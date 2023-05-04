@@ -3,6 +3,7 @@
     "private": true,
     "workspaces": [
         "packages/matter.js",
+        "packages/matter-crypto.js",
         "packages/matter-node.js"
     ],
     "scripts": {
