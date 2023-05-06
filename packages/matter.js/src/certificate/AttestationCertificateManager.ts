@@ -6,7 +6,7 @@
 
 import { TestCert_PAA_NoVID_PrivateKey, TestCert_PAA_NoVID_PublicKey, TestCert_PAA_NoVID_SKID } from "./ChipPAAuthorities.js";
 import { CertificateManager, jsToMatterDate } from "./CertificateManager.js";
-import { Crypto } from "../crypto/Crypto.js";
+import { KeyPair, Crypto } from "../crypto/Crypto.js";
 import { Time } from "../time/Time.js";
 import { ByteArray } from "../util/ByteArray.js";
 import { VendorId } from "../datatype/VendorId.js";
@@ -35,13 +35,25 @@ export class AttestationCertificateManager {
     };
     private readonly paaKeyIdentifier = TestCert_PAA_NoVID_SKID;
     private readonly paiCertId = BigInt(1);
-    private readonly paiKeyPair = Crypto.createKeyPair();
-    private readonly paiKeyIdentifier = Crypto.hash(this.paiKeyPair.publicKey).slice(0, 20);
     private readonly paiCertBytes;
     private nextCertificateId = 2;
 
-    constructor(
+    static async create(vendorId: VendorId) {
+        const paiKeyPair = await Crypto.createKeyPair();
+        const paiKeyIdentifier = (await Crypto.hash(paiKeyPair.publicKey)).slice(0, 20);
+        return new AttestationCertificateManager(
+            vendorId,
+            paiKeyPair,
+            paiKeyIdentifier
+        );
+    
+    }
+
+    // Must use create() to instantiate because key generation is async
+    private constructor(
         private readonly vendorId: VendorId,
+        private paiKeyPair: KeyPair,
+        private paiKeyIdentifier: Uint8Array
     ) {
         this.paiCertBytes = this.generatePAICert(vendorId);
     }
@@ -123,7 +135,7 @@ export class AttestationCertificateManager {
         return CertificateManager.paiCertToAsn1(unsignedCertificate, this.paaKeyPair);
     }
 
-    generateDaCert(publicKey: ByteArray, vendorId: VendorId, productId: number) {
+    async generateDaCert(publicKey: ByteArray, vendorId: VendorId, productId: number) {
         const now = Time.get().now();
         const certId = this.nextCertificateId++;
         const unsignedCertificate = {
@@ -148,7 +160,7 @@ export class AttestationCertificateManager {
                     isCa: false
                 },
                 keyUsage: 1,
-                subjectKeyIdentifier: Crypto.hash(publicKey).slice(0, 20),
+                subjectKeyIdentifier: (await Crypto.hash(publicKey)).slice(0, 20),
                 authorityKeyIdentifier: this.paiKeyIdentifier,
             },
         };

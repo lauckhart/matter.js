@@ -25,13 +25,13 @@ export abstract class Crypto {
     static get: () => Crypto = () => { throw new Error("No provider configured"); };
 
     abstract encrypt(key: ByteArray, data: ByteArray, nonce: ByteArray, aad?: ByteArray): ByteArray;
-    static readonly encrypt = (key: ByteArray, data: ByteArray, nonce: ByteArray, aad?: ByteArray): ByteArray => Crypto.get().encrypt(key, data, nonce, aad);
+    static readonly encrypt = (key: ByteArray, data: ByteArray, nonce: ByteArray, aad?: ByteArray) => Crypto.get().encrypt(key, data, nonce, aad);
 
     abstract decrypt(key: ByteArray, data: ByteArray, nonce: ByteArray, aad?: ByteArray): ByteArray;
-    static readonly decrypt = (key: ByteArray, data: ByteArray, nonce: ByteArray, aad?: ByteArray): ByteArray => Crypto.get().decrypt(key, data, nonce, aad);
+    static readonly decrypt = (key: ByteArray, data: ByteArray, nonce: ByteArray, aad?: ByteArray) => Crypto.get().decrypt(key, data, nonce, aad);
 
     abstract getRandomData(length: number): ByteArray;
-    static readonly getRandomData = (length: number): ByteArray => Crypto.get().getRandomData(length);
+    static readonly getRandomData = (length: number) => Crypto.get().getRandomData(length);
 
     static readonly getRandom = (): ByteArray => Crypto.get().getRandomData(CRYPTO_RANDOM_LENGTH);
 
@@ -48,38 +48,38 @@ export abstract class Crypto {
         }
     };
 
-    abstract ecdhGeneratePublicKey(): { publicKey: ByteArray, ecdh: any };
-    static readonly ecdhGeneratePublicKey = (): { publicKey: ByteArray, ecdh: any } => Crypto.get().ecdhGeneratePublicKey();
+    abstract ecdhGeneratePublicKey(): Promise<{ publicKey: ByteArray, ecdh: any }>;
+    static readonly ecdhGeneratePublicKey = () => Crypto.get().ecdhGeneratePublicKey();
 
-    abstract ecdhGeneratePublicKeyAndSecret(peerPublicKey: ByteArray): { publicKey: ByteArray, sharedSecret: ByteArray };
-    static readonly ecdhGeneratePublicKeyAndSecret = (peerPublicKey: ByteArray): { publicKey: ByteArray, sharedSecret: ByteArray } => Crypto.get().ecdhGeneratePublicKeyAndSecret(peerPublicKey);
+    abstract ecdhGeneratePublicKeyAndSecret(peerPublicKey: ByteArray): Promise<{ publicKey: ByteArray, sharedSecret: ByteArray }>;
+    static readonly ecdhGeneratePublicKeyAndSecret = (peerPublicKey: ByteArray) => Crypto.get().ecdhGeneratePublicKeyAndSecret(peerPublicKey);
 
-    abstract ecdhGenerateSecret(peerPublicKey: ByteArray, ecdh: any): ByteArray;
-    static readonly ecdhGenerateSecret = (peerPublicKey: ByteArray, ecdh: any): ByteArray => Crypto.get().ecdhGenerateSecret(peerPublicKey, ecdh);
+    abstract ecdhGenerateSecret(peerPublicKey: ByteArray, ecdh: any): Promise<ByteArray>;
+    static readonly ecdhGenerateSecret = (peerPublicKey: ByteArray, ecdh: any) => Crypto.get().ecdhGenerateSecret(peerPublicKey, ecdh);
 
-    abstract hash(data: ByteArray | ByteArray[]): ByteArray;
-    static readonly hash = (data: ByteArray | ByteArray[]): ByteArray => Crypto.get().hash(data);
+    abstract hash(data: ByteArray | ByteArray[]): Promise<ByteArray>;
+    static readonly hash = (data: ByteArray | ByteArray[]) => Crypto.get().hash(data);
 
     abstract pbkdf2(secret: ByteArray, salt: ByteArray, iteration: number, keyLength: number): Promise<ByteArray>;
-    static readonly pbkdf2 = (secret: ByteArray, salt: ByteArray, iteration: number, keyLength: number): Promise<ByteArray> => Crypto.get().pbkdf2(secret, salt, iteration, keyLength);
+    static readonly pbkdf2 = (secret: ByteArray, salt: ByteArray, iteration: number, keyLength: number) => Crypto.get().pbkdf2(secret, salt, iteration, keyLength);
 
     abstract hkdf(secret: ByteArray, salt: ByteArray, info: ByteArray, length?: number): Promise<ByteArray>;
-    static readonly hkdf = (secret: ByteArray, salt: ByteArray, info: ByteArray, length?: number): Promise<ByteArray> => Crypto.get().hkdf(secret, salt, info, length);
+    static readonly hkdf = (secret: ByteArray, salt: ByteArray, info: ByteArray, length?: number) => Crypto.get().hkdf(secret, salt, info, length);
 
-    abstract hmac(key: ByteArray, data: ByteArray): ByteArray;
-    static readonly hmac = (key: ByteArray, data: ByteArray): ByteArray => Crypto.get().hmac(key, data);
+    abstract hmac(key: ByteArray, data: ByteArray): Promise<ByteArray>;
+    static readonly hmac = (key: ByteArray, data: ByteArray) => Crypto.get().hmac(key, data);
 
-    abstract signPkcs8(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding): ByteArray;
-    static readonly signPkcs8 = (privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding): ByteArray => Crypto.get().signPkcs8(privateKey, data, dsaEncoding);
+    abstract signPkcs8(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding): Promise<ByteArray>;
+    static readonly signPkcs8 = (privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding) => Crypto.get().signPkcs8(privateKey, data, dsaEncoding);
 
-    abstract signSec1(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding): ByteArray;
-    static readonly signSec1 = (privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding): ByteArray => Crypto.get().signSec1(privateKey, data, dsaEncoding);
+    abstract signSec1(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding): Promise<ByteArray>;
+    static readonly signSec1 = (privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding) => Crypto.get().signSec1(privateKey, data, dsaEncoding);
 
     abstract verifySpkiEc(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding): void;
-    static readonly verifySpkiEc = (publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding): void => Crypto.get().verifySpkiEc(publicKey, data, signature, dsaEncoding);
+    static readonly verifySpkiEc = (publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding) => Crypto.get().verifySpkiEc(publicKey, data, signature, dsaEncoding);
 
     abstract verifySpki(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding): void;
-    static readonly verifySpki = (publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding): void => Crypto.get().verifySpki(publicKey, data, signature, dsaEncoding);
+    static readonly verifySpki = (publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding) => Crypto.get().verifySpki(publicKey, data, signature, dsaEncoding);
 
     abstract createKeyPair(): KeyPair
     static readonly createKeyPair = (): KeyPair => Crypto.get().createKeyPair();

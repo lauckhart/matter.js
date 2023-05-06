@@ -49,6 +49,7 @@
     },
     "dependencies": {
         "@project-chip/matter.js": "^0.3.0",
+        "@project-chip/crypto.js": "^0.3.0",
         "node-localstorage": "^2.2.1"
     },
     "engines": {

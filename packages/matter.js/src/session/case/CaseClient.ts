@@ -28,7 +28,7 @@ export class CaseClient {
         const random = Crypto.getRandom();
         const sessionId = client.getNextAvailableSessionId();
         const { operationalIdentityProtectionKey, operationalCert: nodeOpCert, intermediateCACert } = fabric;
-        const { publicKey: ecdhPublicKey, ecdh } = Crypto.ecdhGeneratePublicKey();
+        const { publicKey: ecdhPublicKey, ecdh } = await Crypto.ecdhGeneratePublicKey();
 
         // Send sigma1
         let sigma1Bytes;
@@ -63,7 +63,7 @@ export class CaseClient {
         } else {
             // Process sigma2
             const { ecdhPublicKey: peerEcdhPublicKey, encrypted: peerEncrypted, random: peerRandom, sessionId: peerSessionId } = sigma2;
-            const sharedSecret = Crypto.ecdhGenerateSecret(peerEcdhPublicKey, ecdh);
+            const sharedSecret = await Crypto.ecdhGenerateSecret(peerEcdhPublicKey, ecdh);
             const sigma2Salt = ByteArray.concat(operationalIdentityProtectionKey, peerRandom, peerEcdhPublicKey, Crypto.hash(sigma1Bytes));
             const sigma2Key = await Crypto.hkdf(sharedSecret, sigma2Salt, KDFSR2_INFO);
             const peerEncryptedData = Crypto.decrypt(sigma2Key, peerEncrypted, TBE_DATA2_NONCE);

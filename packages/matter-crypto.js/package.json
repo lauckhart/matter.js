@@ -12,8 +12,7 @@
     "contributors": [
         "Martin Turon <mturon@google.com>",
         "Marco Fucci di Napoli <mfucci@gmail.com>",
-        "Ingo Fischer <github@fischer-ka.de>",
-        "Greg Lauckhart <greg+git@lauckhart.com>"
+        "Ingo Fischer <github@fischer-ka.de>"
     ],
     "bugs": {
         "url": "https://github.com/project-chip/matter.js/issues"
@@ -25,10 +24,14 @@
     },
     "scripts": {
         "clean": "rm -rf dist && rm -f *.tsbuildinfo",
-        "build": "tsc -b tsconfig.dist.json",
+        "build": "npm run build-es && npm run build-cjs",
+        "build-es": "tsc -b tsconfig.dist-es.json",
+        "build-cjs": "tsc -b tsconfig.dist-cjs.json && cp ../matter.js/package-cjs.json dist/cjs/package.json",
         "build-clean": "npm run clean && npm run build",
-        "test": "TZ=utc jest"
-    },
+        "test": "npm run test-node && npm run test-web",
+        "test-node": "TZ=utc NODE_OPTIONS=--experimental-vm-modules jest",
+        "test-web": "TZ=utc karma start test/karma.conf.cjs"
+        },
     "devDependencies": {
     },
     "dependencies": {

@@ -23,20 +23,20 @@ export interface OperationalCredentialsServerConf {
     certificationDeclaration: ByteArray,
 }
 
-function signWithDeviceKey(conf: OperationalCredentialsServerConf, session: SecureSession<MatterDevice>, data: ByteArray) {
+async function signWithDeviceKey(conf: OperationalCredentialsServerConf, session: SecureSession<MatterDevice>, data: ByteArray) {
     return Crypto.signPkcs8(conf.devicePrivateKey, [data, session.getAttestationChallengeKey()]);
 }
 
 export const OperationalCredentialsClusterHandler: (conf: OperationalCredentialsServerConf) => ClusterServerHandlers<typeof OperationalCredentialsCluster> = (conf) => ({
     requestAttestation: async ({ request: { attestationNonce }, session }) => {
         const elements = TlvAttestation.encode({ declaration: conf.certificationDeclaration, attestationNonce, timestamp: 0 });
-        return { elements: elements, signature: signWithDeviceKey(conf, session as SecureSession<MatterDevice>, elements) };
+        return { elements: elements, signature: await signWithDeviceKey(conf, session as SecureSession<MatterDevice>, elements) };
     },
 
     requestCertSigning: async ({ request: { certSigningRequestNonce }, session }) => {
         const certSigningRequest = session.getContext().getFabricBuilder().createCertificateSigningRequest();
         const elements = TlvCertSigningRequest.encode({ certSigningRequest, certSigningRequestNonce });
-        return { elements, signature: signWithDeviceKey(conf, session as SecureSession<MatterDevice>, elements) };
+        return { elements, signature: await signWithDeviceKey(conf, session as SecureSession<MatterDevice>, elements) };
     },
 
     requestCertChain: async ({ request: { type } }) => {

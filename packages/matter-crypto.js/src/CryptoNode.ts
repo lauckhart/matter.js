@@ -41,23 +41,23 @@ export class CryptoNode extends Crypto {
         return new ByteArray(crypto.randomBytes(length));
     }
 
-    ecdhGeneratePublicKey(): { publicKey: ByteArray, ecdh: any } {
+    override async ecdhGeneratePublicKey(): Promise<{ publicKey: ByteArray, ecdh: any }> {
         const ecdh = crypto.createECDH(CRYPTO_EC_CURVE);
         ecdh.generateKeys();
         return { publicKey: new ByteArray(ecdh.getPublicKey()), ecdh: ecdh };
     }
 
-    ecdhGeneratePublicKeyAndSecret(peerPublicKey: ByteArray): { publicKey: ByteArray, sharedSecret: ByteArray } {
+    override async ecdhGeneratePublicKeyAndSecret(peerPublicKey: ByteArray): Promise<{ publicKey: ByteArray, sharedSecret: ByteArray }> {
         const ecdh = crypto.createECDH(CRYPTO_EC_CURVE);
         ecdh.generateKeys();
         return { publicKey: new ByteArray(ecdh.getPublicKey()), sharedSecret: new ByteArray(ecdh.computeSecret(peerPublicKey)) };
     }
 
-    ecdhGenerateSecret(peerPublicKey: ByteArray, ecdh: crypto.ECDH): ByteArray {
+    override async ecdhGenerateSecret(peerPublicKey: ByteArray, ecdh: crypto.ECDH): Promise<ByteArray> {
         return new ByteArray(ecdh.computeSecret(peerPublicKey));
     }
 
-    hash(data: ByteArray | ByteArray[]): ByteArray {
+    override async hash(data: ByteArray | ByteArray[]): Promise<ByteArray> {
         const hasher = crypto.createHash(CRYPTO_HASH_ALGORITHM);
         if (Array.isArray(data)) {
             data.forEach(chunk => hasher.update(chunk));
@@ -67,7 +67,7 @@ export class CryptoNode extends Crypto {
         return new ByteArray(hasher.digest());
     }
 
-    pbkdf2(secret: ByteArray, salt: ByteArray, iteration: number, keyLength: number): Promise<ByteArray> {
+    override async pbkdf2(secret: ByteArray, salt: ByteArray, iteration: number, keyLength: number): Promise<ByteArray> {
         return new Promise<ByteArray>((resolver, rejecter) => {
             crypto.pbkdf2(secret, salt, iteration, keyLength, CRYPTO_HASH_ALGORITHM, (error, key) => {
                 if (error !== null) rejecter(error);
@@ -76,7 +76,7 @@ export class CryptoNode extends Crypto {
         });
     }
 
-    hkdf(secret: ByteArray, salt: ByteArray, info: ByteArray, length: number = CRYPTO_SYMMETRIC_KEY_LENGTH): Promise<ByteArray> {
+    override async hkdf(secret: ByteArray, salt: ByteArray, info: ByteArray, length: number = CRYPTO_SYMMETRIC_KEY_LENGTH): Promise<ByteArray> {
         return new Promise<ByteArray>((resolver, rejecter) => {
             crypto.hkdf(CRYPTO_HASH_ALGORITHM, secret, salt, info, length, (error, key) => {
                 if (error !== null) rejecter(error);
@@ -85,7 +85,7 @@ export class CryptoNode extends Crypto {
         });
     }
 
-    hmac(key: ByteArray, data: ByteArray): ByteArray {
+    override async hmac(key: ByteArray, data: ByteArray): Promise<ByteArray> {
         const hmac = crypto.createHmac(CRYPTO_HASH_ALGORITHM, key);
         hmac.update(data);
         return new ByteArray(hmac.digest());

@@ -18,7 +18,7 @@ import { NetworkNode } from "./net/NetworkNode";
 Network.get = singleton(() => new NetworkNode());
 
 import { Crypto } from "@project-chip/matter.js/crypto";
-import { CryptoNode } from "./crypto/CryptoNode";
+import { CryptoNode } from "@project-chip/matter-crypto.js";
 
 Crypto.get = singleton(() => new CryptoNode());
 

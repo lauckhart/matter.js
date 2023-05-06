@@ -291,7 +291,7 @@ export class CertificateManager {
         });
     }
 
-    static daCertToAsn1({ serialNumber, notBefore, notAfter, issuer: { commonName: issuerCommonName, vendorId: issuerVendorId }, subject: { commonName: subjectCommonName, vendorId: subjectVendorId, productId: subjectProductId }, ellipticCurvePublicKey, extensions: { subjectKeyIdentifier, authorityKeyIdentifier } }: Unsigned<DeviceAttestationCertificate>, keys: KeyPair) {
+    static async  daCertToAsn1({ serialNumber, notBefore, notAfter, issuer: { commonName: issuerCommonName, vendorId: issuerVendorId }, subject: { commonName: subjectCommonName, vendorId: subjectVendorId, productId: subjectProductId }, ellipticCurvePublicKey, extensions: { subjectKeyIdentifier, authorityKeyIdentifier } }: Unsigned<DeviceAttestationCertificate>, keys: KeyPair) {
         const certificate = {
             version: ContextTagged(0, 2),
             serialNumber: serialNumber[0],
@@ -322,11 +322,11 @@ export class CertificateManager {
         return DerCodec.encode({
             certificate,
             signAlgorithm: EcdsaWithSHA256_X962,
-            signature: BitByteArray(Crypto.signPkcs8(keys.privateKey, DerCodec.encode(certificate), "der")),
+            signature: BitByteArray(await Crypto.signPkcs8(keys.privateKey, DerCodec.encode(certificate), "der")),
         });
     }
 
-    static paiCertToAsn1({ serialNumber, notBefore, notAfter, issuer: { commonName: issuerCommonName, vendorId: issuerVendorId }, subject: { commonName, vendorId, productId }, ellipticCurvePublicKey, extensions: { subjectKeyIdentifier, authorityKeyIdentifier } }: Unsigned<ProductAttestationIntermediateCertificate>, keys: KeyPair) {
+    static async paiCertToAsn1({ serialNumber, notBefore, notAfter, issuer: { commonName: issuerCommonName, vendorId: issuerVendorId }, subject: { commonName, vendorId, productId }, ellipticCurvePublicKey, extensions: { subjectKeyIdentifier, authorityKeyIdentifier } }: Unsigned<ProductAttestationIntermediateCertificate>, keys: KeyPair) {
         const certificate = {
             version: ContextTagged(0, 2),
             serialNumber: serialNumber[0],
@@ -358,11 +358,11 @@ export class CertificateManager {
         return DerCodec.encode({
             certificate,
             signAlgorithm: EcdsaWithSHA256_X962,
-            signature: BitByteArray(Crypto.signPkcs8(keys.privateKey, DerCodec.encode(certificate), "der")),
+            signature: BitByteArray(await Crypto.signPkcs8(keys.privateKey, DerCodec.encode(certificate), "der")),
         });
     }
 
-    static paaCertToAsn1({ serialNumber, notBefore, notAfter, issuer: { commonName: issuerCommonName, vendorId: issuerVendorId }, subject: { commonName, vendorId }, ellipticCurvePublicKey, extensions: { subjectKeyIdentifier, authorityKeyIdentifier } }: Unsigned<ProductAttestationAuthorityCertificate>, keys: KeyPair) {
+    static async paaCertToAsn1({ serialNumber, notBefore, notAfter, issuer: { commonName: issuerCommonName, vendorId: issuerVendorId }, subject: { commonName, vendorId }, ellipticCurvePublicKey, extensions: { subjectKeyIdentifier, authorityKeyIdentifier } }: Unsigned<ProductAttestationAuthorityCertificate>, keys: KeyPair) {
         const certificate = {
             version: ContextTagged(0, 2),
             serialNumber: serialNumber[0],
@@ -392,7 +392,7 @@ export class CertificateManager {
         return DerCodec.encode({
             certificate,
             signAlgorithm: EcdsaWithSHA256_X962,
-            signature: BitByteArray(Crypto.signPkcs8(keys.privateKey, DerCodec.encode(certificate), "der")),
+            signature: BitByteArray(await Crypto.signPkcs8(keys.privateKey, DerCodec.encode(certificate), "der")),
         });
     }
 
@@ -421,7 +421,7 @@ export class CertificateManager {
         Crypto.verifySpki(rootCert.ellipticCurvePublicKey, this.nocCertToAsn1(nocCert), nocCert.signature);
     }
 
-    static createCertificateSigningRequest(keys: KeyPair) {
+    static async createCertificateSigningRequest(keys: KeyPair) {
         const request = {
             version: 0,
             subject: { organization: OrganisationName_X520("CSR") },
@@ -432,7 +432,7 @@ export class CertificateManager {
         return DerCodec.encode({
             request,
             signAlgorithm: EcdsaWithSHA256_X962,
-            signature: BitByteArray(Crypto.signPkcs8(keys.privateKey, DerCodec.encode(request), "der")),
+            signature: BitByteArray(await Crypto.signPkcs8(keys.privateKey, DerCodec.encode(request), "der")),
         });
     }
 
