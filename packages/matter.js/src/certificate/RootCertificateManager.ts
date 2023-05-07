@@ -12,13 +12,19 @@ import { Time } from "../time/Time.js";
 import { StorageManager } from "../storage/StorageManager.js";
 
 export class RootCertificateManager {
-    private rootCertId = BigInt(0);
-    private rootKeyPair = Crypto.createKeyPair();
-    private rootKeyIdentifier = Crypto.hash(this.rootKeyPair.publicKey).slice(0, 20);
-    private rootCertBytes = this.generateRootCert();
+    private static rootCertId = BigInt(0);
+    private rootCertId = RootCertificateManager.rootCertId;
     private nextCertificateId = 1;
 
-    constructor(storageManager: StorageManager) {
+    public static async create(storageManager: StorageManager) {
+        const rootKeyPair = await Crypto.createKeyPair();
+        const rootKeyIdentifier = (await Crypto.hash(rootKeyPair.publicKey)).slice(0, 20);
+        const rootCertBytes = await this.generateRootCert(rootKeyPair, rootKeyIdentifier);
+        return new RootCertificateManager(storageManager, rootKeyPair, rootKeyIdentifier, rootCertBytes);
+    }
+
+    // Must construct create because initialization crypto is async
+    private constructor(storageManager: StorageManager, private rootKeyPair: KeyPair, private rootKeyIdentifier: ByteArray, private rootCertBytes: ByteArray) {
         const storage = storageManager.createContext("RootCertificateManager");
 
         // Read from storage if we have them stored, else store the just generated data
@@ -52,7 +58,7 @@ export class RootCertificateManager {
         return this.rootCertBytes;
     }
 
-    private generateRootCert() {
+    private static async generateRootCert(rootKeyPair: KeyPair, rootKeyIdentifier: ByteArray) {
         const now = Time.get().now();
         const unsignedCertificate = {
             serialNumber: ByteArray.of(Number(this.rootCertId)),
@@ -63,19 +69,19 @@ export class RootCertificateManager {
             notBefore: jsToMatterDate(now, -1),
             notAfter: jsToMatterDate(now, 10),
             subject: { rcacId: this.rootCertId },
-            ellipticCurvePublicKey: this.rootKeyPair.publicKey,
+            ellipticCurvePublicKey: rootKeyPair.publicKey,
             extensions: {
                 basicConstraints: { isCa: true },
                 keyUsage: 96,
-                subjectKeyIdentifier: this.rootKeyIdentifier,
-                authorityKeyIdentifier: this.rootKeyIdentifier,
+                subjectKeyIdentifier: rootKeyIdentifier,
+                authorityKeyIdentifier: rootKeyIdentifier,
             },
         };
-        const signature = Crypto.signPkcs8(this.rootKeyPair.privateKey, CertificateManager.rootCertToAsn1(unsignedCertificate));
+        const signature = await Crypto.signPkcs8(rootKeyPair.privateKey, CertificateManager.rootCertToAsn1(unsignedCertificate));
         return TlvRootCertificate.encode({ ...unsignedCertificate, signature });
     }
 
-    generateNoc(publicKey: ByteArray, fabricId: bigint, nodeId: NodeId) {
+    async generateNoc(publicKey: ByteArray, fabricId: bigint, nodeId: NodeId) {
         const now = Time.get().now();
         const certId = this.nextCertificateId++;
         const unsignedCertificate = {
@@ -92,11 +98,11 @@ export class RootCertificateManager {
                 basicConstraints: { isCa: false },
                 keyUsage: 1,
                 extendedKeyUsage: [2, 1],
-                subjectKeyIdentifier: Crypto.hash(publicKey).slice(0, 20),
+                subjectKeyIdentifier: (await Crypto.hash(publicKey)).slice(0, 20),
                 authorityKeyIdentifier: this.rootKeyIdentifier,
             },
         };
-        const signature = Crypto.signPkcs8(this.rootKeyPair.privateKey, CertificateManager.nocCertToAsn1(unsignedCertificate));
+        const signature = await Crypto.signPkcs8(this.rootKeyPair.privateKey, CertificateManager.nocCertToAsn1(unsignedCertificate));
         return TlvOperationalCertificate.encode({ ...unsignedCertificate, signature });
     }
 }

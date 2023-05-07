@@ -49,9 +49,9 @@ export class FabricManager {
         return this.fabrics;
     }
 
-    findFabricFromDestinationId(destinationId: ByteArray, initiatorRandom: ByteArray) {
+    async findFabricFromDestinationId(destinationId: ByteArray, initiatorRandom: ByteArray) {
         for (const fabric of this.fabrics) {
-            const candidateDestinationId = fabric.getDestinationId(fabric.nodeId, initiatorRandom);
+            const candidateDestinationId = await fabric.getDestinationId(fabric.nodeId, initiatorRandom);
             if (!candidateDestinationId.equals(destinationId)) continue;
             return fabric;
         }

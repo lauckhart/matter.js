@@ -37,9 +37,9 @@ export class CaseClient {
             const { sharedSecret, resumptionId } = resumptionRecord;
             const resumeKey = await Crypto.hkdf(sharedSecret, ByteArray.concat(random, resumptionId), KDFSR1_KEY_INFO);
             const resumeMic = Crypto.encrypt(resumeKey, new ByteArray(0), RESUME1_MIC_NONCE);
-            sigma1Bytes = await messenger.sendSigma1({ sessionId, destinationId: fabric.getDestinationId(peerNodeId, random), ecdhPublicKey, random, resumptionId, resumeMic });
+            sigma1Bytes = await messenger.sendSigma1({ sessionId, destinationId: await fabric.getDestinationId(peerNodeId, random), ecdhPublicKey, random, resumptionId, resumeMic });
         } else {
-            sigma1Bytes = await messenger.sendSigma1({ sessionId, destinationId: fabric.getDestinationId(peerNodeId, random), ecdhPublicKey, random });
+            sigma1Bytes = await messenger.sendSigma1({ sessionId, destinationId: await fabric.getDestinationId(peerNodeId, random), ecdhPublicKey, random });
         }
 
         let secureSession;
@@ -64,7 +64,7 @@ export class CaseClient {
             // Process sigma2
             const { ecdhPublicKey: peerEcdhPublicKey, encrypted: peerEncrypted, random: peerRandom, sessionId: peerSessionId } = sigma2;
             const sharedSecret = await Crypto.ecdhGenerateSecret(peerEcdhPublicKey, ecdh);
-            const sigma2Salt = ByteArray.concat(operationalIdentityProtectionKey, peerRandom, peerEcdhPublicKey, Crypto.hash(sigma1Bytes));
+            const sigma2Salt = ByteArray.concat(operationalIdentityProtectionKey, peerRandom, peerEcdhPublicKey, await Crypto.hash(sigma1Bytes));
             const sigma2Key = await Crypto.hkdf(sharedSecret, sigma2Salt, KDFSR2_INFO);
             const peerEncryptedData = Crypto.decrypt(sigma2Key, peerEncrypted, TBE_DATA2_NONCE);
             const { nodeOpCert: peerNewOpCert, intermediateCACert: peerIntermediateCACert, signature: peerSignature, resumptionId: peerResumptionId } = TlvEncryptedDataSigma2.decode(peerEncryptedData);
@@ -74,17 +74,17 @@ export class CaseClient {
             Crypto.verifySpki(peerPublicKey, peerSignatureData, peerSignature);
 
             // Generate and send sigma3
-            const sigma3Salt = ByteArray.concat(operationalIdentityProtectionKey, Crypto.hash([sigma1Bytes, sigma2Bytes]));
+            const sigma3Salt = ByteArray.concat(operationalIdentityProtectionKey, await Crypto.hash([sigma1Bytes, sigma2Bytes]));
             const sigma3Key = await Crypto.hkdf(sharedSecret, sigma3Salt, KDFSR3_INFO);
             const signatureData = TlvSignedData.encode({ nodeOpCert, intermediateCACert, ecdhPublicKey, peerEcdhPublicKey });
-            const signature = fabric.sign(signatureData);
+            const signature = await fabric.sign(signatureData);
             const encryptedData = TlvEncryptedDataSigma3.encode({ nodeOpCert, intermediateCACert, signature });
             const encrypted = Crypto.encrypt(sigma3Key, encryptedData, TBE_DATA3_NONCE);
             const sigma3Bytes = await messenger.sendSigma3({ encrypted });
             await messenger.waitForSuccess();
 
             // All good! Create secure session
-            const secureSessionSalt = ByteArray.concat(operationalIdentityProtectionKey, Crypto.hash([sigma1Bytes, sigma2Bytes, sigma3Bytes]));
+            const secureSessionSalt = ByteArray.concat(operationalIdentityProtectionKey, await Crypto.hash([sigma1Bytes, sigma2Bytes, sigma3Bytes]));
             secureSession = await client.createSecureSession(sessionId, fabric, peerNodeId, peerSessionId, sharedSecret, secureSessionSalt, true, false);
             logger.info(`Case client: Paired succesfully with ${messenger.getChannelName()}`);
             resumptionRecord = { fabric, peerNodeId, sharedSecret, resumptionId: peerResumptionId };

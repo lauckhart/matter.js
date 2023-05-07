@@ -38,8 +38,8 @@ export class Spake2p {
         return { w0, L };
     }
 
-    static create(context: ByteArray, w0: BN) {
-        const random = Crypto.getRandomBN(32, P256_CURVE.p);
+    static async create(context: ByteArray, w0: BN) {
+        const random = await Crypto.getRandomBN(32, P256_CURVE.p);
         return new Spake2p(context, random, w0);
     }
 
@@ -74,11 +74,11 @@ export class Spake2p {
         if (!XPoint.validate()) throw new Error("X is not on the curve");
         const Z = XPoint.add(M.mul(this.w0).neg()).mul(this.random);
         const V = LPoint.mul(this.random);
-        return this.computeSecretAndVerifiers(X, Y, ByteArray.from(Z.encode()), ByteArray.from(V.encode()));
+        return await this.computeSecretAndVerifiers(X, Y, ByteArray.from(Z.encode()), ByteArray.from(V.encode()));
     }
 
     private async computeSecretAndVerifiers(X: ByteArray, Y: ByteArray, Z: ByteArray, V: ByteArray) {
-        const TT_HASH = this.computeTranscriptHash(X, Y, Z, V);
+        const TT_HASH = await this.computeTranscriptHash(X, Y, Z, V);
         const Ka = TT_HASH.slice(0, 16);
         const Ke = TT_HASH.slice(16, 32);
 
@@ -86,13 +86,13 @@ export class Spake2p {
         const KcA = KcAB.slice(0, 16);
         const KcB = KcAB.slice(16, 32);
 
-        const hAY = Crypto.hmac(KcA, Y);
-        const hBX = Crypto.hmac(KcB, X);
+        const hAY = await Crypto.hmac(KcA, Y);
+        const hBX = await Crypto.hmac(KcB, X);
 
         return { Ke, hAY, hBX };
     }
 
-    private computeTranscriptHash(X: ByteArray, Y: ByteArray, Z: ByteArray, V: ByteArray) {
+    private async computeTranscriptHash(X: ByteArray, Y: ByteArray, Z: ByteArray, V: ByteArray) {
         const TTwriter = new DataWriter(Endian.Little);
         this.addToContext(TTwriter, this.context);
         this.addToContext(TTwriter, ByteArray.fromString(""));
@@ -104,7 +104,7 @@ export class Spake2p {
         this.addToContext(TTwriter, Z);
         this.addToContext(TTwriter, V);
         this.addToContext(TTwriter, ByteArray.from(this.w0.toArray()));
-        return Crypto.hash(TTwriter.toByteArray());
+        return await Crypto.hash(TTwriter.toByteArray());
     }
 
     private addToContext(TTwriter: DataWriter<Endian.Little>, data: ByteArray) {

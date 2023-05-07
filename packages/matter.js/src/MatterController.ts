@@ -38,7 +38,7 @@ const logger = Logger.get("MatterController");
 
 export class MatterController {
     public static async create(scanner: Scanner, netInterfaceIpv4: NetInterface, netInterfaceIpv6: NetInterface, storageManager: StorageManager) {
-        const certificateManager = new RootCertificateManager(storageManager);
+        const certificateManager = await RootCertificateManager.create(storageManager);
 
         const ipkValue = Crypto.getRandomData(16);
         const fabricBuilder = new FabricBuilder(FABRIC_INDEX)
@@ -46,7 +46,7 @@ export class MatterController {
             .setRootNodeId(CONTROLLER_NODE_ID)
             .setIdentityProtectionKey(ipkValue)
             .setRootVendorId(ADMIN_VENDOR_ID);
-        fabricBuilder.setOperationalCert(certificateManager.generateNoc(fabricBuilder.getPublicKey(), FABRIC_ID, CONTROLLER_NODE_ID));
+        fabricBuilder.setOperationalCert(await certificateManager.generateNoc(fabricBuilder.getPublicKey(), FABRIC_ID, CONTROLLER_NODE_ID));
 
         // Check if we have a fabric stored in the storage, if yes initialize this one, else build a new one
         const controllerStorage = storageManager.createContext("MatterController");
@@ -124,7 +124,7 @@ export class MatterController {
 
         await operationalCredentialsClusterClient.addRootCert({ certificate: this.certificateManager.getRootCert() });
         const peerNodeId = new NodeId(BigInt(1));
-        const peerOperationalCert = this.certificateManager.generateNoc(operationalPublicKey, FABRIC_ID, peerNodeId);
+        const peerOperationalCert = await this.certificateManager.generateNoc(operationalPublicKey, FABRIC_ID, peerNodeId);
         await operationalCredentialsClusterClient.addOperationalCert({
             operationalCert: peerOperationalCert,
             intermediateCaCert: new ByteArray(0),

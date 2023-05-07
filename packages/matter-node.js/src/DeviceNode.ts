@@ -18,9 +18,6 @@ import { NetworkNode } from "./net/NetworkNode";
 Network.get = singleton(() => new NetworkNode());
 
 import { Crypto } from "@project-chip/matter.js/crypto";
-import { CryptoNode } from "@project-chip/matter-crypto.js";
-
-Crypto.get = singleton(() => new CryptoNode());
 
 import { Logger } from "@project-chip/matter.js/log";
 import { StorageManager } from "@project-chip/matter.js/storage";
@@ -95,7 +92,7 @@ class DeviceNode {
         const netAnnounceInterface = getParameter("announceinterface");
         const port = getIntParameter("port") ?? 5540;
 
-        const paa = new AttestationCertificateManager(vendorId);
+        const paa = await AttestationCertificateManager.create(vendorId);
         const { keyPair: dacKeyPair, dac } = paa.getDACert(productId)
         const certificationDeclaration = CertificationDeclarationManager.generate(vendorId, productId);
 
