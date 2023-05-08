@@ -54,8 +54,8 @@ describe("CertificateManager", () => {
     });
 
     describe("createCertificateSigningRequest", () => {
-        it("generates a valid CSR", () => {
-            const result = CertificateManager.createCertificateSigningRequest({ publicKey: PUBLIC_KEY, privateKey: PRIVATE_KEY });
+        it("generates a valid CSR", async () => {
+            const result = await CertificateManager.createCertificateSigningRequest({ publicKey: PUBLIC_KEY, privateKey: PRIVATE_KEY });
 
             const derNode = DerCodec.decode(result);
             assert.equal(derNode[ELEMENTS_KEY]?.length, 3);
@@ -63,13 +63,13 @@ describe("CertificateManager", () => {
             assert.deepEqual(DerCodec.encode(signatureAlgorithmNode), DerCodec.encode(EcdsaWithSHA256_X962));
             const requestBytes = DerCodec.encode(requestNode);
             assert.deepEqual(requestBytes, CSR_REQUEST_ASN1);
-            Crypto.verifySpki(PUBLIC_KEY, DerCodec.encode(requestNode), signatureNode[BYTES_KEY], "der");
+            await Crypto.verifySpki(PUBLIC_KEY, DerCodec.encode(requestNode), signatureNode[BYTES_KEY], "der");
         });
     });
 
-    describe("getPublicKeyFromCsr", () => {
-        it("get the public key from the CSR", () => {
-            const csr = CertificateManager.createCertificateSigningRequest({ publicKey: PUBLIC_KEY, privateKey: PRIVATE_KEY });
+    describe("getPublicKeyFromCsr", async () => {
+        it("get the public key from the CSR", async () => {
+            const csr = await CertificateManager.createCertificateSigningRequest({ publicKey: PUBLIC_KEY, privateKey: PRIVATE_KEY });
 
             const result = CertificateManager.getPublicKeyFromCsr(csr);
 

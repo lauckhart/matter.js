@@ -49,7 +49,7 @@ export class AttestationCertificateManager {
     
     }
 
-    // Must use create() to instantiate because key generation is async
+    // Must use create() to instantiate because cert generation is async
     private constructor(
         private readonly vendorId: VendorId,
         private paiKeyPair: KeyPair,
@@ -62,11 +62,11 @@ export class AttestationCertificateManager {
         return this.paiCertBytes;
     }
 
-    getDACert(productId: number) {
-        const dacKeyPair = Crypto.createKeyPair();
+    async getDACert(productId: number) {
+        const dacKeyPair = await Crypto.createKeyPair();
         return {
             keyPair: dacKeyPair,
-            dac: this.generateDaCert(dacKeyPair.publicKey, this.vendorId, productId)
+            dac: await this.generateDaCert(dacKeyPair.publicKey, this.vendorId, productId)
         };
     }
 

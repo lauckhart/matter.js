@@ -204,7 +204,6 @@ export class Fabric {
 }
 
 export class FabricBuilder {
-    private keyPair = Crypto.createKeyPair();
     private rootVendorId?: VendorId;
     private rootCert?: ByteArray;
     private intermediateCACert?: ByteArray;
@@ -215,8 +214,13 @@ export class FabricBuilder {
     private rootPublicKey?: ByteArray;
     private identityProtectionKey?: ByteArray;
 
-    constructor(
+    public static async create(fabricIndex: FabricIndex) {
+        return new FabricBuilder(fabricIndex, await Crypto.createKeyPair());
+    }
+
+    private constructor(
         private readonly fabricIndex: FabricIndex,
+        private keyPair: KeyPair
     ) { }
 
     getPublicKey() {

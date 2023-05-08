@@ -29,7 +29,6 @@ import { CertificateChainType, OperationalCredentialsCluster, TlvCertSigningRequ
 import { ByteArray } from "./util/ByteArray.js";
 import { StorageManager } from "./storage/StorageManager.js";
 
-
 const FABRIC_INDEX = new FabricIndex(1);
 const FABRIC_ID = BigInt(1);
 const CONTROLLER_NODE_ID = new NodeId(BigInt(1));
@@ -41,7 +40,7 @@ export class MatterController {
         const certificateManager = await RootCertificateManager.create(storageManager);
 
         const ipkValue = Crypto.getRandomData(16);
-        const fabricBuilder = new FabricBuilder(FABRIC_INDEX)
+        const fabricBuilder = (await FabricBuilder.create(FABRIC_INDEX))
             .setRootCert(certificateManager.getRootCert())
             .setRootNodeId(CONTROLLER_NODE_ID)
             .setIdentityProtectionKey(ipkValue)
@@ -120,7 +119,7 @@ export class MatterController {
         }
         // TOTO: validate csrSignature using device public key
         const { certSigningRequest } = TlvCertSigningRequest.decode(csrElements);
-        const operationalPublicKey = CertificateManager.getPublicKeyFromCsr(certSigningRequest);
+        const operationalPublicKey = await CertificateManager.getPublicKeyFromCsr(certSigningRequest);
 
         await operationalCredentialsClusterClient.addRootCert({ certificate: this.certificateManager.getRootCert() });
         const peerNodeId = new NodeId(BigInt(1));

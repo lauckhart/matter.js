@@ -75,12 +75,12 @@ export abstract class Crypto {
     abstract signSec1(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding): Promise<ByteArray>;
     static readonly signSec1 = (privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding?: CryptoDsaEncoding) => Crypto.get().signSec1(privateKey, data, dsaEncoding);
 
-    abstract verifySpkiEc(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding): void;
+    abstract verifySpkiEc(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding): Promise<void>;
     static readonly verifySpkiEc = (publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding) => Crypto.get().verifySpkiEc(publicKey, data, signature, dsaEncoding);
 
-    abstract verifySpki(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding): void;
+    abstract verifySpki(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding): Promise<void>;
     static readonly verifySpki = (publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding?: CryptoDsaEncoding) => Crypto.get().verifySpki(publicKey, data, signature, dsaEncoding);
 
-    abstract createKeyPair(): KeyPair
-    static readonly createKeyPair = (): KeyPair => Crypto.get().createKeyPair();
+    abstract createKeyPair(): Promise<KeyPair>
+    static readonly createKeyPair = () => Crypto.get().createKeyPair();
 }

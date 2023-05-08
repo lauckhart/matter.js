@@ -1,13 +1,14 @@
-export { Crypto } from "@project-chip/matter.js/crypto";
-import { CryptoJS } from "./CryptoJS";
+import { Crypto } from "@project-chip/matter.js/crypto";
+import { CryptoSubtle } from "./CryptoSubtle";
 import { CryptoNode } from "./CryptoNode";
 
-let crypto: Crypto;
-if (process?.versions?.node) {
-    crypto = new CryptoNode();
+let matterCrypto: Crypto;
+if (typeof process !== "undefined" && process?.versions?.node) {
+    matterCrypto = new CryptoNode();
+} else if (typeof crypto !== "undefined" && crypto.subtle) {
+    matterCrypto = new CryptoSubtle();
 } else {
-    console.warn("USING JAVASCRIPT CRYPTO.  CONSIDER NATIVE IMPLEMENTATION.");
-    crypto = new CryptoJS();
+    throw new Error("matter-crypto.js does not support this environment");
 }
 
-Crypto.get = () => crypto;
+Crypto.get = () => matterCrypto;

@@ -2,7 +2,12 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "module": "ES2015",
     "strictNullChecks": true, // Required to correctly generate Nullable types in d.ts
-  }
+    "moduleResolution": "node16", // Required to correctly resolve Babel imports and to make sure all imports are js
+    "module": "node16", // Required to make sure all imports are js
+    "allowJs": true,
+    "rootDirs": [ "src", "out/generated" ],
+    "sourceMap": true,
+  },
+  "include": ["src/**/*.ts", "out/generated/sjcl.*"]
 }

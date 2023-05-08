@@ -59,8 +59,8 @@ export class FabricManager {
         throw new Error("Fabric cannot be found from destinationId");
     }
 
-    armFailSafe() {
-        this.fabricBuilder = new FabricBuilder(new FabricIndex(this.nextFabricIndex++));
+    async armFailSafe() {
+        this.fabricBuilder = await FabricBuilder.create(new FabricIndex(this.nextFabricIndex++));
     }
 
     getFabricBuilder() {

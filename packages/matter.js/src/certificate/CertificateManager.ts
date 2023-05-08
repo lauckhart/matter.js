@@ -413,12 +413,12 @@ export class CertificateManager {
         return DerCodec.encode(Pkcs7SignedData(certificate));
     }
 
-    static validateRootCertificate(rootCert: RootCertificate) {
-        Crypto.verifySpki(rootCert.ellipticCurvePublicKey, this.rootCertToAsn1(rootCert), rootCert.signature);
+    static async validateRootCertificate(rootCert: RootCertificate) {
+        await Crypto.verifySpki(rootCert.ellipticCurvePublicKey, this.rootCertToAsn1(rootCert), rootCert.signature);
     }
 
-    static validateNocCertificate(rootCert: RootCertificate, nocCert: OperationalCertificate) {
-        Crypto.verifySpki(rootCert.ellipticCurvePublicKey, this.nocCertToAsn1(nocCert), nocCert.signature);
+    static async validateNocCertificate(rootCert: RootCertificate, nocCert: OperationalCertificate) {
+        await Crypto.verifySpki(rootCert.ellipticCurvePublicKey, this.nocCertToAsn1(nocCert), nocCert.signature);
     }
 
     static async createCertificateSigningRequest(keys: KeyPair) {
@@ -436,7 +436,7 @@ export class CertificateManager {
         });
     }
 
-    static getPublicKeyFromCsr(csr: ByteArray) {
+    static async getPublicKeyFromCsr(csr: ByteArray) {
         const { [ELEMENTS_KEY]: rootElements } = DerCodec.decode(csr);
         if (rootElements?.length !== 3) throw new Error("Invalid CSR data");
         const [requestNode, signAlgorithmNode, signatureNode] = rootElements;
@@ -457,7 +457,7 @@ export class CertificateManager {
 
         // Verify the CSR signature
         if (!EcdsaWithSHA256_X962[OBJECT_ID_KEY][BYTES_KEY].equals(signAlgorithmNode[ELEMENTS_KEY]?.[0]?.[BYTES_KEY])) throw new Error("Unsupported signature type");
-        Crypto.verifySpki(publicKey, DerCodec.encode(requestNode), signatureNode[BYTES_KEY], "der");
+        await Crypto.verifySpki(publicKey, DerCodec.encode(requestNode), signatureNode[BYTES_KEY], "der");
 
         return publicKey;
     }

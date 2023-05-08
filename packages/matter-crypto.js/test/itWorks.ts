@@ -44,41 +44,41 @@ export function itWorks(matterCrypto: Crypto) {
     });
 
     describe("signPkcs8 / verifySpki", () => {
-        it("signs data with known private key", () => {
-            const result = matterCrypto.signPkcs8(PRIVATE_KEY, ENCRYPTED_DATA);
+        it("signs data with known private key", async () => {
+            const result = await matterCrypto.signPkcs8(PRIVATE_KEY, ENCRYPTED_DATA);
 
-            matterCrypto.verifySpki(PUBLIC_KEY, ENCRYPTED_DATA, result);
+            await matterCrypto.verifySpki(PUBLIC_KEY, ENCRYPTED_DATA, result);
         });
 
-        it("signs data with generated private key", () => {
-            const ecdh = crypto.createECDH("prime256v1");
+        it("signs data with generated private key", async () => {
+            const ecdh = await crypto.createECDH("prime256v1");
             ecdh.generateKeys();
-            const result = matterCrypto.signPkcs8(ecdh.getPrivateKey(), ENCRYPTED_DATA);
+            const result = await matterCrypto.signPkcs8(ecdh.getPrivateKey(), ENCRYPTED_DATA);
 
-            matterCrypto.verifySpki(ecdh.getPublicKey(), ENCRYPTED_DATA, result);
+            await matterCrypto.verifySpki(ecdh.getPublicKey(), ENCRYPTED_DATA, result);
         });
     });
 
     describe("signSec1 / verifySpki", () => {
-        it("signs data with known sec1 key", () => {
-            const result = matterCrypto.signSec1(SEC1_KEY, ENCRYPTED_DATA, "der");
+        it("signs data with known sec1 key", async () => {
+            const result = await matterCrypto.signSec1(SEC1_KEY, ENCRYPTED_DATA, "der");
 
-            const privateKeyObject = crypto.createPrivateKey({
+            const privateKeyObject = await crypto.createPrivateKey({
                 key: Buffer.from(SEC1_KEY),
                 format: "der",
                 type: "sec1",
             });
-            const publicKey = crypto.createPublicKey(privateKeyObject).export({ format: "der", type: "spki" });
+            const publicKey = await crypto.createPublicKey(privateKeyObject).export({ format: "der", type: "spki" });
 
-            matterCrypto.verifySpkiEc(publicKey, ENCRYPTED_DATA, result, "der");
+            await matterCrypto.verifySpkiEc(publicKey, ENCRYPTED_DATA, result, "der");
         });
     });
 
     describe("createKeyPair", () => {
-        it("generates a working key pair", () => {
-            const { privateKey, publicKey } = matterCrypto.createKeyPair();
+        it("generates a working key pair", async () => {
+            const { privateKey, publicKey } = await matterCrypto.createKeyPair();
 
-            matterCrypto.verifySpki(publicKey, ENCRYPTED_DATA, matterCrypto.signPkcs8(privateKey, ENCRYPTED_DATA));
+            await matterCrypto.verifySpki(publicKey, ENCRYPTED_DATA, await matterCrypto.signPkcs8(privateKey, ENCRYPTED_DATA));
         });
     });
 };

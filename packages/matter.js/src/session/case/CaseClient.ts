@@ -71,7 +71,7 @@ export class CaseClient {
             const peerSignatureData = TlvSignedData.encode({ nodeOpCert: peerNewOpCert, intermediateCACert: peerIntermediateCACert, ecdhPublicKey: peerEcdhPublicKey, peerEcdhPublicKey: ecdhPublicKey });
             const { ellipticCurvePublicKey: peerPublicKey, subject: { nodeId: peerNodeIdCert } } = TlvOperationalCertificate.decode(peerNewOpCert);
             if (peerNodeIdCert.id !== peerNodeId.id) throw new Error("The node ID in the peer certificate doesn't match the expected peer node ID");
-            Crypto.verifySpki(peerPublicKey, peerSignatureData, peerSignature);
+            await Crypto.verifySpki(peerPublicKey, peerSignatureData, peerSignature);
 
             // Generate and send sigma3
             const sigma3Salt = ByteArray.concat(operationalIdentityProtectionKey, await Crypto.hash([sigma1Bytes, sigma2Bytes]));

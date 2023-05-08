@@ -5,8 +5,8 @@
  */
 
 import { itWorks } from "./itWorks";
-import { CryptoJS } from "../src/CryptoJS.js"
+import { CryptoSubtle } from "../src/CryptoSubtle.js"
 
-describe("CryptoJS", () => {
-    itWorks(new CryptoJS());
+describe("CryptoSubtle", () => {
+    itWorks(new CryptoSubtle());
 });

@@ -24,9 +24,10 @@
     },
     "scripts": {
         "clean": "rm -rf dist && rm -f *.tsbuildinfo",
-        "build": "npm run build-es && npm run build-cjs",
+        "build": "npm run build-sjcl && npm run build-es && npm run build-cjs",
         "build-es": "tsc -b tsconfig.dist-es.json",
         "build-cjs": "tsc -b tsconfig.dist-cjs.json && cp ../matter.js/package-cjs.json dist/cjs/package.json",
+        "build-sjcl": "./build-sjcl.sh",
         "build-clean": "npm run clean && npm run build",
         "test": "npm run test-node && npm run test-web",
         "test-node": "TZ=utc NODE_OPTIONS=--experimental-vm-modules jest",

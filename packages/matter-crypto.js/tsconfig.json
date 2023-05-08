@@ -5,8 +5,6 @@
     "esModuleInterop": true, // Required to remove warnings on jest test
     "composite": true,  // For linking this package from other packages
     "incremental": true, // Speed up subsequent builds
-    "moduleResolution": "node16", // Required to correctly resolve Babel imports and to make sure all imports are js
-    "module": "node16", // Required to make sure all imports are js
 
     // Local dev compilation checks
     "forceConsistentCasingInFileNames": true,
@@ -16,7 +14,7 @@
     "noUnusedLocals": true,
     "strict": true,
   },
+
   /* During dev, src are included, so they are also modified during refactorings. */
-  "include": ["src/**/*.ts", "test/**/*.ts"],
-  "exclude": []
+  "include": ["src/**/*.ts", "test/**/*.ts", "out/generated/sjcl.*"]
 }

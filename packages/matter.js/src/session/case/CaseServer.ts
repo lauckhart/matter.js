@@ -98,7 +98,7 @@ export class CaseServer implements ProtocolHandler<MatterDevice> {
             fabric.verifyCredentials(peerNewOpCert, peerIntermediateCACert);
             const peerSignatureData = TlvSignedData.encode({ nodeOpCert: peerNewOpCert, intermediateCACert: peerIntermediateCACert, ecdhPublicKey: peerEcdhPublicKey, peerEcdhPublicKey: ecdhPublicKey });
             const { ellipticCurvePublicKey: peerPublicKey, subject: { nodeId: peerNodeId } } = TlvOperationalCertificate.decode(peerNewOpCert);
-            Crypto.verifySpki(peerPublicKey, peerSignatureData, peerSignature);
+            await Crypto.verifySpki(peerPublicKey, peerSignatureData, peerSignature);
 
             // All good! Create secure session
             const secureSessionSalt = ByteArray.concat(operationalIdentityProtectionKey, await Crypto.hash([sigma1Bytes, sigma2Bytes, sigma3Bytes]));
