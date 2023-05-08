@@ -1,9 +1,7 @@
 /* Configuration for a distribution */
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "./tsconfig.dist.json",
   "compilerOptions": {
     "outDir": "dist/es",
-    "declaration": true,
-    "declarationMap": true, // Link from type definition (.d.ts) to source .ts for code navigation
-  },
+  }
 }

@@ -2,9 +2,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
     "declaration": true,
     "declarationMap": true, // Link from type definition (.d.ts) to source .ts for code navigation
-  },
-  "include": ["src/**/*.ts"]
+  }
 }

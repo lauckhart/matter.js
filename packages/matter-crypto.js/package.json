@@ -23,11 +23,11 @@
         "url": "https://github.com/project-chip/matter.js.git"
     },
     "scripts": {
-        "clean": "rm -rf dist && rm -f *.tsbuildinfo",
+        "clean": "rm -rf dist && rm -f *.tsbuildinfo && rm -rf out/sjcl",
         "build": "npm run build-sjcl && npm run build-es && npm run build-cjs",
+        "build-sjcl": "./build-sjcl.sh",
         "build-es": "tsc -b tsconfig.dist-es.json",
         "build-cjs": "tsc -b tsconfig.dist-cjs.json && cp ../matter.js/package-cjs.json dist/cjs/package.json",
-        "build-sjcl": "./build-sjcl.sh",
         "build-clean": "npm run clean && npm run build",
         "test": "npm run test-node && npm run test-web",
         "test-node": "TZ=utc NODE_OPTIONS=--experimental-vm-modules jest",
@@ -47,13 +47,18 @@
         "LICENSE",
         "README.md"
     ],
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "type": "module",
+    "main": "dist/cjs/index.js",
+    "module": "dist/es/index.js",
     "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "default": "./dist/index.js"
-        }
+        "import": {
+            "types": "./dist/es/index.d.ts",
+            "default": "./dist/es/index.js"
+          },
+          "require": {
+            "types": "./dist/cjs/index.d.ts",
+            "default": "./dist/cjs/index.js"
+          }
     },
     "publishConfig": {
         "access": "public"

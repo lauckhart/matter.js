@@ -1,6 +1,6 @@
 import { Crypto } from "@project-chip/matter.js/crypto";
-import { CryptoSubtle } from "./CryptoSubtle";
-import { CryptoNode } from "./CryptoNode";
+import { CryptoSubtle } from "./CryptoSubtle.js";
+import { CryptoNode } from "./CryptoNode.js";
 
 let matterCrypto: Crypto;
 if (typeof process !== "undefined" && process?.versions?.node) {
@@ -11,4 +11,4 @@ if (typeof process !== "undefined" && process?.versions?.node) {
     throw new Error("matter-crypto.js does not support this environment");
 }
 
-Crypto.get = () => matterCrypto;
+export { Crypto };

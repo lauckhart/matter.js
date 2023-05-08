@@ -232,7 +232,7 @@ export class CryptoSubtle extends CryptoJS {
         );
         return {
             publicKey: publicKey,
-            privateKey: privateKey
+            privateKey: new ByteArray(privateKey)
         };
     }
 }
