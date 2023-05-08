@@ -5,7 +5,6 @@
     "esModuleInterop": true, // Required to remove warnings on jest test
     "composite": true,  // For linking this package from other packages
     "incremental": true, // Speed up subsequent builds
-    "outDir": "dist/ignored", // We don't actually use this but vs code complains about sjcl.d.ts without it
 
     // Local dev compilation checks
     "forceConsistentCasingInFileNames": true,
@@ -15,11 +14,6 @@
     "noUnusedLocals": true,
     "strict": true,
   },
-
-  "files": [
-    "out/sjcl/sjcl.js",
-    "out/sjcl/sjcl.d.ts"
-  ],
 
   /* During dev, test are included, so they are also modified during refactorings. */
   "include": ["src/**/*.ts", "test/**/*.ts" ]

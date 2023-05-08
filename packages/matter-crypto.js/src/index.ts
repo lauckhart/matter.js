@@ -10,5 +10,6 @@ if (typeof process !== "undefined" && process?.versions?.node) {
 } else {
     throw new Error("matter-crypto.js does not support this environment");
 }
+Crypto.get = () => matterCrypto;
 
-export { Crypto };
+export { Crypto, CryptoSubtle, CryptoNode };

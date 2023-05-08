@@ -21,14 +21,14 @@ print_lib() {
     cat sjcl/core/sjcl.js \
         sjcl/core/aes.js \
         sjcl/core/bitArray.js \
+        sjcl/core/ccm.js \
         sjcl/core/ccmArrayBuffer.js \
         sjcl/core/codecArrayBuffer.js \
         | grep -v "use strict"
     echo $1
 }
-print_lib "export default sjcl;" > ../src/sjcl.js
 mkdir -p ../dist/es
-cp ../src/sjcl.js ../dist/es/sjcl.js
+print_lib "export { sjcl };" > ../dist/es/sjcl.js
 mkdir -p ../dist/cjs
 print_lib "exports.sjcl = sjcl;" > ../dist/cjs/sjcl.js
 
@@ -37,6 +37,9 @@ print_defs() {
     curl -s https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/LICENSE
     echo
     echo "*/"
-    curl -s https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/types/sjcl/index.d.ts
+    curl -s https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/types/sjcl/index.d.ts \
+        | grep -v "export = sjcl;" \
+        | grep -v "export as namespace sjcl;"
+    echo "export { sjcl };"
 }
 print_defs > ../src/sjcl.d.ts
