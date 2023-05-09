@@ -28,17 +28,19 @@ async function chunksToBuffer(data: ByteArray | ByteArray[]) {
     return bytesToBuffer(data);
 }
 
-type SignatureAlgorithm = "pkcs8" | "sec1" | "spki";
+const SIGNATURE_ALGORITHM = <EcdsaParams> {
+    name: "ECDSA",
+    namedCurve: 'P-256',
+    hash: { name: "SHA-256" }
+};
 
-const SIGNATURE_ALGORITHM = <EcdsaParams> { name: "ECDSA", hash: { name: "SHA-256" }};
-
-async function sign(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding: CryptoDsaEncoding, algorithm: SignatureAlgorithm): Promise<ByteArray> {
+async function sign(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding: CryptoDsaEncoding): Promise<ByteArray> {
     const buffer = await chunksToBuffer(data)
 
     const key = await subtle.importKey(
-        "raw",
-        privateKey,
-        algorithm,
+        "pkcs8",
+        ByteArray.concat(EC_PRIVATE_KEY_PKCS8_HEADER, privateKey),
+        SIGNATURE_ALGORITHM,
         false,
         [ "sign" ]
     );
@@ -59,16 +61,38 @@ async function sign(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEnc
         _tag: 48,
         _elements: [
             { _tag: 2, _bytes: r },
-            { _tag: 2, _bytes: r }
+            { _tag: 2, _bytes: s }
         ]
     });
 }
 
-async function verify(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding: CryptoDsaEncoding, algorithm: SignatureAlgorithm) {
+// Wow, for a low-level API subtle sure makes low-level stuff hard.  Two
+// options for extracting private key are via PKCS8 and JWK.  We already have
+// a DER decoder so let's use that.  JWK would be easier but atob gives
+// deprecation warnings
+async function exportBarePrivateKey(ecdh: CryptoKeyPair) {
+    const pkcs8 = await subtle.exportKey(
+        'pkcs8',
+        ecdh.privateKey
+    );
+    const decodedOuter = DerCodec.decode(new ByteArray(pkcs8));
+    const inner = decodedOuter?._elements?.[2];
+    if (inner == undefined) {
+        throw new Error("Error extracting private key from PKCS8 envelope");
+    }
+    const decodedInner = DerCodec.decode(inner._bytes);
+    const key = decodedInner?._elements?.[1]._bytes;
+    if (key == undefined) {
+        throw new Error("Error extracting private key from PKCS8 key element");
+    }
+    return key;
+}
+
+async function verify(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding: CryptoDsaEncoding, keyFormat: "pkcs8" | "spki") {
     const key = await subtle.importKey(
-        "raw",
+        keyFormat,
         publicKey,
-        algorithm,
+        SIGNATURE_ALGORITHM,
         false,
         [ "verify" ]
     );
@@ -95,6 +119,13 @@ async function verify(publicKey: ByteArray, data: ByteArray, signature: ByteArra
         throw new Error("Signature verification failed");
 }
 
+function sec1ToPkcs8(sec1: ByteArray) {
+    const inputDer = DerCodec.decode(sec1);
+    // TODO
+    inputDer && 1;
+    return sec1;
+}
+
 /**
  * Crypto implementation that utilizes Web Crypto's "crypto.subtle" interface.
  */
@@ -112,7 +143,7 @@ export class CryptoSubtle extends CryptoJS {
                 namedCurve: 'P-256'
             },
             true,
-            []
+            [ 'deriveKey', 'deriveBits' ]
         );
         const publicKey = await subtle.exportKey(
             'raw',
@@ -207,12 +238,13 @@ export class CryptoSubtle extends CryptoJS {
     }
 
     override async signPkcs8(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding: CryptoDsaEncoding = "ieee-p1363") {
-        privateKey = ByteArray.concat(EC_PRIVATE_KEY_PKCS8_HEADER, privateKey);
-        return sign(privateKey, data, dsaEncoding, "pkcs8");
+        // Hmm, not sure what this has to do with PKCS8
+        return sign(privateKey, data, dsaEncoding);
     }
 
     override async signSec1(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEncoding: CryptoDsaEncoding = "ieee-p1363") {
-        return sign(privateKey, data, dsaEncoding, "sec1");
+        const privateKeyPkcs8 = sec1ToPkcs8(privateKey);
+        return sign(privateKeyPkcs8, data, dsaEncoding);
     }
 
     override async verifySpkiEc(publicKey: ByteArray, data: ByteArray, signature: ByteArray, dsaEncoding: CryptoDsaEncoding = "ieee-p1363") {
@@ -226,13 +258,9 @@ export class CryptoSubtle extends CryptoJS {
 
     override async createKeyPair() {
         const { publicKey, ecdh } = await this.ecdhGeneratePublicKey();
-        const privateKey = await subtle.exportKey(
-            'raw',
-            ecdh.publicKey
-        );
         return {
             publicKey: publicKey,
-            privateKey: new ByteArray(privateKey)
+            privateKey: await exportBarePrivateKey(ecdh)
         };
     }
 }
