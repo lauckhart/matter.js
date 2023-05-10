@@ -69,7 +69,7 @@ async function sign(privateKey: ByteArray, data: ByteArray | ByteArray[], dsaEnc
 // Wow, for a low-level API subtle sure makes low-level stuff hard.  Two
 // options for extracting private key are via PKCS8 and JWK.  We already have
 // a DER decoder so let's use that.  JWK would be easier but atob gives
-// deprecation warnings
+// deprecation warnings.  Let's keep dependencies low
 async function exportBarePrivateKey(ecdh: CryptoKeyPair) {
     const pkcs8 = await subtle.exportKey(
         'pkcs8',
@@ -121,8 +121,13 @@ async function verify(publicKey: ByteArray, data: ByteArray, signature: ByteArra
 
 function sec1ToPkcs8(sec1: ByteArray) {
     const inputDer = DerCodec.decode(sec1);
+    const privateKey = inputDer?._elements?.[1]?._bytes;
+    if (!privateKey) {
+        throw new Error("Invalid SEC1 private key");
+    }
+
     // TODO
-    inputDer && 1;
+
     return sec1;
 }
 

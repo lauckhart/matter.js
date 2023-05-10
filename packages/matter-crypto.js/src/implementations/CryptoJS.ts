@@ -6,7 +6,7 @@
 
 import { ByteArray } from "@project-chip/matter.js/util";
 import { Crypto, CRYPTO_AUTH_TAG_LENGTH } from "@project-chip/matter.js/crypto";
-import { sjcl } from "./sjcl.js";
+import { sjcl } from "../sjcl.js";
 
 function bytesToBuf(bytes: ByteArray) {
     return bytes.byteLength == bytes.buffer.byteLength

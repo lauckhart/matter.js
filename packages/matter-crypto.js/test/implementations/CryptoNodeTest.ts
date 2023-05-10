@@ -5,7 +5,7 @@
  */
 
 import { itWorks } from "./itWorks.js";
-import { CryptoNode } from "../src/CryptoNode.js";
+import { CryptoNode } from "../../src/implementations/CryptoNode.js";
 
 describe("CryptoNode", () => {
     itWorks(new CryptoNode());

@@ -1,6 +1,6 @@
 import { Crypto } from "@project-chip/matter.js/crypto";
-import { CryptoSubtle } from "./CryptoSubtle.js";
-import { CryptoNode } from "./CryptoNode.js";
+import { CryptoSubtle } from "./implementations/CryptoSubtle.js";
+import { CryptoNode } from "./implementations/CryptoNode.js";
 
 let matterCrypto: Crypto;
 if (typeof process !== "undefined" && process?.versions?.node) {
