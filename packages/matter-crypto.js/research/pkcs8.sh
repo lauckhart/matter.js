@@ -13,5 +13,4 @@ binary | openssl asn1parse -inform der -i -offset 29
 
 echo
 echo === PKCS8 -\> JWK
-
-binary | ./dump_pkcs8.js
+binary | ./dump_jwk.js pkcs8

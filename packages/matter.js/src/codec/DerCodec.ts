@@ -12,7 +12,7 @@ export const BYTES_KEY = "_bytes";
 export const ELEMENTS_KEY = "_elements";
 export const BITS_PADDING = "_padding";
 
-const enum DerType {
+export const enum DerType {
     Boolean = 0x01,
     UnsignedInt = 0x02,
     BitString = 0x03,
@@ -55,7 +55,7 @@ export class DerCodec {
         } else if (value instanceof Date) {
             return this.encodeDate(value);
         } else if (typeof value === "object" && value[TAG_ID_KEY] !== undefined) {
-            return this.encodeAnsi1(value[TAG_ID_KEY], (value[BITS_PADDING] === undefined) ? value[BYTES_KEY] : ByteArray.concat(ByteArray.of(value[BITS_PADDING]), value[BYTES_KEY]));
+            return this.encodeAsn1(value[TAG_ID_KEY], (value[BITS_PADDING] === undefined) ? value[BYTES_KEY] : ByteArray.concat(ByteArray.of(value[BITS_PADDING]), value[BYTES_KEY]));
         } else if (typeof value === "object") {
             return this.encodeObject(value);
         } else if (typeof value === "string") {
@@ -72,19 +72,19 @@ export class DerCodec {
     }
 
     private static encodeDate(date: Date) {
-        return this.encodeAnsi1(DerType.UtcDate, ByteArray.fromString(date.toISOString().replace(/[-:.T]/g, "").slice(2, 14) + "Z"));
+        return this.encodeAsn1(DerType.UtcDate, ByteArray.fromString(date.toISOString().replace(/[-:.T]/g, "").slice(2, 14) + "Z"));
     }
 
     private static encodeBoolean(bool: boolean) {
-        return this.encodeAnsi1(DerType.Boolean, ByteArray.of(bool ? 0xFF : 0));
+        return this.encodeAsn1(DerType.Boolean, ByteArray.of(bool ? 0xFF : 0));
     }
 
     private static encodeArray(array: Array<any>) {
-        return this.encodeAnsi1(DerType.Set | CONSTRUCTED, ByteArray.concat(...array.map(element => this.encode(element))));
+        return this.encodeAsn1(DerType.Set | CONSTRUCTED, ByteArray.concat(...array.map(element => this.encode(element))));
     }
 
     private static encodeOctetString(value: ByteArray) {
-        return this.encodeAnsi1(DerType.OctetString, value);
+        return this.encodeAsn1(DerType.OctetString, value);
     }
 
     private static encodeObject(object: any) {
@@ -92,11 +92,11 @@ export class DerCodec {
         for (const key in object) {
             attributes.push(this.encode(object[key]));
         }
-        return this.encodeAnsi1(DerType.Sequence | CONSTRUCTED, ByteArray.concat(...attributes));
+        return this.encodeAsn1(DerType.Sequence | CONSTRUCTED, ByteArray.concat(...attributes));
     }
 
     private static encodeString(value: string) {
-        return this.encodeAnsi1(DerType.UTF8String, ByteArray.fromString(value));
+        return this.encodeAsn1(DerType.UTF8String, ByteArray.fromString(value));
     }
 
     private static encodeUnsignedInt(value: number) {
@@ -110,7 +110,7 @@ export class DerCodec {
             start++;
             if (start === 4) break;
         }
-        return this.encodeAnsi1(DerType.UnsignedInt, byteArray.slice(start));
+        return this.encodeAsn1(DerType.UnsignedInt, byteArray.slice(start));
     }
 
     private static encodeLengthBytes(value: number) {
@@ -131,7 +131,7 @@ export class DerCodec {
         return byteArray.slice(start);
     }
 
-    private static encodeAnsi1(tag: number, data: ByteArray) {
+    private static encodeAsn1(tag: number, data: ByteArray) {
         return ByteArray.concat(ByteArray.of(tag), this.encodeLengthBytes(data.length), data);
     }
 
@@ -140,7 +140,7 @@ export class DerCodec {
     }
 
     private static decodeRec(reader: DataReader<Endian.Big>): DerNode {
-        const { tag, bytes } = this.decodeAnsi1(reader);
+        const { tag, bytes } = this.decodeAsn1(reader);
         if (tag === DerType.BitString) return { [TAG_ID_KEY]: tag, [BYTES_KEY]: bytes.slice(1), [BITS_PADDING]: bytes[0] };
         if ((tag & CONSTRUCTED) === 0) return { [TAG_ID_KEY]: tag, [BYTES_KEY]: bytes };
         const elementsReader = new DataReader(bytes, Endian.Big);
@@ -151,7 +151,7 @@ export class DerCodec {
         return { [TAG_ID_KEY]: tag, [BYTES_KEY]: bytes, [ELEMENTS_KEY]: elements };
     }
 
-    private static decodeAnsi1(reader: DataReader<Endian.Big>): { tag: number, bytes: ByteArray } {
+    private static decodeAsn1(reader: DataReader<Endian.Big>): { tag: number, bytes: ByteArray } {
         const tag = reader.readUInt8();
         let length = reader.readUInt8();
         if ((length & 0x80) !== 0) {

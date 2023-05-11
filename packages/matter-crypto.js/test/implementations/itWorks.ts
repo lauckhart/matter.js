@@ -8,6 +8,7 @@ import * as assert from "assert";
 import * as crypto from "crypto";
 import { Crypto } from "@project-chip/matter.js/crypto";
 import { ByteArray } from "@project-chip/matter.js/util";
+import { Key } from "../../src/util/Key.js"
 
 const KEY = ByteArray.fromHex("abf227feffea8c38e688ddcbffc459f1");
 const ENCRYPTED_DATA = ByteArray.fromHex("c4527bd6965518e8382edbbd28f27f42492d0766124f9961a772");
@@ -24,7 +25,8 @@ const ADDITIONAL_AUTH_DATA_2 = ByteArray.fromHex("00c7a200ec8ceb00");
 const PRIVATE_KEY = ByteArray.fromHex("727F1005CBA47ED7822A9D930943621617CFD3B79D9AF528B801ECF9F1992204");
 const PUBLIC_KEY = ByteArray.fromHex("0462e2b6e1baff8d74a6fd8216c4cb67a3363a31e691492792e61aee610261481396725ef95e142686ba98f339b0ff65bc338bec7b9e8be0bdf3b2774982476220");
 
-const SEC1_KEY = ByteArray.fromHex("30770201010420aef3484116e9481ec57be0472df41bf499064e5024ad869eca5e889802d48075a00a06082a8648ce3d030107a144034200043c398922452b55caf389c25bd1bca4656952ccb90e8869249ad8474653014cbf95d687965e036b521c51037e6b8cedefca1eb44046694fa08882eed6519decba");
+const SEC1_PRIVATE_KEY = ByteArray.fromHex("30770201010420aef3484116e9481ec57be0472df41bf499064e5024ad869eca5e889802d48075a00a06082a8648ce3d030107a144034200043c398922452b55caf389c25bd1bca4656952ccb90e8869249ad8474653014cbf95d687965e036b521c51037e6b8cedefca1eb44046694fa08882eed6519decba");
+//const SEC1_PUBLIC_KEY = ByteArray.fromHex("3c398922452b55caf389c25bd1bca4656952ccb90e8869249ad8474653014cbf95d687965e036b521c51037e6b8cedefca1eb44046694fa08882eed6519decba");
 
 export function itWorks(matterCrypto: Crypto) {
     describe("encrypt", () => {
@@ -50,26 +52,23 @@ export function itWorks(matterCrypto: Crypto) {
             await matterCrypto.verifySpki(PUBLIC_KEY, ENCRYPTED_DATA, result);
         });
 
-        it("signs data with generated private key", async () => {
-            const ecdh = await crypto.createECDH("prime256v1");
-            ecdh.generateKeys();
-            const result = await matterCrypto.signPkcs8(ecdh.getPrivateKey(), ENCRYPTED_DATA);
-
-            await matterCrypto.verifySpki(ecdh.getPublicKey(), ENCRYPTED_DATA, result);
-        });
+        // Also tested with a dynamic key in createKeyPair test
     });
 
     describe("signSec1 / verifySpki", () => {
         it("signs data with known sec1 key", async () => {
-            const result = await matterCrypto.signSec1(SEC1_KEY, ENCRYPTED_DATA, "der");
+            const result = await matterCrypto.signSec1(SEC1_PRIVATE_KEY, ENCRYPTED_DATA, "der");
 
+            const key = new Key({ sec1: SEC1_PRIVATE_KEY });
+            console.log(key.xBits?.toHex(), key.yBits?.toHex());
             const privateKeyObject = await crypto.createPrivateKey({
-                key: Buffer.from(SEC1_KEY),
+                key: Buffer.from(SEC1_PRIVATE_KEY),
                 format: "der",
                 type: "sec1",
             });
             const publicKey = await crypto.createPublicKey(privateKeyObject).export({ format: "der", type: "spki" });
 
+            // TODO - use SEC1_PUBLIC_KEY
             await matterCrypto.verifySpkiEc(publicKey, ENCRYPTED_DATA, result, "der");
         });
     });
