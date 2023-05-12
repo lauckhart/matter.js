@@ -15,7 +15,7 @@ import { TlvEndpointNumber } from "../datatype/EndpointNumber.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { MatterCoreSpecificationV1_0 } from "../spec/Specifications.js";
-
+ 
 /** @see {@link MatterCoreSpecificationV1_0} § 11.2.6.1 */
 const TlvGroupKeyMap = TlvObject({
     groupId: TlvField(1, TlvGroupId), /* min: 1 */

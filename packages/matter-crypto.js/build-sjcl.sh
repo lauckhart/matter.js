@@ -24,6 +24,7 @@ print_lib() {
         sjcl/core/ccm.js \
         sjcl/core/ccmArrayBuffer.js \
         sjcl/core/codecArrayBuffer.js \
+        sjcl/core/codecBytes.js \
         | grep -v "use strict"
     echo $1
 }

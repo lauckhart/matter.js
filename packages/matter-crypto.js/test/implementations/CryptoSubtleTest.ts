@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { itWorks } from "./itWorks.js";
+import { testCrypto } from "./testCrypto.js";
 import { CryptoSubtle } from "../../src/implementations/CryptoSubtle.js"
 
 describe("CryptoSubtle", () => {
-    itWorks(new CryptoSubtle());
+    testCrypto(new CryptoSubtle());
 });
