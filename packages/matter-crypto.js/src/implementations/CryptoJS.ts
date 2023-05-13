@@ -26,18 +26,19 @@ function aesForKey(key: ByteArray) {
     return new sjcl.cipher.aes(bytesToBits(key));
 }
 
-const CCM_BLOCK_SIZE = 16;
+const CCM_BLOCK_SIZE = 64;
 
-// For encrypt, type definition return value is wrong.  Adata type is wrong in
-// type definition and documentation.  So cast to correct shape
+// For encrypt, type definition return value is wrong.  Also, adata type is
+// wrong in both type definition and documentation.  So this ugly cast corrects
+// the shape
 const ccmEncrypt = <(
-        prf: SjclCipher,
+        prf: sjcl.SjclCipher,
         plaintext_buffer: ArrayBuffer,
-        iv: BitArray,
-        adata?: ArrayBuffer,
+        iv: sjcl.BitArray,
+        adata?: sjcl.BitArray,
         tlen?: number,
-        ol?: number,
-    ): ArrayBuffer => {}>{};
+        ol?: number
+    ) => { ciphertext_buffer: ArrayBuffer, tag: sjcl.BitArray } ><unknown>sjcl.arrayBuffer.ccm.encrypt;
 
 /**
  * This class implements matter crypto using pure JavaScript.  It may be
@@ -46,24 +47,35 @@ const ccmEncrypt = <(
  */
 export abstract class CryptoJS extends Crypto {
     override encrypt(key: ByteArray, data: ByteArray, nonce: ByteArray, aad?: ByteArray): ByteArray {
-        // SJCL requires padding to block size
-        const padding = data.length % CCM_BLOCK_SIZE ? CCM_BLOCK_SIZE - (data.length % CCM_BLOCK_SIZE) : 0;
+        // Allocate buffer with space to append tag
+        let bufferLength = data.length + CRYPTO_AUTH_TAG_LENGTH;
 
-        // Allocate working buffer that includes space for padding and tag
-        const workbuf = new ArrayBuffer(data.length + padding + CRYPTO_AUTH_TAG_LENGTH);
+        // SJCL requires padding to block size.  The crypto tag space can
+        // function as such padding so just add enough more to make SJCL happy
+        if (data.length % CCM_BLOCK_SIZE && bufferLength % CCM_BLOCK_SIZE) {
+            bufferLength += CCM_BLOCK_SIZE - bufferLength % CCM_BLOCK_SIZE;
+        }
+
+        // Allocate the buffer and copy into it (avoiding this copy would
+        // require a change to the calling contract)
+        const workbuf = new ArrayBuffer(bufferLength);
         const workbytes = new ByteArray(workbuf);
         workbytes.set(data);
-        
-        const encryptOut: { ciphertext_buffer: ArrayBuffer, tag: sjcl.BitArray } = <any>sjcl.arrayBuffer.ccm.encrypt(
+
+        // Encrypt
+        const iv = bytesToBits(nonce);
+        const aad2 = aad && bytesToBits(aad);
+        const { tag } = ccmEncrypt(
             aesForKey(key),
             workbuf,
-            bytesToBits(nonce),
-            aad && bytesToBits(aad),
+            iv,
+            aad2,
             CRYPTO_AUTH_TAG_LENGTH * 8,
             data.length
         );
 
-        workbytes.set(encryptOut.tag, data.length);
+        // Append the tag and slice off any padding
+        workbytes.set(tag, data.length);
         return workbytes.slice(0, data.length + CRYPTO_AUTH_TAG_LENGTH);
     }
 
