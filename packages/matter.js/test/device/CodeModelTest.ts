@@ -8,10 +8,10 @@ type CollectionTest<M> = {
     name: "clusters" | "devices",
     minSize: number,
     Model: new (...args: any[]) => M,
-    instanceName: string
+    instanceTests: { [name: string]: (instance: M) => void }
 };
 
-function testCollection<M>({ name, minSize, Model, instanceName }: CollectionTest<M>) {
+function testCollection<M>({ name, minSize, Model, instanceTests }: CollectionTest<M>) {
     const collection = CodeModel[name];
     describe(name, () => {
         it("finds all", () => {
@@ -36,13 +36,54 @@ function testCollection<M>({ name, minSize, Model, instanceName }: CollectionTes
             expect(count).toBeGreaterThanOrEqual(minSize);
         })
 
-        it(`contains ${instanceName}`, () => {
-            
-        })
+        for (const key in instanceTests) {
+            const index = CodeModel[name].findIndex((m) => m.name == key);
+            const model = index == -1 ? undefined : CodeModel[name][index];
+            describe(`instance ${key}`, () => {
+                it("exists", () => {
+                    expect(model).toBeDefined();
+                });
+
+                if (model) {
+                    it("has correct name", () => {
+                        expect(model.name).toBe(key);
+                    })
+
+                    instanceTests[key](model as M);
+                }
+            })
+        }
     })
 }
 
 describe("CodeModel", () => {
-    testCollection("clusters", MINIMUM_EXPECTED_CLUSTERS, ClusterModel);
-    testCollection("devices", MINIMUM_EXPECTED_DEVICES, DeviceModel);
+    testCollection({
+        name: "clusters",
+        minSize: MINIMUM_EXPECTED_CLUSTERS,
+        Model: ClusterModel,
+        instanceTests: {
+            LevelControl: (cluster) => {
+                expect(cluster.attributes.length).toBeGreaterThan(11);
+                expect(cluster.commands.length).toBeGreaterThan(7);
+                expect(cluster.events.length).toBe(0);
+            },
+
+            PowerSource: (cluster) => {
+                expect(cluster.attributes.length).toBeGreaterThan(36);
+                expect(cluster.commands.length).toBe(0);
+                expect(cluster.events.length).toBeGreaterThan(2);
+            }
+        }
+    });
+    testCollection({
+        name: "devices",
+        minSize: MINIMUM_EXPECTED_DEVICES,
+        Model: DeviceModel,
+        instanceTests: {
+            Pump: (device) => {
+                // TODO
+                device;
+            }
+        }
+    });
 })

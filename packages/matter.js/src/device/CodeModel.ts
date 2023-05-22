@@ -81,8 +81,7 @@ class LeafModel<T> {
 
 class LeafModels<T, ST> extends Array<T> {
     constructor(definitions: { [key: string]: ST }, Leaf: new (name: string, definition: ST, cluster: string) => T, cluster: string) {
-        if (Leaf == undefined) throw new Error("whaaaaaaaaaaa?")
-        const type = Leaf.name.slice(0, Leaf.name.length - 5).toLowerCase();
+        const type = Leaf /* Node18/TS4 bug */ && Leaf.name.slice(0, Leaf.name.length - 5).toLowerCase();
         super(...Object.entries(definitions).map(([k, v]) => new Leaf(k, v, `${cluster}.${type}s`)));
     }
 }

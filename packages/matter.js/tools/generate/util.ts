@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CodeModel } from "../../src/device/CodeModel.js";
+export { CodeModel };
 import { readdirSync, unlinkSync, writeFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
-import { CodeModel } from "../../src/device/CodeModel.js";
-export { CodeModel };
 
 const HEADER = `/**
  * @license

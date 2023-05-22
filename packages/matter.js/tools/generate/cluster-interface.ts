@@ -6,8 +6,9 @@
 
 // Generates TypeScript interfaces for each cluster into src/cluster/interface
 
-import * as tlv from "../../src/tlv/index.js";
 import { clean, TsFile, CodeModel } from "./util.js";
+
+import * as tlv from "../../src/tlv/index.js";
 import { GlobalAttributes } from "../../src/cluster/Cluster.js";
 
 clean("cluster/interface", "Interface");
