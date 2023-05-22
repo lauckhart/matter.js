@@ -8,7 +8,7 @@
 
 import { PressureMeasurementCluster, ClusterInterface } from "../index.js";
 
-namespace PressureMeasurement {
+namespace Pressure {
     export type State = {
         measuredValue: number | undefined;
         minMeasuredValue: number | undefined;
@@ -48,6 +48,6 @@ namespace PressureMeasurement {
     }
 }
 
-export const PressureMeasurement: ClusterInterface<PressureMeasurement.State, PressureMeasurement.Client, PressureMeasurement.Server> = {
+export const Pressure: ClusterInterface<Pressure.State, Pressure.Client, Pressure.Server> = {
     definition: PressureMeasurementCluster
 }

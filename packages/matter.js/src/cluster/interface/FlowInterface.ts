@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { TemperatureMeasurementCluster, ClusterInterface } from "../index.js";
+import { FlowMeasurementCluster, ClusterInterface } from "../index.js";
 
-namespace TemperatureMeasurement {
+namespace Flow {
     export type State = {
         measuredValue: number | undefined;
         minMeasuredValue: number | undefined;
@@ -33,6 +33,6 @@ namespace TemperatureMeasurement {
     }
 }
 
-export const TemperatureMeasurement: ClusterInterface<TemperatureMeasurement.State, TemperatureMeasurement.Client, TemperatureMeasurement.Server> = {
-    definition: TemperatureMeasurementCluster
+export const Flow: ClusterInterface<Flow.State, Flow.Client, Flow.Server> = {
+    definition: FlowMeasurementCluster
 }

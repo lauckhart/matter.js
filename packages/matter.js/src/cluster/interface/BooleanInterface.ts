@@ -11,7 +11,7 @@ import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 
 type StateChangeEvent = TypeFromSchema<typeof BooleanStateCluster.events.stateChange.schema>;
 
-namespace BooleanState {
+namespace Boolean {
     export type State = {
         stateValue: boolean;
     }
@@ -29,6 +29,6 @@ namespace BooleanState {
     }
 }
 
-export const BooleanState: ClusterInterface<BooleanState.State, BooleanState.Client, BooleanState.Server> = {
+export const Boolean: ClusterInterface<Boolean.State, Boolean.Client, Boolean.Server> = {
     definition: BooleanStateCluster
 }

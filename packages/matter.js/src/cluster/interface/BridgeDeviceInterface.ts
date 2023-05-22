@@ -14,7 +14,7 @@ type ShutDownEvent = TypeFromSchema<typeof BridgedDeviceBasicInformationCluster.
 type LeaveEvent = TypeFromSchema<typeof BridgedDeviceBasicInformationCluster.events.leave.schema>;
 type ReachableChangedEvent = TypeFromSchema<typeof BridgedDeviceBasicInformationCluster.events.reachableChanged.schema>;
 
-namespace BridgedDeviceBasicInformation {
+namespace BridgeDevice {
     export type State = {
         vendorName?: string;
         vendorId?: number;
@@ -80,6 +80,6 @@ namespace BridgedDeviceBasicInformation {
     }
 }
 
-export const BridgedDeviceBasicInformation: ClusterInterface<BridgedDeviceBasicInformation.State, BridgedDeviceBasicInformation.Client, BridgedDeviceBasicInformation.Server> = {
+export const BridgeDevice: ClusterInterface<BridgeDevice.State, BridgeDevice.Client, BridgeDevice.Server> = {
     definition: BridgedDeviceBasicInformationCluster
 }

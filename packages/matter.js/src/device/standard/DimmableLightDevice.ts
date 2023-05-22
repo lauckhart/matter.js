@@ -9,9 +9,9 @@
 import { DeviceTypes } from "../DeviceTypes.js";
 import { ClusterInterface } from "../../cluster/ClusterInterface.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { Identify, Groups, Scenes, OnOff, LevelControl, OnOffLighting } from "../../cluster/interface/index.js";
+import { Identify, Groups, Scenes, OnOff, Level, OnOffLighting } from "../../cluster/interface/index.js";
 
-export class DimmableLight extends AutoDevice.implement(DeviceTypes.DIMMABLE_LIGHT, Identify, Groups, Scenes, OnOff, LevelControl) {
+export class DimmableLight extends AutoDevice.implement(DeviceTypes.DIMMABLE_LIGHT, Identify, Groups, Scenes, OnOff, Level) {
     static readonly options = {
         OnOffLighting,
     }

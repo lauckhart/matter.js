@@ -8,7 +8,7 @@
 
 import { DeviceTypes } from "../DeviceTypes.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { FlowMeasurement, Identify } from "../../cluster/interface/index.js";
+import { Flow, Identify } from "../../cluster/interface/index.js";
 
-export class FlowSensor extends AutoDevice.implement(DeviceTypes.FLOW_SENSOR, FlowMeasurement, Identify) {
+export class FlowSensor extends AutoDevice.implement(DeviceTypes.FLOW_SENSOR, Flow, Identify) {
 }

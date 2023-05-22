@@ -9,9 +9,9 @@
 import { DeviceTypes } from "../DeviceTypes.js";
 import { ClusterInterface } from "../../cluster/ClusterInterface.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { Identify, Groups, Scenes, OnOff, LevelControl, OnOffLighting } from "../../cluster/interface/index.js";
+import { Identify, Groups, Scenes, OnOff, Level, OnOffLighting } from "../../cluster/interface/index.js";
 
-export class ExtendedColorLight extends AutoDevice.implement(DeviceTypes.EXTENDED_COLOR_LIGHT, Identify, Groups, Scenes, OnOff, LevelControl) {
+export class ExtendedColorLight extends AutoDevice.implement(DeviceTypes.EXTENDED_COLOR_LIGHT, Identify, Groups, Scenes, OnOff, Level) {
     static readonly options = {
         OnOffLighting,
     }

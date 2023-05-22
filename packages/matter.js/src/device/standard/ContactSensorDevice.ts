@@ -8,7 +8,7 @@
 
 import { DeviceTypes } from "../DeviceTypes.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { Identify, BooleanState } from "../../cluster/interface/index.js";
+import { Identify, Boolean } from "../../cluster/interface/index.js";
 
-export class ContactSensor extends AutoDevice.implement(DeviceTypes.CONTACT_SENSOR, Identify, BooleanState) {
+export class ContactSensor extends AutoDevice.implement(DeviceTypes.CONTACT_SENSOR, Identify, Boolean) {
 }

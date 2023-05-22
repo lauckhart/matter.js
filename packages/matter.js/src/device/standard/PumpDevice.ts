@@ -9,17 +9,17 @@
 import { DeviceTypes } from "../DeviceTypes.js";
 import { ClusterInterface } from "../../cluster/ClusterInterface.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { OnOff, Identify, OnOffLighting, LevelControl, Scenes, Groups, TemperatureMeasurement, PressureMeasurement, FlowMeasurement } from "../../cluster/interface/index.js";
+import { OnOff, Identify, OnOffLighting, Level, Scenes, Groups, Temperature, Pressure, Flow } from "../../cluster/interface/index.js";
 
 export class Pump extends AutoDevice.implement(DeviceTypes.PUMP, OnOff, Identify) {
     static readonly options = {
         OnOffLighting,
-        LevelControl,
+        Level,
         Scenes,
         Groups,
-        TemperatureMeasurement,
-        PressureMeasurement,
-        FlowMeasurement,
+        Temperature,
+        Pressure,
+        Flow,
     }
 
     static with<Options extends ClusterInterface<any, any, any>[]>(...options: Options) {

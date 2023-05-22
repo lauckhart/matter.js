@@ -9,11 +9,8 @@
 import { clean, TsFile, CodeModel } from "./util.js";
 
 import * as tlv from "../../src/tlv/index.js";
-import { GlobalAttributes } from "../../src/cluster/Cluster.js";
 
 clean("cluster/interface", "Interface");
-
-const GLOBAL_ATTRIBUTE_IDS = new Set(Object.values(GlobalAttributes({})).map((attribute) => attribute.id));
 
 class TypeContext {
     constructor(public file: TsFile, public definitions = file.section()) { }
@@ -81,8 +78,6 @@ CodeModel.clusters.forEach((cluster) => {
     const serverCommands = server.section();
 
     cluster.attributes.forEach((attr) => {
-        if (GLOBAL_ATTRIBUTE_IDS.has(attr.id)) return;
-
         context.typeName = attr.typeName;
         context.typeSource = `${attr.source}.schema`;
 

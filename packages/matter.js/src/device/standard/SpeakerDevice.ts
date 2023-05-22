@@ -9,9 +9,9 @@
 import { DeviceTypes } from "../DeviceTypes.js";
 import { ClusterInterface } from "../../cluster/ClusterInterface.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { OnOff, LevelControl, OnOffLighting } from "../../cluster/interface/index.js";
+import { OnOff, Level, OnOffLighting } from "../../cluster/interface/index.js";
 
-export class Speaker extends AutoDevice.implement(DeviceTypes.SPEAKER, OnOff, LevelControl) {
+export class Speaker extends AutoDevice.implement(DeviceTypes.SPEAKER, OnOff, Level) {
     static readonly options = {
         OnOffLighting,
     }

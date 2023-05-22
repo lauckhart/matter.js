@@ -18,7 +18,7 @@ type MoveWithOnOffRequest = TypeFromSchema<typeof LevelControlCluster.commands.m
 type StepWithOnOffRequest = TypeFromSchema<typeof LevelControlCluster.commands.stepWithOnOff.requestSchema>;
 type StopWithOnOffRequest = TypeFromSchema<typeof LevelControlCluster.commands.stopWithOnOff.requestSchema>;
 
-namespace LevelControl {
+namespace Level {
     export type State = {
         currentLevel: number | undefined;
         minLevel?: number;
@@ -80,6 +80,6 @@ namespace LevelControl {
     }
 }
 
-export const LevelControl: ClusterInterface<LevelControl.State, LevelControl.Client, LevelControl.Server> = {
+export const Level: ClusterInterface<Level.State, Level.Client, Level.Server> = {
     definition: LevelControlCluster
 }

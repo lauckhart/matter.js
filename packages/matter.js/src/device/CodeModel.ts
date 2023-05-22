@@ -6,9 +6,12 @@
 
 import { Attributes, Cluster, Commands, Events, ClusterInterface } from "../cluster/index.js";
 import { DeviceTypeDefinition, DeviceTypes } from "../../src/device/DeviceTypes.js";
+import { GlobalAttributes } from "../../src/cluster/Cluster.js";
 import * as clusterExports from "../../src/cluster/index.js";
 
 export { ClusterInterface };
+
+const GLOBAL_ATTRIBUTE_IDS = new Set(Object.values(GlobalAttributes({})).map((attribute) => attribute.id));
 
 const INTERNAL_CLUSTERS = [
     clusterExports.BindingCluster,
@@ -24,6 +27,24 @@ const INTERNAL_CLUSTERS = [
 const INTERNAL_DEVICE_TYPES = [
     DeviceTypes.ROOT
 ];
+
+// Matter clusters have very descriptive names.  Use aliases to trim down in
+// the public API
+// TODO - this may be better handled by cluster implementers.  Could move into
+// cluster definition files
+const CLUSTER_SHORT_NAMES = {
+    BooleanState: "Boolean",
+    BridgedDeviceBasicInformation: "BridgeDevice",
+    FlowMeasurement: "Flow",
+    IlluminanceMeasurement: "Illuminance",
+    LevelControl: "Level",
+    OccupancySensingInterface: "Occupancy",
+    OnOffInterface: "Power",
+    OnOffLightingInterface: "LightPower",
+    PressureMeasurement: "Pressure",
+    TemperatureMeasurement: "Temperature",
+    WaterContentMeasurement: "WaterContent"
+} as { [name: string]: string };
 
 /**
  * Converts identifiers of the form "foo-bar", "foo_bar" or "fooBar" into
@@ -131,13 +152,16 @@ function defaultState(cluster: ClusterModel) {
     return result;
 }
 
+const localAttributes = (attributes: Attributes) =>
+    Object.fromEntries(Object.entries(attributes).filter(([ _k, v ]) => !GLOBAL_ATTRIBUTE_IDS.has(v.id)));
+
 /**
  * Information about a cluster.  Extracted from the cluster definition (a
  * Cluster instance).
  */
 export class ClusterModel {
     get id() { return this.definition.id; }
-    get name() { return this.definitionName.slice(0, this.definitionName.length - 7); }
+    name: string;
     get interfaceName() { return `${this.name}Interface`; }
     public defaultServerHandlers: UntypedHandlers;
     public defaultState: { [key: string]: any };
@@ -146,10 +170,14 @@ export class ClusterModel {
         public readonly definitionName: string,
         public readonly definition: Cluster<any, any, Attributes, Commands, Events>,
         public readonly extensions: Array<ClusterModel>,
-        public readonly attributes = new LeafModels(definition.attributes, AttributeModel, definitionName),
+        public readonly attributes = new LeafModels(localAttributes(definition.attributes), AttributeModel, definitionName),
         public readonly commands = new LeafModels(definition.commands, CommandModel, definitionName),
         public readonly events = new LeafModels(definition.events, EventModel, definitionName))
     {
+        this.name = this.definitionName.slice(0, this.definitionName.length - 7);
+        const shortName = CLUSTER_SHORT_NAMES[this.name];
+        if (shortName) this.name = shortName;
+
         this.defaultServerHandlers = findDefaultHandlers(this);
         this.defaultState = defaultState(this);
     }
