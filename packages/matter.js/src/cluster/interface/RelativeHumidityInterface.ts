@@ -8,7 +8,7 @@
 
 import { RelativeHumidityCluster, ClusterInterface } from "../index.js";
 
-namespace RelativeHumidity {
+export namespace RelativeHumidity {
     export type State = {
         measuredValue: number | undefined;
         minMeasuredValue: number | undefined;

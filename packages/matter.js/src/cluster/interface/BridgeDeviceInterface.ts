@@ -14,7 +14,7 @@ type ShutDownEvent = TypeFromSchema<typeof BridgedDeviceBasicInformationCluster.
 type LeaveEvent = TypeFromSchema<typeof BridgedDeviceBasicInformationCluster.events.leave.schema>;
 type ReachableChangedEvent = TypeFromSchema<typeof BridgedDeviceBasicInformationCluster.events.reachableChanged.schema>;
 
-namespace BridgeDevice {
+export namespace BridgeDevice {
     export type State = {
         vendorName?: string;
         vendorId?: number;

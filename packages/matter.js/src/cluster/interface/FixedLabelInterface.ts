@@ -11,7 +11,7 @@ import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 
 type LabelList = TypeFromSchema<typeof FixedLabelCluster.attributes.labelList.schema>;
 
-namespace FixedLabel {
+export namespace FixedLabel {
     export type State = {
         labelList: LabelList[];
     }

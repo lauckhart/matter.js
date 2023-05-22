@@ -9,11 +9,11 @@
 import { DeviceTypes } from "../DeviceTypes.js";
 import { ClusterInterface } from "../../cluster/ClusterInterface.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { Identify, Groups, Scenes, OnOff, Level, OnOffLighting } from "../../cluster/interface/index.js";
+import { Identify, Groups, Scenes, Power, Level, LightPower } from "../../cluster/interface/index.js";
 
-export class DimmablePluginUnit extends AutoDevice.implement(DeviceTypes.DIMMABLE_PLUGIN_UNIT, Identify, Groups, Scenes, OnOff, Level) {
+export class DimmablePluginUnit extends AutoDevice.implement(DeviceTypes.DIMMABLE_PLUGIN_UNIT, Identify, Groups, Scenes, Power, Level) {
     static readonly options = {
-        OnOffLighting,
+        LightPower,
     }
 
     static with<Options extends ClusterInterface<any, any, any>[]>(...options: Options) {

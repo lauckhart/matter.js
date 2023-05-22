@@ -8,7 +8,7 @@
 
 import { TemperatureMeasurementCluster, ClusterInterface } from "../index.js";
 
-namespace Temperature {
+export namespace Temperature {
     export type State = {
         measuredValue: number | undefined;
         minMeasuredValue: number | undefined;

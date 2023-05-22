@@ -12,7 +12,7 @@ import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 type IdentifyRequest = TypeFromSchema<typeof IdentifyCluster.commands.identify.requestSchema>;
 type TriggerEffectRequest = TypeFromSchema<typeof IdentifyCluster.commands.triggerEffect.requestSchema>;
 
-namespace Identify {
+export namespace Identify {
     export type State = {
         identifyTime: number;
         identifyType: number;

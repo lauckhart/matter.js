@@ -13,7 +13,7 @@ type WiredFaultChangeEvent = TypeFromSchema<typeof PowerSourceCluster.events.wir
 type BatFaultChangeEvent = TypeFromSchema<typeof PowerSourceCluster.events.batFaultChange.schema>;
 type BatChargeFaultChangeEvent = TypeFromSchema<typeof PowerSourceCluster.events.batChargeFaultChange.schema>;
 
-namespace PowerSource {
+export namespace PowerSource {
     export type State = {
         status: number;
         order: number;

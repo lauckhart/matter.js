@@ -8,7 +8,7 @@
 
 import { PowerSourceConfigurationCluster, ClusterInterface } from "../index.js";
 
-namespace PowerSourceConfiguration {
+export namespace PowerSourceConfiguration {
     export type State = {
         sources: number[];
     }

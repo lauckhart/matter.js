@@ -19,7 +19,7 @@ type RemoveGroupRequest = TypeFromSchema<typeof GroupsCluster.commands.removeGro
 type RemoveGroupResponse = TypeFromSchema<typeof GroupsCluster.commands.removeGroup.responseSchema>;
 type AddGroupIfIdentifyingRequest = TypeFromSchema<typeof GroupsCluster.commands.addGroupIfIdentifying.requestSchema>;
 
-namespace Groups {
+export namespace Groups {
     export type State = {
         nameSupport: number;
     }

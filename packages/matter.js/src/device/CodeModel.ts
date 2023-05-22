@@ -38,9 +38,9 @@ const CLUSTER_SHORT_NAMES = {
     FlowMeasurement: "Flow",
     IlluminanceMeasurement: "Illuminance",
     LevelControl: "Level",
-    OccupancySensingInterface: "Occupancy",
-    OnOffInterface: "Power",
-    OnOffLightingInterface: "LightPower",
+    OccupancySensing: "Occupancy",
+    OnOff: "Power",
+    OnOffLighting: "LightPower",
     PressureMeasurement: "Pressure",
     TemperatureMeasurement: "Temperature",
     WaterContentMeasurement: "WaterContent"

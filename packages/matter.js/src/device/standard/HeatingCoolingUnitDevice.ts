@@ -9,11 +9,11 @@
 import { DeviceTypes } from "../DeviceTypes.js";
 import { ClusterInterface } from "../../cluster/ClusterInterface.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { Identify, Groups, OnOff, OnOffLighting, Scenes, Level } from "../../cluster/interface/index.js";
+import { Identify, Groups, Power, LightPower, Scenes, Level } from "../../cluster/interface/index.js";
 
-export class HeatingCoolingUnit extends AutoDevice.implement(DeviceTypes.HEATING_COOLING_UNIT, Identify, Groups, OnOff) {
+export class HeatingCoolingUnit extends AutoDevice.implement(DeviceTypes.HEATING_COOLING_UNIT, Identify, Groups, Power) {
     static readonly options = {
-        OnOffLighting,
+        LightPower,
         Scenes,
         Level,
     }

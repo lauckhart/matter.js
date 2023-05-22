@@ -8,7 +8,7 @@
 
 import { IlluminanceMeasurementCluster, ClusterInterface } from "../index.js";
 
-namespace Illuminance {
+export namespace Illuminance {
     export type State = {
         measuredValue: number | undefined;
         minMeasuredValue: number | undefined;

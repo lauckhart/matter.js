@@ -67,7 +67,7 @@ CodeModel.clusters.forEach((cluster) => {
     file.addImport("../index", cluster.definitionName);
     file.addImport("../index", "ClusterInterface");
 
-    const module = file.block(`namespace ${cluster.name}`);
+    const module = file.block(`export namespace ${cluster.name}`);
     const state = module.block(`export type State =`);
     const client = module.block(`export interface Client`);
     const server = module.block(`export interface Server`);

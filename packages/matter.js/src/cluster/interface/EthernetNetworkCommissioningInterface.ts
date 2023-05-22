@@ -12,7 +12,7 @@ import { ByteArray } from "../../util/index.js";
 
 type Networks = TypeFromSchema<typeof EthernetNetworkCommissioningCluster.attributes.networks.schema>;
 
-namespace EthernetNetworkCommissioning {
+export namespace EthernetNetworkCommissioning {
     export type State = {
         maxNetworks: number;
         networks: Networks[];

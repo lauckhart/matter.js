@@ -8,7 +8,7 @@
 
 import { FlowMeasurementCluster, ClusterInterface } from "../index.js";
 
-namespace Flow {
+export namespace Flow {
     export type State = {
         measuredValue: number | undefined;
         minMeasuredValue: number | undefined;

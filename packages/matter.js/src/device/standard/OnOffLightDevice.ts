@@ -9,11 +9,11 @@
 import { DeviceTypes } from "../DeviceTypes.js";
 import { ClusterInterface } from "../../cluster/ClusterInterface.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { Identify, Groups, Scenes, OnOff, OnOffLighting, Level } from "../../cluster/interface/index.js";
+import { Identify, Groups, Scenes, Power, LightPower, Level } from "../../cluster/interface/index.js";
 
-export class OnOffLight extends AutoDevice.implement(DeviceTypes.ON_OFF_LIGHT, Identify, Groups, Scenes, OnOff) {
+export class OnOffLight extends AutoDevice.implement(DeviceTypes.ON_OFF_LIGHT, Identify, Groups, Scenes, Power) {
     static readonly options = {
-        OnOffLighting,
+        LightPower,
         Level,
     }
 

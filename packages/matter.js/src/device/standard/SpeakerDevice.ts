@@ -9,11 +9,11 @@
 import { DeviceTypes } from "../DeviceTypes.js";
 import { ClusterInterface } from "../../cluster/ClusterInterface.js";
 import { AutoDevice } from "../AutoDevice.js";
-import { OnOff, Level, OnOffLighting } from "../../cluster/interface/index.js";
+import { Power, Level, LightPower } from "../../cluster/interface/index.js";
 
-export class Speaker extends AutoDevice.implement(DeviceTypes.SPEAKER, OnOff, Level) {
+export class Speaker extends AutoDevice.implement(DeviceTypes.SPEAKER, Power, Level) {
     static readonly options = {
-        OnOffLighting,
+        LightPower,
     }
 
     static with<Options extends ClusterInterface<any, any, any>[]>(...options: Options) {
