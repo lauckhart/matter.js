@@ -75,14 +75,15 @@ describe("CodeModel", () => {
             }
         }
     });
+
     testCollection({
         name: "devices",
         minSize: MINIMUM_EXPECTED_DEVICES,
         Model: DeviceModel,
         instanceTests: {
             Pump: (device) => {
-                // TODO
-                device;
+                expect(device.requiredServerClusters.length).toBeGreaterThan(1);
+                expect(device.optionalServerClusters.length).toBeGreaterThan(6);
             }
         }
     });
