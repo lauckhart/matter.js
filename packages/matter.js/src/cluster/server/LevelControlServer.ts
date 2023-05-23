@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ClusterServerFactory } from "../ClusterServerFactory.js";
 import { LevelControlCluster } from "../LevelControlCluster.js";
 import { ClusterServerHandlers } from "./ClusterServer.js";
+import { UnsupportedCommandError } from "./CommandServer.js";
 
 
 // TODO: Create temporary options based on mask and override. How to expose to user of the library?
 
-export const LevelControlClusterHandler: () => ClusterServerHandlers<typeof LevelControlCluster> = () => ({
+ClusterServerFactory.registerClusterDefaults(LevelControlCluster, () => ({
     moveToLevel: async ({ request: { level }, attributes: { currentLevel } }) => {
         currentLevel.set(level);
     },
@@ -20,15 +22,15 @@ export const LevelControlClusterHandler: () => ClusterServerHandlers<typeof Leve
     // underlying hardware. But how to expose these paramters to the caller of the library? Callback with
     // temporary options?
     move: async () => {
-        throw new Error("Not implemented")
+        throw new UnsupportedCommandError()
     },
 
     step: async () => {
-        throw new Error("Not implemented")
+        throw new UnsupportedCommandError()
     },
 
     stop: async () => {
-        throw new Error("Not implemented")
+        throw new UnsupportedCommandError()
     },
 
     moveToLevelWithOnOff: async function({ request: { level }, attributes: { currentLevel } }) {
@@ -45,14 +47,14 @@ export const LevelControlClusterHandler: () => ClusterServerHandlers<typeof Leve
     },
 
     moveWithOnOff: async () => {
-        throw new Error("Not implemented")
+        throw new UnsupportedCommandError()
     },
 
     stepWithOnOff: async () => {
-        throw new Error("Not implemented")
+        throw new UnsupportedCommandError()
     },
 
     stopWithOnOff: async () => {
-        throw new Error("Not implemented")
+        throw new UnsupportedCommandError()
     },
-});
+} as ClusterServerHandlers<typeof LevelControlCluster>));
