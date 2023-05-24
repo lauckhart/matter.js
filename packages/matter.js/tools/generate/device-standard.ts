@@ -38,11 +38,11 @@ CodeModel.devices.forEach((device) => {
     if (Object.keys(optionalInterfaces).length) {
         Object.assign(interfaces, optionalInterfaces);
         file.addImport("../../cluster/ClusterInterface", "ClusterInterface");
-        klass.block(`static readonly options =`)
+        klass.block(`static readonly features =`)
             .add(...Object.keys(optionalInterfaces).map((c) => `${c},`))
             .parent
-            .block(`static with<Options extends ClusterInterface<any, any, any>[]>(...options: Options)`)
-            .add("return AutoDevice.extend(this, ...options);");
+            .block(`static with<Options extends ClusterInterface<any, any, any>[]>(...features: Options)`)
+            .add("return AutoDevice.extend(this, ...features);");
     }
 
     // Add imports

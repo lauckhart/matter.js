@@ -8,7 +8,7 @@ import { MatterError } from "../common/MatterError.js";
 import { ClusterServer } from "../protocol/interaction/index.js";
 import { BitSchema, TypeFromBitSchema } from "../schema/BitmapSchema.js";
 import { Attributes, Cluster, Commands, Events, GlobalAttributes, MandatoryLocalAttributeNames } from "./Cluster.js";
-import { AttributeInitialValues, ClusterServerHandlers } from "./server/ClusterServer.js";
+import { AttributeInitialValues, ClusterServerHandlers, CommandHandler } from "./server/ClusterServer.js";
 
 type AnyCluster = Cluster<any, any, any, any, any>;
 const GLOBAL_ATTRIBUTES = new Set(Object.keys(GlobalAttributes({})));

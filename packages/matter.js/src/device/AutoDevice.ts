@@ -7,7 +7,7 @@
 import { Device } from "./Device.js";
 import { DeviceTypeDefinition } from "./DeviceTypes.js";
 import { CodeModel, ClusterInterface, ClusterModel, AttributeModel, CommandModel, EventModel, UntypedHandlers } from "./CodeModel.js";
-import { ClusterServer } from "../protocol/interaction/InteractionServer.js";
+import { ClusterServerFactory } from "../cluster/ClusterServerFactory.js";
 
 // AutoDevice static private, AutoDeviceOptions private
 const DEFINITION = Symbol("definition");
@@ -15,6 +15,12 @@ const STATE_IMPLEMENTATION = Symbol("StateImplementation");
 
 // AutoDevice private
 const STATE = Symbol("state");
+
+// AutoDevice private
+const NOT_IMPLEMENTED = Symbol("notImplemented");
+
+// AutoDevice private
+const SUPER = Symbol("super");
 
 // AutoDeviceOptions private
 const DEVICE = Symbol("device");
@@ -33,8 +39,8 @@ function ignore() {
 }
 
 /**
- * Unified device interface for a set of clusters.  This defines the interface
- * for a device that implements the listed clusters.
+ * Unified device interface for a set of features.  This defines the interface
+ * for a device that implements the listed features.
  */
 export type ServerType<T> =
     T extends [ClusterInterface<any, any, infer S>]
@@ -46,8 +52,8 @@ export type ServerType<T> =
     : T;
 
 /**
- * Unified state type for a base server and a set of clusters.  This defines
- * the state type for a device that implements the listed clusters.
+ * Unified state type for a base server and a set of features.  This defines
+ * the state type for a device that implements the listed features.
  */
 export type StateType<C extends Constructor, T> =
     T extends [ClusterInterface<infer S, any, any>]
@@ -159,11 +165,6 @@ class WiringContext {
 
         // Add the property
         Object.defineProperty(this.stateProto, attr.name, descriptor);
-
-        // If there's a default "get" handler, install it
-        // TODO - remove
-        const handler = cluster.defaultServerHandlers[attr.getter];
-        if (handler) this.serverHandlers[attr.getter] = handler;
     }
 
     // Implement attribute change events
@@ -216,9 +217,9 @@ class WiringContext {
         const cluster = this.cluster;
         const handlers = this.serverHandlers;
         this.initializers.push(function(this: AutoDevice, options: AutoDeviceOptions<BaseState>) {
-            this.addClusterServer(ClusterServer(
+            this.addClusterServer(ClusterServerFactory.create(
                 cluster.definition,
-                Object.assign({}, cluster.defaultState, options.state || {}),
+                options.state,
                 handlers));
         });
     }
