@@ -5,7 +5,7 @@
  */
 
 export * from "./Element.js";
-export * from "./DatatypeElement.js";
+export * from "../types/BaseTypeElement.js";
 
 export * from "./AttributeElement.js";
 export * from "./CommandElement.js";

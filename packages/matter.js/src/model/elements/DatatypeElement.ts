@@ -4,9 +4,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {
+    BoolElement,
+    IntElement,
+    FloatElement,
+    OctetElement,
+    EnumElement,
+    StructElement,
+    ListElement,
+    NeverElement
+} from "../types/index.js";
+
 /**
- * Value typing description.
+ * Definition of a type as defined by the Matter specification.
  */
-export type DatatypeElement = {
-    // TODO
-}
+export type Element
+    = BoolElement
+    | IntElement
+    | FloatElement
+    | OctetElement
+    | EnumElement
+    | StructElement
+    | ListElement
+    | NeverElement;

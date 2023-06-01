@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DeviceTypeCode } from "../index.js"
-import { ClusterElement, CodedElement } from "./index.js"
+import { ClusterElement, DeviceTypeCode, Element } from "../index.js"
 
 export enum DeviceTypeClass {
     Node = "node",
@@ -19,7 +18,7 @@ export enum DeviceTypeClass {
  * 
  * TODO - extract/merge DeviceTypes.ts?
  */
-export type DeviceTypeElement = CodedElement & {
+export type DeviceTypeElement = Element & {
     code: DeviceTypeCode,
     class: DeviceTypeClass,
     revision: number,

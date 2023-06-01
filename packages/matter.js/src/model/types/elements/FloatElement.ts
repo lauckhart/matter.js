@@ -4,18 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommonTypeDefinition, Metatype } from "../index.js";
+import { BaseTypeElement, Metatype } from "../index.js";
 
 /**
  * Definition of a type detailing a non-composite base type.
  */
-export type FloatTypeDefinition = CommonTypeDefinition & {
+export type FloatElement = BaseTypeElement & {
     datatype: Metatype.Float,
-    size: FloatTypeDefinition.Size,
+    size: FloatElement.Size,
     default?: number
 };
 
-export namespace FloatTypeDefinition {
+export namespace FloatElement {
     /**
      * Valid sizes for floats.
      */

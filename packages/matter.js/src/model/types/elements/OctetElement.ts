@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommonTypeDefinition, Metatype } from "../index.js";
+import { BaseTypeElement, Metatype } from "../index.js";
 
 /**
  * Definition of a sequence of octets of fixed length.
  */
-export type OctetTypeDefinition = CommonTypeDefinition & {
+export type OctetElement = BaseTypeElement & {
     datatype: Metatype.Bytes
 }

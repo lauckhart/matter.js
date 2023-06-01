@@ -10,21 +10,30 @@ export namespace Element {
      */
     export enum Type {
         // Root element type - not formally part of specification
-        matter = "matter",
+        Matter = "matter",
 
-        fabric = "fabric",
-        node = "node",
-        endpoint = "endpoint",
-        cluster = "cluster",
-        command = "command",
-        event = "event",
-        attribute = "attribute",
-        commandField = "commandField",
-        eventField = "eventField",
-        attributeField = "structField",
-        listEntry = "listEntry",
-        deviceType = "deviceType",
-        dataType = "dataType"
+        Fabric = "fabric",
+        Node = "node",
+        Endpoint = "endpoint",
+        Cluster = "cluster",
+        Command = "command",
+        Event = "event",
+        Attribute = "attribute",
+        CommandField = "commandField",
+        EventField = "eventField",
+        AttributeField = "structField",
+        ListEntry = "listEntry",
+        DeviceType = "deviceType",
+        Datatype = "dataType"
+    }
+
+    /**
+     * The Matter specification documents.
+     */
+    export enum Specification {
+        Core = "Matter Core Specification",
+        Cluster = "Matter Application Cluster Specification",
+        Device = "Matter Device Library Specification"
     }
 }
 
@@ -34,28 +43,31 @@ export namespace Element {
  */
 export type Element = {
     /**
-     * The element type.
+     * The ID of the element per Matter specification in the context of its.  A
+     * "machine appropriate" semantic differentiator.  The Matter specification
+     * calls this the "ID"; we use code as ID can be confused with instance ID.
      */
-    type: Element.Type,
+    code: number
 
     /**
      * The key used for storing this element.  A "human appropriate" semantic
      * differentiator.
      */
-    name: string    
-}
+    name: string,
 
-/**
- * Elements for which the Matter specification defines a unique numerical code
- * to differentiate the element semantically in the context of some logical
- * namespace.
- */
-export type CodedElement = {
     /**
-     * The ID of the element per Matter specification in the context of its.  A
-     * "machine appropriate" semantic differentiator.
+     * A short summary of the element.
      */
-    code: number
+    description?: string,
+
+    /**
+     * Reference to Matter specification document.
+     */
+    xref?: {
+        document: Element.Specification,
+        version: string,
+        section: string
+    }
 }
 
 /**

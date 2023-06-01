@@ -4,16 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, Conformance, PriorityCode } from "../index.js"
-import { TypeDefinition } from "../types/TypeDefinition.js"
+import { Access, Conformance, BaseTypeElement, PriorityCode } from "../index.js"
 
 /**
  * An event is triggered by endpoints.
  */
-export type EventElement = {
+export type EventElement = BaseTypeElement & {
     priority: PriorityCode,
 
     access: Access,
-    conformance: Conformance,
-    type: TypeDefinition
+    conformance: Conformance
 }

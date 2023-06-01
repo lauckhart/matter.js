@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommonTypeDefinition, Datatype } from "../index.js";
+import { Datatype, BaseTypeElement } from "../index.js";
 
 /**
  * Definition of a type detailing a non-composite base type.
  */
-export type BoolTypeDefinition = CommonTypeDefinition & {
+export type BoolElement = BaseTypeElement & {
     datatype: Datatype.bool,
     default?: boolean
 };

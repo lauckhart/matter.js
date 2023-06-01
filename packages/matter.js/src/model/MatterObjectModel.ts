@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterElement, DeviceElement } from "./index.js"
+import { ClusterElement, DeviceTypeElement } from "./index.js"
 
 /**
  * This is the entry to a model of application-level Matter constructs referred
@@ -29,5 +29,5 @@ import { ClusterElement, DeviceElement } from "./index.js"
  */
 export type MatterObjectModel = {
     clusters: ClusterElement,
-    devices: DeviceElement
+    devices: DeviceTypeElement
 }

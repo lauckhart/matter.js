@@ -4,22 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterCode, Conformance } from "../index.js";
-import { AttributeElement, CodedElement, CommandElement, EventElement } from "./index.js";
+import { ClusterCode, AttributeElement, CommandElement, EventElement, BaseTypeElement } from "../index.js";
 
 export type FeatureMap = { [name: string]: number };
 
 /**
  * A cluster describes a set of related functionality.
  */
-export type ClusterElement = CodedElement & {
+export type ClusterElement = BaseTypeElement & {
     code: ClusterCode,
 
     revision: number,
     utility: boolean,
     features: FeatureMap,
-
-    conformance: Conformance,
 
     attributes: AttributeElement[],
     commands: CommandElement[],
