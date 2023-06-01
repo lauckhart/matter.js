@@ -4,18 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommonTypeDefinition, Metatype } from "../index.js";
+import { BaseTypeElement, Metatype } from "../index.js";
 
 /**
  * Definition of a type detailing a non-composite base type.
  */
-export type IntTypeDefinition = CommonTypeDefinition & {
+export type IntElement = BaseTypeElement & {
     datatype: Metatype.Integer,
-    size?: IntTypeDefinition.Size,
+    size?: IntElement.Size,
     default?: bigint
 };
 
-export namespace IntTypeDefinition {
+export namespace IntElement {
     /**
      * Valid sizes for ints.
      */

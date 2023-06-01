@@ -4,30 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, Conformance, Quality } from "../index.js";
-import { Constraint } from "./index.js";
+import { Element, Access, Conformance, Quality, Constraint } from "../index.js";
 
 /**
  * A type definition with no specialization based on metatype.  Generally only
  * useful as a base type.
  */
-export type CommonTypeDefinition = {
-    /**
-     * This type's ID as defined in the Matter specification.  This
-     * semantically defines the type either globally or in the context of its
-     * parent.
-     */
-    code: number,
-
-    /**
-     * A short identifier for the type.
-     */
-    name?: string,
-
-    /**
-     * A longer description of the type.
-     */
-    description?: string,
+export type BaseTypeElement = Element & {
+    type: Element.Type.Datatype,
 
     /**
      * Limits on values.
@@ -47,5 +31,10 @@ export type CommonTypeDefinition = {
     /**
      * Qualities defined by the Matter specification as "other qualities".
      */
-    quality?: Quality.DataField
+    quality?: Quality.DataField,
+
+    /**
+     * Default value for the element.
+     */
+    default?: any
 }

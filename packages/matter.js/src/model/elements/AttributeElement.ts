@@ -4,18 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, Conformance, Constraint, Quality } from "../index.js"
-import { TypeDefinition } from "../types/TypeDefinition.js"
+import { Access, Conformance, Constraint, Quality, BaseTypeElement } from "../index.js"
 
 /**
  * A cluster property description.
  */
-export type AttributeElement = {
+export type AttributeElement = BaseTypeElement & {
     constraint: Constraint,
     quality: Quality.Definition
     access: Access.Definition,
     conformance: Conformance.Definition,
 
-    type: TypeDefinition,
     default: any
 }

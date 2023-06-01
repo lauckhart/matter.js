@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BoolTypeDefinition, Constraint, Datatype, EnumTypeDefinition, FloatTypeDefinition, IntTypeDefinition, ArrayTypeDefinition, Metatype, Never, OctetTypeDefinition, ObjectTypeDefinition, derive } from "./index.js";
-import { TypeDefinition } from "./TypeDefinition.js";
+import { BoolElement, Constraint, Datatype, EnumElement, FloatTypeDefinition, IntTypeDefinition, ArrayTypeDefinition, Metatype, Never, OctetTypeDefinition, ObjectTypeDefinition, derive } from "./index.js";
+import { TypeDefinition } from "../elements/DatatypeElement.js";
 
-const bool = (code: number, name: Metatype.BooleanName, description: string): BoolTypeDefinition =>
+const bool = (code: number, name: Metatype.BooleanName, description: string): BoolElement =>
     ({ datatype: Datatype.bool, code, name, description });
 const baseint = (code: number, name: Metatype.IntegerName, description: string, size: IntTypeDefinition.Size): IntTypeDefinition =>
     ({ datatype: Datatype[name], code, name, description, size });
@@ -17,7 +17,7 @@ const float = (code: number, name: Metatype.FloatName, description: string, size
     ({ datatype: Datatype[name], code, name, description, size });
 const octet = (code: number, name: string, description: string, constraint?: Constraint): OctetTypeDefinition =>
     ({ datatype: Datatype.octstr, code, name, constraint, description });
-const enum8 = (code: number, name: string, description: string, values: EnumTypeDefinition.Values) =>
+const enum8 = (code: number, name: string, description: string, values: EnumType.Values) =>
     ({ datatype: Datatype.enum8, code, name, description, values });
 const list = (code: number, name: string, description: string, entry: TypeDefinition): ArrayTypeDefinition =>
     ({ datatype: Datatype.list, code, name, description, entry });
