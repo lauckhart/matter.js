@@ -41,13 +41,12 @@ export namespace Element {
  * Per the Matter specification, an element is a data construct that supports
  * an instance of data.  So, a class.
  */
-export type Element = {
+export type MatterElement = {
     /**
-     * The ID of the element per Matter specification in the context of its.  A
-     * "machine appropriate" semantic differentiator.  The Matter specification
-     * calls this the "ID"; we use code as ID can be confused with instance ID.
+     * The ID of the element per Matter specification, either global or
+     * context-specific.  A "machine appropriate" semantic differentiator.
      */
-    code: number
+    id: number
 
     /**
      * The key used for storing this element.  A "human appropriate" semantic
@@ -61,17 +60,28 @@ export type Element = {
     description?: string,
 
     /**
+     * A paragraph summary of the element.
+     */
+    details?: string,
+
+    /**
      * Reference to Matter specification document.
      */
     xref?: {
+        /**
+         * The defining document for the element.
+         */
         document: Element.Specification,
+
+        /**
+         * The version of the element's defining document.
+         */
         version: string,
+
+        /**
+         * The section of the defining document that most specifically
+         * addresses the element.
+         */
         section: string
     }
 }
-
-/**
- * An input element definition for which the object model infers the name and
- * type from the context of the element's definition.
- */
-export type ContextualElement<T extends Element> = Omit<T, "name" | "type">;

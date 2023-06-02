@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Element, EndpointElement } from "./index.js";
+import { MatterElement, EndpointElement } from "./index.js";
 
 /**
  * Runtime representation of a node.
  */
-export type NodeElement = Element & {
+export type NodeElement = MatterElement & {
     endpoints: EndpointElement[]
 }
