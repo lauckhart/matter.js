@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./Element.js";
+export * from "./MatterElement.js";
 export * from "../types/BaseTypeElement.js";
 
+export * from "./DatatypeElement.js";
 export * from "./AttributeElement.js";
 export * from "./CommandElement.js";
 export * from "./EventElement.js";

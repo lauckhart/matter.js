@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Element, Access, Conformance, Quality, Constraint } from "../index.js";
+import { MatterElement, Access, Conformance, Quality, Constraint } from "../index.js";
 
 /**
  * A type definition with no specialization based on metatype.  Generally only
  * useful as a base type.
  */
-export type BaseTypeElement = Element & {
+export type BaseTypeElement = MatterElement & {
     type: Element.Type.Datatype,
 
     /**

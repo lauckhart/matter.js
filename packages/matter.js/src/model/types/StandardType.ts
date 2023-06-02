@@ -8,7 +8,7 @@ import { BoolElement, Constraint, Datatype, EnumElement, FloatTypeDefinition, In
 import { TypeDefinition } from "../elements/DatatypeElement.js";
 
 const bool = (code: number, name: Metatype.BooleanName, description: string): BoolElement =>
-    ({ datatype: Datatype.bool, code, name, description });
+    ({ datatype: Datatype.bool, id: code, name, description });
 const baseint = (code: number, name: Metatype.IntegerName, description: string, size: IntTypeDefinition.Size): IntTypeDefinition =>
     ({ datatype: Datatype[name], code, name, description, size });
 const int = (code: number, name: string, description: string, datatype: Metatype.Integer): IntTypeDefinition =>

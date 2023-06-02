@@ -18,7 +18,7 @@ import {
 /**
  * Definition of a type as defined by the Matter specification.
  */
-export type Element
+export type DatatypeElement
     = BoolElement
     | IntElement
     | FloatElement
