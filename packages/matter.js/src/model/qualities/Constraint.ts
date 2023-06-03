@@ -44,5 +44,11 @@ export namespace Constraint {
 
 /**
  * Defines constraints per the Matter specification.
+ * 
+ * Formally a constraint is not considered a quality by the specification.
+ * It is handled similarly to qualities, though, so we place it in the
+ * qualities package.
  */
 export type Constraint = Constraint.Atom | Constraint.Union;
+
+// TODO - for completeness, should parse constraints

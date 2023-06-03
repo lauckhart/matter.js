@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./PriorityCode.js";
+export * from "./Priority.js";
 export * from "./StatusCode.js";
-export * from "./DeviceTypeCode.js";
 export * from "./ClusterCode.js";
+export * from "./Datatype.js";

@@ -11,9 +11,8 @@ import {
     OctetElement,
     EnumElement,
     StructElement,
-    ListElement,
-    NeverElement
-} from "../types/index.js";
+    ListElement
+} from "../../index.js";
 
 /**
  * Definition of a type as defined by the Matter specification.
@@ -25,5 +24,4 @@ export type DatatypeElement
     | OctetElement
     | EnumElement
     | StructElement
-    | ListElement
-    | NeverElement;
+    | ListElement;

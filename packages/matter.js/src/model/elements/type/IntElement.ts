@@ -4,18 +4,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseTypeElement, Metatype } from "../index.js";
+import { BaseElement, BaseTypeElement } from "../../index.js";
 
 /**
  * Definition of a type detailing a non-composite base type.
  */
 export type IntElement = BaseTypeElement & {
-    datatype: Metatype.Integer,
+    type: IntElement.Type,
     size?: IntElement.Size,
     default?: bigint
 };
 
+export function IntElement(definition: BaseElement.Typeless<IntElement>): IntElement {
+    return { ...definition, type: IntElement.Type }
+}
+
 export namespace IntElement {
+    export type Type = BaseElement.Type.Int;
+    export const Type = BaseElement.Type.Int;
+
     /**
      * Valid sizes for ints.
      */

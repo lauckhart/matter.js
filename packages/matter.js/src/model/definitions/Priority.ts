@@ -7,7 +7,7 @@
 /**
  * Event tag defined in Matter specification.
  */
-export enum PriorityCode {
+export enum Priority {
     Debug = 0,
     Info = 1,
     Critical = 2

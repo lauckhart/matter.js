@@ -4,11 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterElement, EndpointElement } from "./index.js";
+import { BaseElement, EndpointElement } from "../index.js";
 
 /**
  * Runtime representation of a node.
  */
-export type NodeElement = MatterElement & {
+export type NodeElement = BaseElement & {
+    type: NodeElement.Type,
     endpoints: EndpointElement[]
+}
+
+export function NodeElement(definition: BaseElement.Typeless<NodeElement>): NodeElement {
+    return { ...definition, type: NodeElement.Type }
+}
+
+export namespace NodeElement {
+    export type Type = BaseElement.Type.Node;
+    export const Type = BaseElement.Type.Node;
 }
