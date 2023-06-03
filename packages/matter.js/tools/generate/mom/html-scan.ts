@@ -6,20 +6,12 @@
 
 import { dirname, join } from "path";
 
-import { camelize } from "../../../src/util/String.js";
 import { loadHtml } from "./input.js";
-import { Reference, Table } from "./intermediate.js";
+import { HtmlReference, Table } from "./intermediate.js";
+import { MatterElement } from "../../../src/model/index.js";
+import { Logger } from "../../../src/log/Logger.js";
 
-// Removes all whitespace and dashes from a string.  Ideally would only do
-// whitespace but PDF-to-HTML is not precise and we end up with dashes from
-// words that are hyphenated at line breaks
-export function wsx(el: Node | undefined) {
-    if (el?.textContent) {
-        return el.textContent.replace(/[\s\u200c\-]/g, "");
-    } else {
-        return "";
-    }
-}
+const logger = Logger.get("html-scan");
 
 const FAKE_CLUSTER_NAMES = [
     "New",
@@ -52,28 +44,47 @@ function parseHeading(e: Node | null) {
 
 // Read an index file to find the portions of the spec we care about
 export function scanIndex(path: string) {
-    console.info(`index ${path}`);
+    const source = loadHtml(path);
+    const titleEl = source.querySelector("h1");
+    if (!titleEl || !titleEl.textContent) {
+        logger.error("cannot find specification title");
+        return;
+    }
+    const title = titleEl.textContent;
 
     const result = {
-        clusters: Array<Reference>()
+        clusters: Array<HtmlReference>()
     }
-    let spec: "core" | "cluster" | "device";
-    if (path.match(/core/i)) {
-        spec = "core";
-    } else if (path.match(/app/i || path.match(/cluster/i))) {
-        spec = "cluster";
-    } else if (path.match(/device/)) {
-        spec = "device";
+    let spec: MatterElement.Specification;
+    if (title.match(/matter specification/i)) {
+        spec = MatterElement.Specification.Cluster;
+    } else if (title.match(/application/i)) {
+        spec = MatterElement.Specification.Core;
+    } else if (title.match(/device/i)) {
+        spec = MatterElement.Specification.Device;
     } else {
-        return result;
+        logger.error(`matter specification name ${title} unrecognized`);
+        return;
     }
 
-    const source = loadHtml(path);
+    const versionEl = titleEl.nextElementSibling;
+    if (!versionEl || !versionEl.textContent || !versionEl.textContent.match(/version (?:\d\.)+/i)) {
+        logger.error(`version element unrecognized`)
+        return;
+    }
+    const version = versionEl.textContent.replace(/.*version (?:\d\.).*/i, "$1");
+
     source.querySelectorAll("a").forEach((a: HTMLAnchorElement) => {
         const heading = parseHeading(a);
         if (!heading) {
             return;
         }
+
+        const xref = {
+            section: heading.section,
+            document: spec,
+            version: version 
+        };
 
         // Core spec convention for clusters is heading suffixed with "Cluster"
         if (heading.name.endsWith(" Cluster")) {
@@ -88,10 +99,9 @@ export function scanIndex(path: string) {
             }
 
             result.clusters.push({
-                section: heading.section,
-                spec,
                 name: heading.name.slice(0, heading.name.length - 8),
-                path: a.href
+                path: a.href,
+                xref: xref
             });
             return;
         }
@@ -102,10 +112,9 @@ export function scanIndex(path: string) {
             const sectionPath = heading.section.split(".");
             if (sectionPath.length == 2 && sectionPath[1] != "1") {
                 const cluster = {
-                    section: heading.section,
-                    spec,
                     name: heading.name,
-                    path: a.href
+                    path: a.href,
+                    xref: xref
                 };
                 result.clusters.push(cluster);
             }
@@ -126,7 +135,9 @@ function convertTable(el: HTMLTableElement) {
         if (!columns) {
             columns = [];
             cells.forEach(cell => {
-                columns!.push(camelize(wsx(cell as HTMLElement), false));
+                let key = cell.textContent || "";
+                key = key.replace(/[\W]/g, "").toLowerCase();
+                columns!.push(key);
             });
             continue;
         }
@@ -142,10 +153,10 @@ function convertTable(el: HTMLTableElement) {
 }
 
 // Parse a single page that is confirmed to be part of a "section of interest"
-function* scanSectionPage(ref: Reference, html: Document): Generator<Reference> {
+function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlReference> {
     const elements = html.querySelectorAll("h1, h2, h3, h4, h5, h6, body > p, table");
 
-    let currentRef: Reference | undefined = undefined;
+    let currentRef: HtmlReference | undefined = undefined;
 
     function* emit() {
         if (currentRef) {
@@ -177,7 +188,7 @@ function* scanSectionPage(ref: Reference, html: Document): Generator<Reference> 
                 const text = element.textContent;
                 if (text?.match(/^(\d+\.)+ [ a-zA-Z0-9]+$/)) {
                     const possibleHeading = parseHeading(element);
-                    if (possibleHeading && possibleHeading.section.startsWith(ref.section)) {
+                    if (possibleHeading && possibleHeading.section.startsWith(ref.xref.section)) {
                         // Yep, looks like a heading
                         yield* emit();
                         currentRef = { ...ref, ...possibleHeading };
@@ -230,7 +241,7 @@ function* scanSectionPage(ref: Reference, html: Document): Generator<Reference> 
 }
 
 // Parses all pages in a specific section
-export function* scanSection(ref: Reference) {
+export function* scanSection(ref: HtmlReference) {
     let path = ref.path;
 
     let html = loadHtml(path);

@@ -14,26 +14,40 @@
 // likely require this code to be reworked.
 //
 // Reach out in Matter Integrators Discord server if you would like access to
-// a Dropbox folder with the HTML version of the specification.
+// a Dropbox folder with the HTML version of the specification.  Specifically
+// mention the term "masochist".
 
 import { ClusterElement } from "../../src/model/index.js"
-import { scanIndex } from "./mom/html-scanner.js";
+import { scanIndex } from "./mom/html-scan.js";
 
 import { paths } from "./mom/input.js";
-import { Reference } from "./mom/intermediate.js";
-import { loadClusterDefinition } from "./mom/load-cluster.js";
-import { translateClusterDefinition } from "./mom/translate-cluster.js";
+import { ClusterReference, HtmlReference } from "./mom/intermediate.js";
+import { clusterLoad } from "./mom/cluster-load.js";
+import { clusterMap } from "./mom/cluster-map.js";
+import { Logger } from "../../src/log/Logger.js";
 
 const clusters = Array<ClusterElement>();
+const logger = Logger.get("mom");
 
-function scanCluster(clusterRef: Reference) {
-    console.info(`  cluster ${clusterRef.name} (${clusterRef.spec} § ${clusterRef.section})`);
+function scanCluster(clusterRef: HtmlReference) {
+    logger.info(`cluster ${clusterRef.name} (${clusterRef.xref.document} § ${clusterRef.xref.section})`);
 
-    const definition = loadClusterDefinition(clusterRef);
-    clusters.push(...translateClusterDefinition(definition));
+    Logger.nest(() => {
+        logger.info("ingest");
+        let definition: ClusterReference;
+        Logger.nest(() => definition = clusterLoad(clusterRef));
+        
+        logger.info("translate");
+        Logger.nest(() => clusters.push(...clusterMap(definition)));
+    });
 }
 
 paths.forEach(path => {
-    const index = scanIndex(path);
-    index.clusters.forEach(scanCluster);
+    logger.info(`specification ${path}`);
+    Logger.nest(() => {
+        const index = scanIndex(path);
+        if (index) {
+            index.clusters.forEach(scanCluster);
+        }
+    });
 })

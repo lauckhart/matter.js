@@ -4,18 +4,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseTypeElement, Metatype } from "../index.js";
+import { BaseElement, BaseTypeElement } from "../../index.js";
 
 /**
  * Definition of a type detailing a non-composite base type.
  */
 export type FloatElement = BaseTypeElement & {
-    datatype: Metatype.Float,
+    type: FloatElement.Type,
     size: FloatElement.Size,
     default?: number
 };
 
+export function FloatElement(definition: BaseElement.Typeless<FloatElement>): FloatElement {
+    return { ...definition, type: FloatElement.Type }
+}
+
 export namespace FloatElement {
+    export type Type = BaseElement.Type.Float;
+    export const Type = BaseElement.Type.Float;
+
     /**
      * Valid sizes for floats.
      */
