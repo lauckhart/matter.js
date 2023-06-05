@@ -33,7 +33,7 @@ const enum8 = (id: number, name: string, description: string, values: DatatypeEl
     DatatypeElement({ id, name, description, children: DatatypeElement.ListValues(values) });
 const list = (id: number, name: string, description: string) =>
     DatatypeElement({ id, name, description });
-const struct = (id: number, name: string, description: string, children: BaseDataElement[]) =>
+const struct = (id: number, name: string, description: string, children: DatatypeElement[]) =>
     DatatypeElement({ id, name, description, children });
 
 const TodFields = [

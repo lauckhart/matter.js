@@ -31,7 +31,7 @@ export namespace DeviceTypeElement {
     export const Type = BaseElement.Type.DeviceType;
     export type Definition = BaseElement.Definition & {
         revision: number,
-        classification: DeviceTypeElement.Classification,
+        classification: `${Classification}`,
         children?: (DeviceTypeElement | ClusterElement)[]
     }
 

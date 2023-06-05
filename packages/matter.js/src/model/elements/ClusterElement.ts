@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterCode, AttributeElement, CommandElement, EventElement, BaseElement, DatatypeElement } from "../index.js";
+import { ClusterId, AttributeElement, CommandElement, EventElement, BaseElement, DatatypeElement } from "../index.js";
 
 /**
  * A cluster describes a set of related functionality.
@@ -16,7 +16,7 @@ export type ClusterElement = BaseElement & {
      * Semantic ID for the cluster.  Either defined in the Matter specification
      * (IDs less than 0x10000) or manufacturer defined,
      */
-    id: ClusterCode,
+    id: ClusterId,
 
     /**
      * Encodes both classification and scope from the Matter specification.
@@ -35,8 +35,8 @@ export namespace ClusterElement {
     export const Type = BaseElement.Type.Cluster;
     export type Children = DatatypeElement | AttributeElement | CommandElement | EventElement;
     export type Definition = BaseElement.Definition & {
-        id: ClusterCode,
-        classification: ClusterElement.Classification,
+        id: ClusterId,
+        classification: `${ClusterElement.Classification}`,
         children?: Children[]
     }
 

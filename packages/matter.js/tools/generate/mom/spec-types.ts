@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterElement } from "../../../src/model";
+import { AnyElement } from "../../../src/model";
 
 // An HTML table
 export type Table = {
@@ -18,7 +18,7 @@ export type Table = {
 // A reference to a specific portion of the specification.  Captures details
 // as raw HTML DOM nodes from the Matter specification
 export type HtmlReference = {
-    xref: MatterElement.CrossReference,
+    xref: AnyElement.CrossReference,
     name: string,
     path: string,
     table?: Table,

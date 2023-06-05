@@ -6,9 +6,9 @@
 
 import { dirname, join } from "path";
 
-import { loadHtml } from "./input.js";
-import { HtmlReference, Table } from "./intermediate.js";
-import { parseHeading } from "./index-scan.js";
+import { loadHtml } from "./spec-input.js";
+import { HtmlReference, Table } from "./spec-types.js";
+import { parseHeading } from "./scan-index.js";
 
 // Convert HTMLTableELement -> Table
 function convertTable(el: HTMLTableElement) {

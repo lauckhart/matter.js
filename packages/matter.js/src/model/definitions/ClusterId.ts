@@ -7,7 +7,7 @@
 /**
  * All cluster identifiers defined in the Matter specification(s).
  */
-export enum ClusterCode {
+export enum ClusterId {
     AccessControlCluster = 0x001F,
     AccountLoginCluster = 0x050e,
     ActionsCluster = 0x0025,

@@ -5,15 +5,15 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { AttributeElement, BaseDataElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../src/model/index.js";
+import { AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
-import { ClusterReference, DetailedReference } from "./intermediate.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter } from "./table-translate.js";
+import { ClusterReference, DetailedReference } from "./spec-types.js";
+import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter } from "./translate-table.js";
 
 const logger = Logger.get("cluster-translate");
 
 // Translate from DOM -> MOM
-export function* clusterMap(definition: ClusterReference) {
+export function* translateCluster(definition: ClusterReference) {
     const children = Array<ClusterElement.Children>();
 
     const metadata = translateMetadata(definition, children);
@@ -357,8 +357,8 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         let base = match?.[1];
     
         let description: string | undefined;
-        let children: BaseDataElement[] | undefined;
-        let translator: undefined | ((entries: DetailedReference) => BaseDataElement[] | undefined);
+        let children: DatatypeElement[] | undefined;
+        let translator: undefined | ((entries: DetailedReference) => DatatypeElement[] | undefined);
     
         if (name.match(/enum$/i) || base?.match(/^enum/i)) {
             if (!base) {

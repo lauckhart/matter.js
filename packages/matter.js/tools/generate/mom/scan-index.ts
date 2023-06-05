@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { loadHtml } from "./input.js";
-import { HtmlReference } from "./intermediate.js";
-import { MatterElement } from "../../../src/model/index.js";
+import { loadHtml } from "./spec-input.js";
+import { HtmlReference } from "./spec-types.js";
+import { AnyElement } from "../../../src/model/index.js";
 import { Logger } from "../../../src/log/Logger.js";
 
 const logger = Logger.get("index-scan");
@@ -54,13 +54,13 @@ export function scanIndex(path: string) {
         clusters: Array<HtmlReference>()
     }
 
-    let spec: MatterElement.Specification;
+    let spec: AnyElement.Specification;
     if (title.match(/matter specification/i)) {
-        spec = MatterElement.Specification.Core;
+        spec = AnyElement.Specification.Core;
     } else if (title.match(/application/i)) {
-        spec = MatterElement.Specification.Cluster;
+        spec = AnyElement.Specification.Cluster;
     } else if (title.match(/device/i)) {
-        spec = MatterElement.Specification.Device;
+        spec = AnyElement.Specification.Device;
     } else {
         logger.error(`matter specification name ${title} unrecognized`);
         return;

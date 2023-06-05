@@ -18,34 +18,4 @@
  * we do not express statically with TypeScript.
  */
 export type ManufacturerExtensibleIdentifier = number;
-type MEI = ManufacturerExtensibleIdentifier;
-
-/**
- * Semantic identifier for device classification.
- */
-export type DeviceTypeID = MEI;
-
-/**
- * Semantic identifier for device feature groupings.
- */
-export type ClusterID = MEI;
-
-/**
- * Semantic identifier for cluster attributes.
- */
-export type AttributeID = MEI;
-
-/**
- * Semantic identifier for structure fields.
- */
-export type FieldID = MEI;
-
-/**
- * Semantic identifier for cluster events.
- */
-export type EventID = MEI;
-
-/**
- * Semantic identifier for cluster commands.
- */
-export type CommandID = MEI;
+export type MEI = ManufacturerExtensibleIdentifier;

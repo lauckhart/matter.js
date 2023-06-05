@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement } from "../index.js"
+import { BaseDataElement, BaseElement, DatatypeElement } from "../index.js"
 
 /**
  * A command describes a remote procedure call.
@@ -13,7 +13,7 @@ export type CommandElement = BaseDataElement & {
     type: CommandElement.Type,
     direction: CommandElement.Direction,
     response?: string,
-    children: (BaseDataElement | CommandElement)[]
+    children: (DatatypeElement | CommandElement)[]
 }
 
 export function CommandElement(definition: CommandElement.Definition) {
@@ -27,9 +27,9 @@ export namespace CommandElement {
     export type Type = BaseElement.Type.Command;
     export const Type = BaseElement.Type.Command;
     export type Definition = BaseDataElement.Definition & {
-        direction: CommandElement.Direction,
+        direction: `${CommandElement.Direction}`,
         response?: string,
-        children?: (BaseDataElement | CommandElement)[]
+        children?: (DatatypeElement | CommandElement)[]
     }
 
     /**

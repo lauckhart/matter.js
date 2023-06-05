@@ -5,9 +5,9 @@
  */
 
 import { camelize } from "../../../src/util/String.js";
-import { DetailedReference } from "./intermediate.js";
+import { DetailedReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
-import { MatterElement } from "../../../src/model/index.js";
+import { AnyElement } from "../../../src/model/index.js";
 
 const logger = Logger.get("table-translate");
 
@@ -16,15 +16,15 @@ type Translator<T> = (el: HTMLElement) => T;
 
 // String, trimmed with whitespace collapsed
 export const Str = (el: HTMLElement) => el.textContent
-    ? el.textContent.trim()
+    ? el.textContent
+        // Remove leading and trailing whitespace
+        .trim()
+
+        // Remove soft hyphen and any surrounding whitespace
+        .replace(/\s*\u00ad\s*/, "")
+        
         // Collapse whitespace    
         .replace(/\s+/g, " ")
-
-        // Remove soft hyphen
-        .replace(/\u00ad\s+/, "")
-        
-        // Dash, not sure we actually see this but just for completeness
-        .replace(/(\w)- /ig, "$1")
     : "";
 
 // String with no space at all
@@ -73,7 +73,7 @@ type FieldType<F>
 // Create TS object type from schema definition
 type TableRecord<T extends TableSchema> = {
     [name in keyof T]: FieldType<T[name]>
-} & { xref?: MatterElement.CrossReference };
+} & { xref?: AnyElement.CrossReference };
 
 const has = (object: Object, name: string) =>
     !!Object.getOwnPropertyDescriptor(object, name);
