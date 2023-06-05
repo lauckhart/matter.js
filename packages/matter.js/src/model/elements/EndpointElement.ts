@@ -10,14 +10,20 @@ import { BaseElement, DeviceTypeElement } from "../index.js";
  */
 export type EndpointElement = BaseElement & {
     type: EndpointElement.Type,
-    deviceTypes: DeviceTypeElement[]
+    children: DeviceTypeElement[]
 }
 
-export function EndpointElement(definition: BaseElement.Typeless<EndpointElement>): EndpointElement {
-    return { ...definition, type: EndpointElement.Type }
+export function EndpointElement(definition: EndpointElement.Definition) {
+    return BaseElement({
+        type: EndpointElement.Type,
+        ...definition
+    }) as EndpointElement;
 }
 
 export namespace EndpointElement {
     export type Type = BaseElement.Type.Endpoint;
     export const Type = BaseElement.Type.Endpoint;
+    export type Definition = BaseElement.Definition & {
+        children?: DeviceTypeElement[]
+    }
 }

@@ -29,6 +29,8 @@ export class Conformance {
         }
     }
 
+    // TODO - offer validation?
+
     toString() {
         return Conformance.serialize(this.definition);
     }

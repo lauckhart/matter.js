@@ -7,8 +7,8 @@
 import { Logger } from "../../../src/log/Logger.js";
 import { MatterElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
-import { scanSection } from "./html-scan.js";
 import { ClusterReference, DetailedReference, HtmlReference } from "./intermediate.js";
+import { scanSection } from "./section-scan.js";
 
 const logger = Logger.get("cluster-load");
 
@@ -60,7 +60,7 @@ export function clusterLoad(clusterRef: HtmlReference) {
         }
 
         // Sometimes there's an empty table to indicate no elements
-        if (!ref.table.length) {
+        if (!ref.table.rows.length) {
             return;
         }
 
@@ -69,7 +69,7 @@ export function clusterLoad(clusterRef: HtmlReference) {
             return;
         }
 
-        logger.info(`${name} § ${ref.xref.section}`);
+        logger.debug(`${name} § ${ref.xref.section}`);
 
         collectDetails(ref, definition[name] = { ...ref, details: [] });
     }
@@ -118,13 +118,14 @@ export function clusterLoad(clusterRef: HtmlReference) {
                 // collectors are a stack
                 collectors.push({
                     subsection: subref.xref.section,
-                    collector: (ref) => {
+                    collector: (dtRef) => {
                         if (!definition.datatypes) {
                             definition.datatypes = [];
                         }
-                        const datatypeDef = { ...ref, details: [] };
+                        const datatypeDef = { ...dtRef, details: [] };
+                        logger.debug(`datatype ${dtRef.name} § ${dtRef.xref.section}`);
                         definition.datatypes.push(datatypeDef);
-                        if (ref.table) {
+                        if (dtRef.table) {
                             // Probably a struct, enum or bitmap.  These are
                             // sometimes followed with sections that detail
                             // individual items

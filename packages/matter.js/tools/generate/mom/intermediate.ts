@@ -6,8 +6,14 @@
 
 import { MatterElement } from "../../../src/model";
 
-// An HTML table converted to array of records
-export type Table = { [name: string ]: HTMLElement | undefined }[];
+// An HTML table
+export type Table = {
+    // Column name -> defining HTML element
+    rows: { [name: string ]: HTMLElement | undefined }[],
+
+    // Single-cell rows, tend to be informational
+    notes: HTMLElement[]
+};
 
 // A reference to a specific portion of the specification.  Captures details
 // as raw HTML DOM nodes from the Matter specification

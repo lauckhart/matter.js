@@ -18,13 +18,14 @@
 // mention the term "masochist".
 
 import { ClusterElement } from "../../src/model/index.js"
-import { scanIndex } from "./mom/html-scan.js";
+import { scanIndex } from "./mom/index-scan.js";
 
 import { paths } from "./mom/input.js";
 import { ClusterReference, HtmlReference } from "./mom/intermediate.js";
 import { clusterLoad } from "./mom/cluster-load.js";
-import { clusterMap } from "./mom/cluster-map.js";
+import { clusterMap } from "./mom/cluster-translate.js";
 import { Logger } from "../../src/log/Logger.js";
+import { clusterGenerate, clusterClean } from "./mom/cluster-generate.js";
 
 const clusters = Array<ClusterElement>();
 const logger = Logger.get("mom");
@@ -50,4 +51,16 @@ paths.forEach(path => {
             index.clusters.forEach(scanCluster);
         }
     });
-})
+
+    logger.info(`generate`);
+    Logger.nest(() => {
+        logger.info(`clusters`);
+        Logger.nest(() => {
+            clusterClean();
+            for (const cluster of clusters) {
+                logger.info(cluster.name);
+                Logger.nest(() => clusterGenerate(cluster));
+            }
+        });
+    });
+});

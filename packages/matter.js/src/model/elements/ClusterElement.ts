@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterCode, AttributeElement, CommandElement, EventElement, BaseElement, DatatypeElement, EnumElement } from "../../index.js";
+import { ClusterCode, AttributeElement, CommandElement, EventElement, BaseElement, DatatypeElement } from "../index.js";
 
 /**
  * A cluster describes a set of related functionality.
@@ -19,48 +19,26 @@ export type ClusterElement = BaseElement & {
     id: ClusterCode,
 
     /**
-     * Latest revision in Matter specification.
-     */
-    revision: number,
-
-    /**
      * Encodes both classification and scope from the Matter specification.
      */
     classification: ClusterElement.Classification,
 
-    /**
-     * Feature flags for the cluster.  Each ID represents a bit position.
-     */
-    features?: EnumElement,
-
-    /**
-     * Datatypes scoped to the cluster.
-     */
-    datatypes?: DatatypeElement[],
-
-    /**
-     * Attributes of the cluster.
-     */
-    attributes?: AttributeElement[],
-
-    /**
-     * Commands the cluster supports.
-     */
-    commands?: CommandElement[],
-
-    /**
-     * Events the cluster supports.
-     */
-    events?: EventElement[]
+    children: ClusterElement.Children[]
 }
 
-export function ClusterElement(definition: BaseElement.Typeless<ClusterElement>): ClusterElement {
-    return { ...definition, type: ClusterElement.Type }
+export function ClusterElement(definition: ClusterElement.Definition) {
+    return BaseElement({ type: BaseElement.Type.Cluster, ...definition }) as ClusterElement;
 }
 
 export namespace ClusterElement {
     export type Type = BaseElement.Type.Cluster;
     export const Type = BaseElement.Type.Cluster;
+    export type Children = DatatypeElement | AttributeElement | CommandElement | EventElement;
+    export type Definition = BaseElement.Definition & {
+        id: ClusterCode,
+        classification: ClusterElement.Classification,
+        children?: Children[]
+    }
 
     export enum Classification {
         EndpointUtility = "endpoint",

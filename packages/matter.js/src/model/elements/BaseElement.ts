@@ -37,6 +37,10 @@ export type BaseElement = {
     xref?: BaseElement.CrossReference
 }
 
+export function BaseElement(definition: BaseElement.Definition): BaseElement {
+    return { children: [], ...definition };
+}
+
 export namespace BaseElement {
     /**
      * Types of elements per the Matter specification.
@@ -58,20 +62,7 @@ export namespace BaseElement {
         AttributeField = "structField",
         ListEntry = "listEntry",
         DeviceType = "deviceType",
-
-        // Datatype elements - formally these are all "datatype" per the
-        // specification but we use different structures for them so give
-        // them different types
-        Bool = "bool",
-        Enum = "enum",
-        Float = "float",
-        Int = "int",
-        List = "list",
-        Octet = "octet",
-        Struct = "struct",
-
-        // Placeholder, not part of specification
-        Never = "never"
+        Datatype = "datatype"
     }
 
     /**
@@ -113,9 +104,5 @@ export namespace BaseElement {
         section: string
     }
 
-    /**
-     * An element definition without the type field.
-     */
-    export type Typeless<E extends { type: Type } & BaseElement>
-        = Omit<E, "type"> & Partial<Pick<E, "type">>;
+    export type Definition = Omit<BaseElement, "children"> & { type?: Type, children?: BaseElement[] }
 }

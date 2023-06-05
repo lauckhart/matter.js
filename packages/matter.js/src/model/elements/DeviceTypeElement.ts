@@ -16,17 +16,24 @@ export type DeviceTypeElement = BaseElement & {
     id: DeviceTypeElement.DeviceType,
     classification: DeviceTypeElement.Classification,
     revision: number,
-    composes: DeviceTypeElement[],
-    clusters: ClusterElement[]
+    children: (DeviceTypeElement | ClusterElement)[]
 }
 
-export function DeviceTypeElement(definition: BaseElement.Typeless<DeviceTypeElement>): DeviceTypeElement {
-    return { ...definition, type: DeviceTypeElement.Type }
+export function DeviceTypeElement(definition: DeviceTypeElement.Definition) {
+    return BaseElement({
+        type: DeviceTypeElement.Type,
+        ...definition
+    }) as DeviceTypeElement;
 }
 
 export namespace DeviceTypeElement {
     export type Type = BaseElement.Type.DeviceType;
     export const Type = BaseElement.Type.DeviceType;
+    export type Definition = BaseElement.Definition & {
+        revision: number,
+        classification: DeviceTypeElement.Classification,
+        children?: (DeviceTypeElement | ClusterElement)[]
+    }
 
     export enum Classification {
         Node = "node",

@@ -8,129 +8,22 @@ import { dirname, join } from "path";
 
 import { loadHtml } from "./input.js";
 import { HtmlReference, Table } from "./intermediate.js";
-import { MatterElement } from "../../../src/model/index.js";
-import { Logger } from "../../../src/log/Logger.js";
-
-const logger = Logger.get("html-scan");
-
-const FAKE_CLUSTER_NAMES = [
-    "New",
-    "Sample",
-    "Disco Ball",
-    "Super Disco Ball"
-]
-
-// Parse the section ID and name from a heading element
-function parseHeading(e: Node | null) {
-    if (!e) {
-        return undefined;
-    }
-
-    const heading = e.textContent?.trim().replace(/\s+/g, " ").replace("\u200c", "");
-    if (!heading) {
-        return undefined;
-    }
-
-    const parsed = /^([\d\.]+)\. (.+)$/.exec(heading);
-    if (!parsed) {
-        return;
-    }
-
-    return {
-        section: parsed[1],
-        name: parsed[2]
-    }
-}
-
-// Read an index file to find the portions of the spec we care about
-export function scanIndex(path: string) {
-    const source = loadHtml(path);
-    const titleEl = source.querySelector("h1");
-    if (!titleEl || !titleEl.textContent) {
-        logger.error("cannot find specification title");
-        return;
-    }
-    const title = titleEl.textContent;
-
-    const result = {
-        clusters: Array<HtmlReference>()
-    }
-    let spec: MatterElement.Specification;
-    if (title.match(/matter specification/i)) {
-        spec = MatterElement.Specification.Cluster;
-    } else if (title.match(/application/i)) {
-        spec = MatterElement.Specification.Core;
-    } else if (title.match(/device/i)) {
-        spec = MatterElement.Specification.Device;
-    } else {
-        logger.error(`matter specification name ${title} unrecognized`);
-        return;
-    }
-
-    const versionEl = titleEl.nextElementSibling;
-    if (!versionEl || !versionEl.textContent || !versionEl.textContent.match(/version (?:\d\.)+/i)) {
-        logger.error(`version element unrecognized`)
-        return;
-    }
-    const version = versionEl.textContent.replace(/.*version (?:\d\.).*/i, "$1");
-
-    source.querySelectorAll("a").forEach((a: HTMLAnchorElement) => {
-        const heading = parseHeading(a);
-        if (!heading) {
-            return;
-        }
-
-        const xref = {
-            section: heading.section,
-            document: spec,
-            version: version 
-        };
-
-        // Core spec convention for clusters is heading suffixed with "Cluster"
-        if (heading.name.endsWith(" Cluster")) {
-            if (Number.parseInt(heading.section) < 3) {
-                // There's some noise in early sections
-                return;
-            }
-
-            const name = heading.name.slice(0, heading.name.length - 8);
-            if (FAKE_CLUSTER_NAMES.indexOf(name) != -1) {
-                return;
-            }
-
-            result.clusters.push({
-                name: heading.name.slice(0, heading.name.length - 8),
-                path: a.href,
-                xref: xref
-            });
-            return;
-        }
-
-        // Cluster spec convention is one cluster per sub-section except the
-        // first sub-section which summarizes the section
-        if (spec == "cluster") {
-            const sectionPath = heading.section.split(".");
-            if (sectionPath.length == 2 && sectionPath[1] != "1") {
-                const cluster = {
-                    name: heading.name,
-                    path: a.href,
-                    xref: xref
-                };
-                result.clusters.push(cluster);
-            }
-            return;
-        }
-    });
-    
-    return result;
-}
+import { parseHeading } from "./index-scan.js";
 
 // Convert HTMLTableELement -> Table
 function convertTable(el: HTMLTableElement) {
-    const table = [] as Table;
+    const table = {
+        rows: [],
+        notes: []
+    } as Table;
     let columns: string[] | undefined;
     for (const tr of el.querySelectorAll("tr")) {
         const cells = tr.querySelectorAll("td, th");
+
+        if (cells.length == 1) {
+            table.notes.push(cells[0] as HTMLElement);
+            continue;
+        }
 
         if (!columns) {
             columns = [];
@@ -142,12 +35,12 @@ function convertTable(el: HTMLTableElement) {
             continue;
         }
 
-        const row = {} as Table[number];
+        const row = {} as Table["rows"][number];
         for (let i = 0; i < columns.length; i++) {
             row[columns[i]] = cells.item(i) as HTMLElement;
         }
         
-        table.push(row);
+        table.rows.push(row);
     }
     return table;
 }
@@ -157,6 +50,13 @@ function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlRef
     const elements = html.querySelectorAll("h1, h2, h3, h4, h5, h6, body > p, table");
 
     let currentRef: HtmlReference | undefined = undefined;
+
+    const fakeSection = {
+        faking: false,
+        actual: "",
+        section: 1,
+        subsection: 1
+    }
 
     function* emit() {
         if (currentRef) {
@@ -178,22 +78,48 @@ function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlRef
                 yield* emit();
                 const heading = parseHeading(element);
                 if (heading) {
-                    currentRef = { ...ref, ...heading };
+                    currentRef = { ...ref, name: heading.name, xref: { ...ref.xref, section: heading.section } };
+                    fakeSection.faking = false;
                 }
                 break;
 
             case "P":
                 // Sometimes heading is just in a P so we have to guess as to
                 // "headingness"
-                const text = element.textContent;
+                const text = element.textContent?.trim();
                 if (text?.match(/^(\d+\.)+ [ a-zA-Z0-9]+$/)) {
                     const possibleHeading = parseHeading(element);
                     if (possibleHeading && possibleHeading.section.startsWith(ref.xref.section)) {
                         // Yep, looks like a heading
                         yield* emit();
-                        currentRef = { ...ref, ...possibleHeading };
+                        currentRef = { ...ref, name: possibleHeading.name, xref: { ...ref.xref, section: possibleHeading.section } };
+                        fakeSection.faking = false;
                         break;
                     }
+                }
+
+                // Sometimes there isn't even a section marker.  In this case
+                // we just make up the section number
+                if (text?.match(/^[a-z0-9]+(?:Enum| Attribute| Command| Event)$/i)) {
+                    // Treat like a heading
+                    yield* emit();
+                    if (fakeSection.faking) {
+                        fakeSection.section++;
+                        fakeSection.subsection = 0;
+                    } else {
+                        fakeSection.actual = currentRef?.xref.section!;
+                        fakeSection.section = 1;
+                        fakeSection.subsection = 0;
+                    }
+                    currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}` } };
+                }
+
+                // If we're faking the section we need to fake fields too
+                if (text?.match(/^[a-z0-9]+(?: Field| Value)$/) && fakeSection.faking) {
+                    // Treat like a sub-heading to our fake heading
+                    yield* emit();
+                    fakeSection.subsection++;
+                    currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}.${fakeSection.subsection}`}};
                 }
 
                 // Save the first paragraph of the section
@@ -220,10 +146,11 @@ function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlRef
                 // are the same, though; use this to merge tables
                 const other = currentRef.table;
                 if (other) {
-                    if (table.length) {
-                        if (!other.length || Object.keys(other[0]).join("/") == Object.keys(table[0]).join("/")) {
+                    if (table.rows.length) {
+                        if (!other.rows.length || Object.keys(other.rows[0]).join("/") == Object.keys(table.rows[0]).join("/")) {
                             // Merge tables
-                            other.push(...table);
+                            other.notes.push(...table.notes)
+                            other.rows.push(...table.rows);
                         }
                     }
 
