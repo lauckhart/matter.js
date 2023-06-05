@@ -18,20 +18,20 @@ export function camelize(name: string, upperFirst = true) {
     let sawLower = false;
 
     let i = 0;
-    function addPiece() {
-        if (pieceStart != i) pieces.push(name.slice(pieceStart, i));
+    function addPiece(to: number) {
+        if (pieceStart < to) pieces.push(name.slice(pieceStart, i));
         sawLower = false;
     }
 
     for (; i < name.length; i++) {
         if (name[i] == "-" || name[i] == "_" || name[i] == " " || name[i] == "\n") {
-            addPiece();
+            addPiece(i - 1);
             pieceStart = i + 1;
             continue;
         }
 
         if (name[i] >= "A" && name[i] <= "Z" && sawLower) {
-            addPiece();
+            addPiece(i);
             pieceStart = i;
             continue;
         }
@@ -40,7 +40,7 @@ export function camelize(name: string, upperFirst = true) {
             sawLower = true;
         }
     }
-    addPiece();
+    addPiece(i);
 
     let didFirst = false;
     return pieces.map((piece) => {
