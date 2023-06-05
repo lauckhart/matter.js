@@ -16,7 +16,7 @@ const HEADER = `/**
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 `;
 
-class Block extends Array<any> {
+export class Block extends Array<any> {
     constructor(private parentBlock: Block | undefined, ...entries: any[]) {
         super(...entries);
     }
@@ -24,7 +24,7 @@ class Block extends Array<any> {
     override toString(linePrefix = "") {
         const pieces = new Array<string>();
         for (let i = 0; i < this.length; i++) {
-            const str = this[i].toString();
+            const str = `${this[i]}${this.delimiterAfter(i)}`;
             str.split("\n").forEach((line: string) => {
                 if (line) {
                     pieces.push(`${linePrefix}${line}`);
@@ -33,6 +33,7 @@ class Block extends Array<any> {
                 }
             });
             if (i < this.length - 1 && this[i] instanceof Block && str.length && this[i + 1] != "") {
+                // Always have blank line after blocks with following content
                 pieces.push("");
             }
         }
@@ -43,6 +44,15 @@ class Block extends Array<any> {
     get parent() {
         if (!this.parentBlock) throw new Error("Undefined parent access");
         return this.parentBlock;
+    }
+
+    /** Access the file */
+    get file() {
+        let b: Block = this;
+        while (!(b instanceof TsFile)) {
+            b = b.parent;
+        }
+        return b;
     }
 
     /** Delete from parent */
@@ -71,23 +81,91 @@ class Block extends Array<any> {
         return section;
     }
 
-    /** Add JS code block.  Children will be indented */
-    block(prefix: string, ...entries: any[]) {
-        const block = new NestedBlock(this, prefix, ...entries);
-        this.push(block);
+    /** Add a block with separate statements terminated by ";" */
+    statements(prefix: string = "", suffix = "", ...entries: any[]) {
+        const block = new StatementBlock(this, prefix, suffix, ...entries);
+        this.add(block);
         return block;
+    }
+
+    /** Add a comma-delimited block */
+    expressions(prefix: string, suffix: string, ...entries: any[]) {
+        const block = new ExpressionBlock(this, prefix, suffix, ...entries);
+        this.add(block);
+        return block;
+    }
+
+    /** Add a statement or expression that will be automatically delimited */
+    atom(labelOrEntry: any, entry?: any) {
+        this.add(new Atom(labelOrEntry, entry));
+        return this;
+    }
+
+    protected delimiterAfter(_index: number) {
+        return "";
+    }
+}
+
+class Atom {
+    private content: String;
+
+    constructor(labelOrEntry: any, entry: any) {
+        if (entry == undefined) {
+            this.content = labelOrEntry;
+        } else {
+            this.content = `${labelOrEntry}: ${entry}`;
+        }
+    }
+
+    toString() {
+        return this.content;
     }
 }
 
 class NestedBlock extends Block {
-    constructor(parent: Block, private prefix: string, ...entries: any[]) {
+    constructor(parent: Block | undefined, private prefix: string, private suffix: string, ...entries: any[]) {
         super(parent, ...entries);
     }
 
     override toString() {
         let contents = super.toString("    ");
         if (contents) contents = `${contents}\n`;
-        return `${this.prefix} {\n${contents}}`;
+        let text = `{\n${contents}}`;
+        if (this.prefix) text = `${this.prefix} ${text}`;
+        if (this.suffix) text = `${text} ${this.suffix}`;
+        return text;
+    }
+
+    protected isDelimited(index: number) {
+        return this[index] instanceof Atom || this[index] instanceof Block;
+    }
+}
+
+class StatementBlock extends NestedBlock {
+    constructor(parent: Block | undefined, prefix: string = "{\n", suffix: string = "}", ...entries: any[]) {
+        super(parent, prefix, suffix, entries);
+    }
+
+    override delimiterAfter(index: number) {
+        if (this.isDelimited(index)) {
+            return ";";
+        }
+        return "";
+    }
+}
+
+class ExpressionBlock extends NestedBlock {
+    constructor(parent: Block, prefix: string, suffix: string, ...entries: any[]) {
+        super(parent, `${prefix}\n`, suffix);
+    }
+
+    override delimiterAfter(index: number) {
+        if (this.isDelimited(index)) {
+            for (let i = index + 1; i < this.length; i++) {
+                if (this.isDelimited(i)) return ",";
+            }
+        }
+        return "";
     }
 }
 
@@ -95,7 +173,7 @@ class NestedBlock extends Block {
  * Quick & dirty support for code gen.  Mostly string based but slightly higher
  * level.  And less cumberson than e.g. TS compiler AST
  */
-export class TsFile extends Block {
+export class TsFile extends StatementBlock {
     private imports = new Map<string, Array<string>>();
     private header!: Block;
 
@@ -103,7 +181,7 @@ export class TsFile extends Block {
         public name: string,
         ...parts: any[]
     ) {
-        super(undefined, ...parts);
+        super(undefined, "", "", ...parts);
         this.header = this.section(HEADER);
     }
 

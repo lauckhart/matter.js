@@ -18,14 +18,14 @@
 // mention the term "masochist".
 
 import { ClusterElement } from "../../src/model/index.js"
-import { scanIndex } from "./mom/index-scan.js";
+import { scanIndex } from "./mom/scan-index.js";
 
-import { paths } from "./mom/input.js";
-import { ClusterReference, HtmlReference } from "./mom/intermediate.js";
-import { clusterLoad } from "./mom/cluster-load.js";
-import { clusterMap } from "./mom/cluster-translate.js";
+import { paths } from "./mom/spec-input.js";
+import { ClusterReference, HtmlReference } from "./mom/spec-types.js";
+import { loadCluster } from "./mom/load-cluster.js";
+import { translateCluster } from "./mom/translate-cluster.js";
 import { Logger } from "../../src/log/Logger.js";
-import { clusterGenerate, clusterClean } from "./mom/cluster-generate.js";
+import { generateCluster, cleanCluster } from "./mom/generate-cluster.js";
 
 const clusters = Array<ClusterElement>();
 const logger = Logger.get("mom");
@@ -36,10 +36,10 @@ function scanCluster(clusterRef: HtmlReference) {
     Logger.nest(() => {
         logger.info("ingest");
         let definition: ClusterReference;
-        Logger.nest(() => definition = clusterLoad(clusterRef));
+        Logger.nest(() => definition = loadCluster(clusterRef));
         
         logger.info("translate");
-        Logger.nest(() => clusters.push(...clusterMap(definition)));
+        Logger.nest(() => clusters.push(...translateCluster(definition)));
     });
 }
 
@@ -56,10 +56,10 @@ paths.forEach(path => {
     Logger.nest(() => {
         logger.info(`clusters`);
         Logger.nest(() => {
-            clusterClean();
+            cleanCluster();
             for (const cluster of clusters) {
                 logger.info(cluster.name);
-                Logger.nest(() => clusterGenerate(cluster));
+                Logger.nest(() => generateCluster(cluster));
             }
         });
     });

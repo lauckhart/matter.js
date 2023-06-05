@@ -4,14 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement } from "../index.js"
+import { AttributeId } from "../../datatype/AttributeId.js";
+import { BaseDataElement, BaseElement, DatatypeElement } from "../index.js"
 
 /**
  * A cluster property description.
  */
 export type AttributeElement = BaseDataElement & {
+    id: AttributeId,
+    
     type: AttributeElement.Type,
-    children: BaseDataElement[]
+    children: DatatypeElement[]
 }
 
 export function AttributeElement(definition: AttributeElement.Definition) {
@@ -25,6 +28,6 @@ export namespace AttributeElement {
     export type Type = BaseElement.Type.Attribute;
     export const Type = BaseElement.Type.Attribute;
     export type Definition = BaseDataElement.Definition & {
-        children?: BaseDataElement[];
+        children?: DatatypeElement[];
     }
 }

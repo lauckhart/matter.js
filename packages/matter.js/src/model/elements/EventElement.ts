@@ -25,16 +25,25 @@ export namespace EventElement {
     export type Type = BaseElement.Type.Event;
     export const Type = BaseElement.Type.Event;
     export type Definition = BaseDataElement.Definition & {
-        priority: Priority
+        priority: `${Priority}`
     }
 
     /**
      * Event priority as defined in Matter specification.
      */
     export enum Priority {
-        Debug = 0,
-        Info = 1,
-        Critical = 2
+        Debug = "debug",
+        Info = "info",
+        Critical = "critical"
+    }
+
+    /**
+     * Event priority mapped to official ID.
+     */
+    export enum PriorityId {
+        debug = 0,
+        info = 1,
+        critical = 2
     }
 }
 

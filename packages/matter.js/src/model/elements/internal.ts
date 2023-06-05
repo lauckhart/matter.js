@@ -19,5 +19,6 @@ export * from "./NodeElement.js";
 export * from "./FabricElement.js";
 
 export * from "./MatterElement.js";
+export * from "./AnyElement.js";
 
 export * from "./Globals.js";

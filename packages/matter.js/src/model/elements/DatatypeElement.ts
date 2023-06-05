@@ -12,7 +12,7 @@ import { BaseDataElement, BaseElement } from "../index.js";
 export type DatatypeElement = BaseDataElement & {
     type: DatatypeElement.Type,
 
-    children: BaseDataElement[]
+    children: DatatypeElement[]
 }
 
 export function DatatypeElement(definition: DatatypeElement.Definition) {
@@ -22,7 +22,9 @@ export function DatatypeElement(definition: DatatypeElement.Definition) {
 export namespace DatatypeElement {
     export type Type = BaseElement.Type.Datatype;
     export const Type = BaseElement.Type.Datatype;
-    export type Definition = BaseDataElement.Definition;
+    export type Definition = BaseDataElement.Definition & {
+        children?: DatatypeElement[]
+    };
 
     /**
      * Convert a TypeScript enum to Matter enum values.
@@ -32,7 +34,7 @@ export namespace DatatypeElement {
      * we can't use a TypeScript enum directly.
      */
     export function ListValues(values: ValueMap): ListValues {
-        const result = Array<BaseDataElement>();
+        const result = Array<DatatypeElement>();
 
         for (const [k, v] of Object.entries(values)) {
             if (typeof v == "number") {
@@ -51,7 +53,7 @@ export namespace DatatypeElement {
      * We express enum values as IntElements as this gives us conformance
      * and other metadata.
      */
-    export type ListValues = BaseDataElement[];
+    export type ListValues = DatatypeElement[];
 
     /**
      * Per the Matter specification, enums are named integers.  The following

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MEI } from "../index.js";
+
 /**
  * Per the Matter specification, an element is a data construct that supports
  * an instance of data.  So, a class.
@@ -13,7 +15,7 @@ export type BaseElement = {
      * The ID of the element per Matter specification, either global or
      * context-specific.  A "machine appropriate" semantic differentiator.
      */
-    id: number
+    id: MEI
 
     /**
      * The key used for storing this element.  A "human appropriate" semantic
@@ -34,7 +36,12 @@ export type BaseElement = {
     /**
      * Reference to Matter specification document.
      */
-    xref?: BaseElement.CrossReference
+    xref?: BaseElement.CrossReference,
+
+    /**
+     * Child elements.
+     */
+    children: BaseElement[]
 }
 
 export function BaseElement(definition: BaseElement.Definition): BaseElement {

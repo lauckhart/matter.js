@@ -4,39 +4,40 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-    AttributeElement,
-    BaseElement,
-    ClusterElement,
-    CommandElement,
-    DeviceTypeElement,
-    EndpointElement,
-    EventElement,
-    FabricElement,
-    NodeElement,
-    BaseDataElement
-} from "../index.js";
+import { BaseElement, ClusterElement, DeviceTypeElement, FabricElement } from "../index.js"
 
 /**
- * A type describing all elements defined by the Matter specification.
+ * This is the entry to a model of application-level Matter constructs referred
+ * to as the "Matter Object Model".
+ * 
+ * The Matter Object Model architecture attempts:
+ * 
+ *   - Precise expression of semantics in the Matter Core Specification
+ *   - Simultaneous modeling of multiple Matter implementations
+ *   - Reasoning about Matter implementations and specifications
+ *   - Manipulation of Matter implementations
+ *   - Runtime validation of Matter data and interactions
+ * 
+ * Other representations of the Matter data model in this library offer similar
+ * representations with a different focus.  The TLV API models data with a
+ * focus on serialization and manipulation of instance values.  The Cluster
+ * API models clusters in a form optimized for correct implementation.
+ * 
+ * All references to "Matter Specification" in the object model corpus refer
+ * to Matter Core Specification 1.1.
  */
-export type MatterElement
-    = AttributeElement
-    | CommandElement
-    | EventElement
-    | ClusterElement
-    | DeviceTypeElement
-    | EndpointElement
-    | FabricElement
-    | NodeElement
-    | BaseDataElement;
+export type MatterElement = BaseElement & {
+    type: BaseElement.Type.Matter,
+    version: string,
+    children: ClusterElement | DeviceTypeElement | FabricElement
+}
+
+export function MatterElement(definition: MatterElement.Definition) {
+    return BaseElement(definition) as MatterElement;
+}
 
 export namespace MatterElement {
-    export type Type = BaseElement.Type;
-    export const Type = BaseElement.Type;
-    export type Specification = BaseElement.Specification;
-    export const Specification = BaseElement.Specification;
-    export type SpecificationNames = BaseElement.SpecificationNames;
-    export const SpecificationNames = BaseElement.SpecificationNames;
-    export type CrossReference = BaseElement.CrossReference;
+    export type Definition = BaseElement.Definition & {
+        version: string
+    }
 }
