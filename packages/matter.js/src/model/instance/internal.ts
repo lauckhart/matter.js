@@ -5,4 +5,4 @@
  */
 
 export * from "./Matter.js";
-import "clusters/internal.js";
+import "./clusters/internal.js";

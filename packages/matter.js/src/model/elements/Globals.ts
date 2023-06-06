@@ -6,7 +6,6 @@
 
 import {
     Constraint,
-    Datatype,
     Conformance,
     StatusCode,
     DatatypeElement,
@@ -14,6 +13,8 @@ import {
     AttributeElement,
     EventElement
 } from "../index.js";
+
+const Datatype = BaseDataElement.Datatype;
 
 const bool = (id: number, name: string, description: string) =>
     DatatypeElement({ id, name, description });

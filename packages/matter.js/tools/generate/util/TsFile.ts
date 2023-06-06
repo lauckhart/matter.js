@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { writeFileSync } from "fs";
-import { writeMatterFile } from "./file";
+import { writeMatterFile } from "./file.js";
 
 const HEADER = `/**
  * @license
@@ -130,9 +129,9 @@ class NestedBlock extends Block {
     override toString() {
         let contents = super.toString("    ");
         if (contents) contents = `${contents}\n`;
-        let text = `{\n${contents}}`;
-        if (this.prefix) text = `${this.prefix} ${text}`;
-        if (this.suffix) text = `${text} ${this.suffix}`;
+        let text = `${contents}`;
+        if (this.prefix) text = `${this.prefix}${text}`;
+        if (this.suffix) text = `${text}${this.suffix}`;
         return text;
     }
 
@@ -156,7 +155,7 @@ class StatementBlock extends NestedBlock {
 
 class ExpressionBlock extends NestedBlock {
     constructor(parent: Block, prefix: string, suffix: string, ...entries: any[]) {
-        super(parent, `${prefix}\n`, suffix);
+        super(parent, `${prefix}\n`, suffix, ...entries);
     }
 
     override delimiterAfter(index: number) {
@@ -173,7 +172,7 @@ class ExpressionBlock extends NestedBlock {
  * Quick & dirty support for code gen.  Mostly string based but slightly higher
  * level.  And less cumberson than e.g. TS compiler AST
  */
-export class TsFile extends StatementBlock {
+export class TsFile extends Block {
     private imports = new Map<string, Array<string>>();
     private header!: Block;
 
@@ -181,7 +180,7 @@ export class TsFile extends StatementBlock {
         public name: string,
         ...parts: any[]
     ) {
-        super(undefined, "", "", ...parts);
+        super(undefined, ...parts);
         this.header = this.section(HEADER);
     }
 
@@ -196,8 +195,6 @@ export class TsFile extends StatementBlock {
     }
 
     save() {
-        console.log(`Write ${this.name}.ts`);
-
         if (this.imports.size) {
             this.imports.forEach((symbols, name) => {
                 this.header.add(`import { ${symbols.join(", ")} } from "${name}.js";`);
@@ -206,7 +203,7 @@ export class TsFile extends StatementBlock {
 
         this.blank();
 
-        writeMatterFile(`src/${this.name}.ts`, this);
+        writeMatterFile(`${this.name}.ts`, this);
         return this;
     }
 }

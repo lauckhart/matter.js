@@ -58,7 +58,7 @@ paths.forEach(path => {
         Logger.nest(() => {
             cleanCluster();
             for (const cluster of clusters) {
-                logger.info(cluster.name);
+                logger.debug(cluster.name);
                 Logger.nest(() => generateCluster(cluster));
             }
         });

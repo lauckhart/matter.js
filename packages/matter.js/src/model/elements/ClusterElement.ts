@@ -35,7 +35,7 @@ export namespace ClusterElement {
     export const Type = BaseElement.Type.Cluster;
     export type Children = DatatypeElement | AttributeElement | CommandElement | EventElement;
     export type Definition = BaseElement.Definition & {
-        id: ClusterId,
+        id: number,
         classification: `${ClusterElement.Classification}`,
         children?: Children[]
     }
