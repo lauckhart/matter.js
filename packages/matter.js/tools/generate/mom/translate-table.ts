@@ -7,7 +7,7 @@
 import { camelize } from "../../../src/util/String.js";
 import { DetailedReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
-import { AnyElement } from "../../../src/model/index.js";
+import { AnyElement, BaseElement } from "../../../src/model/index.js";
 
 const logger = Logger.get("table-translate");
 
@@ -21,7 +21,7 @@ export const Str = (el: HTMLElement) => el.textContent
         .trim()
 
         // Remove soft hyphen and any surrounding whitespace
-        .replace(/\s*\u00ad\s*/, "")
+        .replace(/\s*\u00ad\s*/g, "")
         
         // Collapse whitespace    
         .replace(/\s+/g, " ")
@@ -36,7 +36,10 @@ export const Integer = (el: HTMLElement) => Number.parseInt(NoSpace(el));
 // CamelCase identifier.  Note we replace "Fo o" with "Foo" because space
 // errors are very common in the PDFs, especially in narrow columns and we
 // don't want to end up with FoO
-export const Identifier = (el: HTMLElement) => camelize(Str(el).replace(/ +([a-z])/g, "$1"), true);
+export const Identifier = (el: HTMLElement) => camelize(Str(el)
+    .replace(/[^\sA-Za-z0-9\-_]/g, "")
+    .replace(/ +([a-z])/g, "$1"),
+    true);
 
 // Identifier, all lowercase
 export const LowerIdentifier = (el: HTMLElement) => Identifier(el).toLowerCase();
@@ -73,7 +76,7 @@ type FieldType<F>
 // Create TS object type from schema definition
 type TableRecord<T extends TableSchema> = {
     [name in keyof T]: FieldType<T[name]>
-} & { xref?: AnyElement.CrossReference };
+} & { xref?: AnyElement.CrossReference, name?: string, details?: string };
 
 const has = (object: Object, name: string) =>
     !!Object.getOwnPropertyDescriptor(object, name);
@@ -143,7 +146,7 @@ export function translateTable<T extends TableSchema>(
         for (const [name, translator] of translators) {
             const el = source[name];
             const value = el == undefined ? undefined : translator(el);
-            
+
             // Ignore the row if required values are missing
             if ((value == undefined || value === "" || Number.isNaN(value)) && !optional.has(name)) {
                 missing.add(name);
@@ -160,6 +163,8 @@ export function translateTable<T extends TableSchema>(
         logger.error(`ignored one or more ${desc} rows due to missing fields: ${Array(...missing).join(', ')}`);
         logger.error(`keys present are: ${Object.keys(definition.table.rows[0]).join(', ')}`);
     }
+
+    installPreciseDetails(desc, definition, result);
 
     return result;
 }
@@ -186,4 +191,30 @@ export function translateRecordsToMatter<R, E extends { id: number, name: string
         return undefined;
     }
     return result;
+}
+
+// Attempt to install more specific xref and details
+function installPreciseDetails(
+    desc: string,
+    definition: DetailedReference,
+    records: Array<{ name?: string, xref?: BaseElement.CrossReference, details?: string }>
+) {
+    const lookup = Object.fromEntries(
+        definition.details.map((detail) =>
+            [ detail.name.toLowerCase(), detail ]
+        )
+    );
+
+    records.forEach((r) => {
+        if (!r.name) {
+            return;
+        }
+
+        const detail = lookup[`${r.name.toLowerCase()} ${desc}`]
+            || lookup[`${r.name.toLowerCase()}`];
+        if (detail) {
+            r.xref = detail.xref;
+            detail.firstParagraph && (r.details = Str(detail.firstParagraph));
+        }
+    })
 }

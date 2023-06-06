@@ -33,10 +33,15 @@ export type MatterElement = BaseElement & {
 }
 
 export function MatterElement(definition: MatterElement.Definition) {
-    return BaseElement(definition) as MatterElement;
+    return BaseElement({
+        type: MatterElement.Type,
+        ...definition
+    }) as MatterElement;
 }
 
 export namespace MatterElement {
+    export type Type = BaseElement.Type.Matter;
+    export const Type = BaseElement.Type.Matter;
     export type Definition = BaseElement.Definition & {
         version: string
     }

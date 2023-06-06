@@ -5,9 +5,9 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../src/model/index.js";
+import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
-import { ClusterReference, DetailedReference } from "./spec-types.js";
+import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
 import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter } from "./translate-table.js";
 
 const logger = Logger.get("cluster-translate");
@@ -30,8 +30,11 @@ export function* translateCluster(definition: ClusterReference) {
         const cluster = ClusterElement({
             id: id,
             name: name,
-            classification: metadata.classification
+            classification: metadata.classification,
+            children: children
         });
+
+        addDetails(cluster, definition);
 
         yield cluster;
     }
@@ -124,7 +127,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             // Must define after description because name is overwritten otherwise
             name: Alias(UpperIdentifier, "code", "feature"),
     
-            def: Optional(Integer)
+            default: Optional(Alias(Integer, "def"))
         });
     
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
@@ -306,6 +309,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         Logger.nest(() => {
             const child = translateDatatype(datatype);
             if (child) {
+                addDetails(child, datatype);
                 children.push(child);
             }
         });
@@ -402,5 +406,11 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         }
     
         return DatatypeElement({ id: -1, base, name, description, xref: datatype.xref, children: children });
+    }
+}
+
+function addDetails(element: AnyElement, definition: HtmlReference) {
+    if (definition.firstParagraph) {
+        element.details = Str(definition.firstParagraph);
     }
 }

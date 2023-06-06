@@ -7,10 +7,10 @@
 export const CLUSTER_PATH = "src/model/instance/clusters";
 export const CLUSTER_SUFFIX = "Model";
 
-import { ClusterElement } from "../../../src/model";
+import { ClusterElement } from "../../../src/model/index.js";
 import { TsFile } from "../util/TsFile.js";
 import { clean } from "../util/file.js";
-import { generateElement } from "./generate-element";
+import { generateElement } from "./generate-element.js";
 
 export function cleanCluster() {
     clean(CLUSTER_PATH, CLUSTER_SUFFIX);
@@ -19,7 +19,7 @@ export function cleanCluster() {
 export function generateCluster(cluster: ClusterElement) {
     const file = new TsFile(`${CLUSTER_PATH}/${cluster.name}${CLUSTER_SUFFIX}`);
 
-    file.addImport("../Matter.js", "Matter");
+    file.addImport("../Matter", "Matter");
 
     generateElement(
         file,

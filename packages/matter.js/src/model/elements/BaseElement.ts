@@ -44,8 +44,17 @@ export type BaseElement = {
     children: BaseElement[]
 }
 
-export function BaseElement(definition: BaseElement.Definition): BaseElement {
-    return { children: [], ...definition };
+export function BaseElement(definition: BaseElement.Definition) {
+    const result: any = {};
+    for (const [ k, v ] of Object.entries(definition)) {
+        if (v !== undefined) {
+            result[k] = v;
+        }
+    }
+    if (!result.children) {
+        result.children = [];
+    }
+    return result as BaseElement;
 }
 
 export namespace BaseElement {
@@ -111,5 +120,15 @@ export namespace BaseElement {
         section: string
     }
 
-    export type Definition = Omit<BaseElement, "children"> & { type?: Type, children?: BaseElement[] }
+    export type Definition = Omit<BaseElement, "children" | "xref"> & {
+        type?: Type,
+
+        xref?: {
+            document: `${BaseElement.Specification}`,
+            version: string,
+            section: string,
+        },
+
+        children?: BaseElement[]
+    }
 }

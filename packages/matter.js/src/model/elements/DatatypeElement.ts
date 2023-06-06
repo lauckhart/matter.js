@@ -16,7 +16,10 @@ export type DatatypeElement = BaseDataElement & {
 }
 
 export function DatatypeElement(definition: DatatypeElement.Definition) {
-    return BaseDataElement(definition) as DatatypeElement;
+    return BaseDataElement({
+        type: DatatypeElement.Type,
+        ...definition
+    }) as DatatypeElement;
 }
 
 export namespace DatatypeElement {
