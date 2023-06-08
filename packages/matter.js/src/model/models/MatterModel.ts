@@ -11,6 +11,12 @@ export class MatterModel extends Model implements MatterElement {
     version!: string;
     override children!: (DeviceTypeModel | ClusterModel | FabricModel | NodeModel)[];
 
+    override validate() {
+        this.validateStructure(MatterElement.Type, true, DeviceTypeModel, ClusterModel, FabricModel, NodeModel);
+        this.validateProperty({ name: "version", type: "string", required: true });
+        return super.validate();
+    }
+
     constructor(definition: MatterElement.Properties, parent?: Model) {
         super(definition, parent);
     }

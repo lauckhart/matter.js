@@ -105,7 +105,7 @@ function children(dom: Element, tagName: string) {
 }
 
 // Translate CHIP XML access tags to MOM privileges
-function setAccessPrivileges(src: Element, target: Access.FlagList) {
+function setAccessPrivileges(src: Element, target: Access.Ast) {
     const srcAccess = {
         read: undefined,
         invoke: undefined,
@@ -137,16 +137,16 @@ function setAccessPrivileges(src: Element, target: Access.FlagList) {
     });
 
     if (srcAccess.read !== undefined) {
-        target.push(srcAccess.read);
+        target.readPrivilege = srcAccess.read;
     }
-    if (srcAccess.write !== undefined && srcAccess.write != srcAccess.read) {
-        target.push(srcAccess.write);
+    if (srcAccess.write) {
+        target.writePrivilege = srcAccess.write;
     }
-    if (srcAccess.invoke !== undefined) {
+    if (srcAccess.invoke) {
         if (srcAccess.read || srcAccess.write) {
             throw new Error(`Intermingled data and command privileges`);
         }
-        target.push(srcAccess.invoke);
+        target.writePrivilege = srcAccess.invoke;
     }
 }
 
@@ -160,17 +160,19 @@ function setQualities(src: Element, target: BaseDataElement) {
     const writable = bool(src.getAttribute("writable"));
     const timed = bool(src.getAttribute("mustUseTimedWrite"));
 
-    const access: Access.FlagList = [ Access.Rw.Read ];
+    const access: Access.Ast = {
+         rw: Access.Rw.Read
+    };
     if (writable) {
-        access.push(Access.Rw.Write);
+        access.rw = Access.Rw.Write;
     }
     if (fabricSensitive) {
-        access.push(Access.Fabric.Sensitive);
+        access.fabric = Access.Fabric.Sensitive;
     } else if (fabricScoped) {
-        access.push(Access.Fabric.Scoped);
+        access.fabric = Access.Fabric.Scoped;
     }
     if (timed) {
-        access.push(Access.Timed.Required);
+        access.timed = true;
     }
     setAccessPrivileges(src, access);
     target.access = access;
@@ -185,6 +187,7 @@ function setQualities(src: Element, target: BaseDataElement) {
     } else if (optional === false) {
         conformance.push(Conformance.Flag.Mandatory);
     }
+
     target.conformance = conformance;
 }
 
@@ -197,10 +200,13 @@ function createDataElement<T extends BaseDataElement>(
     const id = need(`${Factory.Type} id`, int(src.getAttribute("code")));
     const name = camelize(need(`${Factory.Type} name`, str(src)));
     const base = need(`${Factory.Type} base`, str(src.getAttribute("type")));
-    const element = Factory({ id: id, name: name, base: base });
+    const element = Factory({ id: id, name: name, base: base } as T);
 
     setQualities(src, element);
 
+    if (!target.children) {
+        target.children = [];
+    }
     target.children.push(element);
 
     return element;

@@ -146,11 +146,11 @@ export const Globals = {
     string:        octet     (0x42,   "string",        "Character string"),
 
     // Composite address
-    ipadr:         octet     (0xd3,   "ipadr",         "IP Address",                  [ 4, 16 ]),
-    ipv4adr:       octet     (0xd4,   "ipv4adr",       "IPv4 address",                [ 4 ]),
-    ipv6adr:       octet     (0xd5,   "ipv6adr",       "IPv6 address",                [ 16 ]),
+    ipadr:         octet     (0xd3,   "ipadr",         "IP Address",                  { min: 4, max: 16 }),
+    ipv4adr:       octet     (0xd4,   "ipv4adr",       "IPv4 address",                4),
+    ipv6adr:       octet     (0xd5,   "ipv6adr",       "IPv6 address",                16),
     ipv6pre:       octet     (0xd6,   "ipv6pre",       "IPv6 prefix",                 { min: 1, max: 17 }),
-    hwadr:         octet     (0xd7,   "hwadr",         "Hardware address",            [ 6, 8 ]),
+    hwadr:         octet     (0xd7,   "hwadr",         "Hardware address",            { min: 6, max: 8 }),
 
     // Global elements
     ClusterRevision: AttributeElement({

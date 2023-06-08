@@ -12,6 +12,12 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
     classification!: DeviceTypeElement.Classification;
     override children!: (DeviceTypeModel | ClusterModel)[];
 
+    override validate() {
+        this.validateStructure(DeviceTypeElement.Type, true, DeviceTypeModel, ClusterModel);
+        this.validateProperty({ name: "classification", type: DeviceTypeElement.Classification });
+        return super.validate();
+    }
+
     constructor(definition: DeviceTypeElement.Properties, parent?: Model) {
         super(definition, parent);
     }

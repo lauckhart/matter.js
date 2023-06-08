@@ -11,6 +11,11 @@ export class EndpointModel extends Model implements EndpointElement {
     override id!: number;
     override children!: DeviceTypeModel[];
 
+    override validate() {
+        this.validateStructure(EndpointElement.Type, true, DeviceTypeModel);
+        return super.validate();
+    }
+
     constructor(definition: EndpointElement.Properties, parent?: Model) {
         super(definition, parent);
     }
