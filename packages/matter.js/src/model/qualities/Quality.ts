@@ -15,7 +15,7 @@ export class IllegalQualityError extends MatterError {}
  * "Other qualities" are defined behaviors of data fields and cluster elements
  * that do not involve access or conformance.
  */
-export class Quality implements Quality.Definition {
+export class Quality implements Quality.Ast {
     public nullable?: boolean;
     public nonvolatile?: boolean;
     public fixed?: boolean;
@@ -29,9 +29,11 @@ export class Quality implements Quality.Definition {
      * Initialize from a Quality.All definition or a string conforming to the
      * "other quality" DSL defined in the Matter specification.
      */
-    constructor(definition: Quality.Definition | string) {
+    constructor(definition: Quality.Definition) {
         if (typeof definition == "string") {
             this.parse(definition);
+        } else if (Array.isArray(definition)) {
+            definition.map((f) => this.parse(f));
         } else {
             Object.assign(this, definition);
         }
@@ -88,6 +90,11 @@ export class Quality implements Quality.Definition {
 }
 
 export namespace Quality {
+    /**
+     * Various ways to define quality.
+     */
+    export type Definition = Ast | `${Flag}`[] | `${Flag}` | undefined;
+
     /**
      * All qualities designated as "other qualities" in the Matter specification.
      */
@@ -196,5 +203,5 @@ export namespace Quality {
      * Values for all qualities designated as "other qualities" in the Matter
      * specification.
      */
-    export type Definition = DeviceType;
+    export type Ast = DeviceType;
 }

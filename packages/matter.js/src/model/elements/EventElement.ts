@@ -4,29 +4,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement } from "../index.js";
+import { BaseDataElement, BaseElement, Mei } from "../index.js";
 
 /**
  * An event is triggered by endpoints.
  */
 export type EventElement = BaseDataElement & {
+    id: Mei,
     type: EventElement.Type,
     priority: EventElement.Priority
 }
 
-export function EventElement(definition: EventElement.Definition) {
-    return BaseDataElement({
-        type: BaseElement.Type.Event,
-        ...definition
-    }) as EventElement;
+export function EventElement(definition: EventElement.Properties) {
+    return BaseDataElement(EventElement.Type, definition) as EventElement;
 }
 
 export namespace EventElement {
     export type Type = BaseElement.Type.Event;
     export const Type = BaseElement.Type.Event;
-    export type Definition = BaseDataElement.Definition & {
-        priority: `${Priority}`
-    }
+    export type Properties = BaseElement.Properties<EventElement>;
 
     /**
      * Event priority as defined in Matter specification.

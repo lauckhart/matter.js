@@ -14,29 +14,80 @@ export class IllegalConformanceError extends MatterError {}
  * "Conformance" controls when a data field or cluster element is allowed or
  * required.
  */
-export class Conformance {
-    definition: Conformance.Definition;
+export class Conformance implements Conformance.Ast {
+    type: Conformance.AstType;
+    param?: Conformance.AstParam;
 
     /**
      * Initialize from a Conformance.Definition or the conformance DSL defined
      * by the Matter Specification.
      */
-    constructor(definition: Conformance.Definition | string) {
-        if (typeof definition == "string") {
-            this.definition = new Parser(definition).ast;
+    constructor(definition: Conformance.Definition) {
+        let ast: Conformance.Ast;
+        if (definition == undefined) {
+            this.type = Conformance.Special.Empty;
+            return;
+        } else if (typeof definition == "string") {
+            ast = new Parser(definition).ast;
+        } else if (Array.isArray(definition)) {
+            const asts = definition.map((def) => new Parser(def).ast);
+            if (asts.length == 1) {
+                ast = asts[0];
+            } else {
+                ast = {
+                    type: Conformance.Special.Group,
+                    param: asts
+                }
+            }
         } else {
-            this.definition = definition;
+            ast = definition;
         }
+        this.type = ast.type;
+        this.param = ast.param;
     }
 
     // TODO - offer validation?
 
     toString() {
-        return Conformance.serialize(this.definition);
+        return Conformance.serialize(this);
     }
 }
 
 export namespace Conformance {
+    export type AstType = Special | Flag | Operator;
+    export type AstParam = Ast.Name | Ast.Value | Ast.Option | Ast.UnaryOperand | Ast.BinaryOperands | Ast.Group | Ast.Choice;
+
+    export type Ast = {
+        type: AstType,
+        param?: AstParam
+    };
+
+    export namespace Ast {
+        export type Name = string;
+        export type Value = string | number;
+        export type Option = Ast;
+        export type UnaryOperand = Ast;
+        export type BinaryOperands = {
+            lhs: Ast,
+            rhs: Ast
+        }
+        export type Group = Ast[];
+        export type Choice = {
+            choice: ChoiceName,
+            num?: number,
+            orMore?: boolean,
+            expr: Ast
+        };
+    }
+
+    export enum Special {
+        Empty = "empty",
+        Name = "name",
+        Value = "value",
+        Choice = "choice",
+        Group = "group"
+    }
+
     export enum Flag {
         Mandatory = "M",
         Optional = "O",
@@ -45,169 +96,67 @@ export namespace Conformance {
         Disallowed = "X"
     }
 
+    export enum Operator {
+        NOT = "!",
+        EQ = "==",
+        NE = "!=",
+        OR = "|",
+        XOR = "^",
+        AND = "&",
+        DOT = "."
+    }
+
     export const M = Flag.Mandatory;
     export const O = Flag.Optional;
     export const P = Flag.Provisional;
     export const D = Flag.Deprecated;
     export const X = Flag.Disallowed;
-    export const EQ = "==";
-    export const NE = "!=";
-    export const OR = "|";
-    export const XOR = "^";
-    export const AND = "&";
-    export const DOT = ".";
+    export const EQ = Operator.EQ;
+    export const NE = Operator.NE;
+    export const OR = Operator.OR;
+    export const XOR = Operator.XOR;
+    export const AND = Operator.AND;
+    export const DOT = Operator.DOT;
 
     export type Name = string;
 
     export type Number = number;
 
-    export type Not = { not: Definition };
-
-    export type Equal = [ Definition, typeof EQ, Name | Number ];
-
-    export type NotEqual = [ Definition, typeof NE, Name | Number ];
-
-    export type Or = [ Definition, typeof OR, Definition ];
-
-    export type Xor = [ Definition, typeof XOR, Definition ];
-
-    export type And = [ Definition, typeof AND, Definition ];
-
     export type ChoiceName = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z";
 
-    export type Choice = {
-        choice: ChoiceName,
-        num?: number,
-        orMore?: boolean,
-        def: Definition
-    };
-
-    export type Optional = { optional: Definition }
-
-    export type List = Definition[];
-
     /**
-     * Defines "conformance" per the Matter specification.
+     * Supported ways of expressing conformance.
      */
     export type Definition
-        = Flag
-        | Name
-        | Number
-        | Not
-        | Equal
-        | NotEqual
-        | Or
-        | Xor
-        | And
-        | Choice
-        | Optional
-        | List;
+        = Flag | Name | (Flag | Name)[] | Ast | string | undefined;
 
-    export enum NodeType {
-        Unknown,
-        Flag,
-        Value,
-        Not,
-        BinaryOperator,
-        Choice,
-        Optional,
-        List
-    }
-
-    const Flags = new Set([ M, O, P, D, X ]);
     const BinaryOperators = new Set([ EQ, NE, OR, XOR, AND ]);
     const OrXorAnd = new Set([ OR, XOR, AND ]);
 
-    // Retrieve the operator from an "AST" node, or undefined if the node
-    // is not an binary operator
-    function logicalOperator(definition: Definition) {
-        if (!Array.isArray(definition) || definition.length != 3) {
-            return undefined;
-        }
-
-        const op = definition[1] as string;
-        if (BinaryOperators.has(op)) {
-            return op;
-        }
-
-        return undefined;
-    }
-
     // Serialize with parenthesis if necessary to make the expression atomic
-    function serializeAtomic(definition: Definition, operators = BinaryOperators) {
-        const serialized = serialize(definition);
-        switch (nodeType(definition)) {
-            case NodeType.List:
-                return `(${serialized})`;
-
-            case NodeType.BinaryOperator:
-                const operator = logicalOperator(definition);
-                if (operator && operators.has(operator)) {
-                    return `(${serialized})`;
-                }
+    function serializeAtomic(ast: Ast, operators = BinaryOperators) {
+        const serialized = serialize(ast);
+        if (ast.type == "group" || operators.has(ast.type as Operator)) {
+            return `(${serialized})`;
         }
         return serialized;
     }
-
-    /**
-     * Get the node type for an entry in a definition "AST".
-     */
-    export function nodeType(definition: Definition) {
-        if (typeof definition == "string") {
-            if (Flags.has(definition as Flag)) {
-                return NodeType.Flag;
-            }
-
-            return NodeType.Value;
-        }
-        
-        if (typeof definition == "number") {
-            return NodeType.Value;
-        }
-
-        if (Array.isArray(definition)) {
-            if (definition.length == 3 && BinaryOperators.has(definition[1] as any)) {
-                return NodeType.BinaryOperator;
-            }
-
-            return NodeType.List;
-        }
-
-        if (typeof definition == "object") {
-            if (Object.getOwnPropertyDescriptor(definition, "not")) {
-                return NodeType.Not;
-            }
-            if (Object.getOwnPropertyDescriptor(definition, "choice")) {
-                return NodeType.Choice;
-            }
-            if (Object.getOwnPropertyDescriptor(definition, "optional")) {
-                return NodeType.Optional;
-            }
-        }
-
-        return NodeType.Unknown;
-    }
     
-    export function serialize(definition: Definition): string {
-        switch (nodeType(definition)) {
-            case NodeType.Flag:
-            case NodeType.Value:
-                return `${definition}`;
+    export function serialize(ast: Ast): string {
+        switch (ast.type) {
+            case Operator.OR:
+            case Operator.XOR:
+            case Operator.AND:
+                const operands = ast.param as Conformance.Ast.BinaryOperands;
+                return `${serializeAtomic(operands.lhs, OrXorAnd)} ${ast.type} ${serializeAtomic(operands.rhs, OrXorAnd)}`;
 
-            case NodeType.BinaryOperator:
-                const lhs = (definition as Definition[])[0];
-                const op = (definition as string[])[1];
-                const rhs = (definition as Definition[])[2];
-
-                return `${serializeAtomic(lhs, OrXorAnd)} ${op} ${serializeAtomic(rhs, OrXorAnd)}`;
-
-            case NodeType.Not:
-                const n = definition as Conformance.Not;
-                return `!${serializeAtomic(n.not)}`;
+            case Operator.NOT:
+                const n = ast.param as Conformance.Ast.UnaryOperand;
+                return `!${serializeAtomic(n)}`;
                 
-            case NodeType.Choice:
-                const c = definition as Conformance.Choice;
-                let result = `${serializeAtomic(c.def)}.${c.choice}`;
+            case "choice":
+                const c = ast.param as Conformance.Ast.Choice;
+                let result = `${serializeAtomic(c.expr)}.${c.choice}`;
                 if (c.num) {
                     result = `${result}${c.num}`;
                 }
@@ -216,16 +165,18 @@ export namespace Conformance {
                 }
                 return result;
 
-            case NodeType.List:
-                const l = definition as Conformance.List;
+            case "group":
+                const l = ast.param as Conformance.Ast.Group;
                 return l.map(d => serialize(d)).join(", ");
 
-            case NodeType.Optional:
-                const o = definition as Conformance.Optional;
-                return `[${serialize(o.optional)}]`;
-        }
+            case Flag.Optional:
+                const o = ast.param as Conformance.Ast.Option;
+                return `[${serialize(o)}]`;
 
-        return "?";
+            default:
+                // Flag, name or value
+                return `${ast}`;
+        }
     }
 }
 
@@ -397,10 +348,7 @@ namespace Tokenizer {
 // The DSL is *almost* complex enough to warrant a proper parser library.  Not
 // quite though...
 class Parser {
-    // Note that Conformance.Definition effectively serves as our AST.  Its
-    // design is slightly suboptimal for this purpose because it also attempts
-    // to serve as a reasonable DSL for manual expression of conformance
-    public ast: Conformance.Definition;
+    public ast: Conformance.Ast;
 
     private tokens: Iterator<Tokenizer.Token>;
     private token?: Tokenizer.Token;
@@ -431,20 +379,29 @@ class Parser {
     // design is slightly suboptimal for this purpose because it also attempts
     // to serve as a DSL for manual expression of conformance
     private parse() {
-        const group = this.parseGroup();
-
-        return group.length < 2 ? group[0] : group;
+        return this.parseGroup();
     }
 
     private parseGroup(end?: Tokenizer.Special) {
-        const group = [] as Conformance.Definition[];
+        const group = [] as Conformance.Ast[];
+
+        function groupAsAst() {
+            if (group.length == 1) {
+                return group[0];
+            }
+
+            return {
+                type: Conformance.Special.Group,
+                param: group
+            }
+        }
 
         while (true) {
             if (!this.token) {
                 if (end) {
                     throw new IllegalConformanceError("Unterminated conformance grouping");
                 }
-                return group;
+                return groupAsAst();
             }
 
             // Optional brackets are only allowed at the top-level
@@ -453,7 +410,10 @@ class Parser {
 
             if (optional) {
                 this.next();
-                group.push({ optional: this.parseGroup(Tokenizer.Special.OptionalEnd)})
+                group.push({
+                    type: Conformance.Special.Group,
+                    param: this.parseGroup(Tokenizer.Special.OptionalEnd)
+                })
             } else {
                 group.push(this.parseExpression());
             }
@@ -462,7 +422,7 @@ class Parser {
                 this.next();
             } else if (end && this.atSpecial(end)) {
                 this.next();
-                return group;
+                return groupAsAst();
             }
         }
     }
@@ -474,7 +434,7 @@ class Parser {
     }
 
     private parseExpression() {
-        let elements = [] as (Tokenizer.Special | Conformance.Definition)[];
+        let elements = [] as (Tokenizer.Special | Conformance.Ast | string)[];
 
         // Collect binary expressions into an array so we can back up and
         // apply operator precedence
@@ -489,15 +449,19 @@ class Parser {
         Parser.BinaryOperatorPrecedence.forEach(operators => {
             for (let i = 0; i < elements.length; i++) {
                 if (operators.indexOf(elements[i + 1] as Tokenizer.Special) != -1) {
-                    elements.splice(i, 0, elements.splice(i, 3));
+                    const [ lhs, op, rhs ] = elements.splice(i, 3);
+                    elements.splice(i, 0, {
+                        type: op as Conformance.Operator,
+                        param: { lhs: lhs as Conformance.Ast, rhs: rhs as Conformance.Ast
+                    }});
                 }
             }
         });
 
-        return elements[0]!;
+        return elements[0] as Conformance.Ast;
     }
 
-    private parseUnaryExpression(): Conformance.Definition {
+    private parseUnaryExpression(): string | Conformance.Ast {
         const expr = this.parseUnaryExpressionWithoutChoice();
 
         // Parse choice suffix
@@ -509,8 +473,8 @@ class Parser {
             }
             const choice = {
                 choice: this.token?.value,
-                def: expr
-            } as Conformance.Choice;
+                expr: expr
+            } as Conformance.Ast.Choice;
             this.next();
             if ((this.token as any)?.type == Tokenizer.TokenType.Number) {
                 choice.num = this.token?.value as number;
@@ -521,13 +485,16 @@ class Parser {
                 this.next();
             }
 
-            return choice;            
+            return {
+                type: Conformance.Special.Choice,
+                param: choice
+            }
         }
 
         return expr;
     }
 
-    private parseUnaryExpressionWithoutChoice(): Conformance.Definition {
+    private parseUnaryExpressionWithoutChoice(): string | Conformance.Ast {
         if (!this.token) {
             throw new IllegalConformanceError("Conformance definition terminated with expression expected");
         }
@@ -535,12 +502,12 @@ class Parser {
         if (this.token.type == Tokenizer.TokenType.Flag || this.token.type == Tokenizer.TokenType.Name || this.token.type == Tokenizer.TokenType.Number) {
             const value = this.token.value;
             this.next();
-            return value;
+            return { type: Conformance.Special.Value, param: value };
         }
 
         if (this.atSpecial(Tokenizer.Special.Not)) {
             this.next();
-            return { not: this.parseUnaryExpression() };
+            return { type: Conformance.Operator.NOT, param: this.parseUnaryExpression() };
         }
 
         if (this.atSpecial(Tokenizer.Special.GroupBegin)) {

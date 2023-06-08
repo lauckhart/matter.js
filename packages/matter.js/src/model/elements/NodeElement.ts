@@ -4,24 +4,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseElement, EndpointElement } from "../index.js";
+import { BaseElement, EndpointElement, Mei } from "../index.js";
 
 /**
  * Runtime representation of a node.
  */
 export type NodeElement = BaseElement & {
+    id: number,
     type: NodeElement.Type,    
-    children: EndpointElement[]
+    children?: EndpointElement[]
 }
 
-export function NodeElement(definition: NodeElement.Definition) {
-    return BaseElement(definition) as NodeElement;
+export function NodeElement(definition: NodeElement.Properties) {
+    return BaseElement(NodeElement.Type, definition) as NodeElement;
 }
 
 export namespace NodeElement {
     export type Type = BaseElement.Type.Node;
     export const Type = BaseElement.Type.Node;
-    export type Definition = BaseElement.Definition & {
-        children?: EndpointElement[]
-    };
+    export type Properties = BaseElement.Properties<NodeElement>;
 }

@@ -5,32 +5,26 @@
  */
 
 import {
-    AttributeElement,
     BaseElement,
     ClusterElement,
-    CommandElement,
     DeviceTypeElement,
     EndpointElement,
-    EventElement,
     FabricElement,
     NodeElement,
-    DatatypeElement,
     MatterElement
 } from "../index.js";
+import { AnyDataElement } from "./AnyDataElement.js";
 
 /**
- * A type describing all elements defined by the Matter specification.
+ * Any Matter element.
  */
-export type AnyElement
-    = AttributeElement
-    | CommandElement
-    | EventElement
+export type AnyElement =
+    AnyDataElement
     | ClusterElement
     | DeviceTypeElement
     | EndpointElement
     | FabricElement
     | NodeElement
-    | DatatypeElement
     | MatterElement;
 
 export namespace AnyElement {

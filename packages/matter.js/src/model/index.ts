@@ -8,3 +8,4 @@ export * from "./definitions/internal.js";
 export * from "./qualities/internal.js";
 export * from "./elements/internal.js";
 export * from "./instance/internal.js";
+export * from "./models/internal.js";

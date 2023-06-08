@@ -4,18 +4,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MEI } from "../index.js";
-
 /**
  * Per the Matter specification, an element is a data construct that supports
  * an instance of data.  So, a class.
+ * 
+ * Elements as defined by this package are a static data structure.  Each
+ * element has a corresponding "Model" that is a proper class with runtime
+ * functionality related to the element.
  */
 export type BaseElement = {
     /**
      * The ID of the element per Matter specification, either global or
      * context-specific.  A "machine appropriate" semantic differentiator.
      */
-    id: MEI
+    id?: number
 
     /**
      * The key used for storing this element.  A "human appropriate" semantic
@@ -41,23 +43,27 @@ export type BaseElement = {
     /**
      * Child elements.
      */
-    children: BaseElement[]
+    children?: BaseElement[]
 }
 
-export function BaseElement(definition: BaseElement.Definition) {
-    const result: any = {};
+export function BaseElement(type: BaseElement.Type, definition: BaseElement) {
+    const result: any = { type: type };
     for (const [ k, v ] of Object.entries(definition)) {
         if (v !== undefined) {
             result[k] = v;
         }
     }
-    if (!result.children) {
-        result.children = [];
-    }
     return result as BaseElement;
 }
 
 export namespace BaseElement {
+    export type ElementForProperties<P> = P extends Properties<infer T> ? T : never;
+
+    /**
+     * Element with optional type; used for factory functions and constructors.
+     */
+    export type Properties<T extends { type: Type }> = Omit<T, "type"> & Partial<Pick<T, "type">>;
+
     /**
      * Types of elements per the Matter specification.
      */
@@ -73,10 +79,6 @@ export namespace BaseElement {
         Command = "command",
         Event = "event",
         Attribute = "attribute",
-        CommandField = "commandField",
-        EventField = "eventField",
-        AttributeField = "structField",
-        ListEntry = "listEntry",
         DeviceType = "deviceType",
         Datatype = "datatype"
     }
@@ -106,7 +108,7 @@ export namespace BaseElement {
         /**
          * The defining document for the element.
          */
-        document: BaseElement.Specification,
+        document: `${BaseElement.Specification}`,
 
         /**
          * The version of the element's defining document.
@@ -118,17 +120,5 @@ export namespace BaseElement {
          * addresses the element.
          */
         section: string
-    }
-
-    export type Definition = Omit<BaseElement, "children" | "xref"> & {
-        type?: Type,
-
-        xref?: {
-            document: `${BaseElement.Specification}`,
-            version: string,
-            section: string,
-        },
-
-        children?: BaseElement[]
     }
 }

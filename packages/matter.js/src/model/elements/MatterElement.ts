@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseElement, ClusterElement, DeviceTypeElement, FabricElement } from "../index.js"
+import { BaseElement, ClusterElement, DeviceTypeElement, FabricElement, NodeElement } from "../index.js"
 
 /**
  * This is the entry to a model of application-level Matter constructs referred
@@ -29,20 +29,15 @@ import { BaseElement, ClusterElement, DeviceTypeElement, FabricElement } from ".
 export type MatterElement = BaseElement & {
     type: BaseElement.Type.Matter,
     version: string,
-    children: ClusterElement | DeviceTypeElement | FabricElement
+    children: (ClusterElement | DeviceTypeElement | FabricElement | NodeElement)[]
 }
 
-export function MatterElement(definition: MatterElement.Definition) {
-    return BaseElement({
-        type: MatterElement.Type,
-        ...definition
-    }) as MatterElement;
+export function MatterElement(definition: MatterElement.Properties) {
+    return BaseElement(MatterElement.Type, definition) as MatterElement;
 }
 
 export namespace MatterElement {
     export type Type = BaseElement.Type.Matter;
     export const Type = BaseElement.Type.Matter;
-    export type Definition = BaseElement.Definition & {
-        version: string
-    }
+    export type Properties = BaseElement.Properties<MatterElement>;
 }

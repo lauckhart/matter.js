@@ -65,6 +65,7 @@ export const Globals = {
     bool:          bool      (0x10,   "bool",          "Boolean"),
     map8:          map       (0x18,   "map8",          "8-bit bitmap",                1),
     map16:         map       (0x19,   "map16",         "16-bit bitmap",               2),
+    map24:         map       (0x19,   "map16",         "16-bit bitmap",               2),
     map32:         map       (0x1b,   "map32",         "32-bit bitmap",               4),
     map64:         map       (0x1f,   "map64",         "64-bit bitmap",               8),
 
@@ -139,7 +140,7 @@ export const Globals = {
 
     // Counter
     dataVer:       extint    (0xd0,   "data-ver",      "Data version",                Datatype.uint32),
-    eventNumber:   extint    (0xe6,   "event-no",      "Event number",                Datatype.uint64),
+    eventNo:       extint    (0xe6,   "event-no",      "Event number",                Datatype.uint64),
 
     // Composite string
     string:        octet     (0x42,   "string",        "Character string"),

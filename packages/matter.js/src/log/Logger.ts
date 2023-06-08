@@ -253,6 +253,18 @@ export class Logger {
         }
     }
 
+    /**
+     * Async version of above.
+     */
+    static nestAsync(context: () => Promise<any>) {
+        this.nestingLevel++;
+        try {
+            context();
+        } finally {
+            this.nestingLevel--;
+        }
+    }
+
     constructor(
         private readonly name: string,
     ) { }
