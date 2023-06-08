@@ -11,8 +11,8 @@ export class FabricModel extends Model implements FabricElement {
     override id!: number;
     override children!: NodeModel[];
 
-    constructor(definition: FabricElement.Properties) {
-        super(definition);
+    constructor(definition: FabricElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {

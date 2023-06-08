@@ -12,8 +12,8 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
     classification!: DeviceTypeElement.Classification;
     override children!: (DeviceTypeModel | ClusterModel)[];
 
-    constructor(definition: DeviceTypeElement.Properties) {
-        super(definition);
+    constructor(definition: DeviceTypeElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {

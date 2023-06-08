@@ -11,8 +11,8 @@ export class DatatypeModel extends DataModel implements DatatypeElement {
     override type: DatatypeElement.Type = DatatypeElement.Type;
     override id?: Mei;
 
-    constructor(definition: DatatypeElement.Properties) {
-        super(definition);
+    constructor(definition: DatatypeElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {

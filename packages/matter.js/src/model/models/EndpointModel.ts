@@ -11,8 +11,8 @@ export class EndpointModel extends Model implements EndpointElement {
     override id!: number;
     override children!: DeviceTypeModel[];
 
-    constructor(definition: EndpointElement.Properties) {
-        super(definition);
+    constructor(definition: EndpointElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {

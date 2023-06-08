@@ -11,8 +11,8 @@ export class MatterModel extends Model implements MatterElement {
     version!: string;
     override children!: (DeviceTypeModel | ClusterModel | FabricModel | NodeModel)[];
 
-    constructor(definition: MatterElement.Properties) {
-        super(definition);
+    constructor(definition: MatterElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {

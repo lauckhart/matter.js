@@ -36,7 +36,7 @@ export type BaseDataElement = BaseElement & {
     /**
      * Other qualities not covered by conformance or access.
      */
-    quality?: Quality.Ast,
+    quality?: Quality.Definition,
 
     /**
      * Applies to numeric types.

@@ -12,8 +12,8 @@ export class CommandModel extends DataModel implements CommandElement {
     direction!: CommandElement.Direction;
     response?: string
 
-    constructor(definition: CommandElement.Properties) {
-        super(definition);
+    constructor(definition: CommandElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {
