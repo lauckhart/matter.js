@@ -11,6 +11,11 @@ export class NodeModel extends Model implements NodeElement {
     override id!: number;
     override children!: EndpointModel[];
 
+    override validate() {
+        this.validateStructure(NodeElement.Type, true, EndpointModel);
+        return super.validate();
+    }
+
     constructor(definition: NodeElement.Properties, parent?: Model) {
         super(definition, parent);
     }

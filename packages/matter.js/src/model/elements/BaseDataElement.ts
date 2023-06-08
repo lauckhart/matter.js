@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ByteArray } from "../../util/index.js";
-import { Access, BaseElement, Conformance, Constraint, Globals, Quality } from "../index.js";
+import { Access, BaseElement, Conformance, Constraint, Quality } from "../index.js";
 import type { AnyDataElement } from "../index.js";
 
 /**
@@ -68,18 +67,7 @@ export function BaseDataElement(type: BaseElement.Type, definition: BaseDataElem
         }
     }
 
-    const result = BaseElement(type, definition) as BaseDataElement;
-
-    let d = definition.default;
-    if (typeof d == "string") {
-        // TODO - technically we need the cluster-local datatypes to properly
-        // resolve to the underlying type in order to select the default value.
-        // This should be good enough for now as we're only using this to make
-        // the definitions look prettier
-        result.default = BaseDataElement.parseValue(result, d);
-    }
-
-    return result;
+    return BaseElement(type, definition) as BaseDataElement;
 }
 
 export namespace BaseDataElement {
@@ -122,110 +110,6 @@ export namespace BaseDataElement {
      * A pool of datatype definitions indexed by name.
      */
     export type Datatypes = { [name: string]: BaseDataElement };
-
-    /**
-     * Find the undeflying JS type for a data element.
-     */
-    export function nativeType(el: BaseDataElement, locals: Datatypes = {}) {
-        while (el.base) {
-            if (locals[el.base]) {
-                el = locals[el.base];
-            } else if ((Globals as any)[el.base]) {
-                el = (Globals as any)[el.base];
-                if (el.name == "string") {
-                    return String;
-                }
-            } else {
-                break;
-            }
-        }
-
-        switch (el.name) {
-            case Datatype.bool:
-                return Boolean;
-
-            case Datatype.map8:
-            case Datatype.map16:
-            case Datatype.map32:
-            case Datatype.map64:
-            case Datatype.uint8:
-            case Datatype.uint16:
-            case Datatype.uint24:
-            case Datatype.uint32:
-            case Datatype.uint40:
-            case Datatype.uint48:
-            case Datatype.uint56:
-            case Datatype.uint64:
-            case Datatype.int8:
-            case Datatype.int16:
-            case Datatype.int24:
-            case Datatype.int32:
-            case Datatype.int40:
-            case Datatype.int48:
-            case Datatype.int56:
-            case Datatype.int64:
-                return BigInt;
-
-            case Datatype.single:
-            case Datatype.double:
-                return Number;
-
-            case Datatype.octstr:
-                return ByteArray;
-
-            case Datatype.list:
-                return Array;
-
-            case Datatype.struct:
-                return Object;
-        }
-    }
-    
-    /**
-     * Convert a string to the type defined by an element.
-     */
-    export function parseValue(type: BaseDataElement, value: string, locals: Datatypes = {}) {
-        const native = BaseDataElement.nativeType(type, locals);
-        if (native == String) {
-            return value;
-        }
-
-        switch (native) {
-            case Boolean:
-                value = value.trim().toLowerCase();
-                switch (value) {
-                    case "false":
-                    case "no":
-                    case "":
-                        return false;
-
-                    default:
-                        return true;
-                }
-            
-            case BigInt:
-                try {
-                    const i = BigInt(value);
-                    const n = Number(i);
-                    if (BigInt(n) == i) {
-                        return n;
-                    }
-                    return i;
-                } catch (e) {
-                    if (e instanceof SyntaxError) {
-                        return NaN;
-                    } else {
-                        throw e;
-                    }
-                }
-
-            case Number:
-                return Number(value);
-        }
-
-        // Better to keep original type or throw?
-        return value;
-    }
     
     /**
      * Valid sizes for ints.

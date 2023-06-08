@@ -4,11 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeElement, DataModel, Mei, Model } from "../index.js";
+import { AttributeElement, DataModel, DatatypeModel, Mei, Model } from "../index.js";
 
 export class AttributeModel extends DataModel implements AttributeElement {
     override type: AttributeElement.Type = AttributeElement.Type;
     override id!: Mei;
+
+    override validate() {
+        this.validateStructure(AttributeElement.Type, true, DatatypeModel);
+        return super.validate();
+    }
 
     constructor(definition: AttributeElement.Properties, parent?: Model) {
         super(definition, parent);

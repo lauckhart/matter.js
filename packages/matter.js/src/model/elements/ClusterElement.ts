@@ -18,7 +18,7 @@ export type ClusterElement = BaseElement & {
      */
     classification?: ClusterElement.Classification,
 
-    children: ClusterElement.Children[]
+    children?: ClusterElement.Children[]
 }
 
 export function ClusterElement(definition: ClusterElement.Properties) {
