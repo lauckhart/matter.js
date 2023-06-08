@@ -12,8 +12,8 @@ export class ClusterModel extends Model implements ClusterElement {
     override id!: Mei;
     override children!: ClusterModel.Children[];
 
-    constructor(definition: ClusterElement.Properties) {
-        super(definition);
+    constructor(definition: ClusterElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {

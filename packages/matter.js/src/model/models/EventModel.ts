@@ -11,8 +11,8 @@ export class EventModel extends DataModel implements EventElement {
     override id!: Mei;
     priority!: EventElement.Priority;
 
-    constructor(definition: EventElement.Properties) {
-        super(definition);
+    constructor(definition: EventElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {

@@ -173,5 +173,5 @@ export const Globals = {
         quality: "F", access: "R V", conformance: "M" }),
     FabricIndex: DatatypeElement({
         id: 0xfe, name: "FabricIndex", base: "fabric-idx",
-        constraint: [ 1, 254 ], access: "R V F" })
+        constraint: "1 to 254", access: "R V F" })
 }

@@ -93,7 +93,7 @@ export namespace Quality {
     /**
      * Various ways to define quality.
      */
-    export type Definition = Ast | `${Flag}`[] | `${Flag}` | undefined;
+    export type Definition = Ast | `${Flag}`[] | string | undefined;
 
     /**
      * All qualities designated as "other qualities" in the Matter specification.

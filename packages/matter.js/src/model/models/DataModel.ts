@@ -18,8 +18,8 @@ export abstract class DataModel extends Model implements BaseDataElement {
     access: Access;
     quality: Quality;
 
-    constructor(definition: BaseDataElement.Properties) {
-        super(definition);
+    protected constructor(definition: BaseDataElement.Properties, parent?: Model) {
+        super(definition, parent);
 
         this.constraint = new Constraint(definition.constraint);
         this.conformance = new Conformance(definition.conformance);

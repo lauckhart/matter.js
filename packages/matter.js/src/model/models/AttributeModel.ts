@@ -10,8 +10,8 @@ export class AttributeModel extends DataModel implements AttributeElement {
     override type: AttributeElement.Type = AttributeElement.Type;
     override id!: Mei;
 
-    constructor(definition: AttributeElement.Properties) {
-        super(definition);
+    constructor(definition: AttributeElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {

@@ -11,8 +11,8 @@ export class NodeModel extends Model implements NodeElement {
     override id!: number;
     override children!: EndpointModel[];
 
-    constructor(definition: NodeElement.Properties) {
-        super(definition);
+    constructor(definition: NodeElement.Properties, parent?: Model) {
+        super(definition, parent);
     }
 
     static {
