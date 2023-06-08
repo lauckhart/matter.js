@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterElement, BaseElement } from "../index.js"
+import { ClusterElement, BaseElement, Mei } from "../index.js"
 
 /**
  * Details on a specific device as defined in the Matter specification.
@@ -12,28 +12,20 @@ import { ClusterElement, BaseElement } from "../index.js"
  * TODO - extract/merge DeviceTypes.ts?
  */
 export type DeviceTypeElement = BaseElement & {
+    id: Mei,
     type: DeviceTypeElement.Type,
-    id: DeviceTypeElement.DeviceType,
-    classification: DeviceTypeElement.Classification,
-    revision: number,
-    children: (DeviceTypeElement | ClusterElement)[]
+    classification: `${DeviceTypeElement.Classification}`,
+    children?: (DeviceTypeElement | ClusterElement)[]
 }
 
-export function DeviceTypeElement(definition: DeviceTypeElement.Definition) {
-    return BaseElement({
-        type: DeviceTypeElement.Type,
-        ...definition
-    }) as DeviceTypeElement;
+export function DeviceTypeElement(definition: DeviceTypeElement.Properties) {
+    return BaseElement(DeviceTypeElement.Type, definition) as DeviceTypeElement;
 }
 
 export namespace DeviceTypeElement {
     export type Type = BaseElement.Type.DeviceType;
     export const Type = BaseElement.Type.DeviceType;
-    export type Definition = BaseElement.Definition & {
-        revision: number,
-        classification: `${Classification}`,
-        children?: (DeviceTypeElement | ClusterElement)[]
-    }
+    export type Properties = BaseElement.Properties<DeviceTypeElement>;
 
     export enum Classification {
         Node = "node",
@@ -42,6 +34,7 @@ export namespace DeviceTypeElement {
         Dynamic = "dynamic"
     }
     
+    // TODO - kill this enum once clusters are loaded
     export enum DeviceType {
         // Lighting
         OnOffLight = 0x0100,

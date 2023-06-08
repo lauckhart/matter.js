@@ -33,3 +33,16 @@ export function clean(target: string, suffix: string) {
         }
     });
 }
+
+export async function readFileWithCache(name: string, generator: (name: string) => Promise<string>) {
+    try {
+        return readMatterFile(name);
+    } catch (e) {
+        // Cache unavailable
+    }
+
+    const text = await generator(name);
+    writeMatterFile(name, text);
+
+    return text;
+}

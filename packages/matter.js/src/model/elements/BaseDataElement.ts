@@ -6,6 +6,7 @@
 
 import { ByteArray } from "../../util/index.js";
 import { Access, BaseElement, Conformance, Constraint, Globals, Quality } from "../index.js";
+import type { AnyDataElement } from "../index.js";
 
 /**
  * A base element for all elements that represent data.
@@ -35,7 +36,7 @@ export type BaseDataElement = BaseElement & {
     /**
      * Other qualities not covered by conformance or access.
      */
-    quality?: Quality.Definition,
+    quality?: Quality.Ast,
 
     /**
      * Applies to numeric types.
@@ -45,10 +46,16 @@ export type BaseDataElement = BaseElement & {
     /**
      * The default value of instances.
      */
-    default?: any
+    default?: any,
+
+    /**
+     * Nested structures that may have data elements include enums, structs and
+     * lists.
+     */
+    children?: AnyDataElement[]
 }
 
-export function BaseDataElement(definition: BaseDataElement.Definition) {
+export function BaseDataElement(type: BaseElement.Type, definition: BaseDataElement) {
     definition = { ...definition };
     
     if (definition.constraint?.toString().toLowerCase() == "all") {
@@ -61,7 +68,7 @@ export function BaseDataElement(definition: BaseDataElement.Definition) {
         }
     }
 
-    const result = BaseElement(definition) as BaseDataElement;
+    const result = BaseElement(type, definition) as BaseDataElement;
 
     let d = definition.default;
     if (typeof d == "string") {
@@ -76,19 +83,10 @@ export function BaseDataElement(definition: BaseDataElement.Definition) {
 }
 
 export namespace BaseDataElement {
-    export type Definition = BaseElement.Definition & {
-        base?: string,
-        byteSize?: Size,
-        default?: any,
-
-        constraint?: Constraint.Definition | string,
-        conformance?: Conformance.Definition | string,
-        access?: Access.Definition | string,
-        quality?: Quality.Definition | string
-    }
+    export type Properties = BaseElement.Properties<BaseDataElement & { type: BaseElement.Type }>;
 
     /**
-     * An identifier for every standard datatype from the Matter Core
+     * An identifier for every non-derived datatype from the Matter Core
      * Specification.
      */
     export enum Datatype {

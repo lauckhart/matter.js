@@ -5,4 +5,7 @@
  */
 
 export * from "./Matter.js";
-import "./clusters/internal.js";
+
+import "./spec/internal.js";
+import "./chip/internal.js";
+import "./local/internal.js";

@@ -18,4 +18,4 @@
  * we do not express statically with TypeScript.
  */
 export type ManufacturerExtensibleIdentifier = number;
-export type MEI = ManufacturerExtensibleIdentifier;
+export type Mei = ManufacturerExtensibleIdentifier;

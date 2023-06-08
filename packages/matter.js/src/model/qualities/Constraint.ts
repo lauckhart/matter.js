@@ -15,77 +15,81 @@ import { MatterError } from "../../common/MatterError.js";
  * It is handled similarly to qualities, though, so we keep it in the same
  * section.
  */
-export class Constraint {
-    public definition: Constraint.Definition;
+export class Constraint implements Constraint.Ast {
+    type: Constraint.AstNodeType;
+    min?: number;
+    max?: number;
+    entries?: Constraint[];
 
     /**
      * Initialize from a Constraint.Definition or the constraint DSL defined
      * by the Matter Specification.
      */
-    constructor(definition: string | Constraint.Definition) {
-        if (typeof definition == "string") {
-            this.definition = Constraint.parse(definition);
-        } else {
-            this.definition = definition;
+    constructor(definition: Constraint.Definition) {
+        this.type = "value";
+
+        let ast;
+        switch (typeof definition) {
+            case "string":
+                ast = Constraint.parse(definition);
+                break;
+
+            case "number":
+                ast = { min: definition, max: definition };
+                break;
+
+            default:
+                ast = definition;
         }
+
+        Object.assign(this, ast);
     }
 }
 
 export namespace Constraint {
-    /**
-     * A fixed numeric value or sequence length.
-     */
-    export type Value = number;
+    export type AstNodeType = "value" | "list" | "desc" | "sequence";
 
     /**
-     * A (possibly unbounded) range of valid values or sequence lengths.
+     * Parsed list structure.
      */
-    export type Range = { min?: number, max?: number };
+    export type Ast = {
+        type?: AstNodeType,
 
-    /**
-     * A constraint on a numerical value or sequence length.
-     */
-    export type Numerical = Value | Range;
+        /**
+         * Lower bound on value or sequence length.
+         */
+        min?: number,
 
-    /**
-     * A limit on both a list and its entry type.
-     */
-    export type List = { list?: Definition, entry: Definition };
+        /**
+         * Upper bound on value or sequence length.
+         */
+        max?: number,
 
-    /**
-     * Constraint is described in prose and cannot be automatically enforced.
-     */
-    export const Desc = { desc: true };
+        /**
+         * Constraint on list child element.
+         */
+        entry?: Ast,
 
-    /**
-     * All non-union constraints.
-     */
-    export type Atom = Numerical | List | typeof Desc;
-
-    /**
-     * A sequence of constraints, any one of which may be true to validate the
-     * entire union.
-     */
-    export type Union = Atom[];
-
-    /**
-     * Defines the constraints.
-     */
-    export type Definition = Atom | Union;
-
-    function parseNum(num: string) {
-        const int = Number.parseInt(num);
-        if (!Number.isNaN(int)) {
-            return int;
-        }
-        const float = Number.parseFloat(num);
-        if (!Number.isNaN(float)) {
-            return float;
-        }
-        throw new MatterError(`Illegal constraint: "${num}" is not a valid number`);
+        /**
+         * List of sub-constraints in a sequence.
+         */
+        parts?: Ast[]
     }
 
-    function parseAtom(words: string[]): Atom | undefined {
+    /**
+     * These are all ways to describe a constraint.
+     */
+    export type Definition = Ast | string | number | undefined;
+
+    function parseNum(num: string): number {
+        const value = Number.parseFloat(num);
+        if (Number.isNaN(value)) {
+            throw new MatterError(`Illegal constraint: "${num}" is not a number`);
+        }
+        return value;
+    }
+
+    function parseAtom(words: string[]): Ast | undefined {
         switch (words.length) {
             case 0:
                 return undefined;
@@ -93,12 +97,13 @@ export namespace Constraint {
             case 1:
                 switch (words[0].toLowerCase()) {
                     case "desc":
-                        return { desc: true };
+                        return { type: "desc" };
 
                     case "all":
                         return {};
                 }
-                return parseNum(words[0]);
+                const value = parseNum(words[0]);
+                return { min: value, max: value };
 
             case 2:
                 switch (words[0].toLowerCase()) {
@@ -107,6 +112,7 @@ export namespace Constraint {
                     case "max":
                         return { max: parseNum(words[1]) };
                 }
+                break;
 
             case 3:
                 if (words[1].toLowerCase() == "to") {
@@ -117,16 +123,16 @@ export namespace Constraint {
                         return parseNum(words[pos]);
                     }
 
-                    const atom: Range = {};
+                    const ast: Ast = {};
                     const min = parseBound("min", 0);
                     if (min != undefined) {
-                        atom.min = min;
+                        ast.min = min;
                     }
                     const max = parseBound("max", 2);
                     if (max != undefined) {
-                        atom.max = max;
+                        ast.max = max;
                     }
-                    return atom;
+                    return ast;
                 }
         }
 
@@ -136,7 +142,7 @@ export namespace Constraint {
     /**
      * Parse constraint DSL.  Extremely lenient.
      */
-    export function parse(definition: string): Definition {
+    export function parse(definition: string): Ast {
         let pos = 1;
         let current: string | undefined = definition[0];
         let peeked: string | undefined = definition[1];
@@ -151,8 +157,8 @@ export namespace Constraint {
             }
         }
 
-        function scan(depth: number): Definition {
-            const parts = Array<Atom>();
+        function scan(depth: number): Ast {
+            const parts = Array<Ast>();
             let words = Array<string>();
             let word = "";
 
@@ -187,13 +193,13 @@ export namespace Constraint {
                     case "[":
                         next();
                         let list = parseWords();
-                        const atom: List = {
+                        const ast: Ast = {
                             entry: scan(depth + 1)
                         }
                         if (list != undefined) {
-                            atom.list = list;
+                            ast.entry = list;
                         }
-                        parts.push(atom);
+                        parts.push(ast);
                         break;
                     
                     case "]":
@@ -201,7 +207,10 @@ export namespace Constraint {
                             throw new MatterError('Illegal constraint: Unexpected "]"');
                         }
                         next();
-                        return parts;
+                        if (parts.length > 1) {
+                            return { type: "sequence", parts: parts };
+                        }
+                        return parts[0];
 
                     case ",":
                         emit();
@@ -226,7 +235,7 @@ export namespace Constraint {
                 return parts[0];
             }
     
-            return parts;
+            return { type: "sequence", parts: parts };
         }
 
         return scan(0);

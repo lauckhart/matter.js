@@ -4,30 +4,31 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement } from "../index.js";
+import { BaseDataElement, BaseElement, Mei } from "../index.js";
 
 /**
- * A base element for all elements that represent data.
+ * A datatype element defines a standalone datatype.
  */
 export type DatatypeElement = BaseDataElement & {
     type: DatatypeElement.Type,
 
-    children: DatatypeElement[]
+    /**
+     * A datatype defined locally within a cluster is referenced by name and
+     * does not have an ID.  So we leave ID is optional for this type.
+     */
+    id?: Mei,
+
+    children?: DatatypeElement[]
 }
 
-export function DatatypeElement(definition: DatatypeElement.Definition) {
-    return BaseDataElement({
-        type: DatatypeElement.Type,
-        ...definition
-    }) as DatatypeElement;
+export function DatatypeElement(definition: DatatypeElement.Properties) {
+    return BaseDataElement(DatatypeElement.Type, definition) as DatatypeElement;
 }
 
 export namespace DatatypeElement {
     export type Type = BaseElement.Type.Datatype;
     export const Type = BaseElement.Type.Datatype;
-    export type Definition = BaseDataElement.Definition & {
-        children?: DatatypeElement[]
-    };
+    export type Properties = BaseElement.Properties<DatatypeElement>;
 
     /**
      * Convert a TypeScript enum to Matter enum values.

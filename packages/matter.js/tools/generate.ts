@@ -4,5 +4,5 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import "./generate/setup.js";
-import "./generate/mom.js";
+//import './mom/generate-spec.js';
+import './mom/generate-chip.js';
