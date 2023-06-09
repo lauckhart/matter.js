@@ -23,7 +23,7 @@ export type ClusterElement = BaseElement & {
      */
     classification?: `${ClusterElement.Classification}`,
 
-    children?: ClusterElement.Children[]
+    children?: ClusterElement.Child[]
 }
 
 export function ClusterElement(definition: ClusterElement.Properties) {
@@ -34,7 +34,7 @@ export namespace ClusterElement {
     export type Type = BaseElement.Type.Cluster;
     export const Type = BaseElement.Type.Cluster;
     export type Properties = BaseElement.Properties<ClusterElement>;
-    export type Children =
+    export type Child =
         DatatypeElement
         | AttributeElement
         | CommandElement

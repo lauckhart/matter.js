@@ -11,7 +11,14 @@ export class ClusterModel extends Model implements ClusterElement {
     override id!: Mei;
     singleton?: boolean;
     classification?: ClusterElement.Classification;
-    override children!: ClusterModel.Children[];
+
+    override get children(): ClusterModel.Child[] {
+        return super.children as any;
+    }
+
+    override set children(children: (ClusterModel.Child | ClusterElement.Child)[]) {
+        super.children = children;
+    }
 
     override validate() {
         this.validateStructure(ClusterElement.Type, true, DatatypeModel, AttributeModel, CommandModel, EventModel);
@@ -32,7 +39,7 @@ export class ClusterModel extends Model implements ClusterElement {
 }
 
 export namespace ClusterModel {
-    export type Children =
+    export type Child =
         DatatypeModel
         | AttributeModel
         | CommandModel

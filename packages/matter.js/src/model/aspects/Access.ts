@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/index.js";
-
-export class IllegalAccessError extends MatterError {}
+import { Aspect } from "./Aspect.js";
 
 /**
  * An operational representation of "access" as defined by the Matter
@@ -15,7 +13,7 @@ export class IllegalAccessError extends MatterError {}
  * "Access" controls the operations a remote party may perform on a data field
  * or cluster element.
  */
-export class Access implements Access.Ast {
+export class Access extends Aspect<Access.Definition> implements Access.Ast {
     rw?: Access.Rw;
     fabric?: Access.Fabric;
     readPriv?: Access.Privilege;
@@ -27,12 +25,14 @@ export class Access implements Access.Ast {
      * by the Matter Specification.
      */
     constructor(definition: string | Access.Definition) {
+        super(definition);
+        
         if (Array.isArray(definition)) {
             this.set(definition.flat());
         } else if (typeof definition == "object") {
             Object.assign(this, definition);
         } else if (definition != undefined) {
-            this.set(Array.from(Access.parse(definition)));
+            this.set(Array.from(Access.parse(this, definition)));
         }
     }
 
@@ -40,7 +40,7 @@ export class Access implements Access.Ast {
      * Parses standard Matter access syntax into an AccessFlag set.  Extremely
      * lenient.
      */
-    static parse(definition: string) {
+    static parse(access: Access, definition: string) {
         definition = definition.toUpperCase();
         const flags = [] as Access.Flags;
         for (let i = 0; i < definition.length; i++) {
@@ -82,7 +82,7 @@ export class Access implements Access.Ast {
                     break;
 
                 default:
-                    throw new IllegalAccessError(`Unknown access flag "${definition[i]}"`);
+                    access.error(`unknown flag "${definition[i]}"`);
             }
         }
         return flags;
@@ -91,7 +91,7 @@ export class Access implements Access.Ast {
     /**
      * Displays access using the standard Matter syntax.
      */
-    toString() {
+    override toString() {
         const parts = [] as string[];
 
         if (this.rw !== undefined) {

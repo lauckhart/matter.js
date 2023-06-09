@@ -14,7 +14,7 @@ const logger = Logger.get("cluster-translate");
 
 // Translate from DOM -> MOM
 export function* translateCluster(definition: ClusterReference) {
-    const children = Array<ClusterElement.Children>();
+    const children = Array<ClusterElement.Child>();
 
     const metadata = translateMetadata(definition, children);
     if (!metadata) {
@@ -41,7 +41,7 @@ export function* translateCluster(definition: ClusterReference) {
 }
 
 // Load misc. values related to cluster definition
-function translateMetadata(definition: ClusterReference, children: Array<ClusterElement.Children>) {
+function translateMetadata(definition: ClusterReference, children: Array<ClusterElement.Child>) {
     const ids = translateIds();
     if (!ids) {
         logger.warn(`no IDs for ${definition.name}, skipping`);
@@ -200,7 +200,7 @@ function translateFields(desc: string, fields?: DetailedReference) {
 }
 
 // Load attributes, events and commands
-function translateInvokable(definition: ClusterReference, children: Array<ClusterElement.Children>) {    
+function translateInvokable(definition: ClusterReference, children: Array<ClusterElement.Child>) {    
     translateAttributes();
     translateEvents();
     translateCommands();
@@ -299,7 +299,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
 }
 
 // Load datatypes
-function translateDatatypes(definition: ClusterReference, children: Array<ClusterElement.Children>) {
+function translateDatatypes(definition: ClusterReference, children: Array<ClusterElement.Child>) {
     if (!definition.datatypes) {
         return;
     }

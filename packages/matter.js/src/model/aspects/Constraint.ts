@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/MatterError.js";
+import { Aspect } from "./Aspect.js";
 
 /**
  * An operational view of constraints as defined by the Matter specification.
@@ -15,23 +15,26 @@ import { MatterError } from "../../common/MatterError.js";
  * It is handled similarly to qualities, though, so we keep it in the same
  * section.
  */
-export class Constraint implements Constraint.Ast {
+export class Constraint extends Aspect<Constraint.Definition> implements Constraint.Ast {
     type: Constraint.AstNodeType;
     min?: number;
     max?: number;
-    entries?: Constraint[];
+    entry?: Constraint;
+    parts?: Constraint[];
 
     /**
      * Initialize from a Constraint.Definition or the constraint DSL defined
      * by the Matter Specification.
      */
     constructor(definition: Constraint.Definition) {
+        super(definition);
+
         this.type = "value";
 
         let ast;
         switch (typeof definition) {
             case "string":
-                ast = Constraint.parse(definition);
+                ast = Constraint.parse(this, definition);
                 break;
 
             case "number":
@@ -43,6 +46,10 @@ export class Constraint implements Constraint.Ast {
         }
 
         Object.assign(this, ast);
+    }
+
+    override toString() {
+        return Constraint.serialize(this);
     }
 }
 
@@ -81,15 +88,16 @@ export namespace Constraint {
      */
     export type Definition = Ast | string | number | undefined;
 
-    function parseNum(num: string): number {
-        const value = Number.parseFloat(num);
+    function parseNum(constraint: Constraint, num: string): number {
+        let value = Number.parseFloat(num);
         if (Number.isNaN(value)) {
-            throw new MatterError(`Illegal constraint: "${num}" is not a number`);
+            constraint.error(`"${num}" is not a number`);
+            value = 0;
         }
         return value;
     }
 
-    function parseAtom(words: string[]): Ast | undefined {
+    function parseAtom(constraint: Constraint, words: string[]): Ast | undefined {
         switch (words.length) {
             case 0:
                 return undefined;
@@ -102,17 +110,19 @@ export namespace Constraint {
                     case "all":
                         return {};
                 }
-                const value = parseNum(words[0]);
+                const value = parseNum(constraint, words[0]);
                 return { min: value, max: value };
 
             case 2:
                 switch (words[0].toLowerCase()) {
                     case "min":
-                        return { min: parseNum(words[1]) };
+                        return { min: parseNum(constraint, words[1]) };
                     case "max":
-                        return { max: parseNum(words[1]) };
+                        return { max: parseNum(constraint, words[1]) };
+                    default:
+                        constraint.error('two word constraint must start with "min" or "max"')
                 }
-                break;
+                return;
 
             case 3:
                 if (words[1].toLowerCase() == "to") {
@@ -120,7 +130,7 @@ export namespace Constraint {
                         if (words[pos].toLowerCase() == name) {
                             return undefined;
                         }
-                        return parseNum(words[pos]);
+                        return parseNum(constraint, words[pos]);
                     }
 
                     const ast: Ast = {};
@@ -134,15 +144,16 @@ export namespace Constraint {
                     }
                     return ast;
                 }
+                return;
         }
 
-        throw new MatterError(`Illegal constraint "${words.join(" ")}"`);
-    }
+        constraint.error("too many words");
+}
 
     /**
      * Parse constraint DSL.  Extremely lenient.
      */
-    export function parse(definition: string): Ast {
+    export function parse(constraint: Constraint, definition: string): Ast {
         let pos = 1;
         let current: string | undefined = definition[0];
         let peeked: string | undefined = definition[1];
@@ -163,7 +174,7 @@ export namespace Constraint {
             let word = "";
 
             function parseWords() {
-                const atom = parseAtom(words);
+                const atom = parseAtom(constraint, words);
                 words = Array<string>();
                 return atom;
             }
@@ -203,10 +214,11 @@ export namespace Constraint {
                         break;
                     
                     case "]":
-                        if (!depth) {
-                            throw new MatterError('Illegal constraint: Unexpected "]"');
-                        }
                         next();
+                        if (!depth) {
+                            constraint.error('unexpected "]"');
+                            break;
+                        }
                         if (parts.length > 1) {
                             return { type: "sequence", parts: parts };
                         }
@@ -226,7 +238,7 @@ export namespace Constraint {
             }
 
             if (depth) {
-                throw new MatterError("Illegal constraint: Unterminated sub-constraint");
+                constraint.error("unterminated sub-constraint");
             }
 
             emit();
@@ -239,5 +251,39 @@ export namespace Constraint {
         }
 
         return scan(0);
+    }
+
+    function serializeValue(ast: Ast) {
+        if (ast.min != undefined) {
+            if (ast.max == undefined) {
+                return `min ${ast.min}`;
+            } else {
+                return `${ast.min} to ${ast.max}`;
+            }
+        } else if (ast.max != undefined) {
+            return `max ${ast.max}`;
+        }
+        return "";
+    }
+
+    function serializeParts(ast: Ast): string {
+        return ast.parts?.map(serialize).join(", ") ?? "";
+    }
+
+    export function serialize(ast: Ast) {
+        switch (ast.type) {
+            case "value":
+                return serializeValue(ast);
+
+            case "list":
+                return serializeParts(ast);
+
+            case "desc":
+                return "desc";
+
+            case "sequence":
+                return `${serializeValue}[${serializeParts(ast)}]`;
+        }
+        return "";
     }
 }
