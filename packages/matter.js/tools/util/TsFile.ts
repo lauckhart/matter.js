@@ -12,8 +12,7 @@ const HEADER = `/**
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/*** THIS FILE IS GENERATED, DO NOT EDIT ***/
-`;
+/*** THIS FILE IS GENERATED, DO NOT EDIT ***/`;
 
 export class Block extends Array<any> {
     constructor(private parentBlock: Block | undefined, ...entries: any[]) {
@@ -196,12 +195,12 @@ export class TsFile extends Block {
 
     save() {
         if (this.imports.size) {
+            const importBlock = this.header.section();
+            importBlock.blank();
             this.imports.forEach((symbols, name) => {
-                this.header.add(`import { ${symbols.join(", ")} } from "${name}.js";`);
+                importBlock.add(`import { ${symbols.join(", ")} } from "${name}.js";`);
             });
         }
-
-        this.blank();
 
         writeMatterFile(`${this.name}.ts`, this);
         return this;

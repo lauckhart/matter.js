@@ -5,39 +5,41 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { Access, AttributeElement, BaseDataElement, BaseElement, ClusterElement, CommandElement, Conformance, DatatypeElement, EventElement } from "../../../src/model/index.js";
+import { Access, AnyElement, AttributeElement, BaseDataElement, BaseElement, ClusterElement, CommandElement, Conformance, DatatypeElement, EventElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/index.js";
 
 const logger = Logger.get("translate-cluster");
 
-export function translateChip(dom: Element) {
-    dom.querySelectorAll("configurator > cluster").forEach((cdom) => {
-        const idStr = child(cdom, "code");
-        const name = need("cluster name", str(child(dom, "name"))).replace(/Cluster$/, "");
+export function translateChip(rootEl: Element, target: Array<AnyElement>) {
+    rootEl.querySelectorAll("configurator > cluster").forEach((clusterEl) => {
+        const idStr = child(clusterEl, "code");
+        const name = need("cluster name", str(child(clusterEl, "name"))).replace(/Cluster$/, "");
         const cluster = ClusterElement({
             id: need("cluster id", int(idStr)),
             name: camelize(name),
             description: name,
-            details: str(child(cdom, "description"))
+            details: str(child(clusterEl, "description"))
         });
 
-        if (bool(cdom.getAttribute("singleton"))) {
+        if (bool(clusterEl.getAttribute("singleton"))) {
             cluster.singleton = true;
         }
 
-        for (const n of cdom.childNodes) {
-            if (n.nodeType != Node.ELEMENT_NODE) {
-                return;
+        for (const n of clusterEl.childNodes) {
+            if (n.nodeType != clusterEl.ownerDocument.ELEMENT_NODE) {
+                continue;
             }
-            const el = n as Element;
-            if (el.tagName != "name" && el.tagName != "description") {
-                translate(el, cluster);
+            const childEl = n as Element;
+            if (childEl.tagName != "name" && childEl.tagName != "description") {
+                translate(childEl, cluster);
             }
         }
 
-        for (const el of cdom.parentElement!.querySelectorAll(`:scope > * > cluster[code="${idStr}"]`)) {
+        for (const el of clusterEl.parentElement!.querySelectorAll(`:scope > * > cluster[code="${idStr}"]`)) {
             translate(el, cluster);
         }
+
+        target.push(cluster);
     })
 }
 
@@ -46,7 +48,7 @@ type MaybeStr = Element | string | null | undefined;
 
 // Reject empty values
 function need<T>(what: string, value: T | null | undefined): T {
-    if (value == null || value == undefined || value == "" || Number.isNaN(value)) {
+    if (value == undefined || value === "" || Number.isNaN(value)) {
         throw Error(`missing ${what}`);
     }
     return value;
@@ -54,17 +56,17 @@ function need<T>(what: string, value: T | null | undefined): T {
 
 // Convert XML string to JS
 function str(src?: MaybeStr) {
-    if (src instanceof Element) {
+    if (typeof src != "string") {
         src = src?.textContent;
     }
-    src = src?.trim();
+    src = src?.trim().replace(/\s+/g, " ");
     return src;
 }
 
 // Convert XML string to JS integer
 function int(src?: MaybeStr) {
     src = str(src);
-    if (src == "string") {
+    if (typeof src == "string") {
         const value = Number.parseInt(src);
         if (Number.isNaN(value)) {
             throw new Error("Invalid numeric value");
@@ -80,13 +82,12 @@ function bool(src?: MaybeStr) {
 
 // Get first direct descendant with specified tag name
 function child(dom: Element, tagName: string) {
-    const el = dom.querySelector(`:scope > ${tagName}`);
-    return el ? el : undefined;
+    return dom.getElementsByTagName(tagName)[0];
 }
 
 // Get all direct descendants with specified tag name
 function children(dom: Element, tagName: string) {
-    return dom.querySelectorAll(`:scope > ${tagName}`);
+    return Array.from(dom.getElementsByTagName(tagName));
 }
 
 // Translate CHIP XML access tags to MOM privileges
@@ -101,24 +102,29 @@ function setAccessPrivileges(src: Element, target: Access.Ast) {
         write?: Access.Privilege
     }
 
-    children(src, "access").forEach((el) => {
+    children(src, "access").forEach((accessEl) => {
+        if (accessEl.getAttribute("modifier")) {
+            // These are removed in newer XML files
+            return;
+        }
         const op = need(
             "access op",
-            str(el.getAttribute("op"))
+            str(accessEl.getAttribute("op"))
         ) as keyof typeof srcAccess;
         if (Object.keys(srcAccess).indexOf(op) == -1) {
             throw new Error(`Unknown access op "${op}"`);
         }
 
-        const role = need(
+        let privilege = need(
             "access role",
-            str(el.getAttribute("role"))
+            str(accessEl.getAttribute("privilege") || accessEl.getAttribute("role"))
         ) as Access.Privilege;
-        if (!(Access.Privilege as any)[role]) {
-            throw new Error(`Unknown access role "${role}"`);
+        privilege = (Access.Privilege as any)[camelize(privilege)];
+        if (!privilege) {
+            throw new Error(`Unknown access role "${privilege}"`);
         }
 
-        srcAccess[op] = role;
+        srcAccess[op] = privilege;
     });
 
     if (srcAccess.read !== undefined) {
@@ -184,27 +190,31 @@ function setQualities(src: Element, target: BaseDataElement) {
 // Create a MOM element with data properties translated from CHIP XML
 function createDataElement<T extends BaseDataElement>(
     Factory: ((properties: T) => T) & { Type: BaseElement.Type },
-    src: Element,
+    dataEl: Element,
     target: BaseDataElement,
     base: string,
     propertyTag?: string
 ): T {
-    const id = need(`${Factory.Type} id`, int(src.getAttribute("code")));
-    const name = camelize(need(`${Factory.Type} name`, str(src)));
+    let name = camelize(need(`${Factory.Type} name`, dataEl.getAttribute("name") || dataEl.getAttribute("define")));
+    logger.debug(`${Factory.Type} ${name}`);
+    let id = int(dataEl.getAttribute("code"));
+    if (Factory.Type != DatatypeElement.Type) {
+        need(`${Factory.Type} id`, id);
+    }
     const element = Factory({ id: id, name: name, base: base } as T);
 
-    setQualities(src, element);
+    setQualities(dataEl, element);
 
     if (propertyTag) {
-        children(src, propertyTag).forEach(pdom => {
+        children(dataEl, propertyTag).forEach(propertyEl => {
             if (!element.children) {
                 element.children = [];
             }
             element.children.push(createDataElement(
                 DatatypeElement,
-                pdom,
+                propertyEl,
                 element,
-                need(`${Factory.Type} ${propertyTag} type`, str(src.getAttribute("type")))
+                need(`${Factory.Type} ${propertyTag} type`, str(propertyEl.getAttribute("type")))
             ))
         })
     }
@@ -230,19 +240,19 @@ const translators: { [name: string]: Translator } = {
     },
 
     event: (source, target) => {
-        const el = createDataElement(
+        const event = createDataElement(
             EventElement,
             source,
             target,
             "struct",
             "field"
         );
-        el.priority = need("event priority", str(source.getAttribute("priority"))) as typeof el.priority;
-        return el;
+        event.priority = need("event priority", str(source.getAttribute("priority"))) as typeof event.priority;
+        return event;
     },
 
     command: (source, target) => {
-        const el = createDataElement(
+        const command = createDataElement(
             CommandElement,
             source,
             target,
@@ -251,18 +261,18 @@ const translators: { [name: string]: Translator } = {
         );
 
         const response = str(source.getAttribute("response"));
-        if (response) el.response = response;
+        if (response) command.response = response;
 
         const src = str(source.getAttribute("source"));
         if (src == "client") {
-            el.direction = CommandElement.Direction.Request;
+            command.direction = CommandElement.Direction.Request;
         } else if (src == "server") {
-            el.direction = CommandElement.Direction.Response;
+            command.direction = CommandElement.Direction.Response;
         } else {
             throw new Error(`Illegal source ${src}`);
         }
 
-        return el;
+        return command;
     },
 
     struct: (source, target) => {
@@ -299,7 +309,6 @@ const translators: { [name: string]: Translator } = {
 function translate(from: Element, to: ClusterElement) {
     const translator = translators[from.tagName];
     if (!translator) {
-        logger.warn(`Unrecognized cluster constituent tag ${from.tagName}`);
         return;
     }
     translator(from, to);

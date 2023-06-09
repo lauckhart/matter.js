@@ -35,7 +35,7 @@ export function clean(target: string, suffix: string) {
 }
 
 export async function readFileWithCache(name: string, generator: (name: string) => Promise<string>) {
-    name = `build/cache/${name}`;
+    name = `dist/cache/${name}`;
     try {
         return readMatterFile(name);
     } catch (e) {

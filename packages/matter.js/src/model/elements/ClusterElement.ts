@@ -11,7 +11,7 @@ import { AttributeElement, CommandElement, EventElement, BaseElement, DatatypeEl
  */
 export type ClusterElement = BaseElement & {
     id: Mei,
-    type: ClusterElement.Type,
+    type: `${ClusterElement.Type}`,
 
     /**
      * Marks a cluster as a singleton per the Matter specification.
@@ -21,7 +21,7 @@ export type ClusterElement = BaseElement & {
     /**
      * Encodes both classification and scope from the Matter specification.
      */
-    classification?: ClusterElement.Classification,
+    classification?: `${ClusterElement.Classification}`,
 
     children?: ClusterElement.Children[]
 }

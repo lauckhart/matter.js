@@ -93,6 +93,9 @@ export function serialize(value: any) {
         if (typeof value == "string") {
             return JSON.stringify(value);
         }
+        if (typeof value == "boolean") {
+            return value ? "true" : "false";
+        }
 
         // Composite objects after this
         if (visited.has(value)) {

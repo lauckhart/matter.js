@@ -10,7 +10,7 @@ import { homedir } from "os";
 import { resolve } from "path";
 import { Logger } from "../../../src/log/Logger.js";
 import { JSDOM } from "jsdom";
-import { ClusterElement } from "../../../src/model/index.js";
+import { AnyElement } from "../../../src/model/index.js";
 import { translateChip } from "./translate-chip.js";
 
 const AUTH_FILE = resolve(homedir(), ".gh-auth");
@@ -23,7 +23,7 @@ const repo = new Repo("project-chip", "connectedhomeip", "v1.1-branch", readFile
 const parser = new(new JSDOM("").window.DOMParser)();
 
 export async function loadChip() {
-    const clusters = Array<ClusterElement>();
+    const elements = Array<AnyElement>();
 
     logger.info("load chip");
     await Logger.nestAsync(async () => {
@@ -39,13 +39,12 @@ export async function loadChip() {
                 const xml = await path.get(filename);
                 logger.debug("parse");
                 const document = parser.parseFromString(xml, "text/xml");
-                logger.debug("translate");
-                translateChip(document.documentElement);
+                translateChip(document.documentElement, elements);
             });
         }
     });
 
-    return clusters;
+    return elements;
 }
 
 // Load github authentication

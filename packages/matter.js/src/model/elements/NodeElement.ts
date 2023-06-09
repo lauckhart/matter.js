@@ -11,7 +11,7 @@ import { BaseElement, EndpointElement } from "../index.js";
  */
 export type NodeElement = BaseElement & {
     id: number,
-    type: NodeElement.Type,    
+    type: `${NodeElement.Type}`,    
     children?: EndpointElement[]
 }
 

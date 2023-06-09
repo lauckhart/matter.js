@@ -11,5 +11,5 @@ import "../util/setup.js";
 import { loadChip } from "./chip/load-chip.js";
 import { generateModel } from "./common/generate-model.js";
 
-const clusters = await loadChip();
-generateModel("chip", clusters);
+const elements = await loadChip();
+generateModel("chip", elements);
