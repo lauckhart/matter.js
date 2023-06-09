@@ -8,8 +8,8 @@ import { ClusterModel, DeviceTypeModel, FabricModel, MatterElement, Model, NodeM
 
 export class MatterModel extends Model implements MatterElement {
     override type!: MatterElement.Type;
-    version!: string;
-    override children!: (DeviceTypeModel | ClusterModel | FabricModel | NodeModel)[];
+    version?: string;
+    override children!: MatterModel.Child[];
 
     override validate() {
         this.validateStructure(MatterElement.Type, true, DeviceTypeModel, ClusterModel, FabricModel, NodeModel);
@@ -24,4 +24,8 @@ export class MatterModel extends Model implements MatterElement {
     static {
         Model.constructors[MatterElement.Type] = this;
     }
+}
+
+export namespace MatterModel {
+    export type Child = DeviceTypeModel | ClusterModel | FabricModel | NodeModel;
 }

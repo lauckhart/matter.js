@@ -8,7 +8,7 @@ export const MODEL_PATH = "src/model/instance";
 export const CLUSTER_SUFFIX = "Model";
 
 import { Logger } from "../../../src/log/Logger.js";
-import { AnyElement } from "../../../src/model/index.js";
+import { AnyElement, MatterElement, MatterModel } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { TsFile } from "../../util/TsFile.js";
 import { clean } from "../../util/file.js";
@@ -32,7 +32,7 @@ export function generateElementFile(source: string, element: AnyElement) {
         file,
         element,
         `${prefix}Matter.children!.push(`,
-        ")"
+        ");\n"
     )
 
     file.save();
@@ -50,8 +50,17 @@ export function generateIndex(source: string, elements: AnyElement[]) {
     file.save();
 }
 
-export function generateModel(source: string, elements: AnyElement[]) {
-    logger.info(`generate from ${source}`);
+export function generateModel(source: string, elements: MatterElement.Child[]) {
+    logger.info(`validate ${source}`);
+    Logger.nest(() => {
+        const mom = new MatterModel({
+            name: camelize(`validate ${source}`),
+            children: elements
+        });
+        mom.validate();
+    });
+
+    logger.info(`generate ${source}`);
     Logger.nest(() => {
         logger.info("elements");
         Logger.nest(() => {

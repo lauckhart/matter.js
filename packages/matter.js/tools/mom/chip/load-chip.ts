@@ -10,7 +10,7 @@ import { homedir } from "os";
 import { resolve } from "path";
 import { Logger } from "../../../src/log/Logger.js";
 import { JSDOM } from "jsdom";
-import { AnyElement } from "../../../src/model/index.js";
+import { MatterElement } from "../../../src/model/index.js";
 import { translateChip } from "./translate-chip.js";
 
 const AUTH_FILE = resolve(homedir(), ".gh-auth");
@@ -23,7 +23,7 @@ const repo = new Repo("project-chip", "connectedhomeip", "v1.1-branch", readFile
 const parser = new(new JSDOM("").window.DOMParser)();
 
 export async function loadChip() {
-    const elements = Array<AnyElement>();
+    const elements = Array<MatterElement.Child>();
 
     logger.info("load chip");
     await Logger.nestAsync(async () => {

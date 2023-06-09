@@ -19,4 +19,4 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ]
         })
     ]
-}))
+}));

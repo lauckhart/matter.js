@@ -28,8 +28,8 @@ import { BaseElement, ClusterElement, DeviceTypeElement, FabricElement, NodeElem
  */
 export type MatterElement = BaseElement & {
     type: `${BaseElement.Type.Matter}`,
-    version: string,
-    children?: (ClusterElement | DeviceTypeElement | FabricElement | NodeElement)[]
+    version?: string,
+    children?: MatterElement.Child[]
 }
 
 export function MatterElement(definition: MatterElement.Properties) {
@@ -40,4 +40,5 @@ export namespace MatterElement {
     export type Type = BaseElement.Type.Matter;
     export const Type = BaseElement.Type.Matter;
     export type Properties = BaseElement.Properties<MatterElement>;
+    export type Child = ClusterElement | DeviceTypeElement | FabricElement | NodeElement;
 }
