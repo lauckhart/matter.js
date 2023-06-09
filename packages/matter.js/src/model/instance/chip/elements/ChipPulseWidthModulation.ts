@@ -13,4 +13,4 @@ ChipMatter.children!.push(ClusterElement({
     id: 0x001c, name: "PulseWidthModulation",
     description: "Pulse Width Modulation",
     details: "Cluster to control pulse width modulation"
-}))
+}));

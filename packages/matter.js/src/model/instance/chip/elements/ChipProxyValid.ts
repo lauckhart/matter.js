@@ -13,4 +13,4 @@ ChipMatter.children!.push(ClusterElement({
     id: 0x0044, name: "ProxyValid",
     description: "Proxy Valid",
     details: "Cluster to control Proxy Valid"
-}))
+}));

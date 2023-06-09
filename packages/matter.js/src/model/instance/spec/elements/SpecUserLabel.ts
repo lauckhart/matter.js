@@ -30,4 +30,4 @@ SpecMatter.children!.push(ClusterElement({
             xref: { section: "9.9.4.1", document: "core", version: "1.1" }
         })
     ]
-}))
+}));

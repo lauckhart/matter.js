@@ -768,4 +768,4 @@ ChipMatter.children!.push(ClusterElement({
             ]
         })
     ]
-}))
+}));

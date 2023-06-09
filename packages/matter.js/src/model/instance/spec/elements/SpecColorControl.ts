@@ -187,4 +187,4 @@ SpecMatter.children!.push(ClusterElement({
             xref: { section: "3.2.11.22", document: "cluster", version: "1.1" }
         })
     ]
-}))
+}));

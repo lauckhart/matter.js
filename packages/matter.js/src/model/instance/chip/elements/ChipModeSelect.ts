@@ -60,4 +60,4 @@ ChipMatter.children!.push(ClusterElement({
             ]
         })
     ]
-}))
+}));

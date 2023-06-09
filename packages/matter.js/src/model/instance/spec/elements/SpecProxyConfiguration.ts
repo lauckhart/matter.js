@@ -48,4 +48,4 @@ SpecMatter.children!.push(ClusterElement({
             ]
         })
     ]
-}))
+}));

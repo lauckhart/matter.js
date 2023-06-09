@@ -106,4 +106,4 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R", writePrivilege: "A" }, conformance: [ "M" ], direction: "request"
         })
     ]
-}))
+}));

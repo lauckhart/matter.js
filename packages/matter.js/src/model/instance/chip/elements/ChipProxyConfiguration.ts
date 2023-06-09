@@ -13,4 +13,4 @@ ChipMatter.children!.push(ClusterElement({
     id: 0x0042, name: "ProxyConfiguration",
     description: "Proxy Configuration",
     details: "Cluster to control Proxy Configuration"
-}))
+}));

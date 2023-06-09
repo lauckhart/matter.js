@@ -36,7 +36,7 @@ export abstract class Model implements BaseElement {
         // them but constructors correct this.  Properties for which type is
         // correct are suffixed with "!" to indicate no further initialization
         // is necessary
-        for (const [k, v] of definition as any) {
+        for (const [k, v] of Object.entries(definition)) {
             if (v !== undefined) {
                 (this as any)[k] = v;
             }
