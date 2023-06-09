@@ -32,6 +32,7 @@ export async function loadChip() {
 
         for (const filename of await path.ls()) {
             if (!filename.endsWith(".xml")) continue;
+            if (filename == "test-cluster.xml") continue;
 
             logger.info(`file ${filename}`);
             await Logger.nestAsync(async () => {

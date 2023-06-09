@@ -65,7 +65,6 @@ import "./elements/ChipSoftwareDiagnostics.js";
 import "./elements/ChipSwitch.js";
 import "./elements/ChipTargetNavigator.js";
 import "./elements/ChipTemperatureMeasurement.js";
-import "./elements/ChipUnitTesting.js";
 import "./elements/ChipThermostat.js";
 import "./elements/ChipThermostatUserInterfaceConfiguration.js";
 import "./elements/ChipThreadNetworkDiagnostics.js";
