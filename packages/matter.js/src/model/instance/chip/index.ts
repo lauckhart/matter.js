@@ -4,5 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./validate.js";
-export * from "./merge.js";
+/*** THIS FILE IS GENERATED, DO NOT EDIT ***/
+
+
+export * from "./ChipMatter.js"
+

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AnyElement } from "../../../../src/model";
+import { AnyElement } from "../../../src/model";
 
 // An HTML table
 export type Table = {

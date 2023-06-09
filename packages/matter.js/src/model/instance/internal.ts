@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./Matter.js";
-
-import "./spec/internal.js";
-import "./chip/internal.js";
-import "./local/internal.js";
+export * from "./spec/internal.js";
+export * from "./chip/internal.js";
+export * from "./local/internal.js";

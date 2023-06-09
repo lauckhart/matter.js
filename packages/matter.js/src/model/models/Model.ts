@@ -162,7 +162,7 @@ export abstract class Model implements BaseElement {
         let index = 0;
         for (const c of this.children) {
             index++;
-            logger.debug(`${index}. ${c.name}`)
+            logger.debug(`${index}. ${c.type} ${c.name}`)
             Logger.nest(() => {
                 errors += c.validate();
             });

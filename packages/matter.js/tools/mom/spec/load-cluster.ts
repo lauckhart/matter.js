@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../../../src/log/Logger.js";
-import { AnyElement } from "../../../../src/model/index.js";
-import { camelize } from "../../../../src/util/String.js";
+import { Logger } from "../../../src/log/Logger.js";
+import { AnyElement } from "../../../src/model/index.js";
+import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
 import { scanSection } from "./scan-section.js";
 

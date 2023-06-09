@@ -5,7 +5,7 @@
  */
 
 /**
- * Status codes defined in Matter specification.
+ * Glboal status codes defined in Matter specification.
  * 
  * TODO - extract/merge with StatusCode in InteractionProtocol.ts
  */

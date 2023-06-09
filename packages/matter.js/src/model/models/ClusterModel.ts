@@ -9,10 +9,16 @@ import { ClusterElement, Mei, Model, AttributeModel, CommandModel, DatatypeModel
 export class ClusterModel extends Model implements ClusterElement {
     override type!: ClusterElement.Type;
     override id!: Mei;
+    singleton?: boolean;
+    classification?: ClusterElement.Classification;
     override children!: ClusterModel.Children[];
 
     override validate() {
         this.validateStructure(ClusterElement.Type, true, DatatypeModel, AttributeModel, CommandModel, EventModel);
+
+        this.validateProperty({ name: "singleton", type: "boolean" });
+        this.validateProperty({ name: "classification", type: "string" })
+
         return super.validate();
     }
 
