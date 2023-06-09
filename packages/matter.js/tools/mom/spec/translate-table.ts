@@ -172,7 +172,7 @@ export function translateTable<T extends TableSchema>(
 // Convert from raw records into a matter element.  Note that we have to
 // cast the element to any for automatic properties because TS isn't sure that
 // the extension hasn't changed the values
-export function translateRecordsToMatter<R, E extends { id: number, name: string }>(
+export function translateRecordsToMatter<R, E extends { id?: number, name: string }>(
     desc: string,
     records: R[],
     mapper: (record: R) => E | undefined
@@ -184,7 +184,7 @@ export function translateRecordsToMatter<R, E extends { id: number, name: string
             continue;
         }
 
-        logger.debug(`${desc} ${mapped.name} = ${mapped.id}`);
+        logger.debug(`${desc} ${mapped.name} = ${mapped.id ?? "(anon)"}`);
         result.push(mapped as E);
     }
     if (result.length == undefined) {

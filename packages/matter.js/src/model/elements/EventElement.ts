@@ -11,8 +11,8 @@ import { BaseDataElement, BaseElement, Mei } from "../index.js";
  */
 export type EventElement = BaseDataElement & {
     id: Mei,
-    type: EventElement.Type,
-    priority: EventElement.Priority
+    type: `${EventElement.Type}`,
+    priority: `${EventElement.Priority}`
 }
 
 export function EventElement(definition: EventElement.Properties) {

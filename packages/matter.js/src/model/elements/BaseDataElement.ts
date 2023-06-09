@@ -71,7 +71,7 @@ export function BaseDataElement(type: BaseElement.Type, definition: BaseDataElem
 }
 
 export namespace BaseDataElement {
-    export type Properties = BaseElement.Properties<BaseDataElement & { type: BaseElement.Type }>;
+    export type Properties = BaseElement.Properties<BaseDataElement & { type: `${BaseElement.Type}` }>;
 
     /**
      * An identifier for every non-derived datatype from the Matter Core

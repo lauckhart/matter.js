@@ -62,7 +62,7 @@ export namespace BaseElement {
     /**
      * Element with optional type; used for factory functions and constructors.
      */
-    export type Properties<T extends { type: Type }> = Omit<T, "type"> & Partial<Pick<T, "type">>;
+    export type Properties<T extends { type: `${Type}` }> = Omit<T, "type"> & Partial<Pick<T, "type">>;
 
     /**
      * Types of elements per the Matter specification.

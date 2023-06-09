@@ -11,7 +11,7 @@ import { NodeElement, BaseElement } from "../index.js"
  */
 export type FabricElement = BaseElement & {
     id: number,
-    type: FabricElement.Type,
+    type: `${FabricElement.Type}`,
     children: NodeElement[]
 }
 

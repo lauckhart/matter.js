@@ -10,7 +10,7 @@ import { BaseDataElement, BaseElement, Mei } from "../index.js";
  * A datatype element defines a standalone datatype.
  */
 export type DatatypeElement = BaseDataElement & {
-    type: DatatypeElement.Type,
+    type: `${DatatypeElement.Type}`,
 
     /**
      * A datatype defined locally within a cluster is referenced by name and

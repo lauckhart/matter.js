@@ -10,7 +10,7 @@ import { BaseElement, DeviceTypeElement } from "../index.js";
  */
 export type EndpointElement = BaseElement & {
     id: number,
-    type: EndpointElement.Type,
+    type: `${EndpointElement.Type}`,
     children: DeviceTypeElement[]
 }
 

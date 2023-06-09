@@ -10,7 +10,7 @@ import { BaseDataElement, BaseElement, Mei } from "../index.js"
  * A cluster property description.
  */
 export type AttributeElement = BaseDataElement & {
-    type: AttributeElement.Type,
+    type: `${AttributeElement.Type}`,
     id: Mei
 }
 

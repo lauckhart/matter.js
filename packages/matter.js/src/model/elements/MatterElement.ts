@@ -27,7 +27,7 @@ import { BaseElement, ClusterElement, DeviceTypeElement, FabricElement, NodeElem
  * to Matter Core Specification 1.1.
  */
 export type MatterElement = BaseElement & {
-    type: BaseElement.Type.Matter,
+    type: `${BaseElement.Type.Matter}`,
     version: string,
     children?: (ClusterElement | DeviceTypeElement | FabricElement | NodeElement)[]
 }

@@ -19,7 +19,6 @@ class Directory {
 
     constructor(
         private readonly url: string,
-        private readonly cacheKey: string,
         private readonly cache: Cache,
         private readonly auth?: string,
     ) {}
@@ -35,7 +34,7 @@ class Directory {
         for (const p of path) {
             const entry = await result.find(p);
             if (entry.type !== "tree") throw new Error(`Path "${p}" not a directory`);
-            result = new Directory(entry.url, `${this.cacheKey}-${p}`, this.cache, this.auth);
+            result = new Directory(entry.url, this.cache, this.auth);
         }
         return result!;
     }
@@ -61,7 +60,7 @@ class Directory {
     }
 
     private async fetch(url: string) {
-        return this.cache(this.cacheKey, async () => {
+        return this.cache(url.replace(/^https:\/\//, ""), async () => {
             const options = {
                 headers: {
                     accept: "application/vnd.github.raw"
@@ -91,6 +90,6 @@ export class Repo extends Directory {
         cache: Cache = (name, generator) => generator(name),
         auth?: string
     ) {
-        super(`https://api.github.com/repos/${org}/${repo}/git/trees/${branch}`, `${org}-${repo}-${branch}`, cache, auth);
+        super(`https://api.github.com/repos/${org}/${repo}/git/trees/${branch}`, cache, auth);
     }
 }

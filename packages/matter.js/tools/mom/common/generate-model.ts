@@ -8,7 +8,7 @@ export const MODEL_PATH = "src/model/instance";
 export const CLUSTER_SUFFIX = "Model";
 
 import { Logger } from "../../../src/log/Logger.js";
-import { ClusterElement as AnyElement } from "../../../src/model/index.js";
+import { AnyElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { TsFile } from "../../util/TsFile.js";
 import { clean } from "../../util/file.js";
@@ -22,14 +22,16 @@ export function cleanCluster(source: string) {
 
 export function generateElementFile(source: string, element: AnyElement) {
     const prefix = camelize(source);
+    logger.debug(`${prefix}${element.name}`);
+
     const file = new TsFile(`${MODEL_PATH}/${source}/elements/${prefix}${element.name}`);
 
-    file.addImport("./internal.js", `${prefix}Matter`);
+    file.addImport("../internal", `${prefix}Matter`);
 
     generateElement(
         file,
         element,
-        `${prefix}Matter.children.push(`,
+        `${prefix}Matter.children!.push(`,
         ")"
     )
 
@@ -38,12 +40,12 @@ export function generateElementFile(source: string, element: AnyElement) {
 
 export function generateIndex(source: string, elements: AnyElement[]) {
     const prefix = camelize(source);
-    const file = new TsFile(`${MODEL_PATH}/${source}/index`);
+    const file = new TsFile(`${MODEL_PATH}/${source}/internal`);
 
     file.add(`export * from "./${prefix}Matter.js"`);
     file.add("");
     elements.forEach(element =>
-        file.add(`import from "./${prefix}${element.name}`));
+        file.add(`import "./elements/${prefix}${element.name}.js";`));
 
     file.save();
 }
@@ -51,11 +53,10 @@ export function generateIndex(source: string, elements: AnyElement[]) {
 export function generateModel(source: string, elements: AnyElement[]) {
     logger.info(`generate from ${source}`);
     Logger.nest(() => {
-        logger.info("clusters");
+        logger.info("elements");
         Logger.nest(() => {
-            for (const cluster of elements) {
-                logger.debug(cluster.name);
-                Logger.nest(() => generateElementFile(source, cluster));
+            for (const element of elements) {
+                Logger.nest(() => generateElementFile(source, element));
             }
         });
 

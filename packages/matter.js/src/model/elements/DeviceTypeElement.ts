@@ -13,7 +13,7 @@ import { ClusterElement, BaseElement, Mei } from "../index.js"
  */
 export type DeviceTypeElement = BaseElement & {
     id: Mei,
-    type: DeviceTypeElement.Type,
+    type: `${DeviceTypeElement.Type}`,
     classification: `${DeviceTypeElement.Classification}`,
     children?: (DeviceTypeElement | ClusterElement)[]
 }

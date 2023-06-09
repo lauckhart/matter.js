@@ -185,10 +185,10 @@ export class Access implements Access.Ast {
 
 export namespace Access {
     export type Ast = {
-        rw?: Rw;
-        fabric?: Fabric;
-        readPrivilege?: Privilege;
-        writePrivilege?: Privilege;
+        rw?: `${Rw}`;
+        fabric?: `${Fabric}`;
+        readPrivilege?: `${Privilege}`;
+        writePrivilege?: `${Privilege}`;
         timed?: boolean;
     }
 

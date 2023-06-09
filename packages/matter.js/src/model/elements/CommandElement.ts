@@ -11,9 +11,9 @@ import { BaseDataElement, BaseElement, Mei } from "../index.js"
  */
 export type CommandElement = BaseDataElement & {
     id: Mei,
-    type: CommandElement.Type,
+    type: `${CommandElement.Type}`,
 
-    direction: CommandElement.Direction,
+    direction: `${CommandElement.Direction}`,
     response?: string
 }
 
