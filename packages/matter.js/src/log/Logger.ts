@@ -256,10 +256,10 @@ export class Logger {
     /**
      * Async version of above.
      */
-    static nestAsync(context: () => Promise<any>) {
+    static async nestAsync(context: () => Promise<any>) {
         this.nestingLevel++;
         try {
-            context();
+            await context();
         } finally {
             this.nestingLevel--;
         }

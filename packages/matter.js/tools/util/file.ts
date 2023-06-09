@@ -9,7 +9,7 @@ import { fileURLToPath } from "url";
 import { readdirSync, unlinkSync, readFileSync, writeFileSync, mkdirSync } from "fs";
 
 function resolveFromPackage(path: string) {
-    return resolve(dirname(fileURLToPath(import.meta.url)), `../../../${path}`);
+    return resolve(dirname(fileURLToPath(import.meta.url)), `../../${path}`);
 }
 
 export function readMatterFile(path: string, encoding: BufferEncoding = 'utf-8') {
@@ -35,6 +35,7 @@ export function clean(target: string, suffix: string) {
 }
 
 export async function readFileWithCache(name: string, generator: (name: string) => Promise<string>) {
+    name = `build/cache/${name}`;
     try {
         return readMatterFile(name);
     } catch (e) {

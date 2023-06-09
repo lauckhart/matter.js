@@ -38,17 +38,17 @@ const struct = (id: number, name: string, description: string, children: Datatyp
     DatatypeElement({ id, name, description, children });
 
 const TodFields = [
-    DatatypeElement({ id: 1, base: "uint8", name: "hours" }),
-    DatatypeElement({ id: 2, base: "uint8", name: "minutes" }),
-    DatatypeElement({ id: 3, base: "uint8", name: "seconds" }),
-    DatatypeElement({ id: 4, base: "uint8", name: "hundredths" })
+    DatatypeElement({ base: "uint8", name: "hours" }),
+    DatatypeElement({ base: "uint8", name: "minutes" }),
+    DatatypeElement({ base: "uint8", name: "seconds" }),
+    DatatypeElement({ base: "uint8", name: "hundredths" })
 ];
 
 const DateFields = [
-    DatatypeElement({ id: 1, base: "uint8", name: "year" }),
-    DatatypeElement({ id: 2, base: "uint8", name: "month" }),
-    DatatypeElement({ id: 3, base: "uint8", name: "day" }),
-    DatatypeElement({ id: 4, base: "uint8", name: "dow" })
+    DatatypeElement({ base: "uint8", name: "year" }),
+    DatatypeElement({ base: "uint8", name: "month" }),
+    DatatypeElement({ base: "uint8", name: "day" }),
+    DatatypeElement({ base: "uint8", name: "dow" })
 ];
 
 /**

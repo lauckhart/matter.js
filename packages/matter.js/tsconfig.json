@@ -7,6 +7,7 @@
     "incremental": true, // Speed up subsequent builds
     "moduleResolution": "node16", // Required to correctly resolve Babel imports and to make sure all imports are js
     "module": "node16", // Required to make sure all imports are js
+    "target": "ES2017",
     "sourceMap": true, // Enable debugging breakpoints
 
     // Local dev compilation checks
@@ -18,6 +19,6 @@
     "strict": true,
   },
   /* During dev, src are included, so they are also modified during refactorings. */
-  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts", "tools/**/*.ts"],
   "exclude": []
 }

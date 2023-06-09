@@ -4,56 +4,41 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Repo } from "../util/github.js";
-import { readFileWithCache, writeMatterFile } from "../util/file.js";
-import { readFileSync } from "fs";
-import { homedir } from "os";
-import { resolve } from "path";
 import { Logger } from "../../../src/log/Logger.js";
-import { JSDOM } from "jsdom";
-import { Access, AttributeElement, BaseDataElement, BaseElement, ClusterElement, Conformance, EventElement, Globals, Quality } from "../../../src/model/index.js";
-import { generateClusters } from "./generate-cluster.js";
-import { camelize } from "../../../src/util/String.js";
+import { Access, AttributeElement, BaseDataElement, BaseElement, ClusterElement, CommandElement, Conformance, DatatypeElement, EventElement } from "../../../src/model/index.js";
+import { camelize } from "../../../src/util/index.js";
 
-const AUTH_FILE = resolve(homedir(), ".gh-auth");
+const logger = Logger.get("translate-cluster");
 
-const logger = Logger.get("generate-chip");
-
-const auth = await loadAuth();
-const repo = new Repo("project-chip", "connectedhomeip", "v1.1-branch", readFileWithCache, auth);
-
-const parser = new(new JSDOM("").window.DOMParser)();
-
-const clusters = Array<ClusterElement>();
-
-logger.info("load chip");
-Logger.nestAsync(async () => {
-    logger.info("index");
-    const path = await repo.cd("src/app/zap-templates/zcl/data-model/chip");
-
-    for (const filename of await path.ls()) {
-        if (!filename.endsWith(".xml")) continue;
-
-        console.info(`file ${filename}`);
-        Logger.nestAsync(async () => {
-            console.debug("load");
-            const xml = await path.get(filename);
-            console.debug("parse");
-            const document = parser.parseFromString(xml, "text/xml");
-            console.debug("translate");
-            translateClusters(document.documentElement);
+export function translateChip(dom: Element) {
+    dom.querySelectorAll("configurator > cluster").forEach((cdom) => {
+        const idStr = child(cdom, "code");
+        const name = need("cluster name", str(child(dom, "name"))).replace(/Cluster$/, "");
+        const cluster = ClusterElement({
+            id: need("cluster id", int(idStr)),
+            name: camelize(name),
+            description: name,
+            details: str(child(cdom, "description"))
         });
-        generateClusters("chip", clusters);
-    }
-});
 
-// Load github authentication
-async function loadAuth() {
-    try {
-        return readFileSync(AUTH_FILE, { encoding: "utf-8" });
-    } catch (e) {
-        console.warn(`Stick a read-only github auth token into ${AUTH_FILE} or you will hit rate limit and need to run incrementally over several hours`);
-    }
+        if (bool(cdom.getAttribute("singleton"))) {
+            cluster.singleton = true;
+        }
+
+        for (const n of cdom.childNodes) {
+            if (n.nodeType != Node.ELEMENT_NODE) {
+                return;
+            }
+            const el = n as Element;
+            if (el.tagName != "name" && el.tagName != "description") {
+                translate(el, cluster);
+            }
+        }
+
+        for (const el of cdom.parentElement!.querySelectorAll(`:scope > * > cluster[code="${idStr}"]`)) {
+            translate(el, cluster);
+        }
+    })
 }
 
 // A string as extracted from XML; either element body or attribute value
@@ -129,7 +114,7 @@ function setAccessPrivileges(src: Element, target: Access.Ast) {
             "access role",
             str(el.getAttribute("role"))
         ) as Access.Privilege;
-        if (!Access.Privilege[role]) {
+        if (!(Access.Privilege as any)[role]) {
             throw new Error(`Unknown access role "${role}"`);
         }
 
@@ -155,6 +140,8 @@ function setAccessPrivileges(src: Element, target: Access.Ast) {
 function setQualities(src: Element, target: BaseDataElement) {
     const optional = bool(src.getAttribute("optional"));
     const nullable = bool(src.getAttribute("isNullable"));
+    const reportable = bool(src.getAttribute("reportable"));
+    const singleton = bool(src.getAttribute("singleton"));
     const fabricSensitive = bool(src.getAttribute("isFabricSensitive"));
     const fabricScoped = !fabricSensitive && bool(src.getAttribute("isFabricScoped"));
     const writable = bool(src.getAttribute("writable"));
@@ -177,8 +164,11 @@ function setQualities(src: Element, target: BaseDataElement) {
     setAccessPrivileges(src, access);
     target.access = access;
 
-    if (nullable) {
-        target.quality = { nullable: true };
+    if (nullable || reportable || singleton) {
+        target.quality = {};
+        if (nullable) target.quality.nullable = true;
+        if (reportable) target.quality.reportable = true;
+        if (singleton) target.quality.singleton = true;
     }
 
     const conformance = Array<Conformance.Flag>();
@@ -195,14 +185,29 @@ function setQualities(src: Element, target: BaseDataElement) {
 function createDataElement<T extends BaseDataElement>(
     Factory: ((properties: T) => T) & { Type: BaseElement.Type },
     src: Element,
-    target: BaseDataElement
+    target: BaseDataElement,
+    base: string,
+    propertyTag?: string
 ): T {
     const id = need(`${Factory.Type} id`, int(src.getAttribute("code")));
     const name = camelize(need(`${Factory.Type} name`, str(src)));
-    const base = need(`${Factory.Type} base`, str(src.getAttribute("type")));
     const element = Factory({ id: id, name: name, base: base } as T);
 
     setQualities(src, element);
+
+    if (propertyTag) {
+        children(src, propertyTag).forEach(pdom => {
+            if (!element.children) {
+                element.children = [];
+            }
+            element.children.push(createDataElement(
+                DatatypeElement,
+                pdom,
+                element,
+                need(`${Factory.Type} ${propertyTag} type`, str(src.getAttribute("type")))
+            ))
+        })
+    }
 
     if (!target.children) {
         target.children = [];
@@ -216,27 +221,78 @@ type Translator = (source: Element, target: ClusterElement) => void;
 
 const translators: { [name: string]: Translator } = {
     attribute: (source, target) => {
-        createDataElement(AttributeElement, source, target);
+        return createDataElement(
+            AttributeElement,
+            source,
+            target,
+            need("attribute body", str(source))
+        );
     },
 
     event: (source, target) => {
-        createDataElement(EventElement, source, target);
+        const el = createDataElement(
+            EventElement,
+            source,
+            target,
+            "struct",
+            "field"
+        );
+        el.priority = need("event priority", str(source.getAttribute("priority"))) as typeof el.priority;
+        return el;
     },
 
     command: (source, target) => {
+        const el = createDataElement(
+            CommandElement,
+            source,
+            target,
+            "struct",
+            "arg"
+        );
 
+        const response = str(source.getAttribute("response"));
+        if (response) el.response = response;
+
+        const src = str(source.getAttribute("source"));
+        if (src == "client") {
+            el.direction = CommandElement.Direction.Request;
+        } else if (src == "server") {
+            el.direction = CommandElement.Direction.Response;
+        } else {
+            throw new Error(`Illegal source ${src}`);
+        }
+
+        return el;
     },
 
     struct: (source, target) => {
-
+        return createDataElement(
+            DatatypeElement,
+            source,
+            target,
+            str(source.getAttribute("type")) ?? "struct",
+            "item"
+        );
     },
 
     enum: (source, target) => {
-
+        return createDataElement(
+            DatatypeElement,
+            source,
+            target,
+            need("enum type", str(source.getAttribute("type"))),
+            "item"
+        )
     },
 
     bitmap: (source, target) => {
-
+        return createDataElement(
+            DatatypeElement,
+            source,
+            target,
+            need("bitmap type", str(source.getAttribute("type"))),
+            "item"
+        )
     }
 }
 
@@ -248,95 +304,3 @@ function translate(from: Element, to: ClusterElement) {
     }
     translator(from, to);
 }
-
-function translateClusters(dom: Element) {
-    dom.querySelectorAll("configurator > cluster").forEach((cdom) => {
-        const idStr = child(cdom, "code");
-        const name = need("cluster name", str(child(dom, "name"))).replace(/Cluster$/, "");
-        const cluster = ClusterElement({
-            id: need("cluster id", int(idStr)),
-            name: camelize(name),
-            description: name,
-            details: str(child(cdom, "description"))
-        });
-
-        for (const n of cdom.childNodes) {
-            if (n.nodeType != Node.ELEMENT_NODE) {
-                return;
-            }
-            const el = n as Element;
-            if (el.tagName != "name" && el.tagName != "description") {
-                translate(el, cluster);
-            }
-        }
-
-        for (const el of cdom.parentElement!.querySelectorAll(`:scope > * > cluster[code="${idStr}"]`)) {
-            translate(el, cluster);
-        }
-    })
-}
-
-const typeMap: { [name: string]: keyof typeof Globals} = {
-    BOOLEAN: "bool",
-    BITMAP8: "map8",
-    BITMAP16: "map16",
-    BITMAP24: "map24",
-    BITMAP32: "map32",
-    BITMAP64: "map64",
-    INT8U: "uint8",
-    INT16U: "uint16",
-    INT24U: "uint24",
-    INT32U: "uint32",
-    INT40U: "uint40",
-    INT48U: "uint48",
-    INT56U: "uint56",
-    INT64U: "uint64",
-    INT8S: "int8",
-    INT16S: "int16",
-    INT24S: "int24",
-    INT32S: "int32",
-    INT40S: "int40",
-    INT48S: "int48",
-    INT56S: "int56",
-    INT64S: "int64",
-    ENUM8: "enum8",
-    ENUM16: "enum16",
-    SINGLE: "single",
-    DOUBLE: "double",
-    OCTET_STRING: "octstr",
-    CHAR_STRING: "string",
-    LONG_OCTET_STRING: "octstr",
-    LONG_CHAR_STRING: "string",
-    ARRAY: "list",
-    STRUCT: "struct",
-    TOD: "tod",
-    DATE: "date",
-    UTC: "utc",
-    EPOCH_US: "epochUs",
-    EPOCH_S: "epochS",
-    SYSTIME_US: "systimeUs",
-    PERCENT: "percent",
-    PERCENT100THS: "percent100ths",
-    CLUSTER_ID: "clusterId",
-    ATTRIB_ID: "attributeId",
-    FIELD_ID: "fieldId",
-    EVENT_ID: "eventId",
-    COMMAND_ID: "commandId",
-    ACTION_ID: "actionId",
-    TRANS_ID: "transactionId",
-    NODE_ID: "nodeId",
-    VENDOR_ID: "vendorId",
-    DEVTYPE_ID: "deviceTypeId",
-    FABRIC_ID: "fabricId",
-    GROUP_ID: "groupId",
-    STATUS: "status",
-    DATA_VER: "dataVer",
-    EVENT_NO: "eventNo",
-    ENDPOINT_NO: "endpointNo",
-    FABRIC_IDX: "fabricIdx",
-    IPADR: "ipadr",
-    IPV4ADR: "ipv4adr",
-    IPV6ADR: "ipv6adr",
-    IPV6PRE: "ipv6pre",
-    HWADR: "hwadr"
-};

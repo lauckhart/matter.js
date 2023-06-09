@@ -14,6 +14,11 @@ export type ClusterElement = BaseElement & {
     type: ClusterElement.Type,
 
     /**
+     * Marks a cluster as a singleton per the Matter specification.
+     */
+    singleton?: boolean,
+
+    /**
      * Encodes both classification and scope from the Matter specification.
      */
     classification?: ClusterElement.Classification,

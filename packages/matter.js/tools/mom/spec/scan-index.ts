@@ -6,8 +6,8 @@
 
 import { loadHtml } from "./spec-input.js";
 import { HtmlReference } from "./spec-types.js";
-import { AnyElement } from "../../../../src/model/index.js";
-import { Logger } from "../../../../src/log/Logger.js";
+import { AnyElement } from "../../../src/model/index.js";
+import { Logger } from "../../../src/log/Logger.js";
 
 const logger = Logger.get("index-scan");
 

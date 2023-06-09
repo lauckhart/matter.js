@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../../../src/log/Logger.js";
-import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../../src/model/index.js";
-import { camelize } from "../../../../src/util/String.js";
+import { Logger } from "../../../src/log/Logger.js";
+import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../src/model/index.js";
+import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
 import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter } from "./translate-table.js";
 

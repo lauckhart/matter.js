@@ -4,15 +4,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterElement } from "../../../src/model/index.js"
+// This script scrapes specification information from a HTML version of the
+// Matter specification.  Override the default location with
+// MATTER_SPECIFICATION_PATH environment variable.
+//
+// I used Adobe Acrobat Pro v23.001.20174.0 to generate the HTML, choosing
+// the option to save individual HTML based on headers.  We will probably parse
+// output of the current Acrobat version.  Other means of HTML generation will
+// likely require this code to be reworked.
+//
+// Reach out in Matter Integrators Discord server if you would like access to
+// a Dropbox folder with the HTML version of the specification.  Specifically
+// mention the term "masochist".
+
+import "../util/setup.js";
+import { ClusterElement } from "../../src/model/index.js"
 import { scanIndex } from "./spec/scan-index.js";
 
 import { paths } from "./spec/spec-input.js";
 import { ClusterReference, HtmlReference } from "./spec/spec-types.js";
 import { loadCluster } from "./spec/load-cluster.js";
 import { translateCluster } from "./spec/translate-cluster.js";
-import { Logger } from "../../../src/log/Logger.js";
-import { generateClusters } from "./generate-cluster.js";
+import { Logger } from "../../src/log/Logger.js";
+import { generateModel } from "./common/generate-model.js";
 
 const clusters = Array<ClusterElement>();
 const logger = Logger.get("generate-spec");
@@ -38,6 +52,6 @@ paths.forEach(path => {
             index.clusters.forEach(scanCluster);
         }
     });
-
-    generateClusters("spec", clusters);
 });
+
+generateModel("spec", clusters);

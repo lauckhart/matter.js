@@ -29,7 +29,7 @@ import { BaseElement, ClusterElement, DeviceTypeElement, FabricElement, NodeElem
 export type MatterElement = BaseElement & {
     type: BaseElement.Type.Matter,
     version: string,
-    children: (ClusterElement | DeviceTypeElement | FabricElement | NodeElement)[]
+    children?: (ClusterElement | DeviceTypeElement | FabricElement | NodeElement)[]
 }
 
 export function MatterElement(definition: MatterElement.Properties) {
