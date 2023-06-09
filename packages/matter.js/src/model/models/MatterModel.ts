@@ -7,12 +7,19 @@
 import { ClusterModel, DeviceTypeModel, FabricModel, MatterElement, Model, NodeModel } from "../index.js";
 
 export class MatterModel extends Model implements MatterElement {
-    override type!: MatterElement.Type;
+    override type: MatterElement.Type = MatterElement.Type;
     version?: string;
-    override children!: MatterModel.Child[];
+
+    override get children(): MatterModel.Child[] {
+        return super.children as any;
+    }
+
+    override set children(children: (MatterModel.Child | MatterElement.Child)[]) {
+        super.children = children;
+    }
 
     override validate() {
-        this.validateStructure(MatterElement.Type, true, DeviceTypeModel, ClusterModel, FabricModel, NodeModel);
+        this.validateStructure(MatterElement.Type, false, DeviceTypeModel, ClusterModel, FabricModel, NodeModel);
         this.validateProperty({ name: "version", type: "string", required: true });
         return super.validate();
     }

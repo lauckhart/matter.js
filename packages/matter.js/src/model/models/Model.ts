@@ -9,19 +9,61 @@ import { Logger } from "../../log/Logger.js";
 import { AnyElement, BaseElement, Globals } from "../index.js";
 
 const logger = Logger.get("Model");
+const CHILDREN = Symbol("children");
 
 /**
  * A "model" is a class that implements runtime functionality associated with
  * the corresponding element type.
  */
 export abstract class Model implements BaseElement {
-    abstract type: AnyElement["type"];
+    abstract readonly type: AnyElement["type"];
     id?: number;
     name!: string;
     description?: string;
     details?: string;
-    children: Model[];
-    errors?: MatterError[];
+    errors?: string[];
+
+    get valid() {
+        return !this.errors;
+    }
+
+    private [CHILDREN]!: Array<any>;
+
+    get children(): Model[] {
+        if (!this[CHILDREN]) {
+            this.children = [];
+        }
+        return this[CHILDREN];
+    }
+
+    set children(children: (Model | AnyElement)[]) {
+        this[CHILDREN] = new Proxy([], {
+            get: (target, p, receiver) => {
+                let result = Reflect.get(target, p, receiver);
+                if (!(result instanceof Model) && typeof p == "string" && p.match(/^[0-9]$/)) {
+                    result = Model.create(result);
+                    result.parent = this;
+                    Reflect.set(target, p, result, receiver);
+                }
+                return result;
+            },
+
+            set: (target, p, newValue, receiver) => {
+                if (newValue instanceof Model) {
+                    if (newValue.parent) {
+                        newValue = { ...newValue };
+                        delete newValue.parent;
+                    } else {
+                        newValue.parent = this;
+                    }
+                } else if (typeof newValue != "object" || newValue === null || !newValue.type) {
+                    throw new MatterError("Node child must be Model or AnyElement");
+                }
+                return Reflect.set(target, p, newValue, receiver);
+            }
+        });
+        this[CHILDREN].push(...children);
+    }
 
     xref?: {
         document: BaseElement.Specification,
@@ -40,23 +82,6 @@ export abstract class Model implements BaseElement {
             if (v !== undefined) {
                 (this as any)[k] = v;
             }
-        }
-
-        if (definition.children) {
-            this.children = (definition.children as any).map((c: any) => {
-                if (c instanceof Model) {
-                    if (c.parent == undefined) {
-                        c.parent = this;
-                        return c;
-                    }
-                    if (c.parent == this) {
-                        return c;
-                    }
-                }
-                return Model.create(c);
-            })
-        } else {
-            this.children = [];
         }
     }
 
@@ -117,14 +142,15 @@ export abstract class Model implements BaseElement {
     /**
      * Record a validation error for this model.
      */
-    error(error: MatterError | string) {
+    error(error: { errors: string[] } | string) {
         if (!this.errors) {
             this.errors = [];
         }
         if (typeof error == "string") {
-            error = new MatterError(error);
+            this.errors.push(error);
+        } else {
+            this.errors.push(...error.errors);
         }
-        this.errors.push(error);
     }
 
     /**
@@ -155,7 +181,7 @@ export abstract class Model implements BaseElement {
         if (this.errors) {
             errors += this.errors.length;
             for (const e of this.errors) {
-                logger.error(e.message);
+                logger.error(e);
             }
         }
 
@@ -211,16 +237,18 @@ export abstract class Model implements BaseElement {
     protected validateProperty({ name, type, required, nullable }: Model.PropertyValidation) {
         const value = (this as any)[name];
         if (value === undefined) {
-            if (!required) {
+            if (required) {
                 this.error(`missing required property ${name}`);
                 return;
             }
+            return;
         }
         if (value === null) {
-            if (!nullable) {
+            if (nullable) {
                 this.error(`property ${name} is null`);
                 return;
             }
+            return;
         }
         if (Number.isNaN(value)) {
             this.error(`property ${name} is NaN`);

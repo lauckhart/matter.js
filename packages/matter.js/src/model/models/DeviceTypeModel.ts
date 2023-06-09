@@ -4,13 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterModel, DeviceTypeElement, Mei, Model } from "../index.js";
+import { ClusterElement, ClusterModel, DeviceTypeElement, Mei, Model } from "../index.js";
 
 export class DeviceTypeModel extends Model implements DeviceTypeElement {
     override type!: DeviceTypeElement.Type;
     override id!: Mei;
     classification!: DeviceTypeElement.Classification;
-    override children!: (DeviceTypeModel | ClusterModel)[];
+
+
+    override get children(): (DeviceTypeModel | ClusterModel)[] {
+        return super.children as any;
+    }
+
+    override set children(children: (DeviceTypeModel | ClusterModel | DeviceTypeElement | ClusterElement)[]) {
+        super.children = children;
+    }
 
     override validate() {
         this.validateStructure(DeviceTypeElement.Type, true, DeviceTypeModel, ClusterModel);

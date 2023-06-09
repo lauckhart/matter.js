@@ -4,12 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatatypeModel, FabricElement, Model, NodeModel } from "../index.js";
+import { DatatypeModel, FabricElement, Model, NodeElement, NodeModel } from "../index.js";
 
 export class FabricModel extends Model implements FabricElement {
     override type!: FabricElement.Type;
     override id!: number;
-    override children!: NodeModel[];
+
+    override get children(): NodeModel[] {
+        return super.children as any;
+    }
+
+    override set children(children: (NodeModel | NodeElement)[]) {
+        super.children = children;
+    }
 
     override validate() {
         this.validateStructure(FabricElement.Type, true, DatatypeModel);

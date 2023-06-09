@@ -5,6 +5,7 @@
  */
 
 import { MatterError } from "../../common/index.js";
+import { Aspect } from "./Aspect.js";
 
 export class IllegalQualityError extends MatterError {}
 
@@ -15,7 +16,7 @@ export class IllegalQualityError extends MatterError {}
  * "Other qualities" are defined behaviors of data fields and cluster elements
  * that do not involve access or conformance.
  */
-export class Quality implements Quality.Ast {
+export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
     public nullable?: boolean;
     public nonvolatile?: boolean;
     public fixed?: boolean;
@@ -30,16 +31,18 @@ export class Quality implements Quality.Ast {
      * "other quality" DSL defined in the Matter specification.
      */
     constructor(definition: Quality.Definition) {
+        super(definition);
+
         if (typeof definition == "string") {
-            this.parse(definition);
+            this.parse(this, definition);
         } else if (Array.isArray(definition)) {
-            definition.map((f) => this.parse(f));
+            definition.map((f) => this.parse(this, f));
         } else {
             Object.assign(this, definition);
         }
     }
 
-    private parse(definition: string) {
+    private parse(quality: Quality, definition: string) {
         let disallow = false;
         for (const char of definition.toUpperCase()) {
             if (char == " " || char == "\t") {
@@ -67,7 +70,7 @@ export class Quality implements Quality.Ast {
                     this[field] = true;
                 }
             } else {
-                throw new IllegalQualityError(`Unknown quality flag "${char}"`);
+                quality.error(`unknown flag "${char}"`);
             }
         }
     }
@@ -75,7 +78,7 @@ export class Quality implements Quality.Ast {
     /**
      * Display quality using standard Matter syntax.
      */
-    toString() {
+    override toString() {
         const flags = [] as Quality.FlagName[];
 
         for (const f of Quality.FlagNames) {

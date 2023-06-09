@@ -4,10 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/MatterError.js";
 import { ByteArray } from "../../util/index.js";
 import { Access, BaseDataElement, BaseElement, Conformance, Constraint, DatatypeElement, Globals, Model, Quality } from "../index.js";
 import type { DatatypeModel } from "../index.js";
+
+const CONSTRAINT: unique symbol = Symbol("constraint");
+const CONFORMANCE: unique symbol = Symbol("conformance");
+const ACCESS: unique symbol = Symbol("access");
+const QUALITY: unique symbol = Symbol("quality");
 
 /**
  * Base class for all data element implementations.
@@ -16,20 +20,59 @@ export abstract class DataModel extends Model implements BaseDataElement {
     base?: string;
     byteSize?: BaseDataElement.Size;
     default?: any;
-    override children!: DatatypeModel[];
 
-    constraint: Constraint;
-    conformance: Conformance;
-    access: Access;
-    quality: Quality;
+    override get children(): DatatypeModel[] {
+        return super.children as any;
+    }
+
+    override set children(children: (DatatypeModel | DatatypeElement)[]) {
+        super.children = children;
+    }
+
+    get constraint() {
+        return this.getAspect(CONSTRAINT, Constraint);
+    }
+
+    set constraint(definition: Constraint | Constraint.Definition) {
+        this.setAspect(CONSTRAINT, Constraint, definition);
+    }
+
+    get conformance() {
+        return this.getAspect(CONFORMANCE, Conformance);
+    }
+
+    set conformance(definition: Conformance | Conformance.Definition) {
+        this.setAspect(CONFORMANCE, Conformance, definition);
+    }
+
+    get access() {
+        return this.getAspect(ACCESS, Access);
+    }
+
+    set access(definition: Access | Access.Definition) {
+        this.setAspect(ACCESS, Access, definition);
+    }
+
+    get quality() {
+        return this.getAspect(QUALITY, Quality);
+    }
+
+    set quality(definition: Quality | Quality.Definition) {
+        this.setAspect(QUALITY, Quality, definition);
+    }
 
     override validate() {
         this.validateProperty({ name: "base", type: "string" });
         this.validateProperty({ name: "byteSize", type: "number" });
-        this.validateProperty({ name: "constraint", type: Constraint, required: true });
-        this.validateProperty({ name: "conformance", type: Conformance, required: true });
-        this.validateProperty({ name: "access", type: Access, required: true });
-        this.validateProperty({ name: "quality", type: Quality, required: true });
+        this.validateProperty({ name: "constraint", type: Constraint });
+        this.validateProperty({ name: "conformance", type: Conformance });
+        this.validateProperty({ name: "access", type: Access });
+        this.validateProperty({ name: "quality", type: Quality });
+
+        this.validateAspect(CONSTRAINT);
+        this.validateAspect(CONFORMANCE);
+        this.validateAspect(ACCESS);
+        this.validateAspect(QUALITY);
 
         this.validateType();
 
@@ -38,46 +81,6 @@ export abstract class DataModel extends Model implements BaseDataElement {
 
     protected constructor(definition: BaseDataElement.Properties, parent?: Model) {
         super(definition, parent);
-
-        try {
-            this.constraint = new Constraint(definition.constraint);
-        } catch (e) {
-            if (!(e instanceof MatterError)) {
-                throw e;
-            }
-            this.error(e);
-            this.constraint = new Constraint(undefined);
-        }
-
-        try {
-            this.conformance = new Conformance(definition.conformance);
-        } catch (e) {
-            if (!(e instanceof MatterError)) {
-                throw e;
-            }
-            this.error(e);
-            this.conformance = new Conformance(undefined);
-        }
-        
-        try {
-            this.access = new Access(definition.access);
-        } catch (e) {
-            if (!(e instanceof MatterError)) {
-                throw e;
-            }
-            this.error(e);
-            this.access = new Access(undefined);
-        }
-
-        try {
-            this.quality = new Quality(definition.quality);
-        } catch (e) {
-            if (!(e instanceof MatterError)) {
-                throw e;
-            }
-            this.error(e);
-            this.quality = new Quality(undefined);
-        }
     }
 
     /**
@@ -147,6 +150,25 @@ export abstract class DataModel extends Model implements BaseDataElement {
         }
 
         return undefined;
+    }
+
+    private getAspect(symbol: symbol, constructor: new(definition: any) => any) {
+        return (this as any)[symbol] || ((this as any)[symbol] = new constructor(undefined));
+    }
+
+    private setAspect(symbol: symbol, constructor: new(definition: any) => any, value: any) {
+        if (value instanceof constructor) {
+            (this as any)[symbol] = value;
+        } else {
+            (this as any)[symbol] = new constructor(value);
+        }
+    }
+
+    private validateAspect(symbol: symbol) {
+        const aspect = (this as any)[symbol];
+        if (aspect?.errors) {
+            this.error(aspect);
+        }
     }
 
     private validateType() {

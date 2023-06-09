@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/MatterError.js";
-
-export class IllegalConformanceError extends MatterError {}
+import { Aspect } from "./Aspect.js";
 
 /**
  * An operational view of conformance as defined by the Matter Specification.
@@ -14,7 +12,7 @@ export class IllegalConformanceError extends MatterError {}
  * "Conformance" controls when a data field or cluster element is allowed or
  * required.
  */
-export class Conformance implements Conformance.Ast {
+export class Conformance extends Aspect<Conformance.Definition> implements Conformance.Ast {
     type: Conformance.AstType;
     param?: Conformance.AstParam;
 
@@ -23,14 +21,16 @@ export class Conformance implements Conformance.Ast {
      * by the Matter Specification.
      */
     constructor(definition: Conformance.Definition) {
+        super(definition);
+
         let ast: Conformance.Ast;
         if (definition == undefined) {
             this.type = Conformance.Special.Empty;
             return;
         } else if (typeof definition == "string") {
-            ast = new Parser(definition).ast;
+            ast = new Parser(this, definition).ast;
         } else if (Array.isArray(definition)) {
-            const asts = definition.map((def) => new Parser(def).ast);
+            const asts = definition.map((def) => new Parser(this, def).ast);
             if (asts.length == 1) {
                 ast = asts[0];
             } else {
@@ -48,7 +48,7 @@ export class Conformance implements Conformance.Ast {
 
     // TODO - offer validation?
 
-    toString() {
+    override toString() {
         return Conformance.serialize(this);
     }
 }
@@ -239,7 +239,7 @@ namespace Tokenizer {
         | Token.Choice
         | Token.Number;
 
-    export function* tokenize(definition: string): Generator<Token> {
+    export function* tokenize(conformance: Conformance, definition: string): Generator<Token> {
         const i = definition[Symbol.iterator]();
 
         let current = i.next();
@@ -311,10 +311,10 @@ namespace Tokenizer {
                 case "=":
                     if (peeked.value == "=") {
                         next();
-                        yield { type: TokenType.Special, value: Special.Equal };
                     } else {
-                        throw new IllegalConformanceError(`"=" must be followed by another "="`);
+                        conformance.error(`"=" must be followed by another "="`);
                     }
+                    yield { type: TokenType.Special, value: Special.Equal };
                     break;
 
                 case " ":
@@ -336,7 +336,7 @@ namespace Tokenizer {
                         }
                         yield { type: TokenType.Name, value: name.join("") };
                     } else {
-                        throw new Error(`Unexpected character "${current.value}"`);
+                        throw new Error(`unexpected character "${current.value}"`);
                     }
                     break;
             }
@@ -354,8 +354,8 @@ class Parser {
     private token?: Tokenizer.Token;
     private peeked?: Tokenizer.Token;
 
-    constructor(definition: string) {
-        this.tokens = Tokenizer.tokenize(definition);
+    constructor(private conformance: Conformance, definition: string) {
+        this.tokens = Tokenizer.tokenize(conformance, definition);
         const next = this.tokens.next();
         if (!next.done) {
             this.peeked = next.value;
@@ -399,7 +399,7 @@ class Parser {
         while (true) {
             if (!this.token) {
                 if (end) {
-                    throw new IllegalConformanceError("Unterminated conformance grouping");
+                    this.conformance.error("unterminated conformance grouping");
                 }
                 return groupAsAst();
             }
@@ -438,11 +438,17 @@ class Parser {
 
         // Collect binary expressions into an array so we can back up and
         // apply operator precedence
-        elements.push(this.parseUnaryExpression());
+        let expr = this.parseUnaryExpression();
+        if (expr) {
+            elements.push(expr);
+        }
         while (this.token && this.token.type == Tokenizer.TokenType.Special && Parser.BinaryOperators.has(this.token.value)) {
             elements.push(this.token.value);
             this.next();
-            elements.push(this.parseUnaryExpression());
+            expr = this.parseUnaryExpression();
+            if (expr) {
+                elements.push(expr);
+            }
         }
 
         // Convert binary operators into AST nodes in order of precedence
@@ -461,7 +467,7 @@ class Parser {
         return elements[0] as Conformance.Ast;
     }
 
-    private parseUnaryExpression(): string | Conformance.Ast {
+    private parseUnaryExpression(): string | Conformance.Ast | undefined {
         const expr = this.parseUnaryExpressionWithoutChoice();
 
         // Parse choice suffix
@@ -469,10 +475,10 @@ class Parser {
             this.next();
 
             if ((this.token as any)?.type != Tokenizer.TokenType.Choice) {
-                throw new IllegalConformanceError('Choice indicator (".") must be followed by a single lowercase letter');
+                this.conformance.error('choice indicator (".") must be followed by a single lowercase letter');
             }
             const choice = {
-                choice: this.token?.value,
+                choice: this.token?.value ?? "?",
                 expr: expr
             } as Conformance.Ast.Choice;
             this.next();
@@ -494,9 +500,10 @@ class Parser {
         return expr;
     }
 
-    private parseUnaryExpressionWithoutChoice(): string | Conformance.Ast {
+    private parseUnaryExpressionWithoutChoice(): string | Conformance.Ast | undefined {
         if (!this.token) {
-            throw new IllegalConformanceError("Conformance definition terminated with expression expected");
+            this.conformance.error("terminated with expression expected");
+            return;
         }
 
         if (this.token.type == Tokenizer.TokenType.Flag || this.token.type == Tokenizer.TokenType.Name || this.token.type == Tokenizer.TokenType.Number) {
@@ -515,7 +522,8 @@ class Parser {
             return this.parseGroup(Tokenizer.Special.GroupEnd);
         }
 
-        throw new IllegalConformanceError(`Unexpected "${this.token.value}" in conformance definition`)
+        this.conformance.error(`unexpected "${this.token.value}"`);
+        this.next();
     }
 }
 

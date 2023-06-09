@@ -1,0 +1,4 @@
+src/model/instance/spec/elements/*.ts linguist-generated=true
+src/model/instance/spec/internal.ts linguist-generated=true
+src/model/instance/chip/elements/*.ts linguist-generated=true
+src/model/instance/chip/internal.ts linguist-generated=true
