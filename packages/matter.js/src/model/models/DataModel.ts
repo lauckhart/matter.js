@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MatterError } from "../../common/MatterError.js";
 import { ByteArray } from "../../util/index.js";
 import { Access, BaseDataElement, BaseElement, Conformance, Constraint, DatatypeElement, Globals, Model, Quality } from "../index.js";
-import type { DatatypeModel } from "../index.js";
+import { DatatypeModel } from "../index.js";
 
 const CONSTRAINT: unique symbol = Symbol("constraint");
 const CONFORMANCE: unique symbol = Symbol("conformance");
@@ -86,22 +87,27 @@ export abstract class DataModel extends Model implements BaseDataElement {
     /**
      * Access the DataModel this model derives from, if any.
      */
-    get baseModel(): DataModel | undefined  {
-        if (this.base) {
-            const base = this.global(this.base, DatatypeElement.Type, [ this ]);
-            if (!(base instanceof DataModel)) {
-                // Ignore error, handled in validation
-                return undefined;
+    get baseModel(): DataModel | undefined {
+        const visited = new Set<Model>();
+        let model: DataModel = this;
+        while (model.base) {
+            visited.add(model);
+            const nextModel = model.global(model.base, DatatypeModel, [ this ]);
+            if (nextModel) {
+                if (visited.has(nextModel)) {
+                    throw new MatterError(`Circular inheritance detected for ${this.path}`);
+                }
+                model = nextModel;
             }
-            return base.baseModel;
         }
+        return model;
     }
 
     /**
      * Access the JS type for this data element.
      */
     get nativeType(): DataModel.NativeType | undefined {
-        return undefined;
+        return this.baseModel?.nativeType;
     }
     
     /**
@@ -174,20 +180,23 @@ export abstract class DataModel extends Model implements BaseDataElement {
     private validateType() {
         if (this.base == undefined) {
             if ((Globals as any)[this.name] != this) {
-                this.error("data model has no base type but is not global");
+                this.error("Data model has no base type but is not global");
             } else if (!(BaseDataElement.Datatype as any)[this.name]) {
-                this.error("data model has no base but is not primitive type");
+                this.error("Data model has no base but is not primitive type");
             }
             return;
         }
         
-        const base = this.global(this.base);
+        const base = this.global(this.base, DatatypeModel);
         if (base == undefined) {
-            this.error(`cannot resolve base type ${this.base}`);
+            this.error(`Unknown base type ${this.base}`);
             return;
         }
+
+        // This shouldn't happen because we limit search above to datatype.
+        // Leaving in as a sanity check though
         if (base.type != BaseElement.Type.Datatype) {
-            this.error(`base type ${this.base} resolves to ${base.type} element (expected datatype)`);
+            this.error(`Base type ${this.base} resolves to ${base.type} element (expected datatype)`);
             return;
         }
 
@@ -205,7 +214,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
         const t = typeof d;
         if (T == String) {
             if (t != "string") {
-                this.error(`type is ${t} (expected string)`);
+                this.error(`Type is ${t} (expected string)`);
             }
             return;
         }
@@ -213,15 +222,15 @@ export abstract class DataModel extends Model implements BaseDataElement {
         if (typeof t == "string") {
             d = this.parseValue(d);
             if (d == undefined) {
-                this.error(`default value ${d} does not parse`);
+                this.error(`Default value ${d} does not parse`);
                 return;
             }
             if (Number.isNaN(d)) {
-                this.error(`default value ${d} parses to NaN`);
+                this.error(`Default value ${d} parses to NaN`);
                 return;
             }
             if (d instanceof Date && Number.isNaN(d.valueOf())) {
-                this.error(`default value ${d} parses to invalid date`);
+                this.error(`Default value ${d} parses to invalid date`);
                 return;
             }
             this.default = d;
@@ -230,7 +239,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
 
         d = d.valueOf();
         if (Number.isNaN(d)) {
-            this.error(`default value is NaN`);
+            this.error(`Default value is NaN`);
         }
         let to: string = typeof d;
         if (to == "object") {
@@ -239,37 +248,37 @@ export abstract class DataModel extends Model implements BaseDataElement {
         switch (T) {
             case Boolean:
                 if (to != "boolean") {
-                    this.error(`default value is ${to} (expected boolean)`);
+                    this.error(`Default value is ${to} (expected boolean)`);
                 }
 
             case BigInt:
             case Number:
                 if (to != "number" && to != "bigint") {
-                    this.error(`default value is ${to} (expected number or bigint)`);
+                    this.error(`Default value is ${to} (expected number or bigint)`);
                 }
                 break;
 
             case ByteArray:
                 if (!(d instanceof Uint8Array)) {
-                    this.error(`default value is ${to} (expected byte array)`);
+                    this.error(`Default value is ${to} (expected byte array)`);
                 }
                 break;
 
             case Array:
                 if (!(Array.isArray(d))) {
-                    this.error(`default value is ${to} (expected array)`);
+                    this.error(`Default value is ${to} (expected array)`);
                 }
                 break;
 
             case Object:
                 if (typeof d != "object") {
-                    this.error(`default value is ${to} (expected object)`);
+                    this.error(`Default value is ${to} (expected object)`);
                 }
                 break;
 
             case Date:
                 if (to != "number" && to != "Date") {
-                    this.error(`default value is ${to} (expected date)`);
+                    this.error(`Default value is ${to} (expected date)`);
                 }
                 break;
         }

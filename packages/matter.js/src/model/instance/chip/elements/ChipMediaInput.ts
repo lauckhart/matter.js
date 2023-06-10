@@ -15,12 +15,12 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for controlling the Input Selector on a media device such as a TV.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "MediaInputList", base: "InputList",
+            id: 0x0000, name: "MediaInputList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "MediaInputCurrentInput", base: "CurrentInput",
+            id: 0x0001, name: "MediaInputCurrentInput", base: "uint8",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
@@ -29,12 +29,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "INT8U",
+                    name: "Index", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Index", base: "INT8U",
+                    name: "Index", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -55,25 +55,202 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "INT8U",
+                    name: "Index", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Index", base: "INT8U",
+                    name: "Index", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "CHAR_STRING",
+                    name: "Name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "CHAR_STRING",
+                    name: "Name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
+        }),
+
+        DatatypeElement({
+            name: "InputInfoStruct", base: "struct",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Index", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Index", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "InputType", base: "InputTypeEnum",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "InputType", base: "InputTypeEnum",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Name", base: "string",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Name", base: "string",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Description", base: "string",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Description", base: "string",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "InputTypeEnum", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Internal", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Internal", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Aux", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Aux", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Coax", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Coax", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Composite", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Composite", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Hdmi", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Hdmi", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Input", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Input", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Line", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Line", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Optical", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Optical", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Video", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Video", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Scart", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Scart", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Usb", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Usb", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Other", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Other", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "MediaInputFeature", base: "map32",
+            access: { rw: "R" }, conformance: [ "M" ]
         })
     ]
 }));

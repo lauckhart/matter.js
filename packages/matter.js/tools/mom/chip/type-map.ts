@@ -6,7 +6,7 @@
 
 import { Globals } from "../../../src/model/index.js";
 
-export const typeMap: { [name: string]: keyof typeof Globals} = {
+export const TypeMap: { [name: string]: keyof typeof Globals} = {
     BOOLEAN: "bool",
     BITMAP8: "map8",
     BITMAP16: "map16",
@@ -69,4 +69,14 @@ export const typeMap: { [name: string]: keyof typeof Globals} = {
     IPV6ADR: "ipv6adr",
     IPV6PRE: "ipv6pre",
     HWADR: "hwadr"
+};
+
+export const ChildTypeMap: { [name: string]: string} = {
+    map8: "INT8U",
+    map16: "INT16U",
+    map24: "INT24U",
+    map32: "INT32U",
+    map64: "INT64U",
+    enum8: "INT8U",
+    enum16: "INT16U"
 };

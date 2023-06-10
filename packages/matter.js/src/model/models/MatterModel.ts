@@ -20,7 +20,7 @@ export class MatterModel extends Model implements MatterElement {
 
     override validate() {
         this.validateStructure(MatterElement.Type, false, DeviceTypeModel, ClusterModel, FabricModel, NodeModel);
-        this.validateProperty({ name: "version", type: "string", required: true });
+        this.validateProperty({ name: "version", type: "string" });
         return super.validate();
     }
 

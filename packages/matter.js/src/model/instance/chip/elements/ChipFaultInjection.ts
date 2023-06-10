@@ -29,42 +29,42 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "INT32U",
+                    name: "Id", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "INT32U",
+                    name: "Id", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NumCallsToSkip", base: "INT32U",
+                    name: "NumCallsToSkip", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NumCallsToSkip", base: "INT32U",
+                    name: "NumCallsToSkip", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NumCallsToFail", base: "INT32U",
+                    name: "NumCallsToFail", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NumCallsToFail", base: "INT32U",
+                    name: "NumCallsToFail", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TakeMutex", base: "BOOLEAN",
+                    name: "TakeMutex", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TakeMutex", base: "BOOLEAN",
+                    name: "TakeMutex", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -85,22 +85,78 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "INT32U",
+                    name: "Id", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "INT32U",
+                    name: "Id", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Percentage", base: "INT8U",
+                    name: "Percentage", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Percentage", base: "INT8U",
+                    name: "Percentage", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "FaultType", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Unspecified", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Unspecified", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "SystemFault", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "SystemFault", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "InetFault", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "InetFault", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ChipFault", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ChipFault", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CertFault", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CertFault", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

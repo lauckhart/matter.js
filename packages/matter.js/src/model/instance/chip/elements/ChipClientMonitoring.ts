@@ -15,22 +15,22 @@ ChipMatter.children!.push(ClusterElement({
     details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on the server.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "IdleModeInterval", base: "IdleModeInterval",
+            id: 0x0000, name: "IdleModeInterval", base: "uint32",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ActiveModeInterval", base: "ActiveModeInterval",
+            id: 0x0001, name: "ActiveModeInterval", base: "uint32",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ActiveModeThreshold", base: "ActiveModeThreshold",
+            id: 0x0002, name: "ActiveModeThreshold", base: "uint16",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ExpectedClients", base: "ExpectedClients",
+            id: 0x0003, name: "ExpectedClients", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
@@ -39,22 +39,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R", writePrivilege: "M" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ClientNodeId", base: "node_id",
+                    name: "ClientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ClientNodeId", base: "node_id",
+                    name: "ClientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "INT64U",
+                    name: "ICid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "INT64U",
+                    name: "ICid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -65,22 +65,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R", writePrivilege: "M" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ClientNodeId", base: "node_id",
+                    name: "ClientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ClientNodeId", base: "node_id",
+                    name: "ClientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "INT64U",
+                    name: "ICid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "INT64U",
+                    name: "ICid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -89,6 +89,32 @@ ChipMatter.children!.push(ClusterElement({
         CommandElement({
             id: 0x0002, name: "StayAwakeRequest", base: "struct",
             access: { rw: "R", writePrivilege: "M" }, conformance: [ "O" ], direction: "request"
+        }),
+
+        DatatypeElement({
+            name: "MonitoringRegistration", base: "struct",
+            access: { rw: "R", fabric: "F" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "ClientNodeId", base: "nodeId",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ClientNodeId", base: "nodeId",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ICid", base: "uint64",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ICid", base: "uint64",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
         })
     ]
 }));

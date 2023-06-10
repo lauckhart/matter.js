@@ -16,15 +16,15 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "GetSetupPin", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "GetSetupPINResponse",
+            access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "GetSetupPinResponse",
             children: [
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "CHAR_STRING",
+                    name: "TempAccountIdentifier", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "CHAR_STRING",
+                    name: "TempAccountIdentifier", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -35,22 +35,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "CHAR_STRING",
+                    name: "TempAccountIdentifier", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "CHAR_STRING",
+                    name: "TempAccountIdentifier", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SetupPin", base: "CHAR_STRING",
+                    name: "SetupPin", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SetupPin", base: "CHAR_STRING",
+                    name: "SetupPin", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -66,12 +66,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "SetupPin", base: "CHAR_STRING",
+                    name: "SetupPin", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SetupPin", base: "CHAR_STRING",
+                    name: "SetupPin", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

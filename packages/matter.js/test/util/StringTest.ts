@@ -13,7 +13,8 @@ const CAMELIZE_TESTS = {
     "FOOBar": "FooBar",
     "foo/bar": "FooBar",
     "FooBar": "FooBar",
-    "foo bar biz baz": "FooBarBizBaz"
+    "foo bar biz baz": "FooBarBizBaz",
+    "foo100bar": "Foo100Bar"
 }
 
 describe("String", () => {

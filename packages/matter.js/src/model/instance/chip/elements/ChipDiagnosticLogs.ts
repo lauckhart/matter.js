@@ -39,12 +39,12 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "TransferFileDesignator", base: "CHAR_STRING",
+                    name: "TransferFileDesignator", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "TransferFileDesignator", base: "CHAR_STRING",
+                    name: "TransferFileDesignator", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -65,33 +65,151 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "LogContent", base: "LONG_OCTET_STRING",
+                    name: "LogContent", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "LogContent", base: "LONG_OCTET_STRING",
+                    name: "LogContent", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "UtcTimeStamp", base: "epoch_us",
+                    name: "UtcTimeStamp", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "UtcTimeStamp", base: "epoch_us",
+                    name: "UtcTimeStamp", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "TimeSinceBoot", base: "systime_us",
+                    name: "TimeSinceBoot", base: "systimeUs",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "TimeSinceBoot", base: "systime_us",
+                    name: "TimeSinceBoot", base: "systimeUs",
                     access: { rw: "R" }, conformance: [ "O" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "IntentEnum", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "EndUserSupport", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "EndUserSupport", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "NetworkDiag", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "NetworkDiag", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CrashLogs", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CrashLogs", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "StatusEnum", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Success", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Success", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Exhausted", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Exhausted", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "NoLogs", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "NoLogs", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Busy", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Busy", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Denied", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Denied", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "TransferProtocolEnum", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "ResponsePayload", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ResponsePayload", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Bdx", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Bdx", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         })

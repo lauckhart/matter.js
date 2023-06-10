@@ -9,8 +9,8 @@ export function capitalize(text: string) {
 }
 
 /**
- * Converts identifiers of the form "foo-bar", "foo_bar", "foo bar", "foo*bar"
- * or "fooBar" into "FooBar" or "fooBar".
+ * Converts identifiers of the form "foo-bar", "foo_bar", "foo bar", "foo*bar",
+ * "fooBar" or "FOOBar" into "FooBar" or "fooBar".
  */
 export function camelize(name: string, upperFirst = true) {
     const pieces = new Array<string>();
@@ -46,6 +46,11 @@ export function camelize(name: string, upperFirst = true) {
         }
 
         addPiece(i);
+
+        if ((name[i] >= "0" && name[i] <= "9") || name[i] == "$") {
+            pieces.push(name[i])
+        }
+
         pieceStart = i + 1;
         continue;
     }

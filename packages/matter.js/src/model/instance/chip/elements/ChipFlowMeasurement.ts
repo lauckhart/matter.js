@@ -15,22 +15,22 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring the measurement of flow, and reporting flow measurements.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "FlowMeasuredValue", base: "MeasuredValue",
+            id: 0x0000, name: "FlowMeasuredValue", base: "uint16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "FlowMinMeasuredValue", base: "MinMeasuredValue",
+            id: 0x0001, name: "FlowMinMeasuredValue", base: "uint16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "FlowMaxMeasuredValue", base: "MaxMeasuredValue",
+            id: 0x0002, name: "FlowMaxMeasuredValue", base: "uint16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0003, name: "FlowTolerance", base: "Tolerance",
+            id: 0x0003, name: "FlowTolerance", base: "uint16",
             access: { rw: "R" }, conformance: [ "O" ]
         })
     ]

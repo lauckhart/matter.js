@@ -7,15 +7,16 @@
 import { Logger } from "../../../src/log/Logger.js";
 import { Access, AnyElement, AttributeElement, BaseDataElement, BaseElement, ClusterElement, CommandElement, Conformance, DatatypeElement, EventElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/index.js";
+import { ChildTypeMap, TypeMap } from "./type-map.js";
 
 const logger = Logger.get("translate-cluster");
 
 export function translateChip(rootEl: Element, target: Array<AnyElement>) {
     rootEl.querySelectorAll("configurator > cluster").forEach((clusterEl) => {
-        const idStr = child(clusterEl, "code");
+        const id = int(child(clusterEl, "code"));
         const name = need("cluster name", str(child(clusterEl, "name"))).replace(/Cluster$/, "");
         const cluster = ClusterElement({
-            id: need("cluster id", int(idStr)),
+            id: need("cluster id", id),
             name: camelize(name),
             description: name,
             details: str(child(clusterEl, "description"))
@@ -35,8 +36,13 @@ export function translateChip(rootEl: Element, target: Array<AnyElement>) {
             }
         }
 
-        for (const el of clusterEl.parentElement!.querySelectorAll(`:scope > * > cluster[code="${idStr}"]`)) {
-            translate(el, cluster);
+        for (const node of rootEl.childNodes) {
+            if (node.nodeType == 1 /* element */) {
+                const clusterRefEl = child(node as Element, "cluster");
+                if (clusterRefEl && int(clusterRefEl.getAttribute("code")) == id) {
+                    translate(node as Element, cluster);
+                }
+            }
         }
 
         target.push(cluster);
@@ -197,10 +203,18 @@ function createDataElement<T extends BaseDataElement>(
 ): T {
     let name = camelize(need(`${Factory.Type} name`, dataEl.getAttribute("name") || dataEl.getAttribute("define")));
     logger.debug(`${Factory.Type} ${name}`);
+
     let id = int(dataEl.getAttribute("code"));
     if (Factory.Type != DatatypeElement.Type) {
         need(`${Factory.Type} id`, id);
     }
+
+    if (TypeMap[base.toUpperCase()]) {
+        base = TypeMap[base.toUpperCase()];
+    } else {
+        base = camelize(base);
+    }
+
     const element = Factory({ id: id, name: name, base: base } as T);
 
     setQualities(dataEl, element);
@@ -210,11 +224,14 @@ function createDataElement<T extends BaseDataElement>(
             if (!element.children) {
                 element.children = [];
             }
+
+            const childBase = str(ChildTypeMap[base]) || propertyEl.getAttribute("type");
+
             element.children.push(createDataElement(
                 DatatypeElement,
                 propertyEl,
                 element,
-                need(`${Factory.Type} ${propertyTag} type`, str(propertyEl.getAttribute("type")))
+                need(`${Factory.Type} ${propertyTag} type`, childBase)
             ))
         })
     }
@@ -235,7 +252,7 @@ const translators: { [name: string]: Translator } = {
             AttributeElement,
             source,
             target,
-            need("attribute body", str(source))
+            need("attribute type", str(source.getAttribute("type")))
         );
     },
 
@@ -244,7 +261,7 @@ const translators: { [name: string]: Translator } = {
             EventElement,
             source,
             target,
-            "struct",
+            "STRUCT",
             "field"
         );
         event.priority = need("event priority", str(source.getAttribute("priority"))) as typeof event.priority;
@@ -256,12 +273,12 @@ const translators: { [name: string]: Translator } = {
             CommandElement,
             source,
             target,
-            "struct",
+            "STRUCT",
             "arg"
         );
 
         const response = str(source.getAttribute("response"));
-        if (response) command.response = response;
+        if (response) command.response = camelize(response);
 
         const src = str(source.getAttribute("source"));
         if (src == "client") {
@@ -280,7 +297,7 @@ const translators: { [name: string]: Translator } = {
             DatatypeElement,
             source,
             target,
-            str(source.getAttribute("type")) ?? "struct",
+            str(source.getAttribute("type")) ?? "STRUCT",
             "item"
         );
     },

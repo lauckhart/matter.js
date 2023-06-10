@@ -120,7 +120,7 @@ export namespace Constraint {
                     case "max":
                         return { max: parseNum(constraint, words[1]) };
                     default:
-                        constraint.error('two word constraint must start with "min" or "max"')
+                        constraint.error('Two word constraint must start with "min" or "max"')
                 }
                 return;
 
@@ -147,7 +147,7 @@ export namespace Constraint {
                 return;
         }
 
-        constraint.error("too many words");
+        constraint.error("Too many words");
 }
 
     /**
@@ -216,7 +216,7 @@ export namespace Constraint {
                     case "]":
                         next();
                         if (!depth) {
-                            constraint.error('unexpected "]"');
+                            constraint.error('Unexpected "]"');
                             break;
                         }
                         if (parts.length > 1) {
@@ -238,7 +238,7 @@ export namespace Constraint {
             }
 
             if (depth) {
-                constraint.error("unterminated sub-constraint");
+                constraint.error("Unterminated sub-constraint");
             }
 
             emit();
