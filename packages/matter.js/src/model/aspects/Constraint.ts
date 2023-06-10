@@ -86,13 +86,12 @@ export namespace Constraint {
     /**
      * These are all ways to describe a constraint.
      */
-    export type Definition = Ast | string | number | undefined;
+    export type Definition = (Ast & { definition?: Definition }) | string | number | undefined;
 
     function parseNum(constraint: Constraint, num: string): number {
         let value = Number.parseFloat(num);
         if (Number.isNaN(value)) {
             constraint.error(`"${num}" is not a number`);
-            value = 0;
         }
         return value;
     }
@@ -111,14 +110,27 @@ export namespace Constraint {
                         return {};
                 }
                 const value = parseNum(constraint, words[0]);
+                if (value == undefined) {
+                    return;
+                }
                 return { min: value, max: value };
 
             case 2:
                 switch (words[0].toLowerCase()) {
                     case "min":
-                        return { min: parseNum(constraint, words[1]) };
+                        const min = parseNum(constraint, words[1]);
+                        if (min == undefined) {
+                            return;
+                        }
+                        return { min: min };
+
                     case "max":
-                        return { max: parseNum(constraint, words[1]) };
+                        const max = parseNum(constraint, words[1]);
+                        if (max == undefined) {
+                            return;
+                        }
+                        return { max: max };
+
                     default:
                         constraint.error('Two word constraint must start with "min" or "max"')
                 }
@@ -134,27 +146,32 @@ export namespace Constraint {
                     }
 
                     const ast: Ast = {};
+                    
                     const min = parseBound("min", 0);
                     if (min != undefined) {
                         ast.min = min;
                     }
+
                     const max = parseBound("max", 2);
                     if (max != undefined) {
                         ast.max = max;
                     }
-                    return ast;
+                    
+                    if (ast.min != undefined || ast.max != undefined) {
+                        return ast;
+                    }
                 }
                 return;
         }
 
-        constraint.error(`Unexpected words in "${words.join(" ")}"`);
+        constraint.error(`Unrecognized value constraint "${words.join(" ")}"`);
     }
 
     /**
      * Parse constraint DSL.  Extremely lenient.
      */
     export function parse(constraint: Constraint, definition: string): Ast {
-        let pos = 1;
+        let pos = 2;
         let current: string | undefined = definition[0];
         let peeked: string | undefined = definition[1];
 
@@ -174,6 +191,11 @@ export namespace Constraint {
             let word = "";
 
             function parseWords() {
+                if (word) {
+                    words.push(word);
+                    word = "";
+                }
+
                 const atom = parseAtom(constraint, words);
                 words = Array<string>();
                 return atom;
@@ -197,28 +219,30 @@ export namespace Constraint {
                         if (word) {
                             words.push(word);
                             word = "";
-                            next();
                         }
                         break;
 
                     case "[":
                         next();
-                        let list = parseWords();
-                        const ast: Ast = {
-                            entry: scan(depth + 1)
+                        let ast = parseWords();
+                        const entry = scan(depth + 1);
+                        if (entry) {
+                            if (!ast) {
+                                ast = {};
+                            }
+                            ast.entry = entry;
                         }
-                        if (list != undefined) {
-                            ast.entry = list;
+                        if (ast) {
+                            parts.push(ast);
                         }
-                        parts.push(ast);
                         break;
                     
                     case "]":
-                        next();
                         if (!depth) {
                             constraint.error('Unexpected "]"');
                             break;
                         }
+                        emit();
                         if (parts.length > 1) {
                             return { parts: parts };
                         }
@@ -230,7 +254,6 @@ export namespace Constraint {
 
                     default:
                         word += current;
-                        next();
                         break;
                 }
 
@@ -261,9 +284,10 @@ export namespace Constraint {
         if (ast.min != undefined) {
             if (ast.max == undefined) {
                 return `min ${ast.min}`;
-            } else {
-                return `${ast.min} to ${ast.max}`;
+            } else if (ast.min == ast.max) {
+                return `${ast.min}`;
             }
+            return `${ast.min} to ${ast.max}`;
         } else if (ast.max != undefined) {
             return `max ${ast.max}`;
         }
