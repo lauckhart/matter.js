@@ -185,13 +185,13 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "WpaPersonal",
+                    id: 0x0003, name: "Wpa2Personal",
                     description: "Supports Wi-Fi using WPA2-Personal security",
                     xref: { section: "11.8.5.1", document: "core", version: "1.1" }
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "WpaPersonal",
+                    id: 0x0004, name: "Wpa3Personal",
                     description: "Supports Wi-Fi using WPA3-Personal security",
                     xref: { section: "11.8.5.1", document: "core", version: "1.1" }
                 })

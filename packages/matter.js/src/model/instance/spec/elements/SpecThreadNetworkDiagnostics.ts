@@ -469,9 +469,10 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x003c, name: "ChannelPageMask", base: "octstr",
+            id: 0x003c, name: "ChannelPage0Mask", base: "octstr",
             access: "R V", conformance: "M", constraint: "4", default: "", quality: "X",
-            xref: { section: "11.13.6", document: "core", version: "1.1" }
+            details: "The ChannelPage0Mask attribute indicates the channels within channel page 0, in the 2.4GHz ISM band. The channels are represented in most significant bit order, with bit value 1 meaning selected, bit value 0 meaning unselected. For example, the most significant bit of the left-most byte indicates channel 0. If channel 0 and channel 10 are selected, the mask would be: 80 20 00 00. This attribute SHALL be null when there is no dataset configured.",
+            xref: { section: "11.13.6.61", document: "core", version: "1.1" }
         }),
 
         AttributeElement({

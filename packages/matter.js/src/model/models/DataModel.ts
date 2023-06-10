@@ -89,15 +89,14 @@ export abstract class DataModel extends Model implements BaseDataElement {
      */
     get baseModel(): DataModel | undefined {
         const visited = new Set<Model>();
-        let model: DataModel = this;
-        while (model.base) {
+        let model: DataModel | undefined = this;
+        while (model?.base) {
             visited.add(model);
-            const nextModel = model.global(model.base, DatatypeModel, [ this ]);
-            if (nextModel) {
-                if (visited.has(nextModel)) {
+            model = model.global(model.base, DatatypeModel, [ this ]);
+            if (model) {
+                if (visited.has(model)) {
                     throw new MatterError(`Circular inheritance detected for ${this.path}`);
                 }
-                model = nextModel;
             }
         }
         return model;
