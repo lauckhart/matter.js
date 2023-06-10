@@ -8,7 +8,7 @@ import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter } from "./translate-table.js";
+import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Constant } from "./translate-table.js";
 
 const logger = Logger.get("cluster-translate");
 
@@ -127,7 +127,9 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             // Must define after description because name is overwritten otherwise
             name: Alias(UpperIdentifier, "code", "feature"),
     
-            default: Optional(Alias(Integer, "def"))
+            default: Optional(Alias(Integer, "def")),
+
+            base: Constant("uint8")
         });
     
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
@@ -220,7 +222,8 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             direction: Str,
             response: Optional(Identifier),
             access: Optional(Str),
-            conformance: Optional(Str)
+            conformance: Optional(Str),
+            base: Constant("struct")
         });
 
         applyAccessNotes(definition.commands, records);
@@ -315,12 +318,13 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         });
     }
     
-    function translateEnum(datatype?: DetailedReference) {
+    function translateEnum(datatype: DetailedReference, parentBase: string) {
         const records = translateTable("value", datatype, {
             id: Alias(Integer, "value"),
             name: Identifier,
             conformance: Optional(Str),
-            description: Optional(Str)
+            description: Optional(Str),
+            base: Constant(parentBase.replace(/^enum/, "uint"))
         });
         const values = translateRecordsToMatter("value", records, DatatypeElement)
         if (values) {
@@ -329,11 +333,12 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         logger.error(`no values for enum`);
     }
     
-    function translateBitmap(datatype?: DetailedReference) {
+    function translateBitmap(datatype: DetailedReference) {
         const records = translateTable("bit", datatype, {
             id: Alias(Integer, "bit"),
             name: Identifier,
-            description: Optional(Alias(Str, "summary"))
+            description: Optional(Alias(Str, "summary")),
+            base: Constant("uint8")
         });
         const bits = translateRecordsToMatter("bit", records, DatatypeElement);
         if (bits) {
@@ -362,7 +367,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
     
         let description: string | undefined;
         let children: DatatypeElement[] | undefined;
-        let translator: undefined | ((entries: DetailedReference) => DatatypeElement[] | undefined);
+        let translator: undefined | ((entries: DetailedReference, base: string) => DatatypeElement[] | undefined);
     
         if (name.match(/enum$/i) || base?.match(/^enum/i)) {
             if (!base) {
@@ -399,7 +404,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
                 logger.error(`compound datatype has no defining table`);
                 return;
             }
-            children = translator(datatype);
+            children = translator(datatype, base);
             if (!children) {
                 return;
             }

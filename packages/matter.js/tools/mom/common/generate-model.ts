@@ -76,5 +76,7 @@ export function generateModel(source: string, elements: MatterElement.Child[]) {
 
     if (errors) {
         logger.error(`*** Total ${errors} validation error${errors != 1 ? "s" : ""} ***`);
+    } else {
+        logger.info(`*** Validation successful, generation complete ***`)
     }
 }
