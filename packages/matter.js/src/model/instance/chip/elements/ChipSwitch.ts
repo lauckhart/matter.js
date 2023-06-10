@@ -15,17 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster exposes interactions with a switch device, for the purpose of using those interactions by other devices. Two types of switch devices are supported: latching switch (e.g. rocker switch) and momentary switch (e.g. push button), distinguished with their feature flags. Interactions with the switch device are exposed as attributes (for the latching switch) and as events (for both types of switches). An interested party MAY subscribe to these attributes/events and thus be informed of the interactions, and can perform actions based on this, for example by sending commands to perform an action such as controlling a light or a window shade.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "NumberOfPositions", base: "NumberOfPositions",
+            id: 0x0000, name: "NumberOfPositions", base: "uint8",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "CurrentPosition", base: "CurrentPosition",
+            id: 0x0001, name: "CurrentPosition", base: "uint8",
             access: { rw: "R" }, conformance: [ "M" ], quality: { reportable: true }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "MultiPressMax", base: "MultiPressMax",
+            id: 0x0002, name: "MultiPressMax", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
@@ -34,12 +34,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "INT8U",
+                    name: "NewPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewPosition", base: "INT8U",
+                    name: "NewPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -50,12 +50,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "INT8U",
+                    name: "NewPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewPosition", base: "INT8U",
+                    name: "NewPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -66,12 +66,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "INT8U",
+                    name: "NewPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewPosition", base: "INT8U",
+                    name: "NewPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -82,12 +82,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "INT8U",
+                    name: "PreviousPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "PreviousPosition", base: "INT8U",
+                    name: "PreviousPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -98,12 +98,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "INT8U",
+                    name: "PreviousPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "PreviousPosition", base: "INT8U",
+                    name: "PreviousPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -114,22 +114,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "INT8U",
+                    name: "NewPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewPosition", base: "INT8U",
+                    name: "NewPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "CurrentNumberOfPressesCounted", base: "INT8U",
+                    name: "CurrentNumberOfPressesCounted", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "CurrentNumberOfPressesCounted", base: "INT8U",
+                    name: "CurrentNumberOfPressesCounted", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -140,25 +140,30 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "INT8U",
+                    name: "PreviousPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "PreviousPosition", base: "INT8U",
+                    name: "PreviousPosition", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TotalNumberOfPressesCounted", base: "INT8U",
+                    name: "TotalNumberOfPressesCounted", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TotalNumberOfPressesCounted", base: "INT8U",
+                    name: "TotalNumberOfPressesCounted", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
+        }),
+
+        DatatypeElement({
+            name: "SwitchFeature", base: "map32",
+            access: { rw: "R" }, conformance: [ "M" ]
         })
     ]
 }));

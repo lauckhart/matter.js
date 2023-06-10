@@ -336,7 +336,7 @@ namespace Tokenizer {
                         }
                         yield { type: TokenType.Name, value: name.join("") };
                     } else {
-                        throw new Error(`unexpected character "${current.value}"`);
+                        throw new Error(`Unexpected character "${current.value}"`);
                     }
                     break;
             }
@@ -399,7 +399,7 @@ class Parser {
         while (true) {
             if (!this.token) {
                 if (end) {
-                    this.conformance.error("unterminated conformance grouping");
+                    this.conformance.error("Unterminated conformance grouping");
                 }
                 return groupAsAst();
             }
@@ -475,7 +475,7 @@ class Parser {
             this.next();
 
             if ((this.token as any)?.type != Tokenizer.TokenType.Choice) {
-                this.conformance.error('choice indicator (".") must be followed by a single lowercase letter');
+                this.conformance.error('Choice indicator (".") must be followed by a single lowercase letter');
             }
             const choice = {
                 choice: this.token?.value ?? "?",
@@ -502,7 +502,7 @@ class Parser {
 
     private parseUnaryExpressionWithoutChoice(): string | Conformance.Ast | undefined {
         if (!this.token) {
-            this.conformance.error("terminated with expression expected");
+            this.conformance.error("Terminated with expression expected");
             return;
         }
 
@@ -522,7 +522,7 @@ class Parser {
             return this.parseGroup(Tokenizer.Special.GroupEnd);
         }
 
-        this.conformance.error(`unexpected "${this.token.value}"`);
+        this.conformance.error(`Unexpected "${this.token.value}"`);
         this.next();
     }
 }

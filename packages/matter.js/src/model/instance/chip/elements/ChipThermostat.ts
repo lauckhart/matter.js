@@ -15,247 +15,247 @@ ChipMatter.children!.push(ClusterElement({
     details: "An interface for configuring and controlling the functionality of a thermostat.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "LocalTemperature", base: "LocalTemperature",
+            id: 0x0000, name: "LocalTemperature", base: "int16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true, reportable: true }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "OutdoorTemperature", base: "OutdoorTemperature",
+            id: 0x0001, name: "OutdoorTemperature", base: "int16",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ThermostatOccupancy", base: "Occupancy",
+            id: 0x0002, name: "ThermostatOccupancy", base: "map8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "AbsMinHeatSetpointLimit", base: "AbsMinHeatSetpointLimit",
+            id: 0x0003, name: "AbsMinHeatSetpointLimit", base: "int16",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0004, name: "AbsMaxHeatSetpointLimit", base: "AbsMaxHeatSetpointLimit",
+            id: 0x0004, name: "AbsMaxHeatSetpointLimit", base: "int16",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0005, name: "AbsMinCoolSetpointLimit", base: "AbsMinCoolSetpointLimit",
+            id: 0x0005, name: "AbsMinCoolSetpointLimit", base: "int16",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0006, name: "AbsMaxCoolSetpointLimit", base: "AbsMaxCoolSetpointLimit",
+            id: 0x0006, name: "AbsMaxCoolSetpointLimit", base: "int16",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0007, name: "PiCoolingDemand", base: "PICoolingDemand",
+            id: 0x0007, name: "PiCoolingDemand", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }
         }),
 
         AttributeElement({
-            id: 0x0008, name: "PiHeatingDemand", base: "PIHeatingDemand",
+            id: 0x0008, name: "PiHeatingDemand", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }
         }),
 
         AttributeElement({
-            id: 0x0009, name: "HvacSystemTypeConfiguration", base: "HVACSystemTypeConfiguration",
+            id: 0x0009, name: "HvacSystemTypeConfiguration", base: "map8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0010, name: "LocalTemperatureCalibration", base: "LocalTemperatureCalibration",
+            id: 0x0010, name: "LocalTemperatureCalibration", base: "int8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0011, name: "OccupiedCoolingSetpoint", base: "OccupiedCoolingSetpoint",
+            id: 0x0011, name: "OccupiedCoolingSetpoint", base: "int16",
             access: { rw: "W" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0012, name: "OccupiedHeatingSetpoint", base: "OccupiedHeatingSetpoint",
+            id: 0x0012, name: "OccupiedHeatingSetpoint", base: "int16",
             access: { rw: "W" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0013, name: "UnoccupiedCoolingSetpoint", base: "UnoccupiedCoolingSetpoint",
+            id: 0x0013, name: "UnoccupiedCoolingSetpoint", base: "int16",
             access: { rw: "W" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0014, name: "UnoccupiedHeatingSetpoint", base: "UnoccupiedHeatingSetpoint",
+            id: 0x0014, name: "UnoccupiedHeatingSetpoint", base: "int16",
             access: { rw: "W" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0015, name: "MinHeatSetpointLimit", base: "MinHeatSetpointLimit",
+            id: 0x0015, name: "MinHeatSetpointLimit", base: "int16",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0016, name: "MaxHeatSetpointLimit", base: "MaxHeatSetpointLimit",
+            id: 0x0016, name: "MaxHeatSetpointLimit", base: "int16",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0017, name: "MinCoolSetpointLimit", base: "MinCoolSetpointLimit",
+            id: 0x0017, name: "MinCoolSetpointLimit", base: "int16",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0018, name: "MaxCoolSetpointLimit", base: "MaxCoolSetpointLimit",
+            id: 0x0018, name: "MaxCoolSetpointLimit", base: "int16",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0019, name: "MinSetpointDeadBand", base: "MinSetpointDeadBand",
+            id: 0x0019, name: "MinSetpointDeadBand", base: "int8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x001a, name: "RemoteSensing", base: "RemoteSensing",
+            id: 0x001a, name: "RemoteSensing", base: "map8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x001b, name: "ControlSequenceOfOperation", base: "ControlSequenceOfOperation",
+            id: 0x001b, name: "ControlSequenceOfOperation", base: "ThermostatControlSequence",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x001c, name: "SystemMode", base: "SystemMode",
+            id: 0x001c, name: "SystemMode", base: "enum8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x001e, name: "ThermostatRunningMode", base: "ThermostatRunningMode",
+            id: 0x001e, name: "ThermostatRunningMode", base: "enum8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0020, name: "StartOfWeek", base: "StartOfWeek",
+            id: 0x0020, name: "StartOfWeek", base: "enum8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0021, name: "NumberOfWeeklyTransitions", base: "NumberOfWeeklyTransitions",
+            id: 0x0021, name: "NumberOfWeeklyTransitions", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0022, name: "NumberOfDailyTransitions", base: "NumberOfDailyTransitions",
+            id: 0x0022, name: "NumberOfDailyTransitions", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0023, name: "TemperatureSetpointHold", base: "TemperatureSetpointHold",
+            id: 0x0023, name: "TemperatureSetpointHold", base: "enum8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0024, name: "TemperatureSetpointHoldDuration", base: "TemperatureSetpointHoldDuration",
+            id: 0x0024, name: "TemperatureSetpointHoldDuration", base: "uint16",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0025, name: "ThermostatProgrammingOperationMode", base: "ThermostatProgrammingOperationMode",
+            id: 0x0025, name: "ThermostatProgrammingOperationMode", base: "map8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0029, name: "ThermostatRunningState", base: "ThermostatRunningState",
+            id: 0x0029, name: "ThermostatRunningState", base: "map16",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0030, name: "SetpointChangeSource", base: "SetpointChangeSource",
+            id: 0x0030, name: "SetpointChangeSource", base: "enum8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0031, name: "SetpointChangeAmount", base: "SetpointChangeAmount",
+            id: 0x0031, name: "SetpointChangeAmount", base: "int16",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0032, name: "SetpointChangeSourceTimestamp", base: "SetpointChangeSourceTimestamp",
+            id: 0x0032, name: "SetpointChangeSourceTimestamp", base: "epochS",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0034, name: "OccupiedSetback", base: "OccupiedSetback",
+            id: 0x0034, name: "OccupiedSetback", base: "uint8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0035, name: "OccupiedSetbackMin", base: "OccupiedSetbackMin",
+            id: 0x0035, name: "OccupiedSetbackMin", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0036, name: "OccupiedSetbackMax", base: "OccupiedSetbackMax",
+            id: 0x0036, name: "OccupiedSetbackMax", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0037, name: "UnoccupiedSetback", base: "UnoccupiedSetback",
+            id: 0x0037, name: "UnoccupiedSetback", base: "uint8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0038, name: "UnoccupiedSetbackMin", base: "UnoccupiedSetbackMin",
+            id: 0x0038, name: "UnoccupiedSetbackMin", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0039, name: "UnoccupiedSetbackMax", base: "UnoccupiedSetbackMax",
+            id: 0x0039, name: "UnoccupiedSetbackMax", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x003a, name: "EmergencyHeatDelta", base: "EmergencyHeatDelta",
+            id: 0x003a, name: "EmergencyHeatDelta", base: "uint8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0040, name: "AcType", base: "ACType",
+            id: 0x0040, name: "AcType", base: "enum8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0041, name: "AcCapacity", base: "ACCapacity",
+            id: 0x0041, name: "AcCapacity", base: "uint16",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0042, name: "AcRefrigerantType", base: "ACRefrigerantType",
+            id: 0x0042, name: "AcRefrigerantType", base: "enum8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0043, name: "AcCompressorType", base: "ACCompressorType",
+            id: 0x0043, name: "AcCompressorType", base: "enum8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0044, name: "AcErrorCode", base: "ACErrorCode",
+            id: 0x0044, name: "AcErrorCode", base: "map32",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0045, name: "AcLouverPosition", base: "ACLouverPosition",
+            id: 0x0045, name: "AcLouverPosition", base: "enum8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0046, name: "AcCoilTemperature", base: "ACCoilTemperature",
+            id: 0x0046, name: "AcCoilTemperature", base: "int16",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0047, name: "AcCapacityFormat", base: "ACCapacityformat",
+            id: 0x0047, name: "AcCapacityFormat", base: "enum8",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
         }),
 
@@ -274,12 +274,12 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "Amount", base: "INT8S",
+                    name: "Amount", base: "int8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Amount", base: "INT8S",
+                    name: "Amount", base: "int8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -290,12 +290,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R", writePrivilege: "M" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "NumberOfTransitionsForSequence", base: "INT8U",
+                    name: "NumberOfTransitionsForSequence", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NumberOfTransitionsForSequence", base: "INT8U",
+                    name: "NumberOfTransitionsForSequence", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
@@ -367,12 +367,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "NumberOfTransitionsForSequence", base: "INT8U",
+                    name: "NumberOfTransitionsForSequence", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NumberOfTransitionsForSequence", base: "INT8U",
+                    name: "NumberOfTransitionsForSequence", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
@@ -404,6 +404,291 @@ ChipMatter.children!.push(ClusterElement({
                 DatatypeElement({
                     name: "Transitions", base: "ThermostatScheduleTransition",
                     access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "ThermostatFeature", base: "map32",
+            access: { rw: "R" }, conformance: [ "M" ]
+        }),
+
+        DatatypeElement({
+            name: "DayOfWeek", base: "map8",
+            access: { rw: "R" }, conformance: [ "M" ]
+        }),
+
+        DatatypeElement({
+            name: "ModeForSequence", base: "map8",
+            access: { rw: "R" }, conformance: [ "M" ]
+        }),
+
+        DatatypeElement({
+            name: "ThermostatSystemMode", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Off", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Off", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Auto", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Auto", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Cool", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Cool", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Heat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Heat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "EmergencyHeat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "EmergencyHeat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Precooling", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Precooling", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "FanOnly", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "FanOnly", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Dry", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Dry", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Sleep", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Sleep", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "ThermostatRunningMode", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Off", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Off", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Cool", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Cool", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Heat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Heat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "ThermostatControlSequence", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "CoolingOnly", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CoolingOnly", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CoolingWithReheat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CoolingWithReheat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "HeatingOnly", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "HeatingOnly", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "HeatingWithReheat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "HeatingWithReheat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CoolingAndHeating", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CoolingAndHeating", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CoolingAndHeatingWithReheat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CoolingAndHeatingWithReheat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "SetpointAdjustMode", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Heat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Heat", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Cool", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Cool", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Both", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Both", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "ThermostatScheduleTransition", base: "struct",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "TransitionTime", base: "uint16",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "TransitionTime", base: "uint16",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "HeatSetpoint", base: "int16",
+                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                }),
+
+                DatatypeElement({
+                    name: "HeatSetpoint", base: "int16",
+                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                }),
+
+                DatatypeElement({
+                    name: "CoolSetpoint", base: "int16",
+                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                }),
+
+                DatatypeElement({
+                    name: "CoolSetpoint", base: "int16",
+                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
                 })
             ]
         })

@@ -36,11 +36,19 @@ export abstract class Model implements BaseElement {
         return this[CHILDREN];
     }
 
+    get path(): string {
+        if (this.parent) {
+            return `${this.parent.path}.${this.name}`;
+        } else {
+            return this.name;
+        }
+    }
+
     set children(children: (Model | AnyElement)[]) {
         this[CHILDREN] = new Proxy([], {
             get: (target, p, receiver) => {
                 let result = Reflect.get(target, p, receiver);
-                if (!(result instanceof Model) && typeof p == "string" && p.match(/^[0-9]$/)) {
+                if (!(result instanceof Model) && typeof p == "string" && p.match(/^[0-9]+$/)) {
                     result = Model.create(result);
                     result.parent = this;
                     Reflect.set(target, p, result, receiver);
@@ -49,15 +57,17 @@ export abstract class Model implements BaseElement {
             },
 
             set: (target, p, newValue, receiver) => {
-                if (newValue instanceof Model) {
-                    if (newValue.parent) {
-                        newValue = { ...newValue };
-                        delete newValue.parent;
-                    } else {
-                        newValue.parent = this;
+                if (typeof p == "string" && p.match(/^[0-9]+$/)) {
+                    if (newValue instanceof Model) {
+                        if (newValue.parent) {
+                            newValue = { ...newValue };
+                            delete newValue.parent;
+                        } else {
+                            newValue.parent = this;
+                        }
+                    } else if (typeof newValue != "object" || newValue === null || !newValue.type) {
+                        throw new MatterError("Node child must be Model or AnyElement");
                     }
-                } else if (typeof newValue != "object" || newValue === null || !newValue.type) {
-                    throw new MatterError("Node child must be Model or AnyElement");
                 }
                 return Reflect.set(target, p, newValue, receiver);
             }
@@ -107,10 +117,11 @@ export abstract class Model implements BaseElement {
      * 
      * @param name the name of the element to find
      * @param type an optional type to narrow the search
+     * @param ignore a list of Models to ignore; used to handle name conflicts
      */
-    local(name: string, type: BaseElement.Type | undefined): Model | undefined {
+    local<T>(name: string, type: (new(...args: any) => T), ignore: Model[] = []): T | undefined {
         for (const c of this.children) {
-            if (c.name == name && (!type || c.type == type)) {
+            if (c.name == name && c instanceof type && ignore.indexOf(c) == -1) {
                 return c;
             }
         }
@@ -121,22 +132,27 @@ export abstract class Model implements BaseElement {
      * 
      * @param name the name of the element to find
      * @param type an optional type to narrow the search
-     * @param ignore a list of Models to ignore; used to handle name conflicts
+     * @param ignore a list of Models to ignore; used to avoid infinite loops
      */
-    global(name: string, type?: BaseElement.Type | undefined, ignore: Model[] = []): Model | undefined {
-        let result = this.local(name, type);
-        if (result && ignore.indexOf(result) == -1) {
+    global<T>(name: string, type: (new(...args: any) => T), ignore: Model[] = []): T | undefined {
+        let result = this.local(name, type, ignore);
+        if (result) {
             return result;
         }
+
         if (this.parent) {
             ignore.push(this);
             try {
-                return this.parent.global(name, type, ignore);
+                 return this.parent.global(name, type, ignore);
             } finally {
                 ignore.pop();
             }
         }
-        return this.globals[name];
+
+        const global = this.globals[name];
+        if (global instanceof type) {
+            return global;
+        }
     }
 
     /**
@@ -215,7 +231,7 @@ export abstract class Model implements BaseElement {
     protected validateStructure(type: BaseElement.Type, requireId: boolean, ...childTypes: (new(...args: any) => Model)[]) {
         this.validateProperty({ name: "id", type: "number", required: requireId });
         if (this.type != type) {
-            this.error(`type is ${this.type} (expected ${type})`);
+            this.error(`Type is ${this.type} (expected ${type})`);
         }
         if (this.children) {
             let index = 0;
@@ -224,10 +240,11 @@ export abstract class Model implements BaseElement {
                 for (const type of childTypes) {
                     if (child instanceof type) {
                         ok = true;
+                        break;
                     }
                 }
                 if (!ok) {
-                    this.error(`children[${index}] type ${child.constructor.name} is not allowed`);
+                    this.error(`Children[${index}] type ${child.constructor.name} is not allowed`);
                 }
                 index++;
             }
@@ -238,38 +255,38 @@ export abstract class Model implements BaseElement {
         const value = (this as any)[name];
         if (value === undefined) {
             if (required) {
-                this.error(`missing required property ${name}`);
+                this.error(`Missing required property ${name}`);
                 return;
             }
             return;
         }
         if (value === null) {
             if (nullable) {
-                this.error(`property ${name} is null`);
+                this.error(`Property ${name} is null`);
                 return;
             }
             return;
         }
         if (Number.isNaN(value)) {
-            this.error(`property ${name} is NaN`);
+            this.error(`Property ${name} is NaN`);
         }
         if (type == undefined) {
             return;
         }
         if (typeof type == "string") {
             if (typeof value != type) {
-                this.error(`property ${name} type is ${typeof value} (expected ${type})`);
+                this.error(`Property ${name} type is ${typeof value} (expected ${type})`);
             }
             return;
         }
         if (typeof type == "function") {
             if (!(value instanceof type)) {
-                this.error(`property ${name} is not an instance of ${type.name}`);
+                this.error(`Property ${name} is not an instance of ${type.name}`);
             }
             return;
         }
-        if (!type[value]) {
-            this.error(`property ${name} is not in enum`);
+        if (Object.values(type).indexOf(value) == -1) {
+            this.error(`Property ${name} value ${value} is not in enum`);
         }
     }
 }

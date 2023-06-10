@@ -15,22 +15,22 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ThreadMetrics", base: "ThreadMetrics",
+            id: 0x0000, name: "ThreadMetrics", base: "list",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "CurrentHeapFree", base: "CurrentHeapFree",
+            id: 0x0001, name: "CurrentHeapFree", base: "uint64",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "CurrentHeapUsed", base: "CurrentHeapUsed",
+            id: 0x0002, name: "CurrentHeapUsed", base: "uint64",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CurrentHeapHighWatermark", base: "CurrentHeapHighWatermark",
+            id: 0x0003, name: "CurrentHeapHighWatermark", base: "uint64",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
@@ -44,35 +44,96 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Id", base: "INT64U",
+                    name: "Id", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "INT64U",
+                    name: "Id", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "CHAR_STRING",
+                    name: "Name", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "CHAR_STRING",
+                    name: "Name", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "FaultRecording", base: "OCTET_STRING",
+                    name: "FaultRecording", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "FaultRecording", base: "OCTET_STRING",
+                    name: "FaultRecording", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
+        }),
+
+        DatatypeElement({
+            name: "ThreadMetricsStruct", base: "struct",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Id", base: "uint64",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Id", base: "uint64",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Name", base: "string",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                }),
+
+                DatatypeElement({
+                    name: "Name", base: "string",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                }),
+
+                DatatypeElement({
+                    name: "StackFreeCurrent", base: "uint32",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                }),
+
+                DatatypeElement({
+                    name: "StackFreeCurrent", base: "uint32",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                }),
+
+                DatatypeElement({
+                    name: "StackFreeMinimum", base: "uint32",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                }),
+
+                DatatypeElement({
+                    name: "StackFreeMinimum", base: "uint32",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                }),
+
+                DatatypeElement({
+                    name: "StackSize", base: "uint32",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                }),
+
+                DatatypeElement({
+                    name: "StackSize", base: "uint32",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "SoftwareDiagnosticsFeature", base: "map32",
+            access: { rw: "R" }, conformance: [ "M" ]
         })
     ]
 }));

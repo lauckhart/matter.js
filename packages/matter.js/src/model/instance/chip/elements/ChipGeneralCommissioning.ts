@@ -15,7 +15,7 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster is used to manage global aspects of the Commissioning flow.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "Breadcrumb", base: "Breadcrumb",
+            id: 0x0000, name: "Breadcrumb", base: "uint64",
             access: { rw: "W", readPrivilege: "V", writePrivilege: "A" }, conformance: [ "M" ]
         }),
 
@@ -25,17 +25,17 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "RegulatoryConfig", base: "RegulatoryConfig",
+            id: 0x0002, name: "RegulatoryConfig", base: "RegulatoryLocationType",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "LocationCapability", base: "LocationCapability",
+            id: 0x0003, name: "LocationCapability", base: "RegulatoryLocationType",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0004, name: "SupportsConcurrentConnection", base: "SupportsConcurrentConnection",
+            id: 0x0004, name: "SupportsConcurrentConnection", base: "bool",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
@@ -44,22 +44,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R", writePrivilege: "A" }, conformance: [ "M" ], direction: "request", response: "ArmFailSafeResponse",
             children: [
                 DatatypeElement({
-                    name: "ExpiryLengthSeconds", base: "INT16U",
+                    name: "ExpiryLengthSeconds", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ExpiryLengthSeconds", base: "INT16U",
+                    name: "ExpiryLengthSeconds", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "INT64U",
+                    name: "Breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "INT64U",
+                    name: "Breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -80,12 +80,12 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "CHAR_STRING",
+                    name: "DebugText", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "CHAR_STRING",
+                    name: "DebugText", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -106,22 +106,22 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "CountryCode", base: "CHAR_STRING",
+                    name: "CountryCode", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "CountryCode", base: "CHAR_STRING",
+                    name: "CountryCode", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "INT64U",
+                    name: "Breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "INT64U",
+                    name: "Breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -142,12 +142,12 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "CHAR_STRING",
+                    name: "DebugText", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "CHAR_STRING",
+                    name: "DebugText", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -173,12 +173,130 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "CHAR_STRING",
+                    name: "DebugText", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "CHAR_STRING",
+                    name: "DebugText", base: "string",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "CommissioningError", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Ok", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Ok", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ValueOutsideRange", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ValueOutsideRange", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "InvalidAuthentication", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "InvalidAuthentication", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "NoFailSafe", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "NoFailSafe", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "BusyWithOtherAdmin", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "BusyWithOtherAdmin", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "RegulatoryLocationType", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Indoor", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Indoor", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Outdoor", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Outdoor", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "IndoorOutdoor", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "IndoorOutdoor", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "BasicCommissioningInfo", base: "struct",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "FailSafeExpiryLengthSeconds", base: "uint16",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "FailSafeExpiryLengthSeconds", base: "uint16",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "MaxCumulativeFailsafeSeconds", base: "uint16",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "MaxCumulativeFailsafeSeconds", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

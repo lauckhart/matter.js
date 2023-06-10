@@ -10,7 +10,6 @@ export class EndpointModel extends Model implements EndpointElement {
     override type!: EndpointElement.Type;
     override id!: number;
 
-
     override get children(): DeviceTypeModel[] {
         return super.children as any;
     }

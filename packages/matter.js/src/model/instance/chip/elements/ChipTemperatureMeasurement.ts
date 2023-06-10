@@ -15,22 +15,22 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring the measurement of temperature, and reporting temperature measurements.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "TempMeasuredValue", base: "MeasuredValue",
+            id: 0x0000, name: "TempMeasuredValue", base: "int16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "TempMinMeasuredValue", base: "MinMeasuredValue",
+            id: 0x0001, name: "TempMinMeasuredValue", base: "int16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "TempMaxMeasuredValue", base: "MaxMeasuredValue",
+            id: 0x0002, name: "TempMaxMeasuredValue", base: "int16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0003, name: "TempTolerance", base: "Tolerance",
+            id: 0x0003, name: "TempTolerance", base: "uint16",
             access: { rw: "R" }, conformance: [ "O" ]
         })
     ]

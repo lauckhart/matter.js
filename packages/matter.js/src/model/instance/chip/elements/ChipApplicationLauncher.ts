@@ -15,12 +15,12 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for launching content on a media player device such as a TV or Speaker.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ApplicationLauncherList", base: "CatalogList",
+            id: 0x0000, name: "ApplicationLauncherList", base: "list",
             access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ApplicationLauncherCurrentApp", base: "CurrentApp",
+            id: 0x0001, name: "ApplicationLauncherCurrentApp", base: "ApplicationEpStruct",
             access: { rw: "W" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
@@ -39,12 +39,12 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "OCTET_STRING",
+                    name: "Data", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "OCTET_STRING",
+                    name: "Data", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -97,15 +97,108 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "OCTET_STRING",
+                    name: "Data", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "OCTET_STRING",
+                    name: "Data", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
+        }),
+
+        DatatypeElement({
+            name: "ApplicationEpStruct", base: "struct",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Application", base: "ApplicationStruct",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Application", base: "ApplicationStruct",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Endpoint", base: "endpointNo",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                }),
+
+                DatatypeElement({
+                    name: "Endpoint", base: "endpointNo",
+                    access: { rw: "R" }, conformance: [ "O" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "ApplicationStruct", base: "struct",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "CatalogVendorId", base: "uint16",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "CatalogVendorId", base: "uint16",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ApplicationId", base: "string",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "ApplicationId", base: "string",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "ApplicationLauncherStatusEnum", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "Success", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "Success", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "AppNotAvailable", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "AppNotAvailable", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "SystemBusy", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                }),
+
+                DatatypeElement({
+                    name: "SystemBusy", base: "uint8",
+                    access: { rw: "R" }, conformance: [ "M" ]
+                })
+            ]
+        }),
+
+        DatatypeElement({
+            name: "ApplicationLauncherFeature", base: "map32",
+            access: { rw: "R" }, conformance: [ "M" ]
         })
     ]
 }));

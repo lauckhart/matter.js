@@ -70,7 +70,7 @@ export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
                     this[field] = true;
                 }
             } else {
-                quality.error(`unknown flag "${char}"`);
+                quality.error(`Unknown flag "${char}"`);
             }
         }
     }

@@ -14,15 +14,13 @@ export class CommandModel extends DataModel implements CommandElement {
 
     override validate() {
         this.validateStructure(CommandElement.Type, true, DatatypeModel);
-        this.validateProperty({ name: "direction", type: CommandElement.Type, required: true });
+        this.validateProperty({ name: "direction", type: CommandElement.Direction, required: true });
         this.validateProperty({ name: "response", type: "string" });
 
         if (this.response) {
-            const response = this.global(this.response);
+            const response = this.global(this.response, CommandModel);
             if (!response) {
-                this.error(`response type ${this.response} does not resolve`);
-            } else if (response.type != CommandElement.Type) {
-                this.error(`response type is ${response.type} (expected command)`);
+                this.error(`response type ${this.response} not found`);
             }
         }
 

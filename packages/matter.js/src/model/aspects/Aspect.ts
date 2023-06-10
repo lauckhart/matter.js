@@ -27,6 +27,6 @@ export class Aspect<D> {
         if (!this.errors) {
             this.errors = [];
         }
-        this.errors.push(`${this.constructor.name.toLowerCase} ${serialize(this.definition)}: ${error}`);
+        this.errors.push(`${this.constructor.name} ${serialize(this.definition)}: ${error}`);
     }
 }

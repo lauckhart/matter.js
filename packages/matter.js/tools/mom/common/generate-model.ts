@@ -51,13 +51,14 @@ export function generateIndex(source: string, elements: AnyElement[]) {
 }
 
 export function generateModel(source: string, elements: MatterElement.Child[]) {
+    let errors = 0;
     logger.info(`validate ${source}`);
     Logger.nest(() => {
         const mom = new MatterModel({
             name: camelize(`validate ${source}`),
             children: elements
         });
-        mom.validate();
+        errors = mom.validate();
     });
 
     logger.info(`generate ${source}`);
@@ -72,4 +73,8 @@ export function generateModel(source: string, elements: MatterElement.Child[]) {
         logger.info("index");
         generateIndex(source, elements);
     });
+
+    if (errors) {
+        logger.error(`*** Total ${errors} validation error${errors != 1 ? "s" : ""} ***`);
+    }
 }
