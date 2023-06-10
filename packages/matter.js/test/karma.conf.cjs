@@ -1,3 +1,6 @@
+window.jest = require("jest-mock");
+window.expect = require("expect");
+
 module.exports = function(config) {
     config.set({
         basePath: "..",

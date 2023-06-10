@@ -16,7 +16,7 @@ import { Aspect } from "./Aspect.js";
  * section.
  */
 export class Constraint extends Aspect<Constraint.Definition> implements Constraint.Ast {
-    type: Constraint.AstNodeType;
+    desc?: boolean;
     min?: number;
     max?: number;
     entry?: Constraint;
@@ -28,8 +28,6 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
      */
     constructor(definition: Constraint.Definition) {
         super(definition);
-
-        this.type = "value";
 
         let ast;
         switch (typeof definition) {
@@ -54,13 +52,15 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
 }
 
 export namespace Constraint {
-    export type AstNodeType = "value" | "list" | "desc" | "sequence";
-
     /**
      * Parsed list structure.
      */
     export type Ast = {
-        type?: AstNodeType,
+        /**
+         * Indicates constraint is defined in prose and cannot be enforced
+         * automatically.
+         */
+        desc?: boolean,
 
         /**
          * Lower bound on value or sequence length.
@@ -105,7 +105,7 @@ export namespace Constraint {
             case 1:
                 switch (words[0].toLowerCase()) {
                     case "desc":
-                        return { type: "desc" };
+                        return { desc: true };
 
                     case "all":
                         return {};
@@ -147,8 +147,8 @@ export namespace Constraint {
                 return;
         }
 
-        constraint.error("Too many words");
-}
+        constraint.error(`Unexpected words in "${words.join(" ")}"`);
+    }
 
     /**
      * Parse constraint DSL.  Extremely lenient.
@@ -220,7 +220,7 @@ export namespace Constraint {
                             break;
                         }
                         if (parts.length > 1) {
-                            return { type: "sequence", parts: parts };
+                            return { parts: parts };
                         }
                         return parts[0];
 
@@ -247,13 +247,17 @@ export namespace Constraint {
                 return parts[0];
             }
     
-            return { type: "sequence", parts: parts };
+            return { parts: parts };
         }
 
         return scan(0);
     }
 
-    function serializeValue(ast: Ast) {
+    function serializeAtom(ast: Ast) {
+        if (ast.desc) {
+            return "desc";
+        }
+
         if (ast.min != undefined) {
             if (ast.max == undefined) {
                 return `min ${ast.min}`;
@@ -263,27 +267,17 @@ export namespace Constraint {
         } else if (ast.max != undefined) {
             return `max ${ast.max}`;
         }
-        return "";
+
+        return "all";
     }
 
-    function serializeParts(ast: Ast): string {
-        return ast.parts?.map(serialize).join(", ") ?? "";
-    }
-
-    export function serialize(ast: Ast) {
-        switch (ast.type) {
-            case "value":
-                return serializeValue(ast);
-
-            case "list":
-                return serializeParts(ast);
-
-            case "desc":
-                return "desc";
-
-            case "sequence":
-                return `${serializeValue}[${serializeParts(ast)}]`;
+    export function serialize(ast: Ast): string {
+        if (ast.parts) {
+            return ast.parts.map(serialize).join(", ");
         }
-        return "";
+        if (ast.entry) {
+            return `${serializeAtom(ast)}[${serialize(ast.entry)}]`;
+        }
+        return serializeAtom(ast);
     }
 }
