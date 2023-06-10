@@ -28,6 +28,10 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
             this.type = Conformance.Special.Empty;
             return;
         } else if (typeof definition == "string") {
+            if (definition.toLowerCase() == "desc") {
+                this.type = Conformance.Special.Desc;
+                return;
+            }
             ast = new Parser(this, definition).ast;
         } else if (Array.isArray(definition)) {
             const asts = definition.map((def) => new Parser(this, def).ast);
@@ -43,7 +47,9 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
             ast = definition;
         }
         this.type = ast.type;
-        this.param = ast.param;
+        if (ast.param) {
+            this.param = ast.param;
+        }
     }
 
     // TODO - offer validation?
@@ -82,6 +88,7 @@ export namespace Conformance {
 
     export enum Special {
         Empty = "empty",
+        Desc = "desc",
         Name = "name",
         Value = "value",
         Choice = "choice",
@@ -336,7 +343,7 @@ namespace Tokenizer {
                         }
                         yield { type: TokenType.Name, value: name.join("") };
                     } else {
-                        throw new Error(`Unexpected character "${current.value}"`);
+                        conformance.error(`Unexpected character "${current.value}"`);
                     }
                     break;
             }

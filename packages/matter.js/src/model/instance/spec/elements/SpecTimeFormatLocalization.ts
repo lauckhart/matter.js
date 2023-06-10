@@ -57,13 +57,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { section: "11.4.5.1", document: "core", version: "1.1" },
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Hr",
+                    id: 0x0000, name: "12Hr",
                     conformance: "M",
                     xref: { section: "11.4.5.1", document: "core", version: "1.1" }
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Hr",
+                    id: 0x0001, name: "24Hr",
                     conformance: "M",
                     xref: { section: "11.4.5.1", document: "core", version: "1.1" }
                 })

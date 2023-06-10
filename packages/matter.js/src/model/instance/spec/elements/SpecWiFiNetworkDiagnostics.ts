@@ -185,13 +185,13 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Wpa",
+                    id: 0x0004, name: "Wpa2",
                     conformance: "M",
                     xref: { section: "11.14.5.1", document: "core", version: "1.1" }
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Wpa",
+                    id: 0x0005, name: "Wpa3",
                     conformance: "M",
                     xref: { section: "11.14.5.1", document: "core", version: "1.1" }
                 })

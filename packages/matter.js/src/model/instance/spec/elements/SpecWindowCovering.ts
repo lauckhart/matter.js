@@ -76,17 +76,15 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CurrentPositionLift", base: "uint16",
+            id: 0x0003, name: "CurrentPositionLift1", base: "uint16",
             access: "R V", conformance: "[LF &PA_LF & ABS]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift", default: "null", quality: "XN",
-            details: "The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the window covering from the fully-open position.",
-            xref: { section: "5.3.5.4", document: "cluster", version: "1.1" }
+            xref: { section: "5.3.5", document: "cluster", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0004, name: "CurrentPositionTilt", base: "uint16",
+            id: 0x0004, name: "CurrentPositionTilt1", base: "uint16",
             access: "R V", conformance: "[TL &PA_TL & ABS]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt", default: "null", quality: "XN",
-            details: "The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of the window covering from the fully-open position.",
-            xref: { section: "5.3.5.5", document: "cluster", version: "1.1" }
+            xref: { section: "5.3.5", document: "cluster", version: "1.1" }
         }),
 
         AttributeElement({
@@ -111,17 +109,15 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0008, name: "CurrentPositionLiftPercentage", base: "percent",
+            id: 0x0008, name: "CurrentPositionLiftPercentage1", base: "percent",
             access: "R V", conformance: "[LF & PA_LF]", constraint: "0 to 100", default: "null", quality: "XNSP",
-            details: "The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% to 100% with 1% default step. This attribute is equal to CurrentPositionLiftPercent100ths attribute divided by 100.",
-            xref: { section: "5.3.5.11", document: "cluster", version: "1.1" }
+            xref: { section: "5.3.5", document: "cluster", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0009, name: "CurrentPositionTiltPercentage", base: "percent",
+            id: 0x0009, name: "CurrentPositionTiltPercentage1", base: "percent",
             access: "R V", conformance: "[TL & PA_TL]", constraint: "0 to 100", default: "null", quality: "XNSP",
-            details: "The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% to 100% with 1% default step. This attribute is equal to CurrentPositionTiltPercent100ths attribute divided by 100.",
-            xref: { section: "5.3.5.12", document: "cluster", version: "1.1" }
+            xref: { section: "5.3.5", document: "cluster", version: "1.1" }
         }),
 
         AttributeElement({
@@ -132,13 +128,13 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000b, name: "TargetPositionLiftPercentThs", base: "percent100ths",
+            id: 0x000b, name: "TargetPositionLiftPercent100Ths2", base: "percent100ths",
             access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: "null", quality: "XSP",
             xref: { section: "5.3.5", document: "cluster", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x000c, name: "TargetPositionTiltPercentThs", base: "percent100ths",
+            id: 0x000c, name: "TargetPositionTiltPercent100Ths2", base: "percent100ths",
             access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: "null", quality: "XSP",
             xref: { section: "5.3.5", document: "cluster", version: "1.1" }
         }),
@@ -151,13 +147,13 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000e, name: "CurrentPositionLiftPercentThs", base: "percent100ths",
+            id: 0x000e, name: "CurrentPositionLiftPercent100Ths1", base: "percent100ths",
             access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: "null", quality: "XNP",
             xref: { section: "5.3.5", document: "cluster", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x000f, name: "CurrentPositionTiltPercentThs", base: "percent100ths",
+            id: 0x000f, name: "CurrentPositionTiltPercent100Ths1", base: "percent100ths",
             access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: "null", quality: "XNP",
             xref: { section: "5.3.5", document: "cluster", version: "1.1" }
         }),
