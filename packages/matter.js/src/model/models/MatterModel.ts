@@ -4,35 +4,35 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterModel, DeviceTypeModel, FabricModel, MatterElement, Model, NodeModel } from "../index.js";
+import { AnyElement, Globals, MatterElement, Model } from "../index.js";
 
+/**
+ * The root of a Matter model.
+ */
 export class MatterModel extends Model implements MatterElement {
     override type: MatterElement.Type = MatterElement.Type;
     version?: string;
 
-    override get children(): MatterModel.Child[] {
+    override get children(): Model[] {
         return super.children as any;
     }
 
-    override set children(children: (MatterModel.Child | MatterElement.Child)[]) {
+    override set children(children: (Model | AnyElement)[]) {
         super.children = children;
     }
 
     override validate() {
-        this.validateStructure(MatterElement.Type, false, DeviceTypeModel, ClusterModel, FabricModel, NodeModel);
+        this.validateStructure(MatterElement.Type, false);
         this.validateProperty({ name: "version", type: "string" });
         return super.validate();
     }
 
-    constructor(definition: MatterElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: MatterElement.Properties, globals = Object.values(Globals)) {
+        super(definition);
+        this.children = globals;
     }
 
     static {
         Model.constructors[MatterElement.Type] = this;
     }
-}
-
-export namespace MatterModel {
-    export type Child = DeviceTypeModel | ClusterModel | FabricModel | NodeModel;
 }

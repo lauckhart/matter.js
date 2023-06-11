@@ -31,8 +31,8 @@ export class CommandModel extends DataModel implements CommandElement {
         return super.validate();
     }
 
-    constructor(definition: CommandElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: CommandElement.Properties) {
+        super(definition);
     }
 
     static {

@@ -15,8 +15,8 @@ export class AttributeModel extends DataModel implements AttributeElement {
         return super.validate();
     }
 
-    constructor(definition: AttributeElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: AttributeElement.Properties) {
+        super(definition);
     }
 
     static {

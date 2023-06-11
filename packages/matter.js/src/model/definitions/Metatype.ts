@@ -24,6 +24,8 @@ export enum Metatype {
 }
 
 export namespace Metatype {
+    export const Invalid = Symbol("invalid");
+
     /**
      * Determine the metatype for a type.  Input type can be a metatype,
      * datatype or any other string type.  If no mapping is not supported
@@ -125,26 +127,38 @@ export namespace Metatype {
     }
 
     /**
-     * Cast a string value to a native type.
+     * Cast a value to a specific type.
+     * 
+     * @param type casts to a native equivalent of this type
+     * @param value value to cast
+     * @returns the cast value or Metatype.Invalid if cast is not possible
      */
-    export function parse(type: Metatype | undefined, value: string) {
-        switch (native(type)) {
-            case String:
-                return value;
+    export function cast(type: Metatype, value: any) {
+        if (value == undefined) {
+            return value;
+        }
 
-            case Boolean:
-                value = value.trim().toLowerCase();
-                switch (value) {
-                    case "false":
-                    case "no":
-                    case "":
-                        return false;
+        switch (type) {
+            case Metatype.string:
+                return value.toString();
 
-                    default:
-                        return true;
+            case Metatype.boolean:
+                if (typeof value == "string") {
+                    value = value.trim().toLowerCase();
                 }
+                return value == "false" || value == "no" || !!value;
+
+            case Metatype.bitmap:
+            case Metatype.enum:
+                const id = Number(value);
+                if (Number.isNaN(id)) {
+                    // Key name
+                    return value.toString();
+                }
+                // Value
+                return id;
             
-            case BigInt:
+            case Metatype.integer:
                 try {
                     const i = BigInt(value);
                     const n = Number(i);
@@ -154,23 +168,48 @@ export namespace Metatype {
                     return i;
                 } catch (e) {
                     if (e instanceof SyntaxError) {
-                        return NaN;
-                    } else {
-                        throw e;
+                        return Invalid;
                     }
+                    throw e;
                 }
 
-            case Number:
-                return Number(value);
+            case Metatype.float:
+                const float = Number(value);
+                if (Number.isNaN(float)) {
+                    return Invalid;
+                }
+                return float.valueOf();
 
-            case Date:
-                return new Date(Date.parse(value));
+            case Metatype.date:
+                value = new Date(value);
+                if (Number.isNaN(value.valueOf())) {
+                    return Invalid;
+                }
+                return value;
 
-            case Object:
+            case Metatype.object:
                 if (value == "null") {
                     return null;
                 }
+                if (typeof value != "object") {
+                    return Invalid;
+                }
+                return value;
+
+            case Metatype.bytes:
+                if (!(value instanceof Uint8Array)) {
+                    return Invalid;
+                }
+                return value;
+
+            case Metatype.array:
+                if (!Array.isArray(value)) {
+                    return Invalid;
+                }
+                return value;
         }
+
+        return Invalid;
     }
 
     /**

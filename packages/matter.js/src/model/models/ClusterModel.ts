@@ -29,8 +29,8 @@ export class ClusterModel extends Model implements ClusterElement {
         return super.validate();
     }
 
-    constructor(definition: ClusterElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: ClusterElement.Properties) {
+        super(definition);
     }
 
     static {

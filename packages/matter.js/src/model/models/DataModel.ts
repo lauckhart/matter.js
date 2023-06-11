@@ -4,12 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/MatterError.js";
-import { ByteArray } from "../../util/index.js";
 import {
     Access,
     BaseDataElement,
-    BaseElement,
     Conformance,
     Constraint,
     DatatypeElement,
@@ -22,8 +19,7 @@ import {
     // DatatypeModel installs itself into a special slot in the DataModel
     // namespace.
     type DatatypeModel,
-    Globals,
-    Datatype
+    Globals
 } from "../index.js";
 
 const CONSTRAINT: unique symbol = Symbol("constraint");
@@ -32,7 +28,8 @@ const ACCESS: unique symbol = Symbol("access");
 const QUALITY: unique symbol = Symbol("quality");
 
 /**
- * Base class for all data element implementations.
+ * Each BaseDataElement has a corresponding implementation that derives from
+ * this class.
  */
 export abstract class DataModel extends Model implements BaseDataElement {
     base?: string;
@@ -50,7 +47,6 @@ export abstract class DataModel extends Model implements BaseDataElement {
     get constraint() {
         return this.getAspect(CONSTRAINT, Constraint);
     }
-
     set constraint(definition: Constraint | Constraint.Definition) {
         this.setAspect(CONSTRAINT, Constraint, definition);
     }
@@ -58,7 +54,6 @@ export abstract class DataModel extends Model implements BaseDataElement {
     get conformance() {
         return this.getAspect(CONFORMANCE, Conformance);
     }
-
     set conformance(definition: Conformance | Conformance.Definition) {
         this.setAspect(CONFORMANCE, Conformance, definition);
     }
@@ -66,7 +61,6 @@ export abstract class DataModel extends Model implements BaseDataElement {
     get access() {
         return this.getAspect(ACCESS, Access);
     }
-
     set access(definition: Access | Access.Definition) {
         this.setAspect(ACCESS, Access, definition);
     }
@@ -74,14 +68,13 @@ export abstract class DataModel extends Model implements BaseDataElement {
     get quality() {
         return this.getAspect(QUALITY, Quality);
     }
-
     set quality(definition: Quality | Quality.Definition) {
         this.setAspect(QUALITY, Quality, definition);
     }
 
     /**
      * In some circumstances the base type can be inferred.  This inference
-     * happens here in subclasses.
+     * happens here.
      * 
      * Does not recurse so only returns the direct base type.
      */
@@ -90,39 +83,35 @@ export abstract class DataModel extends Model implements BaseDataElement {
     }
 
     /**
-     * Access the DataModel this model derives from, if any.
+     * Search the inheritance chain for a child.
      */
-    get baseModel(): DataModel | undefined {
-        // Some derivative types have very specialized handling.  In these
-        // cases we don't want the actual base model.  This map allows us to
-        // detect these cases.
-        //
-        // Out of an abundance of caution, we only treat a datatype as
-        // "special" if it has the correct name (the key in this map) *and*
-        // the correct base type (the value in this map)
-        const SpecializedDerivatives = {
-            [Globals.enum8.name]: Datatype.uint8,
-            [Globals.enum16.name]: Datatype.uint16,
-            [Globals.string.name]: Datatype.octstr,
-            [Globals.date.name]: Datatype.struct
-        }
+    member(key: string | number): Model | undefined {
+        return this.find(
+            DataModel.nextBase,
+            current => current.local(key, DataModel.DatatypeModel)
+        );
+    }
 
-        const visited = new Set<Model>();
-        let model: DataModel | undefined = this;
-        while (model?.actualBase) {
-            if (SpecializedDerivatives[model.name] == model.actualBase) {
-                break;
-            }
-
-            visited.add(model);
-            model = model.global(model.actualBase, DataModel.DatatypeModel, [ this ]);
-            if (model) {
-                if (visited.has(model)) {
-                    throw new MatterError(`Circular inheritance detected for ${this.path}`);
+    /**
+     * Determine the metatype of this element.  This requires us to search the
+     * inheritance hierarchy until we find a global element with a semantic
+     * definition we understand.
+     */
+    get metatype(): Metatype | undefined {
+        return this.find(
+            DataModel.nextBase,
+            current => {
+                if (current instanceof DataModel) {
+                    const metatype = Metatype.of(current.name);
+                    if (metatype) {
+                        const global = (Globals as any)[current.name];
+                        if (global && global.base == current.base) {
+                            return metatype;
+                        }
+                    }
                 }
             }
-        }
-        return model;
+        )
     }
 
     override validate() {
@@ -143,8 +132,8 @@ export abstract class DataModel extends Model implements BaseDataElement {
         return super.validate();
     }
 
-    protected constructor(definition: BaseDataElement.Properties, parent?: Model) {
-        super(definition, parent);
+    protected constructor(definition: BaseDataElement.Properties) {
+        super(definition);
 
         const match = this.base?.match(/^list\[(.*)\]$/);
         if (match) {
@@ -174,120 +163,61 @@ export abstract class DataModel extends Model implements BaseDataElement {
 
     private validateType() {
         if (this.actualBase == undefined) {
-            this.error("BASE_INDETERMINATE", "Cannot determine base type")
+            if ((Globals as any)[this.name]) {
+                // Not a derivative type
+                return;
+            }
+
+            // Non-global types must specify a base type
+            this.error("NO_TYPE", "No type information");
             return;
         }
         
-        const base = this.baseModel;
+        const base = this.global(this.actualBase, DataModel.DatatypeModel);
         if (base == undefined) {
-            this.error("BASE_UNKOWN", `Unknown base type ${this.base}`);
+            this.error("TYPE_UNKOWN", `Unknown type ${this.base}`);
             return;
         }
 
-        // This shouldn't happen because base search is limited to datatype.
-        // Leaving in as a sanity check though
-        if (base.type != BaseElement.Type.Datatype) {
-            this.error("BASE_NOT_DATATYPE", `Base type ${this.base} resolves to ${base.type} element (expected datatype)`);
+        const metatype = this.metatype;
+        if (metatype == undefined) {
+            this.error("METATYPE_UNKOWN", `No metatype for ${this.base}`);
             return;
         }
 
-        const metatype = Metatype.of(base.name);
-        const T = Metatype.native(metatype);
-        if (T == undefined) {
-            this.error("NATIVE_TYPE_UNKOWN", `Native type of ${this.type} unknown`);
-            return;
-        }
+        // Require a value for enum and bitmap values.  These are any children
+        // of enums or bitmaps
         if (this.value == undefined) {
-            // Handle both undefined and null the same way
             if (this.parent instanceof DataModel) {
-                switch (Metatype.of(this.parent.base)) {
+                switch (this.parent.metatype) {
                     case Metatype.enum:
                     case Metatype.bitmap:
                         this.error("MISSING_ITEM_VALUE", `No value for ${this.parent.base} child`)
                 }
             }
+
+            // If not an enum or bitmap, undefined and null are both OK
             return;
         }
 
-        const t = typeof this.value;
-        if (T == String) {
-            if (t != "string") {
-                this.error("STRING_VALUE_EXPECTED", `Type is ${t} (expected string)`);
-            }
+        // Convert value to proper type if possible
+        const value = Metatype.cast(metatype, this.value);
+        if (value == Metatype.Invalid) {
+            this.error("INVALID_VALUE", `Value "${this.value}" is not a ${metatype}`);
             return;
         }
+        this.value = value;
 
-        if (t == "string") {
-            const value = Metatype.parse(metatype, this.value);
-            if (value === undefined) {
-                this.error("VALUE_UNPARSEABLE", `Value ${this.value} does not parse as ${this.actualBase}`);
-                return;
+        // For bitmaps and enums, convert string name to numeric ID
+        if (metatype == Metatype.bitmap || metatype == Metatype.enum) {
+            if (typeof value == "string") {
+                const member = this.member(value);
+                if (member) {
+                    this.value = member.id;
+                } else {
+                    this.error("INVALID_ENTRY", `"${value}" is not in ${metatype} ${this.base}`);
+                }
             }
-
-            if (Number.isNaN(value)) {
-                // For enumerations and bitmap, an item name is acceptable
-                if (metatype == Metatype.bitmap || metatype == Metatype.enum) {
-                    if (base.local(this.value, DataModel.DatatypeModel)) {
-                        return;
-                    }
-                }
-                this.error("STRING_IS_NAN", `Value ${this.value} parses to NaN`);
-                return;
-            }
-            
-            if (value instanceof Date && Number.isNaN(value.valueOf())) {
-                this.error("INVALID_DATE", `Value ${this.value} parses to invalid date`);
-                return;
-            }
-            
-            this.value = value;
-            return;
-        }
-
-        const value = this.value.valueOf();
-        if (Number.isNaN(value)) {
-            this.error("VALUE_IS_NAN", `Value is NaN`);
-        }
-        let to: string = typeof value;
-        if (to == "object") {
-            to = value.constructor.name;
-        }
-        switch (T) {
-            case Boolean:
-                if (to != "boolean") {
-                    this.error("VALUE_NOT_BOOLEAN", `Value is ${to} (expected boolean)`);
-                }
-
-            case BigInt:
-            case Number:
-                if (to != "number" && to != "bigint") {
-                    this.error("VALUE_NOT_NUMBER", `Value is ${to} (expected number or bigint)`);
-                }
-                break;
-
-            case ByteArray:
-                if (!(value instanceof Uint8Array)) {
-                    this.error("VALUE_NOT_BYTES", `Value is ${to} (expected byte array)`);
-                }
-                break;
-
-            case Array:
-                if (!(Array.isArray(value))) {
-                    this.error("VALUE_NOT_ARRAY", `Value is ${to} (expected array)`);
-                }
-                break;
-
-            case Object:
-                if (typeof value != "object") {
-                    this.error("VALUE_NOT_OBJECT", `Value is ${to} (expected object)`);
-                }
-                break;
-
-            case Date:
-                if (to != "number" && to != "Date") {
-                    this.error("VALUE_NOT_DATE", `Value is ${to} (expected date)`);
-                }
-                break;
         }
     }
 }
@@ -295,4 +225,10 @@ export abstract class DataModel extends Model implements BaseDataElement {
 export namespace DataModel {
     // Set in DatatypeModel.ts
     export let DatatypeModel = undefined as unknown as new(properties: DatatypeElement.Properties, parent?: Model) => DatatypeModel;
+
+    export function nextBase(current: Model) {
+        if (current instanceof DataModel) {
+            return current.global(current.actualBase, DataModel.DatatypeModel);
+        }
+    }
 }

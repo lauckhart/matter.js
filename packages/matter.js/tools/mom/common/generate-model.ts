@@ -54,7 +54,7 @@ export function generateModel(source: string, elements: MatterElement.Child[]) {
     let errors = 0;
     logger.info(`validate ${source}`);
     const mom = new MatterModel({
-        name: camelize(`validate ${source}`),
+        name: "Matter",
         children: elements
     });
     Logger.nest(() => {

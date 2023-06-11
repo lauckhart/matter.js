@@ -21,8 +21,8 @@ export class EventModel extends DataModel implements EventElement {
         return super.validate();
     }
 
-    constructor(definition: EventElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: EventElement.Properties) {
+        super(definition);
     }
 
     static {

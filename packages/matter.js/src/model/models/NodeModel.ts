@@ -24,8 +24,8 @@ export class NodeModel extends Model implements NodeElement {
         return super.validate();
     }
 
-    constructor(definition: NodeElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: NodeElement.Properties) {
+        super(definition);
     }
 
     static {
