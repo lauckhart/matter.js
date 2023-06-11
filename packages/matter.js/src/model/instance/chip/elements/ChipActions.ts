@@ -15,459 +15,459 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to expose action information.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ActionList", base: "list",
+            id: 0x0000, name: "actionList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "EndpointList", base: "list",
+            id: 0x0001, name: "endpointList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SetupUrl", base: "string",
+            id: 0x0002, name: "setupUrl", base: "string",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         CommandElement({
-            id: 0x0000, name: "InstantAction", base: "struct",
+            id: 0x0000, name: "InstantAction",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0001, name: "InstantActionWithTransition", base: "struct",
+            id: 0x0001, name: "InstantActionWithTransition",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16",
+                    name: "transitionTime", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16",
+                    name: "transitionTime", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0002, name: "StartAction", base: "struct",
+            id: 0x0002, name: "StartAction",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0003, name: "StartActionWithDuration", base: "struct",
+            id: 0x0003, name: "StartActionWithDuration",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "duration", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "duration", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0004, name: "StopAction", base: "struct",
+            id: 0x0004, name: "StopAction",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0005, name: "PauseAction", base: "struct",
+            id: 0x0005, name: "PauseAction",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0006, name: "PauseActionWithDuration", base: "struct",
+            id: 0x0006, name: "PauseActionWithDuration",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "duration", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "duration", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0007, name: "ResumeAction", base: "struct",
+            id: 0x0007, name: "ResumeAction",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0008, name: "EnableAction", base: "struct",
+            id: 0x0008, name: "EnableAction",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0009, name: "EnableActionWithDuration", base: "struct",
+            id: 0x0009, name: "EnableActionWithDuration",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "duration", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "duration", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x000a, name: "DisableAction", base: "struct",
+            id: 0x000a, name: "DisableAction",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x000b, name: "DisableActionWithDuration", base: "struct",
+            id: 0x000b, name: "DisableActionWithDuration",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "duration", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "duration", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         EventElement({
-            id: 0x0000, name: "StateChanged", base: "struct",
+            id: 0x0000, name: "StateChanged",
             access: { rw: "R" }, conformance: [ "M" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewState", base: "ActionStateEnum",
+                    name: "newState", base: "ActionStateEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewState", base: "ActionStateEnum",
+                    name: "newState", base: "ActionStateEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         EventElement({
-            id: 0x0001, name: "ActionFailed", base: "struct",
+            id: 0x0001, name: "ActionFailed",
             access: { rw: "R" }, conformance: [ "M" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "invokeId", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewState", base: "ActionStateEnum",
+                    name: "newState", base: "ActionStateEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewState", base: "ActionStateEnum",
+                    name: "newState", base: "ActionStateEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Error", base: "ActionErrorEnum",
+                    name: "error", base: "ActionErrorEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Error", base: "ActionErrorEnum",
+                    name: "error", base: "ActionErrorEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -475,7 +475,128 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "CommandBits", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "instantAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0001"
+                }),
+
+                DatatypeElement({
+                    name: "instantAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0001"
+                }),
+
+                DatatypeElement({
+                    name: "instantActionWithTransition",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0002"
+                }),
+
+                DatatypeElement({
+                    name: "instantActionWithTransition",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0002"
+                }),
+
+                DatatypeElement({
+                    name: "startAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0004"
+                }),
+
+                DatatypeElement({
+                    name: "startAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0004"
+                }),
+
+                DatatypeElement({
+                    name: "startActionWithDuration",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0008"
+                }),
+
+                DatatypeElement({
+                    name: "startActionWithDuration",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0008"
+                }),
+
+                DatatypeElement({
+                    name: "stopAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0010"
+                }),
+
+                DatatypeElement({
+                    name: "stopAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0010"
+                }),
+
+                DatatypeElement({
+                    name: "pauseAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0020"
+                }),
+
+                DatatypeElement({
+                    name: "pauseAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0020"
+                }),
+
+                DatatypeElement({
+                    name: "pauseActionWithDuration",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0040"
+                }),
+
+                DatatypeElement({
+                    name: "pauseActionWithDuration",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0040"
+                }),
+
+                DatatypeElement({
+                    name: "resumeAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0080"
+                }),
+
+                DatatypeElement({
+                    name: "resumeAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0080"
+                }),
+
+                DatatypeElement({
+                    name: "enableAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0100"
+                }),
+
+                DatatypeElement({
+                    name: "enableAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0100"
+                }),
+
+                DatatypeElement({
+                    name: "enableActionWithDuration",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0200"
+                }),
+
+                DatatypeElement({
+                    name: "enableActionWithDuration",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0200"
+                }),
+
+                DatatypeElement({
+                    name: "disableAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0400"
+                }),
+
+                DatatypeElement({
+                    name: "disableAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0400"
+                }),
+
+                DatatypeElement({
+                    name: "disableActionWithDuration",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0800"
+                }),
+
+                DatatypeElement({
+                    name: "disableActionWithDuration",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0800"
+                })
+            ]
         }),
 
         DatatypeElement({
@@ -483,23 +604,23 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Unknown", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknown",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
                 }),
 
                 DatatypeElement({
-                    name: "Unknown", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknown",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
                 }),
 
                 DatatypeElement({
-                    name: "Interrupted", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "interrupted",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
                 }),
 
                 DatatypeElement({
-                    name: "Interrupted", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "interrupted",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
                 })
             ]
         }),
@@ -509,43 +630,43 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Inactive", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "inactive",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
                 }),
 
                 DatatypeElement({
-                    name: "Inactive", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "inactive",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
                 }),
 
                 DatatypeElement({
-                    name: "Active", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "active",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
                 }),
 
                 DatatypeElement({
-                    name: "Active", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "active",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
                 }),
 
                 DatatypeElement({
-                    name: "Paused", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "paused",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
                 }),
 
                 DatatypeElement({
-                    name: "Paused", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "paused",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
                 }),
 
                 DatatypeElement({
-                    name: "Disabled", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "disabled",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
                 }),
 
                 DatatypeElement({
-                    name: "Disabled", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "disabled",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
                 })
             ]
         }),
@@ -555,73 +676,73 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Other", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "other",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
                 }),
 
                 DatatypeElement({
-                    name: "Other", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "other",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
                 }),
 
                 DatatypeElement({
-                    name: "Scene", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "scene",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
                 }),
 
                 DatatypeElement({
-                    name: "Scene", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "scene",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
                 }),
 
                 DatatypeElement({
-                    name: "Sequence", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sequence",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
                 }),
 
                 DatatypeElement({
-                    name: "Sequence", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sequence",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
                 }),
 
                 DatatypeElement({
-                    name: "Automation", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "automation",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
                 }),
 
                 DatatypeElement({
-                    name: "Automation", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "automation",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
                 }),
 
                 DatatypeElement({
-                    name: "Exception", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "exception",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
                 }),
 
                 DatatypeElement({
-                    name: "Exception", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "exception",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
                 }),
 
                 DatatypeElement({
-                    name: "Notification", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "notification",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
                 }),
 
                 DatatypeElement({
-                    name: "Notification", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "notification",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
                 }),
 
                 DatatypeElement({
-                    name: "Alarm", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "alarm",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
                 }),
 
                 DatatypeElement({
-                    name: "Alarm", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "alarm",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
                 })
             ]
         }),
@@ -631,33 +752,33 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Other", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "other",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
                 }),
 
                 DatatypeElement({
-                    name: "Other", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "other",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
                 }),
 
                 DatatypeElement({
-                    name: "Room", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "room",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
                 }),
 
                 DatatypeElement({
-                    name: "Room", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "room",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
                 }),
 
                 DatatypeElement({
-                    name: "Zone", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "zone",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
                 }),
 
                 DatatypeElement({
-                    name: "Zone", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "zone",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
                 })
             ]
         }),
@@ -667,62 +788,62 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "actionId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "ActionTypeEnum",
+                    name: "type", base: "ActionTypeEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "ActionTypeEnum",
+                    name: "type", base: "ActionTypeEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EndpointListId", base: "uint16",
+                    name: "endpointListId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EndpointListId", base: "uint16",
+                    name: "endpointListId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SupportedCommands", base: "CommandBits",
+                    name: "supportedCommands", base: "CommandBits",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SupportedCommands", base: "CommandBits",
+                    name: "supportedCommands", base: "CommandBits",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "State", base: "ActionStateEnum",
+                    name: "state", base: "ActionStateEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "State", base: "ActionStateEnum",
+                    name: "state", base: "ActionStateEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -733,42 +854,42 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "EndpointListId", base: "uint16",
+                    name: "endpointListId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EndpointListId", base: "uint16",
+                    name: "endpointListId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "EndpointListTypeEnum",
+                    name: "type", base: "EndpointListTypeEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "EndpointListTypeEnum",
+                    name: "type", base: "EndpointListTypeEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Endpoints", base: "endpointNo",
+                    name: "endpoints", base: "endpointNo",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Endpoints", base: "endpointNo",
+                    name: "endpoints", base: "endpointNo",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

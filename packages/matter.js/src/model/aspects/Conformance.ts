@@ -92,7 +92,8 @@ export namespace Conformance {
         Name = "name",
         Value = "value",
         Choice = "choice",
-        Group = "group"
+        Group = "group",
+        Option = "option"
     }
 
     export enum Flag {
@@ -143,7 +144,7 @@ export namespace Conformance {
     // Serialize with parenthesis if necessary to make the expression atomic
     function serializeAtomic(ast: Ast, operators = BinaryOperators) {
         const serialized = serialize(ast);
-        if (ast.type == "group" || operators.has(ast.type as Operator)) {
+        if (ast.type == Conformance.Special.Group || operators.has(ast.type as Operator)) {
             return `(${serialized})`;
         }
         return serialized;
@@ -154,14 +155,22 @@ export namespace Conformance {
             case Operator.OR:
             case Operator.XOR:
             case Operator.AND:
+            case Operator.EQ:
+            case Operator.NE:
                 const operands = ast.param as Conformance.Ast.BinaryOperands;
                 return `${serializeAtomic(operands.lhs, OrXorAnd)} ${ast.type} ${serializeAtomic(operands.rhs, OrXorAnd)}`;
 
             case Operator.NOT:
                 const n = ast.param as Conformance.Ast.UnaryOperand;
                 return `!${serializeAtomic(n)}`;
-                
-            case "choice":
+
+            case Special.Empty:
+                return "";
+
+            case Special.Desc:
+                return "desc";
+                    
+            case Special.Choice:
                 const c = ast.param as Conformance.Ast.Choice;
                 let result = `${serializeAtomic(c.expr)}.${c.choice}`;
                 if (c.num) {
@@ -171,18 +180,18 @@ export namespace Conformance {
                     result = `${result}+`;
                 }
                 return result;
-
-            case "group":
+    
+            case Special.Group:
                 const l = ast.param as Conformance.Ast.Group;
                 return l.map(d => serialize(d)).join(", ");
 
-            case Flag.Optional:
+            case Special.Option:
                 const o = ast.param as Conformance.Ast.Option;
                 return `[${serialize(o)}]`;
 
             default:
                 // Flag, name or value
-                return `${ast}`;
+                return `${ast.param}`;
         }
     }
 }
@@ -319,7 +328,7 @@ namespace Tokenizer {
                     if (peeked.value == "=") {
                         next();
                     } else {
-                        conformance.error(`"=" must be followed by another "="`);
+                        conformance.error("BAD_EQUAL", `"=" must be followed by another "="`);
                     }
                     yield { type: TokenType.Special, value: Special.Equal };
                     break;
@@ -343,7 +352,7 @@ namespace Tokenizer {
                         }
                         yield { type: TokenType.Name, value: name.join("") };
                     } else {
-                        conformance.error(`Unexpected character "${current.value}"`);
+                        conformance.error("GARBAGE_CHARACTER", `Unexpected character "${current.value}"`);
                     }
                     break;
             }
@@ -406,7 +415,7 @@ class Parser {
         while (true) {
             if (!this.token) {
                 if (end) {
-                    this.conformance.error("Unterminated conformance grouping");
+                    this.conformance.error("UNTERMINATED_CONFORMANCE_GROUPING", "Unterminated conformance grouping");
                 }
                 return groupAsAst();
             }
@@ -418,7 +427,7 @@ class Parser {
             if (optional) {
                 this.next();
                 group.push({
-                    type: Conformance.Special.Group,
+                    type: Conformance.Special.Option,
                     param: this.parseGroup(Tokenizer.Special.OptionalEnd)
                 })
             } else {
@@ -482,7 +491,7 @@ class Parser {
             this.next();
 
             if ((this.token as any)?.type != Tokenizer.TokenType.Choice) {
-                this.conformance.error('Choice indicator (".") must be followed by a single lowercase letter');
+                this.conformance.error("INVALID_CHOICE", 'Choice indicator (".") must be followed by a single lowercase letter');
             }
             const choice = {
                 choice: this.token?.value ?? "?",
@@ -509,7 +518,7 @@ class Parser {
 
     private parseUnaryExpressionWithoutChoice(): string | Conformance.Ast | undefined {
         if (!this.token) {
-            this.conformance.error("Terminated with expression expected");
+            this.conformance.error("PREMATURE_CONFORMANCE_TERMINATION", "Terminated with expression expected");
             return;
         }
 
@@ -529,7 +538,7 @@ class Parser {
             return this.parseGroup(Tokenizer.Special.GroupEnd);
         }
 
-        this.conformance.error(`Unexpected "${this.token.value}"`);
+        this.conformance.error("UNEXPECTED_CONFORMANCE_TOKEN", `Unexpected "${this.token.value}"`);
         this.next();
     }
 }

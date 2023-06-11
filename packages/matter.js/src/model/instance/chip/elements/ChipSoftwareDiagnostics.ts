@@ -15,61 +15,61 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ThreadMetrics", base: "list",
+            id: 0x0000, name: "threadMetrics", base: "list",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "CurrentHeapFree", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0001, name: "currentHeapFree", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "CurrentHeapUsed", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0002, name: "currentHeapUsed", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CurrentHeapHighWatermark", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0003, name: "currentHeapHighWatermark", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         CommandElement({
-            id: 0x0000, name: "ResetWatermarks", base: "struct",
+            id: 0x0000, name: "ResetWatermarks",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request"
         }),
 
         EventElement({
-            id: 0x0000, name: "SoftwareFault", base: "struct",
+            id: 0x0000, name: "SoftwareFault",
             access: { rw: "R" }, conformance: [ "O" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Id", base: "uint64",
+                    name: "id", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "uint64",
+                    name: "id", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "FaultRecording", base: "octstr",
+                    name: "faultRecording", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "FaultRecording", base: "octstr",
+                    name: "faultRecording", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -80,52 +80,52 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Id", base: "uint64",
+                    name: "id", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "uint64",
+                    name: "id", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "StackFreeCurrent", base: "uint32",
+                    name: "stackFreeCurrent", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "StackFreeCurrent", base: "uint32",
+                    name: "stackFreeCurrent", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "StackFreeMinimum", base: "uint32",
+                    name: "stackFreeMinimum", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "StackFreeMinimum", base: "uint32",
+                    name: "stackFreeMinimum", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "StackSize", base: "uint32",
+                    name: "stackSize", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "StackSize", base: "uint32",
+                    name: "stackSize", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -133,7 +133,18 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "SoftwareDiagnosticsFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "waterMarks",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "waterMarks",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                })
+            ]
         })
     ]
 }));

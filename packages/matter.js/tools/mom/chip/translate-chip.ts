@@ -7,9 +7,9 @@
 import { Logger } from "../../../src/log/Logger.js";
 import { Access, AnyElement, AttributeElement, BaseDataElement, BaseElement, ClusterElement, CommandElement, Conformance, DatatypeElement, EventElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/index.js";
-import { ChildTypeMap, TypeMap } from "./type-map.js";
+import { TypeMap } from "./type-map.js";
 
-const logger = Logger.get("translate-cluster");
+const logger = Logger.get("translate-chip");
 
 export function translateChip(rootEl: Element, target: Array<AnyElement>) {
     rootEl.querySelectorAll("configurator > cluster").forEach((clusterEl) => {
@@ -134,16 +134,16 @@ function setAccessPrivileges(src: Element, target: Access.Ast) {
     });
 
     if (srcAccess.read !== undefined) {
-        target.readPrivilege = srcAccess.read;
+        target.readPriv = srcAccess.read;
     }
     if (srcAccess.write) {
-        target.writePrivilege = srcAccess.write;
+        target.writePriv = srcAccess.write;
     }
     if (srcAccess.invoke) {
         if (srcAccess.read || srcAccess.write) {
             throw new Error(`Intermingled data and command privileges`);
         }
-        target.writePrivilege = srcAccess.invoke;
+        target.writePriv = srcAccess.invoke;
     }
 }
 
@@ -198,10 +198,11 @@ function createDataElement<T extends BaseDataElement>(
     Factory: ((properties: T) => T) & { Type: BaseElement.Type },
     dataEl: Element,
     target: BaseDataElement,
-    base: string,
+    isClass: boolean,
+    base?: string,
     propertyTag?: string
 ): T {
-    let name = camelize(need(`${Factory.Type} name`, dataEl.getAttribute("name") || dataEl.getAttribute("define")));
+    let name = camelize(need(`${Factory.Type} name`, dataEl.getAttribute("name") || dataEl.getAttribute("define")), isClass);
     logger.debug(`${Factory.Type} ${name}`);
 
     let id = int(dataEl.getAttribute("code"));
@@ -209,13 +210,21 @@ function createDataElement<T extends BaseDataElement>(
         need(`${Factory.Type} id`, id);
     }
 
-    if (TypeMap[base.toUpperCase()]) {
+    if (base && TypeMap[base.toUpperCase()]) {
         base = TypeMap[base.toUpperCase()];
-    } else {
+    } else if (base) {
         base = camelize(base);
     }
 
     const element = Factory({ id: id, name: name, base: base } as T);
+
+    let value = str(dataEl.getAttribute("default") || dataEl.getAttribute("value") || dataEl.getAttribute("mask"));
+    if (value != undefined) {
+        if (element.base?.match(/struct$/i) && value == "0x0") {
+            value = "null";
+        }
+        element.value = value;
+    }
 
     setQualities(dataEl, element);
 
@@ -225,14 +234,15 @@ function createDataElement<T extends BaseDataElement>(
                 element.children = [];
             }
 
-            const childBase = str(ChildTypeMap[base]) || propertyEl.getAttribute("type");
+            const childBase = str(propertyEl.getAttribute("type"));
 
             element.children.push(createDataElement(
                 DatatypeElement,
                 propertyEl,
                 element,
-                need(`${Factory.Type} ${propertyTag} type`, childBase)
-            ))
+                false,
+                childBase
+            ));
         })
     }
 
@@ -252,6 +262,7 @@ const translators: { [name: string]: Translator } = {
             AttributeElement,
             source,
             target,
+            false,
             need("attribute type", str(source.getAttribute("type")))
         );
     },
@@ -261,7 +272,8 @@ const translators: { [name: string]: Translator } = {
             EventElement,
             source,
             target,
-            "STRUCT",
+            true,
+            undefined,
             "field"
         );
         event.priority = need("event priority", str(source.getAttribute("priority"))) as typeof event.priority;
@@ -273,7 +285,8 @@ const translators: { [name: string]: Translator } = {
             CommandElement,
             source,
             target,
-            "STRUCT",
+            true,
+            undefined,
             "arg"
         );
 
@@ -297,6 +310,7 @@ const translators: { [name: string]: Translator } = {
             DatatypeElement,
             source,
             target,
+            true,
             str(source.getAttribute("type")) ?? "STRUCT",
             "item"
         );
@@ -307,6 +321,7 @@ const translators: { [name: string]: Translator } = {
             DatatypeElement,
             source,
             target,
+            true,
             need("enum type", str(source.getAttribute("type"))),
             "item"
         )
@@ -317,8 +332,9 @@ const translators: { [name: string]: Translator } = {
             DatatypeElement,
             source,
             target,
+            true,
             need("bitmap type", str(source.getAttribute("type"))),
-            "item"
+            "field"
         )
     }
 }

@@ -15,189 +15,189 @@ ChipMatter.children!.push(ClusterElement({
     details: "Provides an interface for controlling and adjusting automatic window coverings.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "WcType", base: "Type",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0000, name: "wcType", base: "Type",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "WcPhysicalClosedLimitLift", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0001, name: "wcPhysicalClosedLimitLift", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "WcPhysicalClosedLimitTilt", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0002, name: "wcPhysicalClosedLimitTilt", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "WcCurrentPositionLift", base: "uint16",
+            id: 0x0003, name: "wcCurrentPositionLift", base: "uint16",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0004, name: "WcCurrentPositionTilt", base: "uint16",
+            id: 0x0004, name: "wcCurrentPositionTilt", base: "uint16",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0005, name: "WcNumberOfActuationsLift", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0005, name: "wcNumberOfActuationsLift", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "WcNumberOfActuationsTilt", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0006, name: "wcNumberOfActuationsTilt", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "WcConfigStatus", base: "ConfigStatus",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0007, name: "wcConfigStatus", base: "ConfigStatus",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "WcCurrentPositionLiftPercentage", base: "percent",
+            id: 0x0008, name: "wcCurrentPositionLiftPercentage", base: "percent",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true, reportable: true }
         }),
 
         AttributeElement({
-            id: 0x0009, name: "WcCurrentPositionTiltPercentage", base: "percent",
+            id: 0x0009, name: "wcCurrentPositionTiltPercentage", base: "percent",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true, reportable: true }
         }),
 
         AttributeElement({
-            id: 0x000a, name: "WcOperationalStatus", base: "OperationalStatus",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { reportable: true }
+            id: 0x000a, name: "wcOperationalStatus", base: "OperationalStatus",
+            access: { rw: "R" }, conformance: [ "M" ], quality: { reportable: true }, value: "0x00"
         }),
 
         AttributeElement({
-            id: 0x000b, name: "WcTargetPositionLiftPercent100Ths", base: "percent100ths",
+            id: 0x000b, name: "wcTargetPositionLiftPercent100Ths", base: "percent100ths",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true, reportable: true }
         }),
 
         AttributeElement({
-            id: 0x000c, name: "WcTargetPositionTiltPercent100Ths", base: "percent100ths",
+            id: 0x000c, name: "wcTargetPositionTiltPercent100Ths", base: "percent100ths",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true, reportable: true }
         }),
 
         AttributeElement({
-            id: 0x000d, name: "WcEndProductType", base: "EndProductType",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x000d, name: "wcEndProductType", base: "EndProductType",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
         }),
 
         AttributeElement({
-            id: 0x000e, name: "WcCurrentPositionLiftPercent100Ths", base: "percent100ths",
+            id: 0x000e, name: "wcCurrentPositionLiftPercent100Ths", base: "percent100ths",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true, reportable: true }
         }),
 
         AttributeElement({
-            id: 0x000f, name: "WcCurrentPositionTiltPercent100Ths", base: "percent100ths",
+            id: 0x000f, name: "wcCurrentPositionTiltPercent100Ths", base: "percent100ths",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true, reportable: true }
         }),
 
         AttributeElement({
-            id: 0x0010, name: "WcInstalledOpenLimitLift", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0010, name: "wcInstalledOpenLimitLift", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
         }),
 
         AttributeElement({
-            id: 0x0011, name: "WcInstalledClosedLimitLift", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0011, name: "wcInstalledClosedLimitLift", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0xFFFF"
         }),
 
         AttributeElement({
-            id: 0x0012, name: "WcInstalledOpenLimitTilt", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0012, name: "wcInstalledOpenLimitTilt", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
         }),
 
         AttributeElement({
-            id: 0x0013, name: "WcInstalledClosedLimitTilt", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0013, name: "wcInstalledClosedLimitTilt", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0xFFFF"
         }),
 
         AttributeElement({
-            id: 0x0017, name: "WcMode", base: "Mode",
-            access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "M" ]
+            id: 0x0017, name: "wcMode", base: "Mode",
+            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "M" ], value: "0x00"
         }),
 
         AttributeElement({
-            id: 0x001a, name: "WcSafetyStatus", base: "SafetyStatus",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }
+            id: 0x001a, name: "wcSafetyStatus", base: "SafetyStatus",
+            access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }, value: "0x0000"
         }),
 
         CommandElement({
-            id: 0x0000, name: "UpOrOpen", base: "struct",
+            id: 0x0000, name: "UpOrOpen",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request"
         }),
 
         CommandElement({
-            id: 0x0001, name: "DownOrClose", base: "struct",
+            id: 0x0001, name: "DownOrClose",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request"
         }),
 
         CommandElement({
-            id: 0x0002, name: "StopMotion", base: "struct",
+            id: 0x0002, name: "StopMotion",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request"
         }),
 
         CommandElement({
-            id: 0x0004, name: "GoToLiftValue", base: "struct",
+            id: 0x0004, name: "GoToLiftValue",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "LiftValue", base: "uint16",
+                    name: "liftValue", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "LiftValue", base: "uint16",
+                    name: "liftValue", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0005, name: "GoToLiftPercentage", base: "struct",
+            id: 0x0005, name: "GoToLiftPercentage",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "LiftPercent100ThsValue", base: "percent100ths",
+                    name: "liftPercent100ThsValue", base: "percent100ths",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "LiftPercent100ThsValue", base: "percent100ths",
+                    name: "liftPercent100ThsValue", base: "percent100ths",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0007, name: "GoToTiltValue", base: "struct",
+            id: 0x0007, name: "GoToTiltValue",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TiltValue", base: "uint16",
+                    name: "tiltValue", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TiltValue", base: "uint16",
+                    name: "tiltValue", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0008, name: "GoToTiltPercentage", base: "struct",
+            id: 0x0008, name: "GoToTiltPercentage",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TiltPercent100ThsValue", base: "percent100ths",
+                    name: "tiltPercent100ThsValue", base: "percent100ths",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TiltPercent100ThsValue", base: "percent100ths",
+                    name: "tiltPercent100ThsValue", base: "percent100ths",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -208,113 +208,113 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "RollerShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "00"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "00"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShade2Motor", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShade2Motor",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "01"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShade2Motor", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShade2Motor",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "01"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShadeExterior", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShadeExterior",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "02"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShadeExterior", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShadeExterior",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "02"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShadeExterior2Motor", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShadeExterior2Motor",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "03"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShadeExterior2Motor", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShadeExterior2Motor",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "03"
                 }),
 
                 DatatypeElement({
-                    name: "Drapery", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "drapery",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "04"
                 }),
 
                 DatatypeElement({
-                    name: "Drapery", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "drapery",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "04"
                 }),
 
                 DatatypeElement({
-                    name: "Awning", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "awning",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "05"
                 }),
 
                 DatatypeElement({
-                    name: "Awning", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "awning",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "05"
                 }),
 
                 DatatypeElement({
-                    name: "Shutter", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "shutter",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "06"
                 }),
 
                 DatatypeElement({
-                    name: "Shutter", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "shutter",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "06"
                 }),
 
                 DatatypeElement({
-                    name: "TiltBlindTiltOnly", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tiltBlindTiltOnly",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "07"
                 }),
 
                 DatatypeElement({
-                    name: "TiltBlindTiltOnly", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tiltBlindTiltOnly",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "07"
                 }),
 
                 DatatypeElement({
-                    name: "TiltBlindLiftAndTilt", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tiltBlindLiftAndTilt",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "08"
                 }),
 
                 DatatypeElement({
-                    name: "TiltBlindLiftAndTilt", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tiltBlindLiftAndTilt",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "08"
                 }),
 
                 DatatypeElement({
-                    name: "ProjectorScreen", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "projectorScreen",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "09"
                 }),
 
                 DatatypeElement({
-                    name: "ProjectorScreen", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "projectorScreen",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "09"
                 }),
 
                 DatatypeElement({
-                    name: "Unknown", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknown",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "255"
                 }),
 
                 DatatypeElement({
-                    name: "Unknown", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknown",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "255"
                 })
             ]
         }),
@@ -324,280 +324,595 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "RollerShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "00"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "00"
                 }),
 
                 DatatypeElement({
-                    name: "RomanShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "romanShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "01"
                 }),
 
                 DatatypeElement({
-                    name: "RomanShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "romanShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "01"
                 }),
 
                 DatatypeElement({
-                    name: "BalloonShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "balloonShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "02"
                 }),
 
                 DatatypeElement({
-                    name: "BalloonShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "balloonShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "02"
                 }),
 
                 DatatypeElement({
-                    name: "WovenWood", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "wovenWood",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "03"
                 }),
 
                 DatatypeElement({
-                    name: "WovenWood", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "wovenWood",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "03"
                 }),
 
                 DatatypeElement({
-                    name: "PleatedShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "pleatedShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "04"
                 }),
 
                 DatatypeElement({
-                    name: "PleatedShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "pleatedShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "04"
                 }),
 
                 DatatypeElement({
-                    name: "CellularShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cellularShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "05"
                 }),
 
                 DatatypeElement({
-                    name: "CellularShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cellularShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "05"
                 }),
 
                 DatatypeElement({
-                    name: "LayeredShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "layeredShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "06"
                 }),
 
                 DatatypeElement({
-                    name: "LayeredShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "layeredShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "06"
                 }),
 
                 DatatypeElement({
-                    name: "LayeredShade2D", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "layeredShade2D",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "07"
                 }),
 
                 DatatypeElement({
-                    name: "LayeredShade2D", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "layeredShade2D",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "07"
                 }),
 
                 DatatypeElement({
-                    name: "SheerShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sheerShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "08"
                 }),
 
                 DatatypeElement({
-                    name: "SheerShade", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sheerShade",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "08"
                 }),
 
                 DatatypeElement({
-                    name: "TiltOnlyInteriorBlind", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tiltOnlyInteriorBlind",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "09"
                 }),
 
                 DatatypeElement({
-                    name: "TiltOnlyInteriorBlind", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tiltOnlyInteriorBlind",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "09"
                 }),
 
                 DatatypeElement({
-                    name: "InteriorBlind", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "interiorBlind",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
                 }),
 
                 DatatypeElement({
-                    name: "InteriorBlind", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "interiorBlind",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
                 }),
 
                 DatatypeElement({
-                    name: "VerticalBlindStripCurtain", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "verticalBlindStripCurtain",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "11"
                 }),
 
                 DatatypeElement({
-                    name: "VerticalBlindStripCurtain", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "verticalBlindStripCurtain",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "11"
                 }),
 
                 DatatypeElement({
-                    name: "InteriorVenetianBlind", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "interiorVenetianBlind",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "12"
                 }),
 
                 DatatypeElement({
-                    name: "InteriorVenetianBlind", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "interiorVenetianBlind",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "12"
                 }),
 
                 DatatypeElement({
-                    name: "ExteriorVenetianBlind", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "exteriorVenetianBlind",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "13"
                 }),
 
                 DatatypeElement({
-                    name: "ExteriorVenetianBlind", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "exteriorVenetianBlind",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "13"
                 }),
 
                 DatatypeElement({
-                    name: "LateralLeftCurtain", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "lateralLeftCurtain",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "14"
                 }),
 
                 DatatypeElement({
-                    name: "LateralLeftCurtain", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "lateralLeftCurtain",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "14"
                 }),
 
                 DatatypeElement({
-                    name: "LateralRightCurtain", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "lateralRightCurtain",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "15"
                 }),
 
                 DatatypeElement({
-                    name: "LateralRightCurtain", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "lateralRightCurtain",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "15"
                 }),
 
                 DatatypeElement({
-                    name: "CentralCurtain", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "centralCurtain",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "16"
                 }),
 
                 DatatypeElement({
-                    name: "CentralCurtain", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "centralCurtain",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "16"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShutter", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShutter",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "17"
                 }),
 
                 DatatypeElement({
-                    name: "RollerShutter", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rollerShutter",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "17"
                 }),
 
                 DatatypeElement({
-                    name: "ExteriorVerticalScreen", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "exteriorVerticalScreen",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "18"
                 }),
 
                 DatatypeElement({
-                    name: "ExteriorVerticalScreen", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "exteriorVerticalScreen",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "18"
                 }),
 
                 DatatypeElement({
-                    name: "AwningTerracePatio", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "awningTerracePatio",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "19"
                 }),
 
                 DatatypeElement({
-                    name: "AwningTerracePatio", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "awningTerracePatio",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "19"
                 }),
 
                 DatatypeElement({
-                    name: "AwningVerticalScreen", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "awningVerticalScreen",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "20"
                 }),
 
                 DatatypeElement({
-                    name: "AwningVerticalScreen", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "awningVerticalScreen",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "20"
                 }),
 
                 DatatypeElement({
-                    name: "TiltOnlyPergola", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tiltOnlyPergola",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "21"
                 }),
 
                 DatatypeElement({
-                    name: "TiltOnlyPergola", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tiltOnlyPergola",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "21"
                 }),
 
                 DatatypeElement({
-                    name: "SwingingShutter", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "swingingShutter",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "22"
                 }),
 
                 DatatypeElement({
-                    name: "SwingingShutter", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "swingingShutter",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "22"
                 }),
 
                 DatatypeElement({
-                    name: "SlidingShutter", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "slidingShutter",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "23"
                 }),
 
                 DatatypeElement({
-                    name: "SlidingShutter", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "slidingShutter",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "23"
                 }),
 
                 DatatypeElement({
-                    name: "Unknown", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknown",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "255"
                 }),
 
                 DatatypeElement({
-                    name: "Unknown", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknown",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "255"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "Mode", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "motorDirectionReversed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                }),
+
+                DatatypeElement({
+                    name: "motorDirectionReversed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                }),
+
+                DatatypeElement({
+                    name: "calibrationMode",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                }),
+
+                DatatypeElement({
+                    name: "calibrationMode",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                }),
+
+                DatatypeElement({
+                    name: "maintenanceMode",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                }),
+
+                DatatypeElement({
+                    name: "maintenanceMode",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                }),
+
+                DatatypeElement({
+                    name: "ledFeedback",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                }),
+
+                DatatypeElement({
+                    name: "ledFeedback",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                })
+            ]
         }),
 
         DatatypeElement({
             name: "OperationalStatus", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "global",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                }),
+
+                DatatypeElement({
+                    name: "global",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                }),
+
+                DatatypeElement({
+                    name: "lift",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
+                }),
+
+                DatatypeElement({
+                    name: "lift",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
+                }),
+
+                DatatypeElement({
+                    name: "tilt",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x30"
+                }),
+
+                DatatypeElement({
+                    name: "tilt",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x30"
+                })
+            ]
         }),
 
         DatatypeElement({
             name: "ConfigStatus", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "operational",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                }),
+
+                DatatypeElement({
+                    name: "operational",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                }),
+
+                DatatypeElement({
+                    name: "onlineReserved",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                }),
+
+                DatatypeElement({
+                    name: "onlineReserved",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                }),
+
+                DatatypeElement({
+                    name: "liftMovementReversed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                }),
+
+                DatatypeElement({
+                    name: "liftMovementReversed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                }),
+
+                DatatypeElement({
+                    name: "liftPositionAware",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                }),
+
+                DatatypeElement({
+                    name: "liftPositionAware",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                }),
+
+                DatatypeElement({
+                    name: "tiltPositionAware",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                }),
+
+                DatatypeElement({
+                    name: "tiltPositionAware",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                }),
+
+                DatatypeElement({
+                    name: "liftEncoderControlled",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
+                }),
+
+                DatatypeElement({
+                    name: "liftEncoderControlled",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
+                }),
+
+                DatatypeElement({
+                    name: "tiltEncoderControlled",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                }),
+
+                DatatypeElement({
+                    name: "tiltEncoderControlled",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                })
+            ]
         }),
 
         DatatypeElement({
             name: "SafetyStatus", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "remoteLockout",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0001"
+                }),
+
+                DatatypeElement({
+                    name: "remoteLockout",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0001"
+                }),
+
+                DatatypeElement({
+                    name: "tamperDetection",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0002"
+                }),
+
+                DatatypeElement({
+                    name: "tamperDetection",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0002"
+                }),
+
+                DatatypeElement({
+                    name: "failedCommunication",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0004"
+                }),
+
+                DatatypeElement({
+                    name: "failedCommunication",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0004"
+                }),
+
+                DatatypeElement({
+                    name: "positionFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0008"
+                }),
+
+                DatatypeElement({
+                    name: "positionFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0008"
+                }),
+
+                DatatypeElement({
+                    name: "thermalProtection",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0010"
+                }),
+
+                DatatypeElement({
+                    name: "thermalProtection",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0010"
+                }),
+
+                DatatypeElement({
+                    name: "obstacleDetected",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0020"
+                }),
+
+                DatatypeElement({
+                    name: "obstacleDetected",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0020"
+                }),
+
+                DatatypeElement({
+                    name: "power",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0040"
+                }),
+
+                DatatypeElement({
+                    name: "power",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0040"
+                }),
+
+                DatatypeElement({
+                    name: "stopInput",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0080"
+                }),
+
+                DatatypeElement({
+                    name: "stopInput",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0080"
+                }),
+
+                DatatypeElement({
+                    name: "motorJammed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0100"
+                }),
+
+                DatatypeElement({
+                    name: "motorJammed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0100"
+                }),
+
+                DatatypeElement({
+                    name: "hardwareFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0200"
+                }),
+
+                DatatypeElement({
+                    name: "hardwareFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0200"
+                }),
+
+                DatatypeElement({
+                    name: "manualOperation",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0400"
+                }),
+
+                DatatypeElement({
+                    name: "manualOperation",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0400"
+                }),
+
+                DatatypeElement({
+                    name: "protection",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0800"
+                }),
+
+                DatatypeElement({
+                    name: "protection",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0800"
+                })
+            ]
         }),
 
         DatatypeElement({
             name: "WindowCoveringFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "lift",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                }),
+
+                DatatypeElement({
+                    name: "lift",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                }),
+
+                DatatypeElement({
+                    name: "tilt",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                }),
+
+                DatatypeElement({
+                    name: "tilt",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                }),
+
+                DatatypeElement({
+                    name: "positionAwareLift",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                }),
+
+                DatatypeElement({
+                    name: "positionAwareLift",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                }),
+
+                DatatypeElement({
+                    name: "absolutePosition",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                }),
+
+                DatatypeElement({
+                    name: "absolutePosition",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                }),
+
+                DatatypeElement({
+                    name: "positionAwareTilt",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                }),
+
+                DatatypeElement({
+                    name: "positionAwareTilt",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                })
+            ]
         })
     ]
 }));

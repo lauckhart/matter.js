@@ -15,62 +15,62 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for UX navigation within a set of targets on a device or endpoint.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "TargetNavigatorList", base: "list",
+            id: 0x0000, name: "targetNavigatorList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "TargetNavigatorCurrentTarget", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0001, name: "targetNavigatorCurrentTarget", base: "uint8",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0"
         }),
 
         CommandElement({
-            id: 0x0000, name: "NavigateTarget", base: "struct",
+            id: 0x0000, name: "NavigateTarget",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "NavigateTargetResponse",
             children: [
                 DatatypeElement({
-                    name: "Target", base: "uint8",
+                    name: "target", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Target", base: "uint8",
+                    name: "target", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "data", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "data", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0001, name: "NavigateTargetResponse", base: "struct",
+            id: 0x0001, name: "NavigateTargetResponse",
             access: { rw: "R" }, conformance: [ "M" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "TargetNavigatorStatusEnum",
+                    name: "status", base: "TargetNavigatorStatusEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "TargetNavigatorStatusEnum",
+                    name: "status", base: "TargetNavigatorStatusEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "data", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "data", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -81,33 +81,33 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Success", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "success",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Success", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "success",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "TargetNotFound", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "targetNotFound",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "TargetNotFound", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "targetNotFound",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "NotAllowed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "notAllowed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "NotAllowed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "notAllowed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 })
             ]
         }),
@@ -117,22 +117,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Identifier", base: "uint8",
+                    name: "identifier", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Identifier", base: "uint8",
+                    name: "identifier", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

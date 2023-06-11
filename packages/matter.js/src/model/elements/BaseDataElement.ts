@@ -13,7 +13,10 @@ import type { AnyDataElement } from "../index.js";
 export type BaseDataElement = BaseElement & {
     /**
      * Derived datatypes as defined by the Matter Specification must specify
-     * the name of the base type.
+     * the name of the base type.  This is every type that is not global.
+     * 
+     * Elements may use the shortcut "list[EntryType]" to designate an element
+     * as type "list" with a single child that is the entry type.
      */
     base?: string,
 
@@ -43,9 +46,11 @@ export type BaseDataElement = BaseElement & {
     byteSize?: BaseDataElement.Size,
 
     /**
-     * The default value of instances.
+     * A value associated with the element.  For enum and bitmap items, this
+     * is the value associated with the element name.  For other datatype
+     * elements this is the default value.
      */
-    default?: any,
+    value?: any,
 
     /**
      * Nested structures that may have data elements include enums, structs and
@@ -74,36 +79,11 @@ export namespace BaseDataElement {
     export type Properties = BaseElement.Properties<BaseDataElement & { type: `${BaseElement.Type}` }>;
 
     /**
-     * An identifier for every non-derived datatype from the Matter Core
-     * Specification.
+     * The general type of datatype (ignoring size).
      */
-    export enum Datatype {
-        bool = "bool",
-        map8 = "map8",
-        map16 = "map16",
-        map32 = "map32",
-        map64 = "map64",
-        uint8 = "uint8",
-        uint16 = "uint16",
-        uint24 = "uint24",
-        uint32 = "uint32",
-        uint40 = "uint40",
-        uint48 = "uint48",
-        uint56 = "uint56",
-        uint64 = "uint64",
-        int8 = "int8",
-        int16 = "int16",
-        int24 = "int24",
-        int32 = "int32",
-        int40 = "int40",
-        int48 = "int48",
-        int56 = "int56",
-        int64 = "int64",
-        single = "single",
-        double = "double",
-        octstr = "octstr",
-        list = "list",
-        struct = "struct"
+    export enum Metatype {
+        bool,
+        map
     }
 
     /**

@@ -15,82 +15,82 @@ ChipMatter.children!.push(ClusterElement({
     details: "The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be used to aid in diagnostics.",
     children: [
         CommandElement({
-            id: 0x0000, name: "RetrieveLogsRequest", base: "struct",
+            id: 0x0000, name: "RetrieveLogsRequest",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "RetrieveLogsResponse",
             children: [
                 DatatypeElement({
-                    name: "Intent", base: "IntentEnum",
+                    name: "intent", base: "IntentEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Intent", base: "IntentEnum",
+                    name: "intent", base: "IntentEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "RequestedProtocol", base: "TransferProtocolEnum",
+                    name: "requestedProtocol", base: "TransferProtocolEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "RequestedProtocol", base: "TransferProtocolEnum",
+                    name: "requestedProtocol", base: "TransferProtocolEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TransferFileDesignator", base: "string",
+                    name: "transferFileDesignator", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "TransferFileDesignator", base: "string",
+                    name: "transferFileDesignator", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0001, name: "RetrieveLogsResponse", base: "struct",
+            id: 0x0001, name: "RetrieveLogsResponse",
             access: { rw: "R" }, conformance: [ "M" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "StatusEnum",
+                    name: "status", base: "StatusEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "StatusEnum",
+                    name: "status", base: "StatusEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "LogContent", base: "octstr",
+                    name: "logContent", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "LogContent", base: "octstr",
+                    name: "logContent", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "UtcTimeStamp", base: "epochUs",
+                    name: "utcTimeStamp", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "UtcTimeStamp", base: "epochUs",
+                    name: "utcTimeStamp", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "TimeSinceBoot", base: "systimeUs",
+                    name: "timeSinceBoot", base: "systimeUs",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "TimeSinceBoot", base: "systimeUs",
+                    name: "timeSinceBoot", base: "systimeUs",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -101,33 +101,33 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "EndUserSupport", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "endUserSupport",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "EndUserSupport", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "endUserSupport",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkDiag", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "networkDiag",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkDiag", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "networkDiag",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "CrashLogs", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "crashLogs",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "CrashLogs", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "crashLogs",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 })
             ]
         }),
@@ -137,53 +137,53 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Success", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "success",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "Success", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "success",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "Exhausted", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "exhausted",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "Exhausted", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "exhausted",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "NoLogs", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "noLogs",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "NoLogs", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "noLogs",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "Busy", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "busy",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 }),
 
                 DatatypeElement({
-                    name: "Busy", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "busy",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 }),
 
                 DatatypeElement({
-                    name: "Denied", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "denied",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
                 }),
 
                 DatatypeElement({
-                    name: "Denied", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "denied",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
                 })
             ]
         }),
@@ -193,23 +193,23 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "ResponsePayload", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "responsePayload",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "ResponsePayload", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "responsePayload",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "Bdx", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "bdx",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "Bdx", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "bdx",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 })
             ]
         })

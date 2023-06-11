@@ -8,7 +8,7 @@ import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Constant } from "./translate-table.js";
+import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter } from "./translate-table.js";
 
 const logger = Logger.get("cluster-translate");
 
@@ -114,7 +114,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             revision = 1;
         }
     
-        children.push({ ...Globals.ClusterRevision, default: revision });
+        children.push({ ...Globals.ClusterRevision, value: revision });
     
         return revision;
     }
@@ -124,12 +124,12 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             id: Alias(Integer, "bit"),
             description: Optional(Alias(Str, "name", "summary")),
     
-            // Must define after description because name is overwritten otherwise
+            // Must define after description because name is overwritten
+            // otherwise
             name: Alias(UpperIdentifier, "code", "feature"),
     
-            default: Optional(Alias(Integer, "def")),
-
-            base: Constant("uint8")
+            // Actual type is numeric but we let Model handle that translation
+            default: Optional(Alias(NoSpace, "def"))
         });
     
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
@@ -222,21 +222,17 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             direction: Str,
             response: Optional(Identifier),
             access: Optional(Str),
-            conformance: Optional(Str),
-            base: Constant("struct")
+            conformance: Optional(Str)
         });
 
         applyAccessNotes(definition.commands, records);
     
         const commands = translateRecordsToMatter("command", records, (r) => {
-            let direction: CommandElement.Direction;
+            let direction: CommandElement.Direction | undefined;
             if (r.direction.match(/client.*server/i)) {
                 direction = CommandElement.Direction.Request;
             } else if (r.direction.match(/server.*client/i)) {
                 direction = CommandElement.Direction.Response;
-            } else {
-                logger.error(`unrecognized command direction "${r.direction}", ignoring row`);
-                return;
             }
     
             let response: string | undefined;
@@ -318,42 +314,28 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         });
     }
     
-    function translateEnum(datatype: DetailedReference, parentBase: string) {
+    function translateEnum(datatype: DetailedReference) {
         const records = translateTable("value", datatype, {
             id: Alias(Integer, "value"),
             name: Identifier,
             conformance: Optional(Str),
-            description: Optional(Str),
-            base: Constant(parentBase.replace(/^enum/, "uint"))
+            description: Optional(Str)
         });
-        const values = translateRecordsToMatter("value", records, DatatypeElement)
-        if (values) {
-            return values;
-        }
-        logger.error(`no values for enum`);
+        return translateRecordsToMatter("value", records, DatatypeElement)
     }
     
     function translateBitmap(datatype: DetailedReference) {
         const records = translateTable("bit", datatype, {
             id: Alias(Integer, "bit"),
             name: Identifier,
-            description: Optional(Alias(Str, "summary")),
-            base: Constant("uint8")
+            description: Optional(Alias(Str, "summary"))
         });
-        const bits = translateRecordsToMatter("bit", records, DatatypeElement);
-        if (bits) {
-            return bits;
-        }
-        logger.error(`no bits for bitmap`);
+        return translateRecordsToMatter("bit", records, DatatypeElement);
     }
     
     function translateStruct(datatype: DetailedReference) {
         const records = translateFields("field", datatype);
-        const fields = translateRecordsToMatter("field", records, DatatypeElement);
-        if (fields) {
-            return fields;
-        }
-        logger.error(`no fields for struct`);
+        return translateRecordsToMatter("field", records, DatatypeElement);
     }
     
     function translateDatatype(datatype: DetailedReference) {
@@ -362,7 +344,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         if (!text) {
             logger.warn(`no text to search for base type`);
         }
-        let match = text?.match(/derived from (\S+)/i);
+        let match = text?.match(/derived from ([a-z0-9\-_]+)/i);
         let base = match?.[1];
     
         let description: string | undefined;
@@ -395,13 +377,13 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         }
     
         if (!base) {
-            logger.error(`no base detected for ${name}`);
+            logger.warn(`no base detected for ${name}`);
             return;
         }
     
         if (translator) {
             if (!datatype.table) {
-                logger.error(`compound datatype has no defining table`);
+                logger.warn(`compound datatype has no defining table`);
                 return;
             }
             children = translator(datatype, base);

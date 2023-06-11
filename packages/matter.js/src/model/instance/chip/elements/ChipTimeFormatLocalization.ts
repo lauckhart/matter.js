@@ -15,17 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions may have differing preferences for how dates and times are conveyed. As such, Nodes that visually or audibly convey time information need a mechanism by which they can be configured to use a user’s preferred format.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "HourFormat", base: "HourFormatEnum",
+            id: 0x0000, name: "hourFormat", base: "HourFormatEnum",
             access: { rw: "W" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ActiveCalendarType", base: "CalendarTypeEnum",
+            id: 0x0001, name: "activeCalendarType", base: "CalendarTypeEnum",
             access: { rw: "W" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SupportedCalendarTypes", base: "list",
+            id: 0x0002, name: "supportedCalendarTypes", base: "list",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
@@ -34,23 +34,23 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "12Hr", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "12Hr",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "12Hr", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "12Hr",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "24Hr", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "24Hr",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "24Hr", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "24Hr",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 })
             ]
         }),
@@ -60,123 +60,123 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Buddhist", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "buddhist",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Buddhist", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "buddhist",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Chinese", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "chinese",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Chinese", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "chinese",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Coptic", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "coptic",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Coptic", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "coptic",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Ethiopian", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ethiopian",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Ethiopian", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ethiopian",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Gregorian", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "gregorian",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Gregorian", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "gregorian",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Hebrew", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "hebrew",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "Hebrew", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "hebrew",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "Indian", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "indian",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "Indian", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "indian",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "Islamic", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "islamic",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "Islamic", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "islamic",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "Japanese", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "japanese",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "Japanese", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "japanese",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "Korean", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "korean",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "Korean", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "korean",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "Persian", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "persian",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
                 }),
 
                 DatatypeElement({
-                    name: "Persian", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "persian",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
                 }),
 
                 DatatypeElement({
-                    name: "Taiwanese", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "taiwanese",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
                 }),
 
                 DatatypeElement({
-                    name: "Taiwanese", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "taiwanese",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
                 })
             ]
         })

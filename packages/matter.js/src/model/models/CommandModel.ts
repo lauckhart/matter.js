@@ -4,13 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommandElement, DataModel, DatatypeModel, Mei, Model } from "../index.js";
+import { CommandElement, DataModel, Datatype, DatatypeModel, Mei, Model } from "../index.js";
 
 export class CommandModel extends DataModel implements CommandElement {
     override type: CommandElement.Type = CommandElement.Type;
     override id!: Mei;
-    direction!: CommandElement.Direction;
+    direction?: CommandElement.Direction;
     response?: string
+
+    override get actualBase() {
+        return Datatype.struct;
+    }
 
     override validate() {
         this.validateStructure(CommandElement.Type, true, DatatypeModel);
@@ -20,7 +24,7 @@ export class CommandModel extends DataModel implements CommandElement {
         if (this.response) {
             const response = this.global(this.response, CommandModel);
             if (!response) {
-                this.error(`response type ${this.response} not found`);
+                this.error("RESPONSE_NOT_FOUND", `response type ${this.response} not found`);
             }
         }
 

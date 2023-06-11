@@ -15,21 +15,21 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface to a boolean state called StateValue.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "StateValue", base: "bool",
+            id: 0x0000, name: "stateValue", base: "bool",
             access: { rw: "R" }, conformance: [ "M" ], quality: { reportable: true }
         }),
 
         EventElement({
-            id: 0x0000, name: "StateChange", base: "struct",
+            id: 0x0000, name: "StateChange",
             access: { rw: "R" }, conformance: [ "M" ], priority: "info",
             children: [
                 DatatypeElement({
-                    name: "StateValue", base: "bool",
+                    name: "stateValue", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "StateValue", base: "bool",
+                    name: "stateValue", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

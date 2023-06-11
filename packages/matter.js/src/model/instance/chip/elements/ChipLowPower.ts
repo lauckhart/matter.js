@@ -15,7 +15,7 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for managing low power mode on a device.",
     children: [
         CommandElement({
-            id: 0x0000, name: "Sleep", base: "struct",
+            id: 0x0000, name: "Sleep",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request"
         })
     ]

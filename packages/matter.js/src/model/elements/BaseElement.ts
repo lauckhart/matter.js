@@ -43,7 +43,13 @@ export type BaseElement = {
     /**
      * Child elements.
      */
-    children?: BaseElement[]
+    children?: BaseElement[],
+
+    /**
+     * A list of errors to ignore.  Used when too little information is
+     * available to properly model an element.
+     */
+    accept?: string[]
 }
 
 export function BaseElement(type: BaseElement.Type, definition: BaseElement) {

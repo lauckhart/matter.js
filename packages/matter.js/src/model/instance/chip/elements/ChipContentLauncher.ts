@@ -15,108 +15,108 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for launching content on a media player device such as a TV or Speaker.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ContentLauncherAcceptHeader", base: "list",
+            id: 0x0000, name: "contentLauncherAcceptHeader", base: "list",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ContentLauncherSupportedStreamingProtocols", base: "map32",
-            access: { rw: "W" }, conformance: [ "O" ]
+            id: 0x0001, name: "contentLauncherSupportedStreamingProtocols", base: "map32",
+            access: { rw: "W" }, conformance: [ "O" ], value: "0"
         }),
 
         CommandElement({
-            id: 0x0000, name: "LaunchContent", base: "struct",
+            id: 0x0000, name: "LaunchContent",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "Search", base: "ContentSearchStruct",
+                    name: "search", base: "ContentSearchStruct",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Search", base: "ContentSearchStruct",
+                    name: "search", base: "ContentSearchStruct",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "AutoPlay", base: "bool",
+                    name: "autoPlay", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "AutoPlay", base: "bool",
+                    name: "autoPlay", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "data", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "data", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0001, name: "LaunchUrl", base: "struct",
+            id: 0x0001, name: "LaunchUrl",
             access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "ContentUrl", base: "string",
+                    name: "contentUrl", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ContentUrl", base: "string",
+                    name: "contentUrl", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DisplayString", base: "string",
+                    name: "displayString", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "DisplayString", base: "string",
+                    name: "displayString", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "BrandingInformation", base: "BrandingInformationStruct",
+                    name: "brandingInformation", base: "BrandingInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "BrandingInformation", base: "BrandingInformationStruct",
+                    name: "brandingInformation", base: "BrandingInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0002, name: "LauncherResponse", base: "struct",
+            id: 0x0002, name: "LauncherResponse",
             access: { rw: "R" }, conformance: [ "O" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "ContentLaunchStatusEnum",
+                    name: "status", base: "ContentLaunchStatusEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "ContentLaunchStatusEnum",
+                    name: "status", base: "ContentLaunchStatusEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "data", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "data", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -127,12 +127,12 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "ParameterList", base: "ParameterStruct",
+                    name: "parameterList", base: "ParameterStruct",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ParameterList", base: "ParameterStruct",
+                    name: "parameterList", base: "ParameterStruct",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -143,22 +143,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "value", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "value", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -169,23 +169,23 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Pixels", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "pixels",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Pixels", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "pixels",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Percentage", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "percentage",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Percentage", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "percentage",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 })
             ]
         }),
@@ -195,32 +195,32 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Width", base: "double",
+                    name: "width", base: "double",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Width", base: "double",
+                    name: "width", base: "double",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Height", base: "double",
+                    name: "height", base: "double",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Height", base: "double",
+                    name: "height", base: "double",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Metric", base: "MetricTypeEnum",
+                    name: "metric", base: "MetricTypeEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Metric", base: "MetricTypeEnum",
+                    name: "metric", base: "MetricTypeEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -231,32 +231,32 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "ImageUrl", base: "string",
+                    name: "imageUrl", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ImageUrl", base: "string",
+                    name: "imageUrl", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Color", base: "string",
+                    name: "color", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Color", base: "string",
+                    name: "color", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Size", base: "DimensionStruct",
+                    name: "size", base: "DimensionStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Size", base: "DimensionStruct",
+                    name: "size", base: "DimensionStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -267,62 +267,62 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "ProviderName", base: "string",
+                    name: "providerName", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ProviderName", base: "string",
+                    name: "providerName", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Background", base: "StyleInformationStruct",
+                    name: "background", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Background", base: "StyleInformationStruct",
+                    name: "background", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Logo", base: "StyleInformationStruct",
+                    name: "logo", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Logo", base: "StyleInformationStruct",
+                    name: "logo", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ProgressBar", base: "StyleInformationStruct",
+                    name: "progressBar", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ProgressBar", base: "StyleInformationStruct",
+                    name: "progressBar", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Splash", base: "StyleInformationStruct",
+                    name: "splash", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Splash", base: "StyleInformationStruct",
+                    name: "splash", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "WaterMark", base: "StyleInformationStruct",
+                    name: "waterMark", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "WaterMark", base: "StyleInformationStruct",
+                    name: "waterMark", base: "StyleInformationStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -333,143 +333,143 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Actor", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "actor",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Actor", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "actor",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Channel", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "channel",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Channel", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "channel",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Character", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "character",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Character", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "character",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Director", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "director",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Director", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "director",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Event", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "event",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Event", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "event",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Franchise", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "franchise",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "Franchise", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "franchise",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "Genre", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "genre",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "Genre", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "genre",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "League", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "league",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "League", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "league",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "Popularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "popularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "Popularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "popularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "Provider", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "provider",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "Provider", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "provider",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "Sport", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sport",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
                 }),
 
                 DatatypeElement({
-                    name: "Sport", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sport",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
                 }),
 
                 DatatypeElement({
-                    name: "SportsTeam", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sportsTeam",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00B"
                 }),
 
                 DatatypeElement({
-                    name: "SportsTeam", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sportsTeam",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00B"
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "type",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "type",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
                 }),
 
                 DatatypeElement({
-                    name: "Video", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "video",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0D"
                 }),
 
                 DatatypeElement({
-                    name: "Video", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "video",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0D"
                 })
             ]
         }),
@@ -479,33 +479,33 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Success", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "success",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Success", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "success",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "UrlNotAvailable", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "urlNotAvailable",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "UrlNotAvailable", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "urlNotAvailable",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "AuthFailed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "authFailed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "AuthFailed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "authFailed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 })
             ]
         }),
@@ -515,32 +515,32 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Type", base: "ParameterEnum",
+                    name: "type", base: "ParameterEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "ParameterEnum",
+                    name: "type", base: "ParameterEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "value", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "value", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ExternalIdList", base: "AdditionalInfoStruct",
+                    name: "externalIdList", base: "AdditionalInfoStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ExternalIdList", base: "AdditionalInfoStruct",
+                    name: "externalIdList", base: "AdditionalInfoStruct",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -548,12 +548,54 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "SupportedStreamingProtocol", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "dash",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "dash",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "hls",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                }),
+
+                DatatypeElement({
+                    name: "hls",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                })
+            ]
         }),
 
         DatatypeElement({
             name: "ContentLauncherFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "contentSearch",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "contentSearch",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "urlPlayback",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                }),
+
+                DatatypeElement({
+                    name: "urlPlayback",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                })
+            ]
         })
     ]
 }));

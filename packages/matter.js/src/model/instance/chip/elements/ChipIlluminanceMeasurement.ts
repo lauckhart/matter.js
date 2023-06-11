@@ -15,28 +15,28 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring the measurement of illuminance, and reporting illuminance measurements.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "IllumMeasuredValue", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true, reportable: true }
+            id: 0x0000, name: "illumMeasuredValue", base: "uint16",
+            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true, reportable: true }, value: "0x0000"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "IllumMinMeasuredValue", base: "uint16",
+            id: 0x0001, name: "illumMinMeasuredValue", base: "uint16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "IllumMaxMeasuredValue", base: "uint16",
+            id: 0x0002, name: "illumMaxMeasuredValue", base: "uint16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0003, name: "IllumTolerance", base: "uint16",
+            id: 0x0003, name: "illumTolerance", base: "uint16",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0004, name: "IllumLightSensorType", base: "enum8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0004, name: "illumLightSensorType", base: "enum8",
+            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }, value: "0xFF"
         }),
 
         DatatypeElement({
@@ -44,23 +44,23 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Photodiode", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "photodiode",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Photodiode", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "photodiode",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Cmos", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cmos",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Cmos", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cmos",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 })
             ]
         })

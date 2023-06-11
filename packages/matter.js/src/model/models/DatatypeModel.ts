@@ -4,11 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ByteArray } from "../../util/ByteArray.js";
-import { BaseDataElement, DatatypeElement, Mei, Model } from "../index.js";
-import { DataModel } from "./DataModel.js";
-
-const Datatype = BaseDataElement.Datatype;
+import { DatatypeElement, DataModel, Mei, Model, Datatype, Globals, Metatype, CommandElement } from "../index.js";
 
 export class DatatypeModel extends DataModel implements DatatypeElement {
     override type: DatatypeElement.Type = DatatypeElement.Type;
@@ -16,7 +12,33 @@ export class DatatypeModel extends DataModel implements DatatypeElement {
 
     override validate() {
         this.validateStructure(DatatypeElement.Type, false, DatatypeModel);
+        this.validateEntries();
         return super.validate();
+    }
+
+    override get actualBase() {
+        const base = super.actualBase;
+        if (base || !(this.parent instanceof DatatypeModel)) {
+            return base;
+        }
+
+        // If this is an untyped item parented by an enum or bitmap, infer
+        // the base type as the corresponding unsigned integer type
+        switch (this.parent.base) {
+            case Globals.enum8.name:
+            case Datatype.map8:
+                return Datatype.uint8;
+
+            case Globals.enum16.name:
+            case Datatype.map16:
+                return Datatype.uint16;
+
+            case Datatype.map32:
+                return Datatype.uint32;
+
+            case Datatype.map64:
+                return Datatype.uint64;
+        }
     }
 
     constructor(definition: DatatypeElement.Properties, parent?: Model) {
@@ -27,62 +49,37 @@ export class DatatypeModel extends DataModel implements DatatypeElement {
         Model.constructors[DatatypeElement.Type] = this;
     }
 
-    override get nativeType(): DataModel.NativeType | undefined {
-        switch (this.name) {
-            case "string":
-                if (this == this.globals.string) {
-                    return String;
+    private validateEntries() {
+        switch (Metatype.of(this.base)) {
+            case Metatype.object:
+                if (!this.children.length) {
+                    this.error("CHILDLESS_OBJECT", `struct element with no children`);
                 }
                 break;
 
-            case "date":
-                if (this == this.globals.date) {
-                    return Date;
+            case Metatype.bitmap:
+            case Metatype.enum:
+                if (!this.children.length) {
+                    if (this.parent?.type == CommandElement.Type || this.parent?.type == DatatypeElement.Type) {
+                        // The specification defines some fields as enums without specific values, so
+                        // allow this under command and datatype fields
+                        break;
+                    }
+
+                    this.error("CHILDLESS_ENUM", `${this.base} with no children`);
                 }
-        }
+                break;
 
-        if (this.base) {
-            return super.nativeType;
-        }
-
-        switch (this.name) {
-            case Datatype.bool:
-                return Boolean;
-
-            case Datatype.map8:
-            case Datatype.map16:
-            case Datatype.map32:
-            case Datatype.map64:
-            case Datatype.uint8:
-            case Datatype.uint16:
-            case Datatype.uint24:
-            case Datatype.uint32:
-            case Datatype.uint40:
-            case Datatype.uint48:
-            case Datatype.uint56:
-            case Datatype.uint64:
-            case Datatype.int8:
-            case Datatype.int16:
-            case Datatype.int24:
-            case Datatype.int32:
-            case Datatype.int40:
-            case Datatype.int48:
-            case Datatype.int56:
-            case Datatype.int64:
-                return BigInt;
-
-            case Datatype.single:
-            case Datatype.double:
-                return Number;
-
-            case Datatype.octstr:
-                return ByteArray;
-
-            case Datatype.list:
-                return Array;
-
-            case Datatype.struct:
-                return Object;
+            case Metatype.array:
+                if (!this.children.length) {
+                    this.error("UNTYPED_ARRAY", `array element with no entry type`);
+                } else if (this.children.length > 1) {
+                    this.error("OVERLY_TYPED_ARRAY", `array element with multiple entry types`);
+                }
+                break;
         }
     }
 }
+
+// This allows DataModel to access DatatypeModel without a circular dependency.
+DataModel.DatatypeModel = DatatypeModel;

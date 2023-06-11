@@ -15,63 +15,63 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides commands that facilitate user account login on a Content App or a node. For example, a Content App running on a Video Player device, which is represented as an endpoint (see [TV Architecture]), can use this cluster to help make the user account on the Content App match the user account on the Client.",
     children: [
         CommandElement({
-            id: 0x0000, name: "GetSetupPin", base: "struct",
+            id: 0x0000, name: "GetSetupPin",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "GetSetupPinResponse",
             children: [
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "string",
+                    name: "tempAccountIdentifier", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "string",
+                    name: "tempAccountIdentifier", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0002, name: "Login", base: "struct",
+            id: 0x0002, name: "Login",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "string",
+                    name: "tempAccountIdentifier", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "string",
+                    name: "tempAccountIdentifier", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SetupPin", base: "string",
+                    name: "setupPin", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SetupPin", base: "string",
+                    name: "setupPin", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0003, name: "Logout", base: "struct",
+            id: 0x0003, name: "Logout",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request"
         }),
 
         CommandElement({
-            id: 0x0001, name: "GetSetupPinResponse", base: "struct",
+            id: 0x0001, name: "GetSetupPinResponse",
             access: { rw: "R" }, conformance: [ "M" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "SetupPin", base: "string",
+                    name: "setupPin", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SetupPin", base: "string",
+                    name: "setupPin", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

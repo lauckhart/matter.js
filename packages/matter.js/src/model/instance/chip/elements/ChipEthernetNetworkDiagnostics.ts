@@ -15,52 +15,52 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "PhyRate", base: "PhyRateEnum",
+            id: 0x0000, name: "phyRate", base: "PhyRateEnum",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "FullDuplex", base: "bool",
+            id: 0x0001, name: "fullDuplex", base: "bool",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "PacketRxCount", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0002, name: "packetRxCount", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PacketTxCount", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0003, name: "packetTxCount", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "TxErrCount", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0004, name: "txErrCount", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "CollisionCount", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0005, name: "collisionCount", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "EthernetOverrunCount", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0006, name: "ethernetOverrunCount", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "CarrierDetect", base: "bool",
+            id: 0x0007, name: "carrierDetect", base: "bool",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0008, name: "TimeSinceReset", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0008, name: "timeSinceReset", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
         }),
 
         CommandElement({
-            id: 0x0000, name: "ResetCounts", base: "struct",
+            id: 0x0000, name: "ResetCounts",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request"
         }),
 
@@ -69,110 +69,131 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Rate10M", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate10M",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Rate10M", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate10M",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Rate100M", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate100M",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Rate100M", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate100M",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Rate1G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate1G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Rate1G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate1G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Rate25G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate25G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Rate25G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate25G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Rate5G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate5G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Rate5G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate5G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Rate10G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate10G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "Rate10G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate10G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "Rate40G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate40G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "Rate40G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate40G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "Rate100G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate100G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "Rate100G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate100G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "Rate200G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate200G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "Rate200G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate200G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "Rate400G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate400G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "Rate400G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "rate400G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "EthernetNetworkDiagnosticsFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "packetCounts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "packetCounts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "errorCounts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                }),
+
+                DatatypeElement({
+                    name: "errorCounts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                })
+            ]
         })
     ]
 }));

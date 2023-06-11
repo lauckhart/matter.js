@@ -11,10 +11,9 @@ import {
     DatatypeElement,
     BaseDataElement,
     AttributeElement,
-    EventElement
+    EventElement,
+    Datatype
 } from "../index.js";
-
-const Datatype = BaseDataElement.Datatype;
 
 const bool = (id: number, name: string, description: string) =>
     DatatypeElement({ id, name, description });
@@ -158,7 +157,7 @@ export const Globals = {
         constraint: { min: 1 }, quality: "F", access: "R V", conformance: "M" }),
     FeatureMap: AttributeElement({
         id: 0xfffc, name: "FeatureMap", base: "map32",
-        quality: "F", access: "R V", default: 0, conformance: "M" }),
+        quality: "F", access: "R V", value: 0, conformance: "M" }),
     AttributeList: AttributeElement({
         id: 0xfffb, name: "AttributeList", base: "list[attrib-id]",
         quality: "F", access: "R V", conformance: "M" }),

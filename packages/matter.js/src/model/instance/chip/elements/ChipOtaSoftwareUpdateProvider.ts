@@ -15,250 +15,250 @@ ChipMatter.children!.push(ClusterElement({
     details: "Provides an interface for providing OTA software updates",
     children: [
         CommandElement({
-            id: 0x0000, name: "QueryImage", base: "struct",
+            id: 0x0000, name: "QueryImage",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "QueryImageResponse",
             children: [
                 DatatypeElement({
-                    name: "VendorId", base: "vendorId",
+                    name: "vendorId", base: "vendorId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "VendorId", base: "vendorId",
+                    name: "vendorId", base: "vendorId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ProductId", base: "uint16",
+                    name: "productId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ProductId", base: "uint16",
+                    name: "productId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "softwareVersion", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "softwareVersion", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ProtocolsSupported", base: "OtaDownloadProtocol",
+                    name: "protocolsSupported", base: "OtaDownloadProtocol",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ProtocolsSupported", base: "OtaDownloadProtocol",
+                    name: "protocolsSupported", base: "OtaDownloadProtocol",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "HardwareVersion", base: "uint16",
+                    name: "hardwareVersion", base: "uint16",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "HardwareVersion", base: "uint16",
+                    name: "hardwareVersion", base: "uint16",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Location", base: "string",
+                    name: "location", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Location", base: "string",
+                    name: "location", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "RequestorCanConsent", base: "bool",
+                    name: "requestorCanConsent", base: "bool",
+                    access: { rw: "R" }, conformance: [ "O" ], value: "false"
+                }),
+
+                DatatypeElement({
+                    name: "requestorCanConsent", base: "bool",
+                    access: { rw: "R" }, conformance: [ "O" ], value: "false"
+                }),
+
+                DatatypeElement({
+                    name: "metadataForProvider", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "RequestorCanConsent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "MetadataForProvider", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "MetadataForProvider", base: "octstr",
+                    name: "metadataForProvider", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0001, name: "QueryImageResponse", base: "struct",
+            id: 0x0001, name: "QueryImageResponse",
             access: { rw: "R" }, conformance: [ "M" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "OtaQueryStatus",
+                    name: "status", base: "OtaQueryStatus",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "OtaQueryStatus",
+                    name: "status", base: "OtaQueryStatus",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DelayedActionTime", base: "uint32",
+                    name: "delayedActionTime", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "DelayedActionTime", base: "uint32",
+                    name: "delayedActionTime", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ImageUri", base: "string",
+                    name: "imageUri", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ImageUri", base: "string",
+                    name: "imageUri", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "softwareVersion", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "softwareVersion", base: "uint32",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersionString", base: "string",
+                    name: "softwareVersionString", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersionString", base: "string",
+                    name: "softwareVersionString", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "updateToken", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "updateToken", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "UserConsentNeeded", base: "bool",
+                    name: "userConsentNeeded", base: "bool",
+                    access: { rw: "R" }, conformance: [ "O" ], value: "false"
+                }),
+
+                DatatypeElement({
+                    name: "userConsentNeeded", base: "bool",
+                    access: { rw: "R" }, conformance: [ "O" ], value: "false"
+                }),
+
+                DatatypeElement({
+                    name: "metadataForRequestor", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "UserConsentNeeded", base: "bool",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "MetadataForRequestor", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "MetadataForRequestor", base: "octstr",
+                    name: "metadataForRequestor", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0002, name: "ApplyUpdateRequest", base: "struct",
+            id: 0x0002, name: "ApplyUpdateRequest",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "ApplyUpdateResponse",
             children: [
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "updateToken", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "updateToken", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewVersion", base: "uint32",
+                    name: "newVersion", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewVersion", base: "uint32",
+                    name: "newVersion", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0003, name: "ApplyUpdateResponse", base: "struct",
+            id: 0x0003, name: "ApplyUpdateResponse",
             access: { rw: "R" }, conformance: [ "M" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Action", base: "OtaApplyUpdateAction",
+                    name: "action", base: "OtaApplyUpdateAction",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Action", base: "OtaApplyUpdateAction",
+                    name: "action", base: "OtaApplyUpdateAction",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DelayedActionTime", base: "uint32",
+                    name: "delayedActionTime", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DelayedActionTime", base: "uint32",
+                    name: "delayedActionTime", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0004, name: "NotifyUpdateApplied", base: "struct",
+            id: 0x0004, name: "NotifyUpdateApplied",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "updateToken", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "updateToken", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "softwareVersion", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "softwareVersion", base: "uint32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -269,43 +269,43 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "UpdateAvailable", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "updateAvailable",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "UpdateAvailable", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "updateAvailable",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "Busy", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "busy",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "Busy", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "busy",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "NotAvailable", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "notAvailable",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "NotAvailable", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "notAvailable",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "DownloadProtocolNotSupported", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "downloadProtocolNotSupported",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 }),
 
                 DatatypeElement({
-                    name: "DownloadProtocolNotSupported", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "downloadProtocolNotSupported",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 })
             ]
         }),
@@ -315,33 +315,33 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Proceed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "proceed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "Proceed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "proceed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "AwaitNextAction", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "awaitNextAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "AwaitNextAction", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "awaitNextAction",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "Discontinue", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "discontinue",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "Discontinue", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "discontinue",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 })
             ]
         }),
@@ -351,43 +351,43 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "BdxSynchronous", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "bdxSynchronous",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "BdxSynchronous", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "bdxSynchronous",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "BdxAsynchronous", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "bdxAsynchronous",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "BdxAsynchronous", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "bdxAsynchronous",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "Https", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "https",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "Https", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "https",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "VendorSpecific", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "vendorSpecific",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 }),
 
                 DatatypeElement({
-                    name: "VendorSpecific", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "vendorSpecific",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 })
             ]
         })

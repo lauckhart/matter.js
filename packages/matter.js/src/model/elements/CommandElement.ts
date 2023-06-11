@@ -13,7 +13,9 @@ export type CommandElement = BaseDataElement & {
     id: Mei,
     type: `${CommandElement.Type}`,
 
-    direction: `${CommandElement.Direction}`,
+    // Direction is required but we handling missing direction in validation
+    direction?: `${CommandElement.Direction}`,
+
     response?: string
 }
 

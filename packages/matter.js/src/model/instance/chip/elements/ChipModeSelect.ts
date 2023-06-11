@@ -15,46 +15,46 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for selecting a mode from a list of supported options.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ModeDescription", base: "string",
+            id: 0x0000, name: "modeDescription", base: "string",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "StandardNamespace", base: "enum16",
+            id: 0x0001, name: "standardNamespace", base: "enum16",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SupportedModes", base: "list",
+            id: 0x0002, name: "supportedModes", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CurrentMode", base: "uint8",
+            id: 0x0003, name: "currentMode", base: "uint8",
             access: { rw: "R" }, conformance: [ "M" ], quality: { reportable: true }
         }),
 
         AttributeElement({
-            id: 0x0004, name: "StartUpMode", base: "uint8",
+            id: 0x0004, name: "startUpMode", base: "uint8",
             access: { rw: "W" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0005, name: "OnMode", base: "uint8",
+            id: 0x0005, name: "onMode", base: "uint8",
             access: { rw: "W" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         CommandElement({
-            id: 0x0000, name: "ChangeToMode", base: "struct",
+            id: 0x0000, name: "ChangeToMode",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "NewMode", base: "uint8",
+                    name: "newMode", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NewMode", base: "uint8",
+                    name: "newMode", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -65,22 +65,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "MfgCode", base: "vendorId",
+                    name: "mfgCode", base: "vendorId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "MfgCode", base: "vendorId",
+                    name: "mfgCode", base: "vendorId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "enum16",
+                    name: "value", base: "enum16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "enum16",
+                    name: "value", base: "enum16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -91,32 +91,32 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Label", base: "string",
+                    name: "label", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Label", base: "string",
+                    name: "label", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Mode", base: "uint8",
+                    name: "mode", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Mode", base: "uint8",
+                    name: "mode", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SemanticTags", base: "SemanticTagStruct",
+                    name: "semanticTags", base: "SemanticTagStruct",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "SemanticTags", base: "SemanticTagStruct",
+                    name: "semanticTags", base: "SemanticTagStruct",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -124,7 +124,18 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "ModeSelectFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "deponoff",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "deponoff",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                })
+            ]
         })
     ]
 }));
