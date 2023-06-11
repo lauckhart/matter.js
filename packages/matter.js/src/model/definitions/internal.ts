@@ -6,3 +6,5 @@
 
 export * from "./identifiers.js";
 export * from "./StatusCode.js";
+export * from "./Datatype.js";
+export * from "./Metatype.js";

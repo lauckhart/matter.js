@@ -15,42 +15,42 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides information about an application running on a TV or media player device which is represented as an endpoint.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ApplicationVendorName", base: "string",
+            id: 0x0000, name: "applicationVendorName", base: "string",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ApplicationVendorId", base: "vendorId",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0001, name: "applicationVendorId", base: "vendorId",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ApplicationName", base: "string",
+            id: 0x0002, name: "applicationName", base: "string",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ApplicationProductId", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0003, name: "applicationProductId", base: "uint16",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "ApplicationApp", base: "ApplicationStruct",
+            id: 0x0004, name: "applicationApp", base: "ApplicationStruct",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0005, name: "ApplicationStatus", base: "ApplicationStatusEnum",
+            id: 0x0005, name: "applicationStatus", base: "ApplicationStatusEnum",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+        }),
+
+        AttributeElement({
+            id: 0x0006, name: "applicationVersion", base: "string",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0006, name: "ApplicationVersion", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ]
-        }),
-
-        AttributeElement({
-            id: 0x0007, name: "ApplicationAllowedVendorList", base: "list",
+            id: 0x0007, name: "applicationAllowedVendorList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
@@ -59,43 +59,43 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Stopped", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "stopped",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Stopped", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "stopped",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "ActiveVisibleFocus", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "activeVisibleFocus",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "ActiveVisibleFocus", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "activeVisibleFocus",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "ActiveHidden", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "activeHidden",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "ActiveHidden", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "activeHidden",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "ActiveVisibleNotFocus", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "activeVisibleNotFocus",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "ActiveVisibleNotFocus", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "activeVisibleNotFocus",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 })
             ]
         }),
@@ -105,22 +105,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "CatalogVendorId", base: "uint16",
+                    name: "catalogVendorId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "CatalogVendorId", base: "uint16",
+                    name: "catalogVendorId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ApplicationId", base: "string",
+                    name: "applicationId", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ApplicationId", base: "string",
+                    name: "applicationId", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

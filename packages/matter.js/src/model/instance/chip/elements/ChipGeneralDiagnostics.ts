@@ -15,165 +15,165 @@ ChipMatter.children!.push(ClusterElement({
     details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "NetworkInterfaces", base: "list",
+            id: 0x0000, name: "networkInterfaces", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "RebootCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "rebootCount", base: "uint16",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x0000"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "UpTime", base: "uint64",
+            id: 0x0002, name: "upTime", base: "uint64",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
+        }),
+
+        AttributeElement({
+            id: 0x0003, name: "totalOperationalHours", base: "uint32",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x00000000"
+        }),
+
+        AttributeElement({
+            id: 0x0004, name: "bootReasons", base: "BootReasonEnum",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "TotalOperationalHours", base: "uint32",
+            id: 0x0005, name: "activeHardwareFaults", base: "list",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0004, name: "BootReasons", base: "BootReasonEnum",
+            id: 0x0006, name: "activeRadioFaults", base: "list",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0005, name: "ActiveHardwareFaults", base: "list",
+            id: 0x0007, name: "activeNetworkFaults", base: "list",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0006, name: "ActiveRadioFaults", base: "list",
-            access: { rw: "R" }, conformance: [ "O" ]
-        }),
-
-        AttributeElement({
-            id: 0x0007, name: "ActiveNetworkFaults", base: "list",
-            access: { rw: "R" }, conformance: [ "O" ]
-        }),
-
-        AttributeElement({
-            id: 0x0008, name: "TestEventTriggersEnabled", base: "bool",
+            id: 0x0008, name: "testEventTriggersEnabled", base: "bool",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         CommandElement({
-            id: 0x0000, name: "TestEventTrigger", base: "struct",
-            access: { rw: "R", writePrivilege: "M" }, conformance: [ "M" ], direction: "request",
+            id: 0x0000, name: "TestEventTrigger",
+            access: { rw: "R", writePriv: "M" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "EnableKey", base: "octstr",
+                    name: "enableKey", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EnableKey", base: "octstr",
+                    name: "enableKey", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EventTrigger", base: "uint64",
+                    name: "eventTrigger", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EventTrigger", base: "uint64",
+                    name: "eventTrigger", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         EventElement({
-            id: 0x0000, name: "HardwareFaultChange", base: "struct",
+            id: 0x0000, name: "HardwareFaultChange",
             access: { rw: "R" }, conformance: [ "O" ], priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "HardwareFaultEnum",
+                    name: "current", base: "HardwareFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Current", base: "HardwareFaultEnum",
+                    name: "current", base: "HardwareFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "HardwareFaultEnum",
+                    name: "previous", base: "HardwareFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "HardwareFaultEnum",
+                    name: "previous", base: "HardwareFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         EventElement({
-            id: 0x0001, name: "RadioFaultChange", base: "struct",
+            id: 0x0001, name: "RadioFaultChange",
             access: { rw: "R" }, conformance: [ "O" ], priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "RadioFaultEnum",
+                    name: "current", base: "RadioFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Current", base: "RadioFaultEnum",
+                    name: "current", base: "RadioFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "RadioFaultEnum",
+                    name: "previous", base: "RadioFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "RadioFaultEnum",
+                    name: "previous", base: "RadioFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         EventElement({
-            id: 0x0002, name: "NetworkFaultChange", base: "struct",
+            id: 0x0002, name: "NetworkFaultChange",
             access: { rw: "R" }, conformance: [ "O" ], priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "NetworkFaultEnum",
+                    name: "current", base: "NetworkFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Current", base: "NetworkFaultEnum",
+                    name: "current", base: "NetworkFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "NetworkFaultEnum",
+                    name: "previous", base: "NetworkFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "NetworkFaultEnum",
+                    name: "previous", base: "NetworkFaultEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         EventElement({
-            id: 0x0003, name: "BootReason", base: "struct",
+            id: 0x0003, name: "BootReason",
             access: { rw: "R" }, conformance: [ "M" ], priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "BootReason", base: "BootReasonEnum",
+                    name: "bootReason", base: "BootReasonEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "BootReason", base: "BootReasonEnum",
+                    name: "bootReason", base: "BootReasonEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -184,113 +184,113 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Radio", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "radio",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Radio", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "radio",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Sensor", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sensor",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Sensor", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "sensor",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "ResettableOverTemp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "resettableOverTemp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "ResettableOverTemp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "resettableOverTemp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "NonResettableOverTemp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonResettableOverTemp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "NonResettableOverTemp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonResettableOverTemp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "PowerSource", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "powerSource",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "PowerSource", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "powerSource",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "VisualDisplayFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "visualDisplayFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "VisualDisplayFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "visualDisplayFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "AudioOutputFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "audioOutputFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "AudioOutputFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "audioOutputFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "UserInterfaceFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "userInterfaceFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "UserInterfaceFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "userInterfaceFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "NonVolatileMemoryError", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonVolatileMemoryError",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "NonVolatileMemoryError", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonVolatileMemoryError",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "TamperDetected", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tamperDetected",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
                 }),
 
                 DatatypeElement({
-                    name: "TamperDetected", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "tamperDetected",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
                 })
             ]
         }),
@@ -300,73 +300,73 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "WiFiFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "wiFiFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "WiFiFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "wiFiFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "CellularFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cellularFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "CellularFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cellularFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "ThreadFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "threadFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "ThreadFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "threadFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "NfcFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nfcFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "NfcFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nfcFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "BleFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "bleFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "BleFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "bleFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "EthernetFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ethernetFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "EthernetFault", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ethernetFault",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 })
             ]
         }),
@@ -376,43 +376,43 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "HardwareFailure", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "hardwareFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "HardwareFailure", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "hardwareFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkJammed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "networkJammed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkJammed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "networkJammed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "ConnectionFailed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "connectionFailed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "ConnectionFailed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "connectionFailed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 })
             ]
         }),
@@ -422,73 +422,73 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "PowerOnReboot", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "powerOnReboot",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "PowerOnReboot", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "powerOnReboot",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "BrownOutReset", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "brownOutReset",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "BrownOutReset", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "brownOutReset",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareWatchdogReset", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "softwareWatchdogReset",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareWatchdogReset", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "softwareWatchdogReset",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "HardwareWatchdogReset", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "hardwareWatchdogReset",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "HardwareWatchdogReset", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "hardwareWatchdogReset",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareUpdateCompleted", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "softwareUpdateCompleted",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareUpdateCompleted", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "softwareUpdateCompleted",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareReset", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "softwareReset",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareReset", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "softwareReset",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 })
             ]
         }),
@@ -498,53 +498,53 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Unspecified", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unspecified",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "WiFi", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "wiFi",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "WiFi", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "wiFi",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Ethernet", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ethernet",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Ethernet", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ethernet",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Cellular", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cellular",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Cellular", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cellular",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Thread", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "thread",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Thread", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "thread",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 })
             ]
         }),
@@ -554,82 +554,82 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "IsOperational", base: "bool",
+                    name: "isOperational", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "IsOperational", base: "bool",
+                    name: "isOperational", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "OffPremiseServicesReachableIPv4", base: "bool",
+                    name: "offPremiseServicesReachableIPv4", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
                 }),
 
                 DatatypeElement({
-                    name: "OffPremiseServicesReachableIPv4", base: "bool",
+                    name: "offPremiseServicesReachableIPv4", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
                 }),
 
                 DatatypeElement({
-                    name: "OffPremiseServicesReachableIPv6", base: "bool",
+                    name: "offPremiseServicesReachableIPv6", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
                 }),
 
                 DatatypeElement({
-                    name: "OffPremiseServicesReachableIPv6", base: "bool",
+                    name: "offPremiseServicesReachableIPv6", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
                 }),
 
                 DatatypeElement({
-                    name: "HardwareAddress", base: "octstr",
+                    name: "hardwareAddress", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "HardwareAddress", base: "octstr",
+                    name: "hardwareAddress", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "IPv4Addresses", base: "octstr",
+                    name: "iPv4Addresses", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "IPv4Addresses", base: "octstr",
+                    name: "iPv4Addresses", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "IPv6Addresses", base: "octstr",
+                    name: "iPv6Addresses", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "IPv6Addresses", base: "octstr",
+                    name: "iPv6Addresses", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "InterfaceTypeEnum",
+                    name: "type", base: "InterfaceTypeEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "InterfaceTypeEnum",
+                    name: "type", base: "InterfaceTypeEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

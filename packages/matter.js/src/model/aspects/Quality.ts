@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/index.js";
 import { Aspect } from "./Aspect.js";
-
-export class IllegalQualityError extends MatterError {}
 
 /**
  * An operational representation of "other quality" as defined by the Matter
@@ -70,7 +67,7 @@ export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
                     this[field] = true;
                 }
             } else {
-                quality.error(`Unknown flag "${char}"`);
+                quality.error("UNKNOWN_QUALITY_FLAG", `Unknown flag "${char}"`);
             }
         }
     }

@@ -66,5 +66,4 @@ export namespace DatatypeElement {
      * generating the Matter enum we ignore the string keys.
      */
     export type ValueMap = { [name: string]: number | string };
-
 }

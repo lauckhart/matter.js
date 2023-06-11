@@ -82,7 +82,9 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                     break;
 
                 default:
-                    access.error(`Unknown flag "${definition[i]}"`);
+                    access.error("UNKOWN_ACCESS_FLAG", `Unknown flag "${definition[i]}"`);
+                    i++;
+                    break;
             }
         }
         return flags;
@@ -170,7 +172,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                     if (!this.readPriv || (Access.PrivilegePriority[f] < Access.PrivilegePriority[this.readPriv])) {
                         this.readPriv = f;
                     }
-                    if (!this.writePriv || (Access.PrivilegePriority[f] < Access.PrivilegePriority[this.writePriv])) {
+                    if (!this.writePriv || (Access.PrivilegePriority[f] > Access.PrivilegePriority[this.writePriv])) {
                         this.writePriv = f;
                     }
                     break;
@@ -187,8 +189,8 @@ export namespace Access {
     export type Ast = {
         rw?: `${Rw}`;
         fabric?: `${Fabric}`;
-        readPrivilege?: `${Privilege}`;
-        writePrivilege?: `${Privilege}`;
+        readPriv?: `${Privilege}`;
+        writePriv?: `${Privilege}`;
         timed?: boolean;
     }
 
@@ -214,7 +216,7 @@ export namespace Access {
         /**
          * Read and optional write access.
          */
-        ReadWriteOption = "[W]",
+        ReadWriteOption = "R[W]",
     }
 
     /**

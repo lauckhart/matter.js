@@ -53,11 +53,11 @@ export function generateIndex(source: string, elements: AnyElement[]) {
 export function generateModel(source: string, elements: MatterElement.Child[]) {
     let errors = 0;
     logger.info(`validate ${source}`);
+    const mom = new MatterModel({
+        name: camelize(`validate ${source}`),
+        children: elements
+    });
     Logger.nest(() => {
-        const mom = new MatterModel({
-            name: camelize(`validate ${source}`),
-            children: elements
-        });
         errors = mom.validate();
     });
 
@@ -75,6 +75,14 @@ export function generateModel(source: string, elements: MatterElement.Child[]) {
     });
 
     if (errors) {
+        logger.error("*** Validation error summary ***");
+        mom.visit((model) => {
+            if (!model.valid) {
+                for (const error of model.errors!) {
+                    logger.error(error.message, Logger.dict({ code: error.code, xref: model.xref, src: error.source }));
+                }
+            }
+        })
         logger.error(`*** Total ${errors} validation error${errors != 1 ? "s" : ""} ***`);
     } else {
         logger.info(`*** Validation successful, generation complete ***`)

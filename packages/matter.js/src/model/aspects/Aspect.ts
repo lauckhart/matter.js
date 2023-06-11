@@ -5,6 +5,7 @@
  */
 
 import { serialize } from "../../util/index.js";
+import { DefinitionError } from "../definitions/DefinitionError.js";
 
 /**
  * An "aspect" is metadata about a Matter element that affects implementation
@@ -13,7 +14,7 @@ import { serialize } from "../../util/index.js";
  */
 export class Aspect<D> {
     definition: D;
-    errors?: string[];
+    errors?: DefinitionError[];
 
     get valid() {
         return !this.errors;
@@ -23,10 +24,14 @@ export class Aspect<D> {
         this.definition = definition;
     }
 
-    error(error: string) {
+    error(code: string, message: string) {
         if (!this.errors) {
             this.errors = [];
         }
-        this.errors.push(`${this.constructor.name} ${serialize(this.definition)}: ${error}`);
+        this.errors.push({
+            code,
+            source: `${this.constructor.name} ${serialize(this.definition)}`,
+            message
+        });
     }
 }

@@ -15,22 +15,22 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Descriptor Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for describing a node, its endpoints and clusters.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "DeviceList", base: "list",
+            id: 0x0000, name: "deviceList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ServerList", base: "list",
+            id: 0x0001, name: "serverList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ClientList", base: "list",
+            id: 0x0002, name: "clientList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PartsList", base: "list",
+            id: 0x0003, name: "partsList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
@@ -39,22 +39,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "DeviceType", base: "deviceTypeId",
+                    name: "deviceType", base: "deviceTypeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DeviceType", base: "deviceTypeId",
+                    name: "deviceType", base: "deviceTypeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Revision", base: "uint16",
+                    name: "revision", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Revision", base: "uint16",
+                    name: "revision", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

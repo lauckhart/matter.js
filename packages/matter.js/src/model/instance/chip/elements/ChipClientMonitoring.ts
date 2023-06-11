@@ -15,80 +15,80 @@ ChipMatter.children!.push(ClusterElement({
     details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on the server.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "IdleModeInterval", base: "uint32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0000, name: "idleModeInterval", base: "uint32",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x12C"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ActiveModeInterval", base: "uint32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "activeModeInterval", base: "uint32",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x12C"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ActiveModeThreshold", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0002, name: "activeModeThreshold", base: "uint16",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0xFA0"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ExpectedClients", base: "list",
+            id: 0x0003, name: "expectedClients", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
         CommandElement({
-            id: 0x0000, name: "RegisterClientMonitoring", base: "struct",
-            access: { rw: "R", writePrivilege: "M" }, conformance: [ "M" ], direction: "request",
+            id: 0x0000, name: "RegisterClientMonitoring",
+            access: { rw: "R", writePriv: "M" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ClientNodeId", base: "nodeId",
+                    name: "clientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ClientNodeId", base: "nodeId",
+                    name: "clientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "iCid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "iCid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0001, name: "UnregisterClientMonitoring", base: "struct",
-            access: { rw: "R", writePrivilege: "M" }, conformance: [ "M" ], direction: "request",
+            id: 0x0001, name: "UnregisterClientMonitoring",
+            access: { rw: "R", writePriv: "M" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ClientNodeId", base: "nodeId",
+                    name: "clientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ClientNodeId", base: "nodeId",
+                    name: "clientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "iCid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "iCid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0002, name: "StayAwakeRequest", base: "struct",
-            access: { rw: "R", writePrivilege: "M" }, conformance: [ "O" ], direction: "request"
+            id: 0x0002, name: "StayAwakeRequest",
+            access: { rw: "R", writePriv: "M" }, conformance: [ "O" ], direction: "request"
         }),
 
         DatatypeElement({
@@ -96,22 +96,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R", fabric: "F" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "ClientNodeId", base: "nodeId",
+                    name: "clientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ClientNodeId", base: "nodeId",
+                    name: "clientNodeId", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "iCid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "iCid", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

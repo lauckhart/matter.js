@@ -15,334 +15,334 @@ ChipMatter.children!.push(ClusterElement({
     details: "Functionality to configure, enable, disable network credentials and access on a Matter device.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "MaxNetworks", base: "uint8",
-            access: { rw: "R", readPrivilege: "A" }, conformance: [ "M" ]
+            id: 0x0000, name: "maxNetworks", base: "uint8",
+            access: { rw: "R", readPriv: "A" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "Networks", base: "list",
-            access: { rw: "R", readPrivilege: "A" }, conformance: [ "M" ]
+            id: 0x0001, name: "networks", base: "list",
+            access: { rw: "R", readPriv: "A" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ScanMaxTimeSeconds", base: "uint8",
+            id: 0x0002, name: "scanMaxTimeSeconds", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ConnectMaxTimeSeconds", base: "uint8",
+            id: 0x0003, name: "connectMaxTimeSeconds", base: "uint8",
             access: { rw: "R" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0004, name: "InterfaceEnabled", base: "bool",
-            access: { rw: "W", readPrivilege: "V", writePrivilege: "A" }, conformance: [ "M" ]
+            id: 0x0004, name: "interfaceEnabled", base: "bool",
+            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "M" ]
         }),
 
         AttributeElement({
-            id: 0x0005, name: "LastNetworkingStatus", base: "NetworkCommissioningStatus",
-            access: { rw: "R", readPrivilege: "A" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0005, name: "lastNetworkingStatus", base: "NetworkCommissioningStatus",
+            access: { rw: "R", readPriv: "A" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0006, name: "LastNetworkId", base: "octstr",
-            access: { rw: "R", readPrivilege: "A" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0006, name: "lastNetworkId", base: "octstr",
+            access: { rw: "R", readPriv: "A" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0007, name: "LastConnectErrorValue", base: "int32",
-            access: { rw: "R", readPrivilege: "A" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0007, name: "lastConnectErrorValue", base: "int32",
+            access: { rw: "R", readPriv: "A" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         CommandElement({
-            id: 0x0000, name: "ScanNetworks", base: "struct",
-            access: { rw: "R", writePrivilege: "A" }, conformance: [ "M" ], direction: "request", response: "ScanNetworksResponse",
+            id: 0x0000, name: "ScanNetworks",
+            access: { rw: "R", writePriv: "A" }, conformance: [ "M" ], direction: "request", response: "ScanNetworksResponse",
             children: [
                 DatatypeElement({
-                    name: "Ssid", base: "octstr",
+                    name: "ssid", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
                 }),
 
                 DatatypeElement({
-                    name: "Ssid", base: "octstr",
+                    name: "ssid", base: "octstr",
                     access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0001, name: "ScanNetworksResponse", base: "struct",
+            id: 0x0001, name: "ScanNetworksResponse",
             access: { rw: "R" }, conformance: [ "M" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "NetworkingStatus", base: "NetworkCommissioningStatus",
+                    name: "networkingStatus", base: "NetworkCommissioningStatus",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkingStatus", base: "NetworkCommissioningStatus",
+                    name: "networkingStatus", base: "NetworkCommissioningStatus",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
+                    name: "debugText", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
+                    name: "debugText", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "WiFiScanResults", base: "WiFiInterfaceScanResult",
+                    name: "wiFiScanResults", base: "WiFiInterfaceScanResult",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "WiFiScanResults", base: "WiFiInterfaceScanResult",
+                    name: "wiFiScanResults", base: "WiFiInterfaceScanResult",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ThreadScanResults", base: "ThreadInterfaceScanResult",
+                    name: "threadScanResults", base: "ThreadInterfaceScanResult",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ThreadScanResults", base: "ThreadInterfaceScanResult",
+                    name: "threadScanResults", base: "ThreadInterfaceScanResult",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0002, name: "AddOrUpdateWiFiNetwork", base: "struct",
-            access: { rw: "R", writePrivilege: "A" }, conformance: [ "O" ], direction: "request", response: "NetworkConfigResponse",
+            id: 0x0002, name: "AddOrUpdateWiFiNetwork",
+            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request", response: "NetworkConfigResponse",
             children: [
                 DatatypeElement({
-                    name: "Ssid", base: "octstr",
+                    name: "ssid", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Ssid", base: "octstr",
+                    name: "ssid", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Credentials", base: "octstr",
+                    name: "credentials", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Credentials", base: "octstr",
+                    name: "credentials", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0003, name: "AddOrUpdateThreadNetwork", base: "struct",
-            access: { rw: "R", writePrivilege: "A" }, conformance: [ "O" ], direction: "request", response: "NetworkConfigResponse",
+            id: 0x0003, name: "AddOrUpdateThreadNetwork",
+            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request", response: "NetworkConfigResponse",
             children: [
                 DatatypeElement({
-                    name: "OperationalDataset", base: "octstr",
+                    name: "operationalDataset", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "OperationalDataset", base: "octstr",
+                    name: "operationalDataset", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0004, name: "RemoveNetwork", base: "struct",
-            access: { rw: "R", writePrivilege: "A" }, conformance: [ "M" ], direction: "request", response: "NetworkConfigResponse",
+            id: 0x0004, name: "RemoveNetwork",
+            access: { rw: "R", writePriv: "A" }, conformance: [ "M" ], direction: "request", response: "NetworkConfigResponse",
             children: [
                 DatatypeElement({
-                    name: "NetworkId", base: "octstr",
+                    name: "networkId", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkId", base: "octstr",
+                    name: "networkId", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0005, name: "NetworkConfigResponse", base: "struct",
+            id: 0x0005, name: "NetworkConfigResponse",
             access: { rw: "R" }, conformance: [ "O" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "NetworkingStatus", base: "NetworkCommissioningStatus",
+                    name: "networkingStatus", base: "NetworkCommissioningStatus",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkingStatus", base: "NetworkCommissioningStatus",
+                    name: "networkingStatus", base: "NetworkCommissioningStatus",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
+                    name: "debugText", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
+                    name: "debugText", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkIndex", base: "uint8",
+                    name: "networkIndex", base: "uint8",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkIndex", base: "uint8",
+                    name: "networkIndex", base: "uint8",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0006, name: "ConnectNetwork", base: "struct",
-            access: { rw: "R", writePrivilege: "A" }, conformance: [ "M" ], direction: "request", response: "ConnectNetworkResponse",
+            id: 0x0006, name: "ConnectNetwork",
+            access: { rw: "R", writePriv: "A" }, conformance: [ "M" ], direction: "request", response: "ConnectNetworkResponse",
             children: [
                 DatatypeElement({
-                    name: "NetworkId", base: "octstr",
+                    name: "networkId", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkId", base: "octstr",
+                    name: "networkId", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0007, name: "ConnectNetworkResponse", base: "struct",
+            id: 0x0007, name: "ConnectNetworkResponse",
             access: { rw: "R" }, conformance: [ "M" ], direction: "response",
             children: [
                 DatatypeElement({
-                    name: "NetworkingStatus", base: "NetworkCommissioningStatus",
+                    name: "networkingStatus", base: "NetworkCommissioningStatus",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkingStatus", base: "NetworkCommissioningStatus",
+                    name: "networkingStatus", base: "NetworkCommissioningStatus",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
+                    name: "debugText", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
+                    name: "debugText", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "ErrorValue", base: "int32",
+                    name: "errorValue", base: "int32",
                     access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
                 }),
 
                 DatatypeElement({
-                    name: "ErrorValue", base: "int32",
+                    name: "errorValue", base: "int32",
                     access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0008, name: "ReorderNetwork", base: "struct",
-            access: { rw: "R", writePrivilege: "A" }, conformance: [ "M" ], direction: "request", response: "NetworkConfigResponse",
+            id: 0x0008, name: "ReorderNetwork",
+            access: { rw: "R", writePriv: "A" }, conformance: [ "M" ], direction: "request", response: "NetworkConfigResponse",
             children: [
                 DatatypeElement({
-                    name: "NetworkId", base: "octstr",
+                    name: "networkId", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkId", base: "octstr",
+                    name: "networkId", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkIndex", base: "uint8",
+                    name: "networkIndex", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkIndex", base: "uint8",
+                    name: "networkIndex", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
+                    name: "breadcrumb", base: "uint64",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -353,133 +353,133 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Success", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "success",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "Success", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "success",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "OutOfRange", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "outOfRange",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "OutOfRange", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "outOfRange",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "BoundsExceeded", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "boundsExceeded",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "BoundsExceeded", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "boundsExceeded",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkIdNotFound", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "networkIdNotFound",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkIdNotFound", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "networkIdNotFound",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 }),
 
                 DatatypeElement({
-                    name: "DuplicateNetworkId", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "duplicateNetworkId",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
                 }),
 
                 DatatypeElement({
-                    name: "DuplicateNetworkId", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "duplicateNetworkId",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkNotFound", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "networkNotFound",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x5"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkNotFound", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "networkNotFound",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x5"
                 }),
 
                 DatatypeElement({
-                    name: "RegulatoryError", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "regulatoryError",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6"
                 }),
 
                 DatatypeElement({
-                    name: "RegulatoryError", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "regulatoryError",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6"
                 }),
 
                 DatatypeElement({
-                    name: "AuthFailure", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "authFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x7"
                 }),
 
                 DatatypeElement({
-                    name: "AuthFailure", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "authFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x7"
                 }),
 
                 DatatypeElement({
-                    name: "UnsupportedSecurity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unsupportedSecurity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8"
                 }),
 
                 DatatypeElement({
-                    name: "UnsupportedSecurity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unsupportedSecurity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8"
                 }),
 
                 DatatypeElement({
-                    name: "OtherConnectionFailure", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "otherConnectionFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x9"
                 }),
 
                 DatatypeElement({
-                    name: "OtherConnectionFailure", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "otherConnectionFailure",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x9"
                 }),
 
                 DatatypeElement({
-                    name: "Ipv6Failed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ipv6Failed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xa"
                 }),
 
                 DatatypeElement({
-                    name: "Ipv6Failed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ipv6Failed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xa"
                 }),
 
                 DatatypeElement({
-                    name: "IpBindFailed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ipBindFailed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xb"
                 }),
 
                 DatatypeElement({
-                    name: "IpBindFailed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ipBindFailed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xb"
                 }),
 
                 DatatypeElement({
-                    name: "UnknownError", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknownError",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xc"
                 }),
 
                 DatatypeElement({
-                    name: "UnknownError", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknownError",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xc"
                 })
             ]
         }),
@@ -489,60 +489,111 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "2G4", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "2G4",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "2G4", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "2G4",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
                 }),
 
                 DatatypeElement({
-                    name: "3G65", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "3G65",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "3G65", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "3G65",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
                 }),
 
                 DatatypeElement({
-                    name: "5G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "5G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "5G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "5G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
                 }),
 
                 DatatypeElement({
-                    name: "6G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "6G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 }),
 
                 DatatypeElement({
-                    name: "6G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "6G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
                 }),
 
                 DatatypeElement({
-                    name: "60G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "60G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
                 }),
 
                 DatatypeElement({
-                    name: "60G", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "60G",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiFiSecurity", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "unencrypted",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "unencrypted",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "wep",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                }),
+
+                DatatypeElement({
+                    name: "wep",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                }),
+
+                DatatypeElement({
+                    name: "wpaPersonal",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
+                }),
+
+                DatatypeElement({
+                    name: "wpaPersonal",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
+                }),
+
+                DatatypeElement({
+                    name: "wpa2Personal",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8"
+                }),
+
+                DatatypeElement({
+                    name: "wpa2Personal",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8"
+                }),
+
+                DatatypeElement({
+                    name: "wpa3Personal",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                }),
+
+                DatatypeElement({
+                    name: "wpa3Personal",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                })
+            ]
         }),
 
         DatatypeElement({
@@ -550,62 +601,62 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Security", base: "WiFiSecurity",
+                    name: "security", base: "WiFiSecurity",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Security", base: "WiFiSecurity",
+                    name: "security", base: "WiFiSecurity",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Ssid", base: "octstr",
+                    name: "ssid", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Ssid", base: "octstr",
+                    name: "ssid", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Bssid", base: "octstr",
+                    name: "bssid", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Bssid", base: "octstr",
+                    name: "bssid", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Channel", base: "uint16",
+                    name: "channel", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Channel", base: "uint16",
+                    name: "channel", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "WiFiBand", base: "WiFiBand",
+                    name: "wiFiBand", base: "WiFiBand",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "WiFiBand", base: "WiFiBand",
+                    name: "wiFiBand", base: "WiFiBand",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Rssi", base: "int8",
+                    name: "rssi", base: "int8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Rssi", base: "int8",
+                    name: "rssi", base: "int8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -616,82 +667,82 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "PanId", base: "uint16",
+                    name: "panId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "PanId", base: "uint16",
+                    name: "panId", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ExtendedPanId", base: "uint64",
+                    name: "extendedPanId", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ExtendedPanId", base: "uint64",
+                    name: "extendedPanId", base: "uint64",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkName", base: "string",
+                    name: "networkName", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkName", base: "string",
+                    name: "networkName", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Channel", base: "uint16",
+                    name: "channel", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Channel", base: "uint16",
+                    name: "channel", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Version", base: "uint8",
+                    name: "version", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Version", base: "uint8",
+                    name: "version", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ExtendedAddress", base: "octstr",
+                    name: "extendedAddress", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ExtendedAddress", base: "octstr",
+                    name: "extendedAddress", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Rssi", base: "int8",
+                    name: "rssi", base: "int8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Rssi", base: "int8",
+                    name: "rssi", base: "int8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Lqi", base: "uint8",
+                    name: "lqi", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Lqi", base: "uint8",
+                    name: "lqi", base: "uint8",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -702,22 +753,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "NetworkId", base: "octstr",
+                    name: "networkId", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "NetworkId", base: "octstr",
+                    name: "networkId", base: "octstr",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Connected", base: "bool",
+                    name: "connected", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Connected", base: "bool",
+                    name: "connected", base: "bool",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -725,7 +776,38 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "NetworkCommissioningFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "wiFiNetworkInterface",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "wiFiNetworkInterface",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "threadNetworkInterface",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                }),
+
+                DatatypeElement({
+                    name: "threadNetworkInterface",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                }),
+
+                DatatypeElement({
+                    name: "ethernetNetworkInterface",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
+                }),
+
+                DatatypeElement({
+                    name: "ethernetNetworkInterface",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
+                })
+            ]
         })
     ]
 }));

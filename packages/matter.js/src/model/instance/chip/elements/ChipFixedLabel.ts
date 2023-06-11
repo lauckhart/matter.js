@@ -15,7 +15,7 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read only labels.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "LabelList", base: "list",
+            id: 0x0000, name: "labelList", base: "list",
             access: { rw: "R" }, conformance: [ "M" ]
         }),
 
@@ -24,22 +24,22 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Label", base: "string",
+                    name: "label", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Label", base: "string",
+                    name: "label", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "value", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "value", base: "string",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

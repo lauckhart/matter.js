@@ -12,7 +12,9 @@ import { BaseDataElement, BaseElement, Mei } from "../index.js";
 export type EventElement = BaseDataElement & {
     id: Mei,
     type: `${EventElement.Type}`,
-    priority: `${EventElement.Priority}`
+
+    // Priority is required but we handle missing priority in validation
+    priority?: `${EventElement.Priority}`
 }
 
 export function EventElement(definition: EventElement.Properties) {

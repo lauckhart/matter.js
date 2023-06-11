@@ -15,86 +15,86 @@ ChipMatter.children!.push(ClusterElement({
     details: "Accurate time is required for a number of reasons, including scheduling, display and validating security materials.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "UtcTime", base: "epochUs",
+            id: 0x0000, name: "utcTime", base: "epochUs",
             access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "Granularity", base: "GranularityEnum",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "granularity", base: "GranularityEnum",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "TimeSource", base: "TimeSourceEnum",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0002, name: "timeSource", base: "TimeSourceEnum",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0x00"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "TrustedTimeNodeId", base: "nodeId",
-            access: { rw: "W", readPrivilege: "V", writePrivilege: "A" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0003, name: "trustedTimeNodeId", base: "nodeId",
+            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "M" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0004, name: "DefaultNtp", base: "string",
-            access: { rw: "W", readPrivilege: "V", writePrivilege: "A" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0004, name: "defaultNtp", base: "string",
+            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         AttributeElement({
-            id: 0x0005, name: "TimeZone", base: "list",
-            access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
+            id: 0x0005, name: "timeZone", base: "list",
+            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0006, name: "DstOffset", base: "list",
-            access: { rw: "W", readPrivilege: "V", writePrivilege: "M" }, conformance: [ "O" ]
+            id: 0x0006, name: "dstOffset", base: "list",
+            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
         }),
 
         AttributeElement({
-            id: 0x0007, name: "LocalTime", base: "epochUs",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0007, name: "localTime", base: "epochUs",
+            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }, value: "0x00"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "TimeZoneDatabase", base: "bool",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0008, name: "timeZoneDatabase", base: "bool",
+            access: { rw: "R" }, conformance: [ "O" ], value: "0"
         }),
 
         AttributeElement({
-            id: 0x0009, name: "NtpServerPort", base: "uint16",
+            id: 0x0009, name: "ntpServerPort", base: "uint16",
             access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
         }),
 
         CommandElement({
-            id: 0x0000, name: "SetUtcTime", base: "struct",
+            id: 0x0000, name: "SetUtcTime",
             access: { rw: "R" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "UtcTime", base: "epochUs",
+                    name: "utcTime", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "UtcTime", base: "epochUs",
+                    name: "utcTime", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Granularity", base: "GranularityEnum",
+                    name: "granularity", base: "GranularityEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Granularity", base: "GranularityEnum",
+                    name: "granularity", base: "GranularityEnum",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "TimeSource", base: "TimeSourceEnum",
+                    name: "timeSource", base: "TimeSourceEnum",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "TimeSource", base: "TimeSourceEnum",
+                    name: "timeSource", base: "TimeSourceEnum",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -105,53 +105,53 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "NoTimeGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "noTimeGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "NoTimeGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "noTimeGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "MinutesGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "minutesGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "MinutesGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "minutesGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "SecondsGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "secondsGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "SecondsGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "secondsGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "MillisecondsGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "millisecondsGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "MillisecondsGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "millisecondsGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "MicrosecondsGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "microsecondsGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "MicrosecondsGranularity", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "microsecondsGranularity",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 })
             ]
         }),
@@ -161,173 +161,173 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "None", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "none",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "None", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "none",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Unknown", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknown",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Unknown", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "unknown",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Admin", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "admin",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Admin", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "admin",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "NodeTimeCluster", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nodeTimeCluster",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "NodeTimeCluster", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nodeTimeCluster",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "NonFabricSntp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonFabricSntp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "NonFabricSntp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonFabricSntp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "NonFabricNtp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonFabricNtp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "NonFabricNtp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonFabricNtp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "FabricSntp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fabricSntp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "FabricSntp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fabricSntp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
                 }),
 
                 DatatypeElement({
-                    name: "FabricNtp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fabricNtp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "FabricNtp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fabricNtp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
                 }),
 
                 DatatypeElement({
-                    name: "MixedNtp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "mixedNtp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "MixedNtp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "mixedNtp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
                 }),
 
                 DatatypeElement({
-                    name: "NonFabricSntpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonFabricSntpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "NonFabricSntpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonFabricSntpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
                 }),
 
                 DatatypeElement({
-                    name: "NonFabricNtpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonFabricNtpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
                 }),
 
                 DatatypeElement({
-                    name: "NonFabricNtpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "nonFabricNtpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
                 }),
 
                 DatatypeElement({
-                    name: "FabricSntpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fabricSntpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
                 }),
 
                 DatatypeElement({
-                    name: "FabricSntpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fabricSntpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
                 }),
 
                 DatatypeElement({
-                    name: "FabricNtpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fabricNtpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
                 }),
 
                 DatatypeElement({
-                    name: "FabricNtpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fabricNtpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
                 }),
 
                 DatatypeElement({
-                    name: "MixedNtpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "mixedNtpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0D"
                 }),
 
                 DatatypeElement({
-                    name: "MixedNtpNts", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "mixedNtpNts",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0D"
                 }),
 
                 DatatypeElement({
-                    name: "CloudSource", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cloudSource",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0E"
                 }),
 
                 DatatypeElement({
-                    name: "CloudSource", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "cloudSource",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0E"
                 }),
 
                 DatatypeElement({
-                    name: "Ptp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ptp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0F"
                 }),
 
                 DatatypeElement({
-                    name: "Ptp", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ptp",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0F"
                 }),
 
                 DatatypeElement({
-                    name: "Gnss", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "gnss",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
                 }),
 
                 DatatypeElement({
-                    name: "Gnss", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "gnss",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
                 })
             ]
         }),
@@ -337,32 +337,32 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Offset", base: "int32",
+                    name: "offset", base: "int32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Offset", base: "int32",
+                    name: "offset", base: "int32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ValidAt", base: "epochUs",
+                    name: "validAt", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ValidAt", base: "epochUs",
+                    name: "validAt", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "name", base: "string",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
@@ -373,32 +373,32 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Offset", base: "int32",
+                    name: "offset", base: "int32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "Offset", base: "int32",
+                    name: "offset", base: "int32",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ValidStarting", base: "epochUs",
+                    name: "validStarting", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ValidStarting", base: "epochUs",
+                    name: "validStarting", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ValidUntil", base: "epochUs",
+                    name: "validUntil", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "ValidUntil", base: "epochUs",
+                    name: "validUntil", base: "epochUs",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]

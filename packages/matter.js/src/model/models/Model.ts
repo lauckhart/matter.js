@@ -5,10 +5,9 @@
  */
 
 import { MatterError } from "../../common/MatterError.js";
-import { Logger } from "../../log/Logger.js";
+import { DefinitionError } from "../definitions/DefinitionError.js";
 import { AnyElement, BaseElement, Globals } from "../index.js";
 
-const logger = Logger.get("Model");
 const CHILDREN = Symbol("children");
 
 /**
@@ -21,21 +20,20 @@ export abstract class Model implements BaseElement {
     name!: string;
     description?: string;
     details?: string;
-    errors?: string[];
+    xref?: Model.CrossReference;
+    errors?: DefinitionError[];
+    accept?: string[];
 
+    /**
+     * Did validation find errors?
+     */
     get valid() {
         return !this.errors;
     }
 
-    private [CHILDREN]!: Array<any>;
-
-    get children(): Model[] {
-        if (!this[CHILDREN]) {
-            this.children = [];
-        }
-        return this[CHILDREN];
-    }
-
+    /**
+     * The full path ("." delimited) in the Matter tree.
+     */
     get path(): string {
         if (this.parent) {
             return `${this.parent.path}.${this.name}`;
@@ -44,6 +42,19 @@ export abstract class Model implements BaseElement {
         }
     }
 
+    /**
+     * Children of models are always models.
+     */
+    get children(): Model[] {
+        if (!this[CHILDREN]) {
+            this.children = [];
+        }
+        return this[CHILDREN];
+    }
+
+    /**
+     * Children can be added as models or elements.
+     */
     set children(children: (Model | AnyElement)[]) {
         this[CHILDREN] = new Proxy([], {
             get: (target, p, receiver) => {
@@ -75,11 +86,7 @@ export abstract class Model implements BaseElement {
         this[CHILDREN].push(...children);
     }
 
-    xref?: {
-        document: BaseElement.Specification,
-        version: string,
-        section: string
-    };
+    private [CHILDREN]!: Array<any>;
 
     protected static constructors = {} as { [ type: string ]: new(definition: any, parent?: Model) => Model };
 
@@ -92,6 +99,9 @@ export abstract class Model implements BaseElement {
             if (v !== undefined) {
                 (this as any)[k] = v;
             }
+        }
+        if (this.xref) {
+            this.xref = new Model.CrossReference(this.xref);
         }
     }
 
@@ -116,7 +126,7 @@ export abstract class Model implements BaseElement {
      * Not indexed; may need to address if this become problematically slow.
      * 
      * @param name the name of the element to find
-     * @param type an optional type to narrow the search
+     * @param type the type of the element to find
      * @param ignore a list of Models to ignore; used to handle name conflicts
      */
     local<T>(name: string, type: (new(...args: any) => T), ignore: Model[] = []): T | undefined {
@@ -131,7 +141,7 @@ export abstract class Model implements BaseElement {
      * Retrieve an element from global scope by name.
      * 
      * @param name the name of the element to find
-     * @param type an optional type to narrow the search
+     * @param type the type of the element to find
      * @param ignore a list of Models to ignore; used to avoid infinite loops
      */
     global<T>(name: string, type: (new(...args: any) => T), ignore: Model[] = []): T | undefined {
@@ -158,15 +168,27 @@ export abstract class Model implements BaseElement {
     /**
      * Record a validation error for this model.
      */
-    error(error: { errors: string[] } | string) {
+    error(code: string, message: string) {
+        if (this.accept && this.accept.indexOf(code) != -1) {
+            return;
+        }
+
         if (!this.errors) {
             this.errors = [];
         }
-        if (typeof error == "string") {
-            this.errors.push(error);
-        } else {
-            this.errors.push(...error.errors);
-        }
+        
+        this.errors.push({
+            code,
+            source: this.path,
+            message
+        })
+    }
+
+    /**
+     * Record validation errors from an aspect of this model.
+     */
+    addErrors(aspect: { errors: DefinitionError[] }) {
+        aspect.errors?.forEach((e) => this.errors?.push({ ...e, source: `${this.path} ${e.source}`}))
     }
 
     /**
@@ -196,22 +218,29 @@ export abstract class Model implements BaseElement {
         let errors = 0;
         if (this.errors) {
             errors += this.errors.length;
-            for (const e of this.errors) {
-                logger.error(e);
-            }
         }
 
-        let index = 0;
         for (const c of this.children) {
-            index++;
-            logger.debug(`${index}. ${c.type} ${c.name}`)
-            Logger.nest(() => {
-                errors += c.validate();
-            });
+            errors += c.validate();
         }
 
         return errors;
     }
+
+    /**
+     * Apply a function to all tree elements.
+     */
+    visit(visitor: (model: Model) => boolean | void): boolean {
+        if (visitor(this) === false) {
+            return false;
+        }
+        for (const c of this.children) {
+            if (c.visit(visitor) === false) {
+                return false;
+            }
+        }
+        return true;
+    }    
 
     /**
      * Access global scope.  The default implementation returns models for
@@ -231,7 +260,7 @@ export abstract class Model implements BaseElement {
     protected validateStructure(type: BaseElement.Type, requireId: boolean, ...childTypes: (new(...args: any) => Model)[]) {
         this.validateProperty({ name: "id", type: "number", required: requireId });
         if (this.type != type) {
-            this.error(`Type is ${this.type} (expected ${type})`);
+            this.error("UNEXPECTED_TYPE", `Type is ${this.type} (expected ${type})`);
         }
         if (this.children) {
             let index = 0;
@@ -244,7 +273,7 @@ export abstract class Model implements BaseElement {
                     }
                 }
                 if (!ok) {
-                    this.error(`Children[${index}] type ${child.constructor.name} is not allowed`);
+                    this.error("UNACCEPTABLE_TYPE", `Children[${index}] type ${child.constructor.name} is not allowed`);
                 }
                 index++;
             }
@@ -255,38 +284,38 @@ export abstract class Model implements BaseElement {
         const value = (this as any)[name];
         if (value === undefined) {
             if (required) {
-                this.error(`Missing required property ${name}`);
+                this.error("REQUIRED_PROPERTY", `Missing required property ${name}`);
                 return;
             }
             return;
         }
         if (value === null) {
             if (nullable) {
-                this.error(`Property ${name} is null`);
+                this.error("NULL_PROPERTY", `Property ${name} is null`);
                 return;
             }
             return;
         }
         if (Number.isNaN(value)) {
-            this.error(`Property ${name} is NaN`);
+            this.error("NAN_PROPERTY", `Property ${name} is NaN`);
         }
         if (type == undefined) {
             return;
         }
         if (typeof type == "string") {
             if (typeof value != type) {
-                this.error(`Property ${name} type is ${typeof value} (expected ${type})`);
+                this.error("NON_STRING_PROPERTY", `Property ${name} type is ${typeof value} (expected ${type})`);
             }
             return;
         }
         if (typeof type == "function") {
             if (!(value instanceof type)) {
-                this.error(`Property ${name} is not an instance of ${type.name}`);
+                this.error("PROPERTY_NOT_INSTANCE", `Property ${name} is not an instance of ${type.name}`);
             }
             return;
         }
         if (Object.values(type).indexOf(value) == -1) {
-            this.error(`Property ${name} value ${value} is not in enum`);
+            this.error("INVALID_ENUM_KEY", `Property ${name} value ${value} is not in enum`);
         }
     }
 }
@@ -299,5 +328,21 @@ export namespace Model {
         type: string | (new(...args: any[]) => any) | { [key: string | number]: any } | undefined,
         required?: boolean,
         nullable?: boolean
+    }
+
+    export class CrossReference implements BaseElement.CrossReference {
+        document: BaseElement.Specification;
+        version: string;
+        section: string;
+
+        constructor({ document, section, version }: BaseElement.CrossReference) {
+            this.document = document as BaseElement.Specification;
+            this.section = section;
+            this.version = version;
+        }
+
+        toString() {
+            return `${this.document}§${this.section}`
+        }
     }
 }

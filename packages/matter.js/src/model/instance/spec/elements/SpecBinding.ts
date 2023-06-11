@@ -15,17 +15,17 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: { min: 1 }, default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: { min: 1 }, value: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", default: 0, quality: "F"
+            access: "R V", conformance: "M", value: 0, quality: "F"
         }),
 
         AttributeElement({
             id: 0x0000, name: "Binding", base: "list[TargetStruct]",
-            access: "RW F VM", conformance: "M", constraint: "desc", default: "[]", quality: "N",
+            access: "RW F VM", conformance: "M", constraint: "desc", value: "[]", quality: "N",
             details: "Each entry SHALL represent a binding. Here are some examples:",
             xref: { section: "9.6.6.1", document: "core", version: "1.1" }
         }),
@@ -37,25 +37,25 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0001, name: "Node", base: "node-id",
-                    access: "F", conformance: "Endpoint", default: "",
+                    access: "F", conformance: "Endpoint", value: "",
                     xref: { section: "9.6.5.1", document: "core", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "Group", base: "group-id",
-                    access: "F", conformance: "!Endpoint", default: "",
+                    access: "F", conformance: "!Endpoint", value: "",
                     xref: { section: "9.6.5.1", document: "core", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "Endpoint", base: "endpoint-no",
-                    access: "F", conformance: "!Group", default: "",
+                    access: "F", conformance: "!Group", value: "",
                     xref: { section: "9.6.5.1", document: "core", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "Cluster", base: "cluster-id",
-                    access: "F", conformance: "O", default: "",
+                    access: "F", conformance: "O", value: "",
                     xref: { section: "9.6.5.1", document: "core", version: "1.1" }
                 })
             ]

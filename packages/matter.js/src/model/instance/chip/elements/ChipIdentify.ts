@@ -15,52 +15,52 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for putting a device into Identification mode (e.g. flashing a light).",
     children: [
         AttributeElement({
-            id: 0x0000, name: "IdentifyTime", base: "uint16",
-            access: { rw: "W" }, conformance: [ "M" ]
+            id: 0x0000, name: "identifyTime", base: "uint16",
+            access: { rw: "W" }, conformance: [ "M" ], value: "0x0"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "IdentifyType", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "identifyType", base: "enum8",
+            access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
         }),
 
         CommandElement({
-            id: 0x0000, name: "Identify", base: "struct",
-            access: { rw: "R", writePrivilege: "M" }, conformance: [ "M" ], direction: "request",
+            id: 0x0000, name: "Identify",
+            access: { rw: "R", writePriv: "M" }, conformance: [ "M" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "IdentifyTime", base: "uint16",
+                    name: "identifyTime", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "IdentifyTime", base: "uint16",
+                    name: "identifyTime", base: "uint16",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
         }),
 
         CommandElement({
-            id: 0x0040, name: "TriggerEffect", base: "struct",
-            access: { rw: "R", writePrivilege: "M" }, conformance: [ "O" ], direction: "request",
+            id: 0x0040, name: "TriggerEffect",
+            access: { rw: "R", writePriv: "M" }, conformance: [ "O" ], direction: "request",
             children: [
                 DatatypeElement({
-                    name: "EffectIdentifier", base: "IdentifyEffectIdentifier",
+                    name: "effectIdentifier", base: "IdentifyEffectIdentifier",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EffectIdentifier", base: "IdentifyEffectIdentifier",
+                    name: "effectIdentifier", base: "IdentifyEffectIdentifier",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EffectVariant", base: "IdentifyEffectVariant",
+                    name: "effectVariant", base: "IdentifyEffectVariant",
                     access: { rw: "R" }, conformance: [ "M" ]
                 }),
 
                 DatatypeElement({
-                    name: "EffectVariant", base: "IdentifyEffectVariant",
+                    name: "effectVariant", base: "IdentifyEffectVariant",
                     access: { rw: "R" }, conformance: [ "M" ]
                 })
             ]
@@ -71,63 +71,63 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "None", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "none",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "None", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "none",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "VisibleLight", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "visibleLight",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "VisibleLight", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "visibleLight",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "VisibleLed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "visibleLed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "VisibleLed", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "visibleLed",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "AudibleBeep", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "audibleBeep",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "AudibleBeep", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "audibleBeep",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
                 }),
 
                 DatatypeElement({
-                    name: "Display", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "display",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Display", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "display",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
                 }),
 
                 DatatypeElement({
-                    name: "Actuator", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "actuator",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 }),
 
                 DatatypeElement({
-                    name: "Actuator", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "actuator",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
                 })
             ]
         }),
@@ -137,63 +137,63 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Blink", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "blink",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Blink", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "blink",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Breathe", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "breathe",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Breathe", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "breathe",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Okay", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "okay",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Okay", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "okay",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "ChannelChange", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "channelChange",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
                 }),
 
                 DatatypeElement({
-                    name: "ChannelChange", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "channelChange",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
                 }),
 
                 DatatypeElement({
-                    name: "FinishEffect", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "finishEffect",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xFE"
                 }),
 
                 DatatypeElement({
-                    name: "FinishEffect", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "finishEffect",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xFE"
                 }),
 
                 DatatypeElement({
-                    name: "StopEffect", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "stopEffect",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xFF"
                 }),
 
                 DatatypeElement({
-                    name: "StopEffect", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "stopEffect",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0xFF"
                 })
             ]
         }),
@@ -203,13 +203,13 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Default", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "default",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Default", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "default",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 })
             ]
         })

@@ -15,7 +15,7 @@ ChipMatter.children!.push(ClusterElement({
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions may have differing preferences for the units in which values are conveyed in communication to a user. As such, Nodes that visually or audibly convey measurable values to the user need a mechanism by which they can be configured to use a user’s preferred unit.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "TemperatureUnit", base: "TempUnitEnum",
+            id: 0x0000, name: "temperatureUnit", base: "TempUnitEnum",
             access: { rw: "W" }, conformance: [ "O" ]
         }),
 
@@ -24,40 +24,51 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Fahrenheit", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fahrenheit",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Fahrenheit", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "fahrenheit",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
                 }),
 
                 DatatypeElement({
-                    name: "Celsius", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "celsius",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Celsius", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "celsius",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
                 }),
 
                 DatatypeElement({
-                    name: "Kelvin", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "kelvin",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 }),
 
                 DatatypeElement({
-                    name: "Kelvin", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "kelvin",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "UnitLocalizationFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ]
+            access: { rw: "R" }, conformance: [ "M" ],
+            children: [
+                DatatypeElement({
+                    name: "temperatureUnit",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                }),
+
+                DatatypeElement({
+                    name: "temperatureUnit",
+                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                })
+            ]
         })
     ]
 }));

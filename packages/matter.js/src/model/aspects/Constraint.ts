@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { camelize } from "../../util/String.js";
 import { Aspect } from "./Aspect.js";
 
 /**
@@ -52,6 +53,8 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
 }
 
 export namespace Constraint {
+    export type NumberOrIdentifier = number | string;
+
     /**
      * Parsed list structure.
      */
@@ -65,12 +68,12 @@ export namespace Constraint {
         /**
          * Lower bound on value or sequence length.
          */
-        min?: number,
+        min?: NumberOrIdentifier,
 
         /**
          * Upper bound on value or sequence length.
          */
-        max?: number,
+        max?: NumberOrIdentifier,
 
         /**
          * Constraint on list child element.
@@ -88,10 +91,10 @@ export namespace Constraint {
      */
     export type Definition = (Ast & { definition?: Definition }) | string | number | undefined;
 
-    function parseNum(constraint: Constraint, num: string): number {
-        let value = Number.parseFloat(num);
+    function parseNum(numOrName: string): number | string {
+        let value = Number.parseFloat(numOrName);
         if (Number.isNaN(value)) {
-            constraint.error(`"${num}" is not a number`);
+            return camelize(numOrName);
         }
         return value;
     }
@@ -109,7 +112,7 @@ export namespace Constraint {
                     case "all":
                         return {};
                 }
-                const value = parseNum(constraint, words[0]);
+                const value = parseNum(words[0]);
                 if (value == undefined) {
                     return;
                 }
@@ -118,21 +121,21 @@ export namespace Constraint {
             case 2:
                 switch (words[0].toLowerCase()) {
                     case "min":
-                        const min = parseNum(constraint, words[1]);
+                        const min = parseNum(words[1]);
                         if (min == undefined) {
                             return;
                         }
                         return { min: min };
 
                     case "max":
-                        const max = parseNum(constraint, words[1]);
+                        const max = parseNum(words[1]);
                         if (max == undefined) {
                             return;
                         }
                         return { max: max };
 
                     default:
-                        constraint.error('Two word constraint must start with "min" or "max"')
+                        constraint.error("MIN_MAX_EXPECTED", 'Two word constraint must start with "min" or "max"')
                 }
                 return;
 
@@ -142,7 +145,7 @@ export namespace Constraint {
                         if (words[pos].toLowerCase() == name) {
                             return undefined;
                         }
-                        return parseNum(constraint, words[pos]);
+                        return parseNum(words[pos]);
                     }
 
                     const ast: Ast = {};
@@ -164,7 +167,7 @@ export namespace Constraint {
                 return;
         }
 
-        constraint.error(`Unrecognized value constraint "${words.join(" ")}"`);
+        constraint.error("UNRECOGNIZED_VALUE", `Unrecognized value constraint "${words.join(" ")}"`);
     }
 
     /**
@@ -239,7 +242,7 @@ export namespace Constraint {
                     
                     case "]":
                         if (!depth) {
-                            constraint.error('Unexpected "]"');
+                            constraint.error("UNEXPECTED_OPTION_END", 'Unexpected "]"');
                             break;
                         }
                         emit();
@@ -261,7 +264,7 @@ export namespace Constraint {
             }
 
             if (depth) {
-                constraint.error("Unterminated sub-constraint");
+                constraint.error("PREMATURE_TERMINATION", "Unterminated sub-constraint");
             }
 
             emit();

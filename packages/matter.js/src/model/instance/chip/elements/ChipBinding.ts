@@ -15,7 +15,7 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for supporting the binding table.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "BindingList", base: "list",
+            id: 0x0000, name: "bindingList", base: "list",
             access: { rw: "W" }, conformance: [ "M" ]
         }),
 
@@ -24,42 +24,42 @@ ChipMatter.children!.push(ClusterElement({
             access: { rw: "R", fabric: "F" }, conformance: [ "M" ],
             children: [
                 DatatypeElement({
-                    name: "Node", base: "nodeId",
+                    name: "node", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Node", base: "nodeId",
+                    name: "node", base: "nodeId",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Group", base: "groupId",
+                    name: "group", base: "groupId",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Group", base: "groupId",
+                    name: "group", base: "groupId",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Endpoint", base: "endpointNo",
+                    name: "endpoint", base: "endpointNo",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Endpoint", base: "endpointNo",
+                    name: "endpoint", base: "endpointNo",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Cluster", base: "clusterId",
+                    name: "cluster", base: "clusterId",
                     access: { rw: "R" }, conformance: [ "O" ]
                 }),
 
                 DatatypeElement({
-                    name: "Cluster", base: "clusterId",
+                    name: "cluster", base: "clusterId",
                     access: { rw: "R" }, conformance: [ "O" ]
                 })
             ]
