@@ -23,8 +23,8 @@ export class EndpointModel extends Model implements EndpointElement {
         return super.validate();
     }
 
-    constructor(definition: EndpointElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: EndpointElement.Properties) {
+        super(definition);
     }
 
     static {

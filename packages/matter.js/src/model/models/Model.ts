@@ -6,7 +6,7 @@
 
 import { MatterError } from "../../common/MatterError.js";
 import { DefinitionError } from "../definitions/DefinitionError.js";
-import { AnyElement, BaseElement, Globals } from "../index.js";
+import { AnyElement, BaseElement } from "../index.js";
 
 const CHILDREN = Symbol("children");
 
@@ -23,6 +23,7 @@ export abstract class Model implements BaseElement {
     xref?: Model.CrossReference;
     errors?: DefinitionError[];
     accept?: string[];
+    parent?: Model;
 
     /**
      * Did validation find errors?
@@ -88,9 +89,9 @@ export abstract class Model implements BaseElement {
 
     private [CHILDREN]!: Array<any>;
 
-    protected static constructors = {} as { [ type: string ]: new(definition: any, parent?: Model) => Model };
+    protected static constructors = {} as { [ type: string ]: new(definition: any) => Model };
 
-    protected constructor(definition: BaseElement, public parent?: Model) {
+    protected constructor(definition: BaseElement) {
         // Copy all definition properties.  Types will be wrong for some of
         // them but constructors correct this.  Properties for which type is
         // correct are suffixed with "!" to indicate no further initialization
@@ -110,59 +111,76 @@ export abstract class Model implements BaseElement {
      */
     static create(definition: AnyElement) {
         if (typeof definition != "object") {
-            throw new MatterError(`Model definition must be objects, not ${typeof definition}`);
+            throw new MatterError(`Model definition must be object, not ${typeof definition}`);
         }
         const t = definition["type"];
         const constructor = Model.constructors[t];
         if (!constructor) {
-            throw new MatterError(`Unknown model definition type "${t}"`);
+            throw new MatterError(`Unknown element type "${t}"`);
         }
         return new constructor(definition);
     }
 
     /**
-     * Retrieve a model from local scope by name.
+     * Retrieve a model from local scope.
      * 
      * Not indexed; may need to address if this become problematically slow.
      * 
-     * @param name the name of the element to find
+     * @param key the name or ID of the element to find
      * @param type the type of the element to find
      * @param ignore a list of Models to ignore; used to handle name conflicts
      */
-    local<T>(name: string, type: (new(...args: any) => T), ignore: Model[] = []): T | undefined {
+    local<T>(key: string | number | undefined, type: (new(...args: any) => T), ignore: Model[] = []): T | undefined {
         for (const c of this.children) {
-            if (c.name == name && c instanceof type && ignore.indexOf(c) == -1) {
+            if (c.is(key) && c instanceof type && ignore.indexOf(c) == -1) {
                 return c;
             }
         }
     }
 
     /**
-     * Retrieve an element from global scope by name.
+     * Retrieve an element from visible scope.
      * 
-     * @param name the name of the element to find
+     * @param key the name or ID of the element to find
      * @param type the type of the element to find
-     * @param ignore a list of Models to ignore; used to avoid infinite loops
      */
-    global<T>(name: string, type: (new(...args: any) => T), ignore: Model[] = []): T | undefined {
-        let result = this.local(name, type, ignore);
-        if (result) {
-            return result;
-        }
+    global<T>(key: string | number | undefined, type: (new(...args: any) => T)): T | undefined {
+        return this.find(
+            current => current.parent,
+            current => current.local(key, type)
+        );
+    }
 
-        if (this.parent) {
-            ignore.push(this);
-            try {
-                 return this.parent.global(name, type, ignore);
-            } finally {
-                ignore.pop();
+    /**
+     * Search for a related model.  Protects against infinite loops.
+     * 
+     * @param next moves to the next model
+     * @param test return any defined value to terminate the search
+     * 
+     * @returns the first defined result from `test`
+     */
+    find<T>(next: (current: Model) => Model | undefined, test: (current: Model) => T | undefined): T | undefined {
+        const visited = new Set<Model>();
+        for (let current: Model | undefined = this; current; current = next(current)) {
+            if (visited.has(current)) {
+                throw new MatterError("Recursive model structure detected");
             }
+            const result = test(current);
+            if (result !== undefined) {
+                return result;
+            }
+            visited.add(this);
         }
+    }
 
-        const global = this.globals[name];
-        if (global instanceof type) {
-            return global;
+    /**
+     * Check identity of element by name or ID.
+     */
+    is(key: string | number | undefined) {
+        if (typeof key == "number") {
+            return this.id == key;
         }
+        return this.name == key;
     }
 
     /**
@@ -240,21 +258,6 @@ export abstract class Model implements BaseElement {
             }
         }
         return true;
-    }    
-
-    /**
-     * Access global scope.  The default implementation returns models for
-     * elements defined in Globals.ts.
-     */
-    protected get globals() {
-        if (!globalCache) {
-            globalCache = Object.fromEntries(
-                Object.entries(Globals).map(
-                    ([k, v]) => [ k, Model.create(v) ]
-                )
-            );
-        }
-        return globalCache;
     }
 
     protected validateStructure(type: BaseElement.Type, requireId: boolean, ...childTypes: (new(...args: any) => Model)[]) {
@@ -262,7 +265,7 @@ export abstract class Model implements BaseElement {
         if (this.type != type) {
             this.error("UNEXPECTED_TYPE", `Type is ${this.type} (expected ${type})`);
         }
-        if (this.children) {
+        if (this.children && childTypes.length) {
             let index = 0;
             for (const child of this.children) {
                 let ok = false;
@@ -319,8 +322,6 @@ export abstract class Model implements BaseElement {
         }
     }
 }
-
-let globalCache: { [name: string]: Model } | undefined;
 
 export namespace Model {
     export type PropertyValidation = {

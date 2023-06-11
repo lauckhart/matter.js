@@ -26,8 +26,8 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
         return super.validate();
     }
 
-    constructor(definition: DeviceTypeElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: DeviceTypeElement.Properties) {
+        super(definition);
     }
 
     static {

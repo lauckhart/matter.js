@@ -28,8 +28,7 @@ import { BaseElement, ClusterElement, DeviceTypeElement, FabricElement, NodeElem
  */
 export type MatterElement = BaseElement & {
     type: `${BaseElement.Type.Matter}`,
-    version?: string,
-    children?: MatterElement.Child[]
+    version?: string
 }
 
 export function MatterElement(definition: MatterElement.Properties) {

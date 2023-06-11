@@ -23,8 +23,8 @@ export class FabricModel extends Model implements FabricElement {
         return super.validate();
     }
 
-    constructor(definition: FabricElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: FabricElement.Properties) {
+        super(definition);
     }
 
     static {

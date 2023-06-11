@@ -41,8 +41,8 @@ export class DatatypeModel extends DataModel implements DatatypeElement {
         }
     }
 
-    constructor(definition: DatatypeElement.Properties, parent?: Model) {
-        super(definition, parent);
+    constructor(definition: DatatypeElement.Properties) {
+        super(definition);
     }
 
     static {
