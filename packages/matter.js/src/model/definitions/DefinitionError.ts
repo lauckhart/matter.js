@@ -10,5 +10,6 @@
 export type DefinitionError = {
     code: string,
     source: string,
-    message: string
+    message: string,
+    xref?: string
 }

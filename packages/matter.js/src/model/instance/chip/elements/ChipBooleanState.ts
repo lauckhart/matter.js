@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,22 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface to a boolean state called StateValue.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "stateValue", base: "bool",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { reportable: true }
+            id: 0x0000, name: "StateValue", base: "bool",
+            access: "R", conformance: "M", quality: "P"
         }),
 
         EventElement({
             id: 0x0000, name: "StateChange",
-            access: { rw: "R" }, conformance: [ "M" ], priority: "info",
+            access: "R", conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "stateValue", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "stateValue", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StateValue", base: "bool",
+                    access: "R", conformance: "M"
                 })
             ]
         })

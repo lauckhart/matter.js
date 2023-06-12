@@ -7,6 +7,7 @@
 import { MatterError } from "../../common/MatterError.js";
 import { DefinitionError } from "../definitions/DefinitionError.js";
 import { AnyElement, BaseElement } from "../index.js";
+import { ValidateModel } from "../logic/ValidateModel.js";
 
 const CHILDREN = Symbol("children");
 
@@ -54,6 +55,17 @@ export abstract class Model implements BaseElement {
     }
 
     /**
+     * Element view of children.  For TypeScript this allows children to be
+     * added as elements.  For JavaScript this is identical to children().
+     */
+    get elements(): AnyElement[] {
+        if (!this[CHILDREN]) {
+            this.children = [];
+        }
+        return this[CHILDREN];
+    }
+
+    /**
      * Children can be added as models or elements.
      */
     set children(children: (Model | AnyElement)[]) {
@@ -87,23 +99,22 @@ export abstract class Model implements BaseElement {
         this[CHILDREN].push(...children);
     }
 
+    /**
+     * Factory support.  Populated by derivatives upon definition.
+     */
+    static constructors = {} as { [ type: string ]: new(definition: any) => Model };
+
     private [CHILDREN]!: Array<any>;
 
-    protected static constructors = {} as { [ type: string ]: new(definition: any) => Model };
-
-    protected constructor(definition: BaseElement) {
-        // Copy all definition properties.  Types will be wrong for some of
-        // them but constructors correct this.  Properties for which type is
-        // correct are suffixed with "!" to indicate no further initialization
-        // is necessary
-        for (const [k, v] of Object.entries(definition)) {
-            if (v !== undefined) {
-                (this as any)[k] = v;
-            }
-        }
-        if (this.xref) {
-            this.xref = new Model.CrossReference(this.xref);
-        }
+    /**
+     * Access the top-most element in the model.
+     */
+    get root(): Model {
+        return this.find(
+            model => model.parent,
+            model => model.parent ? undefined : model,
+            true
+        ) as Model;
     }
 
     /**
@@ -122,44 +133,65 @@ export abstract class Model implements BaseElement {
     }
 
     /**
-     * Retrieve a model from local scope.
+     * Retrieve all models of a specific element type from local scope.
      * 
-     * Not indexed; may need to address if this become problematically slow.
-     * 
-     * @param key the name or ID of the element to find
-     * @param type the type of the element to find
-     * @param ignore a list of Models to ignore; used to handle name conflicts
+     * @param type the element type to retrieve
      */
-    local<T>(key: string | number | undefined, type: (new(...args: any) => T), ignore: Model[] = []): T | undefined {
+    local<T>(type: Model.Constructor<T>): T[];
+
+    /**
+     * Retrieve a model from local scope
+     * 
+     * @param type the element type to retrieve
+     * @param key the ID or name of the model to retrieve
+     */
+    local<T>(type: Model.Constructor<T>, key: string | number): T;
+
+    local<T>(type: Model.Constructor<T>, key?: string | number): T | T[] | undefined {
+        // Not - not indexed.  Not currently a problem but should address if
+        // becomes problematically slow
+        const found = key === undefined ? Array<T>() : undefined;
         for (const c of this.children) {
-            if (c.is(key) && c instanceof type && ignore.indexOf(c) == -1) {
-                return c;
+            if (c instanceof type) {
+                if (key === undefined) {
+                    found!.push(c);
+                } else if (c.is(key)) {
+                    return c;
+                }
             }
         }
+        return found;
     }
 
     /**
-     * Retrieve an element from visible scope.
+     * Retrieve all models of a specific element type from global scope.
      * 
-     * @param key the name or ID of the element to find
-     * @param type the type of the element to find
+     * @param type the element type to retrieve
      */
-    global<T>(key: string | number | undefined, type: (new(...args: any) => T)): T | undefined {
+    global<T>(type: Model.Constructor<T>): T[];
+
+    /**
+     * Retrieve a model from global scope.
+     * 
+     * @param type the element type to retrieve
+     * @param key the ID or name of the model to retrieve
+     */
+    global<T>(type: Model.Constructor<T>, key: string | number): T;
+
+    global<T>(type: Model.Constructor<T>, key?: string | number): T | T[] | undefined {
         return this.find(
             current => current.parent,
-            current => current.local(key, type)
+            current => current.local(type, key as any),
+            key !== undefined
         );
     }
 
-    /**
-     * Search for a related model.  Protects against infinite loops.
-     * 
-     * @param next moves to the next model
-     * @param test return any defined value to terminate the search
-     * 
-     * @returns the first defined result from `test`
-     */
-    find<T>(next: (current: Model) => Model | undefined, test: (current: Model) => T | undefined): T | undefined {
+    find<T>(
+        next: (current: Model) => Model | undefined,
+        test: (current: Model) => T | undefined,
+        first: boolean
+    ): T[] | T | undefined {
+        const found = first ? undefined : Array<T>();
         const visited = new Set<Model>();
         for (let current: Model | undefined = this; current; current = next(current)) {
             if (visited.has(current)) {
@@ -167,9 +199,16 @@ export abstract class Model implements BaseElement {
             }
             const result = test(current);
             if (result !== undefined) {
-                return result;
+                if (first) {
+                    return result;
+                } else {
+                    found!.push(result);
+                }
             }
             visited.add(this);
+        }
+        if (!first) {
+            return found;
         }
     }
 
@@ -198,7 +237,8 @@ export abstract class Model implements BaseElement {
         this.errors.push({
             code,
             source: this.path,
-            message
+            message,
+            xref: this.xref?.toString()
         })
     }
 
@@ -213,36 +253,19 @@ export abstract class Model implements BaseElement {
      * Convert model to JSON.
      */
     toJSON() {
-        const fields = { ...this };
-        delete fields.parent;
-        delete fields.errors;
-        return fields;
+        return this.valueOf();
     }
 
     /**
-     * Validates the model's definition.  Places errors into the errors array
-     * of individual elements and logs.
-     * 
-     * For data elements, parses default values as a side effect.
-     * 
-     * @return the number of validation errors
+     * Convert to non-class structure.
      */
-    validate(): number {
-        this.validateProperty({ name: "name", type: "string", required: true });
-        this.validateProperty({ name: "description", type: "string" });
-        this.validateProperty({ name: "details", type: "string" });
-        this.validateProperty({ name: "children", type: Array });
+    valueOf(): AnyElement {
+        const result = { ...this };
 
-        let errors = 0;
-        if (this.errors) {
-            errors += this.errors.length;
-        }
-
-        for (const c of this.children) {
-            errors += c.validate();
-        }
-
-        return errors;
+        delete result.parent;
+        delete result.errors;
+        
+        return result as AnyElement;
     }
 
     /**
@@ -260,75 +283,39 @@ export abstract class Model implements BaseElement {
         return true;
     }
 
-    protected validateStructure(type: BaseElement.Type, requireId: boolean, ...childTypes: (new(...args: any) => Model)[]) {
-        this.validateProperty({ name: "id", type: "number", required: requireId });
-        if (this.type != type) {
-            this.error("UNEXPECTED_TYPE", `Type is ${this.type} (expected ${type})`);
-        }
-        if (this.children && childTypes.length) {
-            let index = 0;
-            for (const child of this.children) {
-                let ok = false;
-                for (const type of childTypes) {
-                    if (child instanceof type) {
-                        ok = true;
-                        break;
-                    }
-                }
-                if (!ok) {
-                    this.error("UNACCEPTABLE_TYPE", `Children[${index}] type ${child.constructor.name} is not allowed`);
-                }
-                index++;
-            }
-        }
+    /**
+     * Validate the model.  Places validation errors into the errors array and
+     * casts the default value to the proper type.
+     */
+    validate() {
+        ValidateModel(this);
     }
 
-    protected validateProperty({ name, type, required, nullable }: Model.PropertyValidation) {
-        const value = (this as any)[name];
-        if (value === undefined) {
-            if (required) {
-                this.error("REQUIRED_PROPERTY", `Missing required property ${name}`);
-                return;
+    protected constructor(definition: BaseElement) {
+        // Copy all definition properties.  Types will be wrong for some of
+        // them but constructors correct this.  Properties for which type is
+        // correct are suffixed with "!" to indicate no further initialization
+        // is necessary
+        for (const [k, v] of Object.entries(definition)) {
+            if (v !== undefined) {
+                (this as any)[k] = v;
             }
-            return;
         }
-        if (value === null) {
-            if (nullable) {
-                this.error("NULL_PROPERTY", `Property ${name} is null`);
-                return;
-            }
-            return;
-        }
-        if (Number.isNaN(value)) {
-            this.error("NAN_PROPERTY", `Property ${name} is NaN`);
-        }
-        if (type == undefined) {
-            return;
-        }
-        if (typeof type == "string") {
-            if (typeof value != type) {
-                this.error("NON_STRING_PROPERTY", `Property ${name} type is ${typeof value} (expected ${type})`);
-            }
-            return;
-        }
-        if (typeof type == "function") {
-            if (!(value instanceof type)) {
-                this.error("PROPERTY_NOT_INSTANCE", `Property ${name} is not an instance of ${type.name}`);
-            }
-            return;
-        }
-        if (Object.values(type).indexOf(value) == -1) {
-            this.error("INVALID_ENUM_KEY", `Property ${name} value ${value} is not in enum`);
+        if (this.xref) {
+            this.xref = new Model.CrossReference(this.xref);
         }
     }
 }
 
 export namespace Model {
+    export type Constructor<T> = new(...args: any) => T;
+
     export type PropertyValidation = {
         name: string,
         type: string | (new(...args: any[]) => any) | { [key: string | number]: any } | undefined,
         required?: boolean,
-        nullable?: boolean
+        nullable?: boolean,
+        values?: { [name: string]: any }
     }
 
     export class CrossReference implements BaseElement.CrossReference {

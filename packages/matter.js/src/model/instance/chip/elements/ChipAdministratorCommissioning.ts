@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,165 +15,105 @@ ChipMatter.children!.push(ClusterElement({
     details: "Commands to trigger a Node to allow a new Administrator to commission it.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "windowStatus", base: "CommissioningWindowStatusEnum",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0000, name: "WindowStatus", base: "CommissioningWindowStatusEnum",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "adminFabricIndex", base: "fabricIdx",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0001, name: "AdminFabricIndex", base: "fabric-idx",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "adminVendorId", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0002, name: "AdminVendorId", base: "uint16",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         CommandElement({
             id: 0x0000, name: "OpenCommissioningWindow",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "M" ], direction: "request",
+            access: "R A", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "commissioningTimeout", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "CommissioningTimeout", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "commissioningTimeout", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "PakePasscodeVerifier", base: "octstr",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pakePasscodeVerifier", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Discriminator", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pakePasscodeVerifier", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Iterations", base: "uint32",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "discriminator", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "discriminator", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "iterations", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "iterations", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "salt", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "salt", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Salt", base: "octstr",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "OpenBasicCommissioningWindow",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "commissioningTimeout", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "commissioningTimeout", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "CommissioningTimeout", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "RevokeCommissioning",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "M" ], direction: "request"
+            access: "R A", conformance: "M", direction: "request"
         }),
 
         DatatypeElement({
             name: "StatusCode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "busy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "Busy",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "busy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0003, name: "PakeParameterError",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pakeParameterError",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "pakeParameterError",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "windowNotOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "windowNotOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0004, name: "WindowNotOpen",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CommissioningWindowStatusEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "windowNotOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "WindowNotOpen",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "windowNotOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "EnhancedWindowOpen",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "enhancedWindowOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "enhancedWindowOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "basicWindowOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "basicWindowOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "BasicWindowOpen",
+                    access: "R", conformance: "M"
                 })
             ]
         })

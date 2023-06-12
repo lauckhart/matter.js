@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,8 +15,8 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for managing low power mode on a device that supports the Wake On LAN protocol.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "wakeOnLanMacAddress", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0000, name: "WakeOnLanMacAddress", base: "string",
+            access: "R", conformance: "O"
         })
     ]
 }));

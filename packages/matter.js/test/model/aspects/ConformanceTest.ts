@@ -44,4 +44,12 @@ function testOne(definition: string, expected = definition) {
 describe("Conformance", () => {
     TEST_DEFINITIONS.forEach(d => testOne(d));
     Object.entries(TEST_DEFINITIONS2).forEach(([ d, e ]) => testOne(d, e));
+
+    describe("Matter!Zigbee", () => {
+        it("fails gracefully", () => {
+            const conformance = new Conformance("Matter!Zigbee");
+            expect(conformance.errors?.length).toBe(10);
+            expect(conformance.toString()).toBe("M, !Z");
+        })
+    })
 })

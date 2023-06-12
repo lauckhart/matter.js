@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,332 +15,212 @@ ChipMatter.children!.push(ClusterElement({
     details: "An interface for controlling a fan in a heating/cooling system.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "fanMode", base: "FanModeType",
-            access: { rw: "W" }, conformance: [ "M" ], value: "0"
+            id: 0x0000, name: "FanMode", base: "FanModeType",
+            access: "W", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0001, name: "fanModeSequence", base: "FanModeSequenceType",
-            access: { rw: "W" }, conformance: [ "M" ], value: "2"
+            id: 0x0001, name: "FanModeSequence", base: "FanModeSequenceType",
+            access: "W", conformance: "M", default: 2
         }),
 
         AttributeElement({
-            id: 0x0002, name: "percentSetting", base: "uint8",
-            access: { rw: "W" }, conformance: [ "M" ], quality: { nullable: true }, value: "0"
+            id: 0x0002, name: "PercentSetting", base: "uint8",
+            access: "W", conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "percentCurrent", base: "uint8",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0"
+            id: 0x0003, name: "PercentCurrent", base: "uint8",
+            access: "R", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0004, name: "speedMax", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], value: "1"
+            id: 0x0004, name: "SpeedMax", base: "uint8",
+            access: "R", conformance: "O", default: 1
         }),
 
         AttributeElement({
-            id: 0x0005, name: "speedSetting", base: "uint8",
-            access: { rw: "W" }, conformance: [ "O" ], quality: { nullable: true }, value: "0"
+            id: 0x0005, name: "SpeedSetting", base: "uint8",
+            access: "W", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "speedCurrent", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0006, name: "SpeedCurrent", base: "uint8",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0007, name: "rockSupport", base: "map8",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x00"
+            id: 0x0007, name: "RockSupport", base: "map8",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0008, name: "rockSetting", base: "map8",
-            access: { rw: "W" }, conformance: [ "O" ], value: "0x00"
+            id: 0x0008, name: "RockSetting", base: "map8",
+            access: "W", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0009, name: "windSupport", base: "map8",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x00"
+            id: 0x0009, name: "WindSupport", base: "map8",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x000a, name: "windSetting", base: "map8",
-            access: { rw: "W" }, conformance: [ "O" ], value: "0x00"
+            id: 0x000a, name: "WindSetting", base: "map8",
+            access: "W", conformance: "O", default: 0
         }),
 
         DatatypeElement({
             name: "FanControlFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "multiSpeed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "MultiSpeed",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "multiSpeed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Auto",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "auto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Rocking",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "auto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "rocking",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "rocking",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "wind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "wind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                    id: 0x0008, name: "Wind",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "FanModeType", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "off",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Off",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "off",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "Low",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "low",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Medium",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "low",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "High",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "medium",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "On",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "medium",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0005, name: "Auto",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "high",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "high",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "on",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "on",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "auto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "auto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "smart",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
-                }),
-
-                DatatypeElement({
-                    name: "smart",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
+                    id: 0x0006, name: "Smart",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "FanModeSequenceType", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "offLowMedHigh",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "OffLowMedHigh",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "offLowMedHigh",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "OffLowHigh",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "offLowHigh",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "OffLowMedHighAuto",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "offLowHigh",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "OffLowHighAuto",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "offLowMedHighAuto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "OffOnAuto",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "offLowMedHighAuto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "offLowHighAuto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "offLowHighAuto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "offOnAuto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "offOnAuto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "offOn",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "offOn",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
+                    id: 0x0005, name: "OffOn",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "RockSupportMask", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "rockLeftRight",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "RockLeftRight",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rockLeftRight",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "RockUpDown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rockUpDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "rockUpDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "rockRound",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "rockRound",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0004, name: "RockRound",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WindSupportMask", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "sleepWind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "SleepWind",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sleepWind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "naturalWind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "naturalWind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "NaturalWind",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WindSettingMask", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "sleepWind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "SleepWind",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sleepWind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "naturalWind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "naturalWind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "NaturalWind",
+                    access: "R", conformance: "M"
                 })
             ]
         })

@@ -86,8 +86,6 @@ function installCrossClusterDependencies(elements: MatterElement.Child[]) {
                     logger.warn(`kludge addition of ${base} into ${d.name}`);
                     elementNamespace.set(base, childToBringOver);
                     e.children!.push(childToBringOver);
-                } else {
-                    logger.warn(`${d.name} missing ${base} but cannot find with global search`);
                 }
             }
             d.children?.forEach(visit);

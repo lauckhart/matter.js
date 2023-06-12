@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
-import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../index.js";
+import { ClusterElement, AttributeElement, DatatypeElement, EventElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x002f, name: "PowerSource",
@@ -15,1898 +15,1093 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster is used to describe the configuration and capabilities of a physical power source that provides power to the Node.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "powerSourceStatus", base: "PowerSourceStatusEnum",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0000, name: "PowerSourceStatus", base: "PowerSourceStatusEnum",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "powerSourceOrder", base: "uint8",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "PowerSourceOrder", base: "uint8",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "powerSourceDescription", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0002, name: "PowerSourceDescription", base: "string",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "powerSourceWiredAssessedInputVoltage", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0003, name: "PowerSourceWiredAssessedInputVoltage", base: "uint32",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "powerSourceWiredAssessedInputFrequency", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0004, name: "PowerSourceWiredAssessedInputFrequency", base: "uint16",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "powerSourceWiredCurrentType", base: "WiredCurrentTypeEnum",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0005, name: "PowerSourceWiredCurrentType", base: "WiredCurrentTypeEnum",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "powerSourceWiredAssessedCurrent", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0006, name: "PowerSourceWiredAssessedCurrent", base: "uint32",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "powerSourceWiredNominalVoltage", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0007, name: "PowerSourceWiredNominalVoltage", base: "uint32",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "powerSourceWiredMaximumCurrent", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0008, name: "PowerSourceWiredMaximumCurrent", base: "uint32",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0009, name: "powerSourceWiredPresent", base: "bool",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0009, name: "PowerSourceWiredPresent", base: "bool",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000a, name: "powerSourceActiveWiredFaults", base: "list",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x000a, name: "PowerSourceActiveWiredFaults", base: "list",
+            access: "R", conformance: "O",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "WiredFaultEnum"
+                })
+            ]
         }),
 
         AttributeElement({
-            id: 0x000b, name: "powerSourceBatVoltage", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x000b, name: "PowerSourceBatVoltage", base: "uint32",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000c, name: "powerSourceBatPercentRemaining", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x000c, name: "PowerSourceBatPercentRemaining", base: "uint8",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000d, name: "powerSourceBatTimeRemaining", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x000d, name: "PowerSourceBatTimeRemaining", base: "uint32",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000e, name: "powerSourceBatChargeLevel", base: "BatChargeLevelEnum",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x000e, name: "PowerSourceBatChargeLevel", base: "BatChargeLevelEnum",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000f, name: "powerSourceBatReplacementNeeded", base: "bool",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x000f, name: "PowerSourceBatReplacementNeeded", base: "bool",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0010, name: "powerSourceBatReplaceability", base: "BatReplaceabilityEnum",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0010, name: "PowerSourceBatReplaceability", base: "BatReplaceabilityEnum",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0011, name: "powerSourceBatPresent", base: "bool",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0011, name: "PowerSourceBatPresent", base: "bool",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0012, name: "powerSourceActiveBatFaults", base: "list",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0012, name: "PowerSourceActiveBatFaults", base: "list",
+            access: "R", conformance: "O",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "BatFaultEnum"
+                })
+            ]
         }),
 
         AttributeElement({
-            id: 0x0013, name: "powerSourceBatReplacementDescription", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0013, name: "PowerSourceBatReplacementDescription", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0014, name: "powerSourceBatCommonDesignation", base: "BatCommonDesignationEnum",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0014, name: "PowerSourceBatCommonDesignation", base: "BatCommonDesignationEnum",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0015, name: "powerSourceBatAnsiDesignation", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0015, name: "PowerSourceBatAnsiDesignation", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0016, name: "powerSourceBatIecDesignation", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0016, name: "PowerSourceBatIecDesignation", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0017, name: "powerSourceBatApprovedChemistry", base: "BatApprovedChemistryEnum",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0017, name: "PowerSourceBatApprovedChemistry", base: "BatApprovedChemistryEnum",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0018, name: "powerSourceBatCapacity", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0018, name: "PowerSourceBatCapacity", base: "uint32",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0019, name: "powerSourceBatQuantity", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0019, name: "PowerSourceBatQuantity", base: "uint8",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001a, name: "powerSourceBatChargeState", base: "BatChargeStateEnum",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x001a, name: "PowerSourceBatChargeState", base: "BatChargeStateEnum",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001b, name: "powerSourceBatTimeToFullCharge", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x001b, name: "PowerSourceBatTimeToFullCharge", base: "uint32",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x001c, name: "powerSourceBatFunctionalWhileCharging", base: "bool",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x001c, name: "PowerSourceBatFunctionalWhileCharging", base: "bool",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001d, name: "powerSourceBatChargingCurrent", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x001d, name: "PowerSourceBatChargingCurrent", base: "uint32",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x001e, name: "powerSourceActiveBatChargeFaults", base: "list",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x001e, name: "PowerSourceActiveBatChargeFaults", base: "list",
+            access: "R", conformance: "O",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "BatChargeFaultEnum"
+                })
+            ]
         }),
 
         EventElement({
             id: 0x0000, name: "WiredFaultChange",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "info",
+            access: "R", conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "current", base: "WiredFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Current", base: "WiredFaultEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "current", base: "WiredFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "WiredFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "WiredFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Previous", base: "WiredFaultEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0001, name: "BatFaultChange",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "info",
+            access: "R", conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "current", base: "BatFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Current", base: "BatFaultEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "current", base: "BatFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "BatFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "BatFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Previous", base: "BatFaultEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0002, name: "BatChargeFaultChange",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "info",
+            access: "R", conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "current", base: "BatChargeFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Current", base: "BatChargeFaultEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "current", base: "BatChargeFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "BatChargeFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "BatChargeFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Previous", base: "BatChargeFaultEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "PowerSourceFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "wired",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0001, name: "Wired",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "wired",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0002, name: "Battery",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "battery",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                    id: 0x0004, name: "Rechargeable",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "battery",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "rechargeable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
-                }),
-
-                DatatypeElement({
-                    name: "rechargeable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
-                }),
-
-                DatatypeElement({
-                    name: "replaceable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8"
-                }),
-
-                DatatypeElement({
-                    name: "replaceable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8"
+                    id: 0x0008, name: "Replaceable",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiredFaultEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "OverVoltage",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "overVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "overVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "underVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "underVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "UnderVoltage",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatFaultEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "OverTemp",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "overTemp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "overTemp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "underTemp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "underTemp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "UnderTemp",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatChargeFaultEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "AmbientTooHot",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ambientTooHot",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "AmbientTooCold",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ambientTooHot",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "BatteryTooHot",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ambientTooCold",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "BatteryTooCold",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ambientTooCold",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0005, name: "BatteryAbsent",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "batteryTooHot",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0006, name: "BatteryOverVoltage",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "batteryTooHot",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0007, name: "BatteryUnderVoltage",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "batteryTooCold",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0008, name: "ChargerOverVoltage",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "batteryTooCold",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0009, name: "ChargerUnderVoltage",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "batteryAbsent",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "batteryAbsent",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "batteryOverVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
-                }),
-
-                DatatypeElement({
-                    name: "batteryOverVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
-                }),
-
-                DatatypeElement({
-                    name: "batteryUnderVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
-                }),
-
-                DatatypeElement({
-                    name: "batteryUnderVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
-                }),
-
-                DatatypeElement({
-                    name: "chargerOverVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "chargerOverVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "chargerUnderVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
-                }),
-
-                DatatypeElement({
-                    name: "chargerUnderVoltage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
-                }),
-
-                DatatypeElement({
-                    name: "safetyTimeout",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
-                }),
-
-                DatatypeElement({
-                    name: "safetyTimeout",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
+                    id: 0x000a, name: "SafetyTimeout",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "PowerSourceStatusEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "Active",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "active",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Standby",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "active",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "standby",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "standby",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "unavailable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "unavailable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0003, name: "Unavailable",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiredCurrentTypeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ac",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Ac",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ac",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
-                }),
-
-                DatatypeElement({
-                    name: "dc",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "dc",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Dc",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatChargeLevelEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ok",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Ok",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ok",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "Warning",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "warning",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "warning",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "critical",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "critical",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "Critical",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatReplaceabilityEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "NotReplaceable",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "notReplaceable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "UserReplaceable",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "notReplaceable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "userReplaceable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "userReplaceable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "factoryReplaceable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "factoryReplaceable",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0003, name: "FactoryReplaceable",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatChargeStateEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unknown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "IsCharging",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "isCharging",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "IsAtFullCharge",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "isCharging",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "isAtFullCharge",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "isAtFullCharge",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "isNotCharging",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "isNotCharging",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0003, name: "IsNotCharging",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatCommonDesignationEnum", base: "enum16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Aaa",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "aaa",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "Aa",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "aaa",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "C",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "aa",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "D",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "aa",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0005, name: "4V5",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "c",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0006, name: "6V0",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "c",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0007, name: "9V0",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "d",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0008, name: "12Aa",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "d",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0009, name: "Aaaa",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "4V5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x000a, name: "A",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "4V5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x000b, name: "B",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "6V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
+                    id: 0x000c, name: "F",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "6V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
+                    id: 0x000d, name: "N",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "9V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
+                    id: 0x000e, name: "No6",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "9V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
+                    id: 0x000f, name: "SubC",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "12Aa",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
+                    id: 0x0010, name: "A23",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "12Aa",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
+                    id: 0x0011, name: "A27",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "aaaa",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
+                    id: 0x0012, name: "Ba5800",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "aaaa",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
+                    id: 0x0013, name: "Duplex",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "a",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
+                    id: 0x0014, name: "4Sr44",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "a",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
+                    id: 0x0015, name: "523",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "b",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "11"
+                    id: 0x0016, name: "531",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "b",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "11"
+                    id: 0x0017, name: "15V0",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "f",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "12"
+                    id: 0x0018, name: "22V5",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "f",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "12"
+                    id: 0x0019, name: "30V0",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "n",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "13"
+                    id: 0x001a, name: "45V0",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "n",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "13"
+                    id: 0x001b, name: "67V5",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "no6",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "14"
+                    id: 0x001c, name: "J",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "no6",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "14"
+                    id: 0x001d, name: "Cr123A",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "subC",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "15"
+                    id: 0x001e, name: "Cr2",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "subC",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "15"
+                    id: 0x001f, name: "2Cr5",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "a23",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "16"
+                    id: 0x0020, name: "CrP2",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "a23",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "16"
+                    id: 0x0021, name: "CrV3",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "a27",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "17"
+                    id: 0x0022, name: "Sr41",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "a27",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "17"
+                    id: 0x0023, name: "Sr43",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ba5800",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "18"
+                    id: 0x0024, name: "Sr44",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ba5800",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "18"
+                    id: 0x0025, name: "Sr45",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "duplex",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "19"
+                    id: 0x0026, name: "Sr48",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "duplex",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "19"
+                    id: 0x0027, name: "Sr54",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "4Sr44",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "20"
+                    id: 0x0028, name: "Sr55",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "4Sr44",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "20"
+                    id: 0x0029, name: "Sr57",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "523",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "21"
+                    id: 0x002a, name: "Sr58",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "523",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "21"
+                    id: 0x002b, name: "Sr59",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "531",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "22"
+                    id: 0x002c, name: "Sr60",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "531",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "22"
+                    id: 0x002d, name: "Sr63",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "15V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "23"
+                    id: 0x002e, name: "Sr64",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "15V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "23"
+                    id: 0x002f, name: "Sr65",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "22V5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "24"
+                    id: 0x0030, name: "Sr66",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "22V5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "24"
+                    id: 0x0031, name: "Sr67",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "30V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "25"
+                    id: 0x0032, name: "Sr68",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "30V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "25"
+                    id: 0x0033, name: "Sr69",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "45V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "26"
+                    id: 0x0034, name: "Sr516",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "45V0",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "26"
+                    id: 0x0035, name: "Sr731",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "67V5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "27"
+                    id: 0x0036, name: "Sr712",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "67V5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "27"
+                    id: 0x0037, name: "Lr932",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "j",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "28"
+                    id: 0x0038, name: "A5",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "j",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "28"
+                    id: 0x0039, name: "A10",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "cr123A",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "29"
+                    id: 0x003a, name: "A13",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "cr123A",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "29"
+                    id: 0x003b, name: "A312",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "cr2",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "30"
+                    id: 0x003c, name: "A675",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "cr2",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "30"
+                    id: 0x003d, name: "Ac41E",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "2Cr5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "31"
+                    id: 0x003e, name: "10180",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "2Cr5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "31"
+                    id: 0x003f, name: "10280",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "crP2",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "32"
+                    id: 0x0040, name: "10440",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "crP2",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "32"
+                    id: 0x0041, name: "14250",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "crV3",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "33"
+                    id: 0x0042, name: "14430",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "crV3",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "33"
+                    id: 0x0043, name: "14500",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr41",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "34"
+                    id: 0x0044, name: "14650",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr41",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "34"
+                    id: 0x0045, name: "15270",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr43",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "35"
+                    id: 0x0046, name: "16340",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr43",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "35"
+                    id: 0x0047, name: "Rcr123A",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr44",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "36"
+                    id: 0x0048, name: "17500",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr44",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "36"
+                    id: 0x0049, name: "17670",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr45",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "37"
+                    id: 0x004a, name: "18350",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr45",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "37"
+                    id: 0x004b, name: "18500",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr48",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "38"
+                    id: 0x004c, name: "18650",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr48",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "38"
+                    id: 0x004d, name: "19670",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr54",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "39"
+                    id: 0x004e, name: "25500",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr54",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "39"
+                    id: 0x004f, name: "26650",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sr55",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "40"
-                }),
-
-                DatatypeElement({
-                    name: "sr55",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "40"
-                }),
-
-                DatatypeElement({
-                    name: "sr57",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "41"
-                }),
-
-                DatatypeElement({
-                    name: "sr57",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "41"
-                }),
-
-                DatatypeElement({
-                    name: "sr58",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "42"
-                }),
-
-                DatatypeElement({
-                    name: "sr58",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "42"
-                }),
-
-                DatatypeElement({
-                    name: "sr59",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "43"
-                }),
-
-                DatatypeElement({
-                    name: "sr59",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "43"
-                }),
-
-                DatatypeElement({
-                    name: "sr60",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "44"
-                }),
-
-                DatatypeElement({
-                    name: "sr60",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "44"
-                }),
-
-                DatatypeElement({
-                    name: "sr63",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "45"
-                }),
-
-                DatatypeElement({
-                    name: "sr63",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "45"
-                }),
-
-                DatatypeElement({
-                    name: "sr64",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "46"
-                }),
-
-                DatatypeElement({
-                    name: "sr64",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "46"
-                }),
-
-                DatatypeElement({
-                    name: "sr65",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "47"
-                }),
-
-                DatatypeElement({
-                    name: "sr65",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "47"
-                }),
-
-                DatatypeElement({
-                    name: "sr66",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "48"
-                }),
-
-                DatatypeElement({
-                    name: "sr66",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "48"
-                }),
-
-                DatatypeElement({
-                    name: "sr67",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "49"
-                }),
-
-                DatatypeElement({
-                    name: "sr67",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "49"
-                }),
-
-                DatatypeElement({
-                    name: "sr68",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "50"
-                }),
-
-                DatatypeElement({
-                    name: "sr68",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "50"
-                }),
-
-                DatatypeElement({
-                    name: "sr69",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "51"
-                }),
-
-                DatatypeElement({
-                    name: "sr69",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "51"
-                }),
-
-                DatatypeElement({
-                    name: "sr516",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "52"
-                }),
-
-                DatatypeElement({
-                    name: "sr516",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "52"
-                }),
-
-                DatatypeElement({
-                    name: "sr731",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "53"
-                }),
-
-                DatatypeElement({
-                    name: "sr731",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "53"
-                }),
-
-                DatatypeElement({
-                    name: "sr712",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "54"
-                }),
-
-                DatatypeElement({
-                    name: "sr712",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "54"
-                }),
-
-                DatatypeElement({
-                    name: "lr932",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "55"
-                }),
-
-                DatatypeElement({
-                    name: "lr932",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "55"
-                }),
-
-                DatatypeElement({
-                    name: "a5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "56"
-                }),
-
-                DatatypeElement({
-                    name: "a5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "56"
-                }),
-
-                DatatypeElement({
-                    name: "a10",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "57"
-                }),
-
-                DatatypeElement({
-                    name: "a10",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "57"
-                }),
-
-                DatatypeElement({
-                    name: "a13",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "58"
-                }),
-
-                DatatypeElement({
-                    name: "a13",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "58"
-                }),
-
-                DatatypeElement({
-                    name: "a312",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "59"
-                }),
-
-                DatatypeElement({
-                    name: "a312",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "59"
-                }),
-
-                DatatypeElement({
-                    name: "a675",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "60"
-                }),
-
-                DatatypeElement({
-                    name: "a675",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "60"
-                }),
-
-                DatatypeElement({
-                    name: "ac41E",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "61"
-                }),
-
-                DatatypeElement({
-                    name: "ac41E",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "61"
-                }),
-
-                DatatypeElement({
-                    name: "10180",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "62"
-                }),
-
-                DatatypeElement({
-                    name: "10180",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "62"
-                }),
-
-                DatatypeElement({
-                    name: "10280",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "63"
-                }),
-
-                DatatypeElement({
-                    name: "10280",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "63"
-                }),
-
-                DatatypeElement({
-                    name: "10440",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "64"
-                }),
-
-                DatatypeElement({
-                    name: "10440",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "64"
-                }),
-
-                DatatypeElement({
-                    name: "14250",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "65"
-                }),
-
-                DatatypeElement({
-                    name: "14250",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "65"
-                }),
-
-                DatatypeElement({
-                    name: "14430",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "66"
-                }),
-
-                DatatypeElement({
-                    name: "14430",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "66"
-                }),
-
-                DatatypeElement({
-                    name: "14500",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "67"
-                }),
-
-                DatatypeElement({
-                    name: "14500",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "67"
-                }),
-
-                DatatypeElement({
-                    name: "14650",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "68"
-                }),
-
-                DatatypeElement({
-                    name: "14650",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "68"
-                }),
-
-                DatatypeElement({
-                    name: "15270",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "69"
-                }),
-
-                DatatypeElement({
-                    name: "15270",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "69"
-                }),
-
-                DatatypeElement({
-                    name: "16340",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "70"
-                }),
-
-                DatatypeElement({
-                    name: "16340",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "70"
-                }),
-
-                DatatypeElement({
-                    name: "rcr123A",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "71"
-                }),
-
-                DatatypeElement({
-                    name: "rcr123A",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "71"
-                }),
-
-                DatatypeElement({
-                    name: "17500",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "72"
-                }),
-
-                DatatypeElement({
-                    name: "17500",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "72"
-                }),
-
-                DatatypeElement({
-                    name: "17670",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "73"
-                }),
-
-                DatatypeElement({
-                    name: "17670",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "73"
-                }),
-
-                DatatypeElement({
-                    name: "18350",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "74"
-                }),
-
-                DatatypeElement({
-                    name: "18350",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "74"
-                }),
-
-                DatatypeElement({
-                    name: "18500",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "75"
-                }),
-
-                DatatypeElement({
-                    name: "18500",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "75"
-                }),
-
-                DatatypeElement({
-                    name: "18650",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "76"
-                }),
-
-                DatatypeElement({
-                    name: "18650",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "76"
-                }),
-
-                DatatypeElement({
-                    name: "19670",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "77"
-                }),
-
-                DatatypeElement({
-                    name: "19670",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "77"
-                }),
-
-                DatatypeElement({
-                    name: "25500",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "78"
-                }),
-
-                DatatypeElement({
-                    name: "25500",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "78"
-                }),
-
-                DatatypeElement({
-                    name: "26650",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "79"
-                }),
-
-                DatatypeElement({
-                    name: "26650",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "79"
-                }),
-
-                DatatypeElement({
-                    name: "32600",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "80"
-                }),
-
-                DatatypeElement({
-                    name: "32600",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "80"
+                    id: 0x0050, name: "32600",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatApprovedChemistryEnum", base: "enum16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Alkaline",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "alkaline",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "LithiumCarbonFluoride",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "alkaline",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "LithiumChromiumOxide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumCarbonFluoride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "LithiumCopperOxide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumCarbonFluoride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0005, name: "LithiumIronDisulfide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumChromiumOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0006, name: "LithiumManganeseDioxide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumChromiumOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0007, name: "LithiumThionylChloride",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumCopperOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0008, name: "Magnesium",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumCopperOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0009, name: "MercuryOxide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumIronDisulfide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x000a, name: "NickelOxyhydride",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumIronDisulfide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x000b, name: "SilverOxide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumManganeseDioxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
+                    id: 0x000c, name: "ZincAir",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumManganeseDioxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
+                    id: 0x000d, name: "ZincCarbon",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumThionylChloride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
+                    id: 0x000e, name: "ZincChloride",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lithiumThionylChloride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
+                    id: 0x000f, name: "ZincManganeseDioxide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "magnesium",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
+                    id: 0x0010, name: "LeadAcid",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "magnesium",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
+                    id: 0x0011, name: "LithiumCobaltOxide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mercuryOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
+                    id: 0x0012, name: "LithiumIon",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mercuryOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
+                    id: 0x0013, name: "LithiumIonPolymer",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "nickelOxyhydride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
+                    id: 0x0014, name: "LithiumIronPhosphate",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "nickelOxyhydride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
+                    id: 0x0015, name: "LithiumSulfur",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "silverOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "11"
+                    id: 0x0016, name: "LithiumTitanate",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "silverOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "11"
+                    id: 0x0017, name: "NickelCadmium",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "zincAir",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "12"
+                    id: 0x0018, name: "NickelHydrogen",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "zincAir",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "12"
+                    id: 0x0019, name: "NickelIron",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "zincCarbon",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "13"
+                    id: 0x001a, name: "NickelMetalHydride",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "zincCarbon",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "13"
+                    id: 0x001b, name: "NickelZinc",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "zincChloride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "14"
+                    id: 0x001c, name: "SilverZinc",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "zincChloride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "14"
+                    id: 0x001d, name: "SodiumIon",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "zincManganeseDioxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "15"
+                    id: 0x001e, name: "SodiumSulfur",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "zincManganeseDioxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "15"
+                    id: 0x001f, name: "ZincBromide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "leadAcid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "16"
-                }),
-
-                DatatypeElement({
-                    name: "leadAcid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "16"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumCobaltOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "17"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumCobaltOxide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "17"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumIon",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "18"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumIon",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "18"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumIonPolymer",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "19"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumIonPolymer",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "19"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumIronPhosphate",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "20"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumIronPhosphate",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "20"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumSulfur",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "21"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumSulfur",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "21"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumTitanate",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "22"
-                }),
-
-                DatatypeElement({
-                    name: "lithiumTitanate",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "22"
-                }),
-
-                DatatypeElement({
-                    name: "nickelCadmium",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "23"
-                }),
-
-                DatatypeElement({
-                    name: "nickelCadmium",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "23"
-                }),
-
-                DatatypeElement({
-                    name: "nickelHydrogen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "24"
-                }),
-
-                DatatypeElement({
-                    name: "nickelHydrogen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "24"
-                }),
-
-                DatatypeElement({
-                    name: "nickelIron",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "25"
-                }),
-
-                DatatypeElement({
-                    name: "nickelIron",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "25"
-                }),
-
-                DatatypeElement({
-                    name: "nickelMetalHydride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "26"
-                }),
-
-                DatatypeElement({
-                    name: "nickelMetalHydride",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "26"
-                }),
-
-                DatatypeElement({
-                    name: "nickelZinc",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "27"
-                }),
-
-                DatatypeElement({
-                    name: "nickelZinc",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "27"
-                }),
-
-                DatatypeElement({
-                    name: "silverZinc",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "28"
-                }),
-
-                DatatypeElement({
-                    name: "silverZinc",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "28"
-                }),
-
-                DatatypeElement({
-                    name: "sodiumIon",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "29"
-                }),
-
-                DatatypeElement({
-                    name: "sodiumIon",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "29"
-                }),
-
-                DatatypeElement({
-                    name: "sodiumSulfur",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "30"
-                }),
-
-                DatatypeElement({
-                    name: "sodiumSulfur",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "30"
-                }),
-
-                DatatypeElement({
-                    name: "zincBromide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "31"
-                }),
-
-                DatatypeElement({
-                    name: "zincBromide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "31"
-                }),
-
-                DatatypeElement({
-                    name: "zincCerium",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "32"
-                }),
-
-                DatatypeElement({
-                    name: "zincCerium",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "32"
+                    id: 0x0020, name: "ZincCerium",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiredFaultChangeType", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "current", base: "WiredFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Current", base: "WiredFaultEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "current", base: "WiredFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "WiredFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "WiredFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Previous", base: "WiredFaultEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatFaultChangeType", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "current", base: "BatFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Current", base: "BatFaultEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "current", base: "BatFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "BatFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "BatFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Previous", base: "BatFaultEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatChargeFaultChangeType", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "current", base: "BatChargeFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Current", base: "BatChargeFaultEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "current", base: "BatChargeFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "BatChargeFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "BatChargeFaultEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Previous", base: "BatChargeFaultEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         })

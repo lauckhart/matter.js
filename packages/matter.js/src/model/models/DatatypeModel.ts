@@ -4,17 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatatypeElement, DataModel, Mei, Model, Datatype, Globals, Metatype, CommandElement } from "../index.js";
+import { DatatypeElement, DataModel, Mei, Model, Datatype, Globals } from "../index.js";
 
 export class DatatypeModel extends DataModel implements DatatypeElement {
     override type: DatatypeElement.Type = DatatypeElement.Type;
     override id?: Mei;
-
-    override validate() {
-        this.validateStructure(DatatypeElement.Type, false, DatatypeModel);
-        this.validateEntries();
-        return super.validate();
-    }
 
     override get actualBase() {
         const base = super.actualBase;
@@ -48,38 +42,4 @@ export class DatatypeModel extends DataModel implements DatatypeElement {
     static {
         Model.constructors[DatatypeElement.Type] = this;
     }
-
-    private validateEntries() {
-        switch (Metatype.of(this.base)) {
-            case Metatype.object:
-                if (!this.children.length) {
-                    this.error("CHILDLESS_OBJECT", `struct element with no children`);
-                }
-                break;
-
-            case Metatype.bitmap:
-            case Metatype.enum:
-                if (!this.children.length) {
-                    if (this.parent?.type == CommandElement.Type || this.parent?.type == DatatypeElement.Type) {
-                        // The specification defines some fields as enums without specific values, so
-                        // allow this under command and datatype fields
-                        break;
-                    }
-
-                    this.error("CHILDLESS_ENUM", `${this.base} with no children`);
-                }
-                break;
-
-            case Metatype.array:
-                if (!this.children.length) {
-                    this.error("UNTYPED_ARRAY", `array element with no entry type`);
-                } else if (this.children.length > 1) {
-                    this.error("OVERLY_TYPED_ARRAY", `array element with multiple entry types`);
-                }
-                break;
-        }
-    }
 }
-
-// This allows DataModel to access DatatypeModel without a circular dependency.
-DataModel.DatatypeModel = DatatypeModel;

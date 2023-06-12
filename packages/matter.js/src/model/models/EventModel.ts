@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DataModel, Datatype, DatatypeModel, EventElement, Mei, Model } from "../index.js";
+import { DataModel, Datatype, EventElement, Mei, Model } from "../index.js";
 
 export class EventModel extends DataModel implements EventElement {
     override type!: EventElement.Type;
@@ -13,12 +13,6 @@ export class EventModel extends DataModel implements EventElement {
 
     override get actualBase() {
         return Datatype.struct;
-    }
-
-    override validate() {
-        this.validateStructure(EventElement.Type, true, DatatypeModel);
-        this.validateProperty({ name: "priority", type: EventElement.Priority, required: true })
-        return super.validate();
     }
 
     constructor(definition: EventElement.Properties) {

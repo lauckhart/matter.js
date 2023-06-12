@@ -193,56 +193,72 @@ function setQualities(src: Element, target: BaseDataElement) {
     target.conformance = conformance;
 }
 
+function mapType(chipType: string | undefined) {
+    if (!chipType) {
+        return;
+    }
+    const mapped = TypeMap[chipType.toUpperCase()];
+    if (mapped) {
+        return mapped;
+    }
+    return camelize(chipType);
+}
+
 // Create a MOM element with data properties translated from CHIP XML
-function createDataElement<T extends BaseDataElement>(
-    Factory: ((properties: T) => T) & { Type: BaseElement.Type },
-    dataEl: Element,
+function createDataElement<T extends BaseDataElement>({
+    factory,
+    source,
+    target,
+    isClass,
+    base,
+    propertyTag,
+    propertyIsClass
+}: {
+    factory: ((properties: T) => T) & { Type: BaseElement.Type },
+    source: Element,
     target: BaseDataElement,
-    isClass: boolean,
+    isClass?: boolean,
     base?: string,
-    propertyTag?: string
-): T {
-    let name = camelize(need(`${Factory.Type} name`, dataEl.getAttribute("name") || dataEl.getAttribute("define")), isClass);
-    logger.debug(`${Factory.Type} ${name}`);
+    propertyTag?: string,
+    propertyIsClass?: boolean
+}): T {
+    let name = camelize(need(`${factory.Type} name`, source.getAttribute("name") || source.getAttribute("define")), isClass);
+    logger.debug(`${factory.Type} ${name}`);
 
-    let id = int(dataEl.getAttribute("code"));
-    if (Factory.Type != DatatypeElement.Type) {
-        need(`${Factory.Type} id`, id);
+    let id = int(source.getAttribute("code") || source.getAttribute("value") || source.getAttribute("mask"));
+    if (factory.Type != DatatypeElement.Type) {
+        need(`${factory.Type} id`, id);
     }
 
-    if (base && TypeMap[base.toUpperCase()]) {
-        base = TypeMap[base.toUpperCase()];
-    } else if (base) {
-        base = camelize(base);
-    }
+    base = mapType(base);
 
-    const element = Factory({ id: id, name: name, base: base } as T);
+    const element = factory({ id: id, name: name, base: base } as T);
 
-    let value = str(dataEl.getAttribute("default") || dataEl.getAttribute("value") || dataEl.getAttribute("mask"));
+    let value = str(source.getAttribute("default"));
     if (value != undefined) {
         if (element.base?.match(/struct$/i) && value == "0x0") {
             value = "null";
         }
-        element.value = value;
+        element.default = value;
     }
 
-    setQualities(dataEl, element);
+    setQualities(source, element);
 
     if (propertyTag) {
-        children(dataEl, propertyTag).forEach(propertyEl => {
+        children(source, propertyTag).forEach(propertyEl => {
             if (!element.children) {
                 element.children = [];
             }
 
             const childBase = str(propertyEl.getAttribute("type"));
 
-            element.children.push(createDataElement(
-                DatatypeElement,
-                propertyEl,
-                element,
-                false,
-                childBase
-            ));
+            createDataElement({
+                factory: DatatypeElement,
+                source: propertyEl,
+                target: element,
+                isClass: propertyIsClass,
+                base: childBase
+            });
         })
     }
 
@@ -251,6 +267,13 @@ function createDataElement<T extends BaseDataElement>(
     }
     target.children.push(element);
 
+    if (!element.children?.length) {
+        const entryType = source.getAttribute("entryType");
+        if (entryType) {
+            element.children = [ DatatypeElement({ name: "entry", base: mapType(entryType) }) ];
+        }
+    }
+
     return element;
 }
 
@@ -258,37 +281,34 @@ type Translator = (source: Element, target: ClusterElement) => void;
 
 const translators: { [name: string]: Translator } = {
     attribute: (source, target) => {
-        return createDataElement(
-            AttributeElement,
+        return createDataElement({
+            factory: AttributeElement,
             source,
             target,
-            false,
-            need("attribute type", str(source.getAttribute("type")))
-        );
+            base: need("attribute type", str(source.getAttribute("type")))
+        });
     },
 
     event: (source, target) => {
-        const event = createDataElement(
-            EventElement,
+        const event = createDataElement({
+            factory: EventElement,
             source,
             target,
-            true,
-            undefined,
-            "field"
-        );
+            isClass: true,
+            propertyTag: "field"
+        });
         event.priority = need("event priority", str(source.getAttribute("priority"))) as typeof event.priority;
         return event;
     },
 
     command: (source, target) => {
-        const command = createDataElement(
-            CommandElement,
+        const command = createDataElement({
+            factory: CommandElement,
             source,
             target,
-            true,
-            undefined,
-            "arg"
-        );
+            isClass: true,
+            propertyTag: "arg"
+        });
 
         const response = str(source.getAttribute("response"));
         if (response) command.response = camelize(response);
@@ -306,36 +326,38 @@ const translators: { [name: string]: Translator } = {
     },
 
     struct: (source, target) => {
-        return createDataElement(
-            DatatypeElement,
+        return createDataElement({
+            factory: DatatypeElement,
             source,
             target,
-            true,
-            str(source.getAttribute("type")) ?? "STRUCT",
-            "item"
-        );
+            isClass: true,
+            base: str(source.getAttribute("type")) ?? "STRUCT",
+            propertyTag: "item"
+        });
     },
 
     enum: (source, target) => {
-        return createDataElement(
-            DatatypeElement,
+        return createDataElement({
+            factory: DatatypeElement,
             source,
             target,
-            true,
-            need("enum type", str(source.getAttribute("type"))),
-            "item"
-        )
+            isClass: true,
+            base: need("enum type", str(source.getAttribute("type"))),
+            propertyTag: "item",
+            propertyIsClass: true
+        })
     },
 
     bitmap: (source, target) => {
-        return createDataElement(
-            DatatypeElement,
+        return createDataElement({
+            factory: DatatypeElement,
             source,
             target,
-            true,
-            need("bitmap type", str(source.getAttribute("type"))),
-            "field"
-        )
+            isClass: true,
+            base: need("bitmap type", str(source.getAttribute("type"))),
+            propertyTag: "field",
+            propertyIsClass: true
+        })
     }
 }
 

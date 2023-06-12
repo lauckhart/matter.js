@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AnyElement, Globals, MatterElement, Model } from "../index.js";
+import { AnyElement, AttributeModel, ClusterModel, DatatypeModel, DeviceTypeModel, FabricModel, Globals, MatterElement, Model } from "../index.js";
 
 /**
  * The root of a Matter model.
@@ -12,6 +12,41 @@ import { AnyElement, Globals, MatterElement, Model } from "../index.js";
 export class MatterModel extends Model implements MatterElement {
     override type: MatterElement.Type = MatterElement.Type;
     version?: string;
+
+    /**
+     * Clusters.
+     */
+    get clusters() {
+        return this.local(ClusterModel)
+    }
+
+    /**
+     * Device types.
+     */
+    get deviceTypes() {
+        return this.local(DeviceTypeModel);
+    }
+
+    /**
+     * Global datatypes.
+     */
+    get datatypes() {
+        return this.local(DatatypeModel);
+    }
+
+    /**
+     * Global attributes.
+     */
+    get attributes() {
+        return this.local(AttributeModel);
+    }
+
+    /**
+     * Fabrics.
+     */
+    get fabrics() {
+        return this.local(FabricModel);
+    }
 
     override get children(): Model[] {
         return super.children as any;
@@ -21,15 +56,9 @@ export class MatterModel extends Model implements MatterElement {
         super.children = children;
     }
 
-    override validate() {
-        this.validateStructure(MatterElement.Type, false);
-        this.validateProperty({ name: "version", type: "string" });
-        return super.validate();
-    }
-
     constructor(definition: MatterElement.Properties, globals = Object.values(Globals)) {
-        super(definition);
-        this.children = globals;
+        const children = [ ...globals, ...(definition.children || []) ]
+        super({ ...definition, children: children });
     }
 
     static {

@@ -14,7 +14,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
 
     target.file.addImport("../../../index", factory);
 
-    const fields = { ...element } as { [ name: string ]: any };
+    const fields = element.valueOf() as { [ name: string ]: any };
     
     delete fields.type;
     delete fields.xref;

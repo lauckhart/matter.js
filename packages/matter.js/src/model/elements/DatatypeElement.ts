@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement, Mei } from "../index.js";
+import { BaseDataElement, BaseElement, Mei, Metatype } from "../index.js";
 
 /**
  * A datatype element defines a standalone datatype.
@@ -17,6 +17,14 @@ export type DatatypeElement = BaseDataElement & {
      * does not have an ID.  So we leave ID is optional for this type.
      */
     id?: Mei,
+
+    /**
+     * A "metatype" provides enough semantics for us to translate a value into
+     * a native datatype.  Metatype is only required on global datatypes, and
+     * only when the datatype should map directly to a specific native (JS)
+     * type.
+     */
+    metatype?: Metatype,
 
     children?: DatatypeElement[]
 }
@@ -45,7 +53,8 @@ export namespace DatatypeElement {
                 result.push(DatatypeElement({
                     id: v,
                     name: k,
-                    base: "uint8"
+                    base: "uint8",
+                    default: v
                 }));
             }
         }

@@ -4,7 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MatterError } from "../../common/index.js";
+import { Aspect } from "../aspects/Aspect.js";
 import {
+    // These are circular dependencies so just to be safe we only import the
+    // types.  We also need the class, though, at runtime.  So we use the
+    // references in the Model.constructors factory pool.
+    type DatatypeModel,
+    type ClusterModel,
+
     Access,
     BaseDataElement,
     Conformance,
@@ -13,13 +21,7 @@ import {
     Model,
     Quality,
     Metatype,
-
-    // This is a circular dependency so just to be safe we only import the
-    // type.  We also need the class, though, at runtime.  So just to be safe
-    // DatatypeModel installs itself into a special slot in the DataModel
-    // namespace.
-    type DatatypeModel,
-    Globals
+    AnyElement
 } from "../index.js";
 
 const CONSTRAINT: unique symbol = Symbol("constraint");
@@ -34,7 +36,8 @@ const QUALITY: unique symbol = Symbol("quality");
 export abstract class DataModel extends Model implements BaseDataElement {
     base?: string;
     byteSize?: BaseDataElement.Size;
-    value?: any;
+    default?: any;
+    metatype?: Metatype;
 
     override get children(): DatatypeModel[] {
         return super.children as any;
@@ -73,6 +76,37 @@ export abstract class DataModel extends Model implements BaseDataElement {
     }
 
     /**
+     * Access the cluster that owns this element.
+     */
+    get cluster() {
+        const cluster = this.find(
+            current => current.parent,
+            current => current instanceof Model.constructors.cluster ? current : undefined,
+            true
+        );
+        if (cluster) {
+            return cluster as ClusterModel;
+        }
+        throw new MatterError("Attempt to access cluster on non-cluster element");
+    }
+
+    /**
+     * Access the element from which datatype search should commence.  This is
+     * the first model that is not a data structure.
+     */
+    get scope() {
+        const scope = this.find(
+            current => current.parent,
+            current => !(current instanceof DataModel) ? current : undefined,
+            true
+        )
+        if (scope) {
+            return scope as Model;
+        }
+        throw new MatterError("Attempt to access scope on unparented data structure");
+    }
+
+    /**
      * In some circumstances the base type can be inferred.  This inference
      * happens here.
      * 
@@ -83,53 +117,48 @@ export abstract class DataModel extends Model implements BaseDataElement {
     }
 
     /**
+     * Metatype is only present on global types with specific semantic meaning.
+     * This model is significant because it gives us information about how to
+     * manipulate the data.  This accessor retrieves this model.
+     */
+    get metaBase() {
+        return this.find(
+            current => (current as DataModel).baseModel,
+            current => (current as DataModel).metatype ? current : undefined,
+            true
+        ) as DataModel;
+    }
+
+    /**
+     * Get a Model for my base type, if any.
+     */
+    get baseModel() {
+        const base = this.actualBase;
+        if (base) {
+            return this.scope.global(DataModel.constructors.datatype, base);
+        }
+    }
+
+    /**
      * Search the inheritance chain for a child.
      */
     member(key: string | number): Model | undefined {
         return this.find(
-            DataModel.nextBase,
-            current => current.local(key, DataModel.DatatypeModel)
-        );
+            current => current instanceof DataModel ? current.baseModel : undefined,
+            current => current.local(DataModel.constructors.datatype, key),
+            true
+        ) as Model | undefined;
     }
 
-    /**
-     * Determine the metatype of this element.  This requires us to search the
-     * inheritance hierarchy until we find a global element with a semantic
-     * definition we understand.
-     */
-    get metatype(): Metatype | undefined {
-        return this.find(
-            DataModel.nextBase,
-            current => {
-                if (current instanceof DataModel) {
-                    const metatype = Metatype.of(current.name);
-                    if (metatype) {
-                        const global = (Globals as any)[current.name];
-                        if (global && global.base == current.base) {
-                            return metatype;
-                        }
-                    }
-                }
+    override valueOf() {
+        const result = super.valueOf() as any;
+        for (const k of [ "constraint", "conformance", "access", "quality" ]) {
+            const v = (this as any)[k] as Aspect<any>;
+            if (v && !v.empty) {
+                result[k] = v.valueOf();
             }
-        )
-    }
-
-    override validate() {
-        this.validateProperty({ name: "base", type: "string" });
-        this.validateProperty({ name: "byteSize", type: "number" });
-        this.validateProperty({ name: "constraint", type: Constraint });
-        this.validateProperty({ name: "conformance", type: Conformance });
-        this.validateProperty({ name: "access", type: Access });
-        this.validateProperty({ name: "quality", type: Quality });
-
-        this.validateAspect(CONSTRAINT);
-        this.validateAspect(CONFORMANCE);
-        this.validateAspect(ACCESS);
-        this.validateAspect(QUALITY);
-
-        this.validateType();
-
-        return super.validate();
+        }
+        return result as AnyElement;
     }
 
     protected constructor(definition: BaseDataElement.Properties) {
@@ -138,7 +167,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
         const match = this.base?.match(/^list\[(.*)\]$/);
         if (match) {
             this.base = "list";
-            this.children.push(new DataModel.DatatypeModel({ name: "entry", base: match[1] }));
+            this.children.push(new Model.constructors.datatype({ name: "entry", base: match[1] }) as DatatypeModel);
         }
     }
 
@@ -151,84 +180,6 @@ export abstract class DataModel extends Model implements BaseDataElement {
             (this as any)[symbol] = value;
         } else {
             (this as any)[symbol] = new constructor(value);
-        }
-    }
-
-    private validateAspect(symbol: symbol) {
-        const aspect = (this as any)[symbol];
-        if (aspect?.errors) {
-            this.addErrors(aspect);
-        }
-    }
-
-    private validateType() {
-        if (this.actualBase == undefined) {
-            if ((Globals as any)[this.name]) {
-                // Not a derivative type
-                return;
-            }
-
-            // Non-global types must specify a base type
-            this.error("NO_TYPE", "No type information");
-            return;
-        }
-        
-        const base = this.global(this.actualBase, DataModel.DatatypeModel);
-        if (base == undefined) {
-            this.error("TYPE_UNKOWN", `Unknown type ${this.base}`);
-            return;
-        }
-
-        const metatype = this.metatype;
-        if (metatype == undefined) {
-            this.error("METATYPE_UNKOWN", `No metatype for ${this.base}`);
-            return;
-        }
-
-        // Require a value for enum and bitmap values.  These are any children
-        // of enums or bitmaps
-        if (this.value == undefined) {
-            if (this.parent instanceof DataModel) {
-                switch (this.parent.metatype) {
-                    case Metatype.enum:
-                    case Metatype.bitmap:
-                        this.error("MISSING_ITEM_VALUE", `No value for ${this.parent.base} child`)
-                }
-            }
-
-            // If not an enum or bitmap, undefined and null are both OK
-            return;
-        }
-
-        // Convert value to proper type if possible
-        const value = Metatype.cast(metatype, this.value);
-        if (value == Metatype.Invalid) {
-            this.error("INVALID_VALUE", `Value "${this.value}" is not a ${metatype}`);
-            return;
-        }
-        this.value = value;
-
-        // For bitmaps and enums, convert string name to numeric ID
-        if (metatype == Metatype.bitmap || metatype == Metatype.enum) {
-            if (typeof value == "string") {
-                const member = this.member(value);
-                if (member) {
-                    this.value = member.id;
-                } else {
-                    this.error("INVALID_ENTRY", `"${value}" is not in ${metatype} ${this.base}`);
-                }
-            }
-        }
-    }
-}
-
-export namespace DataModel {
-    // Set in DatatypeModel.ts
-    export let DatatypeModel = undefined as unknown as new(properties: DatatypeElement.Properties, parent?: Model) => DatatypeModel;
-
-    export function nextBase(current: Model) {
-        if (current instanceof DataModel) {
-            return current.global(current.actualBase, DataModel.DatatypeModel);
         }
     }
 }

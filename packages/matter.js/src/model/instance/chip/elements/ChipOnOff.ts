@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,254 +15,174 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for switching devices between 'On' and 'Off' states.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "onOff", base: "bool",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { reportable: true }, value: "0"
+            id: 0x0000, name: "OnOff", base: "bool",
+            access: "R", conformance: "M", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x4000, name: "globalSceneControl", base: "bool",
-            access: { rw: "R" }, conformance: [ "O" ], value: "1"
+            id: 0x4000, name: "GlobalSceneControl", base: "bool",
+            access: "R", conformance: "O", default: true
         }),
 
         AttributeElement({
-            id: 0x4001, name: "onTime", base: "uint16",
-            access: { rw: "W" }, conformance: [ "O" ], value: "0"
+            id: 0x4001, name: "OnTime", base: "uint16",
+            access: "W", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x4002, name: "offWaitTime", base: "uint16",
-            access: { rw: "W" }, conformance: [ "O" ], value: "0"
+            id: 0x4002, name: "OffWaitTime", base: "uint16",
+            access: "W", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x4003, name: "startUpOnOff", base: "OnOffStartUpOnOff",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x4003, name: "StartUpOnOff", base: "OnOffStartUpOnOff",
+            access: "W VM", conformance: "O", quality: "X"
         }),
 
         CommandElement({
             id: 0x0000, name: "Off",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request"
+            access: "R", conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0001, name: "On",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request"
+            access: "R", conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0002, name: "Toggle",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request"
+            access: "R", conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0040, name: "OffWithEffect",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "effectIdentifier", base: "OnOffEffectIdentifier",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "EffectIdentifier", base: "OnOffEffectIdentifier",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "effectIdentifier", base: "OnOffEffectIdentifier",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "effectVariant", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "effectVariant", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "EffectVariant", base: "uint8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0041, name: "OnWithRecallGlobalScene",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request"
+            access: "R", conformance: "O", direction: "request"
         }),
 
         CommandElement({
             id: 0x0042, name: "OnWithTimedOff",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "onOffControl", base: "OnOffControl",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OnOffControl", base: "OnOffControl",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "onOffControl", base: "OnOffControl",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OnTime", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "onTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "onTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "offWaitTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "offWaitTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OffWaitTime", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffStartUpOnOff", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "off",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Off",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "off",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "On",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "on",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "on",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "togglePreviousOnOff",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "togglePreviousOnOff",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "TogglePreviousOnOff",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffEffectIdentifier", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "delayedAllOff",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "DelayedAllOff",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "delayedAllOff",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
-                }),
-
-                DatatypeElement({
-                    name: "dyingLight",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "dyingLight",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "DyingLight",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffDelayedAllOffEffectVariant", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "fadeToOffIn0P8Seconds",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "FadeToOffIn0P8Seconds",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "fadeToOffIn0P8Seconds",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "NoFade",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "noFade",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "noFade",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "50PercentDimDownIn0P8SecondsThenFadeToOffIn12Seconds",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "50PercentDimDownIn0P8SecondsThenFadeToOffIn12Seconds",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "50PercentDimDownIn0P8SecondsThenFadeToOffIn12Seconds",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffDyingLightEffectVariant", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "20PercenterDimUpIn0P5SecondsThenFadeToOffIn1Second",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
-                }),
-
-                DatatypeElement({
-                    name: "20PercenterDimUpIn0P5SecondsThenFadeToOffIn1Second",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "20PercenterDimUpIn0P5SecondsThenFadeToOffIn1Second",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffControl", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "acceptOnlyWhenOn",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "acceptOnlyWhenOn",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "AcceptOnlyWhenOn",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "lighting",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "lighting",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Lighting",
+                    access: "R", conformance: "M"
                 })
             ]
         })

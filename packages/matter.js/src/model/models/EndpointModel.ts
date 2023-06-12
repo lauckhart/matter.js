@@ -10,17 +10,16 @@ export class EndpointModel extends Model implements EndpointElement {
     override type!: EndpointElement.Type;
     override id!: number;
 
+    get deviceTypes() {
+        return this.children;
+    }
+
     override get children(): DeviceTypeModel[] {
         return super.children as any;
     }
 
     override set children(children: (DeviceTypeModel | DeviceTypeElement)[]) {
         super.children = children;
-    }
-
-    override validate() {
-        this.validateStructure(EndpointElement.Type, true, DeviceTypeModel);
-        return super.validate();
     }
 
     constructor(definition: EndpointElement.Properties) {

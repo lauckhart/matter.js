@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./definitions/internal.js";
-export * from "./aspects/internal.js";
-export * from "./elements/internal.js";
-export * from "./instance/internal.js";
-export * from "./models/internal.js";
+export * from "./definitions/index.js";
+export * from "./aspects/index.js";
+export * from "./elements/index.js";
+export * from "./instance/index.js";
+export * from "./models/index.js";

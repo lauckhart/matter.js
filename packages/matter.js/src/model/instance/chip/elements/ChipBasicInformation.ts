@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,493 +15,323 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides attributes and events for determining basic information about Nodes, which supports both Commissioning and operational determination of Node characteristics, such as Vendor ID, Product ID and serial number, which apply to the whole Node. Also allows setting user device information such as location.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "dataModelRevision", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0000, name: "DataModelRevision", base: "uint16",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "vendorName", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "VendorName", base: "string",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "vendorId", base: "vendorId",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0002, name: "VendorId", base: "vendor-id",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "productName", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0003, name: "ProductName", base: "string",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "productId", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0004, name: "ProductId", base: "uint16",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "nodeLabel", base: "string",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "M" ]
+            id: 0x0005, name: "NodeLabel", base: "string",
+            access: "W VM", conformance: "M", default: ""
         }),
 
         AttributeElement({
-            id: 0x0006, name: "location", base: "string",
-            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "M" ], value: "XX"
+            id: 0x0006, name: "Location", base: "string",
+            access: "W VA", conformance: "M", default: "XX"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "hardwareVersion", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0"
+            id: 0x0007, name: "HardwareVersion", base: "uint16",
+            access: "R", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0008, name: "hardwareVersionString", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0008, name: "HardwareVersionString", base: "string",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0009, name: "softwareVersion", base: "uint32",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0"
+            id: 0x0009, name: "SoftwareVersion", base: "uint32",
+            access: "R", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x000a, name: "softwareVersionString", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x000a, name: "SoftwareVersionString", base: "string",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x000b, name: "manufacturingDate", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x000b, name: "ManufacturingDate", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000c, name: "partNumber", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x000c, name: "PartNumber", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000d, name: "productUrl", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x000d, name: "ProductUrl", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000e, name: "productLabel", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x000e, name: "ProductLabel", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000f, name: "serialNumber", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x000f, name: "SerialNumber", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0010, name: "localConfigDisabled", base: "bool",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0"
+            id: 0x0010, name: "LocalConfigDisabled", base: "bool",
+            access: "W VM", conformance: "O", default: true
         }),
 
         AttributeElement({
-            id: 0x0011, name: "reachable", base: "bool",
-            access: { rw: "R" }, conformance: [ "O" ], value: "1"
+            id: 0x0011, name: "Reachable", base: "bool",
+            access: "R", conformance: "O", default: true
         }),
 
         AttributeElement({
-            id: 0x0012, name: "uniqueId", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0012, name: "UniqueId", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0013, name: "capabilityMinima", base: "CapabilityMinimaStruct",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0013, name: "CapabilityMinima", base: "CapabilityMinimaStruct",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0014, name: "productAppearance", base: "ProductAppearanceStruct",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0014, name: "ProductAppearance", base: "ProductAppearanceStruct",
+            access: "R", conformance: "O"
         }),
 
         EventElement({
             id: 0x0000, name: "StartUp",
-            access: { rw: "R" }, conformance: [ "M" ], priority: "critical",
+            access: "R", conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "softwareVersion", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "softwareVersion", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "SoftwareVersion", base: "uint32",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0001, name: "ShutDown",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "critical"
+            access: "R", conformance: "O", priority: "critical"
         }),
 
         EventElement({
             id: 0x0002, name: "Leave",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "info",
+            access: "R", conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "fabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "fabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "FabricIndex", base: "fabric-idx",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0003, name: "ReachableChanged",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "info",
+            access: "R", conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "reachableNewValue", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "reachableNewValue", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ReachableNewValue", base: "bool",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CapabilityMinimaStruct", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "caseSessionsPerFabric", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "CaseSessionsPerFabric", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "caseSessionsPerFabric", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "subscriptionsPerFabric", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "subscriptionsPerFabric", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "SubscriptionsPerFabric", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ProductFinishEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "other",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Other",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "other",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Matte",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "matte",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "Satin",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "matte",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "Polished",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "satin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "Rugged",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "satin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "polished",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "polished",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "rugged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "rugged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "fabric",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "fabric",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x0005, name: "Fabric",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "black",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Black",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "black",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Navy",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "navy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "Green",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "navy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "Teal",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "green",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "Maroon",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "green",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0005, name: "Purple",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "teal",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0006, name: "Olive",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "teal",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0007, name: "Gray",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "maroon",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0008, name: "Blue",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "maroon",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0009, name: "Lime",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "purple",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x000a, name: "Aqua",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "purple",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x000b, name: "Red",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "olive",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
+                    id: 0x000c, name: "Fuchsia",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "olive",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
+                    id: 0x000d, name: "Yellow",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "gray",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
+                    id: 0x000e, name: "White",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "gray",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
+                    id: 0x000f, name: "Nickel",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "blue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
+                    id: 0x0010, name: "Chrome",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "blue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
+                    id: 0x0011, name: "Brass",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lime",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
+                    id: 0x0012, name: "Copper",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lime",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
+                    id: 0x0013, name: "Silver",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "aqua",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
-                }),
-
-                DatatypeElement({
-                    name: "aqua",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
-                }),
-
-                DatatypeElement({
-                    name: "red",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "11"
-                }),
-
-                DatatypeElement({
-                    name: "red",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "11"
-                }),
-
-                DatatypeElement({
-                    name: "fuchsia",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "12"
-                }),
-
-                DatatypeElement({
-                    name: "fuchsia",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "12"
-                }),
-
-                DatatypeElement({
-                    name: "yellow",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "13"
-                }),
-
-                DatatypeElement({
-                    name: "yellow",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "13"
-                }),
-
-                DatatypeElement({
-                    name: "white",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "14"
-                }),
-
-                DatatypeElement({
-                    name: "white",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "14"
-                }),
-
-                DatatypeElement({
-                    name: "nickel",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "15"
-                }),
-
-                DatatypeElement({
-                    name: "nickel",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "15"
-                }),
-
-                DatatypeElement({
-                    name: "chrome",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "16"
-                }),
-
-                DatatypeElement({
-                    name: "chrome",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "16"
-                }),
-
-                DatatypeElement({
-                    name: "brass",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "17"
-                }),
-
-                DatatypeElement({
-                    name: "brass",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "17"
-                }),
-
-                DatatypeElement({
-                    name: "copper",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "18"
-                }),
-
-                DatatypeElement({
-                    name: "copper",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "18"
-                }),
-
-                DatatypeElement({
-                    name: "silver",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "19"
-                }),
-
-                DatatypeElement({
-                    name: "silver",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "19"
-                }),
-
-                DatatypeElement({
-                    name: "gold",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "20"
-                }),
-
-                DatatypeElement({
-                    name: "gold",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "20"
+                    id: 0x0014, name: "Gold",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ProductAppearanceStruct", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "finish", base: "ProductFinishEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Finish", base: "ProductFinishEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "finish", base: "ProductFinishEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "primaryColor", base: "ColorEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "primaryColor", base: "ColorEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "PrimaryColor", base: "ColorEnum",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         })

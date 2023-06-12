@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, CommandElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -16,970 +16,500 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "SendKey",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "SendKeyResponse",
+            access: "R", conformance: "M", direction: "request", response: "SendKeyResponse",
             children: [
                 DatatypeElement({
-                    name: "keyCode", base: "CecKeyCode",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "keyCode", base: "CecKeyCode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "KeyCode", base: "CecKeyCode",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "SendKeyResponse",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "response",
+            access: "R", conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "status", base: "KeypadInputStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "status", base: "KeypadInputStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Status", base: "KeypadInputStatusEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "KeypadInputStatusEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "success",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Success",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "success",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "UnsupportedKey",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unsupportedKey",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "unsupportedKey",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "invalidKeyInCurrentState",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "invalidKeyInCurrentState",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "InvalidKeyInCurrentState",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CecKeyCode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "select",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Select",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "select",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "Up",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Down",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "Left",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Right",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0005, name: "RightUp",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "left",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0006, name: "RightDown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "left",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0007, name: "LeftUp",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "right",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0008, name: "LeftDown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "right",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0009, name: "RootMenu",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rightUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
+                    id: 0x000a, name: "SetupMenu",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rightUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
+                    id: 0x000b, name: "ContentsMenu",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rightDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
+                    id: 0x000c, name: "FavoriteMenu",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rightDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
+                    id: 0x000d, name: "Exit",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "leftUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
+                    id: 0x0010, name: "MediaTopMenu",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "leftUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
+                    id: 0x0011, name: "MediaContextSensitiveMenu",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "leftDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                    id: 0x001d, name: "NumberEntryMode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "leftDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                    id: 0x001e, name: "Number11",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rootMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
+                    id: 0x001f, name: "Number12",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rootMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
+                    id: 0x0020, name: "Number0OrNumber10",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "setupMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
+                    id: 0x0021, name: "Numbers1",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "setupMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
+                    id: 0x0022, name: "Numbers2",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "contentsMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
+                    id: 0x0023, name: "Numbers3",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "contentsMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
+                    id: 0x0024, name: "Numbers4",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "favoriteMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
+                    id: 0x0025, name: "Numbers5",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "favoriteMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
+                    id: 0x0026, name: "Numbers6",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "exit",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0D"
+                    id: 0x0027, name: "Numbers7",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "exit",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0D"
+                    id: 0x0028, name: "Numbers8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mediaTopMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                    id: 0x0029, name: "Numbers9",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mediaTopMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                    id: 0x002a, name: "Dot",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mediaContextSensitiveMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x11"
+                    id: 0x002b, name: "Enter",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mediaContextSensitiveMenu",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x11"
+                    id: 0x002c, name: "Clear",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numberEntryMode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1D"
+                    id: 0x002f, name: "NextFavorite",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numberEntryMode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1D"
+                    id: 0x0030, name: "ChannelUp",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "number11",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1E"
+                    id: 0x0031, name: "ChannelDown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "number11",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1E"
+                    id: 0x0032, name: "PreviousChannel",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "number12",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1F"
+                    id: 0x0033, name: "SoundSelect",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "number12",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1F"
+                    id: 0x0034, name: "InputSelect",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "number0OrNumber10",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
+                    id: 0x0035, name: "DisplayInformation",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "number0OrNumber10",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
+                    id: 0x0036, name: "Help",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers1",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x21"
+                    id: 0x0037, name: "PageUp",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers1",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x21"
+                    id: 0x0038, name: "PageDown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers2",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x22"
+                    id: 0x0040, name: "Power",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers2",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x22"
+                    id: 0x0041, name: "VolumeUp",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers3",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x23"
+                    id: 0x0042, name: "VolumeDown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers3",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x23"
+                    id: 0x0043, name: "Mute",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers4",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x24"
+                    id: 0x0044, name: "Play",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers4",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x24"
+                    id: 0x0045, name: "Stop",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x25"
+                    id: 0x0046, name: "Pause",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x25"
+                    id: 0x0047, name: "Record",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers6",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x26"
+                    id: 0x0048, name: "Rewind",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers6",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x26"
+                    id: 0x0049, name: "FastForward",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers7",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x27"
+                    id: 0x004a, name: "Eject",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers7",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x27"
+                    id: 0x004b, name: "Forward",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers8",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x28"
+                    id: 0x004c, name: "Backward",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers8",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x28"
+                    id: 0x004d, name: "StopRecord",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers9",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x29"
+                    id: 0x004e, name: "PauseRecord",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "numbers9",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x29"
+                    id: 0x004f, name: "Reserved",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "dot",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2A"
+                    id: 0x0050, name: "Angle",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "dot",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2A"
+                    id: 0x0051, name: "SubPicture",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "enter",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2B"
+                    id: 0x0052, name: "VideoOnDemand",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "enter",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2B"
+                    id: 0x0053, name: "ElectronicProgramGuide",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "clear",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2C"
+                    id: 0x0054, name: "TimerProgramming",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "clear",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2C"
+                    id: 0x0055, name: "InitialConfiguration",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "nextFavorite",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2F"
+                    id: 0x0056, name: "SelectBroadcastType",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "nextFavorite",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2F"
+                    id: 0x0057, name: "SelectSoundPresentation",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "channelUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x30"
+                    id: 0x0060, name: "PlayFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "channelUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x30"
+                    id: 0x0061, name: "PausePlayFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "channelDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x31"
+                    id: 0x0062, name: "RecordFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "channelDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x31"
+                    id: 0x0063, name: "PauseRecordFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "previousChannel",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x32"
+                    id: 0x0064, name: "StopFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "previousChannel",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x32"
+                    id: 0x0065, name: "MuteFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "soundSelect",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x33"
+                    id: 0x0066, name: "RestoreVolumeFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "soundSelect",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x33"
+                    id: 0x0067, name: "TuneFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "inputSelect",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x34"
+                    id: 0x0068, name: "SelectMediaFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "inputSelect",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x34"
+                    id: 0x0069, name: "SelectAvInputFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "displayInformation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x35"
+                    id: 0x006a, name: "SelectAudioInputFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "displayInformation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x35"
+                    id: 0x006b, name: "PowerToggleFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "help",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x36"
+                    id: 0x006c, name: "PowerOffFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "help",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x36"
+                    id: 0x006d, name: "PowerOnFunction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pageUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x37"
+                    id: 0x0071, name: "F1Blue",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pageUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x37"
+                    id: 0x0072, name: "F2Red",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pageDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x38"
+                    id: 0x0073, name: "F3Green",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pageDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x38"
+                    id: 0x0074, name: "F4Yellow",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "power",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                    id: 0x0075, name: "F5",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "power",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "volumeUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x41"
-                }),
-
-                DatatypeElement({
-                    name: "volumeUp",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x41"
-                }),
-
-                DatatypeElement({
-                    name: "volumeDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x42"
-                }),
-
-                DatatypeElement({
-                    name: "volumeDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x42"
-                }),
-
-                DatatypeElement({
-                    name: "mute",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x43"
-                }),
-
-                DatatypeElement({
-                    name: "mute",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x43"
-                }),
-
-                DatatypeElement({
-                    name: "play",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x44"
-                }),
-
-                DatatypeElement({
-                    name: "play",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x44"
-                }),
-
-                DatatypeElement({
-                    name: "stop",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x45"
-                }),
-
-                DatatypeElement({
-                    name: "stop",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x45"
-                }),
-
-                DatatypeElement({
-                    name: "pause",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x46"
-                }),
-
-                DatatypeElement({
-                    name: "pause",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x46"
-                }),
-
-                DatatypeElement({
-                    name: "record",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x47"
-                }),
-
-                DatatypeElement({
-                    name: "record",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x47"
-                }),
-
-                DatatypeElement({
-                    name: "rewind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x48"
-                }),
-
-                DatatypeElement({
-                    name: "rewind",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x48"
-                }),
-
-                DatatypeElement({
-                    name: "fastForward",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x49"
-                }),
-
-                DatatypeElement({
-                    name: "fastForward",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x49"
-                }),
-
-                DatatypeElement({
-                    name: "eject",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4A"
-                }),
-
-                DatatypeElement({
-                    name: "eject",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4A"
-                }),
-
-                DatatypeElement({
-                    name: "forward",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4B"
-                }),
-
-                DatatypeElement({
-                    name: "forward",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4B"
-                }),
-
-                DatatypeElement({
-                    name: "backward",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4C"
-                }),
-
-                DatatypeElement({
-                    name: "backward",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4C"
-                }),
-
-                DatatypeElement({
-                    name: "stopRecord",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4D"
-                }),
-
-                DatatypeElement({
-                    name: "stopRecord",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4D"
-                }),
-
-                DatatypeElement({
-                    name: "pauseRecord",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4E"
-                }),
-
-                DatatypeElement({
-                    name: "pauseRecord",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4E"
-                }),
-
-                DatatypeElement({
-                    name: "reserved",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4F"
-                }),
-
-                DatatypeElement({
-                    name: "reserved",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4F"
-                }),
-
-                DatatypeElement({
-                    name: "angle",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x50"
-                }),
-
-                DatatypeElement({
-                    name: "angle",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x50"
-                }),
-
-                DatatypeElement({
-                    name: "subPicture",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x51"
-                }),
-
-                DatatypeElement({
-                    name: "subPicture",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x51"
-                }),
-
-                DatatypeElement({
-                    name: "videoOnDemand",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x52"
-                }),
-
-                DatatypeElement({
-                    name: "videoOnDemand",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x52"
-                }),
-
-                DatatypeElement({
-                    name: "electronicProgramGuide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x53"
-                }),
-
-                DatatypeElement({
-                    name: "electronicProgramGuide",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x53"
-                }),
-
-                DatatypeElement({
-                    name: "timerProgramming",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x54"
-                }),
-
-                DatatypeElement({
-                    name: "timerProgramming",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x54"
-                }),
-
-                DatatypeElement({
-                    name: "initialConfiguration",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x55"
-                }),
-
-                DatatypeElement({
-                    name: "initialConfiguration",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x55"
-                }),
-
-                DatatypeElement({
-                    name: "selectBroadcastType",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x56"
-                }),
-
-                DatatypeElement({
-                    name: "selectBroadcastType",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x56"
-                }),
-
-                DatatypeElement({
-                    name: "selectSoundPresentation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x57"
-                }),
-
-                DatatypeElement({
-                    name: "selectSoundPresentation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x57"
-                }),
-
-                DatatypeElement({
-                    name: "playFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x60"
-                }),
-
-                DatatypeElement({
-                    name: "playFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x60"
-                }),
-
-                DatatypeElement({
-                    name: "pausePlayFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x61"
-                }),
-
-                DatatypeElement({
-                    name: "pausePlayFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x61"
-                }),
-
-                DatatypeElement({
-                    name: "recordFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x62"
-                }),
-
-                DatatypeElement({
-                    name: "recordFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x62"
-                }),
-
-                DatatypeElement({
-                    name: "pauseRecordFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x63"
-                }),
-
-                DatatypeElement({
-                    name: "pauseRecordFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x63"
-                }),
-
-                DatatypeElement({
-                    name: "stopFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x64"
-                }),
-
-                DatatypeElement({
-                    name: "stopFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x64"
-                }),
-
-                DatatypeElement({
-                    name: "muteFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x65"
-                }),
-
-                DatatypeElement({
-                    name: "muteFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x65"
-                }),
-
-                DatatypeElement({
-                    name: "restoreVolumeFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x66"
-                }),
-
-                DatatypeElement({
-                    name: "restoreVolumeFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x66"
-                }),
-
-                DatatypeElement({
-                    name: "tuneFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x67"
-                }),
-
-                DatatypeElement({
-                    name: "tuneFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x67"
-                }),
-
-                DatatypeElement({
-                    name: "selectMediaFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x68"
-                }),
-
-                DatatypeElement({
-                    name: "selectMediaFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x68"
-                }),
-
-                DatatypeElement({
-                    name: "selectAvInputFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x69"
-                }),
-
-                DatatypeElement({
-                    name: "selectAvInputFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x69"
-                }),
-
-                DatatypeElement({
-                    name: "selectAudioInputFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6A"
-                }),
-
-                DatatypeElement({
-                    name: "selectAudioInputFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6A"
-                }),
-
-                DatatypeElement({
-                    name: "powerToggleFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6B"
-                }),
-
-                DatatypeElement({
-                    name: "powerToggleFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6B"
-                }),
-
-                DatatypeElement({
-                    name: "powerOffFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6C"
-                }),
-
-                DatatypeElement({
-                    name: "powerOffFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6C"
-                }),
-
-                DatatypeElement({
-                    name: "powerOnFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6D"
-                }),
-
-                DatatypeElement({
-                    name: "powerOnFunction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x6D"
-                }),
-
-                DatatypeElement({
-                    name: "f1Blue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x71"
-                }),
-
-                DatatypeElement({
-                    name: "f1Blue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x71"
-                }),
-
-                DatatypeElement({
-                    name: "f2Red",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x72"
-                }),
-
-                DatatypeElement({
-                    name: "f2Red",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x72"
-                }),
-
-                DatatypeElement({
-                    name: "f3Green",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x73"
-                }),
-
-                DatatypeElement({
-                    name: "f3Green",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x73"
-                }),
-
-                DatatypeElement({
-                    name: "f4Yellow",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x74"
-                }),
-
-                DatatypeElement({
-                    name: "f4Yellow",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x74"
-                }),
-
-                DatatypeElement({
-                    name: "f5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x75"
-                }),
-
-                DatatypeElement({
-                    name: "f5",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x75"
-                }),
-
-                DatatypeElement({
-                    name: "data",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x76"
-                }),
-
-                DatatypeElement({
-                    name: "data",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x76"
+                    id: 0x0076, name: "Data",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "KeypadInputFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "navigationKeyCodes",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0001, name: "NavigationKeyCodes",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "navigationKeyCodes",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0002, name: "LocationKeys",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "locationKeys",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "locationKeys",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "numberKeys",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
-                }),
-
-                DatatypeElement({
-                    name: "numberKeys",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
+                    id: 0x0004, name: "NumberKeys",
+                    access: "R", conformance: "M"
                 })
             ]
         })

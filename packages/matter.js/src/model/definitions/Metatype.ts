@@ -5,7 +5,6 @@
  */
 
 import { ByteArray } from "../../util/ByteArray.js";
-import { Datatype } from "./Datatype.js";
 
 /**
  * General groupings of Matter types.
@@ -27,74 +26,7 @@ export namespace Metatype {
     export const Invalid = Symbol("invalid");
 
     /**
-     * Determine the metatype for a type.  Input type can be a metatype,
-     * datatype or any other string type.  If no mapping is not supported
-     * returns undefined.
-     */
-    export function of(type: string | undefined) {
-        switch (type) {
-            case Datatype.bool:
-                return Metatype.boolean;
-
-            case Datatype.map8:
-            case Datatype.map16:
-            case Datatype.map32:
-            case Datatype.map64:
-                return Metatype.bitmap;
-
-            case "enum8":
-            case "enum16":
-                return Metatype.enum;
-
-            case Datatype.uint8:
-            case Datatype.uint16:
-            case Datatype.uint24:
-            case Datatype.uint32:
-            case Datatype.uint40:
-            case Datatype.uint48:
-            case Datatype.uint56:
-            case Datatype.uint64:
-            case Datatype.int8:
-            case Datatype.int16:
-            case Datatype.int24:
-            case Datatype.int32:
-            case Datatype.int40:
-            case Datatype.int48:
-            case Datatype.int56:
-            case Datatype.int64:
-                return Metatype.integer;
-
-            case Datatype.single:
-            case Datatype.double:
-                return Metatype.float;
-
-            case Datatype.octstr:
-                return Metatype.bytes;
-
-            case Datatype.list:
-                return Metatype.array;
-
-            case Datatype.struct:
-                return Metatype.object;
-
-            case "date":
-                return Metatype.date;
-                
-            case Metatype.boolean:
-            case Metatype.bitmap:
-            case Metatype.enum:
-            case Metatype.integer:
-            case Metatype.float:
-            case Metatype.bytes:
-            case Metatype.array:
-            case Metatype.object:
-            case Metatype.string:
-                return type;
-        }
-    }
-
-    /**
-     * Determine the JS type for a type.
+     * Determine the JS type for a metatype.
      */
     export function native(type: Metatype | undefined) {
         switch (type) {

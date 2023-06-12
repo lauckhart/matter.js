@@ -24,6 +24,19 @@ export class Aspect<D> {
         this.definition = definition;
     }
 
+    get empty() {
+        for (const [ k, v ] of Object.entries(this)) {
+            if (k != "definition" && k != "errors" && v !== undefined) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    valueOf() {
+        return this.toString();
+    }
+
     error(code: string, message: string) {
         if (!this.errors) {
             this.errors = [];
