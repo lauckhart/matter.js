@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, CommandElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -16,63 +16,43 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "GetSetupPin",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "GetSetupPinResponse",
+            access: "R", conformance: "M", direction: "request", response: "GetSetupPinResponse",
             children: [
                 DatatypeElement({
-                    name: "tempAccountIdentifier", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "tempAccountIdentifier", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TempAccountIdentifier", base: "string",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "Login",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request",
+            access: "R", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "tempAccountIdentifier", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TempAccountIdentifier", base: "string",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "tempAccountIdentifier", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "setupPin", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "setupPin", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "SetupPin", base: "string",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "Logout",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request"
+            access: "R", conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0001, name: "GetSetupPinResponse",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "response",
+            access: "R", conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "setupPin", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "setupPin", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "SetupPin", base: "string",
+                    access: "R", conformance: "M"
                 })
             ]
         })

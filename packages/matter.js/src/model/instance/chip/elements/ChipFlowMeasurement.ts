@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,23 +15,23 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring the measurement of flow, and reporting flow measurements.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "flowMeasuredValue", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0000, name: "FlowMeasuredValue", base: "uint16",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "flowMinMeasuredValue", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0001, name: "FlowMinMeasuredValue", base: "uint16",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "flowMaxMeasuredValue", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0002, name: "FlowMaxMeasuredValue", base: "uint16",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "flowTolerance", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0003, name: "FlowTolerance", base: "uint16",
+            access: "R", conformance: "O", default: 0
         })
     ]
 }));

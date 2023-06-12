@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, CommandElement, DatatypeElement, EventElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,3891 +15,2231 @@ ChipMatter.children!.push(ClusterElement({
     details: "An interface to a generic way to secure a door",
     children: [
         AttributeElement({
-            id: 0x0000, name: "lockState", base: "DlLockState",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true, reportable: true }
+            id: 0x0000, name: "LockState", base: "DlLockState",
+            access: "R", conformance: "M", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "lockType", base: "DlLockType",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "LockType", base: "DlLockType",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "actuatorEnabled", base: "bool",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0002, name: "ActuatorEnabled", base: "bool",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "doorState", base: "DoorStateEnum",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true, reportable: true }
+            id: 0x0003, name: "DoorState", base: "DoorStateEnum",
+            access: "R", conformance: "O", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "doorOpenEvents", base: "uint32",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0004, name: "DoorOpenEvents", base: "uint32",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "doorClosedEvents", base: "uint32",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0005, name: "DoorClosedEvents", base: "uint32",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "openPeriod", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0006, name: "OpenPeriod", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0011, name: "numTotalUsersSupported", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0011, name: "NumTotalUsersSupported", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0012, name: "numPinUsersSupported", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0012, name: "NumPinUsersSupported", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0013, name: "numRfidUsersSupported", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0013, name: "NumRfidUsersSupported", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0014, name: "numWeekdaySchedulesSupportedPerUser", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0014, name: "NumWeekdaySchedulesSupportedPerUser", base: "uint8",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0015, name: "numYeardaySchedulesSupportedPerUser", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0015, name: "NumYeardaySchedulesSupportedPerUser", base: "uint8",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0016, name: "numHolidaySchedulesSupported", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0016, name: "NumHolidaySchedulesSupported", base: "uint8",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0017, name: "maxPinLength", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0017, name: "MaxPinLength", base: "uint8",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0018, name: "minPinLength", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0018, name: "MinPinLength", base: "uint8",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0019, name: "maxRfidCodeLength", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0019, name: "MaxRfidCodeLength", base: "uint8",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001a, name: "minRfidCodeLength", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x001a, name: "MinRfidCodeLength", base: "uint8",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001b, name: "credentialRulesSupport", base: "DlCredentialRuleMask",
-            access: { rw: "R" }, conformance: [ "O" ], value: "1"
+            id: 0x001b, name: "CredentialRulesSupport", base: "DlCredentialRuleMask",
+            access: "R", conformance: "O", default: 1
         }),
 
         AttributeElement({
-            id: 0x001c, name: "numCredentialsSupportedPerUser", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x001c, name: "NumCredentialsSupportedPerUser", base: "uint8",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0021, name: "language", base: "string",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { reportable: true }
+            id: 0x0021, name: "Language", base: "string",
+            access: "W VM", conformance: "O", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0022, name: "ledSettings", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x0022, name: "LedSettings", base: "uint8",
+            access: "W VM", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0023, name: "autoRelockTime", base: "uint32",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "M" ], quality: { reportable: true }
+            id: 0x0023, name: "AutoRelockTime", base: "uint32",
+            access: "W VM", conformance: "M", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0024, name: "soundVolume", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x0024, name: "SoundVolume", base: "uint8",
+            access: "W VM", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0025, name: "operatingMode", base: "OperatingModeEnum",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "M" ], quality: { reportable: true }
+            id: 0x0025, name: "OperatingMode", base: "OperatingModeEnum",
+            access: "W VM", conformance: "M", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0026, name: "supportedOperatingModes", base: "DlSupportedOperatingModes",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0xFFF6"
+            id: 0x0026, name: "SupportedOperatingModes", base: "DlSupportedOperatingModes",
+            access: "R", conformance: "M", default: 65526
         }),
 
         AttributeElement({
-            id: 0x0027, name: "defaultConfigurationRegister", base: "DlDefaultConfigurationRegister",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x0027, name: "DefaultConfigurationRegister", base: "DlDefaultConfigurationRegister",
+            access: "R", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0028, name: "enableLocalProgramming", base: "bool",
-            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "O" ], quality: { reportable: true }, value: "1"
+            id: 0x0028, name: "EnableLocalProgramming", base: "bool",
+            access: "W VA", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0029, name: "enableOneTouchLocking", base: "bool",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x0029, name: "EnableOneTouchLocking", base: "bool",
+            access: "W VM", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x002a, name: "enableInsideStatusLed", base: "bool",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x002a, name: "EnableInsideStatusLed", base: "bool",
+            access: "W VM", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x002b, name: "enablePrivacyModeButton", base: "bool",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x002b, name: "EnablePrivacyModeButton", base: "bool",
+            access: "W VM", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x002c, name: "localProgrammingFeatures", base: "DlLocalProgrammingFeatures",
-            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x002c, name: "LocalProgrammingFeatures", base: "DlLocalProgrammingFeatures",
+            access: "W VA", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0030, name: "wrongCodeEntryLimit", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "O" ], quality: { reportable: true }
+            id: 0x0030, name: "WrongCodeEntryLimit", base: "uint8",
+            access: "W VA", conformance: "O", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0031, name: "userCodeTemporaryDisableTime", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "O" ], quality: { reportable: true }
+            id: 0x0031, name: "UserCodeTemporaryDisableTime", base: "uint8",
+            access: "W VA", conformance: "O", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0032, name: "sendPinOverTheAir", base: "bool",
-            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x0032, name: "SendPinOverTheAir", base: "bool",
+            access: "W VA", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0033, name: "requirePinForRemoteOperation", base: "bool",
-            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "O" ], quality: { reportable: true }, value: "0"
+            id: 0x0033, name: "RequirePinForRemoteOperation", base: "bool",
+            access: "W VA", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0035, name: "expiringUserTimeout", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "A" }, conformance: [ "O" ], quality: { reportable: true }
+            id: 0x0035, name: "ExpiringUserTimeout", base: "uint16",
+            access: "W VA", conformance: "O", quality: "P"
         }),
 
         CommandElement({
             id: 0x0000, name: "LockDoor",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request",
+            access: "R", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "pinCode", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "pinCode", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "PinCode", base: "octstr",
+                    access: "R", conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "UnlockDoor",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request",
+            access: "R", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "pinCode", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "pinCode", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "PinCode", base: "octstr",
+                    access: "R", conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "UnlockWithTimeout",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "timeout", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Timeout", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "timeout", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "pinCode", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "pinCode", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "PinCode", base: "octstr",
+                    access: "R", conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000b, name: "SetWeekDaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "weekDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "WeekDayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "DaysMask", base: "DaysMaskMap",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StartHour", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "daysMask", base: "DaysMaskMap",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StartMinute", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "daysMask", base: "DaysMaskMap",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "EndHour", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "startHour", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "startHour", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "startMinute", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "startMinute", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "endHour", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "endHour", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "endMinute", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "endMinute", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "EndMinute", base: "uint8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000c, name: "GetWeekDaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request", response: "GetWeekDayScheduleResponse",
+            access: "R A", conformance: "O", direction: "request", response: "GetWeekDayScheduleResponse",
             children: [
                 DatatypeElement({
-                    name: "weekDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "WeekDayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000c, name: "GetWeekDayScheduleResponse",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "response",
+            access: "R", conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "weekDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "WeekDayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Status", base: "DlStatus",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "DaysMask", base: "DaysMaskMap",
+                    access: "R", conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "status", base: "DlStatus",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StartHour", base: "uint8",
+                    access: "R", conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "status", base: "DlStatus",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StartMinute", base: "uint8",
+                    access: "R", conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "daysMask", base: "DaysMaskMap",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "EndHour", base: "uint8",
+                    access: "R", conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "daysMask", base: "DaysMaskMap",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "startHour", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "startHour", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "startMinute", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "startMinute", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "endHour", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "endHour", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "endMinute", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "endMinute", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "EndMinute", base: "uint8",
+                    access: "R", conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000d, name: "ClearWeekDaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "weekDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "WeekDayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000e, name: "SetYearDaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "yearDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "YearDayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LocalStartTime", base: "epoch-s",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "localStartTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "localStartTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "localEndTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "localEndTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LocalEndTime", base: "epoch-s",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000f, name: "GetYearDaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request", response: "GetYearDayScheduleResponse",
+            access: "R A", conformance: "O", direction: "request", response: "GetYearDayScheduleResponse",
             children: [
                 DatatypeElement({
-                    name: "yearDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "YearDayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000f, name: "GetYearDayScheduleResponse",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "response",
+            access: "R", conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "yearDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "YearDayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Status", base: "DlStatus",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LocalStartTime", base: "epoch-s",
+                    access: "R", conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "status", base: "DlStatus",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "status", base: "DlStatus",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "localStartTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "localStartTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "localEndTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "localEndTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "LocalEndTime", base: "epoch-s",
+                    access: "R", conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0010, name: "ClearYearDaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "yearDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "YearDayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0011, name: "SetHolidaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "holidayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "HolidayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "holidayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LocalStartTime", base: "epoch-s",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "localStartTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LocalEndTime", base: "epoch-s",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "localStartTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "localEndTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "localEndTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "operatingMode", base: "OperatingModeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "operatingMode", base: "OperatingModeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OperatingMode", base: "OperatingModeEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0012, name: "GetHolidaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request", response: "GetHolidayScheduleResponse",
+            access: "R A", conformance: "O", direction: "request", response: "GetHolidayScheduleResponse",
             children: [
                 DatatypeElement({
-                    name: "holidayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "holidayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "HolidayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0012, name: "GetHolidayScheduleResponse",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "response",
+            access: "R", conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "holidayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "HolidayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "holidayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Status", base: "DlStatus",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "status", base: "DlStatus",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LocalStartTime", base: "epoch-s",
+                    access: "R", conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "status", base: "DlStatus",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LocalEndTime", base: "epoch-s",
+                    access: "R", conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "localStartTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "localStartTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "localEndTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "localEndTime", base: "epochS",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "operatingMode", base: "OperatingModeEnum",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "operatingMode", base: "OperatingModeEnum",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "OperatingMode", base: "OperatingModeEnum",
+                    access: "R", conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0013, name: "ClearHolidaySchedule",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "holidayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "holidayIndex", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "HolidayIndex", base: "uint8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x001a, name: "SetUser",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "operationType", base: "DataOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OperationType", base: "DataOperationTypeEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "operationType", base: "DataOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserName", base: "string",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserUniqueId", base: "uint32",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userName", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "UserStatus", base: "UserStatusEnum",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userName", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "UserType", base: "UserTypeEnum",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userUniqueId", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userUniqueId", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userStatus", base: "UserStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userStatus", base: "UserStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userType", base: "UserTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userType", base: "UserTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentialRule", base: "CredentialRuleEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentialRule", base: "CredentialRuleEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "CredentialRule", base: "CredentialRuleEnum",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x001b, name: "GetUser",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request", response: "GetUserResponse",
+            access: "R A", conformance: "O", direction: "request", response: "GetUserResponse",
             children: [
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x001c, name: "GetUserResponse",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "response",
+            access: "R", conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserName", base: "string",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userName", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "UserUniqueId", base: "uint32",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userName", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "UserStatus", base: "UserStatusEnum",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userUniqueId", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "UserType", base: "UserTypeEnum",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userUniqueId", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "CredentialRule", base: "CredentialRuleEnum",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userStatus", base: "UserStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "Credentials", base: "CredentialStruct",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userStatus", base: "UserStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "CreatorFabricIndex", base: "fabric-idx",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userType", base: "UserTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "LastModifiedFabricIndex", base: "fabric-idx",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userType", base: "UserTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentialRule", base: "CredentialRuleEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentialRule", base: "CredentialRuleEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentials", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentials", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "creatorFabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "creatorFabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "lastModifiedFabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "lastModifiedFabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "nextUserIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "nextUserIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "NextUserIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x001d, name: "ClearUser",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0022, name: "SetCredential",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request", response: "SetCredentialResponse",
+            access: "R A", conformance: "O", direction: "request", response: "SetCredentialResponse",
             children: [
                 DatatypeElement({
-                    name: "operationType", base: "DataOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OperationType", base: "DataOperationTypeEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "operationType", base: "DataOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Credential", base: "CredentialStruct",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "credential", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "CredentialData", base: "octstr",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "credential", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "credentialData", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserStatus", base: "UserStatusEnum",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "credentialData", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userStatus", base: "UserStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userStatus", base: "UserStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userType", base: "UserTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userType", base: "UserTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "UserType", base: "UserTypeEnum",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0023, name: "SetCredentialResponse",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "response",
+            access: "R", conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "status", base: "DlStatus",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Status", base: "DlStatus",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "status", base: "DlStatus",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "nextCredentialIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "nextCredentialIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "NextCredentialIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0024, name: "GetCredentialStatus",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request", response: "GetCredentialStatusResponse",
+            access: "R A", conformance: "O", direction: "request", response: "GetCredentialStatusResponse",
             children: [
                 DatatypeElement({
-                    name: "credential", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "credential", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Credential", base: "CredentialStruct",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0025, name: "GetCredentialStatusResponse",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "response",
+            access: "R", conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "credentialExists", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "CredentialExists", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "credentialExists", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "CreatorFabricIndex", base: "fabric-idx",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "LastModifiedFabricIndex", base: "fabric-idx",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "creatorFabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "creatorFabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "lastModifiedFabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "lastModifiedFabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "nextCredentialIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "nextCredentialIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "NextCredentialIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0026, name: "ClearCredential",
-            access: { rw: "R", writePriv: "A" }, conformance: [ "O" ], direction: "request",
+            access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "credential", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credential", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "Credential", base: "CredentialStruct",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0000, name: "DoorLockAlarm",
-            access: { rw: "R" }, conformance: [ "M" ], priority: "critical",
+            access: "R", conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "alarmCode", base: "AlarmCodeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "alarmCode", base: "AlarmCodeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "AlarmCode", base: "AlarmCodeEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0001, name: "DoorStateChange",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "critical",
+            access: "R", conformance: "O", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "doorState", base: "DoorStateEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "doorState", base: "DoorStateEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "DoorState", base: "DoorStateEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0002, name: "LockOperation",
-            access: { rw: "R" }, conformance: [ "M" ], priority: "critical",
+            access: "R", conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "lockOperationType", base: "LockOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LockOperationType", base: "LockOperationTypeEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockOperationType", base: "LockOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OperationSource", base: "OperationSourceEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "operationSource", base: "OperationSourceEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "operationSource", base: "OperationSourceEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "FabricIndex", base: "fabric-idx",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "SourceNode", base: "node-id",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "fabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "fabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "sourceNode", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "sourceNode", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentials", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentials", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+                    name: "Credentials", base: "CredentialStruct",
+                    access: "R", conformance: "O", quality: "X"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0003, name: "LockOperationError",
-            access: { rw: "R" }, conformance: [ "M" ], priority: "critical",
+            access: "R", conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "lockOperationType", base: "LockOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LockOperationType", base: "LockOperationTypeEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockOperationType", base: "LockOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OperationSource", base: "OperationSourceEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "operationSource", base: "OperationSourceEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OperationError", base: "OperationErrorEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "operationSource", base: "OperationSourceEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "operationError", base: "OperationErrorEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "FabricIndex", base: "fabric-idx",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "operationError", base: "OperationErrorEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "SourceNode", base: "node-id",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "fabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "fabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "sourceNode", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "sourceNode", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentials", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "credentials", base: "CredentialStruct",
-                    access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+                    name: "Credentials", base: "CredentialStruct",
+                    access: "R", conformance: "O", quality: "X"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0004, name: "LockUserChange",
-            access: { rw: "R" }, conformance: [ "M" ], priority: "info",
+            access: "R", conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "lockDataType", base: "LockDataTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LockDataType", base: "LockDataTypeEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockDataType", base: "LockDataTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "DataOperationType", base: "DataOperationTypeEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "dataOperationType", base: "DataOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OperationSource", base: "OperationSourceEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "dataOperationType", base: "DataOperationTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UserIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "operationSource", base: "OperationSourceEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "FabricIndex", base: "fabric-idx",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "operationSource", base: "OperationSourceEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "SourceNode", base: "node-id",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "userIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "fabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "fabricIndex", base: "fabricIdx",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "sourceNode", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "sourceNode", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "dataIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "dataIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "DataIndex", base: "uint16",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AlarmCodeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "lockJammed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "LockJammed",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockJammed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "LockFactoryReset",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockFactoryReset",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "LockRadioPowerCycled",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockFactoryReset",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0004, name: "WrongCodeEntryLimit",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockRadioPowerCycled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0005, name: "FrontEsceutcheonRemoved",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockRadioPowerCycled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0006, name: "DoorForcedOpen",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "wrongCodeEntryLimit",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0007, name: "DoorAjar",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "wrongCodeEntryLimit",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "frontEsceutcheonRemoved",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "frontEsceutcheonRemoved",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "doorForcedOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "doorForcedOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "doorAjar",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "doorAjar",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "forcedUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "forcedUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
+                    id: 0x0008, name: "ForcedUser",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CredentialRuleEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "single",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Single",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "single",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Dual",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "dual",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "dual",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "tri",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "tri",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0002, name: "Tri",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlCredentialRuleMask", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "single",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Single",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "single",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Dual",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "dual",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "dual",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "tri",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "tri",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0004, name: "Tri",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CredentialStruct", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "credentialType", base: "CredentialTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "CredentialType", base: "CredentialTypeEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "credentialType", base: "CredentialTypeEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "credentialIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "credentialIndex", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "CredentialIndex", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CredentialTypeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "programmingPin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "ProgrammingPin",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingPin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Pin",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "Rfid",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "Fingerprint",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "FingerVein",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "fingerprint",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "fingerprint",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "fingerVein",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "fingerVein",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "face",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "face",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x0005, name: "Face",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DataOperationTypeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "add",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Add",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "add",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Clear",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "clear",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "clear",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "modify",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "modify",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0002, name: "Modify",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DaysMaskMap", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "sunday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Sunday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sunday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Monday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "monday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Tuesday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "monday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "Wednesday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "tuesday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0010, name: "Thursday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "tuesday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0020, name: "Friday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "wednesday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "wednesday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "thursday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "thursday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "friday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "friday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "saturday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "saturday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                    id: 0x0040, name: "Saturday",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DoorStateEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "doorOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "DoorOpen",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "doorOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "DoorClosed",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "doorClosed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "DoorJammed",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "doorClosed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "DoorForcedOpen",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "doorJammed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "DoorUnspecifiedError",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "doorJammed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "doorForcedOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "doorForcedOpen",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "doorUnspecifiedError",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "doorUnspecifiedError",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "doorAjar",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "doorAjar",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
+                    id: 0x0005, name: "DoorAjar",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "LockDataTypeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "ProgrammingCode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingCode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "UserIndex",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingCode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "WeekDaySchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "YearDaySchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "userIndex",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0005, name: "HolidaySchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDaySchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0006, name: "Pin",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDaySchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0007, name: "Rfid",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDaySchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0008, name: "Fingerprint",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDaySchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0009, name: "FingerVein",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "holidaySchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "holidaySchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "pin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "pin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "rfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "rfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "fingerprint",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "fingerprint",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "fingerVein",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
-                }),
-
-                DatatypeElement({
-                    name: "fingerVein",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
-                }),
-
-                DatatypeElement({
-                    name: "face",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
-                }),
-
-                DatatypeElement({
-                    name: "face",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
+                    id: 0x000a, name: "Face",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "LockOperationTypeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Lock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Unlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "NonAccessUserEvent",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "nonAccessUserEvent",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "nonAccessUserEvent",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "forcedUserEvent",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "forcedUserEvent",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0003, name: "ForcedUserEvent",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OperationErrorEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "InvalidCredential",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "invalidCredential",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "DisabledUserDenied",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "invalidCredential",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "Restricted",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "disabledUserDenied",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "disabledUserDenied",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "restricted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "restricted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "insufficientBattery",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "insufficientBattery",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0004, name: "InsufficientBattery",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OperatingModeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "normal",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Normal",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "normal",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Vacation",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "vacation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "Privacy",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "vacation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "NoRemoteLockUnlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "privacy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "privacy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "noRemoteLockUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "noRemoteLockUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "passage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "passage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0004, name: "Passage",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OperationSourceEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Manual",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "manual",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "ProprietaryRemote",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "manual",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "Keypad",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "proprietaryRemote",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "Auto",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "proprietaryRemote",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0005, name: "Button",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "keypad",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0006, name: "Schedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "keypad",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0007, name: "Remote",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "auto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0008, name: "Rfid",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "auto",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "button",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "button",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "schedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "schedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "remote",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "remote",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "rfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "rfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "biometric",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
-                }),
-
-                DatatypeElement({
-                    name: "biometric",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
+                    id: 0x0009, name: "Biometric",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "UserStatusEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "available",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "Available",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "available",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "OccupiedEnabled",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "occupiedEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "occupiedEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "occupiedDisabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
-                }),
-
-                DatatypeElement({
-                    name: "occupiedDisabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0003, name: "OccupiedDisabled",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "UserTypeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unrestrictedUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "UnrestrictedUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unrestrictedUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "YearDayScheduleUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDayScheduleUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "WeekDayScheduleUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDayScheduleUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "ProgrammingUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayScheduleUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "NonAccessUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayScheduleUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0005, name: "ForcedUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0006, name: "DisposableUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0007, name: "ExpiringUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "nonAccessUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0008, name: "ScheduleRestrictedUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "nonAccessUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
-                }),
-
-                DatatypeElement({
-                    name: "forcedUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "forcedUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "disposableUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "disposableUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "expiringUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "expiringUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleRestrictedUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleRestrictedUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "remoteOnlyUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
-                }),
-
-                DatatypeElement({
-                    name: "remoteOnlyUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
+                    id: 0x0009, name: "RemoteOnlyUser",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlLockState", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "notFullyLocked",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "NotFullyLocked",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "notFullyLocked",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Locked",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "locked",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "locked",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
-                }),
-
-                DatatypeElement({
-                    name: "unlocked",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
-                }),
-
-                DatatypeElement({
-                    name: "unlocked",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0002, name: "Unlocked",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlLockType", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "deadBolt",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0000, name: "DeadBolt",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "deadBolt",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0"
+                    id: 0x0001, name: "Magnetic",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "magnetic",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0002, name: "Other",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "magnetic",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "1"
+                    id: 0x0003, name: "Mortise",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "other",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0004, name: "Rim",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "other",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "2"
+                    id: 0x0005, name: "LatchBolt",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mortise",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0006, name: "CylindricalLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mortise",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "3"
+                    id: 0x0007, name: "TubularLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rim",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0008, name: "InterconnectedLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rim",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "4"
+                    id: 0x0009, name: "DeadLatch",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "latchBolt",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "latchBolt",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "5"
-                }),
-
-                DatatypeElement({
-                    name: "cylindricalLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "cylindricalLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "6"
-                }),
-
-                DatatypeElement({
-                    name: "tubularLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "tubularLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "7"
-                }),
-
-                DatatypeElement({
-                    name: "interconnectedLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "interconnectedLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "8"
-                }),
-
-                DatatypeElement({
-                    name: "deadLatch",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
-                }),
-
-                DatatypeElement({
-                    name: "deadLatch",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "9"
-                }),
-
-                DatatypeElement({
-                    name: "doorFurniture",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
-                }),
-
-                DatatypeElement({
-                    name: "doorFurniture",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "10"
+                    id: 0x000a, name: "DoorFurniture",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlCredentialRulesSupport", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "single",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Single",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "single",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Dual",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "dual",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "dual",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "tri",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "tri",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0004, name: "Tri",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlSupportedOperatingModes", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "normal",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Normal",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "normal",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Vacation",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "vacation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Privacy",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "vacation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "NoRemoteLockUnlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "privacy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "privacy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "noRemoteLockUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "noRemoteLockUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "passage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "passage",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                    id: 0x0010, name: "Passage",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlDefaultConfigurationRegister", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "enableLocalProgrammingEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "EnableLocalProgrammingEnabled",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "enableLocalProgrammingEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "KeypadInterfaceDefaultAccessEnabled",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "keypadInterfaceDefaultAccessEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "RemoteInterfaceDefaultAccessIsEnabled",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "keypadInterfaceDefaultAccessEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0020, name: "SoundEnabled",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "remoteInterfaceDefaultAccessIsEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0040, name: "AutoRelockTimeSet",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "remoteInterfaceDefaultAccessIsEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "soundEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "soundEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "autoRelockTimeSet",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "autoRelockTimeSet",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "ledSettingsSet",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x80"
-                }),
-
-                DatatypeElement({
-                    name: "ledSettingsSet",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x80"
+                    id: 0x0080, name: "LedSettingsSet",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlLocalProgrammingFeatures", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "addUsersCredentialsSchedulesLocally",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "AddUsersCredentialsSchedulesLocally",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "addUsersCredentialsSchedulesLocally",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "ModifyUsersCredentialsSchedulesLocally",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "modifyUsersCredentialsSchedulesLocally",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "ClearUsersCredentialsSchedulesLocally",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "modifyUsersCredentialsSchedulesLocally",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "clearUsersCredentialsSchedulesLocally",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "clearUsersCredentialsSchedulesLocally",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "adjustLockSettingsLocally",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "adjustLockSettingsLocally",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                    id: 0x0008, name: "AdjustLockSettingsLocally",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlKeypadOperationEventMask", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Unknown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Lock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Unlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "LockInvalidPin",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0010, name: "LockInvalidSchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0020, name: "UnlockInvalidCode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockInvalidPin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                    id: 0x0040, name: "UnlockInvalidSchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockInvalidPin",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "lockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "lockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidCode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidCode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "nonAccessUserOpEvent",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x80"
-                }),
-
-                DatatypeElement({
-                    name: "nonAccessUserOpEvent",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x80"
+                    id: 0x0080, name: "NonAccessUserOpEvent",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlRemoteOperationEventMask", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Unknown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Lock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Unlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "LockInvalidCode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0010, name: "LockInvalidSchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0020, name: "UnlockInvalidCode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockInvalidCode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "lockInvalidCode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "lockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "lockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidCode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidCode",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                    id: 0x0040, name: "UnlockInvalidSchedule",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlManualOperationEventMask", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x001"
+                    id: 0x0001, name: "Unknown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x001"
+                    id: 0x0002, name: "ThumbturnLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "thumbturnLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x002"
+                    id: 0x0004, name: "ThumbturnUnlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "thumbturnLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x002"
+                    id: 0x0008, name: "OneTouchLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "thumbturnUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x004"
+                    id: 0x0010, name: "KeyLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "thumbturnUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x004"
+                    id: 0x0020, name: "KeyUnlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "oneTouchLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x008"
+                    id: 0x0040, name: "AutoLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "oneTouchLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x008"
+                    id: 0x0080, name: "ScheduleLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "keyLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x010"
+                    id: 0x0100, name: "ScheduleUnlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "keyLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x010"
+                    id: 0x0200, name: "ManualLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "keyUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x020"
-                }),
-
-                DatatypeElement({
-                    name: "keyUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x020"
-                }),
-
-                DatatypeElement({
-                    name: "autoLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x040"
-                }),
-
-                DatatypeElement({
-                    name: "autoLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x040"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x080"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x080"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x100"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x100"
-                }),
-
-                DatatypeElement({
-                    name: "manualLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x200"
-                }),
-
-                DatatypeElement({
-                    name: "manualLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x200"
-                }),
-
-                DatatypeElement({
-                    name: "manualUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x400"
-                }),
-
-                DatatypeElement({
-                    name: "manualUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x400"
+                    id: 0x0400, name: "ManualUnlock",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlRfidOperationEventMask", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Unknown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Lock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Unlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "LockInvalidRfid",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0010, name: "LockInvalidSchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0020, name: "UnlockInvalidRfid",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockInvalidRfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "lockInvalidRfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "lockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "lockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidRfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidRfid",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "unlockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                    id: 0x0040, name: "UnlockInvalidSchedule",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlKeypadProgrammingEventMask", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Unknown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "ProgrammingPinChanged",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingPinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "PinAdded",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingPinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "PinCleared",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pinAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "pinAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "pinCleared",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "pinCleared",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "pinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "pinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                    id: 0x0010, name: "PinChanged",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlRemoteProgrammingEventMask", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Unknown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "ProgrammingPinChanged",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingPinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "PinAdded",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "programmingPinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "PinCleared",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pinAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0010, name: "PinChanged",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pinAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0020, name: "RfidCodeAdded",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pinCleared",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "pinCleared",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "pinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "pinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "rfidCodeAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "rfidCodeAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "rfidCodeCleared",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "rfidCodeCleared",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                    id: 0x0040, name: "RfidCodeCleared",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlRfidProgrammingEventMask", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Unknown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0020, name: "RfidCodeAdded",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rfidCodeAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "rfidCodeAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "rfidCodeCleared",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "rfidCodeCleared",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                    id: 0x0040, name: "RfidCodeCleared",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DlStatus", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "success",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Success",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "success",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "Failure",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "failure",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Duplicate",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "failure",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "Occupied",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "duplicate",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0085, name: "InvalidField",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "duplicate",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0089, name: "ResourceExhausted",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "occupied",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "occupied",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "invalidField",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x85"
-                }),
-
-                DatatypeElement({
-                    name: "invalidField",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x85"
-                }),
-
-                DatatypeElement({
-                    name: "resourceExhausted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x89"
-                }),
-
-                DatatypeElement({
-                    name: "resourceExhausted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x89"
-                }),
-
-                DatatypeElement({
-                    name: "notFound",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8B"
-                }),
-
-                DatatypeElement({
-                    name: "notFound",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8B"
+                    id: 0x008b, name: "NotFound",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DoorLockFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "pinCredential",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "PinCredential",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pinCredential",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "RfidCredential",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rfidCredential",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "FingerCredentials",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rfidCredential",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "Logging",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "fingerCredentials",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0010, name: "WeekDayAccessSchedules",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "fingerCredentials",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0020, name: "DoorPositionSensor",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "logging",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                    id: 0x0040, name: "FaceCredentials",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "logging",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                    id: 0x0080, name: "CredentialsOverTheAirAccess",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayAccessSchedules",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                    id: 0x0100, name: "User",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayAccessSchedules",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                    id: 0x0200, name: "Notification",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "doorPositionSensor",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
+                    id: 0x0400, name: "YearDayAccessSchedules",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "doorPositionSensor",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "faceCredentials",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "faceCredentials",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "credentialsOverTheAirAccess",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x80"
-                }),
-
-                DatatypeElement({
-                    name: "credentialsOverTheAirAccess",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x80"
-                }),
-
-                DatatypeElement({
-                    name: "user",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x100"
-                }),
-
-                DatatypeElement({
-                    name: "user",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x100"
-                }),
-
-                DatatypeElement({
-                    name: "notification",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x200"
-                }),
-
-                DatatypeElement({
-                    name: "notification",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x200"
-                }),
-
-                DatatypeElement({
-                    name: "yearDayAccessSchedules",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x400"
-                }),
-
-                DatatypeElement({
-                    name: "yearDayAccessSchedules",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x400"
-                }),
-
-                DatatypeElement({
-                    name: "holidaySchedules",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x800"
-                }),
-
-                DatatypeElement({
-                    name: "holidaySchedules",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x800"
+                    id: 0x0800, name: "HolidaySchedules",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DoorLockSetPinOrIdStatus", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "success",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Success",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "success",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "GeneralFailure",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "generalFailure",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "MemoryFull",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "generalFailure",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "memoryFull",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "memoryFull",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "duplicateCodeError",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "duplicateCodeError",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0003, name: "DuplicateCodeError",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DoorLockOperationEventCode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknownOrMfgSpecific",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "UnknownOrMfgSpecific",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknownOrMfgSpecific",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "Lock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Unlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "LockInvalidPinOrId",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "LockInvalidSchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0005, name: "UnlockInvalidPinOrId",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockInvalidPinOrId",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0006, name: "UnlockInvalidSchedule",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockInvalidPinOrId",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0007, name: "OneTouchLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0008, name: "KeyLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0009, name: "KeyUnlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlockInvalidPinOrId",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
+                    id: 0x000a, name: "AutoLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlockInvalidPinOrId",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
+                    id: 0x000b, name: "ScheduleLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
+                    id: 0x000c, name: "ScheduleUnlock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unlockInvalidSchedule",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
+                    id: 0x000d, name: "ManualLock",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "oneTouchLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
-                }),
-
-                DatatypeElement({
-                    name: "oneTouchLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x07"
-                }),
-
-                DatatypeElement({
-                    name: "keyLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "keyLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "keyUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
-                }),
-
-                DatatypeElement({
-                    name: "keyUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x09"
-                }),
-
-                DatatypeElement({
-                    name: "autoLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
-                }),
-
-                DatatypeElement({
-                    name: "autoLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0A"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0B"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
-                }),
-
-                DatatypeElement({
-                    name: "scheduleUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0C"
-                }),
-
-                DatatypeElement({
-                    name: "manualLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0D"
-                }),
-
-                DatatypeElement({
-                    name: "manualLock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0D"
-                }),
-
-                DatatypeElement({
-                    name: "manualUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0E"
-                }),
-
-                DatatypeElement({
-                    name: "manualUnlock",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0E"
+                    id: 0x000e, name: "ManualUnlock",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DoorLockProgrammingEventCode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unknownOrMfgSpecific",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "UnknownOrMfgSpecific",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unknownOrMfgSpecific",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "MasterCodeChanged",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "masterCodeChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "PinAdded",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "masterCodeChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "PinDeleted",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pinAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "PinChanged",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pinAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0005, name: "IdAdded",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pinDeleted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "pinDeleted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "pinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "pinChanged",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "idAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "idAdded",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "idDeleted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
-                }),
-
-                DatatypeElement({
-                    name: "idDeleted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
+                    id: 0x0006, name: "IdDeleted",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DoorLockUserStatus", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "available",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Available",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "available",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "OccupiedEnabled",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "occupiedEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "OccupiedDisabled",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "occupiedEnabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "occupiedDisabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "occupiedDisabled",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "notSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0xFF"
-                }),
-
-                DatatypeElement({
-                    name: "notSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0xFF"
+                    id: 0x00ff, name: "NotSupported",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DoorLockUserType", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unrestricted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unrestricted",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unrestricted",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "YearDayScheduleUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDayScheduleUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "WeekDayScheduleUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "yearDayScheduleUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "MasterUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayScheduleUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "NonAccessUser",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "weekDayScheduleUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "masterUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "masterUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "nonAccessUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "nonAccessUser",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "notSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0xFF"
-                }),
-
-                DatatypeElement({
-                    name: "notSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0xFF"
+                    id: 0x00ff, name: "NotSupported",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DoorLockDayOfWeek", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "sunday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Sunday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sunday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Monday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "monday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Tuesday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "monday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "Wednesday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "tuesday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0010, name: "Thursday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "tuesday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0020, name: "Friday",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "wednesday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "wednesday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "thursday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "thursday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "friday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "friday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x20"
-                }),
-
-                DatatypeElement({
-                    name: "saturday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
-                }),
-
-                DatatypeElement({
-                    name: "saturday",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x40"
+                    id: 0x0040, name: "Saturday",
+                    access: "R", conformance: "M"
                 })
             ]
         })

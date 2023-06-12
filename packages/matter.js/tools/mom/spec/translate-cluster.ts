@@ -114,7 +114,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             revision = 1;
         }
     
-        children.push({ ...Globals.ClusterRevision, value: revision });
+        children.push({ ...Globals.ClusterRevision, default: revision });
     
         return revision;
     }
@@ -129,7 +129,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             name: Alias(UpperIdentifier, "code", "feature"),
     
             // Actual type is numeric but we let Model handle that translation
-            default: Optional(Alias(NoSpace, "def"))
+            value: Optional(Alias(NoSpace, "def"))
         });
     
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
@@ -191,7 +191,7 @@ function translateFields(desc: string, fields?: DetailedReference) {
         base: Alias(NoSpace, "type"),
         constraint: Optional(Str),
         quality: Optional(Str),
-        default: Optional(NoSpace),
+        value: Optional(NoSpace),
         access: Optional(Str),
         conformance: Optional(Str)
     });

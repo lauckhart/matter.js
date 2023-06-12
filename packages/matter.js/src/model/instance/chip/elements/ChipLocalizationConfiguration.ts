@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
-import { ClusterElement, AttributeElement } from "../../../index.js";
+import { ChipMatter } from "../index.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x002b, name: "LocalizationConfiguration",
@@ -15,13 +15,18 @@ ChipMatter.children!.push(ClusterElement({
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions may have differing common languages, units of measurements, and numerical formatting standards. As such, Nodes that visually or audibly convey information need a mechanism by which they can be configured to use a user’s preferred language, units, etc",
     children: [
         AttributeElement({
-            id: 0x0000, name: "activeLocale", base: "string",
-            access: { rw: "W" }, conformance: [ "M" ]
+            id: 0x0000, name: "ActiveLocale", base: "string",
+            access: "W", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "supportedLocales", base: "list",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "SupportedLocales", base: "list",
+            access: "R", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "string"
+                })
+            ]
         })
     ]
 }));

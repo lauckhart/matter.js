@@ -46,11 +46,9 @@ export type BaseDataElement = BaseElement & {
     byteSize?: BaseDataElement.Size,
 
     /**
-     * A value associated with the element.  For enum and bitmap items, this
-     * is the value associated with the element name.  For other datatype
-     * elements this is the default value.
+     * The default value for the element.
      */
-    value?: any,
+    default?: any,
 
     /**
      * Nested structures that may have data elements include enums, structs and

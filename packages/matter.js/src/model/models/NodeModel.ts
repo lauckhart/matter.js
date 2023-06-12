@@ -10,6 +10,9 @@ export class NodeModel extends Model implements NodeElement {
     override type!: NodeElement.Type;
     override id!: number;
 
+    get endpoints() {
+        return this.children;
+    }
 
     override get children(): EndpointModel[] {
         return super.children as any;
@@ -17,11 +20,6 @@ export class NodeModel extends Model implements NodeElement {
 
     override set children(children: (EndpointModel | EndpointElement)[]) {
         super.children = children;
-    }
-
-    override validate() {
-        this.validateStructure(NodeElement.Type, true, EndpointModel);
-        return super.validate();
     }
 
     constructor(definition: NodeElement.Properties) {

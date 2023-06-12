@@ -12,29 +12,41 @@ import {
     BaseDataElement,
     AttributeElement,
     EventElement,
-    Datatype
+    Datatype,
+    Metatype
 } from "../index.js";
 
+// Base type factories (types with metatypes)
 const bool = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description });
+    DatatypeElement({ id, name, description, metatype: Metatype.boolean });
 const map = (id: number, name: string, description: string, byteSize: BaseDataElement.BitmapSize) =>
-    DatatypeElement({ id, name, description, byteSize });
+    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.bitmap });
 const int = (id: number, name: string, description: string, byteSize: BaseDataElement.Size) =>
-    DatatypeElement({ id, name, description, byteSize });
-const extint = (id: number, name: string, description: string, base: string) =>
+    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.integer });
+const float = (id: number, name: string, description: string, byteSize: BaseDataElement.Size) =>
+    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.float });
+const octet = (id: number, name: string, description: string) =>
+    DatatypeElement({ id, name, description, metatype: Metatype.bytes });
+const string = (id: number, name: string, description: string) =>
+    DatatypeElement({ id, name, description, metatype: Metatype.string });
+const list = (id: number, name: string, description: string) =>
+    DatatypeElement({ id, name, description, metatype: Metatype.array });
+const struct = (id: number, name: string, description: string) =>
+    DatatypeElement({ id, name, description, metatype: Metatype.object });
+const enumt = (id: number, name: string, description: string, base: string) =>
+    DatatypeElement({ id, name, description, metatype: Metatype.enum, base });
+
+// Derivative type factories (types that inherit metatypes)
+const extInt = (id: number, name: string, description: string, base: string) =>
     DatatypeElement({ id, name, description, base });
 const depint = (id: number, name: string, description: string, base: string) =>
     DatatypeElement({ id, name, description, base, conformance: Conformance.Flag.Deprecated });
-const float = (id: number, name: string, description: string, byteSize: BaseDataElement.Size) =>
-    DatatypeElement({ id, name, description, byteSize });
-const octet = (id: number, name: string, description: string, constraint?: Constraint.Definition) =>
-    DatatypeElement({ id, name, constraint, description });
-const enum8 = (id: number, name: string, description: string, values: DatatypeElement.ValueMap) =>
-    DatatypeElement({ id, name, description, children: DatatypeElement.ListValues(values) });
-const list = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description });
-const struct = (id: number, name: string, description: string, children: DatatypeElement[]) =>
-    DatatypeElement({ id, name, description, children });
+const extOctet = (id: number, name: string, description: string, constraint?: Constraint.Definition) =>
+    DatatypeElement({ id, name, description, base: Datatype.octstr, constraint });
+const extEnum = (id: number, name: string, description: string, values: DatatypeElement.ValueMap) =>
+    DatatypeElement({ id, name, description, base: "enum8", children: DatatypeElement.ListValues(values) });
+const extStruct = (id: number, name: string, description: string, children: DatatypeElement[]) =>
+    DatatypeElement({ id, name, description, base: Datatype.struct, children });
 
 const TodFields = [
     DatatypeElement({ base: "uint8", name: "hours" }),
@@ -91,65 +103,65 @@ export const Globals = {
     double:        float     (0x3a,   "double",        "Double precision",            8),
 
     // Composite
-    octstr:        octet     (0x41,   "octstr",        "Octet string",                undefined),
+    octstr:        octet     (0x41,   "octstr",        "Octet string"),
     list:          list      (0x48,   "list",          "List"),
-    struct:        struct    (0x4c,   "struct",        "Struct",                      []),
+    struct:        struct    (0x4c,   "struct",        "Struct"),
 
     // Analog relative
-    percent:       extint    (0x32,   "percent",       "Percentage units 1%",         Datatype.uint8),
-    percent100ths: extint    (0x33,   "percent100ths", "Percentage units 0.01%",      Datatype.uint16),
+    percent:       extInt    (0x32,   "percent",       "Percentage units 1%",         Datatype.uint8),
+    percent100ths: extInt    (0x33,   "percent100ths", "Percentage units 0.01%",      Datatype.uint16),
 
     // Analog time
-    tod:           struct    (0xe0,   "tod",           "Time of day",                 TodFields),
-    date:          struct    (0xe1,   "date",          "Date",                        DateFields),
-    epochUs:       extint    (0xe3,   "epoch-us",      "Epoch time in microseconds",  Datatype.uint64),
-    epochS:        extint    (0xe2,   "epoch-s",       "Epoch time in seconds",       Datatype.uint32),
+    tod:           extStruct (0xe0,   "tod",           "Time of day",                 TodFields),
+    date:          extStruct (0xe1,   "date",          "Date",                        DateFields),
+    epochUs:       extInt    (0xe3,   "epoch-us",      "Epoch time in microseconds",  Datatype.uint64),
+    epochS:        extInt    (0xe2,   "epoch-s",       "Epoch time in seconds",       Datatype.uint32),
     /** @deprecated by Matter specification */
     utc:           depint    (0xe2,   "utc",           "UTC time",                    Datatype.uint32),
-    posixMs:       extint    (0xf3,   "posix-ms",      "POSIX time in milliseconds",  Datatype.uint64),
-    systimeUs:     extint    (0xe4,   "systime-us",    "Sytem time in microseconds",  Datatype.uint64),
-    systimeMs:     extint    (0xf4,   "systime-ms",    "System time in milliseconds", Datatype.uint64),
+    posixMs:       extInt    (0xf3,   "posix-ms",      "POSIX time in milliseconds",  Datatype.uint64),
+    systimeUs:     extInt    (0xe4,   "systime-us",    "Sytem time in microseconds",  Datatype.uint64),
+    systimeMs:     extInt    (0xf4,   "systime-ms",    "System time in milliseconds", Datatype.uint64),
 
     // Discrete enumeration
-    enum8:         extint    (0x30,   "enum8",         "8-bit enumeration",           Datatype.uint8),
-    enum16:        extint    (0x31,   "enum16",        "16-bit enumeration",          Datatype.uint16),
-    priority:      enum8     (0x34,   "priority",      "Priority",                    EventElement.Priority),
-    status:        enum8     (0xe7,   "status",        "Status Code",                 StatusCode),
+    enum8:         enumt     (0x30,   "enum8",         "8-bit enumeration",           Datatype.uint8),
+    enum16:        enumt     (0x31,   "enum16",        "16-bit enumeration",          Datatype.uint16),
+    priority:      extEnum   (0x34,   "priority",      "Priority",                    EventElement.PriorityId),
+    status:        extEnum   (0xe7,   "status",        "Status Code",                 StatusCode),
 
     // Identifier
-    fabricId:      extint    (0xd1,   "fabric-id",     "Fabric ID",                   Datatype.uint64),
-    fabricIdx:     extint    (0xd2,   "fabric-idx",    "Fabric Index",                Datatype.uint8),
-    nodeId:        extint    (0xf0,   "node-id",       "Node ID",                     Datatype.uint64),
+    fabricId:      extInt    (0xd1,   "fabric-id",     "Fabric ID",                   Datatype.uint64),
+    fabricIdx:     extInt    (0xd2,   "fabric-idx",    "Fabric Index",                Datatype.uint8),
+    nodeId:        extInt    (0xf0,   "node-id",       "Node ID",                     Datatype.uint64),
     /** @deprecated by Matter specification */
     eui64:         depint    (0xf0,   "eui64",         "IEEE address",                Datatype.uint64),
-    groupId:       extint    (0xf1,   "group-id",      "Group ID",                    Datatype.uint16),
-    endpointNo:    extint    (0xe5,   "endpoint-no",   "Endpoint number",             Datatype.uint16),
-    vendorId:      extint    (0xd3,   "vendor-id",     "Vendor ID",                   Datatype.uint16),
-    deviceTypeId:  extint    (0xed,   "devtype-id",    "Device type ID",              Datatype.uint32),
-    clusterId:     extint    (0xe8,   "cluster-id",    "Cluster ID",                  Datatype.uint32),
-    attributeId:   extint    (0xe9,   "attrib-id",     "Attribute ID",                Datatype.uint32),
-    fieldId:       extint    (0xef,   "field-id",      "Field ID",                    Datatype.uint32),
-    eventId:       extint    (0xee,   "event-id",      "Event ID",                    Datatype.uint32),
-    commandId:     extint    (0xec,   "command-id",    "Command ID",                  Datatype.uint32),
-    actionId:      extint    (0xea,   "action-id",     "Action ID",                   Datatype.uint8),
-    transactionId: extint    (0xeb,   "trans-id",      "Transaction ID",              Datatype.uint32),
+    groupId:       extInt    (0xf1,   "group-id",      "Group ID",                    Datatype.uint16),
+    endpointNo:    extInt    (0xe5,   "endpoint-no",   "Endpoint number",             Datatype.uint16),
+    vendorId:      extInt    (0xd3,   "vendor-id",     "Vendor ID",                   Datatype.uint16),
+    deviceTypeId:  extInt    (0xed,   "devtype-id",    "Device type ID",              Datatype.uint32),
+    clusterId:     extInt    (0xe8,   "cluster-id",    "Cluster ID",                  Datatype.uint32),
+    attributeId:   extInt    (0xe9,   "attrib-id",     "Attribute ID",                Datatype.uint32),
+    fieldId:       extInt    (0xef,   "field-id",      "Field ID",                    Datatype.uint32),
+    eventId:       extInt    (0xee,   "event-id",      "Event ID",                    Datatype.uint32),
+    commandId:     extInt    (0xec,   "command-id",    "Command ID",                  Datatype.uint32),
+    actionId:      extInt    (0xea,   "action-id",     "Action ID",                   Datatype.uint8),
+    transactionId: extInt    (0xeb,   "trans-id",      "Transaction ID",              Datatype.uint32),
 
     // Index
-    entryIdx:      extint    (0xf2,   "entry-idx",     "Entry index",                 Datatype.uint16),
+    entryIdx:      extInt    (0xf2,   "entry-idx",     "Entry index",                 Datatype.uint16),
 
     // Counter
-    dataVer:       extint    (0xd0,   "data-ver",      "Data version",                Datatype.uint32),
-    eventNo:       extint    (0xe6,   "event-no",      "Event number",                Datatype.uint64),
+    dataVer:       extInt    (0xd0,   "data-ver",      "Data version",                Datatype.uint32),
+    eventNo:       extInt    (0xe6,   "event-no",      "Event number",                Datatype.uint64),
 
     // Composite string
-    string:        octet     (0x42,   "string",        "Character string"),
+    string:        string    (0x42,   "string",        "Character string"),
 
     // Composite address
-    ipadr:         octet     (0xd3,   "ipadr",         "IP Address",                  { min: 4, max: 16 }),
-    ipv4adr:       octet     (0xd4,   "ipv4adr",       "IPv4 address",                4),
-    ipv6adr:       octet     (0xd5,   "ipv6adr",       "IPv6 address",                16),
-    ipv6pre:       octet     (0xd6,   "ipv6pre",       "IPv6 prefix",                 { min: 1, max: 17 }),
-    hwadr:         octet     (0xd7,   "hwadr",         "Hardware address",            { min: 6, max: 8 }),
+    ipadr:         extOctet  (0xd3,   "ipadr",         "IP Address",                  { min: 4, max: 16 }),
+    ipv4adr:       extOctet  (0xd4,   "ipv4adr",       "IPv4 address",                4),
+    ipv6adr:       extOctet  (0xd5,   "ipv6adr",       "IPv6 address",                16),
+    ipv6pre:       extOctet  (0xd6,   "ipv6pre",       "IPv6 prefix",                 { min: 1, max: 17 }),
+    hwadr:         extOctet  (0xd7,   "hwadr",         "Hardware address",            { min: 6, max: 8 }),
 
     // Global elements
     ClusterRevision: AttributeElement({
@@ -157,7 +169,7 @@ export const Globals = {
         constraint: { min: 1 }, quality: "F", access: "R V", conformance: "M" }),
     FeatureMap: AttributeElement({
         id: 0xfffc, name: "FeatureMap", base: "map32",
-        quality: "F", access: "R V", value: 0, conformance: "M" }),
+        quality: "F", access: "R V", default: 0, conformance: "M" }),
     AttributeList: AttributeElement({
         id: 0xfffb, name: "AttributeList", base: "list[attrib-id]",
         quality: "F", access: "R V", conformance: "M" }),

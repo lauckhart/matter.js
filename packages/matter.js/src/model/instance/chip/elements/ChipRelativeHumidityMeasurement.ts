@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,23 +15,23 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring the measurement of relative humidity, and reporting relative humidity measurements.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "relativeHumidityMeasuredValue", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true, reportable: true }
+            id: 0x0000, name: "RelativeHumidityMeasuredValue", base: "uint16",
+            access: "R", conformance: "M", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "relativeHumidityMinMeasuredValue", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0001, name: "RelativeHumidityMinMeasuredValue", base: "uint16",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "relativeHumidityMaxMeasuredValue", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0002, name: "RelativeHumidityMaxMeasuredValue", base: "uint16",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "relativeHumidityTolerance", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0003, name: "RelativeHumidityTolerance", base: "uint16",
+            access: "R", conformance: "O"
         })
     ]
 }));

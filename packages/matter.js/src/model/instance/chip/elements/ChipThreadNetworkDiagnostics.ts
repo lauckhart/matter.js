@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
-import { ClusterElement, AttributeElement, CommandElement, EventElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../index.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement, EventElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0035, name: "ThreadNetworkDiagnostics",
@@ -15,961 +15,686 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
     children: [
         AttributeElement({
-            id: 0x0000, name: "channel", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0000, name: "Channel", base: "uint16",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "routingRole", base: "RoutingRole",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0001, name: "RoutingRole", base: "RoutingRole",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "networkName", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0002, name: "NetworkName", base: "string",
+            access: "R", conformance: "M", default: "", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "diagPanId", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }, value: "0x0000"
+            id: 0x0003, name: "DiagPanId", base: "uint16",
+            access: "R", conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "diagExtendedPanId", base: "uint64",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }, value: "0x0000000000000000"
+            id: 0x0004, name: "DiagExtendedPanId", base: "uint64",
+            access: "R", conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "meshLocalPrefix", base: "octstr",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0005, name: "MeshLocalPrefix", base: "octstr",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "diagOverrunCount", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000000000000000"
+            id: 0x0006, name: "DiagOverrunCount", base: "uint64",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0007, name: "neighborTable", base: "list",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0007, name: "NeighborTable", base: "list",
+            access: "R", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "NeighborTable"
+                })
+            ]
         }),
 
         AttributeElement({
-            id: 0x0008, name: "routeTable", base: "list",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0008, name: "RouteTable", base: "list",
+            access: "R", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "RouteTable"
+                })
+            ]
         }),
 
         AttributeElement({
-            id: 0x0009, name: "partitionId", base: "uint32",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0009, name: "PartitionId", base: "uint32",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000a, name: "weighting", base: "uint8",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x000a, name: "Weighting", base: "uint8",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000b, name: "dataVersion", base: "uint8",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x000b, name: "DataVersion", base: "uint8",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000c, name: "stableDataVersion", base: "uint8",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x000c, name: "StableDataVersion", base: "uint8",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000d, name: "leaderRouterId", base: "uint8",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x000d, name: "LeaderRouterId", base: "uint8",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000e, name: "detachedRoleCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x000e, name: "DetachedRoleCount", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x000f, name: "childRoleCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x000f, name: "ChildRoleCount", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0010, name: "routerRoleCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0010, name: "RouterRoleCount", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0011, name: "leaderRoleCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0011, name: "LeaderRoleCount", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0012, name: "attachAttemptCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0012, name: "AttachAttemptCount", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0013, name: "partitionIdChangeCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0013, name: "PartitionIdChangeCount", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0014, name: "betterPartitionAttachAttemptCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0014, name: "BetterPartitionAttachAttemptCount", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0015, name: "parentChangeCount", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0015, name: "ParentChangeCount", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0016, name: "txTotalCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0016, name: "TxTotalCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0017, name: "txUnicastCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0017, name: "TxUnicastCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0018, name: "txBroadcastCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0018, name: "TxBroadcastCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0019, name: "txAckRequestedCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0019, name: "TxAckRequestedCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x001a, name: "txAckedCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x001a, name: "TxAckedCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x001b, name: "txNoAckRequestedCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x001b, name: "TxNoAckRequestedCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x001c, name: "txDataCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x001c, name: "TxDataCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x001d, name: "txDataPollCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x001d, name: "TxDataPollCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x001e, name: "txBeaconCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x001e, name: "TxBeaconCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x001f, name: "txBeaconRequestCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x001f, name: "TxBeaconRequestCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0020, name: "txOtherCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0020, name: "TxOtherCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0021, name: "txRetryCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0021, name: "TxRetryCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0022, name: "txDirectMaxRetryExpiryCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0022, name: "TxDirectMaxRetryExpiryCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0023, name: "txIndirectMaxRetryExpiryCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0023, name: "TxIndirectMaxRetryExpiryCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0024, name: "txErrCcaCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0024, name: "TxErrCcaCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0025, name: "txErrAbortCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0025, name: "TxErrAbortCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0026, name: "txErrBusyChannelCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0026, name: "TxErrBusyChannelCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0027, name: "rxTotalCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0027, name: "RxTotalCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0028, name: "rxUnicastCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0028, name: "RxUnicastCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0029, name: "rxBroadcastCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0029, name: "RxBroadcastCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x002a, name: "rxDataCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x002a, name: "RxDataCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x002b, name: "rxDataPollCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x002b, name: "RxDataPollCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x002c, name: "rxBeaconCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x002c, name: "RxBeaconCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x002d, name: "rxBeaconRequestCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x002d, name: "RxBeaconRequestCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x002e, name: "rxOtherCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x002e, name: "RxOtherCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x002f, name: "rxAddressFilteredCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x002f, name: "RxAddressFilteredCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0030, name: "rxDestaddrFilteredCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0030, name: "RxDestaddrFilteredCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0031, name: "rxDuplicatedCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0031, name: "RxDuplicatedCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0032, name: "rxErrNoFrameCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0032, name: "RxErrNoFrameCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0033, name: "rxErrUnknownNeighborCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0033, name: "RxErrUnknownNeighborCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0034, name: "rxErrInvalidSrcAddrCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0034, name: "RxErrInvalidSrcAddrCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0035, name: "rxErrSecCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0035, name: "RxErrSecCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0036, name: "rxErrFcsCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0036, name: "RxErrFcsCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0037, name: "rxErrOtherCount", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0037, name: "RxErrOtherCount", base: "uint32",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0038, name: "activeTimestamp", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }, value: "0x0000000000000000"
+            id: 0x0038, name: "ActiveTimestamp", base: "uint64",
+            access: "R", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0039, name: "pendingTimestamp", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }, value: "0x0000000000000000"
+            id: 0x0039, name: "PendingTimestamp", base: "uint64",
+            access: "R", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x003a, name: "delay", base: "uint32",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }, value: "0x0000"
+            id: 0x003a, name: "Delay", base: "uint32",
+            access: "R", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x003b, name: "securityPolicy", base: "SecurityPolicy",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x003b, name: "SecurityPolicy", base: "SecurityPolicy",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x003c, name: "diagChannelMask", base: "octstr",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x003c, name: "DiagChannelMask", base: "octstr",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x003d, name: "operationalDatasetComponents", base: "OperationalDatasetComponents",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x003d, name: "OperationalDatasetComponents", base: "OperationalDatasetComponents",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x003e, name: "activeThreadNetworkFaults", base: "list",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x003e, name: "ActiveThreadNetworkFaults", base: "list",
+            access: "R", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "NetworkFault"
+                })
+            ]
         }),
 
         CommandElement({
             id: 0x0000, name: "ResetCounts",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request"
+            access: "R", conformance: "O", direction: "request"
         }),
 
         EventElement({
             id: 0x0000, name: "ConnectionStatus",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "info",
+            access: "R", conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "connectionStatus", base: "ConnectionStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "connectionStatus", base: "ConnectionStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ConnectionStatus", base: "ConnectionStatusEnum",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0001, name: "NetworkFaultChange",
-            access: { rw: "R" }, conformance: [ "O" ], priority: "info",
+            access: "R", conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "current", base: "NetworkFault",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Current", base: "NetworkFault",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "current", base: "NetworkFault",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "NetworkFault",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "previous", base: "NetworkFault",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Previous", base: "NetworkFault",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "NetworkFault", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "LinkDown",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "linkDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "HardwareFailure",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "linkDown",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "hardwareFailure",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "hardwareFailure",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "networkJammed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "networkJammed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0003, name: "NetworkJammed",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "RoutingRole", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Unspecified",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unspecified",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "Unassigned",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unassigned",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "SleepyEndDevice",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "unassigned",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "EndDevice",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sleepyEndDevice",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "Reed",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "sleepyEndDevice",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0005, name: "Router",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "endDevice",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "endDevice",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "reed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "reed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "router",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "router",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "leader",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
-                }),
-
-                DatatypeElement({
-                    name: "leader",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x06"
+                    id: 0x0006, name: "Leader",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ConnectionStatusEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "connected",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Connected",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "connected",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
-                }),
-
-                DatatypeElement({
-                    name: "notConnected",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "notConnected",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "NotConnected",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "NeighborTable", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "extAddress", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ExtAddress", base: "uint64",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "extAddress", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Age", base: "uint32",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "age", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Rloc16", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "age", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LinkFrameCounter", base: "uint32",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rloc16", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "MleFrameCounter", base: "uint32",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rloc16", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Lqi", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "linkFrameCounter", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "AverageRssi", base: "int8",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "linkFrameCounter", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LastRssi", base: "int8",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "mleFrameCounter", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "FrameErrorRate", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "mleFrameCounter", base: "uint32",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "MessageErrorRate", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lqi", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "RxOnWhenIdle", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "lqi", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "FullThreadDevice", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "averageRssi", base: "int8",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "FullNetworkData", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "averageRssi", base: "int8",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "lastRssi", base: "int8",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "lastRssi", base: "int8",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "frameErrorRate", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "frameErrorRate", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "messageErrorRate", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "messageErrorRate", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "rxOnWhenIdle", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "rxOnWhenIdle", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "fullThreadDevice", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "fullThreadDevice", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "fullNetworkData", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "fullNetworkData", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "isChild", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "isChild", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "IsChild", base: "bool",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "RouteTable", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "extAddress", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ExtAddress", base: "uint64",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "extAddress", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Rloc16", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rloc16", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "RouterId", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rloc16", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "NextHop", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "routerId", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "PathCost", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "routerId", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LqiIn", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "nextHop", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LqiOut", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "nextHop", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Age", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pathCost", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Allocated", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pathCost", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "lqiIn", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "lqiIn", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "lqiOut", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "lqiOut", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "age", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "age", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "allocated", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "allocated", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "linkEstablished", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "linkEstablished", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "LinkEstablished", base: "bool",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SecurityPolicy", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "rotationTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "RotationTime", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rotationTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "flags", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "flags", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Flags", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OperationalDatasetComponents", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "activeTimestampPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ActiveTimestampPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "activeTimestampPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "PendingTimestampPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pendingTimestampPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "MasterKeyPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pendingTimestampPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "NetworkNamePresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "masterKeyPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ExtendedPanIdPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "masterKeyPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "MeshLocalPrefixPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "networkNamePresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "DelayPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "networkNamePresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "PanIdPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "extendedPanIdPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ChannelPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "extendedPanIdPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "PskcPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "meshLocalPrefixPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "SecurityPolicyPresent", base: "bool",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "meshLocalPrefixPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "delayPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "delayPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "panIdPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "panIdPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "channelPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "channelPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "pskcPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "pskcPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "securityPolicyPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "securityPolicyPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "channelMaskPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "channelMaskPresent", base: "bool",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ChannelMaskPresent", base: "bool",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ThreadNetworkDiagnosticsFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "packetCounts",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0001, name: "PacketCounts",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "packetCounts",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0002, name: "ErrorCounts",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "errorCounts",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                    id: 0x0004, name: "MleCounts",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "errorCounts",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "mleCounts",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
-                }),
-
-                DatatypeElement({
-                    name: "mleCounts",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x4"
-                }),
-
-                DatatypeElement({
-                    name: "macCounts",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8"
-                }),
-
-                DatatypeElement({
-                    name: "macCounts",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x8"
+                    id: 0x0008, name: "MacCounts",
+                    access: "R", conformance: "M"
                 })
             ]
         })

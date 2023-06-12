@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,32 +15,27 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read only labels.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "labelList", base: "list",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0000, name: "LabelList", base: "list",
+            access: "R", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "LabelStruct"
+                })
+            ]
         }),
 
         DatatypeElement({
             name: "LabelStruct", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "label", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Label", base: "string",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "label", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "value", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "value", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Value", base: "string",
+                    access: "R", conformance: "M"
                 })
             ]
         })

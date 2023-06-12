@@ -16,6 +16,10 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
     type: Conformance.AstType;
     param?: Conformance.AstParam;
 
+    override get empty() {
+        return this.type === Conformance.Special.Empty;
+    }
+
     /**
      * Initialize from a Conformance.Definition or the conformance DSL defined
      * by the Matter Specification.
@@ -431,7 +435,10 @@ class Parser {
                     param: this.parseGroup(Tokenizer.Special.OptionalEnd)
                 })
             } else {
-                group.push(this.parseExpression());
+                const expr = this.parseExpression();
+                if (expr) {
+                    group.push(expr);
+                }
             }
             
             if (this.atSpecial(Tokenizer.Special.Comma)) {

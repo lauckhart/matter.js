@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,23 +15,23 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring the measurement of temperature, and reporting temperature measurements.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "tempMeasuredValue", base: "int16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0000, name: "TempMeasuredValue", base: "int16",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "tempMinMeasuredValue", base: "int16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }, value: "0x8000"
+            id: 0x0001, name: "TempMinMeasuredValue", base: "int16",
+            access: "R", conformance: "M", default: 32768, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "tempMaxMeasuredValue", base: "int16",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }, value: "0x8000"
+            id: 0x0002, name: "TempMaxMeasuredValue", base: "int16",
+            access: "R", conformance: "M", default: 32768, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "tempTolerance", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0003, name: "TempTolerance", base: "uint16",
+            access: "R", conformance: "O", default: 0
         })
     ]
 }));

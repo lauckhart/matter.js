@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../index.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x003f, name: "GroupKeyManagement",
@@ -15,291 +15,196 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Group Key Management Cluster is the mechanism by which group keys are managed.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "groupKeyMap", base: "list",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "M" ]
+            id: 0x0000, name: "GroupKeyMap", base: "list",
+            access: "W VM", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "GroupKeyMapStruct"
+                })
+            ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "groupTable", base: "list",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "GroupTable", base: "list",
+            access: "R", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "GroupInfoMapStruct"
+                })
+            ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "maxGroupsPerFabric", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0002, name: "MaxGroupsPerFabric", base: "uint16",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "maxGroupKeysPerFabric", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0003, name: "MaxGroupKeysPerFabric", base: "uint16",
+            access: "R", conformance: "M"
         }),
 
         CommandElement({
             id: 0x0000, name: "KeySetWrite",
-            access: { rw: "R", fabric: "F", writePriv: "A" }, conformance: [ "M" ], direction: "request",
+            access: "R F A", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "groupKeySet", base: "GroupKeySetStruct",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupKeySet", base: "GroupKeySetStruct",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySet", base: "GroupKeySetStruct",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "KeySetRead",
-            access: { rw: "R", fabric: "F", writePriv: "A" }, conformance: [ "M" ], direction: "request", response: "KeySetReadResponse",
+            access: "R F A", conformance: "M", direction: "request", response: "KeySetReadResponse",
             children: [
                 DatatypeElement({
-                    name: "groupKeySetId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupKeySetId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySetId", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "KeySetReadResponse",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "response",
+            access: "R", conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "groupKeySet", base: "GroupKeySetStruct",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupKeySet", base: "GroupKeySetStruct",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySet", base: "GroupKeySetStruct",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "KeySetRemove",
-            access: { rw: "R", fabric: "F", writePriv: "A" }, conformance: [ "M" ], direction: "request",
+            access: "R F A", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "groupKeySetId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupKeySetId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySetId", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "KeySetReadAllIndices",
-            access: { rw: "R", fabric: "F", writePriv: "A" }, conformance: [ "M" ], direction: "request", response: "KeySetReadAllIndicesResponse",
+            access: "R F A", conformance: "M", direction: "request", response: "KeySetReadAllIndicesResponse",
             children: [
                 DatatypeElement({
-                    name: "groupKeySetIDs", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupKeySetIDs", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySetIDs", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0005, name: "KeySetReadAllIndicesResponse",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "response",
+            access: "R", conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "groupKeySetIDs", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupKeySetIDs", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySetIDs", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GroupKeyMapStruct", base: "struct",
-            access: { rw: "R", fabric: "F" }, conformance: [ "M" ],
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "groupId", base: "groupId",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupId", base: "group-id",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "groupId", base: "groupId",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupKeySetId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupKeySetId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySetId", base: "uint16",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GroupInfoMapStruct", base: "struct",
-            access: { rw: "R", fabric: "F" }, conformance: [ "M" ],
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "groupId", base: "groupId",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupId", base: "group-id",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "groupId", base: "groupId",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Endpoints", base: "endpoint-no",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "endpoints", base: "endpointNo",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "endpoints", base: "endpointNo",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupName", base: "string",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "groupName", base: "string",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "GroupName", base: "string",
+                    access: "R", conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GroupKeySetStruct", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "groupKeySetId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySetId", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "groupKeySetId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "GroupKeySecurityPolicy", base: "GroupKeySecurityPolicyEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "groupKeySecurityPolicy", base: "GroupKeySecurityPolicyEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "EpochKey0", base: "octstr",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "groupKeySecurityPolicy", base: "GroupKeySecurityPolicyEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "EpochStartTime0", base: "epoch-us",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "epochKey0", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "EpochKey1", base: "octstr",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "epochKey0", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "EpochStartTime1", base: "epoch-us",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "epochStartTime0", base: "epochUs",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "EpochKey2", base: "octstr",
+                    access: "R", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "epochStartTime0", base: "epochUs",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "epochKey1", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "epochKey1", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "epochStartTime1", base: "epochUs",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "epochStartTime1", base: "epochUs",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "epochKey2", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "epochKey2", base: "octstr",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "epochStartTime2", base: "epochUs",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "epochStartTime2", base: "epochUs",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "EpochStartTime2", base: "epoch-us",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GroupKeySecurityPolicyEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "trustFirst",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "TrustFirst",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "trustFirst",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
-                }),
-
-                DatatypeElement({
-                    name: "cacheAndSync",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "cacheAndSync",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "CacheAndSync",
+                    access: "R", conformance: "M"
                 })
             ]
         })

@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SpecMatter } from "../internal.js";
+import { SpecMatter } from "../index.js";
 import { ClusterElement, AttributeElement } from "../../../index.js";
 
 SpecMatter.children!.push(ClusterElement({
@@ -15,39 +15,39 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: { min: 1 }, value: 4, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 4, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", value: 0, quality: "F"
+            access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
             id: 0x0000, name: "Measured", base: "int16",
-            access: "R V", conformance: "M", constraint: "MinMea", value: "", quality: "XP",
-            xref: { section: "2.3.4", document: "cluster", version: "1.1" }
+            access: "R V", conformance: "M", constraint: "MinMea", quality: "X P",
+            xref: { document: "cluster", section: "2.3.4", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "MinMeasuredValue", base: "int16",
-            access: "R V", conformance: "M", constraint: "-27315 toMaxMeasuredValue-1", value: "", quality: "X",
+            access: "R V", conformance: "M", quality: "X",
             details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of being measured. See Measured Value for more details.",
-            xref: { section: "2.3.4.2", document: "cluster", version: "1.1" }
+            xref: { document: "cluster", section: "2.3.4.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "MaxMeasuredValue", base: "int16",
-            access: "R V", conformance: "M", constraint: "MinMeasuredValue+1 to 32767", value: "", quality: "X",
+            access: "R V", conformance: "M", constraint: "MinMeasuredValue1 to 32767", quality: "X",
             details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that is capable of being measured. See Measured Value for more details.",
-            xref: { section: "2.3.4.3", document: "cluster", version: "1.1" }
+            xref: { document: "cluster", section: "2.3.4.3", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "Tolerance", base: "uint16",
-            access: "R V", conformance: "O", constraint: "0 to 2048", value: "0",
+            access: "R V", conformance: "O", constraint: "0 to 2048",
             details: "See Measured Value.",
-            xref: { section: "2.3.4.4", document: "cluster", version: "1.1" }
+            xref: { document: "cluster", section: "2.3.4.4", version: "1.1" }
         })
     ]
 }));

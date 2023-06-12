@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,159 +15,119 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring occupancy sensing, and reporting occupancy status.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "occupancy", base: "OccupancyBitmap",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { reportable: true }
+            id: 0x0000, name: "Occupancy", base: "OccupancyBitmap",
+            access: "R", conformance: "M", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "occupancySensorType", base: "OccupancySensorTypeEnum",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0001, name: "OccupancySensorType", base: "OccupancySensorTypeEnum",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "occupancySensorTypeBitmap", base: "OccupancySensorTypeBitmap",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0002, name: "OccupancySensorTypeBitmap", base: "OccupancySensorTypeBitmap",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0010, name: "pirOccupiedToUnoccupiedDelay", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0010, name: "PirOccupiedToUnoccupiedDelay", base: "uint16",
+            access: "W VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0011, name: "pirUnoccupiedToOccupiedDelay", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0011, name: "PirUnoccupiedToOccupiedDelay", base: "uint16",
+            access: "W VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0012, name: "pirUnoccupiedToOccupiedThreshold", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x01"
+            id: 0x0012, name: "PirUnoccupiedToOccupiedThreshold", base: "uint8",
+            access: "W VM", conformance: "O", default: 1
         }),
 
         AttributeElement({
-            id: 0x0020, name: "ultrasonicOccupiedToUnoccupiedDelay", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0020, name: "UltrasonicOccupiedToUnoccupiedDelay", base: "uint16",
+            access: "W VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0021, name: "ultrasonicUnoccupiedToOccupiedDelay", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0021, name: "UltrasonicUnoccupiedToOccupiedDelay", base: "uint16",
+            access: "W VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0022, name: "ultrasonicUnoccupiedToOccupiedThreshold", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x01"
+            id: 0x0022, name: "UltrasonicUnoccupiedToOccupiedThreshold", base: "uint8",
+            access: "W VM", conformance: "O", default: 1
         }),
 
         AttributeElement({
-            id: 0x0030, name: "physicalContactOccupiedToUnoccupiedDelay", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0030, name: "PhysicalContactOccupiedToUnoccupiedDelay", base: "uint16",
+            access: "W VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0031, name: "physicalContactUnoccupiedToOccupiedDelay", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0031, name: "PhysicalContactUnoccupiedToOccupiedDelay", base: "uint16",
+            access: "W VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0032, name: "physicalContactUnoccupiedToOccupiedThreshold", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], value: "0x01"
+            id: 0x0032, name: "PhysicalContactUnoccupiedToOccupiedThreshold", base: "uint8",
+            access: "W VM", conformance: "O", default: 1
         }),
 
         DatatypeElement({
             name: "OccupancyBitmap", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "occupied",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "occupied",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0001, name: "Occupied",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OccupancySensorTypeEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "pir",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
+                    id: 0x0000, name: "Pir",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pir",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
+                    id: 0x0001, name: "Ultrasonic",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ultrasonic",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0002, name: "PirAndUltrasonic",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ultrasonic",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "pirAndUltrasonic",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "pirAndUltrasonic",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "physicalContact",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
-                }),
-
-                DatatypeElement({
-                    name: "physicalContact",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
+                    id: 0x0003, name: "PhysicalContact",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OccupancySensorTypeBitmap", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "pir",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "Pir",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "pir",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "Ultrasonic",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ultrasonic",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "ultrasonic",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "physicalContact",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "physicalContact",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
+                    id: 0x0004, name: "PhysicalContact",
+                    access: "R", conformance: "M"
                 })
             ]
         })

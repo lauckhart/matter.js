@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SpecMatter } from "../internal.js";
+import { SpecMatter } from "../index.js";
 import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
 
 SpecMatter.children!.push(ClusterElement({
@@ -15,25 +15,51 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: { min: 1 }, value: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", value: 0, quality: "F"
+            access: "R V", conformance: "M", default: 0, quality: "F",
+            children: [
+                DatatypeElement({
+                    id: 0x0000, name: "TEMP",
+                    description: "The Node can be configured to use different units of temperature when conveying values to a user.",
+                    xref: { document: "core", section: "11.5.4", version: "1.1" }
+                })
+            ]
         }),
 
         AttributeElement({
             id: 0x0000, name: "TemperatureUnit", base: "TempUnitEnum",
-            access: "RW VM", conformance: "TEMP", value: "null", quality: "X N",
+            access: "RW VM", conformance: "TEMP", quality: "X N",
             details: "The TemperatureUnit attribute SHALL indicate the unit for the Node to use only when conveying temperature in communication to the user. If provided, this value SHALL take priority over any unit implied through the ActiveLocale Attribute.",
-            xref: { section: "11.5.6.1", document: "core", version: "1.1" }
+            xref: { document: "core", section: "11.5.6.1", version: "1.1" }
         }),
 
         DatatypeElement({
             id: -1, name: "TempUnitEnum", base: "enum8",
             details: "This data type is derived from enum8.",
-            xref: { section: "11.5.5.1", document: "core", version: "1.1" }
+            xref: { document: "core", section: "11.5.5.1", version: "1.1" },
+            children: [
+                DatatypeElement({
+                    id: 0x0000, name: "Fahrenheit",
+                    conformance: "M",
+                    xref: { document: "core", section: "11.5.5.1", version: "1.1" }
+                }),
+
+                DatatypeElement({
+                    id: 0x0001, name: "Celsius",
+                    conformance: "M",
+                    xref: { document: "core", section: "11.5.5.1", version: "1.1" }
+                }),
+
+                DatatypeElement({
+                    id: 0x0002, name: "Kelvin",
+                    conformance: "M",
+                    xref: { document: "core", section: "11.5.5.1", version: "1.1" }
+                })
+            ]
         })
     ]
 }));

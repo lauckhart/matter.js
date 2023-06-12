@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, CommandElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "Sleep",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request"
+            access: "R", conformance: "M", direction: "request"
         })
     ]
 }));

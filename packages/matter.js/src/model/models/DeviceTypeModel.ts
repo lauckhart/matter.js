@@ -11,6 +11,13 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
     override id!: Mei;
     classification!: DeviceTypeElement.Classification;
 
+    get clusters() {
+        return this.local(ClusterModel);
+    }
+
+    get deviceTypes() {
+        return this.local(DeviceTypeModel);
+    }
 
     override get children(): (DeviceTypeModel | ClusterModel)[] {
         return super.children as any;
@@ -18,12 +25,6 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
 
     override set children(children: (DeviceTypeModel | ClusterModel | DeviceTypeElement | ClusterElement)[]) {
         super.children = children;
-    }
-
-    override validate() {
-        this.validateStructure(DeviceTypeElement.Type, true, DeviceTypeModel, ClusterModel);
-        this.validateProperty({ name: "classification", type: DeviceTypeElement.Classification });
-        return super.validate();
     }
 
     constructor(definition: DeviceTypeElement.Properties) {

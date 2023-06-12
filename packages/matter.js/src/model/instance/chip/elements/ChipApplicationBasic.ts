@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,113 +15,88 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides information about an application running on a TV or media player device which is represented as an endpoint.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "applicationVendorName", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0000, name: "ApplicationVendorName", base: "string",
+            access: "R", conformance: "O", default: ""
         }),
 
         AttributeElement({
-            id: 0x0001, name: "applicationVendorId", base: "vendorId",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0"
+            id: 0x0001, name: "ApplicationVendorId", base: "vendor-id",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0002, name: "applicationName", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0002, name: "ApplicationName", base: "string",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "applicationProductId", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0"
+            id: 0x0003, name: "ApplicationProductId", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0004, name: "applicationApp", base: "ApplicationStruct",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0004, name: "ApplicationApp", base: "ApplicationStruct",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "applicationStatus", base: "ApplicationStatusEnum",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+            id: 0x0005, name: "ApplicationStatus", base: "ApplicationStatusEnum",
+            access: "R", conformance: "M", default: 1
         }),
 
         AttributeElement({
-            id: 0x0006, name: "applicationVersion", base: "string",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0006, name: "ApplicationVersion", base: "string",
+            access: "R", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "applicationAllowedVendorList", base: "list",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0007, name: "ApplicationAllowedVendorList", base: "list",
+            access: "R", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "vendor-id"
+                })
+            ]
         }),
 
         DatatypeElement({
             name: "ApplicationStatusEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "stopped",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Stopped",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stopped",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "ActiveVisibleFocus",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "activeVisibleFocus",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "ActiveHidden",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "activeVisibleFocus",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "activeHidden",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "activeHidden",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "activeVisibleNotFocus",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "activeVisibleNotFocus",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0003, name: "ActiveVisibleNotFocus",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ApplicationStruct", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "catalogVendorId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "CatalogVendorId", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "catalogVendorId", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "applicationId", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "applicationId", base: "string",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ApplicationId", base: "string",
+                    access: "R", conformance: "M"
                 })
             ]
         })

@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,1203 +15,773 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for controlling the color properties of a color-capable light.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "colorControlCurrentHue", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }, value: "0x00"
+            id: 0x0000, name: "ColorControlCurrentHue", base: "uint8",
+            access: "R", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "colorControlCurrentSaturation", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }, value: "0x00"
+            id: 0x0001, name: "ColorControlCurrentSaturation", base: "uint8",
+            access: "R", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "colorControlRemainingTime", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0x0000"
+            id: 0x0002, name: "ColorControlRemainingTime", base: "uint16",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0003, name: "colorControlCurrentX", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }, value: "0x616B"
+            id: 0x0003, name: "ColorControlCurrentX", base: "uint16",
+            access: "R", conformance: "O", default: 24939, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "colorControlCurrentY", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }, value: "0x607D"
+            id: 0x0004, name: "ColorControlCurrentY", base: "uint16",
+            access: "R", conformance: "O", default: 24701, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "colorControlDriftCompensation", base: "enum8",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0005, name: "ColorControlDriftCompensation", base: "enum8",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "colorControlCompensationText", base: "string",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0006, name: "ColorControlCompensationText", base: "string",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "colorControlColorTemperature", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { reportable: true }, value: "0x00FA"
+            id: 0x0007, name: "ColorControlColorTemperature", base: "uint16",
+            access: "R", conformance: "O", default: 250, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "colorControlColorMode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+            id: 0x0008, name: "ColorControlColorMode", base: "enum8",
+            access: "R", conformance: "M", default: 1
         }),
 
         AttributeElement({
-            id: 0x000f, name: "colorControlOptions", base: "map8",
-            access: { rw: "W" }, conformance: [ "M" ], value: "0x00"
+            id: 0x000f, name: "ColorControlOptions", base: "map8",
+            access: "W", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0010, name: "colorControlNumberOfPrimaries", base: "uint8",
-            access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+            id: 0x0010, name: "ColorControlNumberOfPrimaries", base: "uint8",
+            access: "R", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0011, name: "colorControlPrimary1X", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0011, name: "ColorControlPrimary1X", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0012, name: "colorControlPrimary1Y", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0012, name: "ColorControlPrimary1Y", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0013, name: "colorControlPrimary1Intensity", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0013, name: "ColorControlPrimary1Intensity", base: "uint8",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0015, name: "colorControlPrimary2X", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0015, name: "ColorControlPrimary2X", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0016, name: "colorControlPrimary2Y", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0016, name: "ColorControlPrimary2Y", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0017, name: "colorControlPrimary2Intensity", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0017, name: "ColorControlPrimary2Intensity", base: "uint8",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0019, name: "colorControlPrimary3X", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0019, name: "ColorControlPrimary3X", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001a, name: "colorControlPrimary3Y", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x001a, name: "ColorControlPrimary3Y", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001b, name: "colorControlPrimary3Intensity", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x001b, name: "ColorControlPrimary3Intensity", base: "uint8",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0020, name: "colorControlPrimary4X", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0020, name: "ColorControlPrimary4X", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0021, name: "colorControlPrimary4Y", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0021, name: "ColorControlPrimary4Y", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0022, name: "colorControlPrimary4Intensity", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0022, name: "ColorControlPrimary4Intensity", base: "uint8",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0024, name: "colorControlPrimary5X", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0024, name: "ColorControlPrimary5X", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0025, name: "colorControlPrimary5Y", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0025, name: "ColorControlPrimary5Y", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0026, name: "colorControlPrimary5Intensity", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0026, name: "ColorControlPrimary5Intensity", base: "uint8",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0028, name: "colorControlPrimary6X", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0028, name: "ColorControlPrimary6X", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0029, name: "colorControlPrimary6Y", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x0029, name: "ColorControlPrimary6Y", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x002a, name: "colorControlPrimary6Intensity", base: "uint8",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x002a, name: "ColorControlPrimary6Intensity", base: "uint8",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0030, name: "colorControlWhitePointX", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0030, name: "ColorControlWhitePointX", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0031, name: "colorControlWhitePointY", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0031, name: "ColorControlWhitePointY", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0032, name: "colorControlColorPointRX", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0032, name: "ColorControlColorPointRX", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0033, name: "colorControlColorPointRY", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0033, name: "ColorControlColorPointRY", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0034, name: "colorControlColorPointRIntensity", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0034, name: "ColorControlColorPointRIntensity", base: "uint8",
+            access: "W VM", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0036, name: "colorControlColorPointGX", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0036, name: "ColorControlColorPointGX", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0037, name: "colorControlColorPointGY", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x0037, name: "ColorControlColorPointGY", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0038, name: "colorControlColorPointGIntensity", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0038, name: "ColorControlColorPointGIntensity", base: "uint8",
+            access: "W VM", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x003a, name: "colorControlColorPointBX", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x003a, name: "ColorControlColorPointBX", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x003b, name: "colorControlColorPointBY", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ]
+            id: 0x003b, name: "ColorControlColorPointBY", base: "uint16",
+            access: "W VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x003c, name: "colorControlColorPointBIntensity", base: "uint8",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x003c, name: "ColorControlColorPointBIntensity", base: "uint8",
+            access: "W VM", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x400d, name: "colorControlTemperatureLevelMinMireds", base: "uint16",
-            access: { rw: "R" }, conformance: [ "O" ]
+            id: 0x400d, name: "ColorControlTemperatureLevelMinMireds", base: "uint16",
+            access: "R", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x4010, name: "startUpColorTemperatureMireds", base: "uint16",
-            access: { rw: "W", readPriv: "V", writePriv: "M" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x4010, name: "StartUpColorTemperatureMireds", base: "uint16",
+            access: "W VM", conformance: "O", quality: "X"
         }),
 
         CommandElement({
             id: 0x0000, name: "MoveToHue",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "hue", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Hue", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "hue", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Direction", base: "HueDirection",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "direction", base: "HueDirection",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TransitionTime", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "direction", base: "HueDirection",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "MoveHue",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "moveMode", base: "HueMoveMode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "MoveMode", base: "HueMoveMode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "moveMode", base: "HueMoveMode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Rate", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rate", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rate", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "StepHue",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "stepMode", base: "HueStepMode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StepMode", base: "HueStepMode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepMode", base: "HueStepMode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StepSize", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepSize", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TransitionTime", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepSize", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "transitionTime", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "MoveToSaturation",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "saturation", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Saturation", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "saturation", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TransitionTime", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "MoveSaturation",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "moveMode", base: "SaturationMoveMode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "MoveMode", base: "SaturationMoveMode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "moveMode", base: "SaturationMoveMode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Rate", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rate", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rate", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0005, name: "StepSaturation",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "stepMode", base: "SaturationStepMode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StepMode", base: "SaturationStepMode",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepMode", base: "SaturationStepMode",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StepSize", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepSize", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TransitionTime", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepSize", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "transitionTime", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0006, name: "MoveToHueAndSaturation",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "hue", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Hue", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "hue", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Saturation", base: "uint8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "saturation", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TransitionTime", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "saturation", base: "uint8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0007, name: "MoveToColor",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "colorX", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ColorX", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "colorX", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ColorY", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "colorY", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TransitionTime", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "colorY", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0008, name: "MoveColor",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "rateX", base: "int16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "RateX", base: "int16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rateX", base: "int16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "RateY", base: "int16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rateY", base: "int16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "rateY", base: "int16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0009, name: "StepColor",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "stepX", base: "int16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StepX", base: "int16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepX", base: "int16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "StepY", base: "int16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepY", base: "int16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TransitionTime", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stepY", base: "int16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000a, name: "MoveToColorTemperature",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request",
+            access: "R", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "colorTemperatureMireds", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ColorTemperatureMireds", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "colorTemperatureMireds", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "TransitionTime", base: "uint16",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsMask", base: "map8",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "transitionTime", base: "uint16",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsMask", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "optionsOverride", base: "map8",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "OptionsOverride", base: "map8",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorControlFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "hueAndSaturation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "HueAndSaturation",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "hueAndSaturation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "EnhancedHue",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "enhancedHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "ColorLoop",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "enhancedHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0008, name: "Xy",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "colorLoop",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "colorLoop",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "xy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "xy",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "colorTemperature",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
-                }),
-
-                DatatypeElement({
-                    name: "colorTemperature",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x10"
+                    id: 0x0010, name: "ColorTemperature",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "HueDirection", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "shortestDistance",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
+                    id: 0x0000, name: "ShortestDistance",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "shortestDistance",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
+                    id: 0x0001, name: "LongestDistance",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "longestDistance",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0002, name: "Up",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "longestDistance",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
+                    id: 0x0003, name: "Down",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "HueMoveMode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "stop",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
+                    id: 0x0000, name: "Stop",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stop",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
+                    id: 0x0001, name: "Up",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
+                    id: 0x0003, name: "Down",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "HueStepMode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0001, name: "Up",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
+                    id: 0x0003, name: "Down",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SaturationMoveMode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "stop",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
+                    id: 0x0000, name: "Stop",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "stop",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0"
+                    id: 0x0001, name: "Up",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
+                    id: 0x0003, name: "Down",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SaturationStepMode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0001, name: "Up",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "up",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
-                }),
-
-                DatatypeElement({
-                    name: "down",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x3"
+                    id: 0x0003, name: "Down",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorMode", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "currentHueAndCurrentSaturation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "CurrentHueAndCurrentSaturation",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "currentHueAndCurrentSaturation",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "CurrentXAndCurrentY",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "currentXAndCurrentY",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "currentXAndCurrentY",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "colorTemperature",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "colorTemperature",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "ColorTemperature",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorCapabilities", base: "map16",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "hueSaturationSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0001"
+                    id: 0x0001, name: "HueSaturationSupported",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "hueSaturationSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0001"
+                    id: 0x0002, name: "EnhancedHueSupported",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "enhancedHueSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0002"
+                    id: 0x0004, name: "ColorLoopSupported",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "enhancedHueSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0002"
+                    id: 0x0008, name: "XyAttributesSupported",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "colorLoopSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0004"
-                }),
-
-                DatatypeElement({
-                    name: "colorLoopSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0004"
-                }),
-
-                DatatypeElement({
-                    name: "xyAttributesSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0008"
-                }),
-
-                DatatypeElement({
-                    name: "xyAttributesSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0008"
-                }),
-
-                DatatypeElement({
-                    name: "colorTemperatureSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0010"
-                }),
-
-                DatatypeElement({
-                    name: "colorTemperatureSupported",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x0010"
+                    id: 0x0010, name: "ColorTemperatureSupported",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorLoopUpdateFlags", base: "map8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "updateAction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "UpdateAction",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "updateAction",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "UpdateDirection",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "updateDirection",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "UpdateTime",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "updateDirection",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "updateTime",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "updateTime",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "updateStartHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
-                }),
-
-                DatatypeElement({
-                    name: "updateStartHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x08"
+                    id: 0x0008, name: "UpdateStartHue",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorLoopAction", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "deactivate",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Deactivate",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "deactivate",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "ActivateFromColorLoopStartEnhancedHue",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "activateFromColorLoopStartEnhancedHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "activateFromColorLoopStartEnhancedHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "activateFromEnhancedCurrentHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "activateFromEnhancedCurrentHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0002, name: "ActivateFromEnhancedCurrentHue",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorLoopDirection", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "decrementHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "DecrementHue",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "decrementHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
-                }),
-
-                DatatypeElement({
-                    name: "incrementHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "incrementHue",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0001, name: "IncrementHue",
+                    access: "R", conformance: "M"
                 })
             ]
         })

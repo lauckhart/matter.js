@@ -9,6 +9,7 @@ export const CLUSTER_SUFFIX = "Model";
 
 import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, MatterElement, MatterModel } from "../../../src/model/index.js";
+import { ValidateModel } from "../../../src/model/logic/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { TsFile } from "../../util/TsFile.js";
 import { clean } from "../../util/file.js";
@@ -26,7 +27,7 @@ export function generateElementFile(source: string, element: AnyElement) {
 
     const file = new TsFile(`${MODEL_PATH}/${source}/elements/${prefix}${element.name}`);
 
-    file.addImport("../internal", `${prefix}Matter`);
+    file.addImport("../index", `${prefix}Matter`);
 
     generateElement(
         file,
@@ -40,7 +41,7 @@ export function generateElementFile(source: string, element: AnyElement) {
 
 export function generateIndex(source: string, elements: AnyElement[]) {
     const prefix = camelize(source);
-    const file = new TsFile(`${MODEL_PATH}/${source}/internal`);
+    const file = new TsFile(`${MODEL_PATH}/${source}/index`);
 
     file.add(`export * from "./${prefix}Matter.js"`);
     file.add("");
@@ -51,22 +52,21 @@ export function generateIndex(source: string, elements: AnyElement[]) {
 }
 
 export function generateModel(source: string, elements: MatterElement.Child[]) {
-    let errors = 0;
     logger.info(`validate ${source}`);
-    const mom = new MatterModel({
+    const matter = new MatterModel({
         name: "Matter",
         children: elements
     });
     Logger.nest(() => {
-        errors = mom.validate();
+        matter.validate();
     });
 
     logger.info(`generate ${source}`);
     Logger.nest(() => {
-        logger.info("elements");
+        logger.info("clusters");
         Logger.nest(() => {
-            for (const element of elements) {
-                Logger.nest(() => generateElementFile(source, element));
+            for (const cluster of matter.clusters) {
+                Logger.nest(() => generateElementFile(source, cluster));
             }
         });
 
@@ -74,17 +74,5 @@ export function generateModel(source: string, elements: MatterElement.Child[]) {
         generateIndex(source, elements);
     });
 
-    if (errors) {
-        logger.error("*** Validation error summary ***");
-        mom.visit((model) => {
-            if (!model.valid) {
-                for (const error of model.errors!) {
-                    logger.error(error.message, Logger.dict({ code: error.code, xref: model.xref, src: error.source }));
-                }
-            }
-        })
-        logger.error(`*** Total ${errors} validation error${errors != 1 ? "s" : ""} ***`);
-    } else {
-        logger.info(`*** Validation successful, generation complete ***`)
-    }
+    ValidateModel.report(matter);
 }

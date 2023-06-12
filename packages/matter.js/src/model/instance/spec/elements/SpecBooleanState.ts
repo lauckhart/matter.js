@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SpecMatter } from "../internal.js";
-import { ClusterElement, AttributeElement } from "../../../index.js";
+import { SpecMatter } from "../index.js";
+import { ClusterElement, AttributeElement, EventElement } from "../../../index.js";
 
 SpecMatter.children!.push(ClusterElement({
     id: 0x0045, name: "BooleanState",
@@ -15,19 +15,26 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: { min: 1 }, value: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", value: 0, quality: "F"
+            access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
             id: 0x0000, name: "StateValue", base: "bool",
-            access: "R V", conformance: "M", constraint: "", value: "", quality: "P",
+            access: "R V", conformance: "M", quality: "P",
             details: "This represents a Boolean state.",
-            xref: { section: "1.7.4.1", document: "cluster", version: "1.1" }
+            xref: { document: "cluster", section: "1.7.4.1", version: "1.1" }
+        }),
+
+        EventElement({
+            id: 0x0000, name: "StateChange",
+            access: "V", conformance: "O", priority: "info",
+            details: "This event SHALL be generated when the StateValue attribute changes.",
+            xref: { document: "cluster", section: "1.7.5.1", version: "1.1" }
         })
     ]
 }));

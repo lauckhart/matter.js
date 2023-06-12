@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
+import { ChipMatter } from "../index.js";
 import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
@@ -15,314 +15,219 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media device such as a TV or Speaker.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "mediaPlaybackState", base: "PlaybackStateEnum",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+            id: 0x0000, name: "MediaPlaybackState", base: "PlaybackStateEnum",
+            access: "R", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0001, name: "mediaPlaybackStartTime", base: "epochUs",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }, value: "0x00"
+            id: 0x0001, name: "MediaPlaybackStartTime", base: "epoch-us",
+            access: "R", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "mediaPlaybackDuration", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }, value: "0"
+            id: 0x0002, name: "MediaPlaybackDuration", base: "uint64",
+            access: "R", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "mediaPlaybackPlaybackPosition", base: "PlaybackPositionStruct",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0003, name: "MediaPlaybackPlaybackPosition", base: "PlaybackPositionStruct",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "mediaPlaybackPlaybackSpeed", base: "single",
-            access: { rw: "R" }, conformance: [ "O" ], value: "0"
+            id: 0x0004, name: "MediaPlaybackPlaybackSpeed", base: "single",
+            access: "R", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0005, name: "mediaPlaybackPlaybackSeekRangeEnd", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0005, name: "MediaPlaybackPlaybackSeekRangeEnd", base: "uint64",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "mediaPlaybackPlaybackSeekRangeStart", base: "uint64",
-            access: { rw: "R" }, conformance: [ "O" ], quality: { nullable: true }
+            id: 0x0006, name: "MediaPlaybackPlaybackSeekRangeStart", base: "uint64",
+            access: "R", conformance: "O", quality: "X"
         }),
 
         CommandElement({
             id: 0x0000, name: "Play",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "PlaybackResponse"
+            access: "R", conformance: "M", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0001, name: "Pause",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "PlaybackResponse"
+            access: "R", conformance: "M", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0002, name: "Stop",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "request", response: "PlaybackResponse"
+            access: "R", conformance: "M", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0003, name: "StartOver",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "PlaybackResponse"
+            access: "R", conformance: "O", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0004, name: "Previous",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "PlaybackResponse"
+            access: "R", conformance: "O", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0005, name: "Next",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "PlaybackResponse"
+            access: "R", conformance: "O", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0006, name: "Rewind",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "PlaybackResponse"
+            access: "R", conformance: "O", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0007, name: "FastForward",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "PlaybackResponse"
+            access: "R", conformance: "O", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0008, name: "SkipForward",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "PlaybackResponse",
+            access: "R", conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "deltaPositionMilliseconds", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "deltaPositionMilliseconds", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "DeltaPositionMilliseconds", base: "uint64",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0009, name: "SkipBackward",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "PlaybackResponse",
+            access: "R", conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "deltaPositionMilliseconds", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "deltaPositionMilliseconds", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "DeltaPositionMilliseconds", base: "uint64",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000b, name: "Seek",
-            access: { rw: "R" }, conformance: [ "O" ], direction: "request", response: "PlaybackResponse",
+            access: "R", conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "position", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "position", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Position", base: "uint64",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000a, name: "PlaybackResponse",
-            access: { rw: "R" }, conformance: [ "M" ], direction: "response",
+            access: "R", conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "status", base: "MediaPlaybackStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "Status", base: "MediaPlaybackStatusEnum",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "status", base: "MediaPlaybackStatusEnum",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "data", base: "string",
-                    access: { rw: "R" }, conformance: [ "O" ]
-                }),
-
-                DatatypeElement({
-                    name: "data", base: "string",
-                    access: { rw: "R" }, conformance: [ "O" ]
+                    name: "Data", base: "string",
+                    access: "R", conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "PlaybackPositionStruct", base: "struct",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "updatedAt", base: "epochUs",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "UpdatedAt", base: "epoch-us",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "updatedAt", base: "epochUs",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "position", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
-                }),
-
-                DatatypeElement({
-                    name: "position", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ], quality: { nullable: true }
+                    name: "Position", base: "uint64",
+                    access: "R", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "PlaybackStateEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "playing",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Playing",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "playing",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "Paused",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "paused",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "NotPlaying",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "paused",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
-                }),
-
-                DatatypeElement({
-                    name: "notPlaying",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "notPlaying",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "buffering",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "buffering",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
+                    id: 0x0003, name: "Buffering",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MediaPlaybackStatusEnum", base: "enum8",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "success",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0000, name: "Success",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "success",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x00"
+                    id: 0x0001, name: "InvalidStateForCommand",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "invalidStateForCommand",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0002, name: "NotAllowed",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "invalidStateForCommand",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x01"
+                    id: 0x0003, name: "NotActive",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "notAllowed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
+                    id: 0x0004, name: "SpeedOutOfRange",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "notAllowed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x02"
-                }),
-
-                DatatypeElement({
-                    name: "notActive",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "notActive",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x03"
-                }),
-
-                DatatypeElement({
-                    name: "speedOutOfRange",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "speedOutOfRange",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x04"
-                }),
-
-                DatatypeElement({
-                    name: "seekOutOfRange",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
-                }),
-
-                DatatypeElement({
-                    name: "seekOutOfRange",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x05"
+                    id: 0x0005, name: "SeekOutOfRange",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MediaPlaybackFeature", base: "map32",
-            access: { rw: "R" }, conformance: [ "M" ],
+            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "advancedSeek",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
+                    id: 0x0001, name: "AdvancedSeek",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "advancedSeek",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x1"
-                }),
-
-                DatatypeElement({
-                    name: "variableSpeed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
-                }),
-
-                DatatypeElement({
-                    name: "variableSpeed",
-                    access: { rw: "R" }, conformance: [ "M" ], value: "0x2"
+                    id: 0x0002, name: "VariableSpeed",
+                    access: "R", conformance: "M"
                 })
             ]
         })

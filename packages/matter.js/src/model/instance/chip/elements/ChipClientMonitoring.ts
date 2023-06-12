@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../internal.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../index.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x1046, name: "ClientMonitoring",
@@ -15,104 +15,79 @@ ChipMatter.children!.push(ClusterElement({
     details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on the server.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "idleModeInterval", base: "uint32",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0x12C"
+            id: 0x0000, name: "IdleModeInterval", base: "uint32",
+            access: "R", conformance: "M", default: 300
         }),
 
         AttributeElement({
-            id: 0x0001, name: "activeModeInterval", base: "uint32",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0x12C"
+            id: 0x0001, name: "ActiveModeInterval", base: "uint32",
+            access: "R", conformance: "M", default: 300
         }),
 
         AttributeElement({
-            id: 0x0002, name: "activeModeThreshold", base: "uint16",
-            access: { rw: "R" }, conformance: [ "M" ], value: "0xFA0"
+            id: 0x0002, name: "ActiveModeThreshold", base: "uint16",
+            access: "R", conformance: "M", default: 4000
         }),
 
         AttributeElement({
-            id: 0x0003, name: "expectedClients", base: "list",
-            access: { rw: "R" }, conformance: [ "M" ]
+            id: 0x0003, name: "ExpectedClients", base: "list",
+            access: "R", conformance: "M",
+            children: [
+                DatatypeElement({
+                    name: "entry", base: "MonitoringRegistration"
+                })
+            ]
         }),
 
         CommandElement({
             id: 0x0000, name: "RegisterClientMonitoring",
-            access: { rw: "R", writePriv: "M" }, conformance: [ "M" ], direction: "request",
+            access: "R M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "clientNodeId", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ClientNodeId", base: "node-id",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "clientNodeId", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "iCid", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "iCid", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ICid", base: "uint64",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "UnregisterClientMonitoring",
-            access: { rw: "R", writePriv: "M" }, conformance: [ "M" ], direction: "request",
+            access: "R M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "clientNodeId", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ClientNodeId", base: "node-id",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "clientNodeId", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "iCid", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "iCid", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ICid", base: "uint64",
+                    access: "R", conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "StayAwakeRequest",
-            access: { rw: "R", writePriv: "M" }, conformance: [ "O" ], direction: "request"
+            access: "R M", conformance: "O", direction: "request"
         }),
 
         DatatypeElement({
             name: "MonitoringRegistration", base: "struct",
-            access: { rw: "R", fabric: "F" }, conformance: [ "M" ],
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "clientNodeId", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ClientNodeId", base: "node-id",
+                    access: "R", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "clientNodeId", base: "nodeId",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "iCid", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
-                }),
-
-                DatatypeElement({
-                    name: "iCid", base: "uint64",
-                    access: { rw: "R" }, conformance: [ "M" ]
+                    name: "ICid", base: "uint64",
+                    access: "R", conformance: "M"
                 })
             ]
         })

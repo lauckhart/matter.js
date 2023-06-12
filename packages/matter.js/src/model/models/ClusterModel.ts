@@ -12,21 +12,28 @@ export class ClusterModel extends Model implements ClusterElement {
     singleton?: boolean;
     classification?: ClusterElement.Classification;
 
+    get attributes() {
+        return this.local(AttributeModel);
+    }
+
+    get commands() {
+        return this.local(CommandModel);
+    }
+
+    get events() {
+        return this.local(EventModel);
+    }
+
+    get datatypes() {
+        return this.local(DatatypeModel);
+    }
+
     override get children(): ClusterModel.Child[] {
         return super.children as any;
     }
 
     override set children(children: (ClusterModel.Child | ClusterElement.Child)[]) {
         super.children = children;
-    }
-
-    override validate() {
-        this.validateStructure(ClusterElement.Type, true, DatatypeModel, AttributeModel, CommandModel, EventModel);
-
-        this.validateProperty({ name: "singleton", type: "boolean" });
-        this.validateProperty({ name: "classification", type: "string" })
-
-        return super.validate();
     }
 
     constructor(definition: ClusterElement.Properties) {
