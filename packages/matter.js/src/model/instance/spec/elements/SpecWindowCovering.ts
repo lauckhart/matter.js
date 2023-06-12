@@ -24,31 +24,31 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "LF",
-                    description: "Lift Control and behavior for lifting/sliding window coverings",
+                    conformance: "O.a+", description: "Lift Control and behavior for lifting/sliding window coverings",
                     xref: { document: "cluster", section: "5.3.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "TL",
-                    description: "Tilt Control and behavior for tilting window coverings",
+                    conformance: "O.a+", description: "Tilt Control and behavior for tilting window coverings",
                     xref: { document: "cluster", section: "5.3.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "PALF",
-                    description: "Position Aware lift control is supported.",
+                    conformance: "[LF]", description: "Position Aware lift control is supported.",
                     xref: { document: "cluster", section: "5.3.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "ABS",
-                    description: "Absolute positioning is supported.",
+                    conformance: "O", description: "Absolute positioning is supported.",
                     xref: { document: "cluster", section: "5.3.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "PATL",
-                    description: "Position Aware tilt control is supported.",
+                    conformance: "[TL]", description: "Position Aware tilt control is supported.",
                     xref: { document: "cluster", section: "5.3.4", version: "1.1" }
                 })
             ]

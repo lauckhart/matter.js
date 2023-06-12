@@ -24,7 +24,7 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "EXT",
-                    description: "The cluster is capable of extended range and resolution",
+                    conformance: "O", description: "The cluster is capable of extended range and resolution",
                     xref: { document: "cluster", section: "2.4.4", version: "1.1" }
                 })
             ]

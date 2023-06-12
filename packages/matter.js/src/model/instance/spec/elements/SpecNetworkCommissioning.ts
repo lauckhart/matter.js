@@ -24,19 +24,19 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "WI",
-                    description: "Wi-Fi related features",
+                    conformance: "O.a", description: "Wi-Fi related features",
                     xref: { document: "core", section: "11.8.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "TH",
-                    description: "Thread related features",
+                    conformance: "O.a", description: "Thread related features",
                     xref: { document: "core", section: "11.8.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "ET",
-                    description: "Ethernet related features",
+                    conformance: "O.a", description: "Ethernet related features",
                     xref: { document: "core", section: "11.8.4", version: "1.1" }
                 })
             ]

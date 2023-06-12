@@ -24,43 +24,43 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "PRSCONST",
-                    description: "Supports operating in constant pressure mode",
+                    conformance: "O.a+", description: "Supports operating in constant pressure mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "PRSCOMP",
-                    description: "Supports operating in compensated pressure mode",
+                    conformance: "O.a+", description: "Supports operating in compensated pressure mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "FLW",
-                    description: "Supports operating in constant flow mode",
+                    conformance: "O.a+", description: "Supports operating in constant flow mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "SPD",
-                    description: "Supports operating in constant speed mode",
+                    conformance: "O.a+", description: "Supports operating in constant speed mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "TEMP",
-                    description: "Supports operating in constant temperature mode",
+                    conformance: "O.a+", description: "Supports operating in constant temperature mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0005, name: "AUTO",
-                    description: "Supports operating in automatic mode",
+                    conformance: "O", description: "Supports operating in automatic mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0006, name: "LOCAL",
-                    description: "Supports operating using local settings",
+                    conformance: "O", description: "Supports operating using local settings",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 })
             ]
