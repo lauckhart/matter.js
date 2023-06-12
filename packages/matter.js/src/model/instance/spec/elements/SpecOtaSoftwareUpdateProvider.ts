@@ -15,41 +15,41 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", default: 0, quality: "F"
+            access: "R V", default: 0, quality: "F"
         }),
 
         CommandElement({
             id: 0x0000, name: "QueryImage",
-            conformance: "M", direction: "request", response: "QueryImageResponse",
+            direction: "request", response: "QueryImageResponse",
             xref: { document: "core", section: "11.19.6.5", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "QueryImageResponse",
-            conformance: "M", direction: "response",
+            direction: "response",
             xref: { document: "core", section: "11.19.6.5", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0002, name: "ApplyUpdateRequest",
-            conformance: "M", direction: "request", response: "ApplyUpdateResponse",
+            direction: "request", response: "ApplyUpdateResponse",
             xref: { document: "core", section: "11.19.6.5", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0003, name: "ApplyUpdateResponse",
-            conformance: "M", direction: "response",
+            direction: "response",
             xref: { document: "core", section: "11.19.6.5", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0004, name: "NotifyUpdateApplied",
-            conformance: "M", direction: "request", response: "status",
+            direction: "request", response: "status",
             xref: { document: "core", section: "11.19.6.5", version: "1.1" }
         })
     ]

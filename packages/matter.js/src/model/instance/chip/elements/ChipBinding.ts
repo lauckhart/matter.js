@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "BindingList", base: "list",
-            access: "W", conformance: "M",
+            access: "RW",
             children: [
                 DatatypeElement({
                     name: "entry", base: "TargetStruct"
@@ -26,26 +26,26 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "TargetStruct", base: "struct",
-            access: "R F", conformance: "M",
+            access: "R F",
             children: [
                 DatatypeElement({
                     name: "Node", base: "node-id",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "Group", base: "group-id",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "Endpoint", base: "endpoint-no",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "Cluster", base: "cluster-id",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         })

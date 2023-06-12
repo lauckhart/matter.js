@@ -129,7 +129,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             name: Alias(UpperIdentifier, "code", "feature"),
     
             // Actual type is numeric but we let Model handle that translation
-            value: Optional(Alias(NoSpace, "def"))
+            default: Optional(Alias(NoSpace, "def"))
         });
     
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
@@ -191,7 +191,7 @@ function translateFields(desc: string, fields?: DetailedReference) {
         base: Alias(NoSpace, "type"),
         constraint: Optional(Str),
         quality: Optional(Str),
-        value: Optional(NoSpace),
+        default: Optional(NoSpace),
         access: Optional(Str),
         conformance: Optional(Str)
     });

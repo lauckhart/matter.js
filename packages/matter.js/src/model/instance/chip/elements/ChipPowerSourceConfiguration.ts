@@ -16,7 +16,6 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "Sources", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "uint8"

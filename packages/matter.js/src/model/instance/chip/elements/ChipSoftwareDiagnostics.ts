@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "ThreadMetrics", base: "list",
-            access: "R", conformance: "O",
+            conformance: "O",
             children: [
                 DatatypeElement({
                     name: "entry", base: "ThreadMetricsStruct"
@@ -26,83 +26,78 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "CurrentHeapFree", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         AttributeElement({
             id: 0x0002, name: "CurrentHeapUsed", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         AttributeElement({
             id: 0x0003, name: "CurrentHeapHighWatermark", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         CommandElement({
             id: 0x0000, name: "ResetWatermarks",
-            access: "R", conformance: "O", direction: "request"
+            conformance: "O", direction: "request"
         }),
 
         EventElement({
             id: 0x0000, name: "SoftwareFault",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Id", base: "uint64",
-                    access: "R", conformance: "M"
+                    name: "Id", base: "uint64"
                 }),
 
                 DatatypeElement({
                     name: "Name", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "FaultRecording", base: "octstr",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ThreadMetricsStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Id", base: "uint64",
-                    access: "R", conformance: "M"
+                    name: "Id", base: "uint64"
                 }),
 
                 DatatypeElement({
                     name: "Name", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "StackFreeCurrent", base: "uint32",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "StackFreeMinimum", base: "uint32",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "StackSize", base: "uint32",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SoftwareDiagnosticsFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "WaterMarks",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "WaterMarks"
                 })
             ]
         })

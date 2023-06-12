@@ -15,156 +15,138 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for group configuration and manipulation.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "GroupNameSupport", base: "map8",
-            access: "R", conformance: "M"
+            id: 0x0000, name: "GroupNameSupport", base: "map8"
         }),
 
         CommandElement({
             id: 0x0000, name: "AddGroup",
-            access: "R F M", conformance: "M", direction: "request", response: "AddGroupResponse",
+            access: "R F M", direction: "request", response: "AddGroupResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupId", base: "group-id"
                 }),
 
                 DatatypeElement({
-                    name: "GroupName", base: "string",
-                    access: "R", conformance: "M"
+                    name: "GroupName", base: "string"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "ViewGroup",
-            access: "R F", conformance: "M", direction: "request", response: "ViewGroupResponse",
+            access: "R F", direction: "request", response: "ViewGroupResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupId", base: "group-id"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "GetGroupMembership",
-            access: "R F", conformance: "M", direction: "request", response: "GetGroupMembershipResponse",
+            access: "R F", direction: "request", response: "GetGroupMembershipResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupList", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupList", base: "group-id"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "RemoveGroup",
-            access: "R F M", conformance: "M", direction: "request", response: "RemoveGroupResponse",
+            access: "R F M", direction: "request", response: "RemoveGroupResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupId", base: "group-id"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "RemoveAllGroups",
-            access: "R F M", conformance: "M", direction: "request"
+            access: "R F M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0005, name: "AddGroupIfIdentifying",
-            access: "R F M", conformance: "M", direction: "request",
+            access: "R F M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupId", base: "group-id"
                 }),
 
                 DatatypeElement({
-                    name: "GroupName", base: "string",
-                    access: "R", conformance: "M"
+                    name: "GroupName", base: "string"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0000, name: "AddGroupResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8",
-                    access: "R", conformance: "M"
+                    name: "Status", base: "enum8"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupId", base: "group-id"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "ViewGroupResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8",
-                    access: "R", conformance: "M"
+                    name: "Status", base: "enum8"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupId", base: "group-id"
                 }),
 
                 DatatypeElement({
-                    name: "GroupName", base: "string",
-                    access: "R", conformance: "M"
+                    name: "GroupName", base: "string"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "GetGroupMembershipResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
                     name: "Capacity", base: "uint8",
-                    access: "R", conformance: "M", quality: "X"
+                    quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "GroupList", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupList", base: "group-id"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "RemoveGroupResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8",
-                    access: "R", conformance: "M"
+                    name: "Status", base: "enum8"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
-                    access: "R", conformance: "M"
+                    name: "GroupId", base: "group-id"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GroupsFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "GroupNames",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "GroupNames"
                 })
             ]
         })

@@ -15,17 +15,17 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", default: 0, quality: "F"
+            access: "R V", default: 0, quality: "F"
         }),
 
         AttributeElement({
             id: 0x0000, name: "ActionList", base: "list",
-            access: "R V", conformance: "M", constraint: "max 256",
+            access: "R V", constraint: "max 256", default: "empty",
             details: "The ActionList attribute holds the list of actions. Each entry SHALL have an unique ActionID, and its EndpointListID SHALL exist in the EndpointLists attribute.",
             xref: { document: "core", section: "9.14.5.1", version: "1.1" },
             children: [
@@ -37,7 +37,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "EndpointLists", base: "list",
-            access: "R V", conformance: "M", constraint: "max 256",
+            access: "R V", constraint: "max 256", default: "empty",
             details: "The EndpointLists attribute holds the list of endpoint lists. Each entry SHALL have an unique EndpointListID.",
             xref: { document: "core", section: "9.14.5.2", version: "1.1" },
             children: [
@@ -49,21 +49,21 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0002, name: "SetupUrl", base: "string",
-            access: "R V", conformance: "O", constraint: "max 512",
+            access: "R V", conformance: "O", constraint: "max 512", default: "empty",
             details: "The SetupURL attribute (when provided) SHALL indicate a URL; its syntax SHALL follow the syntax as specified in RFC 3986, max. 512 ASCII characters. The location referenced by this URL SHALL provide additional information for the actions provided:",
             xref: { document: "core", section: "9.14.5.3", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0000, name: "StateChanged",
-            access: "V", conformance: "M", priority: "info",
+            access: "V", priority: "info",
             details: "This event SHALL be generated when there is a change in the State of an ActionID during the execution of an action and the most recent command using that ActionID used an InvokeID data field.",
             xref: { document: "core", section: "9.14.7.1", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0001, name: "ActionFailed",
-            access: "V", conformance: "M", priority: "info",
+            access: "V", priority: "info",
             details: "This event SHALL be generated when there is some error which prevents the action from its normal planned execution and the most recent command using that ActionID used an InvokeID data field.",
             xref: { document: "core", section: "9.14.7.2", version: "1.1" }
         }),

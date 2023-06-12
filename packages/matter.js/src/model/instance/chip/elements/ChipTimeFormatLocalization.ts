@@ -16,17 +16,17 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "HourFormat", base: "HourFormatEnum",
-            access: "W", conformance: "M"
+            access: "RW"
         }),
 
         AttributeElement({
             id: 0x0001, name: "ActiveCalendarType", base: "CalendarTypeEnum",
-            access: "W", conformance: "O"
+            access: "RW", conformance: "O"
         }),
 
         AttributeElement({
             id: 0x0002, name: "SupportedCalendarTypes", base: "list",
-            access: "R", conformance: "O",
+            conformance: "O",
             children: [
                 DatatypeElement({
                     name: "entry", base: "CalendarTypeEnum"
@@ -36,82 +36,66 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "HourFormatEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "12Hr",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "12Hr"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "24Hr",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "24Hr"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CalendarTypeEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Buddhist",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Buddhist"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Chinese",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Chinese"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Coptic",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Coptic"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Ethiopian",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "Ethiopian"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Gregorian",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Gregorian"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Hebrew",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "Hebrew"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Indian",
-                    access: "R", conformance: "M"
+                    id: 0x0006, name: "Indian"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "Islamic",
-                    access: "R", conformance: "M"
+                    id: 0x0007, name: "Islamic"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Japanese",
-                    access: "R", conformance: "M"
+                    id: 0x0008, name: "Japanese"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Korean",
-                    access: "R", conformance: "M"
+                    id: 0x0009, name: "Korean"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "Persian",
-                    access: "R", conformance: "M"
+                    id: 0x000a, name: "Persian"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "Taiwanese",
-                    access: "R", conformance: "M"
+                    id: 0x000b, name: "Taiwanese"
                 })
             ]
         })

@@ -16,32 +16,32 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "UtcTime", base: "epoch-us",
-            access: "R", conformance: "M", quality: "X"
+            quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "Granularity", base: "GranularityEnum",
-            access: "R", conformance: "M", default: 0
+            default: 0
         }),
 
         AttributeElement({
             id: 0x0002, name: "TimeSource", base: "TimeSourceEnum",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         AttributeElement({
             id: 0x0003, name: "TrustedTimeNodeId", base: "node-id",
-            access: "W VA", conformance: "M", quality: "X"
+            access: "RW VA", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0004, name: "DefaultNtp", base: "string",
-            access: "W VA", conformance: "O", quality: "X"
+            access: "RW VA", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0005, name: "TimeZone", base: "list",
-            access: "W VM", conformance: "O",
+            access: "RW VM", conformance: "O",
             children: [
                 DatatypeElement({
                     name: "entry", base: "TimeZoneStruct"
@@ -51,7 +51,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0006, name: "DstOffset", base: "list",
-            access: "W VM", conformance: "O",
+            access: "RW VM", conformance: "O",
             children: [
                 DatatypeElement({
                     name: "entry", base: "DstOffsetStruct"
@@ -61,200 +61,167 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0007, name: "LocalTime", base: "epoch-us",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0008, name: "TimeZoneDatabase", base: "bool",
-            access: "R", conformance: "O", default: true
+            conformance: "O", default: true
         }),
 
         AttributeElement({
             id: 0x0009, name: "NtpServerPort", base: "uint16",
-            access: "R", conformance: "O", quality: "X"
+            conformance: "O", quality: "X"
         }),
 
         CommandElement({
             id: 0x0000, name: "SetUtcTime",
-            access: "R", conformance: "M", direction: "request",
+            direction: "request",
             children: [
                 DatatypeElement({
-                    name: "UtcTime", base: "epoch-us",
-                    access: "R", conformance: "M"
+                    name: "UtcTime", base: "epoch-us"
                 }),
 
                 DatatypeElement({
-                    name: "Granularity", base: "GranularityEnum",
-                    access: "R", conformance: "M"
+                    name: "Granularity", base: "GranularityEnum"
                 }),
 
                 DatatypeElement({
                     name: "TimeSource", base: "TimeSourceEnum",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GranularityEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "NoTimeGranularity",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "NoTimeGranularity"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "MinutesGranularity",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "MinutesGranularity"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "SecondsGranularity",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "SecondsGranularity"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "MillisecondsGranularity",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "MillisecondsGranularity"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "MicrosecondsGranularity",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "MicrosecondsGranularity"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TimeSourceEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "None",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "None"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Unknown",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Unknown"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Admin",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Admin"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "NodeTimeCluster",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "NodeTimeCluster"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "NonFabricSntp",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "NonFabricSntp"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "NonFabricNtp",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "NonFabricNtp"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "FabricSntp",
-                    access: "R", conformance: "M"
+                    id: 0x0006, name: "FabricSntp"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "FabricNtp",
-                    access: "R", conformance: "M"
+                    id: 0x0007, name: "FabricNtp"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "MixedNtp",
-                    access: "R", conformance: "M"
+                    id: 0x0008, name: "MixedNtp"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "NonFabricSntpNts",
-                    access: "R", conformance: "M"
+                    id: 0x0009, name: "NonFabricSntpNts"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "NonFabricNtpNts",
-                    access: "R", conformance: "M"
+                    id: 0x000a, name: "NonFabricNtpNts"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "FabricSntpNts",
-                    access: "R", conformance: "M"
+                    id: 0x000b, name: "FabricSntpNts"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "FabricNtpNts",
-                    access: "R", conformance: "M"
+                    id: 0x000c, name: "FabricNtpNts"
                 }),
 
                 DatatypeElement({
-                    id: 0x000d, name: "MixedNtpNts",
-                    access: "R", conformance: "M"
+                    id: 0x000d, name: "MixedNtpNts"
                 }),
 
                 DatatypeElement({
-                    id: 0x000e, name: "CloudSource",
-                    access: "R", conformance: "M"
+                    id: 0x000e, name: "CloudSource"
                 }),
 
                 DatatypeElement({
-                    id: 0x000f, name: "Ptp",
-                    access: "R", conformance: "M"
+                    id: 0x000f, name: "Ptp"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "Gnss",
-                    access: "R", conformance: "M"
+                    id: 0x0010, name: "Gnss"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TimeZoneStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Offset", base: "int32",
-                    access: "R", conformance: "M"
+                    name: "Offset", base: "int32"
                 }),
 
                 DatatypeElement({
-                    name: "ValidAt", base: "epoch-us",
-                    access: "R", conformance: "M"
+                    name: "ValidAt", base: "epoch-us"
                 }),
 
                 DatatypeElement({
                     name: "Name", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DstOffsetStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Offset", base: "int32",
-                    access: "R", conformance: "M"
+                    name: "Offset", base: "int32"
                 }),
 
                 DatatypeElement({
-                    name: "ValidStarting", base: "epoch-us",
-                    access: "R", conformance: "M"
+                    name: "ValidStarting", base: "epoch-us"
                 }),
 
                 DatatypeElement({
-                    name: "ValidUntil", base: "epoch-us",
-                    access: "R", conformance: "M"
+                    name: "ValidUntil", base: "epoch-us"
                 })
             ]
         })

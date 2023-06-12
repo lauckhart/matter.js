@@ -16,7 +16,6 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "MediaInputList", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "InputInfoStruct"
@@ -26,145 +25,122 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "MediaInputCurrentInput", base: "uint8",
-            access: "R", conformance: "M", default: 0
+            default: 0
         }),
 
         CommandElement({
             id: 0x0000, name: "SelectInput",
-            access: "R", conformance: "M", direction: "request",
+            direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "Index", base: "uint8"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "ShowInputStatus",
-            access: "R", conformance: "M", direction: "request"
+            direction: "request"
         }),
 
         CommandElement({
             id: 0x0002, name: "HideInputStatus",
-            access: "R", conformance: "M", direction: "request"
+            direction: "request"
         }),
 
         CommandElement({
             id: 0x0003, name: "RenameInput",
-            access: "R", conformance: "O", direction: "request",
+            conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "Index", base: "uint8"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Name", base: "string"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "InputInfoStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "Index", base: "uint8"
                 }),
 
                 DatatypeElement({
-                    name: "InputType", base: "InputTypeEnum",
-                    access: "R", conformance: "M"
+                    name: "InputType", base: "InputTypeEnum"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Name", base: "string"
                 }),
 
                 DatatypeElement({
-                    name: "Description", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Description", base: "string"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "InputTypeEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Internal",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Internal"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Aux",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Aux"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Coax",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Coax"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Composite",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "Composite"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Hdmi",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Hdmi"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Input",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "Input"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Line",
-                    access: "R", conformance: "M"
+                    id: 0x0006, name: "Line"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "Optical",
-                    access: "R", conformance: "M"
+                    id: 0x0007, name: "Optical"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Video",
-                    access: "R", conformance: "M"
+                    id: 0x0008, name: "Video"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Scart",
-                    access: "R", conformance: "M"
+                    id: 0x0009, name: "Scart"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "Usb",
-                    access: "R", conformance: "M"
+                    id: 0x000a, name: "Usb"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "Other",
-                    access: "R", conformance: "M"
+                    id: 0x000b, name: "Other"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MediaInputFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "NameUpdates",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "NameUpdates"
                 })
             ]
         })

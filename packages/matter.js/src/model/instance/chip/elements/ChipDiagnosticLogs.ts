@@ -16,115 +16,98 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "RetrieveLogsRequest",
-            access: "R", conformance: "M", direction: "request", response: "RetrieveLogsResponse",
+            direction: "request", response: "RetrieveLogsResponse",
             children: [
                 DatatypeElement({
-                    name: "Intent", base: "IntentEnum",
-                    access: "R", conformance: "M"
+                    name: "Intent", base: "IntentEnum"
                 }),
 
                 DatatypeElement({
-                    name: "RequestedProtocol", base: "TransferProtocolEnum",
-                    access: "R", conformance: "M"
+                    name: "RequestedProtocol", base: "TransferProtocolEnum"
                 }),
 
                 DatatypeElement({
                     name: "TransferFileDesignator", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "RetrieveLogsResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "StatusEnum",
-                    access: "R", conformance: "M"
+                    name: "Status", base: "StatusEnum"
                 }),
 
                 DatatypeElement({
-                    name: "LogContent", base: "octstr",
-                    access: "R", conformance: "M"
+                    name: "LogContent", base: "octstr"
                 }),
 
                 DatatypeElement({
                     name: "UtcTimeStamp", base: "epoch-us",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "TimeSinceBoot", base: "systime-us",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "IntentEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "EndUserSupport",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "EndUserSupport"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "NetworkDiag",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "NetworkDiag"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "CrashLogs",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "CrashLogs"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "StatusEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Success"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Exhausted",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Exhausted"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "NoLogs",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "NoLogs"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Busy",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "Busy"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Denied",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Denied"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TransferProtocolEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "ResponsePayload",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "ResponsePayload"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Bdx",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Bdx"
                 })
             ]
         })

@@ -16,12 +16,11 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "ActiveLocale", base: "string",
-            access: "W", conformance: "M"
+            access: "RW"
         }),
 
         AttributeElement({
             id: 0x0001, name: "SupportedLocales", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "string"

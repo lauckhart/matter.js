@@ -16,21 +16,20 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "IdentifyTime", base: "uint16",
-            access: "W", conformance: "M", default: 0
+            access: "RW", default: 0
         }),
 
         AttributeElement({
             id: 0x0001, name: "IdentifyType", base: "enum8",
-            access: "R", conformance: "M", default: 0
+            default: 0
         }),
 
         CommandElement({
             id: 0x0000, name: "Identify",
-            access: "R M", conformance: "M", direction: "request",
+            access: "R M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "IdentifyTime", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "IdentifyTime", base: "uint16"
                 })
             ]
         }),
@@ -40,96 +39,78 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "EffectIdentifier", base: "IdentifyEffectIdentifier",
-                    access: "R", conformance: "M"
+                    name: "EffectIdentifier", base: "IdentifyEffectIdentifier"
                 }),
 
                 DatatypeElement({
-                    name: "EffectVariant", base: "IdentifyEffectVariant",
-                    access: "R", conformance: "M"
+                    name: "EffectVariant", base: "IdentifyEffectVariant"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "IdentifyIdentifyType", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "None",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "None"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "VisibleLight",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "VisibleLight"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "VisibleLed",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "VisibleLed"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "AudibleBeep",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "AudibleBeep"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Display",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Display"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Actuator",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "Actuator"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "IdentifyEffectIdentifier", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Blink",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Blink"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Breathe",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Breathe"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Okay",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Okay"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "ChannelChange",
-                    access: "R", conformance: "M"
+                    id: 0x000b, name: "ChannelChange"
                 }),
 
                 DatatypeElement({
-                    id: 0x00fe, name: "FinishEffect",
-                    access: "R", conformance: "M"
+                    id: 0x00fe, name: "FinishEffect"
                 }),
 
                 DatatypeElement({
-                    id: 0x00ff, name: "StopEffect",
-                    access: "R", conformance: "M"
+                    id: 0x00ff, name: "StopEffect"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "IdentifyEffectVariant", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Default",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Default"
                 })
             ]
         })

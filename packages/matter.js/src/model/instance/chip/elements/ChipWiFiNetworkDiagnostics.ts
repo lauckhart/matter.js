@@ -16,238 +16,209 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "Bssid", base: "octstr",
-            access: "R", conformance: "M", quality: "X"
+            quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "SecurityType", base: "SecurityTypeEnum",
-            access: "R", conformance: "M", quality: "X"
+            quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "WifiVersion", base: "WiFiVersionEnum",
-            access: "R", conformance: "M", quality: "X"
+            quality: "X"
         }),
 
         AttributeElement({
             id: 0x0003, name: "ChannelNumber", base: "uint16",
-            access: "R", conformance: "M", default: 0, quality: "X"
+            default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0004, name: "Rssi", base: "int8",
-            access: "R", conformance: "M", quality: "X"
+            quality: "X"
         }),
 
         AttributeElement({
             id: 0x0005, name: "BeaconLostCount", base: "uint32",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0006, name: "BeaconRxCount", base: "uint32",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0007, name: "PacketMulticastRxCount", base: "uint32",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0008, name: "PacketMulticastTxCount", base: "uint32",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0009, name: "PacketUnicastRxCount", base: "uint32",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x000a, name: "PacketUnicastTxCount", base: "uint32",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x000b, name: "CurrentMaxRate", base: "uint64",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x000c, name: "OverrunCount", base: "uint64",
-            access: "R", conformance: "O", default: 0, quality: "X"
+            conformance: "O", default: 0, quality: "X"
         }),
 
         CommandElement({
             id: 0x0000, name: "ResetCounts",
-            access: "R", conformance: "O", direction: "request"
+            conformance: "O", direction: "request"
         }),
 
         EventElement({
             id: 0x0000, name: "Disconnection",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ReasonCode", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "ReasonCode", base: "uint16"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0001, name: "AssociationFailure",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "AssociationFailure", base: "AssociationFailureCauseEnum",
-                    access: "R", conformance: "M"
+                    name: "AssociationFailure", base: "AssociationFailureCauseEnum"
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "Status", base: "uint16"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0002, name: "ConnectionStatus",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ConnectionStatus", base: "ConnectionStatusEnum",
-                    access: "R", conformance: "M"
+                    name: "ConnectionStatus", base: "ConnectionStatusEnum"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SecurityTypeEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Unspecified"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "None",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "None"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Wep",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Wep"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Wpa",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "Wpa"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Wpa2",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Wpa2"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Wpa3",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "Wpa3"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiFiVersionEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "A",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "A"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "B",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "B"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "G",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "G"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "N",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "N"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Ac",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Ac"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Ax",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "Ax"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AssociationFailureCauseEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unknown",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Unknown"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "AssociationFailed",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "AssociationFailed"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "AuthenticationFailed",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "AuthenticationFailed"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "SsidNotFound",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "SsidNotFound"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ConnectionStatusEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Connected",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Connected"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "NotConnected",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "NotConnected"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiFiNetworkDiagnosticsFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "PacketCounts",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "PacketCounts"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ErrorCounts",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "ErrorCounts"
                 })
             ]
         })

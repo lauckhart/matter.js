@@ -16,7 +16,6 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "AudioOutputList", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "OutputInfoStruct"
@@ -26,100 +25,84 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "AudioOutputCurrentOutput", base: "uint8",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         CommandElement({
             id: 0x0000, name: "SelectOutput",
-            access: "R", conformance: "M", direction: "request",
+            direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "Index", base: "uint8"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "RenameOutput",
-            access: "R", conformance: "O", direction: "request",
+            conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "Index", base: "uint8"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Name", base: "string"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OutputInfoStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "Index", base: "uint8"
                 }),
 
                 DatatypeElement({
-                    name: "OutputType", base: "OutputTypeEnum",
-                    access: "R", conformance: "M"
+                    name: "OutputType", base: "OutputTypeEnum"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Name", base: "string"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OutputTypeEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Hdmi",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Hdmi"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Bt",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Bt"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Optical",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Optical"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Headphone",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "Headphone"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Internal",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Internal"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Other",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "Other"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AudioOutputFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "NameUpdates",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "NameUpdates"
                 })
             ]
         })

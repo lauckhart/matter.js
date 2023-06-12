@@ -16,17 +16,17 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "TemperatureDisplayMode", base: "enum8",
-            access: "W", conformance: "M", default: 0
+            access: "RW", default: 0
         }),
 
         AttributeElement({
             id: 0x0001, name: "KeypadLockout", base: "enum8",
-            access: "W VM", conformance: "M", default: 0
+            access: "RW VM", default: 0
         }),
 
         AttributeElement({
             id: 0x0002, name: "ScheduleProgrammingVisibility", base: "enum8",
-            access: "W VM", conformance: "O"
+            access: "RW VM", conformance: "O"
         })
     ]
 }));

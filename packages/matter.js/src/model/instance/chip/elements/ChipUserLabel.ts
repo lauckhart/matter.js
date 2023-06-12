@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "LabelList", base: "list",
-            access: "W VM", conformance: "M",
+            access: "RW VM",
             children: [
                 DatatypeElement({
                     name: "entry", base: "LabelStruct"
@@ -26,16 +26,13 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "LabelStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Label", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Label", base: "string"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Value", base: "string"
                 })
             ]
         })

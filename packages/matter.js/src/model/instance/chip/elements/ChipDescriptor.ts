@@ -16,7 +16,6 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "DeviceList", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "DeviceTypeStruct"
@@ -26,7 +25,6 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "ServerList", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "cluster-id"
@@ -36,7 +34,6 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0002, name: "ClientList", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "cluster-id"
@@ -46,7 +43,6 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0003, name: "PartsList", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "endpoint-no"
@@ -56,16 +52,13 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "DeviceTypeStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "DeviceType", base: "devtype-id",
-                    access: "R", conformance: "M"
+                    name: "DeviceType", base: "devtype-id"
                 }),
 
                 DatatypeElement({
-                    name: "Revision", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "Revision", base: "uint16"
                 })
             ]
         })

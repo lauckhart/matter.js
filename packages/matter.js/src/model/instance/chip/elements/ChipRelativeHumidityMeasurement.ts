@@ -16,22 +16,22 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "RelativeHumidityMeasuredValue", base: "uint16",
-            access: "R", conformance: "M", quality: "X P"
+            quality: "X P"
         }),
 
         AttributeElement({
             id: 0x0001, name: "RelativeHumidityMinMeasuredValue", base: "uint16",
-            access: "R", conformance: "M", quality: "X"
+            quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "RelativeHumidityMaxMeasuredValue", base: "uint16",
-            access: "R", conformance: "M", quality: "X"
+            quality: "X"
         }),
 
         AttributeElement({
             id: 0x0003, name: "RelativeHumidityTolerance", base: "uint16",
-            access: "R", conformance: "O"
+            conformance: "O"
         })
     ]
 }));
