@@ -24,26 +24,31 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "LS",
+                    conformance: "O.a",
                     xref: { document: "cluster", section: "1.11.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "MS",
+                    conformance: "O.a",
                     xref: { document: "cluster", section: "1.11.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "MSR",
+                    conformance: "[M, S]",
                     xref: { document: "cluster", section: "1.11.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "MSL",
+                    conformance: "[M, S & M, SR]",
                     xref: { document: "cluster", section: "1.11.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "MSM",
+                    conformance: "[M, S & M, SR]",
                     xref: { document: "cluster", section: "1.11.4", version: "1.1" }
                 })
             ]

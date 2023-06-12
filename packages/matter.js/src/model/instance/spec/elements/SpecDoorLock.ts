@@ -24,73 +24,73 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "PIN",
-                    description: "Lock supports PIN credentials (via keypad, or over- the-air)",
+                    conformance: "O", description: "Lock supports PIN credentials (via keypad, or over- the-air)",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "RID",
-                    description: "Lock supports RFID credentials",
+                    conformance: "O", description: "Lock supports RFID credentials",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "FGP",
-                    description: "Lock supports finger related credentials (fingerprint, finger vein)",
+                    conformance: "P, O", description: "Lock supports finger related credentials (fingerprint, finger vein)",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "LOG",
-                    description: "Lock supports local/on-lock logging when Events are not supported",
+                    conformance: "O", description: "Lock supports local/on-lock logging when Events are not supported",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "WDSCH",
-                    description: "Lock supports week day user access schedules",
+                    conformance: "O", description: "Lock supports week day user access schedules",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0005, name: "DPS",
-                    description: "Lock supports a door position sensor that indicates door’s state",
+                    conformance: "O", description: "Lock supports a door position sensor that indicates door’s state",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0006, name: "FACE",
-                    description: "Lock supports face related credentials (face, iris, retina)",
+                    conformance: "P, O", description: "Lock supports face related credentials (face, iris, retina)",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0007, name: "COTA",
-                    description: "PIN codes over- the-air supported for lock/unlock operations",
+                    conformance: "O", description: "PIN codes over- the-air supported for lock/unlock operations",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0008, name: "USR",
-                    description: "Lock supports the user commands and database",
+                    conformance: "[P, IN | RID]", description: "Lock supports the user commands and database",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0009, name: "NOT",
-                    description: "Operation and Programming Notifications",
+                    conformance: "O", description: "Operation and Programming Notifications",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x000a, name: "YDSCH",
-                    description: "Lock supports year day user access schedules",
+                    conformance: "O", description: "Lock supports year day user access schedules",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x000b, name: "HDSCH",
-                    description: "Lock supports holiday schedules",
+                    conformance: "O", description: "Lock supports holiday schedules",
                     xref: { document: "cluster", section: "5.2.2", version: "1.1" }
                 })
             ]

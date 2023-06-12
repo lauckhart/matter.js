@@ -24,43 +24,43 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "HEAT",
-                    description: "Thermostat is capable of managing a heating device",
+                    conformance: "AUTO, O.a+", description: "Thermostat is capable of managing a heating device",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "COOL",
-                    description: "Thermostat is capable of managing a cooling device",
+                    conformance: "AUTO, O.a+", description: "Thermostat is capable of managing a cooling device",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "OCC",
-                    description: "Supports Occupied and Unoccupied setpoints",
+                    conformance: "O", description: "Supports Occupied and Unoccupied setpoints",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "SCH",
-                    description: "Supports remote configuration of a weekly schedule of setpoint transitions",
+                    conformance: "O", description: "Supports remote configuration of a weekly schedule of setpoint transitions",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "SB",
-                    description: "Supports configurable setback (or span)",
+                    conformance: "O", description: "Supports configurable setback (or span)",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0005, name: "AUTO",
-                    description: "Supports a System Mode of Auto",
+                    conformance: "O", description: "Supports a System Mode of Auto",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0006, name: "LTNE",
-                    description: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
+                    conformance: "O", description: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 })
             ]

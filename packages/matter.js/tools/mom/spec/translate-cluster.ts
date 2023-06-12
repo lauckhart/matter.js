@@ -123,6 +123,8 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         const records = translateTable("feature", definition.features, {
             id: Alias(Integer, "bit"),
             description: Optional(Alias(Str, "name", "summary")),
+
+            conformance: Optional(Str),
     
             // Must define after description because name is overwritten
             // otherwise
