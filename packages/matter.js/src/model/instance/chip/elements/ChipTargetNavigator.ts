@@ -16,7 +16,6 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "TargetNavigatorList", base: "list",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "TargetInfoStruct"
@@ -26,74 +25,65 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "TargetNavigatorCurrentTarget", base: "uint8",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         CommandElement({
             id: 0x0000, name: "NavigateTarget",
-            access: "R", conformance: "M", direction: "request", response: "NavigateTargetResponse",
+            direction: "request", response: "NavigateTargetResponse",
             children: [
                 DatatypeElement({
-                    name: "Target", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "Target", base: "uint8"
                 }),
 
                 DatatypeElement({
                     name: "Data", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "NavigateTargetResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "TargetNavigatorStatusEnum",
-                    access: "R", conformance: "M"
+                    name: "Status", base: "TargetNavigatorStatusEnum"
                 }),
 
                 DatatypeElement({
                     name: "Data", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TargetNavigatorStatusEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Success"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "TargetNotFound",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "TargetNotFound"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "NotAllowed",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "NotAllowed"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TargetInfoStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Identifier", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "Identifier", base: "uint8"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Name", base: "string"
                 })
             ]
         })

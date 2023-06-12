@@ -16,122 +16,108 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "PhyRate", base: "PhyRateEnum",
-            access: "R", conformance: "O", quality: "X"
+            conformance: "O", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "FullDuplex", base: "bool",
-            access: "R", conformance: "O", quality: "X"
+            conformance: "O", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "PacketRxCount", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         AttributeElement({
             id: 0x0003, name: "PacketTxCount", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         AttributeElement({
             id: 0x0004, name: "TxErrCount", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         AttributeElement({
             id: 0x0005, name: "CollisionCount", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         AttributeElement({
             id: 0x0006, name: "EthernetOverrunCount", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         AttributeElement({
             id: 0x0007, name: "CarrierDetect", base: "bool",
-            access: "R", conformance: "O", quality: "X"
+            conformance: "O", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0008, name: "TimeSinceReset", base: "uint64",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         }),
 
         CommandElement({
             id: 0x0000, name: "ResetCounts",
-            access: "R", conformance: "M", direction: "request"
+            direction: "request"
         }),
 
         DatatypeElement({
             name: "PhyRateEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Rate10M",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Rate10M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Rate100M",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Rate100M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Rate1G",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Rate1G"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Rate25G",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "Rate25G"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Rate5G",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Rate5G"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Rate10G",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "Rate10G"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Rate40G",
-                    access: "R", conformance: "M"
+                    id: 0x0006, name: "Rate40G"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "Rate100G",
-                    access: "R", conformance: "M"
+                    id: 0x0007, name: "Rate100G"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Rate200G",
-                    access: "R", conformance: "M"
+                    id: 0x0008, name: "Rate200G"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Rate400G",
-                    access: "R", conformance: "M"
+                    id: 0x0009, name: "Rate400G"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "EthernetNetworkDiagnosticsFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "PacketCounts",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "PacketCounts"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ErrorCounts",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "ErrorCounts"
                 })
             ]
         })

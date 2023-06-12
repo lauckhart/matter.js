@@ -17,7 +17,8 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
     param?: Conformance.AstParam;
 
     override get empty() {
-        return this.type === Conformance.Special.Empty;
+        return this.type === Conformance.Special.Empty
+            || this.toString() == "M";
     }
 
     /**

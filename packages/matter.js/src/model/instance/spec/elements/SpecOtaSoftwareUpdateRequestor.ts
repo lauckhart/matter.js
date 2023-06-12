@@ -15,17 +15,17 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", default: 0, quality: "F"
+            access: "R V", default: 0, quality: "F"
         }),
 
         AttributeElement({
             id: 0x0000, name: "DefaultOtaProviders", base: "list",
-            access: "RW F VA", conformance: "M", constraint: "desc",
+            access: "RW F VA", constraint: "desc", default: "[]",
             xref: { document: "core", section: "11.19.7.5", version: "1.1" },
             children: [
                 DatatypeElement({
@@ -36,37 +36,37 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "UpdatePossible", base: "bool",
-            access: "R V", conformance: "M",
+            access: "R V", default: true,
             xref: { document: "core", section: "11.19.7.5", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "UpdateState", base: "UpdateStateEnum",
-            access: "R V", conformance: "M",
+            access: "R V", default: "Unknown",
             xref: { document: "core", section: "11.19.7.5", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "UpdateStateProgress", base: "uint8",
-            access: "R V", conformance: "M", constraint: "0 to 100", quality: "X",
+            access: "R V", constraint: "0 to 100", default: "null", quality: "X",
             xref: { document: "core", section: "11.19.7.5", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0000, name: "StateTransition",
-            access: "V", conformance: "M", priority: "info",
+            access: "V", priority: "info",
             xref: { document: "core", section: "11.19.7.7", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0001, name: "VersionApplied",
-            access: "V", conformance: "M", priority: "critical",
+            access: "V", priority: "critical",
             xref: { document: "core", section: "11.19.7.7", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0002, name: "DownloadError",
-            access: "V", conformance: "M", priority: "info",
+            access: "V", priority: "info",
             xref: { document: "core", section: "11.19.7.7", version: "1.1" }
         }),
 

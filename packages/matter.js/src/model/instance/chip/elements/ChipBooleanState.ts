@@ -16,16 +16,15 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "StateValue", base: "bool",
-            access: "R", conformance: "M", quality: "P"
+            quality: "P"
         }),
 
         EventElement({
             id: 0x0000, name: "StateChange",
-            access: "R", conformance: "M", priority: "info",
+            priority: "info",
             children: [
                 DatatypeElement({
-                    name: "StateValue", base: "bool",
-                    access: "R", conformance: "M"
+                    name: "StateValue", base: "bool"
                 })
             ]
         })

@@ -16,43 +16,39 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "GetSetupPin",
-            access: "R", conformance: "M", direction: "request", response: "GetSetupPinResponse",
+            direction: "request", response: "GetSetupPinResponse",
             children: [
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "string",
-                    access: "R", conformance: "M"
+                    name: "TempAccountIdentifier", base: "string"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "Login",
-            access: "R", conformance: "M", direction: "request",
+            direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "string",
-                    access: "R", conformance: "M"
+                    name: "TempAccountIdentifier", base: "string"
                 }),
 
                 DatatypeElement({
-                    name: "SetupPin", base: "string",
-                    access: "R", conformance: "M"
+                    name: "SetupPin", base: "string"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "Logout",
-            access: "R", conformance: "M", direction: "request"
+            direction: "request"
         }),
 
         CommandElement({
             id: 0x0001, name: "GetSetupPinResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "SetupPin", base: "string",
-                    access: "R", conformance: "M"
+                    name: "SetupPin", base: "string"
                 })
             ]
         })

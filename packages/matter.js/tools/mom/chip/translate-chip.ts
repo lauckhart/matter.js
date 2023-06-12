@@ -163,7 +163,7 @@ function setQualities(src: Element, target: BaseDataElement) {
          rw: Access.Rw.Read
     };
     if (writable) {
-        access.rw = Access.Rw.Write;
+        access.rw = Access.Rw.ReadWrite;
     }
     if (fabricSensitive) {
         access.fabric = Access.Fabric.Sensitive;

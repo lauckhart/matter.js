@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "WakeOnLanMacAddress", base: "string",
-            access: "R", conformance: "O"
+            conformance: "O"
         })
     ]
 }));

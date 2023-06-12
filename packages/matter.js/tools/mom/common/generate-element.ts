@@ -37,7 +37,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
         delete fields.base;
     }
     block.atom(row1.join(", "));
-
+    
     // Next row: Other fields
     const row2 = Object.entries(fields)
         .sort((a, b) => a[0].toLowerCase().localeCompare(b[0].toLowerCase()))

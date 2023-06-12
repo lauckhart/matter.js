@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", default: 0, quality: "F",
+            access: "R V", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "AS",
@@ -38,70 +38,70 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "CurrentState", base: "PlaybackStateEnum",
-            access: "R V", conformance: "M", constraint: "desc",
+            access: "R V", constraint: "desc", default: 0,
             details: "This SHALL indicate the current playback state of media.",
             xref: { document: "cluster", section: "6.10.3.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "StartTime", base: "epoch-us",
-            access: "R V", conformance: "AS", constraint: "desc", quality: "X",
+            access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the start time of the media, in case the media has a fixed start time (for example, live stream or television broadcast), or null when start time does not apply to the current",
             xref: { document: "cluster", section: "6.10.3.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "Duration", base: "uint64",
-            access: "R V", conformance: "AS", constraint: "desc", quality: "X",
+            access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the duration, in milliseconds, of the current media being played back or null when duration is not applicable (for example, in live streaming content with no known duration). This attribute SHALL never be 0.",
             xref: { document: "cluster", section: "6.10.3.3", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "SampledPosition", base: "PlaybackPositionStruct",
-            access: "R V", conformance: "AS", constraint: "desc", quality: "X",
+            access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the position of playback (Position field) at the time (UpdateAt field) specified in the attribute. The client MAY use the SampledPosition attribute to compute the current position within the media stream based on the PlaybackSpeed, PlaybackPositionStruct.UpdatedAt and PlaybackPositionStruct.Position fields. To enable this, the SampledPosition attribute SHALL be updated whenever a change in either the playback speed or the playback position is triggered outside the normal playback of the media. The events which MAY cause this to happen include:",
             xref: { document: "cluster", section: "6.10.3.4", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0004, name: "PlaybackSpeed", base: "single",
-            access: "R V", conformance: "AS", constraint: "desc",
+            access: "R V", conformance: "AS", constraint: "desc", default: 0,
             details: "This SHALL indicate the speed at which the current media is being played. The new PlaybackSpeed",
             xref: { document: "cluster", section: "6.10.3.5", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0005, name: "SeekRangeEnd", base: "uint64",
-            access: "R V", conformance: "AS", constraint: "desc", quality: "X",
+            access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the furthest forward valid position to which a client MAY seek forward, in milliseconds from the start of the media. When the media has an associated StartTime, a value of null SHALL indicate that a seek forward is valid only until the current time within the media, using a position computed from the difference between the current time offset and StartTime, in milliseconds from start of the media, truncating fractional milliseconds towards 0. A value of Nas when StartTime is not specified SHALL indicate that seeking forward is not allowed.",
             xref: { document: "cluster", section: "6.10.3.7", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0006, name: "SeekRangeStart", base: "uint64",
-            access: "R V", conformance: "AS", constraint: "desc", quality: "X",
+            access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the earliest valid position to which a client MAY seek back, in milliseconds from start of the media. A value of Nas SHALL indicate that seeking backwards is not allowed.",
             xref: { document: "cluster", section: "6.10.3.6", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0000, name: "Play",
-            access: "O", conformance: "M", direction: "request", response: "PlaybackResponse",
+            access: "O", direction: "request", response: "PlaybackResponse",
             details: "Upon receipt, this SHALL play media. If content is currently in a FastForward or Rewind state. Play SHALL return media to normal playback speed.",
             xref: { document: "cluster", section: "6.10.4.1", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "Pause",
-            access: "O", conformance: "M", direction: "request", response: "PlaybackResponse",
+            access: "O", direction: "request", response: "PlaybackResponse",
             details: "Upon receipt, this SHALL pause playback of the media.",
             xref: { document: "cluster", section: "6.10.4.2", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0002, name: "Stop",
-            access: "O", conformance: "M", direction: "request", response: "PlaybackResponse",
+            access: "O", direction: "request", response: "PlaybackResponse",
             details: "Upon receipt, this SHALL stop playback of the media. User-visible outcome is context-specific. This MAY navigate the user back to the location from where the media was originally launched.",
             xref: { document: "cluster", section: "6.10.4.3", version: "1.1" }
         }),
@@ -157,7 +157,7 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x000a, name: "PlaybackResponse",
-            conformance: "M", direction: "response",
+            direction: "response",
             details: "This command SHALL be generated in response to various Playback Commands. The data for this command SHALL be as follows:",
             xref: { document: "cluster", section: "6.10.4.12", version: "1.1" }
         }),
@@ -176,25 +176,25 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Playing",
-                    conformance: "M", description: "Media is currently playing (includes FF and REW)",
+                    description: "Media is currently playing (includes FF and REW)",
                     xref: { document: "cluster", section: "6.10.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "Paused",
-                    conformance: "M", description: "Media is currently paused",
+                    description: "Media is currently paused",
                     xref: { document: "cluster", section: "6.10.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "NotPlaying",
-                    conformance: "M", description: "Media is not currently playing",
+                    description: "Media is not currently playing",
                     xref: { document: "cluster", section: "6.10.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "Buffering",
-                    conformance: "M", description: "Media is not currently buffering and playback will start when buffer has been filled",
+                    description: "Media is not currently buffering and playback will start when buffer has been filled",
                     xref: { document: "cluster", section: "6.10.5.1", version: "1.1" }
                 })
             ]

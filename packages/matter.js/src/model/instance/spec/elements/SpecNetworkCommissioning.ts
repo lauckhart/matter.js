@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", default: 0, quality: "F",
+            access: "R V", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "WI",
@@ -44,14 +44,14 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "MaxNetworks", base: "uint8",
-            access: "R A", conformance: "M", constraint: "min 1", quality: "F",
+            access: "R A", constraint: "min 1", default: 0, quality: "F",
             details: "This SHALL indicate the maximum number of network configuration entries that can be added, based on available device resources. The length of the Networks attribute list SHALL be less than or equal to this value.",
             xref: { document: "core", section: "11.8.6.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "Networks", base: "list",
-            access: "R A", conformance: "M", constraint: "max MaxNetworks",
+            access: "R A", constraint: "max MaxNetworks", default: "empty",
             details: "This attribute SHALL indicate the network configurations that are usable on the network interface represented by this cluster server instance.",
             xref: { document: "core", section: "11.8.6.2", version: "1.1" },
             children: [
@@ -63,42 +63,42 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0002, name: "ScanMaxTimeSeconds", base: "uint8",
-            access: "R V", conformance: "WI | TH", constraint: "desc", quality: "F",
+            access: "R V", conformance: "WI | TH", constraint: "desc", default: 0, quality: "F",
             details: "This attribute SHALL indicate the maximum duration taken, in seconds, by the network interface on this cluster server instance to provide scan results.",
             xref: { document: "core", section: "11.8.6.3", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "ConnectMaxTimeSeconds", base: "uint8",
-            access: "R V", conformance: "WI | TH", constraint: "desc", quality: "F",
+            access: "R V", conformance: "WI | TH", constraint: "desc", default: 0, quality: "F",
             details: "This attribute SHALL indicate the maximum duration taken, in seconds, by the network interface on this cluster server instance to report a successful or failed network connection indication. This maximum time SHALL account for all operations needed until a successful network connection is deemed to have occurred, including, for example, obtaining IP addresses, or the execution of necessary internal retries.",
             xref: { document: "core", section: "11.8.6.4", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0004, name: "InterfaceEnabled", base: "bool",
-            access: "RW VA", conformance: "M", quality: "N",
+            access: "RW VA", default: true, quality: "N",
             details: "This attribute SHALL indicate whether the associated network interface is enabled or not. By default all network interfaces SHOULD be enabled during initial commissioning (InterfaceEnabled set to true).",
             xref: { document: "core", section: "11.8.6.5", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0005, name: "LastNetworkingStatus", base: "NetworkCommissioningStatusEnum",
-            access: "R A", conformance: "M", quality: "X",
+            access: "R A", default: "null", quality: "X",
             details: "This attribute SHALL indicate the status of the last attempt either scan or connect to an operational network, using this interface, whether by invocation of the ConnectNetwork command or by autonomous connection after loss of connectivity or during initial establishment. If no such attempt was made, or no network configurations exist in the Networks attribute, then this attribute SHALL be set to null.",
             xref: { document: "core", section: "11.8.6.6", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0006, name: "LastNetworkId", base: "octstr",
-            access: "R A", conformance: "M", constraint: "1 to 32", quality: "X",
+            access: "R A", constraint: "1 to 32", default: "null", quality: "X",
             details: "This attribute SHALL indicate the NetworkID used in the last attempt to connect to an operational network, using this interface, whether by invocation of the ConnectNetwork command or by autonomous connection after loss of connectivity or during initial establishment. If no such attempt was made, or no network configurations exist in the Networks attribute, then this attribute SHALL be set to null.",
             xref: { document: "core", section: "11.8.6.7", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0007, name: "LastConnectErrorValue", base: "int32",
-            access: "R A", conformance: "M", quality: "X",
+            access: "R A", default: "null", quality: "X",
             details: "This attribute SHALL indicate the ErrorValue used in the last failed attempt to connect to an operational network, using this interface, whether by invocation of the ConnectNetwork command or by autonomous connection after loss of connectivity or during initial establishment. If no such attempt was made, or no network configurations exist in the Networks attribute, then this attribute SHALL be set to null.",
             xref: { document: "core", section: "11.8.6.8", version: "1.1" }
         }),

@@ -16,37 +16,31 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "TemperatureUnit", base: "TempUnitEnum",
-            access: "W", conformance: "O"
+            access: "RW", conformance: "O"
         }),
 
         DatatypeElement({
             name: "TempUnitEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Fahrenheit",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Fahrenheit"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Celsius",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Celsius"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Kelvin",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Kelvin"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "UnitLocalizationFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "TemperatureUnit",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "TemperatureUnit"
                 })
             ]
         })

@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "ContentLauncherAcceptHeader", base: "list",
-            access: "R", conformance: "O",
+            conformance: "O",
             children: [
                 DatatypeElement({
                     name: "entry", base: "string"
@@ -26,334 +26,287 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "ContentLauncherSupportedStreamingProtocols", base: "map32",
-            access: "W", conformance: "O", default: 0
+            access: "RW", conformance: "O", default: 0
         }),
 
         CommandElement({
             id: 0x0000, name: "LaunchContent",
-            access: "R", conformance: "O", direction: "request", response: "LauncherResponse",
+            conformance: "O", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "Search", base: "ContentSearchStruct",
-                    access: "R", conformance: "M"
+                    name: "Search", base: "ContentSearchStruct"
                 }),
 
                 DatatypeElement({
-                    name: "AutoPlay", base: "bool",
-                    access: "R", conformance: "M"
+                    name: "AutoPlay", base: "bool"
                 }),
 
                 DatatypeElement({
                     name: "Data", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "LaunchUrl",
-            access: "R", conformance: "O", direction: "request", response: "LauncherResponse",
+            conformance: "O", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "ContentUrl", base: "string",
-                    access: "R", conformance: "M"
+                    name: "ContentUrl", base: "string"
                 }),
 
                 DatatypeElement({
                     name: "DisplayString", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "BrandingInformation", base: "BrandingInformationStruct",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "LauncherResponse",
-            access: "R", conformance: "O", direction: "response",
+            conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "ContentLaunchStatusEnum",
-                    access: "R", conformance: "M"
+                    name: "Status", base: "ContentLaunchStatusEnum"
                 }),
 
                 DatatypeElement({
                     name: "Data", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ContentSearchStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ParameterList", base: "ParameterStruct",
-                    access: "R", conformance: "M"
+                    name: "ParameterList", base: "ParameterStruct"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AdditionalInfoStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Name", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Name", base: "string"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Value", base: "string"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MetricTypeEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Pixels",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Pixels"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Percentage",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Percentage"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DimensionStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Width", base: "double",
-                    access: "R", conformance: "M"
+                    name: "Width", base: "double"
                 }),
 
                 DatatypeElement({
-                    name: "Height", base: "double",
-                    access: "R", conformance: "M"
+                    name: "Height", base: "double"
                 }),
 
                 DatatypeElement({
-                    name: "Metric", base: "MetricTypeEnum",
-                    access: "R", conformance: "M"
+                    name: "Metric", base: "MetricTypeEnum"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "StyleInformationStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "ImageUrl", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "Color", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "Size", base: "DimensionStruct",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BrandingInformationStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ProviderName", base: "string",
-                    access: "R", conformance: "M"
+                    name: "ProviderName", base: "string"
                 }),
 
                 DatatypeElement({
                     name: "Background", base: "StyleInformationStruct",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "Logo", base: "StyleInformationStruct",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "ProgressBar", base: "StyleInformationStruct",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "Splash", base: "StyleInformationStruct",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "WaterMark", base: "StyleInformationStruct",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ParameterEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Actor",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Actor"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Channel",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Channel"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Character",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Character"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Director",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "Director"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Event",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "Event"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Franchise",
-                    access: "R", conformance: "M"
+                    id: 0x0005, name: "Franchise"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Genre",
-                    access: "R", conformance: "M"
+                    id: 0x0006, name: "Genre"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "League",
-                    access: "R", conformance: "M"
+                    id: 0x0007, name: "League"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Popularity",
-                    access: "R", conformance: "M"
+                    id: 0x0008, name: "Popularity"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Provider",
-                    access: "R", conformance: "M"
+                    id: 0x0009, name: "Provider"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "Sport",
-                    access: "R", conformance: "M"
+                    id: 0x000a, name: "Sport"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "SportsTeam",
-                    access: "R", conformance: "M"
+                    id: 0x000b, name: "SportsTeam"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "Type",
-                    access: "R", conformance: "M"
+                    id: 0x000c, name: "Type"
                 }),
 
                 DatatypeElement({
-                    id: 0x000d, name: "Video",
-                    access: "R", conformance: "M"
+                    id: 0x000d, name: "Video"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ContentLaunchStatusEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Success"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "UrlNotAvailable",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "UrlNotAvailable"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "AuthFailed",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "AuthFailed"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ParameterStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Type", base: "ParameterEnum",
-                    access: "R", conformance: "M"
+                    name: "Type", base: "ParameterEnum"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Value", base: "string"
                 }),
 
                 DatatypeElement({
                     name: "ExternalIdList", base: "AdditionalInfoStruct",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SupportedStreamingProtocol", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Dash",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Dash"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Hls",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "Hls"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ContentLauncherFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "ContentSearch",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "ContentSearch"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "UrlPlayback",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "UrlPlayback"
                 })
             ]
         })

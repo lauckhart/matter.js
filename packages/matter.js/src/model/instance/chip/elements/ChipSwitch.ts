@@ -16,133 +16,118 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "NumberOfPositions", base: "uint8",
-            access: "R", conformance: "M", default: 2
+            default: 2
         }),
 
         AttributeElement({
             id: 0x0001, name: "CurrentPosition", base: "uint8",
-            access: "R", conformance: "M", quality: "P"
+            quality: "P"
         }),
 
         AttributeElement({
             id: 0x0002, name: "MultiPressMax", base: "uint8",
-            access: "R", conformance: "O", default: 2
+            conformance: "O", default: 2
         }),
 
         EventElement({
             id: 0x0000, name: "SwitchLatched",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "NewPosition", base: "uint8"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0001, name: "InitialPress",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "NewPosition", base: "uint8"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0002, name: "LongPress",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "NewPosition", base: "uint8"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0003, name: "ShortRelease",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "PreviousPosition", base: "uint8"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0004, name: "LongRelease",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "PreviousPosition", base: "uint8"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0005, name: "MultiPressOngoing",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "NewPosition", base: "uint8"
                 }),
 
                 DatatypeElement({
-                    name: "CurrentNumberOfPressesCounted", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "CurrentNumberOfPressesCounted", base: "uint8"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0006, name: "MultiPressComplete",
-            access: "R", conformance: "O", priority: "info",
+            conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "PreviousPosition", base: "uint8"
                 }),
 
                 DatatypeElement({
-                    name: "TotalNumberOfPressesCounted", base: "uint8",
-                    access: "R", conformance: "M"
+                    name: "TotalNumberOfPressesCounted", base: "uint8"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SwitchFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "LatchingSwitch",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "LatchingSwitch"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "MomentarySwitch",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "MomentarySwitch"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "MomentarySwitchRelease",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "MomentarySwitchRelease"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "MomentarySwitchLongPress",
-                    access: "R", conformance: "M"
+                    id: 0x0008, name: "MomentarySwitchLongPress"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "MomentarySwitchMultiPress",
-                    access: "R", conformance: "M"
+                    id: 0x0010, name: "MomentarySwitchMultiPress"
                 })
             ]
         })

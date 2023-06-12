@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", conformance: "M", default: 0, quality: "F",
+            access: "R V", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "CS",
@@ -38,7 +38,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "AcceptHeader", base: "list",
-            access: "R V", conformance: "UP", constraint: "max 100[max 1024]", quality: "N",
+            access: "R V", conformance: "UP", constraint: "max 100[max 1024]", default: "empty", quality: "N",
             details: "This list provides list of content types supported by the Video Player or Content App in the form of entries in the HTTP \"Accept\" request header.",
             xref: { document: "cluster", section: "6.7.3.1", version: "1.1" },
             children: [
@@ -50,7 +50,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "SupportedStreamingProtocols", base: "map32",
-            access: "R V", conformance: "UP", quality: "N",
+            access: "R V", conformance: "UP", default: 0, quality: "N",
             details: "This attribute provides information about supported streaming protocols.",
             xref: { document: "cluster", section: "6.7.3.2", version: "1.1" }
         }),
@@ -83,19 +83,19 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Success",
-                    conformance: "M", description: "Command succeeded",
+                    description: "Command succeeded",
                     xref: { document: "cluster", section: "6.7.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "UrlNotAvailable",
-                    conformance: "M", description: "Requested URL could not be reached by device.",
+                    description: "Requested URL could not be reached by device.",
                     xref: { document: "cluster", section: "6.7.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "AuthFailed",
-                    conformance: "M", description: "Requested URL returned 401 error code.",
+                    description: "Requested URL returned 401 error code.",
                     xref: { document: "cluster", section: "6.7.5.1", version: "1.1" }
                 })
             ]

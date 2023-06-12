@@ -16,22 +16,22 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "TempMeasuredValue", base: "int16",
-            access: "R", conformance: "M", quality: "X"
+            quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "TempMinMeasuredValue", base: "int16",
-            access: "R", conformance: "M", default: 32768, quality: "X"
+            default: 32768, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "TempMaxMeasuredValue", base: "int16",
-            access: "R", conformance: "M", default: 32768, quality: "X"
+            default: 32768, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0003, name: "TempTolerance", base: "uint16",
-            access: "R", conformance: "O", default: 0
+            conformance: "O", default: 0
         })
     ]
 }));

@@ -20,6 +20,11 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
     writePriv?: Access.Privilege;
     timed?: boolean;
 
+    override get empty() {
+        return (!this.rw || this.rw == Access.Rw.Read) &&
+            !this.fabric && !this.readPriv && !this.writePriv && !this.timed;
+    }
+
     /**
      * Initialize from an Access.Definition or the access control DSL defined
      * by the Matter Specification.

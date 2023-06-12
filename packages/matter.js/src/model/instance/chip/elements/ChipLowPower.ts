@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "Sleep",
-            access: "R", conformance: "M", direction: "request"
+            direction: "request"
         })
     ]
 }));

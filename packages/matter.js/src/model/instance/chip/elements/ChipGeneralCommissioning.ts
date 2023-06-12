@@ -16,183 +16,156 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "Breadcrumb", base: "uint64",
-            access: "W VA", conformance: "M", default: 0
+            access: "RW VA", default: 0
         }),
 
         AttributeElement({
-            id: 0x0001, name: "BasicCommissioningInfo", base: "BasicCommissioningInfo",
-            access: "R", conformance: "M"
+            id: 0x0001, name: "BasicCommissioningInfo", base: "BasicCommissioningInfo"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "RegulatoryConfig", base: "RegulatoryLocationType",
-            access: "R", conformance: "M"
+            id: 0x0002, name: "RegulatoryConfig", base: "RegulatoryLocationType"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "LocationCapability", base: "RegulatoryLocationType",
-            access: "R", conformance: "M"
+            id: 0x0003, name: "LocationCapability", base: "RegulatoryLocationType"
         }),
 
         AttributeElement({
             id: 0x0004, name: "SupportsConcurrentConnection", base: "bool",
-            access: "R", conformance: "M", default: true
+            default: true
         }),
 
         CommandElement({
             id: 0x0000, name: "ArmFailSafe",
-            access: "R A", conformance: "M", direction: "request", response: "ArmFailSafeResponse",
+            access: "R A", direction: "request", response: "ArmFailSafeResponse",
             children: [
                 DatatypeElement({
-                    name: "ExpiryLengthSeconds", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "ExpiryLengthSeconds", base: "uint16"
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
-                    access: "R", conformance: "M"
+                    name: "Breadcrumb", base: "uint64"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "ArmFailSafeResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "ErrorCode", base: "CommissioningError",
-                    access: "R", conformance: "M"
+                    name: "ErrorCode", base: "CommissioningError"
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
-                    access: "R", conformance: "M"
+                    name: "DebugText", base: "string"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "SetRegulatoryConfig",
-            access: "R A", conformance: "M", direction: "request", response: "SetRegulatoryConfigResponse",
+            access: "R A", direction: "request", response: "SetRegulatoryConfigResponse",
             children: [
                 DatatypeElement({
-                    name: "NewRegulatoryConfig", base: "RegulatoryLocationType",
-                    access: "R", conformance: "M"
+                    name: "NewRegulatoryConfig", base: "RegulatoryLocationType"
                 }),
 
                 DatatypeElement({
-                    name: "CountryCode", base: "string",
-                    access: "R", conformance: "M"
+                    name: "CountryCode", base: "string"
                 }),
 
                 DatatypeElement({
-                    name: "Breadcrumb", base: "uint64",
-                    access: "R", conformance: "M"
+                    name: "Breadcrumb", base: "uint64"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "SetRegulatoryConfigResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "ErrorCode", base: "CommissioningError",
-                    access: "R", conformance: "M"
+                    name: "ErrorCode", base: "CommissioningError"
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
-                    access: "R", conformance: "M"
+                    name: "DebugText", base: "string"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "CommissioningComplete",
-            access: "R F A", conformance: "M", direction: "request", response: "CommissioningCompleteResponse"
+            access: "R F A", direction: "request", response: "CommissioningCompleteResponse"
         }),
 
         CommandElement({
             id: 0x0005, name: "CommissioningCompleteResponse",
-            access: "R", conformance: "M", direction: "response",
+            direction: "response",
             children: [
                 DatatypeElement({
-                    name: "ErrorCode", base: "CommissioningError",
-                    access: "R", conformance: "M"
+                    name: "ErrorCode", base: "CommissioningError"
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
-                    access: "R", conformance: "M"
+                    name: "DebugText", base: "string"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CommissioningError", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Ok",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Ok"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "ValueOutsideRange",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "ValueOutsideRange"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "InvalidAuthentication",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "InvalidAuthentication"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "NoFailSafe",
-                    access: "R", conformance: "M"
+                    id: 0x0003, name: "NoFailSafe"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "BusyWithOtherAdmin",
-                    access: "R", conformance: "M"
+                    id: 0x0004, name: "BusyWithOtherAdmin"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "RegulatoryLocationType", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Indoor",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Indoor"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Outdoor",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "Outdoor"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "IndoorOutdoor",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "IndoorOutdoor"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BasicCommissioningInfo", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "FailSafeExpiryLengthSeconds", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "FailSafeExpiryLengthSeconds", base: "uint16"
                 }),
 
                 DatatypeElement({
-                    name: "MaxCumulativeFailsafeSeconds", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "MaxCumulativeFailsafeSeconds", base: "uint16"
                 })
             ]
         })

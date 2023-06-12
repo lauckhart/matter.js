@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "ChannelList", base: "list",
-            access: "R", conformance: "O",
+            conformance: "O",
             children: [
                 DatatypeElement({
                     name: "entry", base: "ChannelInfoStruct"
@@ -26,169 +26,149 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "ChannelLineup", base: "LineupInfoStruct",
-            access: "R", conformance: "O", default: undefined, quality: "X"
+            conformance: "O", default: undefined, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "ChannelCurrentChannel", base: "ChannelInfoStruct",
-            access: "R", conformance: "O", default: undefined, quality: "X"
+            conformance: "O", default: undefined, quality: "X"
         }),
 
         CommandElement({
             id: 0x0000, name: "ChangeChannel",
-            access: "R", conformance: "O", direction: "request", response: "ChangeChannelResponse",
+            conformance: "O", direction: "request", response: "ChangeChannelResponse",
             children: [
                 DatatypeElement({
-                    name: "Match", base: "string",
-                    access: "R", conformance: "M"
+                    name: "Match", base: "string"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "ChangeChannelByNumber",
-            access: "R", conformance: "M", direction: "request",
+            direction: "request",
             children: [
                 DatatypeElement({
-                    name: "MajorNumber", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "MajorNumber", base: "uint16"
                 }),
 
                 DatatypeElement({
-                    name: "MinorNumber", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "MinorNumber", base: "uint16"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "SkipChannel",
-            access: "R", conformance: "M", direction: "request",
+            direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Count", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "Count", base: "uint16"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "ChangeChannelResponse",
-            access: "R", conformance: "O", direction: "response",
+            conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "ChannelStatusEnum",
-                    access: "R", conformance: "M"
+                    name: "Status", base: "ChannelStatusEnum"
                 }),
 
                 DatatypeElement({
                     name: "Data", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ChannelInfoStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "MajorNumber", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "MajorNumber", base: "uint16"
                 }),
 
                 DatatypeElement({
-                    name: "MinorNumber", base: "uint16",
-                    access: "R", conformance: "M"
+                    name: "MinorNumber", base: "uint16"
                 }),
 
                 DatatypeElement({
                     name: "Name", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "CallSign", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 }),
 
                 DatatypeElement({
                     name: "AffiliateCallSign", base: "string",
-                    access: "R", conformance: "O"
+                    conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "LineupInfoStruct", base: "struct",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "OperatorName", base: "string",
-                    access: "R", conformance: "M"
+                    name: "OperatorName", base: "string"
                 }),
 
                 DatatypeElement({
                     name: "LineupName", base: "string",
-                    access: "R", conformance: "O", default: ""
+                    conformance: "O", default: ""
                 }),
 
                 DatatypeElement({
                     name: "PostalCode", base: "string",
-                    access: "R", conformance: "O", default: ""
+                    conformance: "O", default: ""
                 }),
 
                 DatatypeElement({
-                    name: "LineupInfoType", base: "LineupInfoTypeEnum",
-                    access: "R", conformance: "M"
+                    name: "LineupInfoType", base: "LineupInfoTypeEnum"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "LineupInfoTypeEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Mso",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Mso"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ChannelStatusEnum", base: "enum8",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success",
-                    access: "R", conformance: "M"
+                    id: 0x0000, name: "Success"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "MultipleMatches",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "MultipleMatches"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "NoMatches",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "NoMatches"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ChannelFeature", base: "map32",
-            access: "R", conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "ChannelList",
-                    access: "R", conformance: "M"
+                    id: 0x0001, name: "ChannelList"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "LineupInfo",
-                    access: "R", conformance: "M"
+                    id: 0x0002, name: "LineupInfo"
                 })
             ]
         })
