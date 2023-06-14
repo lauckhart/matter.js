@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "WIRED",
@@ -50,21 +50,21 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "Status", base: "PowerSourceStatusEnum",
-            access: "R V", constraint: "desc", default: "",
+            access: "R V", conformance: "M", constraint: "desc", default: "",
             details: "This attribute SHALL indicate the participation of this power source in providing power to the Node as specified in PowerSourceStatusEnum.",
             xref: { document: "core", section: "11.7.6.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "Order", base: "uint8",
-            access: "R V", default: 0, quality: "N",
+            access: "R V", conformance: "M", default: 0, quality: "N",
             details: "This attribute SHALL indicate the relative preference with which the Node will select this source to provide power. A source with a lower order SHALL be selected by the Node to provide power before any other source with a higher order, if the lower order source is available (see Status).",
             xref: { document: "core", section: "11.7.6.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "Description", base: "string",
-            access: "R V", constraint: "max 60", default: "", quality: "F",
+            access: "R V", conformance: "M", constraint: "max 60", default: "", quality: "F",
             details: "This attribute SHALL provide a user-facing description of this source, used to distinguish it from other power sources, e.g. \"DC Power\", \"Primary Battery\" or \"Battery back-up\". This attribute SHALL NOT be used to convey information such as battery form factor, or chemistry.",
             xref: { document: "core", section: "11.7.6.3", version: "1.1" }
         }),
@@ -308,16 +308,19 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Unspecified",
+                    conformance: "M",
                     xref: { document: "core", section: "11.7.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "OverVoltage",
+                    conformance: "M",
                     xref: { document: "core", section: "11.7.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "UnderVoltage",
+                    conformance: "M",
                     xref: { document: "core", section: "11.7.5.1", version: "1.1" }
                 })
             ]

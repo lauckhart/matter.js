@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ElementType, Specification } from "../index.js";
+
 /**
  * Per the Matter specification, an element is a data construct that supports
  * an instance of data.  So, a class.
@@ -38,7 +40,7 @@ export type BaseElement = {
     /**
      * Reference to Matter specification document.
      */
-    xref?: BaseElement.CrossReference,
+    xref?: Specification.CrossReference,
 
     /**
      * Child elements.
@@ -52,7 +54,7 @@ export type BaseElement = {
     accept?: string[]
 }
 
-export function BaseElement(type: BaseElement.Type, definition: BaseElement) {
+export function BaseElement(type: ElementType, definition: BaseElement) {
     const result: any = { type: type };
     for (const [ k, v ] of Object.entries(definition)) {
         if (v !== undefined) {
@@ -68,63 +70,5 @@ export namespace BaseElement {
     /**
      * Element with optional type; used for factory functions and constructors.
      */
-    export type Properties<T extends { type: `${Type}` }> = Omit<T, "type"> & Partial<Pick<T, "type">>;
-
-    /**
-     * Types of elements per the Matter specification.
-     */
-    export enum Type {
-        // Root element type - not formally part of specification
-        Matter = "matter",
-
-        // Element types defined by the Matter specification
-        Fabric = "fabric",
-        Node = "node",
-        Endpoint = "endpoint",
-        Cluster = "cluster",
-        Command = "command",
-        Event = "event",
-        Attribute = "attribute",
-        DeviceType = "deviceType",
-        Datatype = "datatype"
-    }
-
-    /**
-     * The Matter specification documents.
-     */
-    export enum Specification {
-        Core = "core",
-        Cluster = "cluster",
-        Device = "device"
-    }
-
-    /**
-     * Long names for Matter specification documents.
-     */
-    export enum SpecificationNames {
-        core = "Matter Core Specification",
-        cluster = "Matter Application Cluster Specification",
-        device = "Matter Device Library Specification"
-    }
-
-    /**
-     * Information on the source of an element.
-     */
-    export type CrossReference = {
-        /**
-         * The defining document for the element.
-         */
-        document: `${BaseElement.Specification}`,
-
-        /**
-         * The version of the element's defining document.
-         */
-        version: string,
-
-        /**
-         * The section of the defining document that most specifically
-         * addresses the element.
-         */
-        section: string
-    }
+    export type Properties<T extends { type: `${ElementType}` }> = Omit<T, "type"> & Partial<Pick<T, "type">>;
 }

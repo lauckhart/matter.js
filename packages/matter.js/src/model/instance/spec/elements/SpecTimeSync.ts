@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "TZ",
@@ -44,14 +44,14 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "UtcTime", base: "epoch-us",
-            access: "R V", default: "null", quality: "X C",
+            access: "R V", conformance: "M", default: "null", quality: "X C",
             details: "If the server has achieved time synchronization, this SHALL indicate the current time as a UTC epoch-us (Epoch Time in Microseconds).",
             xref: { document: "core", section: "11.16.8.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "Granularity", base: "GranularityEnum",
-            access: "R V", constraint: "desc", default: 0,
+            access: "R V", conformance: "M", constraint: "desc", default: 0,
             details: "The granularity of the error that the server is willing to guarantee on the time synchronization. It is of type GranularityEnum.",
             xref: { document: "core", section: "11.16.8.2", version: "1.1" }
         }),
@@ -65,7 +65,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0003, name: "TrustedTimeNodeId", base: "node-id",
-            access: "RW VA", default: "null", quality: "X",
+            access: "RW VA", conformance: "M", default: "null", quality: "X",
             details: "The Node ID of a trusted Time Cluster. The TrustedTimeNodeId Node is used as a check on external time sync sources and MAY be used as the primary time source if other time sources are unavailable. See Section 11.16.13, “Time source prioritization”. This attribute is writeable only by an Administrator. It SHOULD be set by the Commissioner during commissioning. If no appropriate TrustedTimeNodeId is available, the commissioner MAY set this value to null.",
             xref: { document: "core", section: "11.16.8.5", version: "1.1" }
         }),
@@ -145,7 +145,7 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "SetUtcTime",
-            access: "A", direction: "request", response: "status",
+            access: "A", conformance: "M", direction: "request", response: "status",
             details: "The data for this command are as follows:",
             xref: { document: "core", section: "11.16.9.1", version: "1.1" }
         }),
@@ -157,26 +157,31 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "NoTimeGranularity",
+                    conformance: "M",
                     xref: { document: "core", section: "11.16.6.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "MinutesGranularity",
+                    conformance: "M",
                     xref: { document: "core", section: "11.16.6.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "SecondsGranularity",
+                    conformance: "M",
                     xref: { document: "core", section: "11.16.6.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "MillisecondsGranularity",
+                    conformance: "M",
                     xref: { document: "core", section: "11.16.6.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "MicrosecondsGranularity",
+                    conformance: "M",
                     xref: { document: "core", section: "11.16.6.1", version: "1.1" }
                 })
             ]

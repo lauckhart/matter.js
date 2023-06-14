@@ -6,7 +6,7 @@
 
 import { MatterError } from "../../common/MatterError.js";
 import { DefinitionError } from "../definitions/DefinitionError.js";
-import { AnyElement, BaseElement } from "../index.js";
+import { AnyElement, BaseElement, ElementType, Specification } from "../index.js";
 import { ValidateModel } from "../logic/ValidateModel.js";
 
 const CHILDREN = Symbol("children");
@@ -37,7 +37,7 @@ export abstract class Model implements BaseElement {
      * The full path ("." delimited) in the Matter tree.
      */
     get path(): string {
-        if (this.parent) {
+        if (this.parent && this.parent.type != ElementType.Matter) {
             return `${this.parent.path}.${this.name}`;
         } else {
             return this.name;
@@ -110,7 +110,7 @@ export abstract class Model implements BaseElement {
      * Access the top-most element in the model.
      */
     get root(): Model {
-        return this.find(
+        return this.search(
             model => model.parent,
             model => model.parent ? undefined : model,
             true
@@ -145,7 +145,7 @@ export abstract class Model implements BaseElement {
      * @param type the element type to retrieve
      * @param key the ID or name of the model to retrieve
      */
-    local<T>(type: Model.Constructor<T>, key: string | number): T;
+    local<T>(type: Model.Constructor<T>, key: string | number): T | undefined;
 
     local<T>(type: Model.Constructor<T>, key?: string | number): T | T[] | undefined {
         // Not - not indexed.  Not currently a problem but should address if
@@ -179,14 +179,14 @@ export abstract class Model implements BaseElement {
     global<T>(type: Model.Constructor<T>, key: string | number): T;
 
     global<T>(type: Model.Constructor<T>, key?: string | number): T | T[] | undefined {
-        return this.find(
+        return this.search(
             current => current.parent,
             current => current.local(type, key as any),
             key !== undefined
         );
     }
 
-    find<T>(
+    search<T>(
         next: (current: Model) => Model | undefined,
         test: (current: Model) => T | undefined,
         first: boolean
@@ -318,13 +318,13 @@ export namespace Model {
         values?: { [name: string]: any }
     }
 
-    export class CrossReference implements BaseElement.CrossReference {
-        document: BaseElement.Specification;
+    export class CrossReference implements Specification.CrossReference {
+        document: Specification;
         version: string;
         section: string;
 
-        constructor({ document, section, version }: BaseElement.CrossReference) {
-            this.document = document as BaseElement.Specification;
+        constructor({ document, section, version }: Specification.CrossReference) {
+            this.document = document as Specification;
             this.section = section;
             this.version = version;
         }

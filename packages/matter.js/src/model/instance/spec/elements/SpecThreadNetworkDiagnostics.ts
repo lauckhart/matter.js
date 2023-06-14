@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "PKTCNT",
@@ -50,42 +50,42 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "Channel", base: "uint16",
-            access: "R V", default: 0, quality: "X",
+            access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The Channel attribute SHALL indicate the 802.15.4 channel number configured on the Node’s Thread interface (that is, the Active Operational Dataset’s current Channel value). A value of null SHALL indicate that the Thread interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "RoutingRole", base: "RoutingRoleEnum",
-            access: "R V", default: "", quality: "X",
+            access: "R V", conformance: "M", default: "", quality: "X",
             details: "The RoutingRole attribute SHALL indicate the role that this Node has within the routing of messages through the Thread network, as defined by RoutingRoleEnum. The potential roles are defined in the following table. A value of null SHALL indicate that the Thread interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "NetworkName", base: "String",
-            access: "R V", constraint: "max 16", default: "", quality: "X",
+            access: "R V", conformance: "M", constraint: "max 16", default: "", quality: "X",
             details: "The NetworkName attribute SHALL indicate a human-readable (displayable) name for the Thread network that the Node has been configured to join to. A value of null SHALL indicate that the Thread interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.3", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "PanId", base: "uint16",
-            access: "R V", default: 0, quality: "X",
+            access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The PanId attribute SHALL indicate the 16-bit identifier of the Node on the Thread network. A value of null SHALL indicate that the Thread interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.4", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0004, name: "ExtendedPanId", base: "uint64",
-            access: "R V", default: 0, quality: "X",
+            access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The ExtendedPanId attribute SHALL indicate the unique 64-bit identifier of the Node on the Thread network. A value of null SHALL indicate that the Thread interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.5", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0005, name: "MeshLocalPrefix", base: "ipv6pre",
-            access: "R V", default: "", quality: "X",
+            access: "R V", conformance: "M", default: "", quality: "X",
             details: "The MeshLocalPrefix attribute SHALL indicate the mesh-local IPv6 prefix for the Thread network that the Node has been configured to join to. A value of null SHALL indicate that the Thread interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.6", version: "1.1" }
         }),
@@ -99,7 +99,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0007, name: "NeighborTable", base: "list",
-            access: "R V", default: "[]",
+            access: "R V", conformance: "M", default: "[]",
             details: "The NeighborTable attribute SHALL indicate the current list of Nodes that comprise the neighbor table on the Node.",
             xref: { document: "core", section: "11.13.6.8", version: "1.1" },
             children: [
@@ -111,7 +111,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0008, name: "RouteTable", base: "list",
-            access: "R V", default: "[]",
+            access: "R V", conformance: "M", default: "[]",
             details: "The RouteTable attribute SHALL indicate the current list of router capable Nodes for which routes have been established.",
             xref: { document: "core", section: "11.13.6.9", version: "1.1" },
             children: [
@@ -123,35 +123,35 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0009, name: "PartitionId", base: "uint32",
-            access: "R V", default: 0, quality: "X",
+            access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The PartitionId attribute SHALL indicate the Thread Leader Partition Id for the Thread network to which the Node is joined. This attribute SHALL be null if not attached to a Thread network.",
             xref: { document: "core", section: "11.13.6.10", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x000a, name: "Weighting", base: "uint8",
-            access: "R V", default: 0, quality: "X",
+            access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The Weighting attribute SHALL indicate the Thread Leader Weight used when operating in the Leader role. This attribute SHALL be null if not attached to a Thread network.",
             xref: { document: "core", section: "11.13.6.11", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x000b, name: "DataVersion", base: "uint8",
-            access: "R V", default: 0, quality: "X",
+            access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The DataVersion attribute SHALL indicate the full Network Data Version the Node currently uses. This attribute SHALL be null if not attached to a Thread network.",
             xref: { document: "core", section: "11.13.6.12", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x000c, name: "StableDataVersion", base: "uint8",
-            access: "R V", default: 0, quality: "X",
+            access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The StableDataVersion attribute SHALL indicate the Network Data Version for the stable subset of",
             xref: { document: "core", section: "11.13.6.13", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x000d, name: "LeaderRouterId", base: "uint8",
-            access: "R V", default: 0, quality: "X",
+            access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The LeaderRouterId attribute SHALL indicate the 8-bit LeaderRouterId the Node shall attempt to utilize upon becoming a router or leader on the Thread network. This attribute SHALL be null if not attached to a Thread network.",
             xref: { document: "core", section: "11.13.6.14", version: "1.1" }
         }),
@@ -473,28 +473,28 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x003b, name: "SecurityPolicy", base: "SecurityPolicy",
-            access: "R V", default: "", quality: "X",
+            access: "R V", conformance: "M", default: "", quality: "X",
             details: "The SecurityPolicy attribute indicates the current security policies for the Thread partition to which a Node is connected. This attribute SHALL be null when there is no dataset configured.",
             xref: { document: "core", section: "11.13.6.60", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x003c, name: "ChannelPage0Mask", base: "octstr",
-            access: "R V", constraint: "4", default: "", quality: "X",
+            access: "R V", conformance: "M", constraint: "4", default: "", quality: "X",
             details: "The ChannelPage0Mask attribute indicates the channels within channel page 0, in the 2.4GHz ISM band. The channels are represented in most significant bit order, with bit value 1 meaning selected, bit value 0 meaning unselected. For example, the most significant bit of the left-most byte indicates channel 0. If channel 0 and channel 10 are selected, the mask would be: 80 20 00 00. This attribute SHALL be null when there is no dataset configured.",
             xref: { document: "core", section: "11.13.6.61", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x003d, name: "OperationalDatasetComponents", base: "OperationalDatasetComponents",
-            access: "R V", default: "", quality: "X",
+            access: "R V", conformance: "M", default: "", quality: "X",
             details: "The OperationalDatasetComponents attribute is a collection of flags to indicate the presence of various operationally acquired values.",
             xref: { document: "core", section: "11.13.6.62", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x003e, name: "ActiveNetworkFaults", base: "list",
-            access: "R V", constraint: "max 4", default: "",
+            access: "R V", conformance: "M", constraint: "max 4", default: "",
             details: "The ActiveNetworkFaults attribute SHALL indicate the set of faults currently detected by the Node.",
             xref: { document: "core", section: "11.13.6.63", version: "1.1" },
             children: [
@@ -532,21 +532,25 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Unspecified",
+                    conformance: "M",
                     xref: { document: "core", section: "11.13.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "LinkDown",
+                    conformance: "M",
                     xref: { document: "core", section: "11.13.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "HardwareFailure",
+                    conformance: "M",
                     xref: { document: "core", section: "11.13.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "NetworkJammed",
+                    conformance: "M",
                     xref: { document: "core", section: "11.13.5.1", version: "1.1" }
                 })
             ]

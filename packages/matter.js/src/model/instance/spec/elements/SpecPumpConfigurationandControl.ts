@@ -15,40 +15,40 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 4, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 4, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "PRSCONST",
-                    conformance: "O.a+", description: "Supports operating in constant pressure mode",
+                    conformance: "O.a1+", description: "Supports operating in constant pressure mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "PRSCOMP",
-                    conformance: "O.a+", description: "Supports operating in compensated pressure mode",
+                    conformance: "O.a1+", description: "Supports operating in compensated pressure mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "FLW",
-                    conformance: "O.a+", description: "Supports operating in constant flow mode",
+                    conformance: "O.a1+", description: "Supports operating in constant flow mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "SPD",
-                    conformance: "O.a+", description: "Supports operating in constant speed mode",
+                    conformance: "O.a1+", description: "Supports operating in constant speed mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "TEMP",
-                    conformance: "O.a+", description: "Supports operating in constant temperature mode",
+                    conformance: "O.a1+", description: "Supports operating in constant temperature mode",
                     xref: { document: "cluster", section: "4.2.4", version: "1.1" }
                 }),
 
@@ -68,21 +68,21 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "MaxPressure", base: "int16",
-            access: "R V", default: "null", quality: "X F",
+            access: "R V", conformance: "M", default: "null", quality: "X F",
             details: "This attribute specifies the maximum pressure the pump can achieve. It is a physical limit, and does not apply to any specific control mode or operation mode.",
             xref: { document: "cluster", section: "4.2.7.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "MaxSpeed", base: "uint16",
-            access: "R V", default: "null", quality: "X F",
+            access: "R V", conformance: "M", default: "null", quality: "X F",
             details: "This attribute specifies the maximum speed the pump can achieve. It is a physical limit, and does not apply to any specific control mode or operation mode.",
             xref: { document: "cluster", section: "4.2.7.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "MaxFlow", base: "uint16",
-            access: "R V", default: "null", quality: "X F",
+            access: "R V", conformance: "M", default: "null", quality: "X F",
             details: "This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does not apply to any specific control mode or operation mode.",
             xref: { document: "cluster", section: "4.2.7.3", version: "1.1" }
         }),
@@ -166,21 +166,21 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0011, name: "EffectiveOperationMode", base: "OperationModeEnum",
-            access: "R V", constraint: "desc", default: "desc", quality: "N",
+            access: "R V", conformance: "M", constraint: "desc", default: "desc", quality: "N",
             details: "This attribute specifies current effective operation mode of the pump as defined in OperationModeEnum.",
             xref: { document: "cluster", section: "4.2.7.15", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0012, name: "EffectiveControlMode", base: "ControlModeEnum",
-            access: "R V", constraint: "desc", default: "desc", quality: "N",
+            access: "R V", conformance: "M", constraint: "desc", default: "desc", quality: "N",
             details: "This attribute specifies the current effective control mode of the pump as defined in ControlModeEnum.",
             xref: { document: "cluster", section: "4.2.7.16", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0013, name: "Capacity", base: "int16",
-            access: "R V", default: "null", quality: "X P",
+            access: "R V", conformance: "M", default: "null", quality: "X P",
             details: "This attribute specifies the actual capacity of the pump as a percentage of the effective maximum setpoint value. It is updated dynamically as the speed of the pump changes.",
             xref: { document: "cluster", section: "4.2.7.17", version: "1.1" }
         }),
@@ -215,7 +215,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0020, name: "OperationMode", base: "OperationModeEnum",
-            access: "RW VM", constraint: "desc", default: "0", quality: "N",
+            access: "RW VM", conformance: "M", constraint: "desc", default: "0", quality: "N",
             details: "This attribute specifies the operation mode of the pump as defined in OperationModeEnum.",
             xref: { document: "cluster", section: "4.2.7.22", version: "1.1" }
         }),

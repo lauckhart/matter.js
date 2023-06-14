@@ -15,24 +15,24 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 2, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 2, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F"
+            access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
             id: 0x0000, name: "TemperatureDisplayMode", base: "enum8",
-            access: "RW VO", constraint: "desc", default: "0(Celsius)",
+            access: "RW VO", conformance: "M", constraint: "desc", default: "0(Celsius)",
             details: "The TemperatureDisplayMode attribute specifies the units of the temperature displayed on the thermostat screen.",
             xref: { document: "cluster", section: "4.5.5.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "KeypadLockout", base: "enum8",
-            access: "RW VM", constraint: "desc", default: "0(nolockout)",
+            access: "RW VM", conformance: "M", constraint: "desc", default: "0(nolockout)",
             details: "The KeypadLockout attribute specifies the level of functionality that is available to the user via the keypad.",
             xref: { document: "cluster", section: "4.5.5.2", version: "1.1" }
         }),

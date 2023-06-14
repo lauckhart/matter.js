@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 6, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 6, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "PIN",
@@ -98,21 +98,21 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "LockState", base: "enum8",
-            access: "R V", constraint: "desc", default: 0, quality: "X S P",
+            access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "X S P",
             details: "This attribute has the following possible values:",
             xref: { document: "cluster", section: "5.2.3.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "LockType", base: "enum8",
-            access: "R V", constraint: "desc", default: 0,
+            access: "R V", conformance: "M", constraint: "desc", default: 0,
             details: "The LockType attribute is indicated by an enumeration:",
             xref: { document: "cluster", section: "5.2.3.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "ActuatorEnabled", base: "bool",
-            access: "R V", default: false,
+            access: "R V", conformance: "M", default: false,
             details: "The ActuatorEnabled attribute indicates if the lock is currently able to (Enabled) or not able to (Disabled) process remote Lock, Unlock, or Unlock with Timeout commands.",
             xref: { document: "cluster", section: "5.2.3.3", version: "1.1" }
         }),
@@ -273,14 +273,14 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0025, name: "OperatingMode", base: "enum8",
-            access: "R[W] VM", constraint: "desc", default: 0, quality: "P",
+            access: "R[W] VM", conformance: "M", constraint: "desc", default: 0, quality: "P",
             details: "The current operating mode of the lock (see OperatingModeEnum).",
             xref: { document: "cluster", section: "5.2.3.23", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0026, name: "SupportedOperatingModes", base: "map16",
-            access: "R V", default: 65526, quality: "F",
+            access: "R V", conformance: "M", default: 65526, quality: "F",
             details: "This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All operating modes NOT supported by a lock SHALL be set to one. The value of the OperatingMode enumeration defines the related bit to be set, as shown below:",
             xref: { document: "cluster", section: "5.2.3.24", version: "1.1" }
         }),
@@ -420,7 +420,7 @@ SpecMatter.children!.push(ClusterElement({
 
         EventElement({
             id: 0x0000, name: "DoorLockAlarm",
-            access: "V", priority: "critical",
+            access: "V", conformance: "M", priority: "critical",
             details: "The door lock cluster provides several alarms which can be sent when there is a critical state on the door lock. The alarms available for the door lock cluster are listed in the AlarmCodeEnum section below.",
             xref: { document: "cluster", section: "5.2.5.1", version: "1.1" }
         }),
@@ -434,14 +434,14 @@ SpecMatter.children!.push(ClusterElement({
 
         EventElement({
             id: 0x0002, name: "LockOperation",
-            access: "V", priority: "critical",
+            access: "V", conformance: "M", priority: "critical",
             details: "The door lock server sends out a LockOperation event when the event is triggered by the various lock operation sources.",
             xref: { document: "cluster", section: "5.2.5.3", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0003, name: "LockOperationError",
-            access: "V", priority: "critical",
+            access: "V", conformance: "M", priority: "critical",
             details: "The door lock server sends out a LockOperationError event when a lock operation fails for various reasons.",
             xref: { document: "cluster", section: "5.2.5.4", version: "1.1" }
         }),
@@ -455,13 +455,13 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "LockDoor",
-            access: "O T", direction: "request", response: "status",
+            access: "O T", conformance: "M", direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "UnlockDoor",
-            access: "O T", direction: "request", response: "status",
+            access: "O T", conformance: "M", direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4", version: "1.1" }
         }),
 
@@ -730,7 +730,7 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "LockJammed",
-                    description: "Locking Mechanism Jammed",
+                    conformance: "M", description: "Locking Mechanism Jammed",
                     xref: { document: "cluster", section: "5.2.6.1", version: "1.1" }
                 }),
 

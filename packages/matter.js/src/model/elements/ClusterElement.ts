@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeElement, CommandElement, EventElement, BaseElement, DatatypeElement, Mei } from "../index.js";
+import { AttributeElement, CommandElement, EventElement, BaseElement, DatatypeElement, Mei, ElementType } from "../index.js";
 
 /**
  * A cluster describes a set of related functionality.
@@ -31,8 +31,8 @@ export function ClusterElement(definition: ClusterElement.Properties) {
 }
 
 export namespace ClusterElement {
-    export type Type = BaseElement.Type.Cluster;
-    export const Type = BaseElement.Type.Cluster;
+    export type Type = ElementType.Cluster;
+    export const Type = ElementType.Cluster;
     export type Properties = BaseElement.Properties<ClusterElement>;
     export type Child =
         DatatypeElement

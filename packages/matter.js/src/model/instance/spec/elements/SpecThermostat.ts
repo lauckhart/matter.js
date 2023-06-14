@@ -15,22 +15,22 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 6, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 6, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "HEAT",
-                    conformance: "AUTO, O.a+", description: "Thermostat is capable of managing a heating device",
+                    conformance: "AUTO, O.a1+", description: "Thermostat is capable of managing a heating device",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "COOL",
-                    conformance: "AUTO, O.a+", description: "Thermostat is capable of managing a cooling device",
+                    conformance: "AUTO, O.a1+", description: "Thermostat is capable of managing a cooling device",
                     xref: { document: "cluster", section: "4.3.3.1", version: "1.1" }
                 }),
 
@@ -68,7 +68,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "LocalTemperature", base: "temperature",
-            access: "R V", default: "null", quality: "X P",
+            access: "R V", conformance: "M", default: "null", quality: "X P",
             details: "This attribute indicates the current LocalTemperature value, when available. The value may be local, or remote, depending on the value of the RemoteSensing attribute when supported.",
             xref: { document: "cluster", section: "4.3.7.2", version: "1.1" }
         }),
@@ -215,14 +215,14 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x001b, name: "ControlSequenceOfOperation", base: "enum8",
-            access: "RW VM", constraint: "desc", default: 4, quality: "N",
+            access: "RW VM", conformance: "M", constraint: "desc", default: 4, quality: "N",
             details: "This attribute specifies the overall operating environment of the thermostat, and thus the possible system modes that the thermostat can operate in. It SHALL be set to one of the following values.",
             xref: { document: "cluster", section: "4.3.7.23", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x001c, name: "SystemMode", base: "enum8",
-            access: "RW VM", constraint: "desc", default: 1, quality: "N S",
+            access: "RW VM", conformance: "M", constraint: "desc", default: 1, quality: "N S",
             details: "This attribute specifies the current operating mode of the thermostat, It SHALL be set to one of the following values, as limited by the ControlSequenceOfOperation Attribute.",
             xref: { document: "cluster", section: "4.3.7.24", version: "1.1" }
         }),
@@ -417,7 +417,7 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "SetpointRaiseLower",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             xref: { document: "cluster", section: "4.3.8", version: "1.1" }
         }),
 
@@ -464,21 +464,21 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "TransitionTime", base: "uint16",
-                    access: "RW", constraint: "0 to 1439", default: 0,
+                    access: "RW", conformance: "M", constraint: "0 to 1439", default: 0,
                     details: "This field represents the start time of the schedule transition during the associated day. The time will be represented by a 16 bits unsigned integer to designate the minutes since midnight. For example, 6am will be represented by 360 minutes since midnight and 11:30pm will be represented by 1410 minutes since midnight.",
                     xref: { document: "cluster", section: "4.3.9.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "HeatSetpoint", base: "temperature",
-                    access: "RW", default: "",
+                    access: "RW", conformance: "M", default: "",
                     details: "This field represents the heat setpoint to be applied at this associated transition start time.",
                     xref: { document: "cluster", section: "4.3.9.6", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "CoolSetpoint", base: "temperature",
-                    access: "RW", default: "",
+                    access: "RW", conformance: "M", default: "",
                     details: "This field represents the cool setpoint to be applied at this associated transition start time.",
                     xref: { document: "cluster", section: "4.3.9.7", version: "1.1" }
                 })

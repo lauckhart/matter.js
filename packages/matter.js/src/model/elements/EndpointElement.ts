@@ -3,7 +3,7 @@
  * Copyright 2022-2023 Project CHIP Authors
  * SPDX-License-Identifier: Apache-2.0
  */
-import { BaseElement, DeviceTypeElement } from "../index.js";
+import { BaseElement, DeviceTypeElement, ElementType } from "../index.js";
 
 /**
  * Runtime representation of an endpoint.
@@ -19,7 +19,7 @@ export function EndpointElement(definition: EndpointElement.Properties) {
 }
 
 export namespace EndpointElement {
-    export type Type = BaseElement.Type.Endpoint;
-    export const Type = BaseElement.Type.Endpoint;
+    export type Type = ElementType.Endpoint;
+    export const Type = ElementType.Endpoint;
     export type Properties = BaseElement.Properties<DeviceTypeElement>;
 }

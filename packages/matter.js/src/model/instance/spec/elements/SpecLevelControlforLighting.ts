@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 5, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 5, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "ONOFF",
@@ -46,7 +46,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "CurrentLevel", base: "uint8",
-            access: "R V", constraint: "MinLevel to MaxLevel", default: "null", quality: "X N S",
+            access: "R V", conformance: "M", constraint: "MinLevel to MaxLevel", default: "null", quality: "X N S",
             details: "The CurrentLevel attribute represents the current level of this device. The meaning of 'level' is device dependent.",
             xref: { document: "cluster", section: "1.6.5.1", version: "1.1" }
         }),
@@ -102,7 +102,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0011, name: "OnLevel", base: "uint8",
-            access: "RW VO", constraint: "MinLevel to MaxLevel", default: "null", quality: "X",
+            access: "RW VO", conformance: "M", constraint: "MinLevel to MaxLevel", default: "null", quality: "X",
             details: "The OnLevel attribute determines the value that the CurrentLevel attribute is set to when the OnOff attribute of an On/Off cluster on the same endpoint is set to TRUE, as a result of processing an On/Off cluster command. If the OnLevel attribute is not implemented, or is set to the null value, it has no effect. For more details see Effect of On/Off Commands on the CurrentLevel Attribute.",
             xref: { document: "cluster", section: "1.6.5.10", version: "1.1" }
         }),
@@ -130,7 +130,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x000f, name: "Options", base: "map8",
-            access: "RW VO", constraint: "desc", default: 0,
+            access: "RW VO", conformance: "M", constraint: "desc", default: 0,
             details: "The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap that determines the default behavior of some cluster commands. Each command that is dependent on the Options attribute SHALL first construct a temporary Options bitmap that is in effect during the command processing. The temporary Options bitmap has the same format and meaning as the Options attribute, but includes any bits that may be overridden by command fields.",
             xref: { document: "cluster", section: "1.6.5.8", version: "1.1" }
         }),
@@ -144,53 +144,53 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "MoveToLevel",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "The MoveToLevel command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.6.6.1", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "Move",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "The Move command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.6.6.2", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0002, name: "Step",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "The Step command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.6.6.3", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0003, name: "Stop",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "The Stop command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.6.6.4", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0004, name: "MoveToLevelWithOnOff",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             xref: { document: "cluster", section: "1.6.6", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0005, name: "MoveWithOnOff",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             xref: { document: "cluster", section: "1.6.6", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0006, name: "StepWithOnOff",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             xref: { document: "cluster", section: "1.6.6", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0007, name: "StopWithOnOff",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             xref: { document: "cluster", section: "1.6.6", version: "1.1" }
         }),
 

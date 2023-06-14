@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterElement, BaseElement, Mei } from "../index.js"
+import { ClusterElement, BaseElement, Mei, ElementType } from "../index.js"
 
 /**
  * Details on a specific device as defined in the Matter specification.
@@ -23,8 +23,8 @@ export function DeviceTypeElement(definition: DeviceTypeElement.Properties) {
 }
 
 export namespace DeviceTypeElement {
-    export type Type = BaseElement.Type.DeviceType;
-    export const Type = BaseElement.Type.DeviceType;
+    export type Type = ElementType.DeviceType;
+    export const Type = ElementType.DeviceType;
     export type Properties = BaseElement.Properties<DeviceTypeElement>;
 
     export enum Classification {

@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 2, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 2, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "MULTISPEED",
@@ -50,28 +50,28 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "FanMode", base: "enum8",
-            access: "RW VO", constraint: "0 to 6", default: 0, quality: "N",
+            access: "RW VO", conformance: "M", constraint: "0 to 6", default: 0, quality: "N",
             details: "This attribute SHALL indicate the current speed mode of the fan. This attribute MAY be written by the client to indicate a new speed mode of the fan. This attribute SHALL be set to one of the values in the table below.",
             xref: { document: "cluster", section: "4.4.6.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "FanModeSequence", base: "enum8",
-            access: "R[W] VO", constraint: "0 to 5", default: "MS", quality: "N",
+            access: "R[W] VO", conformance: "M", constraint: "0 to 5", default: "MS", quality: "N",
             details: "This indicates the fan speed ranges that SHALL be supported.",
             xref: { document: "cluster", section: "4.4.6.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "PercentSetting", base: "uint8",
-            access: "RW VO", constraint: "0 to 100", default: 0, quality: "X",
+            access: "RW VO", conformance: "M", constraint: "0 to 100", default: 0, quality: "X",
             details: "This attribute SHALL indicate the speed setting for the fan. This attribute MAY be written by the client to indicate a new fan speed. If the client writes null to this attribute, the attribute value SHALL NOT change. If this is set to 0, the server SHALL set the FanMode attribute value to Off.",
             xref: { document: "cluster", section: "4.4.6.3", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "PercentCurrent", base: "uint8",
-            access: "R V", constraint: "0 to 100", default: "desc",
+            access: "R V", conformance: "M", constraint: "0 to 100", default: "desc",
             details: "This attribute SHALL indicate the actual currently operating fan speed, or zero to indicate that the fan is off. See Section 4.4.6.3.1 for more details.",
             xref: { document: "cluster", section: "4.4.6.4", version: "1.1" }
         }),

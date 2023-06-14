@@ -15,22 +15,22 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "LS",
-                    conformance: "O.a",
+                    conformance: "O.a1",
                     xref: { document: "cluster", section: "1.11.4", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "MS",
-                    conformance: "O.a",
+                    conformance: "O.a1",
                     xref: { document: "cluster", section: "1.11.4", version: "1.1" }
                 }),
 
@@ -56,14 +56,14 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "NumberOfPositions", base: "uint8",
-            constraint: "min 2", default: 2, quality: "F",
+            conformance: "M", constraint: "min 2", default: 2, quality: "F",
             details: "This attribute SHALL indicate the maximum number of positions the switch has. Any kind of switch has a minimum of 2 positions. Also see Section 1.11.10, “NumberOfPositions > 2” for the case NumberOfPositions>2.",
             xref: { document: "cluster", section: "1.11.5.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "CurrentPosition", base: "uint8",
-            constraint: "0 to NumberOfPositions1", default: 0, quality: "N",
+            conformance: "M", constraint: "0 to NumberOfPositions1", default: 0, quality: "N",
             details: "This attribute SHALL indicate the position of the switch. The valid range is zero to NumberOfPositions-1. CurrentPosition value 0 SHALL be assigned to the default position of the switch: for example the \"open\" state of a rocker switch, or the \"idle\" state of a push button switch.",
             xref: { document: "cluster", section: "1.11.5.2", version: "1.1" }
         }),

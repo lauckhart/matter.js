@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "CL",
@@ -78,14 +78,14 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0002, name: "ChangeChannelByNumber",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "Change the channel to the channel with the given Number in the ChannelList attribute. The data for this command SHALL be as follows:",
             xref: { document: "cluster", section: "6.6.4.3", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0003, name: "SkipChannel",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "This command provides channel up and channel down functionality, but allows channel index jumps of size Count.",
             xref: { document: "cluster", section: "6.6.4.4", version: "1.1" }
         }),
@@ -97,14 +97,14 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "MajorNumber", base: "uint16",
-                    default: 0,
+                    conformance: "M", default: 0,
                     details: "This SHALL indicate the channel major number value (for example, using ATSC format). When the channel number is expressed as a string, such as \"13.1\" or \"256\", the major number would be 13 or 256, respectively.",
                     xref: { document: "cluster", section: "6.6.5.1.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "MinorNumber", base: "uint16",
-                    default: 0,
+                    conformance: "M", default: 0,
                     details: "This SHALL indicate the channel minor number value (for example, using ATSC format). When the channel number is expressed as a string, such as \"13.1\" or \"256\", the minor number would be 1 or 0, respectively.",
                     xref: { document: "cluster", section: "6.6.5.1.2", version: "1.1" }
                 }),

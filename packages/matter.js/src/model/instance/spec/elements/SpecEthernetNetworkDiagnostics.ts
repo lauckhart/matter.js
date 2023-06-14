@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "PKTCNT",
@@ -112,51 +112,61 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Rate10M",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "Rate100M",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "Rate1G",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "Rate25G",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "Rate5G",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0005, name: "Rate10G",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0006, name: "Rate40G",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0007, name: "Rate100G",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0008, name: "Rate200G",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0009, name: "Rate400G",
+                    conformance: "M",
                     xref: { document: "core", section: "11.15.5.1", version: "1.1" }
                 })
             ]

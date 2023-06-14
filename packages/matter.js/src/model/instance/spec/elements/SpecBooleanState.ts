@@ -15,17 +15,17 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F"
+            access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
             id: 0x0000, name: "StateValue", base: "bool",
-            access: "R V", default: false, quality: "P",
+            access: "R V", conformance: "M", default: false, quality: "P",
             details: "This represents a Boolean state.",
             xref: { document: "cluster", section: "1.7.4.1", version: "1.1" }
         }),

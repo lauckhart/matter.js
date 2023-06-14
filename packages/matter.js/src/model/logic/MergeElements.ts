@@ -7,8 +7,8 @@
 import { InternalError } from "../../common/InternalError.js";
 import {
     AnyElement,
-    BaseElement,
     ChipMatter,
+    ElementType,
     LocalMatter,
     SpecMatter
 } from "../index.js";
@@ -17,15 +17,21 @@ import { VisitElements } from "./VisitElements.js";
 /**
  * Merge multiple variants of an element into a single element.
  */
-export function MergeElements({ definitions, priorities }: {
-    definitions: VisitElements.Variants,
+export function MergeElements({
+    variants = MergeElements.DefaultVariants,
+    priorities = MergeElements.DefaultPriorities
+}: {
+    variants: VisitElements.Variants,
     priorities: MergeElements.Priorities
+} = {
+    variants: MergeElements.DefaultVariants,
+    priorities: MergeElements.DefaultPriorities
 }) {
     type VariantValues = { [variant: string]: { [field: string]: any }};
 
     const fake = { children: [] as AnyElement[] } as AnyElement;
 
-    VisitElements<AnyElement>(fake, definitions as VisitElements.Variants, (parent, models) => {
+    VisitElements<AnyElement>(fake, variants as VisitElements.Variants, (parent, models) => {
         return merge(parent, models);
     });
 
@@ -46,7 +52,7 @@ export function MergeElements({ definitions, priorities }: {
         );
         keys.delete("children");
 
-        const type = pluck("*", "type", variantValues) as BaseElement.Type;
+        const type = pluck("*", "type", variantValues) as ElementType;
         if (!type || typeof type != "string") {
             // Really just checking to make TS happy
             throw new InternalError("Type field missing from models");
@@ -68,7 +74,7 @@ export function MergeElements({ definitions, priorities }: {
      * Use priority rules to select a single value from available variants.
      */
     function pluck(
-        type: BaseElement.Type | "*",
+        type: ElementType | "*",
         fieldName: string,
         variantValues: VariantValues
     ) {
@@ -113,6 +119,9 @@ export namespace MergeElements {
     export const DefaultPriorities: Priorities = {
         "*": {
             "*": [ "local", "chip", "spec" ],
+
+            // Prefer spec for elements that are insufficiently defined in
+            // chip
             "conformance": [ "local", "spec", "chip" ],
             "constraint": [ "local", "spec", "chip" ],
             "quality": [ "local", "spec", "chip" ]

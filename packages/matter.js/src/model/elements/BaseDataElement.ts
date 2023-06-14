@@ -5,7 +5,7 @@
  */
 
 import { Access, BaseElement, Conformance, Constraint, Quality } from "../index.js";
-import type { AnyDataElement } from "../index.js";
+import type { AnyDataElement, ElementType } from "../index.js";
 
 /**
  * A base element for all elements that represent data.
@@ -57,7 +57,7 @@ export type BaseDataElement = BaseElement & {
     children?: AnyDataElement[]
 }
 
-export function BaseDataElement(type: BaseElement.Type, definition: BaseDataElement) {
+export function BaseDataElement(type: ElementType, definition: BaseDataElement) {
     definition = { ...definition };
     
     if (definition.constraint?.toString().toLowerCase() == "all") {
@@ -74,7 +74,7 @@ export function BaseDataElement(type: BaseElement.Type, definition: BaseDataElem
 }
 
 export namespace BaseDataElement {
-    export type Properties = BaseElement.Properties<BaseDataElement & { type: `${BaseElement.Type}` }>;
+    export type Properties = BaseElement.Properties<BaseDataElement & { type: `${ElementType}` }>;
 
     /**
      * The general type of datatype (ignoring size).

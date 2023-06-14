@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement, Mei } from "../index.js"
+import { BaseDataElement, BaseElement, ElementType, Mei } from "../index.js"
 
 /**
  * A cluster property description.
@@ -19,7 +19,7 @@ export function AttributeElement(definition: AttributeElement.Properties) {
 }
 
 export namespace AttributeElement {
-    export type Type = BaseElement.Type.Attribute;
-    export const Type = BaseElement.Type.Attribute;
+    export type Type = ElementType.Attribute;
+    export const Type = ElementType.Attribute;
     export type Properties = BaseElement.Properties<AttributeElement>;
 }

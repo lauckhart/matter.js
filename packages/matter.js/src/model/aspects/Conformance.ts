@@ -17,8 +17,7 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
     param?: Conformance.AstParam;
 
     override get empty() {
-        return this.type === Conformance.Special.Empty
-            || this.toString() == "M";
+        return this.type === Conformance.Special.Empty;
     }
 
     /**
@@ -57,15 +56,14 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
         }
     }
 
-    // TODO - offer validation?
-
     override toString() {
         return Conformance.serialize(this);
     }
 }
 
 export namespace Conformance {
-    export type AstType = Special | Flag | Operator;
+    export type AstType =
+        Special | Flag | Exclude<Operator, Operator.DOT>;
     export type AstParam = Ast.Name | Ast.Value | Ast.Option | Ast.UnaryOperand | Ast.BinaryOperands | Ast.Group | Ast.Choice;
 
     export type Ast = {
@@ -84,8 +82,8 @@ export namespace Conformance {
         }
         export type Group = Ast[];
         export type Choice = {
-            choice: ChoiceName,
-            num?: number,
+            name: ChoiceName,
+            num: number,
             orMore?: boolean,
             expr: Ast
         };
@@ -98,7 +96,7 @@ export namespace Conformance {
         Value = "value",
         Choice = "choice",
         Group = "group",
-        Option = "option"
+        OptionalIf = "optionalIf"
     }
 
     export enum Flag {
@@ -177,7 +175,7 @@ export namespace Conformance {
                     
             case Special.Choice:
                 const c = ast.param as Conformance.Ast.Choice;
-                let result = `${serializeAtomic(c.expr)}.${c.choice}`;
+                let result = `${serializeAtomic(c.expr)}.${c.name}`;
                 if (c.num) {
                     result = `${result}${c.num}`;
                 }
@@ -190,7 +188,7 @@ export namespace Conformance {
                 const l = ast.param as Conformance.Ast.Group;
                 return l.map(d => serialize(d)).join(", ");
 
-            case Special.Option:
+            case Special.OptionalIf:
                 const o = ast.param as Conformance.Ast.Option;
                 return `[${serialize(o)}]`;
 
@@ -351,7 +349,12 @@ namespace Tokenizer {
                         yield { type: TokenType.Choice, value: current.value as Conformance.ChoiceName };
                     } else if (current.value >= "A" && current.value <= "Z") {
                         const name = [ current.value ];
-                        while (peeked.value >= "A" && peeked.value <= "Z") {
+                        while (
+                            (peeked.value >= "A" && peeked.value <= "Z")
+                            || (peeked.value >= "a" && peeked.value <= "z")
+                            || (peeked.value >= "0" && peeked.value <= "9")
+                            || peeked.value == "_"
+                        ) {
                             next();
                             name.push(current.value);
                         }
@@ -432,7 +435,7 @@ class Parser {
             if (optional) {
                 this.next();
                 group.push({
-                    type: Conformance.Special.Option,
+                    type: Conformance.Special.OptionalIf,
                     param: this.parseGroup(Tokenizer.Special.OptionalEnd)
                 })
             } else {
@@ -481,7 +484,7 @@ class Parser {
                 if (operators.indexOf(elements[i + 1] as Tokenizer.Special) != -1) {
                     const [ lhs, op, rhs ] = elements.splice(i, 3);
                     elements.splice(i, 0, {
-                        type: op as Conformance.Operator,
+                        type: op as Conformance.AstType,
                         param: { lhs: lhs as Conformance.Ast, rhs: rhs as Conformance.Ast
                     }});
                 }
@@ -502,8 +505,9 @@ class Parser {
                 this.conformance.error("INVALID_CHOICE", 'Choice indicator (".") must be followed by a single lowercase letter');
             }
             const choice = {
-                choice: this.token?.value ?? "?",
-                expr: expr
+                name: this.token?.value ?? "?",
+                expr: expr,
+                num: 1
             } as Conformance.Ast.Choice;
             this.next();
             if ((this.token as any)?.type == Tokenizer.TokenType.Number) {

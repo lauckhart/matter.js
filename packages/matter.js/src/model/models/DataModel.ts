@@ -47,28 +47,28 @@ export abstract class DataModel extends Model implements BaseDataElement {
         super.children = children;
     }
 
-    get constraint() {
+    get constraint(): Constraint {
         return this.getAspect(CONSTRAINT, Constraint);
     }
     set constraint(definition: Constraint | Constraint.Definition) {
         this.setAspect(CONSTRAINT, Constraint, definition);
     }
 
-    get conformance() {
+    get conformance(): Conformance {
         return this.getAspect(CONFORMANCE, Conformance);
     }
     set conformance(definition: Conformance | Conformance.Definition) {
         this.setAspect(CONFORMANCE, Conformance, definition);
     }
 
-    get access() {
+    get access(): Access {
         return this.getAspect(ACCESS, Access);
     }
     set access(definition: Access | Access.Definition) {
         this.setAspect(ACCESS, Access, definition);
     }
 
-    get quality() {
+    get quality(): Quality {
         return this.getAspect(QUALITY, Quality);
     }
     set quality(definition: Quality | Quality.Definition) {
@@ -79,7 +79,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
      * Access the cluster that owns this element.
      */
     get cluster() {
-        const cluster = this.find(
+        const cluster = this.search(
             current => current.parent,
             current => current instanceof Model.constructors.cluster ? current : undefined,
             true
@@ -95,7 +95,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
      * the first model that is not a data structure.
      */
     get scope() {
-        const scope = this.find(
+        const scope = this.search(
             current => current.parent,
             current => !(current instanceof DataModel) ? current : undefined,
             true
@@ -122,7 +122,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
      * manipulate the data.  This accessor retrieves this model.
      */
     get metaBase() {
-        return this.find(
+        return this.search(
             current => (current as DataModel).baseModel,
             current => (current as DataModel).metatype ? current : undefined,
             true
@@ -140,10 +140,43 @@ export abstract class DataModel extends Model implements BaseDataElement {
     }
 
     /**
+     * Collect constraints and conformance for this type and all base types.
+     */
+    get validationAspects() {
+        let aspects = Array<Aspect<any>>();
+        this.search(
+            current => {
+                const next = current instanceof DataModel ? current.baseModel : undefined;
+                if (next instanceof DataModel) {
+                    return next;
+                }
+            },
+            current => {
+                if (current instanceof DataModel) {
+                    if (
+                        !current.conformance.empty
+                        && current.conformance.type != Conformance.Special.Desc
+                    ) {
+                        aspects.push(current.conformance);
+                    }
+                    if (!current.constraint.empty && !current.constraint.desc) {
+                        aspects.push(current.constraint);
+                    }
+                    if (current.quality.nullable === false) {
+                        aspects.push(current.quality);
+                    }
+                }
+            },
+            false
+        )
+        return aspects;
+    }
+
+    /**
      * Search the inheritance chain for a child.
      */
     member(key: string | number): Model | undefined {
-        return this.find(
+        return this.search(
             current => current instanceof DataModel ? current.baseModel : undefined,
             current => current.local(DataModel.constructors.datatype, key),
             true
@@ -152,7 +185,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
 
     override valueOf() {
         const result = super.valueOf() as any;
-        for (const k of [ "constraint", "conformance", "access", "quality" ]) {
+        for (const k of [ "conformance", "access", "quality", "constraint" ]) {
             const v = (this as any)[k] as Aspect<any>;
             if (v && !v.empty) {
                 result[k] = v.valueOf();
