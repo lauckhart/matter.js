@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "PKTCNT",
@@ -38,35 +38,35 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "Bssid", base: "octstr",
-            access: "R V", constraint: "6", default: "null", quality: "X",
+            access: "R V", conformance: "M", constraint: "6", default: "null", quality: "X",
             details: "The BSSID attribute SHALL indicate the BSSID for which the Wi-Fi network the Node is currently connected.",
             xref: { document: "core", section: "11.14.6.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "SecurityType", base: "SecurityTypeEnum",
-            access: "R V", default: "null", quality: "X",
+            access: "R V", conformance: "M", default: "null", quality: "X",
             details: "The SecurityType attribute SHALL indicate the current type of Wi-Fi security used.",
             xref: { document: "core", section: "11.14.6.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "WiFiVersion", base: "WiFiVersionEnum",
-            access: "R V", default: "null", quality: "X",
+            access: "R V", conformance: "M", default: "null", quality: "X",
             details: "The WiFiVersion attribute SHALL indicate the current 802.11 standard version in use by the Node, per the table below.",
             xref: { document: "core", section: "11.14.6.3", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "ChannelNumber", base: "uint16",
-            access: "R V", default: "null", quality: "X",
+            access: "R V", conformance: "M", default: "null", quality: "X",
             details: "The ChannelNumber attribute SHALL indicate the channel that Wi-Fi communication is currently operating on.",
             xref: { document: "core", section: "11.14.6.4", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0004, name: "Rssi", base: "int8",
-            access: "R V", constraint: "-120 to 0", default: "null", quality: "X C",
+            access: "R V", conformance: "M", constraint: "-120 to 0", default: "null", quality: "X C",
             details: "The RSSI attribute SHALL indicate the current RSSI of the Node’s Wi-Fi radio in dBm.",
             xref: { document: "core", section: "11.14.6.5", version: "1.1" }
         }),
@@ -162,31 +162,37 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Unspecified",
+                    conformance: "M",
                     xref: { document: "core", section: "11.14.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "None",
+                    conformance: "M",
                     xref: { document: "core", section: "11.14.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "Wep",
+                    conformance: "M",
                     xref: { document: "core", section: "11.14.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "Wpa",
+                    conformance: "M",
                     xref: { document: "core", section: "11.14.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0004, name: "Wpa2",
+                    conformance: "M",
                     xref: { document: "core", section: "11.14.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0005, name: "Wpa3",
+                    conformance: "M",
                     xref: { document: "core", section: "11.14.5.1", version: "1.1" }
                 })
             ]

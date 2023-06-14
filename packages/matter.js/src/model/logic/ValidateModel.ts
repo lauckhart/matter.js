@@ -6,7 +6,7 @@
 
 import { Logger } from "../../log/index.js";
 import { DefinitionError, Model } from "../index.js";
-import { ModelValidator } from "./validators/ModelValidator.js";
+import { ModelValidator } from "./definition-validation/ModelValidator.js";
 
 const logger = Logger.get("ModelValidator");
 

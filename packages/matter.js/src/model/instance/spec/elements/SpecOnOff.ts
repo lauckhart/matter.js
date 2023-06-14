@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 4, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 4, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "LT",
@@ -32,7 +32,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "OnOff", base: "bool",
-            access: "R V", default: true, quality: "N S",
+            access: "R V", conformance: "M", default: true, quality: "N S",
             details: "The OnOff attribute indicates whether the device type implemented on the endpoint is turned off or turned on, in these cases the value of the OnOff attribute equals FALSE, or TRUE respectively.",
             xref: { document: "cluster", section: "1.5.6.1", version: "1.1" }
         }),
@@ -67,21 +67,21 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "Off",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "This command does not have any data fields.",
             xref: { document: "cluster", section: "1.5.7.1", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "On",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "This command does not have any data fields.",
             xref: { document: "cluster", section: "1.5.7.2", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0002, name: "Toggle",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             details: "This command does not have any data fields.",
             xref: { document: "cluster", section: "1.5.7.3", version: "1.1" }
         }),
@@ -114,19 +114,19 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Off",
-                    description: "Set the OnOff attribute to FALSE",
+                    conformance: "M", description: "Set the OnOff attribute to FALSE",
                     xref: { document: "cluster", section: "1.5.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "On",
-                    description: "Set the OnOff attribute to TRUE",
+                    conformance: "M", description: "Set the OnOff attribute to TRUE",
                     xref: { document: "cluster", section: "1.5.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "Toggle",
-                    description: "If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle).",
+                    conformance: "M", description: "If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle).",
                     xref: { document: "cluster", section: "1.5.5.1", version: "1.1" }
                 })
             ]

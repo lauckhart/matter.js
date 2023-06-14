@@ -5,15 +5,14 @@
  */
 
 import {
-    BaseElement,
     ClusterElement,
     DeviceTypeElement,
     EndpointElement,
     FabricElement,
     NodeElement,
-    MatterElement
+    MatterElement,
+    AnyDataElement
 } from "../index.js";
-import { AnyDataElement } from "./AnyDataElement.js";
 
 /**
  * Any Matter element.
@@ -26,13 +25,3 @@ export type AnyElement =
     | FabricElement
     | NodeElement
     | MatterElement;
-
-export namespace AnyElement {
-    export type Type = BaseElement.Type;
-    export const Type = BaseElement.Type;
-    export type Specification = BaseElement.Specification;
-    export const Specification = BaseElement.Specification;
-    export type SpecificationNames = BaseElement.SpecificationNames;
-    export const SpecificationNames = BaseElement.SpecificationNames;
-    export type CrossReference = BaseElement.CrossReference;
-}

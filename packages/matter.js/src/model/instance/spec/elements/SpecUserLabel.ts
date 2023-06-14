@@ -15,17 +15,17 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F"
+            access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
             id: 0x0000, name: "LabelList", base: "list",
-            access: "RW VM", default: "empty", quality: "N",
+            access: "RW VM", conformance: "M", default: "empty", quality: "N",
             details: "An implementation SHALL support at least 4 list entries per node for all User Label cluster instances on the node.",
             xref: { document: "core", section: "9.9.4.1", version: "1.1" },
             children: [

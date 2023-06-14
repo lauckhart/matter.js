@@ -5,7 +5,7 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { Access, AnyElement, AttributeElement, BaseDataElement, BaseElement, ClusterElement, CommandElement, Conformance, DatatypeElement, EventElement } from "../../../src/model/index.js";
+import { Access, AnyElement, AttributeElement, BaseDataElement, BaseElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementType, EventElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/index.js";
 import { TypeMap } from "./type-map.js";
 
@@ -214,7 +214,7 @@ function createDataElement<T extends BaseDataElement>({
     propertyTag,
     propertyIsClass
 }: {
-    factory: ((properties: T) => T) & { Type: BaseElement.Type },
+    factory: ((properties: T) => T) & { Type: ElementType },
     source: Element,
     target: BaseDataElement,
     isClass?: boolean,

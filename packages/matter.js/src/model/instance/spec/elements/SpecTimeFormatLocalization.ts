@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "CALFMT",
@@ -32,7 +32,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "HourFormat", base: "HourFormatEnum",
-            access: "RW VM", default: "null", quality: "X N",
+            access: "RW VM", conformance: "M", default: "null", quality: "X N",
             details: "The HourFormat attribute SHALL represent the format that the Node is currently configured to use when conveying the hour unit of time. If provided, this value SHALL take priority over any unit",
             xref: { document: "core", section: "11.4.6.1", version: "1.1" }
         }),
@@ -63,11 +63,13 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "12Hr",
+                    conformance: "M",
                     xref: { document: "core", section: "11.4.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "24Hr",
+                    conformance: "M",
                     xref: { document: "core", section: "11.4.5.1", version: "1.1" }
                 })
             ]

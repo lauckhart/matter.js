@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "AS",
@@ -38,7 +38,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "CurrentState", base: "PlaybackStateEnum",
-            access: "R V", constraint: "desc", default: 0,
+            access: "R V", conformance: "M", constraint: "desc", default: 0,
             details: "This SHALL indicate the current playback state of media.",
             xref: { document: "cluster", section: "6.10.3.1", version: "1.1" }
         }),
@@ -87,21 +87,21 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "Play",
-            access: "O", direction: "request", response: "PlaybackResponse",
+            access: "O", conformance: "M", direction: "request", response: "PlaybackResponse",
             details: "Upon receipt, this SHALL play media. If content is currently in a FastForward or Rewind state. Play SHALL return media to normal playback speed.",
             xref: { document: "cluster", section: "6.10.4.1", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "Pause",
-            access: "O", direction: "request", response: "PlaybackResponse",
+            access: "O", conformance: "M", direction: "request", response: "PlaybackResponse",
             details: "Upon receipt, this SHALL pause playback of the media.",
             xref: { document: "cluster", section: "6.10.4.2", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0002, name: "Stop",
-            access: "O", direction: "request", response: "PlaybackResponse",
+            access: "O", conformance: "M", direction: "request", response: "PlaybackResponse",
             details: "Upon receipt, this SHALL stop playback of the media. User-visible outcome is context-specific. This MAY navigate the user back to the location from where the media was originally launched.",
             xref: { document: "cluster", section: "6.10.4.3", version: "1.1" }
         }),
@@ -157,7 +157,7 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x000a, name: "PlaybackResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             details: "This command SHALL be generated in response to various Playback Commands. The data for this command SHALL be as follows:",
             xref: { document: "cluster", section: "6.10.4.12", version: "1.1" }
         }),
@@ -176,25 +176,25 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Playing",
-                    description: "Media is currently playing (includes FF and REW)",
+                    conformance: "M", description: "Media is currently playing (includes FF and REW)",
                     xref: { document: "cluster", section: "6.10.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "Paused",
-                    description: "Media is currently paused",
+                    conformance: "M", description: "Media is currently paused",
                     xref: { document: "cluster", section: "6.10.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "NotPlaying",
-                    description: "Media is not currently playing",
+                    conformance: "M", description: "Media is not currently playing",
                     xref: { document: "cluster", section: "6.10.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0003, name: "Buffering",
-                    description: "Media is not currently buffering and playback will start when buffer has been filled",
+                    conformance: "M", description: "Media is not currently buffering and playback will start when buffer has been filled",
                     xref: { document: "cluster", section: "6.10.5.1", version: "1.1" }
                 })
             ]

@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "NU",
@@ -32,7 +32,7 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0000, name: "OutputList", base: "list",
-            access: "R V", constraint: "None", default: "",
+            access: "R V", conformance: "M", constraint: "None", default: "",
             details: "This list provides the outputs supported by the device.",
             xref: { document: "cluster", section: "6.5.3.1", version: "1.1" },
             children: [
@@ -44,14 +44,14 @@ SpecMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "CurrentOutput", base: "uint8",
-            access: "R V", default: 0,
+            access: "R V", conformance: "M", default: 0,
             details: "This field contains the value of the index field of the currently selected OutputInfoStruct.",
             xref: { document: "cluster", section: "6.5.3.2", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0000, name: "SelectOutput",
-            access: "O", direction: "request", response: "status",
+            access: "O", conformance: "M", direction: "request", response: "status",
             xref: { document: "cluster", section: "6.5.4", version: "1.1" }
         }),
 
@@ -69,21 +69,21 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Index", base: "uint8",
-                    default: 0,
+                    conformance: "M", default: 0,
                     details: "This SHALL indicate the unique index into the list of outputs.",
                     xref: { document: "cluster", section: "6.5.5.1.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "OutputType", base: "OutputTypeEnum",
-                    constraint: "desc", default: "",
+                    conformance: "M", constraint: "desc", default: "",
                     details: "This SHALL indicate the type of output",
                     xref: { document: "cluster", section: "6.5.5.1.2", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "Name", base: "string",
-                    default: "",
+                    conformance: "M", default: "",
                     details: "The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be blank, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.5.5.1.3", version: "1.1" }
                 })

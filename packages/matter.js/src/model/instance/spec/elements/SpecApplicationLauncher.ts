@@ -15,12 +15,12 @@ SpecMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0xfffd, name: "ClusterRevision", base: "uint16",
-            access: "R V", constraint: "min 1", default: 1, quality: "F"
+            access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
             id: 0xfffc, name: "FeatureMap", base: "map32",
-            access: "R V", default: 0, quality: "F",
+            access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "AP",
@@ -51,28 +51,28 @@ SpecMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "LaunchApp",
-            access: "O", direction: "request", response: "LauncherResponse",
+            access: "O", conformance: "M", direction: "request", response: "LauncherResponse",
             details: "Upon receipt of this command, the server SHALL launch the application with optional data. The application SHALL be either",
             xref: { document: "cluster", section: "6.4.4.1", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "StopApp",
-            access: "O", direction: "request", response: "LauncherResponse",
+            access: "O", conformance: "M", direction: "request", response: "LauncherResponse",
             details: "Upon receipt of this command, the server SHALL stop the application if it is running. The application SHALL be either",
             xref: { document: "cluster", section: "6.4.4.2", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0002, name: "HideApp",
-            access: "O", direction: "request", response: "LauncherResponse",
+            access: "O", conformance: "M", direction: "request", response: "LauncherResponse",
             details: "Upon receipt of this command, the server SHALL hide the application. The application SHALL be either",
             xref: { document: "cluster", section: "6.4.4.3", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0003, name: "LauncherResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             details: "This command SHALL be generated in response to LaunchApp/StopApp/HideApp commands.",
             xref: { document: "cluster", section: "6.4.4.4", version: "1.1" }
         }),
@@ -84,19 +84,19 @@ SpecMatter.children!.push(ClusterElement({
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Success",
-                    description: "Command succeeded",
+                    conformance: "M", description: "Command succeeded",
                     xref: { document: "cluster", section: "6.4.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0001, name: "AppNotAvailable",
-                    description: "Requested app is not available.",
+                    conformance: "M", description: "Requested app is not available.",
                     xref: { document: "cluster", section: "6.4.5.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
                     id: 0x0002, name: "SystemBusy",
-                    description: "Video platform unable to honor command.",
+                    conformance: "M", description: "Video platform unable to honor command.",
                     xref: { document: "cluster", section: "6.4.5.1", version: "1.1" }
                 })
             ]

@@ -7,7 +7,7 @@
 import { camelize } from "../../../src/util/String.js";
 import { DetailedReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
-import { AnyElement, BaseElement } from "../../../src/model/index.js";
+import { Specification } from "../../../src/model/index.js";
 
 const logger = Logger.get("table-translate");
 
@@ -197,7 +197,7 @@ export function translateRecordsToMatter<R, E extends { id?: number, name: strin
 function installPreciseDetails(
     desc: string,
     definition: DetailedReference,
-    records: Array<{ name?: string, xref?: BaseElement.CrossReference, details?: string }>
+    records: Array<{ name?: string, xref?: Specification.CrossReference, details?: string }>
 ) {
     const lookup = Object.fromEntries(
         definition.details.map((detail) =>

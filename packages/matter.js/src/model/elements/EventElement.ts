@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement, Mei } from "../index.js";
+import { BaseDataElement, BaseElement, ElementType, Mei } from "../index.js";
 
 /**
  * An event is triggered by endpoints.
@@ -22,8 +22,8 @@ export function EventElement(definition: EventElement.Properties) {
 }
 
 export namespace EventElement {
-    export type Type = BaseElement.Type.Event;
-    export const Type = BaseElement.Type.Event;
+    export type Type = ElementType.Event;
+    export const Type = ElementType.Event;
     export type Properties = BaseElement.Properties<EventElement>;
 
     /**

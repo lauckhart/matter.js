@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeElement, BaseElement } from "../index.js"
+import { NodeElement, BaseElement, ElementType } from "../index.js"
 
 /**
  * Runtime representation of a fabric.
@@ -20,7 +20,7 @@ export function FabricElement(definition: FabricElement.Properties) {
 }
 
 export namespace FabricElement {
-    export type Type = BaseElement.Type.Fabric;
-    export const Type = BaseElement.Type.Fabric;
+    export type Type = ElementType.Fabric;
+    export const Type = ElementType.Fabric;
     export type Properties = BaseElement.Properties<FabricElement>;
 }
