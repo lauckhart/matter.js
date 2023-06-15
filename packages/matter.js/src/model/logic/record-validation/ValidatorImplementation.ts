@@ -5,7 +5,7 @@
  */
 
 import { FeatureSet } from "../../definitions/FeatureSet.js";
-import { DataModel } from "../../index.js";
+import { ValueModel } from "../../models/index.js";
 import { ValidationResult, Validator } from "./Validator.js";
 import { ValidatorBuilder } from "./ValidatorBuilder.js";
 
@@ -27,7 +27,7 @@ export class ValidatorImplementation implements Validator {
     choices?: { [name: string]: ChoiceState };
     result?: ValidationResult;
 
-    constructor(public fields: DataModel[], public features: FeatureSet) {
+    constructor(public fields: ValueModel[], public features: FeatureSet) {
         const builder = new ValidatorBuilder(fields);
         this.validate = builder.compile();
     }

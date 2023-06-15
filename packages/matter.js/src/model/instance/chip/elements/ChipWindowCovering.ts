@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0102, name: "WindowCovering",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "WcType", base: "Type",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
@@ -51,7 +51,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0007, name: "WcConfigStatus", base: "ConfigStatus",
-            default: 3
+            conformance: "M", default: 3
         }),
 
         AttributeElement({
@@ -66,7 +66,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x000a, name: "WcOperationalStatus", base: "OperationalStatus",
-            default: 0, quality: "P"
+            conformance: "M", default: 0, quality: "P"
         }),
 
         AttributeElement({
@@ -81,7 +81,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x000d, name: "WcEndProductType", base: "EndProductType",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
@@ -116,7 +116,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0017, name: "WcMode", base: "Mode",
-            access: "RW VM", default: 0
+            access: "RW VM", conformance: "M", default: 0
         }),
 
         AttributeElement({
@@ -126,17 +126,17 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "UpOrOpen",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0001, name: "DownOrClose",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0002, name: "StopMotion",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         CommandElement({
@@ -144,7 +144,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "LiftValue", base: "uint16"
+                    name: "LiftValue", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
@@ -154,7 +155,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "LiftPercent100ThsValue", base: "percent100ths"
+                    name: "LiftPercent100ThsValue", base: "percent100ths",
+                    conformance: "M"
                 })
             ]
         }),
@@ -164,7 +166,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TiltValue", base: "uint16"
+                    name: "TiltValue", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
@@ -174,310 +177,385 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TiltPercent100ThsValue", base: "percent100ths"
+                    name: "TiltPercent100ThsValue", base: "percent100ths",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "Type", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "RollerShade"
+                    id: 0x0000, name: "RollerShade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "RollerShade2Motor"
+                    id: 0x0001, name: "RollerShade2Motor",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "RollerShadeExterior"
+                    id: 0x0002, name: "RollerShadeExterior",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "RollerShadeExterior2Motor"
+                    id: 0x0003, name: "RollerShadeExterior2Motor",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Drapery"
+                    id: 0x0004, name: "Drapery",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Awning"
+                    id: 0x0005, name: "Awning",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Shutter"
+                    id: 0x0006, name: "Shutter",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "TiltBlindTiltOnly"
+                    id: 0x0007, name: "TiltBlindTiltOnly",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "TiltBlindLiftAndTilt"
+                    id: 0x0008, name: "TiltBlindLiftAndTilt",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "ProjectorScreen"
+                    id: 0x0009, name: "ProjectorScreen",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x00ff, name: "Unknown"
+                    id: 0x00ff, name: "Unknown",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "EndProductType", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "RollerShade"
+                    id: 0x0000, name: "RollerShade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "RomanShade"
+                    id: 0x0001, name: "RomanShade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "BalloonShade"
+                    id: 0x0002, name: "BalloonShade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "WovenWood"
+                    id: 0x0003, name: "WovenWood",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "PleatedShade"
+                    id: 0x0004, name: "PleatedShade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "CellularShade"
+                    id: 0x0005, name: "CellularShade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "LayeredShade"
+                    id: 0x0006, name: "LayeredShade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "LayeredShade2D"
+                    id: 0x0007, name: "LayeredShade2D",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "SheerShade"
+                    id: 0x0008, name: "SheerShade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "TiltOnlyInteriorBlind"
+                    id: 0x0009, name: "TiltOnlyInteriorBlind",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "InteriorBlind"
+                    id: 0x000a, name: "InteriorBlind",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "VerticalBlindStripCurtain"
+                    id: 0x000b, name: "VerticalBlindStripCurtain",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "InteriorVenetianBlind"
+                    id: 0x000c, name: "InteriorVenetianBlind",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000d, name: "ExteriorVenetianBlind"
+                    id: 0x000d, name: "ExteriorVenetianBlind",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000e, name: "LateralLeftCurtain"
+                    id: 0x000e, name: "LateralLeftCurtain",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000f, name: "LateralRightCurtain"
+                    id: 0x000f, name: "LateralRightCurtain",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "CentralCurtain"
+                    id: 0x0010, name: "CentralCurtain",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0011, name: "RollerShutter"
+                    id: 0x0011, name: "RollerShutter",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0012, name: "ExteriorVerticalScreen"
+                    id: 0x0012, name: "ExteriorVerticalScreen",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0013, name: "AwningTerracePatio"
+                    id: 0x0013, name: "AwningTerracePatio",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0014, name: "AwningVerticalScreen"
+                    id: 0x0014, name: "AwningVerticalScreen",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0015, name: "TiltOnlyPergola"
+                    id: 0x0015, name: "TiltOnlyPergola",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0016, name: "SwingingShutter"
+                    id: 0x0016, name: "SwingingShutter",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0017, name: "SlidingShutter"
+                    id: 0x0017, name: "SlidingShutter",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x00ff, name: "Unknown"
+                    id: 0x00ff, name: "Unknown",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "Mode", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "MotorDirectionReversed"
+                    id: 0x0001, name: "MotorDirectionReversed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "CalibrationMode"
+                    id: 0x0002, name: "CalibrationMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "MaintenanceMode"
+                    id: 0x0004, name: "MaintenanceMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "LedFeedback"
+                    id: 0x0008, name: "LedFeedback",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OperationalStatus", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0003, name: "Global"
+                    id: 0x0003, name: "Global",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "Lift"
+                    id: 0x000c, name: "Lift",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0030, name: "Tilt"
+                    id: 0x0030, name: "Tilt",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ConfigStatus", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Operational"
+                    id: 0x0001, name: "Operational",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "OnlineReserved"
+                    id: 0x0002, name: "OnlineReserved",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "LiftMovementReversed"
+                    id: 0x0004, name: "LiftMovementReversed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "LiftPositionAware"
+                    id: 0x0008, name: "LiftPositionAware",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "TiltPositionAware"
+                    id: 0x0010, name: "TiltPositionAware",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0020, name: "LiftEncoderControlled"
+                    id: 0x0020, name: "LiftEncoderControlled",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0040, name: "TiltEncoderControlled"
+                    id: 0x0040, name: "TiltEncoderControlled",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SafetyStatus", base: "map16",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "RemoteLockout"
+                    id: 0x0001, name: "RemoteLockout",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "TamperDetection"
+                    id: 0x0002, name: "TamperDetection",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "FailedCommunication"
+                    id: 0x0004, name: "FailedCommunication",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "PositionFailure"
+                    id: 0x0008, name: "PositionFailure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "ThermalProtection"
+                    id: 0x0010, name: "ThermalProtection",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0020, name: "ObstacleDetected"
+                    id: 0x0020, name: "ObstacleDetected",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0040, name: "Power"
+                    id: 0x0040, name: "Power",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0080, name: "StopInput"
+                    id: 0x0080, name: "StopInput",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0100, name: "MotorJammed"
+                    id: 0x0100, name: "MotorJammed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0200, name: "HardwareFailure"
+                    id: 0x0200, name: "HardwareFailure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0400, name: "ManualOperation"
+                    id: 0x0400, name: "ManualOperation",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0800, name: "Protection"
+                    id: 0x0800, name: "Protection",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WindowCoveringFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Lift"
+                    id: 0x0001, name: "Lift",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Tilt"
+                    id: 0x0002, name: "Tilt",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "PositionAwareLift"
+                    id: 0x0004, name: "PositionAwareLift",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "AbsolutePosition"
+                    id: 0x0008, name: "AbsolutePosition",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "PositionAwareTilt"
+                    id: 0x0010, name: "PositionAwareTilt",
+                    conformance: "M"
                 })
             ]
         })

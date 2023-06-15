@@ -5,12 +5,13 @@
  */
 
 import { Logger } from "../../../log/index.js";
-import { Conformance, DataModel } from "../../index.js";
+import { Conformance } from "../../aspects/index.js";
+import { ValueModel } from "../../models/index.js";
 import { ValidatorBuilder } from "./ValidatorBuilder.js";
 
 const logger = Logger.get("conformance-validation");
 
-export function addConformance(builder: ValidatorBuilder, model: DataModel, conformance: Conformance) {
+export function addConformance(builder: ValidatorBuilder, model: ValueModel, conformance: Conformance) {
     builder.addTest(expr(conformance, builder), "CONFORMANCE_VIOLATION", model, "Value disallowed by conformance");
 
     const BinaryOperatorMap = {

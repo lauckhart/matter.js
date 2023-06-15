@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeElement, BaseElement, ElementType } from "../index.js"
+import { ElementType } from "../definitions/index.js";
+import { BaseElement } from "./BaseElement.js";
+import { NodeElement } from "./NodeElement.js";
 
 /**
  * Runtime representation of a fabric.

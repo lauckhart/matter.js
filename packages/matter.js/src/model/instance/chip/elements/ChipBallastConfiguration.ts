@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0301, name: "BallastConfiguration",
@@ -16,12 +16,12 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "PhysicalMinLevel", base: "uint8",
-            default: 1
+            conformance: "M", default: 1
         }),
 
         AttributeElement({
             id: 0x0001, name: "PhysicalMaxLevel", base: "uint8",
-            default: 254
+            conformance: "M", default: 254
         }),
 
         AttributeElement({
@@ -31,12 +31,12 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0010, name: "MinLevel", base: "uint8",
-            access: "RW", default: 1
+            access: "RW", conformance: "M", default: 1
         }),
 
         AttributeElement({
             id: 0x0011, name: "MaxLevel", base: "uint8",
-            access: "RW", default: 254
+            access: "RW", conformance: "M", default: 254
         }),
 
         AttributeElement({
@@ -50,7 +50,8 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0020, name: "LampQuantity", base: "uint8"
+            id: 0x0020, name: "LampQuantity", base: "uint8",
+            conformance: "M"
         }),
 
         AttributeElement({

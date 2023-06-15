@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0037, name: "EthernetNetworkDiagnostics",
@@ -61,63 +61,77 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "ResetCounts",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         DatatypeElement({
             name: "PhyRateEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Rate10M"
+                    id: 0x0000, name: "Rate10M",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Rate100M"
+                    id: 0x0001, name: "Rate100M",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Rate1G"
+                    id: 0x0002, name: "Rate1G",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Rate25G"
+                    id: 0x0003, name: "Rate25G",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Rate5G"
+                    id: 0x0004, name: "Rate5G",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Rate10G"
+                    id: 0x0005, name: "Rate10G",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Rate40G"
+                    id: 0x0006, name: "Rate40G",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "Rate100G"
+                    id: 0x0007, name: "Rate100G",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Rate200G"
+                    id: 0x0008, name: "Rate200G",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Rate400G"
+                    id: 0x0009, name: "Rate400G",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "EthernetNetworkDiagnosticsFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "PacketCounts"
+                    id: 0x0001, name: "PacketCounts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ErrorCounts"
+                    id: 0x0002, name: "ErrorCounts",
+                    conformance: "M"
                 })
             ]
         })

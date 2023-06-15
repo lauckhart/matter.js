@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterElement, MatterModel } from "../../index.js";
-import { ModelValidator } from "./index.js";
+import { MatterElement } from "../../elements/index.js";
+import { MatterModel } from "../../models/index.js";
+import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[MatterElement.Type] =
 class MatterValidator extends ModelValidator<MatterModel> {

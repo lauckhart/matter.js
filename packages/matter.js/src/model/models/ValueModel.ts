@@ -5,24 +5,16 @@
  */
 
 import { MatterError } from "../../common/index.js";
-import { Aspect } from "../aspects/Aspect.js";
-import {
-    // These are circular dependencies so just to be safe we only import the
-    // types.  We also need the class, though, at runtime.  So we use the
-    // references in the Model.constructors factory pool.
-    type DatatypeModel,
-    type ClusterModel,
+import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
+import { Metatype } from "../definitions/index.js";
+import { AnyElement, ValueElement, DatatypeElement } from "../elements/index.js";
+import { Model } from "./Model.js";
 
-    Access,
-    BaseDataElement,
-    Conformance,
-    Constraint,
-    DatatypeElement,
-    Model,
-    Quality,
-    Metatype,
-    AnyElement
-} from "../index.js";
+// These are circular dependencies so just to be safe we only import the
+// types.  We also need the class, though, at runtime.  So we use the
+// references in the Model.constructors factory pool.
+import { type ClusterModel } from "./ClusterModel.js";
+import { type DatatypeModel } from "./DatatypeModel.js";
 
 const CONSTRAINT: unique symbol = Symbol("constraint");
 const CONFORMANCE: unique symbol = Symbol("conformance");
@@ -30,12 +22,12 @@ const ACCESS: unique symbol = Symbol("access");
 const QUALITY: unique symbol = Symbol("quality");
 
 /**
- * Each BaseDataElement has a corresponding implementation that derives from
+ * Each ValueElement has a corresponding implementation that derives from
  * this class.
  */
-export abstract class DataModel extends Model implements BaseDataElement {
+export abstract class ValueModel extends Model implements ValueElement {
     base?: string;
-    byteSize?: BaseDataElement.Size;
+    byteSize?: ValueElement.Size;
     default?: any;
     metatype?: Metatype;
 
@@ -97,7 +89,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
     get scope() {
         const scope = this.search(
             current => current.parent,
-            current => !(current instanceof DataModel) ? current : undefined,
+            current => !(current instanceof ValueModel) ? current : undefined,
             true
         )
         if (scope) {
@@ -123,10 +115,10 @@ export abstract class DataModel extends Model implements BaseDataElement {
      */
     get metaBase() {
         return this.search(
-            current => (current as DataModel).baseModel,
-            current => (current as DataModel).metatype ? current : undefined,
+            current => (current as ValueModel).baseModel,
+            current => (current as ValueModel).metatype ? current : undefined,
             true
-        ) as DataModel;
+        ) as ValueModel;
     }
 
     /**
@@ -135,7 +127,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
     get baseModel() {
         const base = this.actualBase;
         if (base) {
-            return this.scope.global(DataModel.constructors.datatype, base);
+            return this.scope.global(ValueModel.constructors.datatype, base);
         }
     }
 
@@ -146,13 +138,13 @@ export abstract class DataModel extends Model implements BaseDataElement {
         let aspects = Array<Aspect<any>>();
         this.search(
             current => {
-                const next = current instanceof DataModel ? current.baseModel : undefined;
-                if (next instanceof DataModel) {
+                const next = current instanceof ValueModel ? current.baseModel : undefined;
+                if (next instanceof ValueModel) {
                     return next;
                 }
             },
             current => {
-                if (current instanceof DataModel) {
+                if (current instanceof ValueModel) {
                     if (
                         !current.conformance.empty
                         && current.conformance.type != Conformance.Special.Desc
@@ -177,10 +169,29 @@ export abstract class DataModel extends Model implements BaseDataElement {
      */
     member(key: string | number): Model | undefined {
         return this.search(
-            current => current instanceof DataModel ? current.baseModel : undefined,
-            current => current.local(DataModel.constructors.datatype, key),
+            current => current instanceof ValueModel ? current.baseModel : undefined,
+            current => current.local(ValueModel.constructors.datatype, key),
             true
         ) as Model | undefined;
+    }
+
+    /**
+     * Datatype fields (datatypes parented by other datatypes) can omit their
+     * ID.  In this case we use their index within the parent as the ID.
+     * 
+     * Note that this is only true for fields.  For named datatypes that appear
+     * directly under the cluster the name is the canonical key.
+     */
+    override get effectiveId() {
+        if (this.id != undefined) {
+            return this.id;
+        }
+        if (this.parent) {
+            const index = this.parent.children.indexOf(this);
+            if (index != -1) {
+                return index;
+            }
+        }
     }
 
     override valueOf() {
@@ -194,7 +205,7 @@ export abstract class DataModel extends Model implements BaseDataElement {
         return result as AnyElement;
     }
 
-    protected constructor(definition: BaseDataElement.Properties) {
+    protected constructor(definition: ValueElement.Properties) {
         super(definition);
 
         const match = this.base?.match(/^list\[(.*)\]$/);

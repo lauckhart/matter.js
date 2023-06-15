@@ -4,9 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeElement, DataModel, Mei, Model } from "../index.js";
+import { Mei } from "../definitions/index.js";
+import { AttributeElement } from "../elements/index.js";
+import { ValueModel } from "./ValueModel.js";
+import { Model } from "./Model.js";
 
-export class AttributeModel extends DataModel implements AttributeElement {
+export class AttributeModel extends ValueModel implements AttributeElement {
     override type: AttributeElement.Type = AttributeElement.Type;
     override id!: Mei;
 

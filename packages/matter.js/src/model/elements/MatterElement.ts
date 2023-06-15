@@ -4,7 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseElement, ClusterElement, DeviceTypeElement, ElementType, FabricElement, NodeElement } from "../index.js"
+import { ElementType } from "../definitions/index.js";
+import { BaseElement } from "./BaseElement.js";
+import { ClusterElement } from "./ClusterElement.js";
+import { DeviceTypeElement } from "./DeviceTypeElement.js";
+import { FabricElement } from "./FabricElement.js";
+import { NodeElement } from "./NodeElement.js";
 
 /**
  * This is the entry to a model of application-level Matter constructs referred

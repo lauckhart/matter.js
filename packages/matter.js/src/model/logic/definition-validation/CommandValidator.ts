@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommandElement, CommandModel, DatatypeModel } from "../../index.js";
+import { CommandElement } from "../../elements/index.js";
+import { CommandModel, DatatypeModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[CommandElement.Type] =

@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SpecMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { SpecMatter } from "../SpecMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 SpecMatter.children!.push(ClusterElement({
     id: 0x0102, name: "WindowCovering",

@@ -4,26 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-    Constraint,
-    Conformance,
-    StatusCode,
-    DatatypeElement,
-    BaseDataElement,
-    AttributeElement,
-    EventElement,
-    Datatype,
-    Metatype
-} from "../index.js";
+import { Conformance, Constraint } from "../aspects/index.js";
+import { Datatype, Metatype, StatusCode } from "../definitions/index.js";
+import { AttributeElement } from "./AttributeElement.js";
+import { ValueElement } from "./ValueElement.js";
+import { DatatypeElement } from "./DatatypeElement.js";
+import { EventElement } from "./EventElement.js";
 
 // Base type factories (types with metatypes)
 const bool = (id: number, name: string, description: string) =>
     DatatypeElement({ id, name, description, metatype: Metatype.boolean });
-const map = (id: number, name: string, description: string, byteSize: BaseDataElement.BitmapSize) =>
+const map = (id: number, name: string, description: string, byteSize: ValueElement.BitmapSize) =>
     DatatypeElement({ id, name, description, byteSize, metatype: Metatype.bitmap });
-const int = (id: number, name: string, description: string, byteSize: BaseDataElement.Size) =>
+const int = (id: number, name: string, description: string, byteSize: ValueElement.Size) =>
     DatatypeElement({ id, name, description, byteSize, metatype: Metatype.integer });
-const float = (id: number, name: string, description: string, byteSize: BaseDataElement.Size) =>
+const float = (id: number, name: string, description: string, byteSize: ValueElement.Size) =>
     DatatypeElement({ id, name, description, byteSize, metatype: Metatype.float });
 const octet = (id: number, name: string, description: string) =>
     DatatypeElement({ id, name, description, metatype: Metatype.bytes });
@@ -39,7 +34,7 @@ const enumt = (id: number, name: string, description: string, base: string) =>
 // Derivative type factories (types that inherit metatypes)
 const extInt = (id: number, name: string, description: string, base: string) =>
     DatatypeElement({ id, name, description, base });
-const depint = (id: number, name: string, description: string, base: string) =>
+const depInt = (id: number, name: string, description: string, base: string) =>
     DatatypeElement({ id, name, description, base, conformance: Conformance.Flag.Deprecated });
 const extOctet = (id: number, name: string, description: string, constraint?: Constraint.Definition) =>
     DatatypeElement({ id, name, description, base: Datatype.octstr, constraint });
@@ -117,7 +112,7 @@ export const Globals = {
     epochUs:       extInt    (0xe3,   "epoch-us",      "Epoch time in microseconds",  Datatype.uint64),
     epochS:        extInt    (0xe2,   "epoch-s",       "Epoch time in seconds",       Datatype.uint32),
     /** @deprecated by Matter specification */
-    utc:           depint    (0xe2,   "utc",           "UTC time",                    Datatype.uint32),
+    utc:           depInt    (0xe2,   "utc",           "UTC time",                    Datatype.uint32),
     posixMs:       extInt    (0xf3,   "posix-ms",      "POSIX time in milliseconds",  Datatype.uint64),
     systimeUs:     extInt    (0xe4,   "systime-us",    "Sytem time in microseconds",  Datatype.uint64),
     systimeMs:     extInt    (0xf4,   "systime-ms",    "System time in milliseconds", Datatype.uint64),
@@ -133,7 +128,7 @@ export const Globals = {
     fabricIdx:     extInt    (0xd2,   "fabric-idx",    "Fabric Index",                Datatype.uint8),
     nodeId:        extInt    (0xf0,   "node-id",       "Node ID",                     Datatype.uint64),
     /** @deprecated by Matter specification */
-    eui64:         depint    (0xf0,   "eui64",         "IEEE address",                Datatype.uint64),
+    eui64:         depInt    (0xf0,   "eui64",         "IEEE address",                Datatype.uint64),
     groupId:       extInt    (0xf1,   "group-id",      "Group ID",                    Datatype.uint16),
     endpointNo:    extInt    (0xe5,   "endpoint-no",   "Endpoint number",             Datatype.uint16),
     vendorId:      extInt    (0xd3,   "vendor-id",     "Vendor ID",                   Datatype.uint16),

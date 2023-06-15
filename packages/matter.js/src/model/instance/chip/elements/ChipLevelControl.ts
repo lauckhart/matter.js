@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0008, name: "LevelControl",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "CurrentLevel", base: "uint8",
-            default: 0, quality: "X"
+            conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
@@ -56,7 +56,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0011, name: "OnLevel", base: "uint8",
-            access: "RW", quality: "X"
+            access: "RW", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -76,7 +76,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x000f, name: "Options", base: "LevelControlOptions",
-            access: "RW", default: 0
+            access: "RW", conformance: "M", default: 0
         }),
 
         AttributeElement({
@@ -86,174 +86,198 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "MoveToLevel",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Level", base: "uint8"
+                    name: "Level", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "TransitionTime", base: "uint16",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "LevelControlOptions"
+                    name: "OptionsMask", base: "LevelControlOptions",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "LevelControlOptions"
+                    name: "OptionsOverride", base: "LevelControlOptions",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "Move",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "MoveMode", base: "MoveMode"
+                    name: "MoveMode", base: "MoveMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "Rate", base: "uint8",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "LevelControlOptions"
+                    name: "OptionsMask", base: "LevelControlOptions",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "LevelControlOptions"
+                    name: "OptionsOverride", base: "LevelControlOptions",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "Step",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "StepMode", base: "StepMode"
+                    name: "StepMode", base: "StepMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "StepSize", base: "uint8"
+                    name: "StepSize", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "TransitionTime", base: "uint16",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "LevelControlOptions"
+                    name: "OptionsMask", base: "LevelControlOptions",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "LevelControlOptions"
+                    name: "OptionsOverride", base: "LevelControlOptions",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "Stop",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "OptionsMask", base: "LevelControlOptions"
+                    name: "OptionsMask", base: "LevelControlOptions",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "LevelControlOptions"
+                    name: "OptionsOverride", base: "LevelControlOptions",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "MoveToLevelWithOnOff",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Level", base: "uint8"
+                    name: "Level", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "TransitionTime", base: "uint16",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "LevelControlOptions"
+                    name: "OptionsMask", base: "LevelControlOptions",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "LevelControlOptions"
+                    name: "OptionsOverride", base: "LevelControlOptions",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0005, name: "MoveWithOnOff",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "MoveMode", base: "MoveMode"
+                    name: "MoveMode", base: "MoveMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "Rate", base: "uint8",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "LevelControlOptions"
+                    name: "OptionsMask", base: "LevelControlOptions",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "LevelControlOptions"
+                    name: "OptionsOverride", base: "LevelControlOptions",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0006, name: "StepWithOnOff",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "StepMode", base: "StepMode"
+                    name: "StepMode", base: "StepMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "StepSize", base: "uint8"
+                    name: "StepSize", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "TransitionTime", base: "uint16",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "LevelControlOptions"
+                    name: "OptionsMask", base: "LevelControlOptions",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "LevelControlOptions"
+                    name: "OptionsOverride", base: "LevelControlOptions",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0007, name: "StopWithOnOff",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "OptionsMask", base: "LevelControlOptions"
+                    name: "OptionsMask", base: "LevelControlOptions",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "LevelControlOptions"
+                    name: "OptionsOverride", base: "LevelControlOptions",
+                    conformance: "M"
                 })
             ]
         }),
@@ -263,63 +287,77 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Frequency", base: "uint16"
+                    name: "Frequency", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "LevelControlFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "OnOff"
+                    id: 0x0001, name: "OnOff",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Lighting"
+                    id: 0x0002, name: "Lighting",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Frequency"
+                    id: 0x0004, name: "Frequency",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MoveMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Up"
+                    id: 0x0000, name: "Up",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Down"
+                    id: 0x0001, name: "Down",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "StepMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Up"
+                    id: 0x0000, name: "Up",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Down"
+                    id: 0x0001, name: "Down",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "LevelControlOptions", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "ExecuteIfOff"
+                    id: 0x0001, name: "ExecuteIfOff",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "CoupleColorTempToLevel"
+                    id: 0x0002, name: "CoupleColorTempToLevel",
+                    conformance: "M"
                 })
             ]
         })

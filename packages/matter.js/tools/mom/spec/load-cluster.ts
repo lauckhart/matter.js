@@ -5,10 +5,10 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { AnyElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
 import { scanSection } from "./scan-section.js";
+import { Specification } from "../../../src/model/index.js";
 
 const logger = Logger.get("cluster-load");
 
@@ -19,7 +19,7 @@ type SubsectionCollector = {
 
 // Modify incoming stream to workaround specific spec issues
 function applyPatches(subref: HtmlReference, clusterRef: HtmlReference) {
-    if (clusterRef.xref.document == AnyElement.Specification.Core && clusterRef.name == "General Commissioning") {
+    if (clusterRef.xref.document == Specification.Core && clusterRef.name == "General Commissioning") {
         if (subref.xref.section == "11.9.6" && subref.name == "Commands" && !subref.table) {
             // In 1.1 spec, command table is not here...
             subref.name = "Ignored";

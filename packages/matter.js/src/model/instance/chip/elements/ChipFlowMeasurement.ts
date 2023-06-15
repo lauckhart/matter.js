@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0404, name: "FlowMeasurement",
@@ -16,17 +16,17 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "FlowMeasuredValue", base: "uint16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "FlowMinMeasuredValue", base: "uint16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "FlowMaxMeasuredValue", base: "uint16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({

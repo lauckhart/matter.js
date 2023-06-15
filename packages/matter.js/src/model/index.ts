@@ -9,3 +9,4 @@ export * from "./aspects/index.js";
 export * from "./elements/index.js";
 export * from "./instance/index.js";
 export * from "./models/index.js";
+export * from "./logic/index.js";

@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Conformance, Constraint, DataModel, Quality } from "../../index.js";
+import { Conformance, Constraint, Quality } from "../../aspects/index.js";
+import { ValueModel } from "../../models/index.js";
 import { Validator } from "./Validator.js";
 import { addConformance } from "./conformance.js";
 import { addConstraint } from "./constraint.js";
@@ -14,14 +15,14 @@ import { addType } from "./type.js";
 export class ValidatorBuilder extends Array<string> {
     hasChoices = false;
 
-    constructor(fields: DataModel[]) {
+    constructor(fields: ValueModel[]) {
         super(
             "this.result = {}",
             "let v"
         );
 
         for (const child of fields) {
-            if (!(child instanceof DataModel)) {
+            if (!(child instanceof ValueModel)) {
                 continue;
             }
 
@@ -53,7 +54,7 @@ export class ValidatorBuilder extends Array<string> {
         this.push("return this.result");
     }
 
-    addTest(test: string, code: string, source: DataModel, message: string) {
+    addTest(test: string, code: string, source: ValueModel, message: string) {
         this.push(`if (!${test}) { this.error(${JSON.stringify(code)}, ${JSON.stringify(source.path)}, ${JSON.stringify(message)}) }`);
     }
 

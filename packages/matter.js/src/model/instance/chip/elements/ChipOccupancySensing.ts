@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0406, name: "OccupancySensing",
@@ -16,15 +16,17 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "Occupancy", base: "OccupancyBitmap",
-            quality: "P"
+            conformance: "M", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "OccupancySensorType", base: "OccupancySensorTypeEnum"
+            id: 0x0001, name: "OccupancySensorType", base: "OccupancySensorTypeEnum",
+            conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "OccupancySensorTypeBitmap", base: "OccupancySensorTypeBitmap"
+            id: 0x0002, name: "OccupancySensorTypeBitmap", base: "OccupancySensorTypeBitmap",
+            conformance: "M"
         }),
 
         AttributeElement({
@@ -74,47 +76,58 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "OccupancyBitmap", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Occupied"
+                    id: 0x0001, name: "Occupied",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OccupancySensorTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Pir"
+                    id: 0x0000, name: "Pir",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Ultrasonic"
+                    id: 0x0001, name: "Ultrasonic",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "PirAndUltrasonic"
+                    id: 0x0002, name: "PirAndUltrasonic",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "PhysicalContact"
+                    id: 0x0003, name: "PhysicalContact",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OccupancySensorTypeBitmap", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Pir"
+                    id: 0x0001, name: "Pir",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Ultrasonic"
+                    id: 0x0002, name: "Ultrasonic",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "PhysicalContact"
+                    id: 0x0004, name: "PhysicalContact",
+                    conformance: "M"
                 })
             ]
         })

@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement, EventElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement, EventElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0035, name: "ThreadNetworkDiagnostics",
@@ -16,32 +16,32 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "Channel", base: "uint16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "RoutingRole", base: "RoutingRole",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "NetworkName", base: "string",
-            default: "", quality: "X"
+            conformance: "M", default: "", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0003, name: "DiagPanId", base: "uint16",
-            default: 0, quality: "X"
+            conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0004, name: "DiagExtendedPanId", base: "uint64",
-            default: 0, quality: "X"
+            conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0005, name: "MeshLocalPrefix", base: "octstr",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -51,6 +51,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0007, name: "NeighborTable", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "NeighborTable"
@@ -60,6 +61,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0008, name: "RouteTable", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "RouteTable"
@@ -69,27 +71,27 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0009, name: "PartitionId", base: "uint32",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x000a, name: "Weighting", base: "uint8",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x000b, name: "DataVersion", base: "uint8",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x000c, name: "StableDataVersion", base: "uint8",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x000d, name: "LeaderRouterId", base: "uint8",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -319,21 +321,22 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x003b, name: "SecurityPolicy", base: "SecurityPolicy",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x003c, name: "DiagChannelMask", base: "octstr",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x003d, name: "OperationalDatasetComponents", base: "OperationalDatasetComponents",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x003e, name: "ActiveThreadNetworkFaults", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "NetworkFault"
@@ -351,7 +354,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ConnectionStatus", base: "ConnectionStatusEnum"
+                    name: "ConnectionStatus", base: "ConnectionStatusEnum",
+                    conformance: "M"
                 })
             ]
         }),
@@ -361,273 +365,336 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "NetworkFault"
+                    name: "Current", base: "NetworkFault",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "NetworkFault"
+                    name: "Previous", base: "NetworkFault",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "NetworkFault", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "LinkDown"
+                    id: 0x0001, name: "LinkDown",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "HardwareFailure"
+                    id: 0x0002, name: "HardwareFailure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "NetworkJammed"
+                    id: 0x0003, name: "NetworkJammed",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "RoutingRole", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Unassigned"
+                    id: 0x0001, name: "Unassigned",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "SleepyEndDevice"
+                    id: 0x0002, name: "SleepyEndDevice",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "EndDevice"
+                    id: 0x0003, name: "EndDevice",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Reed"
+                    id: 0x0004, name: "Reed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Router"
+                    id: 0x0005, name: "Router",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Leader"
+                    id: 0x0006, name: "Leader",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ConnectionStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Connected"
+                    id: 0x0000, name: "Connected",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "NotConnected"
+                    id: 0x0001, name: "NotConnected",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "NeighborTable", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ExtAddress", base: "uint64"
+                    name: "ExtAddress", base: "uint64",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Age", base: "uint32"
+                    name: "Age", base: "uint32",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Rloc16", base: "uint16"
+                    name: "Rloc16", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LinkFrameCounter", base: "uint32"
+                    name: "LinkFrameCounter", base: "uint32",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "MleFrameCounter", base: "uint32"
+                    name: "MleFrameCounter", base: "uint32",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Lqi", base: "uint8"
+                    name: "Lqi", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "AverageRssi", base: "int8",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "LastRssi", base: "int8",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "FrameErrorRate", base: "uint8"
+                    name: "FrameErrorRate", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "MessageErrorRate", base: "uint8"
+                    name: "MessageErrorRate", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "RxOnWhenIdle", base: "bool"
+                    name: "RxOnWhenIdle", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "FullThreadDevice", base: "bool"
+                    name: "FullThreadDevice", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "FullNetworkData", base: "bool"
+                    name: "FullNetworkData", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "IsChild", base: "bool"
+                    name: "IsChild", base: "bool",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "RouteTable", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ExtAddress", base: "uint64"
+                    name: "ExtAddress", base: "uint64",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Rloc16", base: "uint16"
+                    name: "Rloc16", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "RouterId", base: "uint8"
+                    name: "RouterId", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NextHop", base: "uint8"
+                    name: "NextHop", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "PathCost", base: "uint8"
+                    name: "PathCost", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LqiIn", base: "uint8"
+                    name: "LqiIn", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LqiOut", base: "uint8"
+                    name: "LqiOut", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Age", base: "uint8"
+                    name: "Age", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Allocated", base: "bool"
+                    name: "Allocated", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LinkEstablished", base: "bool"
+                    name: "LinkEstablished", base: "bool",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SecurityPolicy", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "RotationTime", base: "uint16"
+                    name: "RotationTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Flags", base: "uint16"
+                    name: "Flags", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OperationalDatasetComponents", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ActiveTimestampPresent", base: "bool"
+                    name: "ActiveTimestampPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "PendingTimestampPresent", base: "bool"
+                    name: "PendingTimestampPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "MasterKeyPresent", base: "bool"
+                    name: "MasterKeyPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NetworkNamePresent", base: "bool"
+                    name: "NetworkNamePresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ExtendedPanIdPresent", base: "bool"
+                    name: "ExtendedPanIdPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "MeshLocalPrefixPresent", base: "bool"
+                    name: "MeshLocalPrefixPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DelayPresent", base: "bool"
+                    name: "DelayPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "PanIdPresent", base: "bool"
+                    name: "PanIdPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ChannelPresent", base: "bool"
+                    name: "ChannelPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "PskcPresent", base: "bool"
+                    name: "PskcPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SecurityPolicyPresent", base: "bool"
+                    name: "SecurityPolicyPresent", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ChannelMaskPresent", base: "bool"
+                    name: "ChannelMaskPresent", base: "bool",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ThreadNetworkDiagnosticsFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "PacketCounts"
+                    id: 0x0001, name: "PacketCounts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ErrorCounts"
+                    id: 0x0002, name: "ErrorCounts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "MleCounts"
+                    id: 0x0004, name: "MleCounts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "MacCounts"
+                    id: 0x0008, name: "MacCounts",
+                    conformance: "M"
                 })
             ]
         })

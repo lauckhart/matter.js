@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0507, name: "MediaInput",
@@ -16,6 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "MediaInputList", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "InputInfoStruct"
@@ -25,27 +26,28 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "MediaInputCurrentInput", base: "uint8",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         CommandElement({
             id: 0x0000, name: "SelectInput",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8"
+                    name: "Index", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "ShowInputStatus",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0002, name: "HideInputStatus",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         CommandElement({
@@ -53,94 +55,116 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8"
+                    name: "Index", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string"
+                    name: "Name", base: "string",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "InputInfoStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8"
+                    name: "Index", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InputType", base: "InputTypeEnum"
+                    name: "InputType", base: "InputTypeEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string"
+                    name: "Name", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Description", base: "string"
+                    name: "Description", base: "string",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "InputTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Internal"
+                    id: 0x0000, name: "Internal",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Aux"
+                    id: 0x0001, name: "Aux",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Coax"
+                    id: 0x0002, name: "Coax",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Composite"
+                    id: 0x0003, name: "Composite",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Hdmi"
+                    id: 0x0004, name: "Hdmi",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Input"
+                    id: 0x0005, name: "Input",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Line"
+                    id: 0x0006, name: "Line",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "Optical"
+                    id: 0x0007, name: "Optical",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Video"
+                    id: 0x0008, name: "Video",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Scart"
+                    id: 0x0009, name: "Scart",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "Usb"
+                    id: 0x000a, name: "Usb",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "Other"
+                    id: 0x000b, name: "Other",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MediaInputFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "NameUpdates"
+                    id: 0x0001, name: "NameUpdates",
+                    conformance: "M"
                 })
             ]
         })

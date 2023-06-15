@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseElement, ElementType, EndpointElement } from "../index.js";
+import { ElementType } from "../definitions/index.js";
+import { BaseElement } from "./BaseElement.js";
+import { EndpointElement } from "./EndpointElement.js";
 
 /**
  * Runtime representation of a node.

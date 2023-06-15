@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0300, name: "ColorControl",
@@ -56,17 +56,17 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0008, name: "ColorControlColorMode", base: "enum8",
-            default: 1
+            conformance: "M", default: 1
         }),
 
         AttributeElement({
             id: 0x000f, name: "ColorControlOptions", base: "map8",
-            access: "RW", default: 0
+            access: "RW", conformance: "M", default: 0
         }),
 
         AttributeElement({
             id: 0x0010, name: "ColorControlNumberOfPrimaries", base: "uint8",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -229,23 +229,28 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Hue", base: "uint8"
+                    name: "Hue", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Direction", base: "HueDirection"
+                    name: "Direction", base: "HueDirection",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -255,19 +260,23 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "MoveMode", base: "HueMoveMode"
+                    name: "MoveMode", base: "HueMoveMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Rate", base: "uint8"
+                    name: "Rate", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -277,23 +286,28 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "StepMode", base: "HueStepMode"
+                    name: "StepMode", base: "HueStepMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "StepSize", base: "uint8"
+                    name: "StepSize", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint8"
+                    name: "TransitionTime", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -303,19 +317,23 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Saturation", base: "uint8"
+                    name: "Saturation", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -325,19 +343,23 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "MoveMode", base: "SaturationMoveMode"
+                    name: "MoveMode", base: "SaturationMoveMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Rate", base: "uint8"
+                    name: "Rate", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -347,23 +369,28 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "StepMode", base: "SaturationStepMode"
+                    name: "StepMode", base: "SaturationStepMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "StepSize", base: "uint8"
+                    name: "StepSize", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint8"
+                    name: "TransitionTime", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -373,23 +400,28 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Hue", base: "uint8"
+                    name: "Hue", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Saturation", base: "uint8"
+                    name: "Saturation", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -399,23 +431,28 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ColorX", base: "uint16"
+                    name: "ColorX", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ColorY", base: "uint16"
+                    name: "ColorY", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -425,19 +462,23 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "RateX", base: "int16"
+                    name: "RateX", base: "int16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "RateY", base: "int16"
+                    name: "RateY", base: "int16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -447,23 +488,28 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "StepX", base: "int16"
+                    name: "StepX", base: "int16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "StepY", base: "int16"
+                    name: "StepY", base: "int16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -473,218 +519,269 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ColorTemperatureMireds", base: "uint16"
+                    name: "ColorTemperatureMireds", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsMask", base: "map8"
+                    name: "OptionsMask", base: "map8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OptionsOverride", base: "map8"
+                    name: "OptionsOverride", base: "map8",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorControlFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "HueAndSaturation"
+                    id: 0x0001, name: "HueAndSaturation",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "EnhancedHue"
+                    id: 0x0002, name: "EnhancedHue",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "ColorLoop"
+                    id: 0x0004, name: "ColorLoop",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Xy"
+                    id: 0x0008, name: "Xy",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "ColorTemperature"
+                    id: 0x0010, name: "ColorTemperature",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "HueDirection", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "ShortestDistance"
+                    id: 0x0000, name: "ShortestDistance",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "LongestDistance"
+                    id: 0x0001, name: "LongestDistance",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Up"
+                    id: 0x0002, name: "Up",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Down"
+                    id: 0x0003, name: "Down",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "HueMoveMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Stop"
+                    id: 0x0000, name: "Stop",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Up"
+                    id: 0x0001, name: "Up",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Down"
+                    id: 0x0003, name: "Down",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "HueStepMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Up"
+                    id: 0x0001, name: "Up",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Down"
+                    id: 0x0003, name: "Down",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SaturationMoveMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Stop"
+                    id: 0x0000, name: "Stop",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Up"
+                    id: 0x0001, name: "Up",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Down"
+                    id: 0x0003, name: "Down",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SaturationStepMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Up"
+                    id: 0x0001, name: "Up",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Down"
+                    id: 0x0003, name: "Down",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "CurrentHueAndCurrentSaturation"
+                    id: 0x0000, name: "CurrentHueAndCurrentSaturation",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "CurrentXAndCurrentY"
+                    id: 0x0001, name: "CurrentXAndCurrentY",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ColorTemperature"
+                    id: 0x0002, name: "ColorTemperature",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorCapabilities", base: "map16",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "HueSaturationSupported"
+                    id: 0x0001, name: "HueSaturationSupported",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "EnhancedHueSupported"
+                    id: 0x0002, name: "EnhancedHueSupported",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "ColorLoopSupported"
+                    id: 0x0004, name: "ColorLoopSupported",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "XyAttributesSupported"
+                    id: 0x0008, name: "XyAttributesSupported",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "ColorTemperatureSupported"
+                    id: 0x0010, name: "ColorTemperatureSupported",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorLoopUpdateFlags", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "UpdateAction"
+                    id: 0x0001, name: "UpdateAction",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "UpdateDirection"
+                    id: 0x0002, name: "UpdateDirection",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "UpdateTime"
+                    id: 0x0004, name: "UpdateTime",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "UpdateStartHue"
+                    id: 0x0008, name: "UpdateStartHue",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorLoopAction", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Deactivate"
+                    id: 0x0000, name: "Deactivate",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "ActivateFromColorLoopStartEnhancedHue"
+                    id: 0x0001, name: "ActivateFromColorLoopStartEnhancedHue",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ActivateFromEnhancedCurrentHue"
+                    id: 0x0002, name: "ActivateFromEnhancedCurrentHue",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorLoopDirection", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "DecrementHue"
+                    id: 0x0000, name: "DecrementHue",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "IncrementHue"
+                    id: 0x0001, name: "IncrementHue",
+                    conformance: "M"
                 })
             ]
         })

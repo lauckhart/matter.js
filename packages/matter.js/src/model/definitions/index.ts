@@ -11,3 +11,4 @@ export * from "./Metatype.js";
 export * from "./DefinitionError.js";
 export * from "./ElementType.js";
 export * from "./Specification.js";
+export * from "./FeatureSet.js";

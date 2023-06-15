@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SpecMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement } from "../../../index.js";
+import { SpecMatter } from "../SpecMatter.js";
+import { ClusterElement, AttributeElement, CommandElement } from "../../../elements/index.js";
 
 SpecMatter.children!.push(ClusterElement({
     id: 0x0029, name: "OtaSoftwareUpdateProvider",

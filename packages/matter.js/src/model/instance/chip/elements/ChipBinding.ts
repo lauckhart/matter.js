@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x001e, name: "Binding",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "BindingList", base: "list",
-            access: "RW",
+            access: "RW", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "TargetStruct"
@@ -26,7 +26,7 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "TargetStruct", base: "struct",
-            access: "R F",
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "Node", base: "node-id",

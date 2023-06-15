@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x050a, name: "ContentLauncher",
@@ -34,11 +34,13 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "Search", base: "ContentSearchStruct"
+                    name: "Search", base: "ContentSearchStruct",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AutoPlay", base: "bool"
+                    name: "AutoPlay", base: "bool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -53,7 +55,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "ContentUrl", base: "string"
+                    name: "ContentUrl", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -73,7 +76,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "ContentLaunchStatusEnum"
+                    name: "Status", base: "ContentLaunchStatusEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -85,58 +89,71 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "ContentSearchStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ParameterList", base: "ParameterStruct"
+                    name: "ParameterList", base: "ParameterStruct",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AdditionalInfoStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Name", base: "string"
+                    name: "Name", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string"
+                    name: "Value", base: "string",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MetricTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Pixels"
+                    id: 0x0000, name: "Pixels",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Percentage"
+                    id: 0x0001, name: "Percentage",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DimensionStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Width", base: "double"
+                    name: "Width", base: "double",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Height", base: "double"
+                    name: "Height", base: "double",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Metric", base: "MetricTypeEnum"
+                    name: "Metric", base: "MetricTypeEnum",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "StyleInformationStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "ImageUrl", base: "string",
@@ -157,9 +174,11 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "BrandingInformationStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ProviderName", base: "string"
+                    name: "ProviderName", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -191,91 +210,113 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "ParameterEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Actor"
+                    id: 0x0000, name: "Actor",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Channel"
+                    id: 0x0001, name: "Channel",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Character"
+                    id: 0x0002, name: "Character",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Director"
+                    id: 0x0003, name: "Director",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Event"
+                    id: 0x0004, name: "Event",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Franchise"
+                    id: 0x0005, name: "Franchise",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Genre"
+                    id: 0x0006, name: "Genre",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "League"
+                    id: 0x0007, name: "League",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Popularity"
+                    id: 0x0008, name: "Popularity",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Provider"
+                    id: 0x0009, name: "Provider",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "Sport"
+                    id: 0x000a, name: "Sport",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "SportsTeam"
+                    id: 0x000b, name: "SportsTeam",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "Type"
+                    id: 0x000c, name: "Type",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000d, name: "Video"
+                    id: 0x000d, name: "Video",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ContentLaunchStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success"
+                    id: 0x0000, name: "Success",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "UrlNotAvailable"
+                    id: 0x0001, name: "UrlNotAvailable",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "AuthFailed"
+                    id: 0x0002, name: "AuthFailed",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ParameterStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Type", base: "ParameterEnum"
+                    name: "Type", base: "ParameterEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string"
+                    name: "Value", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -287,26 +328,32 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "SupportedStreamingProtocol", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Dash"
+                    id: 0x0001, name: "Dash",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Hls"
+                    id: 0x0002, name: "Hls",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ContentLauncherFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "ContentSearch"
+                    id: 0x0001, name: "ContentSearch",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "UrlPlayback"
+                    id: 0x0002, name: "UrlPlayback",
+                    conformance: "M"
                 })
             ]
         })

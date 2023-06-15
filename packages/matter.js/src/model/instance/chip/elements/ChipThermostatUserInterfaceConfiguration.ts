@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0204, name: "ThermostatUserInterfaceConfiguration",
@@ -16,12 +16,12 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "TemperatureDisplayMode", base: "enum8",
-            access: "RW", default: 0
+            access: "RW", conformance: "M", default: 0
         }),
 
         AttributeElement({
             id: 0x0001, name: "KeypadLockout", base: "enum8",
-            access: "RW VM", default: 0
+            access: "RW VM", conformance: "M", default: 0
         }),
 
         AttributeElement({

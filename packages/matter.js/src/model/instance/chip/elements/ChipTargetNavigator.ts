@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0505, name: "TargetNavigator",
@@ -16,6 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "TargetNavigatorList", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "TargetInfoStruct"
@@ -30,10 +31,11 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "NavigateTarget",
-            direction: "request", response: "NavigateTargetResponse",
+            conformance: "M", direction: "request", response: "NavigateTargetResponse",
             children: [
                 DatatypeElement({
-                    name: "Target", base: "uint8"
+                    name: "Target", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -45,10 +47,11 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0001, name: "NavigateTargetResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "TargetNavigatorStatusEnum"
+                    name: "Status", base: "TargetNavigatorStatusEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -60,30 +63,37 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "TargetNavigatorStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success"
+                    id: 0x0000, name: "Success",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "TargetNotFound"
+                    id: 0x0001, name: "TargetNotFound",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "NotAllowed"
+                    id: 0x0002, name: "NotAllowed",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TargetInfoStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Identifier", base: "uint8"
+                    name: "Identifier", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string"
+                    name: "Name", base: "string",
+                    conformance: "M"
                 })
             ]
         })

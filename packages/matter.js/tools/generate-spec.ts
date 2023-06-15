@@ -18,15 +18,15 @@
 // mention the term "masochist".
 
 import "../util/setup.js";
-import { ClusterElement } from "../../src/model/index.js"
-import { scanIndex } from "./spec/scan-index.js";
+import { ClusterElement } from "../src/model/index.js"
+import { scanIndex } from "./mom/spec/scan-index.js";
 
-import { paths } from "./spec/spec-input.js";
-import { ClusterReference, HtmlReference } from "./spec/spec-types.js";
-import { loadCluster } from "./spec/load-cluster.js";
-import { translateCluster } from "./spec/translate-cluster.js";
-import { Logger } from "../../src/log/Logger.js";
-import { generateModel } from "./common/generate-model.js";
+import { paths } from "./mom/spec/spec-input.js";
+import { ClusterReference, HtmlReference } from "./mom/spec/spec-types.js";
+import { loadCluster } from "./mom/spec/load-cluster.js";
+import { translateCluster } from "./mom/spec/translate-cluster.js";
+import { Logger } from "../src/log/Logger.js";
+import { generateModel } from "./mom/common/generate-model.js";
 
 const clusters = Array<ClusterElement>();
 const logger = Logger.get("generate-spec");

@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement, ElementType, Mei } from "../index.js";
+import { ElementType, Mei } from "../definitions/index.js";
+import { ValueElement } from "./ValueElement.js";
+import { BaseElement } from "./BaseElement.js";
 
 /**
  * An event is triggered by endpoints.
  */
-export type EventElement = BaseDataElement & {
+export type EventElement = ValueElement & {
     id: Mei,
     type: `${EventElement.Type}`,
 
@@ -18,7 +20,7 @@ export type EventElement = BaseDataElement & {
 }
 
 export function EventElement(definition: EventElement.Properties) {
-    return BaseDataElement(EventElement.Type, definition) as EventElement;
+    return ValueElement(EventElement.Type, definition) as EventElement;
 }
 
 export namespace EventElement {

@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement, EventElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement, EventElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x002a, name: "OtaSoftwareUpdateRequestor",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "DefaultOtaProviders", base: "list",
-            access: "RW",
+            access: "RW", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "ProviderLocation"
@@ -26,17 +26,17 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "UpdatePossible", base: "bool",
-            default: true
+            conformance: "M", default: true
         }),
 
         AttributeElement({
             id: 0x0002, name: "UpdateState", base: "OtaUpdateStateEnum",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
             id: 0x0003, name: "UpdateStateProgress", base: "uint8",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         CommandElement({
@@ -44,15 +44,18 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ProviderNodeId", base: "node-id"
+                    name: "ProviderNodeId", base: "node-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "VendorId", base: "vendor-id"
+                    name: "VendorId", base: "vendor-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AnnouncementReason", base: "OtaAnnouncementReason"
+                    name: "AnnouncementReason", base: "OtaAnnouncementReason",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -61,165 +64,195 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "Endpoint", base: "endpoint-no"
+                    name: "Endpoint", base: "endpoint-no",
+                    conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0000, name: "StateTransition",
-            priority: "info",
+            conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousState", base: "OtaUpdateStateEnum"
+                    name: "PreviousState", base: "OtaUpdateStateEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NewState", base: "OtaUpdateStateEnum"
+                    name: "NewState", base: "OtaUpdateStateEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Reason", base: "OtaChangeReasonEnum"
+                    name: "Reason", base: "OtaChangeReasonEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "TargetSoftwareVersion", base: "uint32",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0001, name: "VersionApplied",
-            priority: "critical",
+            conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32"
+                    name: "SoftwareVersion", base: "uint32",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ProductId", base: "uint16"
+                    name: "ProductId", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0002, name: "DownloadError",
-            priority: "info",
+            conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32"
+                    name: "SoftwareVersion", base: "uint32",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "BytesDownloaded", base: "uint64"
+                    name: "BytesDownloaded", base: "uint64",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "ProgressPercent", base: "uint8",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "PlatformCode", base: "int64",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OtaAnnouncementReason", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "SimpleAnnouncement"
+                    id: 0x0000, name: "SimpleAnnouncement",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "UpdateAvailable"
+                    id: 0x0001, name: "UpdateAvailable",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "UrgentUpdateAvailable"
+                    id: 0x0002, name: "UrgentUpdateAvailable",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OtaUpdateStateEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unknown"
+                    id: 0x0000, name: "Unknown",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Idle"
+                    id: 0x0001, name: "Idle",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Querying"
+                    id: 0x0002, name: "Querying",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "DelayedOnQuery"
+                    id: 0x0003, name: "DelayedOnQuery",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Downloading"
+                    id: 0x0004, name: "Downloading",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Applying"
+                    id: 0x0005, name: "Applying",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "DelayedOnApply"
+                    id: 0x0006, name: "DelayedOnApply",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "RollingBack"
+                    id: 0x0007, name: "RollingBack",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "DelayedOnUserConsent"
+                    id: 0x0008, name: "DelayedOnUserConsent",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OtaChangeReasonEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unknown"
+                    id: 0x0000, name: "Unknown",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Success"
+                    id: 0x0001, name: "Success",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Failure"
+                    id: 0x0002, name: "Failure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "TimeOut"
+                    id: 0x0003, name: "TimeOut",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "DelayByProvider"
+                    id: 0x0004, name: "DelayByProvider",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ProviderLocation", base: "struct",
-            access: "R F",
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ProviderNodeId", base: "node-id"
+                    name: "ProviderNodeId", base: "node-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Endpoint", base: "endpoint-no"
+                    name: "Endpoint", base: "endpoint-no",
+                    conformance: "M"
                 })
             ]
         })

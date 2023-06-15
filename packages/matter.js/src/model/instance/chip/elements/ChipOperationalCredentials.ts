@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x003e, name: "OperationalCredentials",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "Nocs", base: "list",
-            access: "R A",
+            access: "R A", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "NocStruct"
@@ -26,6 +26,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "Fabrics", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "FabricDescriptorStruct"
@@ -34,15 +35,18 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SupportedFabrics", base: "uint8"
+            id: 0x0002, name: "SupportedFabrics", base: "uint8",
+            conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CommissionedFabrics", base: "uint8"
+            id: 0x0003, name: "CommissionedFabrics", base: "uint8",
+            conformance: "M"
         }),
 
         AttributeElement({
             id: 0x0004, name: "TrustedRootCertificates", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "octstr"
@@ -51,59 +55,66 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "CurrentFabricIndex", base: "uint8"
+            id: 0x0005, name: "CurrentFabricIndex", base: "uint8",
+            conformance: "M"
         }),
 
         CommandElement({
             id: 0x0000, name: "AttestationRequest",
-            access: "R A", direction: "request", response: "AttestationResponse",
+            access: "R A", conformance: "M", direction: "request", response: "AttestationResponse",
             children: [
                 DatatypeElement({
-                    name: "AttestationNonce", base: "octstr"
+                    name: "AttestationNonce", base: "octstr",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "AttestationResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "AttestationElements", base: "octstr"
+                    name: "AttestationElements", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AttestationSignature", base: "octstr"
+                    name: "AttestationSignature", base: "octstr",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "CertificateChainRequest",
-            access: "R A", direction: "request", response: "CertificateChainResponse",
+            access: "R A", conformance: "M", direction: "request", response: "CertificateChainResponse",
             children: [
                 DatatypeElement({
-                    name: "CertificateType", base: "CertificateChainTypeEnum"
+                    name: "CertificateType", base: "CertificateChainTypeEnum",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "CertificateChainResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Certificate", base: "octstr"
+                    name: "Certificate", base: "octstr",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "CsrRequest",
-            access: "R A", direction: "request", response: "CsrResponse",
+            access: "R A", conformance: "M", direction: "request", response: "CsrResponse",
             children: [
                 DatatypeElement({
-                    name: "CsrNonce", base: "octstr"
+                    name: "CsrNonce", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -115,24 +126,27 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0005, name: "CsrResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "NocsrElements", base: "octstr"
+                    name: "NocsrElements", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AttestationSignature", base: "octstr"
+                    name: "AttestationSignature", base: "octstr",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0006, name: "AddNoc",
-            access: "R A", direction: "request", response: "NocResponse",
+            access: "R A", conformance: "M", direction: "request", response: "NocResponse",
             children: [
                 DatatypeElement({
-                    name: "NocValue", base: "octstr"
+                    name: "NocValue", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -141,25 +155,29 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "IpkValue", base: "octstr"
+                    name: "IpkValue", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "CaseAdminSubject", base: "uint64"
+                    name: "CaseAdminSubject", base: "uint64",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AdminVendorId", base: "vendor-id"
+                    name: "AdminVendorId", base: "vendor-id",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0007, name: "UpdateNoc",
-            access: "R F A", direction: "request", response: "NocResponse",
+            access: "R F A", conformance: "M", direction: "request", response: "NocResponse",
             children: [
                 DatatypeElement({
-                    name: "NocValue", base: "octstr"
+                    name: "NocValue", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -171,10 +189,11 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0008, name: "NocResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "StatusCode", base: "NodeOperationalCertStatusEnum"
+                    name: "StatusCode", base: "NodeOperationalCertStatusEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -191,130 +210,152 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0009, name: "UpdateFabricLabel",
-            access: "R F A", direction: "request", response: "NocResponse",
+            access: "R F A", conformance: "M", direction: "request", response: "NocResponse",
             children: [
                 DatatypeElement({
-                    name: "Label", base: "string"
+                    name: "Label", base: "string",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000a, name: "RemoveFabric",
-            access: "R A", direction: "request", response: "NocResponse",
+            access: "R A", conformance: "M", direction: "request", response: "NocResponse",
             children: [
                 DatatypeElement({
-                    name: "FabricIndex", base: "fabric-idx"
+                    name: "FabricIndex", base: "fabric-idx",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000b, name: "AddTrustedRootCertificate",
-            access: "R A", direction: "request",
+            access: "R A", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "RootCaCertificate", base: "octstr"
+                    name: "RootCaCertificate", base: "octstr",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "FabricDescriptorStruct", base: "struct",
-            access: "R F",
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "RootPublicKey", base: "octstr"
+                    name: "RootPublicKey", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "VendorId", base: "vendor-id"
+                    name: "VendorId", base: "vendor-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "FabricId", base: "fabric-id"
+                    name: "FabricId", base: "fabric-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NodeId", base: "node-id"
+                    name: "NodeId", base: "node-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Label", base: "string"
+                    name: "Label", base: "string",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "NodeOperationalCertStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Ok"
+                    id: 0x0000, name: "Ok",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "InvalidPublicKey"
+                    id: 0x0001, name: "InvalidPublicKey",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "InvalidNodeOpId"
+                    id: 0x0002, name: "InvalidNodeOpId",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "InvalidNoc"
+                    id: 0x0003, name: "InvalidNoc",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "MissingCsr"
+                    id: 0x0004, name: "MissingCsr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "TableFull"
+                    id: 0x0005, name: "TableFull",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "InvalidAdminSubject"
+                    id: 0x0006, name: "InvalidAdminSubject",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "FabricConflict"
+                    id: 0x0009, name: "FabricConflict",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "LabelConflict"
+                    id: 0x000a, name: "LabelConflict",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "InvalidFabricIndex"
+                    id: 0x000b, name: "InvalidFabricIndex",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "NocStruct", base: "struct",
-            access: "R F",
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "Noc", base: "octstr",
-                    access: "R S"
+                    access: "R S", conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "Icac", base: "octstr",
-                    access: "R S", quality: "X"
+                    access: "R S", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CertificateChainTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "DacCertificate"
+                    id: 0x0001, name: "DacCertificate",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "PaiCertificate"
+                    id: 0x0002, name: "PaiCertificate",
+                    conformance: "M"
                 })
             ]
         })

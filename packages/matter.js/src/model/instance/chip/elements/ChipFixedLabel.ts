@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0040, name: "FixedLabel",
@@ -16,6 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "LabelList", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "LabelStruct"
@@ -25,13 +26,16 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "LabelStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Label", base: "string"
+                    name: "Label", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string"
+                    name: "Value", base: "string",
+                    conformance: "M"
                 })
             ]
         })

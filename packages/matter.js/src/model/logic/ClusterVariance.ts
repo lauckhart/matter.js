@@ -4,16 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FeatureSet } from "../definitions/FeatureSet.js";
-import { AttributeModel, ClusterModel, Conformance, DataModel, DatatypeModel } from "../index.js";
-import { RecordValidator } from "./index.js";
+import { Conformance } from "../aspects/index.js";
+import { FeatureSet } from "../definitions/index.js";
+import { AttributeModel, ClusterModel, ValueModel, DatatypeModel } from "../models/index.js";
+import { RecordValidator } from "./RecordValidator.js";
 
 /**
  * Lists mandatory and optional elements for a specific context.
  */
 export type ElementVariance = {
-    mandatory: DataModel[],
-    optional: DataModel[]
+    mandatory: ValueModel[],
+    optional: ValueModel[]
 }
 
 /**
@@ -60,7 +61,7 @@ export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
         return result;
     }
 
-    const complex = Array<DataModel>();
+    const complex = Array<ValueModel>();
 
     addSimple(cluster, result, complex);
     addFeatureSets(cluster, result, complex);
@@ -69,9 +70,9 @@ export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
 }
 
 // Add variance of the form O, M, FEATURE, [FEATURE], ignoring D and P
-function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: DataModel[]) {
+function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[]) {
     for (const child of cluster.children) {
-        if (!(child instanceof DataModel)) {
+        if (!(child instanceof ValueModel)) {
             continue;
         }
 
@@ -100,7 +101,7 @@ function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: Data
     }
 }
 
-function addFeatureSets(cluster: ClusterModel, result: ClusterVariance, complex: DataModel[]) {
+function addFeatureSets(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[]) {
     if (!complex.length) {
         return;
     }
@@ -113,7 +114,7 @@ function addFeatureSets(cluster: ClusterModel, result: ClusterVariance, complex:
     result;
 }
 
-function getSimpleVariance(element: DataModel) {
+function getSimpleVariance(element: ValueModel) {
     function fromNode(node: Conformance.Ast): SimpleVariance | undefined {
         switch (node.type) {
             case Conformance.Flag.Mandatory:

@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatatypeElement, DatatypeModel } from "../../index.js";
+import { DatatypeElement } from "../../elements/index.js";
+import { DatatypeModel } from "../../models/index.js";
 import { DataValidator } from "./DataValidator.js";
 import { ModelValidator } from "./ModelValidator.js";
 

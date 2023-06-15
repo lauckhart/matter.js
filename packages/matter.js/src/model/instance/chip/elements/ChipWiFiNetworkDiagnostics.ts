@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, EventElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, EventElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0036, name: "WiFiNetworkDiagnostics",
@@ -16,27 +16,27 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "Bssid", base: "octstr",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "SecurityType", base: "SecurityTypeEnum",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "WifiVersion", base: "WiFiVersionEnum",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0003, name: "ChannelNumber", base: "uint16",
-            default: 0, quality: "X"
+            conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0004, name: "Rssi", base: "int8",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -89,7 +89,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ReasonCode", base: "uint16"
+                    name: "ReasonCode", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
@@ -99,11 +100,13 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "AssociationFailure", base: "AssociationFailureCauseEnum"
+                    name: "AssociationFailure", base: "AssociationFailureCauseEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "uint16"
+                    name: "Status", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
@@ -113,112 +116,138 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ConnectionStatus", base: "ConnectionStatusEnum"
+                    name: "ConnectionStatus", base: "ConnectionStatusEnum",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SecurityTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "None"
+                    id: 0x0001, name: "None",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Wep"
+                    id: 0x0002, name: "Wep",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Wpa"
+                    id: 0x0003, name: "Wpa",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Wpa2"
+                    id: 0x0004, name: "Wpa2",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Wpa3"
+                    id: 0x0005, name: "Wpa3",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiFiVersionEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "A"
+                    id: 0x0000, name: "A",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "B"
+                    id: 0x0001, name: "B",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "G"
+                    id: 0x0002, name: "G",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "N"
+                    id: 0x0003, name: "N",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Ac"
+                    id: 0x0004, name: "Ac",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Ax"
+                    id: 0x0005, name: "Ax",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AssociationFailureCauseEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unknown"
+                    id: 0x0000, name: "Unknown",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "AssociationFailed"
+                    id: 0x0001, name: "AssociationFailed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "AuthenticationFailed"
+                    id: 0x0002, name: "AuthenticationFailed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "SsidNotFound"
+                    id: 0x0003, name: "SsidNotFound",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ConnectionStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Connected"
+                    id: 0x0000, name: "Connected",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "NotConnected"
+                    id: 0x0001, name: "NotConnected",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiFiNetworkDiagnosticsFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "PacketCounts"
+                    id: 0x0001, name: "PacketCounts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ErrorCounts"
+                    id: 0x0002, name: "ErrorCounts",
+                    conformance: "M"
                 })
             ]
         })

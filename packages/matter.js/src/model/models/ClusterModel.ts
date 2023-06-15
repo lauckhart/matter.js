@@ -4,7 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterElement, Mei, Model, AttributeModel, CommandModel, DatatypeModel, EventModel } from "../index.js";
+import { Mei } from "../definitions/index.js";
+import { ClusterElement } from "../elements/index.js";
+import { AttributeModel } from "./AttributeModel.js";
+import { CommandModel } from "./CommandModel.js";
+import { DatatypeModel } from "./DatatypeModel.js";
+import { EventModel } from "./EventModel.js";
+import { Model } from "./Model.js";
 
 export class ClusterModel extends Model implements ClusterElement {
     override type!: ClusterElement.Type;

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterElement } from "../../index.js";
+import { MatterElement } from "../../elements/index.js";
 
 /**
  * This Matter model represents elements defined by Project CHIP's

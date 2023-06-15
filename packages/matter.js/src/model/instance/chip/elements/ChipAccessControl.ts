@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, EventElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, EventElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x001f, name: "AccessControl",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "Acl", base: "list",
-            access: "RW A",
+            access: "RW A", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "AccessControlEntryStruct"
@@ -36,181 +36,198 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0002, name: "SubjectsPerAccessControlEntry", base: "uint16",
-            access: "R V"
+            access: "R V", conformance: "M"
         }),
 
         AttributeElement({
             id: 0x0003, name: "TargetsPerAccessControlEntry", base: "uint16",
-            access: "R V"
+            access: "R V", conformance: "M"
         }),
 
         AttributeElement({
             id: 0x0004, name: "AccessControlEntriesPerFabric", base: "uint16",
-            access: "R V"
+            access: "R V", conformance: "M"
         }),
 
         EventElement({
             id: 0x0000, name: "AccessControlEntryChanged",
-            access: "R S A", priority: "info",
+            access: "R S A", conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
                     name: "AdminNodeId", base: "node-id",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "AdminPasscodeId", base: "uint16",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "ChangeType", base: "ChangeTypeEnum"
+                    name: "ChangeType", base: "ChangeTypeEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "LatestValue", base: "AccessControlEntryStruct",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         }),
 
         EventElement({
             id: 0x0001, name: "AccessControlExtensionChanged",
-            access: "R S A", priority: "info",
+            access: "R S A", conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
                     name: "AdminNodeId", base: "node-id",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "AdminPasscodeId", base: "uint16",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "ChangeType", base: "ChangeTypeEnum"
+                    name: "ChangeType", base: "ChangeTypeEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "LatestValue", base: "AccessControlExtensionStruct",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AccessControlEntryPrivilegeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "View"
+                    id: 0x0001, name: "View",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ProxyView"
+                    id: 0x0002, name: "ProxyView",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Operate"
+                    id: 0x0003, name: "Operate",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Manage"
+                    id: 0x0004, name: "Manage",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Administer"
+                    id: 0x0005, name: "Administer",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AccessControlEntryAuthModeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Pase"
+                    id: 0x0001, name: "Pase",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Case"
+                    id: 0x0002, name: "Case",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Group"
+                    id: 0x0003, name: "Group",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ChangeTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Changed"
+                    id: 0x0000, name: "Changed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Added"
+                    id: 0x0001, name: "Added",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Removed"
+                    id: 0x0002, name: "Removed",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "Target", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "Cluster", base: "cluster-id",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "Endpoint", base: "endpoint-no",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "DeviceType", base: "devtype-id",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AccessControlEntryStruct", base: "struct",
-            access: "R F",
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "Privilege", base: "AccessControlEntryPrivilegeEnum",
-                    access: "R S"
+                    access: "R S", conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "AuthMode", base: "AccessControlEntryAuthModeEnum",
-                    access: "R S"
+                    access: "R S", conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "Subjects", base: "uint64",
-                    access: "R S", quality: "X"
+                    access: "R S", conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "Targets", base: "Target",
-                    access: "R S", quality: "X"
+                    access: "R S", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AccessControlExtensionStruct", base: "struct",
-            access: "R F",
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "Data", base: "octstr",
-                    access: "R S"
+                    access: "R S", conformance: "M"
                 })
             ]
         })

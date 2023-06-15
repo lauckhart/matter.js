@@ -4,7 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterElement, ClusterModel, DeviceTypeElement, Mei, Model } from "../index.js";
+import { Mei } from "../definitions/index.js";
+import { ClusterElement, DeviceTypeElement } from "../elements/index.js";
+import { ClusterModel } from "./ClusterModel.js";
+import { Model } from "./Model.js";
 
 export class DeviceTypeModel extends Model implements DeviceTypeElement {
     override type!: DeviceTypeElement.Type;

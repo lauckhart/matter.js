@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { EndpointElement, EndpointModel } from "../../index.js";
-import { ModelValidator } from "./index.js";
+import { EndpointElement } from "../../elements/index.js";
+import { EndpointModel } from "../../models/index.js";
+import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[EndpointElement.Type] =
 class EndpointValidator extends ModelValidator<EndpointModel> {

@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0403, name: "PressureMeasurement",
@@ -16,17 +16,17 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "PressureMeasuredValue", base: "int16",
-            quality: "X P"
+            conformance: "M", quality: "X P"
         }),
 
         AttributeElement({
             id: 0x0001, name: "PressureMinMeasuredValue", base: "int16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "PressureMaxMeasuredValue", base: "int16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -61,9 +61,11 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "PressureMeasurementFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Extended"
+                    id: 0x0001, name: "Extended",
+                    conformance: "M"
                 })
             ]
         })

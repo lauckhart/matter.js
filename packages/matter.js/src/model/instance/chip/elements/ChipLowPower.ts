@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0508, name: "LowPower",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "Sleep",
-            direction: "request"
+            conformance: "M", direction: "request"
         })
     ]
 }));

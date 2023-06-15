@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SpecMatter } from "../index.js";
-import { ClusterElement, AttributeElement } from "../../../index.js";
+import { SpecMatter } from "../SpecMatter.js";
+import { ClusterElement, AttributeElement } from "../../../elements/index.js";
 
 SpecMatter.children!.push(ClusterElement({
     id: 0x0400, name: "IlluminanceMeasurement",

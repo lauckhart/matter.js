@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0039, name: "BridgedDeviceBasicInformation",
@@ -81,7 +81,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0011, name: "Reachable", base: "bool",
-            default: true
+            conformance: "M", default: true
         }),
 
         AttributeElement({
@@ -99,7 +99,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32"
+                    name: "SoftwareVersion", base: "uint32",
+                    conformance: "M"
                 })
             ]
         }),
@@ -116,142 +117,174 @@ ChipMatter.children!.push(ClusterElement({
 
         EventElement({
             id: 0x0003, name: "ReachableChanged",
-            priority: "info",
+            conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ReachableNewValue", base: "bool"
+                    name: "ReachableNewValue", base: "bool",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ProductFinishEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Other"
+                    id: 0x0000, name: "Other",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Matte"
+                    id: 0x0001, name: "Matte",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Satin"
+                    id: 0x0002, name: "Satin",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Polished"
+                    id: 0x0003, name: "Polished",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Rugged"
+                    id: 0x0004, name: "Rugged",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Fabric"
+                    id: 0x0005, name: "Fabric",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ColorEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Black"
+                    id: 0x0000, name: "Black",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Navy"
+                    id: 0x0001, name: "Navy",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Green"
+                    id: 0x0002, name: "Green",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Teal"
+                    id: 0x0003, name: "Teal",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Maroon"
+                    id: 0x0004, name: "Maroon",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Purple"
+                    id: 0x0005, name: "Purple",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Olive"
+                    id: 0x0006, name: "Olive",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "Gray"
+                    id: 0x0007, name: "Gray",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Blue"
+                    id: 0x0008, name: "Blue",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Lime"
+                    id: 0x0009, name: "Lime",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "Aqua"
+                    id: 0x000a, name: "Aqua",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "Red"
+                    id: 0x000b, name: "Red",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "Fuchsia"
+                    id: 0x000c, name: "Fuchsia",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000d, name: "Yellow"
+                    id: 0x000d, name: "Yellow",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000e, name: "White"
+                    id: 0x000e, name: "White",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000f, name: "Nickel"
+                    id: 0x000f, name: "Nickel",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "Chrome"
+                    id: 0x0010, name: "Chrome",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0011, name: "Brass"
+                    id: 0x0011, name: "Brass",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0012, name: "Copper"
+                    id: 0x0012, name: "Copper",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0013, name: "Silver"
+                    id: 0x0013, name: "Silver",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0014, name: "Gold"
+                    id: 0x0014, name: "Gold",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ProductAppearanceStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Finish", base: "ProductFinishEnum"
+                    name: "Finish", base: "ProductFinishEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "PrimaryColor", base: "ColorEnum",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         })

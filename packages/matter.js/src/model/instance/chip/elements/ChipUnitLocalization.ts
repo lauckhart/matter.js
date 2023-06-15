@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x002d, name: "UnitLocalization",
@@ -21,26 +21,32 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "TempUnitEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Fahrenheit"
+                    id: 0x0000, name: "Fahrenheit",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Celsius"
+                    id: 0x0001, name: "Celsius",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Kelvin"
+                    id: 0x0002, name: "Kelvin",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "UnitLocalizationFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "TemperatureUnit"
+                    id: 0x0001, name: "TemperatureUnit",
+                    conformance: "M"
                 })
             ]
         })

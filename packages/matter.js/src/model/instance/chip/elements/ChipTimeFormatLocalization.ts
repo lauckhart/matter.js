@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x002c, name: "TimeFormatLocalization",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "HourFormat", base: "HourFormatEnum",
-            access: "RW"
+            access: "RW", conformance: "M"
         }),
 
         AttributeElement({
@@ -36,66 +36,82 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "HourFormatEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "12Hr"
+                    id: 0x0000, name: "12Hr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "24Hr"
+                    id: 0x0001, name: "24Hr",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "CalendarTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Buddhist"
+                    id: 0x0000, name: "Buddhist",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Chinese"
+                    id: 0x0001, name: "Chinese",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Coptic"
+                    id: 0x0002, name: "Coptic",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Ethiopian"
+                    id: 0x0003, name: "Ethiopian",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Gregorian"
+                    id: 0x0004, name: "Gregorian",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Hebrew"
+                    id: 0x0005, name: "Hebrew",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Indian"
+                    id: 0x0006, name: "Indian",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "Islamic"
+                    id: 0x0007, name: "Islamic",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Japanese"
+                    id: 0x0008, name: "Japanese",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Korean"
+                    id: 0x0009, name: "Korean",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "Persian"
+                    id: 0x000a, name: "Persian",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "Taiwanese"
+                    id: 0x000b, name: "Taiwanese",
+                    conformance: "M"
                 })
             ]
         })

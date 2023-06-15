@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, BaseElement, Conformance, Constraint, Quality } from "../index.js";
-import type { AnyDataElement, ElementType } from "../index.js";
+import { Access, Conformance, Constraint, Quality } from "../aspects/index.js";
+import { ElementType } from "../definitions/index.js";
+import { BaseElement } from "./BaseElement.js";
+import { type AnyDataElement } from "./AnyDataElement.js";
 
 /**
- * A base element for all elements that represent data.
+ * A base element for all elements that represent data values.
  */
-export type BaseDataElement = BaseElement & {
+export type ValueElement = BaseElement & {
     /**
      * Derived datatypes as defined by the Matter Specification must specify
      * the name of the base type.  This is every type that is not global.
@@ -43,7 +45,7 @@ export type BaseDataElement = BaseElement & {
     /**
      * Applies to numeric types.
      */
-    byteSize?: BaseDataElement.Size,
+    byteSize?: ValueElement.Size,
 
     /**
      * The default value for the element.
@@ -57,7 +59,7 @@ export type BaseDataElement = BaseElement & {
     children?: AnyDataElement[]
 }
 
-export function BaseDataElement(type: ElementType, definition: BaseDataElement) {
+export function ValueElement(type: ElementType, definition: ValueElement) {
     definition = { ...definition };
     
     if (definition.constraint?.toString().toLowerCase() == "all") {
@@ -70,11 +72,11 @@ export function BaseDataElement(type: ElementType, definition: BaseDataElement) 
         }
     }
 
-    return BaseElement(type, definition) as BaseDataElement;
+    return BaseElement(type, definition) as ValueElement;
 }
 
-export namespace BaseDataElement {
-    export type Properties = BaseElement.Properties<BaseDataElement & { type: `${ElementType}` }>;
+export namespace ValueElement {
+    export type Properties = BaseElement.Properties<ValueElement & { type: `${ElementType}` }>;
 
     /**
      * The general type of datatype (ignoring size).
@@ -87,7 +89,7 @@ export namespace BaseDataElement {
     /**
      * A pool of datatype definitions indexed by name.
      */
-    export type Datatypes = { [name: string]: BaseDataElement };
+    export type Datatypes = { [name: string]: ValueElement };
     
     /**
      * Valid sizes for ints.

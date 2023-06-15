@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0402, name: "TemperatureMeasurement",
@@ -16,17 +16,17 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "TempMeasuredValue", base: "int16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "TempMinMeasuredValue", base: "int16",
-            default: 32768, quality: "X"
+            conformance: "M", default: 32768, quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "TempMaxMeasuredValue", base: "int16",
-            default: 32768, quality: "X"
+            conformance: "M", default: 32768, quality: "X"
         }),
 
         AttributeElement({

@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0050, name: "ModeSelect",
@@ -15,16 +15,18 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for selecting a mode from a list of supported options.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ModeDescription", base: "string"
+            id: 0x0000, name: "ModeDescription", base: "string",
+            conformance: "M"
         }),
 
         AttributeElement({
             id: 0x0001, name: "StandardNamespace", base: "enum16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "SupportedModes", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "ModeOptionStruct"
@@ -34,7 +36,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0003, name: "CurrentMode", base: "uint8",
-            quality: "P"
+            conformance: "M", quality: "P"
         }),
 
         AttributeElement({
@@ -49,49 +51,59 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "ChangeToMode",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "NewMode", base: "uint8"
+                    name: "NewMode", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SemanticTagStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "MfgCode", base: "vendor-id"
+                    name: "MfgCode", base: "vendor-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "enum16"
+                    name: "Value", base: "enum16",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ModeOptionStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Label", base: "string"
+                    name: "Label", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Mode", base: "uint8"
+                    name: "Mode", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SemanticTags", base: "SemanticTagStruct"
+                    name: "SemanticTags", base: "SemanticTagStruct",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ModeSelectFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Deponoff"
+                    id: 0x0001, name: "Deponoff",
+                    conformance: "M"
                 })
             ]
         })
