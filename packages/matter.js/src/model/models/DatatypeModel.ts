@@ -4,9 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatatypeElement, DataModel, Mei, Model, Datatype, Globals } from "../index.js";
+import { Datatype, Mei } from "../definitions/index.js";
+import { DatatypeElement } from "../elements/index.js";
+import { ValueModel } from "./ValueModel.js";
+import { Model } from "./Model.js";
 
-export class DatatypeModel extends DataModel implements DatatypeElement {
+export class DatatypeModel extends ValueModel implements DatatypeElement {
     override type: DatatypeElement.Type = DatatypeElement.Type;
     override id?: Mei;
 
@@ -19,11 +22,11 @@ export class DatatypeModel extends DataModel implements DatatypeElement {
         // If this is an untyped item parented by an enum or bitmap, infer
         // the base type as the corresponding unsigned integer type
         switch (this.parent.base) {
-            case Globals.enum8.name:
+            case "enum8":
             case Datatype.map8:
                 return Datatype.uint8;
 
-            case Globals.enum16.name:
+            case "enum16":
             case Datatype.map16:
                 return Datatype.uint16;
 

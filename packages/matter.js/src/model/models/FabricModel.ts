@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FabricElement, Model, NodeElement, NodeModel } from "../index.js";
+import { FabricElement, NodeElement } from "../elements/index.js";
+import { Model } from "./Model.js";
+import { NodeModel } from "./NodeModel.js";
 
 export class FabricModel extends Model implements FabricElement {
     override type!: FabricElement.Type;

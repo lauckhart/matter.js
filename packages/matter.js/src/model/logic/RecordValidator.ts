@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FeatureSet } from "../definitions/FeatureSet.js";
-import { DataModel } from "../index.js";
+import { FeatureSet } from "../definitions/index.js";
+import { ValueModel } from "../models/index.js";
 import { Validator } from "./record-validation/Validator.js";
 import { ValidatorImplementation } from "./record-validation/ValidatorImplementation.js";
 
@@ -19,6 +19,6 @@ import { ValidatorImplementation } from "./record-validation/ValidatorImplementa
  * 
  * @return a Validator
  */
-export function RecordValidator(fields: DataModel[], features: FeatureSet): Validator {
+export function RecordValidator(fields: ValueModel[], features: FeatureSet): Validator {
     return new ValidatorImplementation(fields, features);
 }

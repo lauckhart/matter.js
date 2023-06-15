@@ -4,13 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, CommandElement, Conformance, Constraint, DataModel, Datatype, DatatypeElement, Globals, Metatype, Quality } from "../../index.js";
+import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
+import { Datatype, Metatype } from "../../definitions/index.js";
+import { CommandElement, DatatypeElement, Globals } from "../../elements/index.js";
+import { ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 /**
  * Validates models that extend DataModel.
  */
-export class DataValidator<T extends DataModel> extends ModelValidator<T> {
+export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
     override validate() {
         this.validateProperty({ name: "base", type: "string" });
         this.validateProperty({ name: "byteSize", type: "number" });
@@ -65,7 +68,7 @@ export class DataValidator<T extends DataModel> extends ModelValidator<T> {
         // Require an ID for enum and bitmap values.  These are any children
         // of enums or bitmaps
         if (this.model.default == undefined) {
-            if (this.model.parent instanceof DataModel) {
+            if (this.model.parent instanceof ValueModel) {
                 if (this.model.id === undefined) {
                     switch (this.model.parent.metaBase?.metatype) {
                         case Metatype.enum:
@@ -117,7 +120,10 @@ export class DataValidator<T extends DataModel> extends ModelValidator<T> {
             case Datatype.map32:
             case Datatype.map64:
                 if (!this.model.children.length) {
-                    if (this.model.parent?.type == CommandElement.Type || this.model.parent?.type == DatatypeElement.Type) {
+                    if (
+                        this.model.parent?.type == CommandElement.Type
+                        || this.model.parent?.type == DatatypeElement.Type
+                    ) {
                         // The specification defines some fields as enums without specific values, so
                         // allow this under command and datatype fields
                         break;

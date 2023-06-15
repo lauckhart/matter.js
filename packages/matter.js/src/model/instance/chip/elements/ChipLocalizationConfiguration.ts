@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x002b, name: "LocalizationConfiguration",
@@ -16,11 +16,12 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "ActiveLocale", base: "string",
-            access: "RW"
+            access: "RW", conformance: "M"
         }),
 
         AttributeElement({
             id: 0x0001, name: "SupportedLocales", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "string"

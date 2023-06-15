@@ -4,12 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-    AttributeElement,
-    CommandElement,
-    EventElement,
-    DatatypeElement
-} from "../index.js";
+import { AttributeElement } from "./AttributeElement.js";
+import { CommandElement } from "./CommandElement.js";
+import { DatatypeElement } from "./DatatypeElement.js";
+import { EventElement } from "./EventElement.js";
 
 /**
  * All Matter data elements.

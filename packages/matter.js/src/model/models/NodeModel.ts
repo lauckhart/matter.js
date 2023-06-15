@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { EndpointElement, EndpointModel, Model, NodeElement } from "../index.js";
+import { EndpointElement, NodeElement } from "../elements/index.js";
+import { EndpointModel } from "./EndpointModel.js";
+import { Model } from "./Model.js";
 
 export class NodeModel extends Model implements NodeElement {
     override type!: NodeElement.Type;

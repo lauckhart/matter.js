@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Constraint, DataModel, Metatype } from "../../index.js";
+import { Constraint } from "../../aspects/index.js";
+import { Metatype } from "../../definitions/index.js";
+import { ValueModel } from "../../models/index.js";
 import { ValidatorBuilder } from "./ValidatorBuilder.js";
 
-export function addConstraint(builder: ValidatorBuilder, model: DataModel, constraint: Constraint) {
+export function addConstraint(builder: ValidatorBuilder, model: ValueModel, constraint: Constraint) {
     builder.addTest(generateConstraintExpr(model, constraint), "CONSTRAINT_VIOLATION", model, "Value disallowed by constraint");
 
-    function generateConstraintExpr(model: DataModel, ast: Constraint.Ast): string {
+    function generateConstraintExpr(model: ValueModel, ast: Constraint.Ast): string {
         if (ast.parts) {
             return `(${ast.parts.map(part => generateConstraintExpr(model, part)).join(" || ")})`;
         }

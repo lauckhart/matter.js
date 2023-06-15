@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0005, name: "Scenes",
@@ -16,27 +16,27 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "SceneCount", base: "uint8",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
             id: 0x0001, name: "CurrentScene", base: "uint8",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
             id: 0x0002, name: "CurrentGroup", base: "group-id",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
             id: 0x0003, name: "SceneValid", base: "bool",
-            default: true
+            conformance: "M", default: true
         }),
 
         AttributeElement({
             id: 0x0004, name: "SceneNameSupport", base: "map8",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
@@ -46,92 +46,106 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "AddScene",
-            access: "R F M", direction: "request", response: "AddSceneResponse",
+            access: "R F M", conformance: "M", direction: "request", response: "AddSceneResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneName", base: "string"
+                    name: "SceneName", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ExtensionFieldSets", base: "ExtensionFieldSet"
+                    name: "ExtensionFieldSets", base: "ExtensionFieldSet",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "ViewScene",
-            access: "R F", direction: "request", response: "ViewSceneResponse",
+            access: "R F", conformance: "M", direction: "request", response: "ViewSceneResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "RemoveScene",
-            access: "R F M", direction: "request", response: "RemoveSceneResponse",
+            access: "R F M", conformance: "M", direction: "request", response: "RemoveSceneResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "RemoveAllScenes",
-            access: "R F M", direction: "request", response: "RemoveAllScenesResponse",
+            access: "R F M", conformance: "M", direction: "request", response: "RemoveAllScenesResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "StoreScene",
-            access: "R F M", direction: "request", response: "StoreSceneResponse",
+            access: "R F M", conformance: "M", direction: "request", response: "StoreSceneResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0005, name: "RecallScene",
-            access: "R F", direction: "request",
+            access: "R F", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -143,10 +157,11 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0006, name: "GetSceneMembership",
-            access: "R F", direction: "request", response: "GetSceneMembershipResponse",
+            access: "R F", conformance: "M", direction: "request", response: "GetSceneMembershipResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 })
             ]
         }),
@@ -156,23 +171,28 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F", conformance: "O", direction: "request", response: "EnhancedAddSceneResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneName", base: "string"
+                    name: "SceneName", base: "string",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ExtensionFieldSets", base: "ExtensionFieldSet"
+                    name: "ExtensionFieldSets", base: "ExtensionFieldSet",
+                    conformance: "M"
                 })
             ]
         }),
@@ -182,11 +202,13 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F", conformance: "O", direction: "request", response: "EnhancedViewSceneResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -196,59 +218,70 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F", conformance: "O", direction: "request", response: "CopySceneResponse",
             children: [
                 DatatypeElement({
-                    name: "Mode", base: "ScenesCopyMode"
+                    name: "Mode", base: "ScenesCopyMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupIdentifierFrom", base: "group-id"
+                    name: "GroupIdentifierFrom", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneIdentifierFrom", base: "uint8"
+                    name: "SceneIdentifierFrom", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupIdentifierTo", base: "group-id"
+                    name: "GroupIdentifierTo", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneIdentifierTo", base: "uint8"
+                    name: "SceneIdentifierTo", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0000, name: "AddSceneResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "ViewSceneResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -270,69 +303,79 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0002, name: "RemoveSceneResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "RemoveAllScenesResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "StoreSceneResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0006, name: "GetSceneMembershipResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "Capacity", base: "uint8",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -347,15 +390,18 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -365,15 +411,18 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneId", base: "uint8"
+                    name: "SceneId", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -398,30 +447,36 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8"
+                    name: "Status", base: "enum8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupIdentifierFrom", base: "group-id"
+                    name: "GroupIdentifierFrom", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SceneIdentifierFrom", base: "uint8"
+                    name: "SceneIdentifierFrom", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ScenesCopyMode", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "CopyAllScenes"
+                    id: 0x0001, name: "CopyAllScenes",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AttributeValuePair", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "AttributeId", base: "attrib-id",
@@ -429,29 +484,35 @@ ChipMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    name: "AttributeValue", base: "uint8"
+                    name: "AttributeValue", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ExtensionFieldSet", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ClusterId", base: "cluster-id"
+                    name: "ClusterId", base: "cluster-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AttributeValueList", base: "AttributeValuePair"
+                    name: "AttributeValueList", base: "AttributeValuePair",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ScenesFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "SceneNames"
+                    id: 0x0001, name: "SceneNames",
+                    conformance: "M"
                 })
             ]
         })

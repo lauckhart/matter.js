@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeElement, AttributeModel, DatatypeModel } from "../../index.js";
-import { DataValidator, ModelValidator } from "./index.js";
+import { AttributeElement } from "../../elements/index.js";
+import { AttributeModel, DatatypeModel } from "../../models/index.js";
+import { DataValidator } from "./DataValidator.js";
+import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[AttributeElement.Type] =
 class AttributeValidator extends DataValidator<AttributeModel> {

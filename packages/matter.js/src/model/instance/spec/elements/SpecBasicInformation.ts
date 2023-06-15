@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SpecMatter } from "../index.js";
-import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../index.js";
+import { SpecMatter } from "../SpecMatter.js";
+import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../elements/index.js";
 
 SpecMatter.children!.push(ClusterElement({
     id: 0x0028, name: "BasicInformation",

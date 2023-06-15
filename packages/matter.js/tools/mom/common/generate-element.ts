@@ -12,7 +12,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
     const factory = camelize(`${element.type} element`);
     const block = target.expressions(`${prefix}${factory}({`, `})${suffix}`);
 
-    target.file.addImport("../../../index", factory);
+    target.file.addImport("../../../elements/index", factory);
 
     const fields = element.valueOf() as { [ name: string ]: any };
     

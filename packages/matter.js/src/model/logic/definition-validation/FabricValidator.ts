@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatatypeModel, FabricElement, FabricModel } from "../../index.js";
+import { FabricElement } from "../../elements/index.js";
+import { DatatypeModel, FabricModel } from "../../models/index.js";
 import { ModelValidator } from "./index.js";
 
 ModelValidator.validators[FabricElement.Type] =

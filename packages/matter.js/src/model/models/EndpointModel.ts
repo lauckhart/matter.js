@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DeviceTypeElement, DeviceTypeModel, EndpointElement, Model } from "../index.js";
+import { DeviceTypeElement, EndpointElement } from "../elements/index.js";
+import { DeviceTypeModel } from "./DeviceTypeModel.js";
+import { Model } from "./Model.js";
 
 export class EndpointModel extends Model implements EndpointElement {
     override type!: EndpointElement.Type;

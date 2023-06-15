@@ -3,7 +3,10 @@
  * Copyright 2022-2023 Project CHIP Authors
  * SPDX-License-Identifier: Apache-2.0
  */
-import { BaseElement, DeviceTypeElement, ElementType } from "../index.js";
+
+import { ElementType } from "../definitions/index.js";
+import { BaseElement } from "./BaseElement.js";
+import { DeviceTypeElement } from "./DeviceTypeElement.js";
 
 /**
  * Runtime representation of an endpoint.

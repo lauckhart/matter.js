@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0029, name: "OtaSoftwareUpdateProvider",
@@ -16,22 +16,26 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "QueryImage",
-            direction: "request", response: "QueryImageResponse",
+            conformance: "M", direction: "request", response: "QueryImageResponse",
             children: [
                 DatatypeElement({
-                    name: "VendorId", base: "vendor-id"
+                    name: "VendorId", base: "vendor-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ProductId", base: "uint16"
+                    name: "ProductId", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32"
+                    name: "SoftwareVersion", base: "uint32",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ProtocolsSupported", base: "OtaDownloadProtocol"
+                    name: "ProtocolsSupported", base: "OtaDownloadProtocol",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -58,10 +62,11 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0001, name: "QueryImageResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "OtaQueryStatus"
+                    name: "Status", base: "OtaQueryStatus",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -103,101 +108,121 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0002, name: "ApplyUpdateRequest",
-            direction: "request", response: "ApplyUpdateResponse",
+            conformance: "M", direction: "request", response: "ApplyUpdateResponse",
             children: [
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr"
+                    name: "UpdateToken", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NewVersion", base: "uint32"
+                    name: "NewVersion", base: "uint32",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "ApplyUpdateResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Action", base: "OtaApplyUpdateAction"
+                    name: "Action", base: "OtaApplyUpdateAction",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DelayedActionTime", base: "uint32"
+                    name: "DelayedActionTime", base: "uint32",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "NotifyUpdateApplied",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr"
+                    name: "UpdateToken", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32"
+                    name: "SoftwareVersion", base: "uint32",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OtaQueryStatus", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "UpdateAvailable"
+                    id: 0x0000, name: "UpdateAvailable",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Busy"
+                    id: 0x0001, name: "Busy",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "NotAvailable"
+                    id: 0x0002, name: "NotAvailable",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "DownloadProtocolNotSupported"
+                    id: 0x0003, name: "DownloadProtocolNotSupported",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OtaApplyUpdateAction", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Proceed"
+                    id: 0x0000, name: "Proceed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "AwaitNextAction"
+                    id: 0x0001, name: "AwaitNextAction",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Discontinue"
+                    id: 0x0002, name: "Discontinue",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OtaDownloadProtocol", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "BdxSynchronous"
+                    id: 0x0000, name: "BdxSynchronous",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "BdxAsynchronous"
+                    id: 0x0001, name: "BdxAsynchronous",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Https"
+                    id: 0x0002, name: "Https",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "VendorSpecific"
+                    id: 0x0003, name: "VendorSpecific",
+                    conformance: "M"
                 })
             ]
         })

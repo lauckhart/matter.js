@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x003f, name: "GroupKeyManagement",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "GroupKeyMap", base: "list",
-            access: "RW VM",
+            access: "RW VM", conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "GroupKeyMapStruct"
@@ -26,6 +26,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0001, name: "GroupTable", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "GroupInfoMapStruct"
@@ -34,97 +35,109 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "MaxGroupsPerFabric", base: "uint16"
+            id: 0x0002, name: "MaxGroupsPerFabric", base: "uint16",
+            conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "MaxGroupKeysPerFabric", base: "uint16"
+            id: 0x0003, name: "MaxGroupKeysPerFabric", base: "uint16",
+            conformance: "M"
         }),
 
         CommandElement({
             id: 0x0000, name: "KeySetWrite",
-            access: "R F A", direction: "request",
+            access: "R F A", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "GroupKeySet", base: "GroupKeySetStruct"
+                    name: "GroupKeySet", base: "GroupKeySetStruct",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0001, name: "KeySetRead",
-            access: "R F A", direction: "request", response: "KeySetReadResponse",
+            access: "R F A", conformance: "M", direction: "request", response: "KeySetReadResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupKeySetId", base: "uint16"
+                    name: "GroupKeySetId", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0002, name: "KeySetReadResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "GroupKeySet", base: "GroupKeySetStruct"
+                    name: "GroupKeySet", base: "GroupKeySetStruct",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0003, name: "KeySetRemove",
-            access: "R F A", direction: "request",
+            access: "R F A", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "GroupKeySetId", base: "uint16"
+                    name: "GroupKeySetId", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0004, name: "KeySetReadAllIndices",
-            access: "R F A", direction: "request", response: "KeySetReadAllIndicesResponse",
+            access: "R F A", conformance: "M", direction: "request", response: "KeySetReadAllIndicesResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupKeySetIDs", base: "uint16"
+                    name: "GroupKeySetIDs", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x0005, name: "KeySetReadAllIndicesResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "GroupKeySetIDs", base: "uint16"
+                    name: "GroupKeySetIDs", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GroupKeyMapStruct", base: "struct",
-            access: "R F",
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupKeySetId", base: "uint16"
+                    name: "GroupKeySetId", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GroupInfoMapStruct", base: "struct",
-            access: "R F",
+            access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id"
+                    name: "GroupId", base: "group-id",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Endpoints", base: "endpoint-no"
+                    name: "Endpoints", base: "endpoint-no",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -136,56 +149,62 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "GroupKeySetStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "GroupKeySetId", base: "uint16"
+                    name: "GroupKeySetId", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupKeySecurityPolicy", base: "GroupKeySecurityPolicyEnum"
+                    name: "GroupKeySecurityPolicy", base: "GroupKeySecurityPolicyEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "EpochKey0", base: "octstr",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "EpochStartTime0", base: "epoch-us",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "EpochKey1", base: "octstr",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "EpochStartTime1", base: "epoch-us",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "EpochKey2", base: "octstr",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "EpochStartTime2", base: "epoch-us",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "GroupKeySecurityPolicyEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "TrustFirst"
+                    id: 0x0000, name: "TrustFirst",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "CacheAndSync"
+                    id: 0x0001, name: "CacheAndSync",
+                    conformance: "M"
                 })
             ]
         })

@@ -4,7 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AnyElement, AttributeModel, ClusterModel, DatatypeModel, DeviceTypeModel, FabricModel, Globals, MatterElement, Model } from "../index.js";
+import { AnyElement, Globals, MatterElement } from "../elements/index.js";
+import { AttributeModel } from "./AttributeModel.js";
+import { ClusterModel } from "./ClusterModel.js";
+import { DatatypeModel } from "./DatatypeModel.js";
+import { DeviceTypeModel } from "./DeviceTypeModel.js";
+import { FabricModel } from "./FabricModel.js";
+import { Model } from "./Model.js";
 
 /**
  * The root of a Matter model.

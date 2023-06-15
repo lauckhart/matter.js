@@ -5,7 +5,7 @@
  */
 
 export * from "./Model.js";
-export * from "./DataModel.js";
+export * from "./ValueModel.js";
 
 export * from "./DatatypeModel.js";
 export * from "./AttributeModel.js";

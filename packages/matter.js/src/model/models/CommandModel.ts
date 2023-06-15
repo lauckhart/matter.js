@@ -4,9 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommandElement, DataModel, Datatype, Mei, Model } from "../index.js";
+import { Datatype, Mei } from "../definitions/index.js";
+import { CommandElement } from "../elements/index.js";
+import { ValueModel } from "./ValueModel.js";
+import { Model } from "./Model.js";
 
-export class CommandModel extends DataModel implements CommandElement {
+export class CommandModel extends ValueModel implements CommandElement {
     override type: CommandElement.Type = CommandElement.Type;
     override id!: Mei;
     direction?: CommandElement.Direction;

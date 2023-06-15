@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0045, name: "BooleanState",
@@ -16,15 +16,16 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "StateValue", base: "bool",
-            quality: "P"
+            conformance: "M", quality: "P"
         }),
 
         EventElement({
             id: 0x0000, name: "StateChange",
-            priority: "info",
+            conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "StateValue", base: "bool"
+                    name: "StateValue", base: "bool",
+                    conformance: "M"
                 })
             ]
         })

@@ -7,9 +7,9 @@
 // This script builds cluster elements from the connectedhomeip XML cluster
 // definitions.
 
-import "../util/setup.js";
-import { loadChip } from "./chip/load-chip.js";
-import { generateModel } from "./common/generate-model.js";
+import "./util/setup.js";
+import { loadChip } from "./mom/chip/load-chip.js";
+import { generateModel } from "./mom/common/generate-model.js";
 
 const elements = await loadChip();
 generateModel("chip", elements);

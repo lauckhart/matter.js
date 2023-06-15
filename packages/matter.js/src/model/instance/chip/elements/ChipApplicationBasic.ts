@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x050d, name: "ApplicationBasic",
@@ -25,7 +25,8 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ApplicationName", base: "string"
+            id: 0x0002, name: "ApplicationName", base: "string",
+            conformance: "M"
         }),
 
         AttributeElement({
@@ -34,20 +35,23 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "ApplicationApp", base: "ApplicationStruct"
+            id: 0x0004, name: "ApplicationApp", base: "ApplicationStruct",
+            conformance: "M"
         }),
 
         AttributeElement({
             id: 0x0005, name: "ApplicationStatus", base: "ApplicationStatusEnum",
-            default: 1
+            conformance: "M", default: 1
         }),
 
         AttributeElement({
-            id: 0x0006, name: "ApplicationVersion", base: "string"
+            id: 0x0006, name: "ApplicationVersion", base: "string",
+            conformance: "M"
         }),
 
         AttributeElement({
             id: 0x0007, name: "ApplicationAllowedVendorList", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "vendor-id"
@@ -57,34 +61,42 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "ApplicationStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Stopped"
+                    id: 0x0000, name: "Stopped",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "ActiveVisibleFocus"
+                    id: 0x0001, name: "ActiveVisibleFocus",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ActiveHidden"
+                    id: 0x0002, name: "ActiveHidden",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "ActiveVisibleNotFocus"
+                    id: 0x0003, name: "ActiveVisibleNotFocus",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ApplicationStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "CatalogVendorId", base: "uint16"
+                    name: "CatalogVendorId", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ApplicationId", base: "string"
+                    name: "ApplicationId", base: "string",
+                    conformance: "M"
                 })
             ]
         })

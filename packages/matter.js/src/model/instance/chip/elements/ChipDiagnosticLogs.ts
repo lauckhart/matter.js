@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0032, name: "DiagnosticLogs",
@@ -16,14 +16,16 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         CommandElement({
             id: 0x0000, name: "RetrieveLogsRequest",
-            direction: "request", response: "RetrieveLogsResponse",
+            conformance: "M", direction: "request", response: "RetrieveLogsResponse",
             children: [
                 DatatypeElement({
-                    name: "Intent", base: "IntentEnum"
+                    name: "Intent", base: "IntentEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "RequestedProtocol", base: "TransferProtocolEnum"
+                    name: "RequestedProtocol", base: "TransferProtocolEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -35,14 +37,16 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0001, name: "RetrieveLogsResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "StatusEnum"
+                    name: "Status", base: "StatusEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LogContent", base: "octstr"
+                    name: "LogContent", base: "octstr",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -59,55 +63,68 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "IntentEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "EndUserSupport"
+                    id: 0x0000, name: "EndUserSupport",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "NetworkDiag"
+                    id: 0x0001, name: "NetworkDiag",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "CrashLogs"
+                    id: 0x0002, name: "CrashLogs",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "StatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success"
+                    id: 0x0000, name: "Success",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Exhausted"
+                    id: 0x0001, name: "Exhausted",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "NoLogs"
+                    id: 0x0002, name: "NoLogs",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Busy"
+                    id: 0x0003, name: "Busy",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Denied"
+                    id: 0x0004, name: "Denied",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TransferProtocolEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "ResponsePayload"
+                    id: 0x0000, name: "ResponsePayload",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Bdx"
+                    id: 0x0001, name: "Bdx",
+                    conformance: "M"
                 })
             ]
         })

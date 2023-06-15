@@ -5,7 +5,7 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { Access, AnyElement, AttributeElement, BaseDataElement, BaseElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementType, EventElement } from "../../../src/model/index.js";
+import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementType, EventElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/index.js";
 import { TypeMap } from "./type-map.js";
 
@@ -149,7 +149,7 @@ function setAccessPrivileges(src: Element, target: Access.Ast) {
 
 // Gather quality information from XML for a specific element and translate to
 // MOM equivalents
-function setQualities(src: Element, target: BaseDataElement) {
+function setQualities(src: Element, target: ValueElement) {
     const optional = bool(src.getAttribute("optional"));
     const nullable = bool(src.getAttribute("isNullable"));
     const reportable = bool(src.getAttribute("reportable"));
@@ -205,7 +205,7 @@ function mapType(chipType: string | undefined) {
 }
 
 // Create a MOM element with data properties translated from CHIP XML
-function createDataElement<T extends BaseDataElement>({
+function createDataElement<T extends ValueElement>({
     factory,
     source,
     target,
@@ -216,7 +216,7 @@ function createDataElement<T extends BaseDataElement>({
 }: {
     factory: ((properties: T) => T) & { Type: ElementType },
     source: Element,
-    target: BaseDataElement,
+    target: ValueElement,
     isClass?: boolean,
     base?: string,
     propertyTag?: string,

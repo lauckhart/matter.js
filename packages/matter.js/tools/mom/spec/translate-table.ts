@@ -76,7 +76,7 @@ type FieldType<F>
 // Create TS object type from schema definition
 type TableRecord<T extends TableSchema> = {
     [name in keyof T]: FieldType<T[name]>
-} & { xref?: AnyElement.CrossReference, name?: string, details?: string };
+} & { xref?: Specification.CrossReference, name?: string, details?: string };
 
 const has = (object: Object, name: string) =>
     !!Object.getOwnPropertyDescriptor(object, name);

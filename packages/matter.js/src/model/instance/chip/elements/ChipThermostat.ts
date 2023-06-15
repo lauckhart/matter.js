@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0201, name: "Thermostat",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "LocalTemperature", base: "int16",
-            quality: "X P"
+            conformance: "M", quality: "X P"
         }),
 
         AttributeElement({
@@ -121,12 +121,12 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x001b, name: "ControlSequenceOfOperation", base: "ThermostatControlSequence",
-            access: "RW VM", default: 4
+            access: "RW VM", conformance: "M", default: 4
         }),
 
         AttributeElement({
             id: 0x001c, name: "SystemMode", base: "enum8",
-            access: "RW VM", default: 1
+            access: "RW VM", conformance: "M", default: 1
         }),
 
         AttributeElement({
@@ -261,14 +261,16 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "SetpointRaiseLower",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Mode", base: "SetpointAdjustMode"
+                    name: "Mode", base: "SetpointAdjustMode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Amount", base: "int8"
+                    name: "Amount", base: "int8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -278,19 +280,23 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "NumberOfTransitionsForSequence", base: "uint8"
+                    name: "NumberOfTransitionsForSequence", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DayOfWeekForSequence", base: "DayOfWeek"
+                    name: "DayOfWeekForSequence", base: "DayOfWeek",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ModeForSequence", base: "ModeForSequence"
+                    name: "ModeForSequence", base: "ModeForSequence",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Transitions", base: "ThermostatScheduleTransition"
+                    name: "Transitions", base: "ThermostatScheduleTransition",
+                    conformance: "M"
                 })
             ]
         }),
@@ -300,11 +306,13 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "GetWeeklyScheduleResponse",
             children: [
                 DatatypeElement({
-                    name: "DaysToReturn", base: "DayOfWeek"
+                    name: "DaysToReturn", base: "DayOfWeek",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ModeToReturn", base: "ModeForSequence"
+                    name: "ModeToReturn", base: "ModeForSequence",
+                    conformance: "M"
                 })
             ]
         }),
@@ -319,221 +327,271 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "NumberOfTransitionsForSequence", base: "uint8"
+                    name: "NumberOfTransitionsForSequence", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DayOfWeekForSequence", base: "DayOfWeek"
+                    name: "DayOfWeekForSequence", base: "DayOfWeek",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ModeForSequence", base: "ModeForSequence"
+                    name: "ModeForSequence", base: "ModeForSequence",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Transitions", base: "ThermostatScheduleTransition"
+                    name: "Transitions", base: "ThermostatScheduleTransition",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ThermostatFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Heating"
+                    id: 0x0001, name: "Heating",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Cooling"
+                    id: 0x0002, name: "Cooling",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Occupancy"
+                    id: 0x0004, name: "Occupancy",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "ScheduleConfiguration"
+                    id: 0x0008, name: "ScheduleConfiguration",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "Setback"
+                    id: 0x0010, name: "Setback",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0020, name: "AutoMode"
+                    id: 0x0020, name: "AutoMode",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "DayOfWeek", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Sunday"
+                    id: 0x0001, name: "Sunday",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Monday"
+                    id: 0x0002, name: "Monday",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Tuesday"
+                    id: 0x0004, name: "Tuesday",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Wednesday"
+                    id: 0x0008, name: "Wednesday",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "Thursday"
+                    id: 0x0010, name: "Thursday",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0020, name: "Friday"
+                    id: 0x0020, name: "Friday",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0040, name: "Saturday"
+                    id: 0x0040, name: "Saturday",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0080, name: "Away"
+                    id: 0x0080, name: "Away",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ModeForSequence", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "HeatSetpointPresent"
+                    id: 0x0001, name: "HeatSetpointPresent",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "CoolSetpointPresent"
+                    id: 0x0002, name: "CoolSetpointPresent",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ThermostatSystemMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Off"
+                    id: 0x0000, name: "Off",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Auto"
+                    id: 0x0001, name: "Auto",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Cool"
+                    id: 0x0003, name: "Cool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Heat"
+                    id: 0x0004, name: "Heat",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "EmergencyHeat"
+                    id: 0x0005, name: "EmergencyHeat",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "Precooling"
+                    id: 0x0006, name: "Precooling",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "FanOnly"
+                    id: 0x0007, name: "FanOnly",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Dry"
+                    id: 0x0008, name: "Dry",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Sleep"
+                    id: 0x0009, name: "Sleep",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ThermostatRunningMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Off"
+                    id: 0x0000, name: "Off",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Cool"
+                    id: 0x0003, name: "Cool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Heat"
+                    id: 0x0004, name: "Heat",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ThermostatControlSequence", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "CoolingOnly"
+                    id: 0x0000, name: "CoolingOnly",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "CoolingWithReheat"
+                    id: 0x0001, name: "CoolingWithReheat",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "HeatingOnly"
+                    id: 0x0002, name: "HeatingOnly",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "HeatingWithReheat"
+                    id: 0x0003, name: "HeatingWithReheat",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "CoolingAndHeating"
+                    id: 0x0004, name: "CoolingAndHeating",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "CoolingAndHeatingWithReheat"
+                    id: 0x0005, name: "CoolingAndHeatingWithReheat",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SetpointAdjustMode", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Heat"
+                    id: 0x0000, name: "Heat",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Cool"
+                    id: 0x0001, name: "Cool",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Both"
+                    id: 0x0002, name: "Both",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ThermostatScheduleTransition", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16"
+                    name: "TransitionTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "HeatSetpoint", base: "int16",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
                     name: "CoolSetpoint", base: "int16",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         })

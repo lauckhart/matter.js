@@ -27,7 +27,7 @@ export function generateElementFile(source: string, element: AnyElement) {
 
     const file = new TsFile(`${MODEL_PATH}/${source}/elements/${prefix}${element.name}`);
 
-    file.addImport("../index", `${prefix}Matter`);
+    file.addImport(`../${prefix}Matter`, `${prefix}Matter`);
 
     generateElement(
         file,
@@ -58,7 +58,7 @@ export function generateModel(source: string, elements: MatterElement.Child[]) {
         children: elements
     });
     Logger.nest(() => {
-        matter.validate();
+        ValidateModel(matter);
     });
 
     logger.info(`generate ${source}`);

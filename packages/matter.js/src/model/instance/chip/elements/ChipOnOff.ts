@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0006, name: "OnOff",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "OnOff", base: "bool",
-            default: true, quality: "P"
+            conformance: "M", default: true, quality: "P"
         }),
 
         AttributeElement({
@@ -41,17 +41,17 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "Off",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0001, name: "On",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         CommandElement({
             id: 0x0002, name: "Toggle",
-            direction: "request"
+            conformance: "M", direction: "request"
         }),
 
         CommandElement({
@@ -59,11 +59,13 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "EffectIdentifier", base: "OnOffEffectIdentifier"
+                    name: "EffectIdentifier", base: "OnOffEffectIdentifier",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "EffectVariant", base: "uint8"
+                    name: "EffectVariant", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -78,89 +80,109 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "OnOffControl", base: "OnOffControl"
+                    name: "OnOffControl", base: "OnOffControl",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OnTime", base: "uint16"
+                    name: "OnTime", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OffWaitTime", base: "uint16"
+                    name: "OffWaitTime", base: "uint16",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffStartUpOnOff", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Off"
+                    id: 0x0000, name: "Off",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "On"
+                    id: 0x0001, name: "On",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "TogglePreviousOnOff"
+                    id: 0x0002, name: "TogglePreviousOnOff",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffEffectIdentifier", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "DelayedAllOff"
+                    id: 0x0000, name: "DelayedAllOff",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "DyingLight"
+                    id: 0x0001, name: "DyingLight",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffDelayedAllOffEffectVariant", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "FadeToOffIn0P8Seconds"
+                    id: 0x0000, name: "FadeToOffIn0P8Seconds",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "NoFade"
+                    id: 0x0001, name: "NoFade",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "50PercentDimDownIn0P8SecondsThenFadeToOffIn12Seconds"
+                    id: 0x0002, name: "50PercentDimDownIn0P8SecondsThenFadeToOffIn12Seconds",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffDyingLightEffectVariant", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "20PercenterDimUpIn0P5SecondsThenFadeToOffIn1Second"
+                    id: 0x0000, name: "20PercenterDimUpIn0P5SecondsThenFadeToOffIn1Second",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffControl", base: "map8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "AcceptOnlyWhenOn"
+                    id: 0x0001, name: "AcceptOnlyWhenOn",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OnOffFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Lighting"
+                    id: 0x0001, name: "Lighting",
+                    conformance: "M"
                 })
             ]
         })

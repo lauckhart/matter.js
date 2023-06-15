@@ -4,18 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement, ElementType, Mei } from "../index.js"
+import { BaseElement, ElementType, Mei } from "../index.js";
+import { ValueElement } from "./ValueElement.js";
 
 /**
  * A cluster property description.
  */
-export type AttributeElement = BaseDataElement & {
+export type AttributeElement = ValueElement & {
     type: `${AttributeElement.Type}`,
     id: Mei
 }
 
 export function AttributeElement(definition: AttributeElement.Properties) {
-    return BaseDataElement(AttributeElement.Type, definition) as AttributeElement;
+    return ValueElement(AttributeElement.Type, definition) as AttributeElement;
 }
 
 export namespace AttributeElement {

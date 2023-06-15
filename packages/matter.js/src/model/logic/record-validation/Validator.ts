@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DefinitionError } from "../../index.js";
+import { DefinitionError } from "../../definitions/index.js";
 
 /**
  * The result of validation.

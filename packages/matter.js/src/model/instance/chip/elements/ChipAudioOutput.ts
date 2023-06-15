@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x050b, name: "AudioOutput",
@@ -16,6 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "AudioOutputList", base: "list",
+            conformance: "M",
             children: [
                 DatatypeElement({
                     name: "entry", base: "OutputInfoStruct"
@@ -30,10 +31,11 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "SelectOutput",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8"
+                    name: "Index", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -43,66 +45,81 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8"
+                    name: "Index", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string"
+                    name: "Name", base: "string",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OutputInfoStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8"
+                    name: "Index", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OutputType", base: "OutputTypeEnum"
+                    name: "OutputType", base: "OutputTypeEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string"
+                    name: "Name", base: "string",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OutputTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Hdmi"
+                    id: 0x0000, name: "Hdmi",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Bt"
+                    id: 0x0001, name: "Bt",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Optical"
+                    id: 0x0002, name: "Optical",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Headphone"
+                    id: 0x0003, name: "Headphone",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Internal"
+                    id: 0x0004, name: "Internal",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "Other"
+                    id: 0x0005, name: "Other",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "AudioOutputFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "NameUpdates"
+                    id: 0x0001, name: "NameUpdates",
+                    conformance: "M"
                 })
             ]
         })

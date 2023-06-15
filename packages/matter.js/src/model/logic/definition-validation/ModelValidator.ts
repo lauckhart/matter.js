@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseElement, ElementType, Model } from "../../index.js";
+import { ElementType } from "../../definitions/index.js";
+import { Model } from "../../models/index.js";
 
 /**
  * Base class for all model validators.

@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0200, name: "PumpConfigurationAndControl",
@@ -16,17 +16,17 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "MaxPressure", base: "int16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "MaxSpeed", base: "uint16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "MaxFlow", base: "uint16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -85,16 +85,18 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0011, name: "EffectiveOperationMode", base: "OperationModeEnum"
+            id: 0x0011, name: "EffectiveOperationMode", base: "OperationModeEnum",
+            conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0012, name: "EffectiveControlMode", base: "ControlModeEnum"
+            id: 0x0012, name: "EffectiveControlMode", base: "ControlModeEnum",
+            conformance: "M"
         }),
 
         AttributeElement({
             id: 0x0013, name: "Capacity", base: "int16",
-            quality: "X P"
+            conformance: "M", quality: "X P"
         }),
 
         AttributeElement({
@@ -119,7 +121,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0020, name: "OperationMode", base: "OperationModeEnum",
-            access: "RW VM", default: 0
+            access: "RW VM", conformance: "M", default: 0
         }),
 
         AttributeElement({
@@ -214,124 +216,154 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "PumpStatusBitmap", base: "map16",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "DeviceFault"
+                    id: 0x0001, name: "DeviceFault",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Supplyfault"
+                    id: 0x0002, name: "Supplyfault",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "SpeedLow"
+                    id: 0x0004, name: "SpeedLow",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "SpeedHigh"
+                    id: 0x0008, name: "SpeedHigh",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "LocalOverride"
+                    id: 0x0010, name: "LocalOverride",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0020, name: "Running"
+                    id: 0x0020, name: "Running",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0040, name: "RemotePressure"
+                    id: 0x0040, name: "RemotePressure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0080, name: "RemoteFlow"
+                    id: 0x0080, name: "RemoteFlow",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0100, name: "RemoteTemperature"
+                    id: 0x0100, name: "RemoteTemperature",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "OperationModeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Normal"
+                    id: 0x0000, name: "Normal",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Minimum"
+                    id: 0x0001, name: "Minimum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Maximum"
+                    id: 0x0002, name: "Maximum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Local"
+                    id: 0x0003, name: "Local",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ControlModeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "ConstantSpeed"
+                    id: 0x0000, name: "ConstantSpeed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "ConstantPressure"
+                    id: 0x0001, name: "ConstantPressure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "ProportionalPressure"
+                    id: 0x0002, name: "ProportionalPressure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "ConstantFlow"
+                    id: 0x0003, name: "ConstantFlow",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "ConstantTemperature"
+                    id: 0x0005, name: "ConstantTemperature",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "Automatic"
+                    id: 0x0007, name: "Automatic",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "PumpConfigurationAndControlFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "ConstantPressure"
+                    id: 0x0001, name: "ConstantPressure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "CompensatedPressure"
+                    id: 0x0002, name: "CompensatedPressure",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "ConstantFlow"
+                    id: 0x0004, name: "ConstantFlow",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "ConstantSpeed"
+                    id: 0x0008, name: "ConstantSpeed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "ConstantTemperature"
+                    id: 0x0010, name: "ConstantTemperature",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0020, name: "Automatic"
+                    id: 0x0020, name: "Automatic",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0040, name: "LocalOperation"
+                    id: 0x0040, name: "LocalOperation",
+                    conformance: "M"
                 })
             ]
         })

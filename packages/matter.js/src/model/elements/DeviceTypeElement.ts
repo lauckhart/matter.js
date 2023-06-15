@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterElement, BaseElement, Mei, ElementType } from "../index.js"
+import { ElementType, Mei } from "../definitions/index.js";
+import { BaseElement } from "./BaseElement.js";
+import { ClusterElement } from "./ClusterElement.js";
 
 /**
  * Details on a specific device as defined in the Matter specification.

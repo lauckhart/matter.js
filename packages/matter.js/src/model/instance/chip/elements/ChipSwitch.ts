@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, EventElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x003b, name: "Switch",
@@ -16,12 +16,12 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "NumberOfPositions", base: "uint8",
-            default: 2
+            conformance: "M", default: 2
         }),
 
         AttributeElement({
             id: 0x0001, name: "CurrentPosition", base: "uint8",
-            quality: "P"
+            conformance: "M", quality: "P"
         }),
 
         AttributeElement({
@@ -34,7 +34,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "uint8"
+                    name: "NewPosition", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -44,7 +45,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "uint8"
+                    name: "NewPosition", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -54,7 +56,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "uint8"
+                    name: "NewPosition", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -64,7 +67,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "uint8"
+                    name: "PreviousPosition", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -74,7 +78,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "uint8"
+                    name: "PreviousPosition", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -84,11 +89,13 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "NewPosition", base: "uint8"
+                    name: "NewPosition", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "CurrentNumberOfPressesCounted", base: "uint8"
+                    name: "CurrentNumberOfPressesCounted", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
@@ -98,36 +105,44 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "PreviousPosition", base: "uint8"
+                    name: "PreviousPosition", base: "uint8",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TotalNumberOfPressesCounted", base: "uint8"
+                    name: "TotalNumberOfPressesCounted", base: "uint8",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "SwitchFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "LatchingSwitch"
+                    id: 0x0001, name: "LatchingSwitch",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "MomentarySwitch"
+                    id: 0x0002, name: "MomentarySwitch",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "MomentarySwitchRelease"
+                    id: 0x0004, name: "MomentarySwitchRelease",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "MomentarySwitchLongPress"
+                    id: 0x0008, name: "MomentarySwitchLongPress",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "MomentarySwitchMultiPress"
+                    id: 0x0010, name: "MomentarySwitchMultiPress",
+                    conformance: "M"
                 })
             ]
         })

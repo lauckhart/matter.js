@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseDataElement, BaseElement, ElementType, Mei } from "../index.js"
+import { ElementType, Mei } from "../definitions/index.js";
+import { ValueElement } from "./ValueElement.js";
+import { BaseElement } from "./BaseElement.js";
 
 /**
  * A command describes a remote procedure call.
  */
-export type CommandElement = BaseDataElement & {
+export type CommandElement = ValueElement & {
     id: Mei,
     type: `${CommandElement.Type}`,
 
@@ -20,7 +22,7 @@ export type CommandElement = BaseDataElement & {
 }
 
 export function CommandElement(definition: CommandElement.Properties) {
-    return BaseDataElement(CommandElement.Type, definition) as CommandElement;
+    return ValueElement(CommandElement.Type, definition) as CommandElement;
 }
 
 export namespace CommandElement {

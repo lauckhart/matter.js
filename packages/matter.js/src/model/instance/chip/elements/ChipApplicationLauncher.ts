@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x050c, name: "ApplicationLauncher",
@@ -31,7 +31,7 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "LaunchApp",
-            direction: "request", response: "LauncherResponse",
+            conformance: "M", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
                     name: "Application", base: "ApplicationStruct",
@@ -47,7 +47,7 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0001, name: "StopApp",
-            direction: "request", response: "LauncherResponse",
+            conformance: "M", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
                     name: "Application", base: "ApplicationStruct",
@@ -58,7 +58,7 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0002, name: "HideApp",
-            direction: "request", response: "LauncherResponse",
+            conformance: "M", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
                     name: "Application", base: "ApplicationStruct",
@@ -69,10 +69,11 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0003, name: "LauncherResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "ApplicationLauncherStatusEnum"
+                    name: "Status", base: "ApplicationLauncherStatusEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -84,9 +85,11 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "ApplicationEpStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Application", base: "ApplicationStruct"
+                    name: "Application", base: "ApplicationStruct",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -98,39 +101,48 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "ApplicationStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "CatalogVendorId", base: "uint16"
+                    name: "CatalogVendorId", base: "uint16",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ApplicationId", base: "string"
+                    name: "ApplicationId", base: "string",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ApplicationLauncherStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success"
+                    id: 0x0000, name: "Success",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "AppNotAvailable"
+                    id: 0x0001, name: "AppNotAvailable",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "SystemBusy"
+                    id: 0x0002, name: "SystemBusy",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "ApplicationLauncherFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "ApplicationPlatform"
+                    id: 0x0001, name: "ApplicationPlatform",
+                    conformance: "M"
                 })
             ]
         })

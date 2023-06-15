@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/MatterError.js";
-import { DefinitionError } from "../definitions/DefinitionError.js";
-import { AnyElement, BaseElement, ElementType, Specification } from "../index.js";
-import { ValidateModel } from "../logic/ValidateModel.js";
+import { MatterError } from "../../common/index.js";
+import { Logger } from "../../log/index.js";
+import { DefinitionError, ElementType, Specification } from "../definitions/index.js";
+import { AnyElement, BaseElement } from "../elements/index.js";
 
 const CHILDREN = Symbol("children");
 
@@ -63,6 +63,13 @@ export abstract class Model implements BaseElement {
             this.children = [];
         }
         return this[CHILDREN];
+    }
+
+    /**
+     * Allows subclasses to pull a working ID from an alternate source.
+     */
+    get effectiveId() {
+        return this.id;
     }
 
     /**
@@ -186,6 +193,14 @@ export abstract class Model implements BaseElement {
         );
     }
 
+    /**
+     * Perform an iterative search for a custom model relationship.
+     * 
+     * @param next retrieves the next model
+     * @param test returns the result of the search or undefined to continue
+     * @param first this model from which to search
+     * @returns the result of the search
+     */
     search<T>(
         next: (current: Model) => Model | undefined,
         test: (current: Model) => T | undefined,
@@ -284,11 +299,56 @@ export abstract class Model implements BaseElement {
     }
 
     /**
-     * Validate the model.  Places validation errors into the errors array and
-     * casts the default value to the proper type.
+     * Write model structure to log.
      */
-    validate() {
-        ValidateModel(this);
+    log({ logger }: { logger?: Logger } = {}) {
+        if (!logger) {
+            logger = Logger.get(this.name);
+        }
+        const properties = this.valueOf() as any;
+
+        const summary = `${properties.type} ${properties.name}`;
+        delete properties.type;
+        delete properties.name;
+
+        const summaryProps = {} as any;
+        if (properties.id != undefined) {
+            if (typeof this.id == "number" && this.id >= 0) {
+                summaryProps.id = `0x${this.id.toString(16).padStart(4, "0")}`;
+            } else {
+                summaryProps.id = this.id;
+            }
+            delete properties.id;
+        }
+        if (properties.base) {
+            summaryProps.base = properties.base;
+            delete properties.base;
+        }
+        if (properties.xref) {
+            summaryProps.xref = properties.xref;
+            delete properties.xref;
+        }
+        logger.debug(summary, Logger.dict(summaryProps));
+
+        const details = properties.details;
+        if (details) {
+            delete properties.details;
+        }
+
+        Logger.nest(() => {
+            if (Object.keys(properties).length) {
+                logger!.debug(Logger.dict(properties));
+            }
+            if (details) {
+                logger!.debug(Logger.dict({ details: details }));
+            }
+            if (this.children.length) {
+                logger!.debug(Logger.dict({ children: "" }));
+                Logger.nest(() => {
+                    this.children.forEach(child => child.log({ logger }));
+                });
+            }
+        });
     }
 
     protected constructor(definition: BaseElement) {

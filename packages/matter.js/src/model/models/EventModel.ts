@@ -4,9 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DataModel, Datatype, EventElement, Mei, Model } from "../index.js";
+import { Datatype, Mei } from "../definitions/index.js";
+import { EventElement } from "../elements/index.js";
+import { ValueModel } from "./ValueModel.js";
+import { Model } from "./Model.js";
 
-export class EventModel extends DataModel implements EventElement {
+export class EventModel extends ValueModel implements EventElement {
     override type!: EventElement.Type;
     override id!: Mei;
     priority?: EventElement.Priority;

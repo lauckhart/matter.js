@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement, EventElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement, EventElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0034, name: "SoftwareDiagnostics",
@@ -49,7 +49,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Id", base: "uint64"
+                    name: "Id", base: "uint64",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -66,9 +67,11 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "ThreadMetricsStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Id", base: "uint64"
+                    name: "Id", base: "uint64",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -95,9 +98,11 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "SoftwareDiagnosticsFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "WaterMarks"
+                    id: 0x0001, name: "WaterMarks",
+                    conformance: "M"
                 })
             ]
         })

@@ -6,8 +6,8 @@
 
 import { loadHtml } from "./spec-input.js";
 import { HtmlReference } from "./spec-types.js";
-import { AnyElement } from "../../../src/model/index.js";
 import { Logger } from "../../../src/log/Logger.js";
+import { Specification } from "../../../src/model/index.js";
 
 const logger = Logger.get("index-scan");
 
@@ -54,13 +54,13 @@ export function scanIndex(path: string) {
         clusters: Array<HtmlReference>()
     }
 
-    let spec: AnyElement.Specification;
+    let spec: Specification;
     if (title.match(/matter specification/i)) {
-        spec = AnyElement.Specification.Core;
+        spec = Specification.Core;
     } else if (title.match(/application/i)) {
-        spec = AnyElement.Specification.Cluster;
+        spec = Specification.Cluster;
     } else if (title.match(/device/i)) {
-        spec = AnyElement.Specification.Device;
+        spec = Specification.Device;
     } else {
         logger.error(`matter specification name ${title} unrecognized`);
         return;

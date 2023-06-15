@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, EventElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, EventElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x002f, name: "PowerSource",
@@ -15,15 +15,18 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster is used to describe the configuration and capabilities of a physical power source that provides power to the Node.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "PowerSourceStatus", base: "PowerSourceStatusEnum"
+            id: 0x0000, name: "PowerSourceStatus", base: "PowerSourceStatusEnum",
+            conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "PowerSourceOrder", base: "uint8"
+            id: 0x0001, name: "PowerSourceOrder", base: "uint8",
+            conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "PowerSourceDescription", base: "string"
+            id: 0x0002, name: "PowerSourceDescription", base: "string",
+            conformance: "M"
         }),
 
         AttributeElement({
@@ -186,11 +189,13 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "WiredFaultEnum"
+                    name: "Current", base: "WiredFaultEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "WiredFaultEnum"
+                    name: "Previous", base: "WiredFaultEnum",
+                    conformance: "M"
                 })
             ]
         }),
@@ -200,11 +205,13 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "BatFaultEnum"
+                    name: "Current", base: "BatFaultEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "BatFaultEnum"
+                    name: "Previous", base: "BatFaultEnum",
+                    conformance: "M"
                 })
             ]
         }),
@@ -214,713 +221,887 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "BatChargeFaultEnum"
+                    name: "Current", base: "BatChargeFaultEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "BatChargeFaultEnum"
+                    name: "Previous", base: "BatChargeFaultEnum",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "PowerSourceFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "Wired"
+                    id: 0x0001, name: "Wired",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Battery"
+                    id: 0x0002, name: "Battery",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "Rechargeable"
+                    id: 0x0004, name: "Rechargeable",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Replaceable"
+                    id: 0x0008, name: "Replaceable",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiredFaultEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "OverVoltage"
+                    id: 0x0001, name: "OverVoltage",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "UnderVoltage"
+                    id: 0x0002, name: "UnderVoltage",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatFaultEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "OverTemp"
+                    id: 0x0001, name: "OverTemp",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "UnderTemp"
+                    id: 0x0002, name: "UnderTemp",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatChargeFaultEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "AmbientTooHot"
+                    id: 0x0001, name: "AmbientTooHot",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "AmbientTooCold"
+                    id: 0x0002, name: "AmbientTooCold",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "BatteryTooHot"
+                    id: 0x0003, name: "BatteryTooHot",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "BatteryTooCold"
+                    id: 0x0004, name: "BatteryTooCold",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "BatteryAbsent"
+                    id: 0x0005, name: "BatteryAbsent",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "BatteryOverVoltage"
+                    id: 0x0006, name: "BatteryOverVoltage",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "BatteryUnderVoltage"
+                    id: 0x0007, name: "BatteryUnderVoltage",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "ChargerOverVoltage"
+                    id: 0x0008, name: "ChargerOverVoltage",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "ChargerUnderVoltage"
+                    id: 0x0009, name: "ChargerUnderVoltage",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "SafetyTimeout"
+                    id: 0x000a, name: "SafetyTimeout",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "PowerSourceStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Active"
+                    id: 0x0001, name: "Active",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Standby"
+                    id: 0x0002, name: "Standby",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Unavailable"
+                    id: 0x0003, name: "Unavailable",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiredCurrentTypeEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Ac"
+                    id: 0x0000, name: "Ac",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Dc"
+                    id: 0x0001, name: "Dc",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatChargeLevelEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Ok"
+                    id: 0x0000, name: "Ok",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Warning"
+                    id: 0x0001, name: "Warning",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Critical"
+                    id: 0x0002, name: "Critical",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatReplaceabilityEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "NotReplaceable"
+                    id: 0x0001, name: "NotReplaceable",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "UserReplaceable"
+                    id: 0x0002, name: "UserReplaceable",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "FactoryReplaceable"
+                    id: 0x0003, name: "FactoryReplaceable",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatChargeStateEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unknown"
+                    id: 0x0000, name: "Unknown",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "IsCharging"
+                    id: 0x0001, name: "IsCharging",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "IsAtFullCharge"
+                    id: 0x0002, name: "IsAtFullCharge",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "IsNotCharging"
+                    id: 0x0003, name: "IsNotCharging",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatCommonDesignationEnum", base: "enum16",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Aaa"
+                    id: 0x0001, name: "Aaa",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Aa"
+                    id: 0x0002, name: "Aa",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "C"
+                    id: 0x0003, name: "C",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "D"
+                    id: 0x0004, name: "D",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "4V5"
+                    id: 0x0005, name: "4V5",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "6V0"
+                    id: 0x0006, name: "6V0",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "9V0"
+                    id: 0x0007, name: "9V0",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "12Aa"
+                    id: 0x0008, name: "12Aa",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "Aaaa"
+                    id: 0x0009, name: "Aaaa",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "A"
+                    id: 0x000a, name: "A",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "B"
+                    id: 0x000b, name: "B",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "F"
+                    id: 0x000c, name: "F",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000d, name: "N"
+                    id: 0x000d, name: "N",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000e, name: "No6"
+                    id: 0x000e, name: "No6",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000f, name: "SubC"
+                    id: 0x000f, name: "SubC",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "A23"
+                    id: 0x0010, name: "A23",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0011, name: "A27"
+                    id: 0x0011, name: "A27",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0012, name: "Ba5800"
+                    id: 0x0012, name: "Ba5800",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0013, name: "Duplex"
+                    id: 0x0013, name: "Duplex",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0014, name: "4Sr44"
+                    id: 0x0014, name: "4Sr44",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0015, name: "523"
+                    id: 0x0015, name: "523",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0016, name: "531"
+                    id: 0x0016, name: "531",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0017, name: "15V0"
+                    id: 0x0017, name: "15V0",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0018, name: "22V5"
+                    id: 0x0018, name: "22V5",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0019, name: "30V0"
+                    id: 0x0019, name: "30V0",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001a, name: "45V0"
+                    id: 0x001a, name: "45V0",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001b, name: "67V5"
+                    id: 0x001b, name: "67V5",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001c, name: "J"
+                    id: 0x001c, name: "J",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001d, name: "Cr123A"
+                    id: 0x001d, name: "Cr123A",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001e, name: "Cr2"
+                    id: 0x001e, name: "Cr2",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001f, name: "2Cr5"
+                    id: 0x001f, name: "2Cr5",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0020, name: "CrP2"
+                    id: 0x0020, name: "CrP2",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0021, name: "CrV3"
+                    id: 0x0021, name: "CrV3",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0022, name: "Sr41"
+                    id: 0x0022, name: "Sr41",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0023, name: "Sr43"
+                    id: 0x0023, name: "Sr43",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0024, name: "Sr44"
+                    id: 0x0024, name: "Sr44",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0025, name: "Sr45"
+                    id: 0x0025, name: "Sr45",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0026, name: "Sr48"
+                    id: 0x0026, name: "Sr48",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0027, name: "Sr54"
+                    id: 0x0027, name: "Sr54",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0028, name: "Sr55"
+                    id: 0x0028, name: "Sr55",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0029, name: "Sr57"
+                    id: 0x0029, name: "Sr57",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x002a, name: "Sr58"
+                    id: 0x002a, name: "Sr58",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x002b, name: "Sr59"
+                    id: 0x002b, name: "Sr59",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x002c, name: "Sr60"
+                    id: 0x002c, name: "Sr60",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x002d, name: "Sr63"
+                    id: 0x002d, name: "Sr63",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x002e, name: "Sr64"
+                    id: 0x002e, name: "Sr64",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x002f, name: "Sr65"
+                    id: 0x002f, name: "Sr65",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0030, name: "Sr66"
+                    id: 0x0030, name: "Sr66",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0031, name: "Sr67"
+                    id: 0x0031, name: "Sr67",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0032, name: "Sr68"
+                    id: 0x0032, name: "Sr68",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0033, name: "Sr69"
+                    id: 0x0033, name: "Sr69",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0034, name: "Sr516"
+                    id: 0x0034, name: "Sr516",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0035, name: "Sr731"
+                    id: 0x0035, name: "Sr731",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0036, name: "Sr712"
+                    id: 0x0036, name: "Sr712",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0037, name: "Lr932"
+                    id: 0x0037, name: "Lr932",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0038, name: "A5"
+                    id: 0x0038, name: "A5",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0039, name: "A10"
+                    id: 0x0039, name: "A10",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x003a, name: "A13"
+                    id: 0x003a, name: "A13",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x003b, name: "A312"
+                    id: 0x003b, name: "A312",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x003c, name: "A675"
+                    id: 0x003c, name: "A675",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x003d, name: "Ac41E"
+                    id: 0x003d, name: "Ac41E",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x003e, name: "10180"
+                    id: 0x003e, name: "10180",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x003f, name: "10280"
+                    id: 0x003f, name: "10280",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0040, name: "10440"
+                    id: 0x0040, name: "10440",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0041, name: "14250"
+                    id: 0x0041, name: "14250",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0042, name: "14430"
+                    id: 0x0042, name: "14430",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0043, name: "14500"
+                    id: 0x0043, name: "14500",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0044, name: "14650"
+                    id: 0x0044, name: "14650",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0045, name: "15270"
+                    id: 0x0045, name: "15270",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0046, name: "16340"
+                    id: 0x0046, name: "16340",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0047, name: "Rcr123A"
+                    id: 0x0047, name: "Rcr123A",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0048, name: "17500"
+                    id: 0x0048, name: "17500",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0049, name: "17670"
+                    id: 0x0049, name: "17670",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x004a, name: "18350"
+                    id: 0x004a, name: "18350",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x004b, name: "18500"
+                    id: 0x004b, name: "18500",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x004c, name: "18650"
+                    id: 0x004c, name: "18650",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x004d, name: "19670"
+                    id: 0x004d, name: "19670",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x004e, name: "25500"
+                    id: 0x004e, name: "25500",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x004f, name: "26650"
+                    id: 0x004f, name: "26650",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0050, name: "32600"
+                    id: 0x0050, name: "32600",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatApprovedChemistryEnum", base: "enum16",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Unspecified"
+                    id: 0x0000, name: "Unspecified",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Alkaline"
+                    id: 0x0001, name: "Alkaline",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "LithiumCarbonFluoride"
+                    id: 0x0002, name: "LithiumCarbonFluoride",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "LithiumChromiumOxide"
+                    id: 0x0003, name: "LithiumChromiumOxide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "LithiumCopperOxide"
+                    id: 0x0004, name: "LithiumCopperOxide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "LithiumIronDisulfide"
+                    id: 0x0005, name: "LithiumIronDisulfide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "LithiumManganeseDioxide"
+                    id: 0x0006, name: "LithiumManganeseDioxide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "LithiumThionylChloride"
+                    id: 0x0007, name: "LithiumThionylChloride",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "Magnesium"
+                    id: 0x0008, name: "Magnesium",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "MercuryOxide"
+                    id: 0x0009, name: "MercuryOxide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "NickelOxyhydride"
+                    id: 0x000a, name: "NickelOxyhydride",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "SilverOxide"
+                    id: 0x000b, name: "SilverOxide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "ZincAir"
+                    id: 0x000c, name: "ZincAir",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000d, name: "ZincCarbon"
+                    id: 0x000d, name: "ZincCarbon",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000e, name: "ZincChloride"
+                    id: 0x000e, name: "ZincChloride",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000f, name: "ZincManganeseDioxide"
+                    id: 0x000f, name: "ZincManganeseDioxide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "LeadAcid"
+                    id: 0x0010, name: "LeadAcid",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0011, name: "LithiumCobaltOxide"
+                    id: 0x0011, name: "LithiumCobaltOxide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0012, name: "LithiumIon"
+                    id: 0x0012, name: "LithiumIon",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0013, name: "LithiumIonPolymer"
+                    id: 0x0013, name: "LithiumIonPolymer",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0014, name: "LithiumIronPhosphate"
+                    id: 0x0014, name: "LithiumIronPhosphate",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0015, name: "LithiumSulfur"
+                    id: 0x0015, name: "LithiumSulfur",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0016, name: "LithiumTitanate"
+                    id: 0x0016, name: "LithiumTitanate",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0017, name: "NickelCadmium"
+                    id: 0x0017, name: "NickelCadmium",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0018, name: "NickelHydrogen"
+                    id: 0x0018, name: "NickelHydrogen",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0019, name: "NickelIron"
+                    id: 0x0019, name: "NickelIron",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001a, name: "NickelMetalHydride"
+                    id: 0x001a, name: "NickelMetalHydride",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001b, name: "NickelZinc"
+                    id: 0x001b, name: "NickelZinc",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001c, name: "SilverZinc"
+                    id: 0x001c, name: "SilverZinc",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001d, name: "SodiumIon"
+                    id: 0x001d, name: "SodiumIon",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001e, name: "SodiumSulfur"
+                    id: 0x001e, name: "SodiumSulfur",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x001f, name: "ZincBromide"
+                    id: 0x001f, name: "ZincBromide",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0020, name: "ZincCerium"
+                    id: 0x0020, name: "ZincCerium",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "WiredFaultChangeType", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "WiredFaultEnum"
+                    name: "Current", base: "WiredFaultEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "WiredFaultEnum"
+                    name: "Previous", base: "WiredFaultEnum",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatFaultChangeType", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "BatFaultEnum"
+                    name: "Current", base: "BatFaultEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "BatFaultEnum"
+                    name: "Previous", base: "BatFaultEnum",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "BatChargeFaultChangeType", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "BatChargeFaultEnum"
+                    name: "Current", base: "BatChargeFaultEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "BatChargeFaultEnum"
+                    name: "Previous", base: "BatChargeFaultEnum",
+                    conformance: "M"
                 })
             ]
         })

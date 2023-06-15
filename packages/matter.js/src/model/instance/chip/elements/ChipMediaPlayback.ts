@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, CommandElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0506, name: "MediaPlayback",
@@ -16,7 +16,7 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "MediaPlaybackState", base: "PlaybackStateEnum",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
@@ -51,17 +51,17 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "Play",
-            direction: "request", response: "PlaybackResponse"
+            conformance: "M", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0001, name: "Pause",
-            direction: "request", response: "PlaybackResponse"
+            conformance: "M", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
             id: 0x0002, name: "Stop",
-            direction: "request", response: "PlaybackResponse"
+            conformance: "M", direction: "request", response: "PlaybackResponse"
         }),
 
         CommandElement({
@@ -94,7 +94,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "DeltaPositionMilliseconds", base: "uint64"
+                    name: "DeltaPositionMilliseconds", base: "uint64",
+                    conformance: "M"
                 })
             ]
         }),
@@ -104,7 +105,8 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "DeltaPositionMilliseconds", base: "uint64"
+                    name: "DeltaPositionMilliseconds", base: "uint64",
+                    conformance: "M"
                 })
             ]
         }),
@@ -114,17 +116,19 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "Position", base: "uint64"
+                    name: "Position", base: "uint64",
+                    conformance: "M"
                 })
             ]
         }),
 
         CommandElement({
             id: 0x000a, name: "PlaybackResponse",
-            direction: "response",
+            conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "MediaPlaybackStatusEnum"
+                    name: "Status", base: "MediaPlaybackStatusEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -136,77 +140,94 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "PlaybackPositionStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "UpdatedAt", base: "epoch-us"
+                    name: "UpdatedAt", base: "epoch-us",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
                     name: "Position", base: "uint64",
-                    quality: "X"
+                    conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "PlaybackStateEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Playing"
+                    id: 0x0000, name: "Playing",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Paused"
+                    id: 0x0001, name: "Paused",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "NotPlaying"
+                    id: 0x0002, name: "NotPlaying",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "Buffering"
+                    id: 0x0003, name: "Buffering",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MediaPlaybackStatusEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Success"
+                    id: 0x0000, name: "Success",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "InvalidStateForCommand"
+                    id: 0x0001, name: "InvalidStateForCommand",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "NotAllowed"
+                    id: 0x0002, name: "NotAllowed",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "NotActive"
+                    id: 0x0003, name: "NotActive",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "SpeedOutOfRange"
+                    id: 0x0004, name: "SpeedOutOfRange",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "SeekOutOfRange"
+                    id: 0x0005, name: "SeekOutOfRange",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "MediaPlaybackFeature", base: "map32",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0001, name: "AdvancedSeek"
+                    id: 0x0001, name: "AdvancedSeek",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "VariableSpeed"
+                    id: 0x0002, name: "VariableSpeed",
+                    conformance: "M"
                 })
             ]
         })

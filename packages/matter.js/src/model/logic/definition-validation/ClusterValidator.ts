@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeModel, ClusterElement, ClusterModel, CommandModel, DatatypeModel, EventModel } from "../../index.js";
-import { ModelValidator } from "./index.js";
+import { ClusterElement } from "../../elements/index.js";
+import { AttributeModel, ClusterModel, CommandModel, DatatypeModel, EventModel } from "../../models/index.js";
+import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[ClusterElement.Type] =
 class DeviceTypeValidator extends ModelValidator<ClusterModel> {

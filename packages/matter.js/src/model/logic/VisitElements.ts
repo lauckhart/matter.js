@@ -4,74 +4,108 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AnyElement } from "../index.js";
+import { ElementType } from "../definitions/index.js";
+import { AnyElement } from "../elements/index.js";
 
 /**
  * Visit multiple elements simultaneously and build state
  */
-export function VisitElements<T>(
-    parent: T,
+export function VisitElements<T>({
+    state,
+    variants,
+    visitor,
+    getName = (_variant, element) => element.name
+}: {
+    state: T,
     variants: VisitElements.Variants,
-    visitor: (parent: T, variants: VisitElements.Variants) => T
-) {
-    parent = visitor(parent, variants);
+    visitor: (
+        parent: T,
+        variants: VisitElements.Variants
+    ) => T,
+    getName?: (
+        variant: string,
+        parent: AnyElement,
+        element: AnyElement
+    ) => string
+}) {
+    state = visitor(state, variants);
     
     // List of children associated by ID or name (ID gets priority)
     const slots = Array<VisitElements.Variants>();
 
     // Map of IDs to first slot the ID appeared
-    const idToSlot = new Map<number, number>();
+    const idToSlot = {} as { [id: number]: number };
 
     // Map of names to first slot the name appeared
-    const nameToSlot = new Map<string, number>();
+    const nameToSlot = {} as { [name: string]: number };
 
     // Iterate over each model variant
-    for (const name in variants) {
+    for (const variantName in variants) {
         // Get the model
-        const element = variants[name];
+        const element = variants[variantName];
         if (!element?.children) {
             continue;
         }
 
         // For each child of this variant, associated it with a slot
-        for (const child of element.children as AnyElement[]) {
-            if (child.id) {
+        for (let i = 0; i < element.children.length; i++) {
+            const child = element.children[i] as AnyElement;
+
+            const childId = effectiveId(element, child, i);
+            const childName = getName(variantName, element, child);
+
+            let slot;
+            if (childId != undefined) {
                 // Find existing slot by ID
-                let slot = idToSlot.get(child.id);
-
-                // Find existing slot by name
-                if (!slot) {
-                    slot = nameToSlot.get(child.name);
-                }
-
-                // Create a new slot if necessary
-                if (!slot) {
-                    slot = slots.length;
-                    slots.push({});
-                }
-
-                // Map the child's ID to the slot
-                if (child.id) {
-                    if (idToSlot.get(child.id) === undefined) {
-                        idToSlot.set(child.id, slot);
-                    }
-                }
-
-                // Map the child's name to the slot
-                if (nameToSlot.get(child.name) === undefined) {
-                    nameToSlot.set(child.name, slot);
-                }
-
-                // Update the slot
-                slots[slot][name] = child;
+                slot = idToSlot[childId];
             }
+
+            // Find existing slot by name
+            if (!slot) {
+                slot = nameToSlot[childName];
+            }
+
+            // Create a new slot if necessary
+            if (!slot) {
+                slot = slots.length;
+                slots.push({});
+            }
+
+            // Map the child's ID to the slot
+            if (childId != undefined) {
+                if (idToSlot[childId] === undefined) {
+                    idToSlot[childId] = slot;
+                }
+            }
+
+            // Map the child's name to the slot
+            if (nameToSlot[childName] === undefined) {
+                nameToSlot[childName] = slot;
+            }
+
+            // Update the slot
+            slots[slot][variantName] = child;
         }
     }
 
     // Visit children
-    for (const slot of slots) {
-        VisitElements(parent, slot, visitor);
+    for (const variants of slots) {
+        VisitElements({ state: state, variants, visitor, getName });
     }
+}
+
+// For fields, if there is no explicit ID, use the index within the parent
+function effectiveId(parent: AnyElement, child: AnyElement, index: number) {
+    if (child.id == undefined && child.type == ElementType.Datatype) {
+        switch (parent.type) {
+            case ElementType.Attribute:
+            case ElementType.Command:
+            case ElementType.Datatype:
+            case ElementType.Event:
+                return index;
+        }
+    }
+    return child.id;
 }
 
 export namespace VisitElements {

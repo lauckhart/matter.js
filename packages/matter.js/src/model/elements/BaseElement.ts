@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType, Specification } from "../index.js";
+import { ElementType, Specification } from "../definitions/index.js";
 
 /**
  * Per the Matter specification, an element is a data construct that supports

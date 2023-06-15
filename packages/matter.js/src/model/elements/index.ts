@@ -6,7 +6,7 @@
 
 export * from "./BaseElement.js";
 
-export * from "./BaseDataElement.js";
+export * from "./ValueElement.js";
 export * from "./DatatypeElement.js";
 export * from "./AttributeElement.js";
 export * from "./CommandElement.js";

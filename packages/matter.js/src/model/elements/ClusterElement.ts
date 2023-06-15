@@ -4,7 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeElement, CommandElement, EventElement, BaseElement, DatatypeElement, Mei, ElementType } from "../index.js";
+import { ElementType, Mei } from "../definitions/index.js";
+import { AttributeElement } from "./AttributeElement.js";
+import { BaseElement } from "./BaseElement.js";
+import { CommandElement } from "./CommandElement.js";
+import { DatatypeElement } from "./DatatypeElement.js";
+import { EventElement } from "./EventElement.js";
 
 /**
  * A cluster describes a set of related functionality.

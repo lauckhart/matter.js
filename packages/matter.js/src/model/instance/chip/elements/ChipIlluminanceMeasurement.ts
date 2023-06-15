@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0400, name: "IlluminanceMeasurement",
@@ -16,17 +16,17 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "IllumMeasuredValue", base: "uint16",
-            default: 0, quality: "X P"
+            conformance: "M", default: 0, quality: "X P"
         }),
 
         AttributeElement({
             id: 0x0001, name: "IllumMinMeasuredValue", base: "uint16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0002, name: "IllumMaxMeasuredValue", base: "uint16",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -41,13 +41,16 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "LightSensorType", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Photodiode"
+                    id: 0x0000, name: "Photodiode",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Cmos"
+                    id: 0x0001, name: "Cmos",
+                    conformance: "M"
                 })
             ]
         })

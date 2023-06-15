@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ChipMatter } from "../index.js";
-import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../index.js";
+import { ChipMatter } from "../ChipMatter.js";
+import { ClusterElement, AttributeElement, DatatypeElement, CommandElement } from "../../../elements/index.js";
 
 ChipMatter.children!.push(ClusterElement({
     id: 0x0038, name: "TimeSynchronization",
@@ -16,12 +16,12 @@ ChipMatter.children!.push(ClusterElement({
     children: [
         AttributeElement({
             id: 0x0000, name: "UtcTime", base: "epoch-us",
-            quality: "X"
+            conformance: "M", quality: "X"
         }),
 
         AttributeElement({
             id: 0x0001, name: "Granularity", base: "GranularityEnum",
-            default: 0
+            conformance: "M", default: 0
         }),
 
         AttributeElement({
@@ -31,7 +31,7 @@ ChipMatter.children!.push(ClusterElement({
 
         AttributeElement({
             id: 0x0003, name: "TrustedTimeNodeId", base: "node-id",
-            access: "RW VA", quality: "X"
+            access: "RW VA", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
@@ -76,14 +76,16 @@ ChipMatter.children!.push(ClusterElement({
 
         CommandElement({
             id: 0x0000, name: "SetUtcTime",
-            direction: "request",
+            conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "UtcTime", base: "epoch-us"
+                    name: "UtcTime", base: "epoch-us",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Granularity", base: "GranularityEnum"
+                    name: "Granularity", base: "GranularityEnum",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -95,111 +97,138 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "GranularityEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "NoTimeGranularity"
+                    id: 0x0000, name: "NoTimeGranularity",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "MinutesGranularity"
+                    id: 0x0001, name: "MinutesGranularity",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "SecondsGranularity"
+                    id: 0x0002, name: "SecondsGranularity",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "MillisecondsGranularity"
+                    id: 0x0003, name: "MillisecondsGranularity",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "MicrosecondsGranularity"
+                    id: 0x0004, name: "MicrosecondsGranularity",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TimeSourceEnum", base: "enum8",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "None"
+                    id: 0x0000, name: "None",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Unknown"
+                    id: 0x0001, name: "Unknown",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Admin"
+                    id: 0x0002, name: "Admin",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "NodeTimeCluster"
+                    id: 0x0003, name: "NodeTimeCluster",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "NonFabricSntp"
+                    id: 0x0004, name: "NonFabricSntp",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0005, name: "NonFabricNtp"
+                    id: 0x0005, name: "NonFabricNtp",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0006, name: "FabricSntp"
+                    id: 0x0006, name: "FabricSntp",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0007, name: "FabricNtp"
+                    id: 0x0007, name: "FabricNtp",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0008, name: "MixedNtp"
+                    id: 0x0008, name: "MixedNtp",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0009, name: "NonFabricSntpNts"
+                    id: 0x0009, name: "NonFabricSntpNts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000a, name: "NonFabricNtpNts"
+                    id: 0x000a, name: "NonFabricNtpNts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000b, name: "FabricSntpNts"
+                    id: 0x000b, name: "FabricSntpNts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000c, name: "FabricNtpNts"
+                    id: 0x000c, name: "FabricNtpNts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000d, name: "MixedNtpNts"
+                    id: 0x000d, name: "MixedNtpNts",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000e, name: "CloudSource"
+                    id: 0x000e, name: "CloudSource",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x000f, name: "Ptp"
+                    id: 0x000f, name: "Ptp",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    id: 0x0010, name: "Gnss"
+                    id: 0x0010, name: "Gnss",
+                    conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
             name: "TimeZoneStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Offset", base: "int32"
+                    name: "Offset", base: "int32",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ValidAt", base: "epoch-us"
+                    name: "ValidAt", base: "epoch-us",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
@@ -211,17 +240,21 @@ ChipMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             name: "DstOffsetStruct", base: "struct",
+            conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Offset", base: "int32"
+                    name: "Offset", base: "int32",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ValidStarting", base: "epoch-us"
+                    name: "ValidStarting", base: "epoch-us",
+                    conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ValidUntil", base: "epoch-us"
+                    name: "ValidUntil", base: "epoch-us",
+                    conformance: "M"
                 })
             ]
         })

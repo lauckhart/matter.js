@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatatypeModel, EventElement, EventModel } from "../../index.js";
-import { DataValidator, ModelValidator } from "./index.js";
+import { EventElement } from "../../elements/index.js";
+import { DatatypeModel, EventModel } from "../../models/index.js";
+import { DataValidator } from "./DataValidator.js";
+import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[EventElement.Type] =
 class EventValidator extends DataValidator<EventModel> {
