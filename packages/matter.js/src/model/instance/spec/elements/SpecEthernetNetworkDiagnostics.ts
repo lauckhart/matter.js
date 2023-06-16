@@ -39,56 +39,76 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "PhyRate", base: "PHYRateEnum",
             access: "R V", conformance: "O", default: "null", quality: "X",
-            details: "The PHYRate attribute SHALL indicate the current nominal, usable speed at the top of the physical layer of the Node. A value of null SHALL indicate that the interface is not currently configured or operational.",
+            details: "The PHYRate attribute SHALL indicate the current nominal, usable speed" +
+                     " at the top of the physical layer of the Node. A value of null SHALL " +
+                     "indicate that the interface is not currently configured or operational",
             xref: { document: "core", section: "11.15.6.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "FullDuplex", base: "bool",
             access: "R V", conformance: "O", default: true, quality: "X",
-            details: "The FullDuplex attribute SHALL indicate if the Node is currently utilizing the full-duplex operating mode. A value of null SHALL indicate that the interface is not currently configured or operational.",
+            details: "The FullDuplex attribute SHALL indicate if the Node is currently " +
+                     "utilizing the full-duplex operating mode. A value of null SHALL " +
+                     "indicate that the interface is not currently configured or operational",
             xref: { document: "core", section: "11.15.6.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "PacketRxCount", base: "uint64",
             access: "R V", conformance: "P, KTCNT", default: 0,
-            details: "The PacketRxCount attribute SHALL indicate the number of packets that have been received on the ethernet network interface. The PacketRxCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+            details: "The PacketRxCount attribute SHALL indicate the number of packets that " +
+                     "have been received on the ethernet network interface. The " +
+                     "PacketRxCount attribute SHALL be reset to 0 upon a reboot of the Node",
             xref: { document: "core", section: "11.15.6.3", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "PacketTxCount", base: "uint64",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "C",
-            details: "The PacketTxCount attribute SHALL indicate the number of packets that have been successfully transferred on the ethernet network interface. The PacketTxCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+            details: "The PacketTxCount attribute SHALL indicate the number of packets that " +
+                     "have been successfully transferred on the ethernet network interface. " +
+                     "The PacketTxCount attribute SHALL be reset to 0 upon a reboot of the " +
+                     "Node",
             xref: { document: "core", section: "11.15.6.4", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0004, name: "TxErrCount", base: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "C",
-            details: "The TxErrCount attribute SHALL indicate the number of failed packet transmissions that have occurred on the ethernet network interface. The TxErrCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+            details: "The TxErrCount attribute SHALL indicate the number of failed packet " +
+                     "transmissions that have occurred on the ethernet network interface. " +
+                     "The TxErrCount attribute SHALL be reset to 0 upon a reboot of the Node",
             xref: { document: "core", section: "11.15.6.5", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0005, name: "CollisionCount", base: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "C",
-            details: "The CollisionCount attribute SHALL indicate the number of collisions that have occurred while attempting to transmit a packet on the ethernet network interface. The CollisionCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+            details: "The CollisionCount attribute SHALL indicate the number of collisions " +
+                     "that have occurred while attempting to transmit a packet on the " +
+                     "ethernet network interface. The CollisionCount attribute SHALL be " +
+                     "reset to 0 upon a reboot of the Node",
             xref: { document: "core", section: "11.15.6.6", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0006, name: "OverrunCount", base: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "C",
-            details: "The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or egress, due to lack of buffer memory to retain all packets on the ethernet network interface. The OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+            details: "The OverrunCount attribute SHALL indicate the number of packets " +
+                     "dropped either at ingress or egress, due to lack of buffer memory to " +
+                     "retain all packets on the ethernet network interface. The OverrunCount" +
+                     " attribute SHALL be reset to 0 upon a reboot of the Node",
             xref: { document: "core", section: "11.15.6.7", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0007, name: "CarrierDetect", base: "bool",
             access: "R V", conformance: "O", default: true, quality: "X C",
-            details: "The CarrierDetect attribute SHALL indicate the value of the Carrier Detect control signal present on the ethernet network interface. A value of null SHALL indicate that the interface is not currently configured or operational.",
+            details: "The CarrierDetect attribute SHALL indicate the value of the Carrier " +
+                     "Detect control signal present on the ethernet network interface. A " +
+                     "value of null SHALL indicate that the interface is not currently " +
+                     "configured or operational",
             xref: { document: "core", section: "11.15.6.8", version: "1.1" }
         }),
 
@@ -101,13 +121,13 @@ SpecMatter.children!.push(ClusterElement({
         CommandElement({
             id: 0x0000, name: "ResetCounts",
             access: "M", conformance: "P, KTCNT | ERRCNT", direction: "request", response: "status",
-            details: "Reception of this command SHALL reset the following attributes to 0:",
+            details: "Reception of this command SHALL reset the following attributes to 0",
             xref: { document: "core", section: "11.15.7.1", version: "1.1" }
         }),
 
         DatatypeElement({
             id: -1, name: "PHYRateEnum", base: "enum8",
-            details: "This data type is derived from enum8.",
+            details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.15.5.1", version: "1.1" },
             children: [
                 DatatypeElement({

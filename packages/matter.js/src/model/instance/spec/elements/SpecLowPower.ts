@@ -26,7 +26,7 @@ SpecMatter.children!.push(ClusterElement({
         CommandElement({
             id: 0x0000, name: "Sleep",
             access: "O", conformance: "M", direction: "request", response: "status",
-            details: "This command shall put the device into low power mode.",
+            details: "This command shall put the device into low power mode",
             xref: { document: "cluster", section: "1.9.3.1", version: "1.1" }
         })
     ]

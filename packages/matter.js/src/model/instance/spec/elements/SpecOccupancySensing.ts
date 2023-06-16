@@ -25,7 +25,7 @@ SpecMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             id: -1, name: "OccupancyBitmap", base: "bitmap8",
-            details: "This data type is derived from bitmap8.",
+            details: "This data type is derived from bitmap8",
             xref: { document: "cluster", section: "2.7.5.1", version: "1.1" }
         })
     ]

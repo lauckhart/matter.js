@@ -33,21 +33,31 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "HourFormat", base: "HourFormatEnum",
             access: "RW VM", conformance: "M", default: "null", quality: "X N",
-            details: "The HourFormat attribute SHALL represent the format that the Node is currently configured to use when conveying the hour unit of time. If provided, this value SHALL take priority over any unit",
+            details: "The HourFormat attribute SHALL represent the format that the Node is " +
+                     "currently configured to use when conveying the hour unit of time. If " +
+                     "provided, this value SHALL take priority over any unit",
             xref: { document: "core", section: "11.4.6.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "ActiveCalendarType", base: "CalendarTypeEnum",
             access: "RW VM", conformance: "CALFMT", default: "null", quality: "X N",
-            details: "The ActiveCalendarType attribute SHALL represent the calendar format that the Node is currently configured to use when conveying dates. If provided, this value SHALL take priority over any unit implied through the ActiveLocale Attribute.",
+            details: "The ActiveCalendarType attribute SHALL represent the calendar format " +
+                     "that the Node is currently configured to use when conveying dates. If " +
+                     "provided, this value SHALL take priority over any unit implied through" +
+                     " the ActiveLocale Attribute",
             xref: { document: "core", section: "11.4.6.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "SupportedCalendarTypes", base: "list",
             access: "R V", conformance: "CALFMT", constraint: "desc", default: "N/A", quality: "F",
-            details: "The SupportedCalendarTypes attribute SHALL represent a list of CalendarTypeEnum values that are supported by the Node. The list SHALL NOT contain any duplicate entries. The ordering of items within the list SHOULD NOT express any meaning. The maximum length of the SupportedCalendarTypes list SHALL be equivalent to the number of enumerations within CalendarTypeEnum.",
+            details: "The SupportedCalendarTypes attribute SHALL represent a list of " +
+                     "CalendarTypeEnum values that are supported by the Node. The list SHALL" +
+                     " NOT contain any duplicate entries. The ordering of items within the " +
+                     "list SHOULD NOT express any meaning. The maximum length of the " +
+                     "SupportedCalendarTypes list SHALL be equivalent to the number of " +
+                     "enumerations within CalendarTypeEnum",
             xref: { document: "core", section: "11.4.6.3", version: "1.1" },
             children: [
                 DatatypeElement({
@@ -58,7 +68,7 @@ SpecMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             id: -1, name: "HourFormatEnum", base: "enum8",
-            details: "This data type is derived from enum8.",
+            details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.4.5.1", version: "1.1" },
             children: [
                 DatatypeElement({

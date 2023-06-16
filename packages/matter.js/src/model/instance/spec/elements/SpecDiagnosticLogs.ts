@@ -26,20 +26,22 @@ SpecMatter.children!.push(ClusterElement({
         CommandElement({
             id: 0x0000, name: "RetrieveLogsRequest",
             access: "O", conformance: "M", direction: "request", response: "RetrieveLogsResponse",
-            details: "Reception of this command starts the process of retrieving diagnostic logs from a Node. The data for this command is as follows:",
+            details: "Reception of this command starts the process of retrieving diagnostic " +
+                     "logs from a Node. The data for this command is as follows",
             xref: { document: "core", section: "11.10.5.1", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "RetrieveLogsResponse",
             conformance: "M", direction: "response",
-            details: "This SHALL be generated as a response to the RetrieveLogsRequest. The data for this command is shown in the following.",
+            details: "This SHALL be generated as a response to the RetrieveLogsRequest. The " +
+                     "data for this command is shown in the following",
             xref: { document: "core", section: "11.10.5.2", version: "1.1" }
         }),
 
         DatatypeElement({
             id: -1, name: "IntentEnum", base: "enum8",
-            details: "This data type is derived from enum8.",
+            details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.10.4.1", version: "1.1" },
             children: [
                 DatatypeElement({

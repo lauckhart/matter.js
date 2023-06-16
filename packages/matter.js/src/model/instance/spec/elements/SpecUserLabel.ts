@@ -26,7 +26,8 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "LabelList", base: "list",
             access: "RW VM", conformance: "M", default: "empty", quality: "N",
-            details: "An implementation SHALL support at least 4 list entries per node for all User Label cluster instances on the node.",
+            details: "An implementation SHALL support at least 4 list entries per node for " +
+                     "all User Label cluster instances on the node",
             xref: { document: "core", section: "9.9.4.1", version: "1.1" },
             children: [
                 DatatypeElement({

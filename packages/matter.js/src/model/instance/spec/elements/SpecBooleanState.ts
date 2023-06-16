@@ -26,14 +26,14 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "StateValue", base: "bool",
             access: "R V", conformance: "M", default: false, quality: "P",
-            details: "This represents a Boolean state.",
+            details: "This represents a Boolean state",
             xref: { document: "cluster", section: "1.7.4.1", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0000, name: "StateChange",
             access: "V", conformance: "O", priority: "info",
-            details: "This event SHALL be generated when the StateValue attribute changes.",
+            details: "This event SHALL be generated when the StateValue attribute changes",
             xref: { document: "cluster", section: "1.7.5.1", version: "1.1" }
         })
     ]

@@ -319,14 +319,17 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
     function translateEnum(datatype: DetailedReference) {
         const records = translateTable("value", datatype, {
             id: Alias(Integer, "value"),
-            name: Identifier,
+            name: Alias(Identifier, "type"),
             conformance: Optional(Str),
-            description: Optional(Str)
+            description: Optional(Str),
+            meaning: Optional(Str)
         });
         return translateRecordsToMatter("value", records, DatatypeElement)
     }
     
     function translateBitmap(datatype: DetailedReference) {
+        
+
         const records = translateTable("bit", datatype, {
             id: Alias(Integer, "bit"),
             name: Identifier,

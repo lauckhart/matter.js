@@ -39,7 +39,9 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "AcceptHeader", base: "list",
             access: "R V", conformance: "UP", constraint: "max 100[max 1024]", default: "empty", quality: "N",
-            details: "This list provides list of content types supported by the Video Player or Content App in the form of entries in the HTTP \"Accept\" request header.",
+            details: "This list provides list of content types supported by the Video Player" +
+                     " or Content App in the form of entries in the HTTP \"Accept\" request " +
+                     "header",
             xref: { document: "cluster", section: "6.7.3.1", version: "1.1" },
             children: [
                 DatatypeElement({
@@ -51,34 +53,37 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0001, name: "SupportedStreamingProtocols", base: "map32",
             access: "R V", conformance: "UP", default: 0, quality: "N",
-            details: "This attribute provides information about supported streaming protocols.",
+            details: "This attribute provides information about supported streaming " +
+                     "protocols",
             xref: { document: "cluster", section: "6.7.3.2", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0000, name: "LaunchContent",
             access: "O", conformance: "CS", direction: "request", response: "LauncherResponse",
-            details: "Upon receipt, this SHALL launch the specified content with optional search criteria. This command returns a Launch Response.",
+            details: "Upon receipt, this SHALL launch the specified content with optional " +
+                     "search criteria. This command returns a Launch Response",
             xref: { document: "cluster", section: "6.7.4.1", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "LaunchUrl",
             access: "O", conformance: "UP", direction: "request", response: "LauncherResponse",
-            details: "Upon receipt, this SHALL launch content from the specified URL.",
+            details: "Upon receipt, this SHALL launch content from the specified URL",
             xref: { document: "cluster", section: "6.7.4.2", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0002, name: "LauncherResponse",
             conformance: "CS | UP", direction: "response",
-            details: "This command SHALL be generated in response to LaunchContent and LaunchURL commands.",
+            details: "This command SHALL be generated in response to LaunchContent and " +
+                     "LaunchURL commands",
             xref: { document: "cluster", section: "6.7.4.3", version: "1.1" }
         }),
 
         DatatypeElement({
             id: -1, name: "StatusEnum", base: "enum8",
-            details: "StatusEnum Data Type is derived from enum8.",
+            details: "StatusEnum Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.7.5.1", version: "1.1" },
             children: [
                 DatatypeElement({

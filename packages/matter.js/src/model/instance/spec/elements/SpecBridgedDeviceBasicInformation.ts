@@ -44,7 +44,10 @@ SpecMatter.children!.push(ClusterElement({
         EventElement({
             id: 0x0003, name: "ReachableChanged",
             conformance: "M", priority: "critical",
-            details: "This event SHALL be generated when there is a change in the Reachable attribute. Its purpose is to provide an indication towards interested parties that the reachability of a bridged device (over the non-Matter network) has changed, so they MAY take appropriate action.",
+            details: "This event SHALL be generated when there is a change in the Reachable " +
+                     "attribute. Its purpose is to provide an indication towards interested " +
+                     "parties that the reachability of a bridged device (over the non-Matter" +
+                     " network) has changed, so they MAY take appropriate action",
             xref: { document: "core", section: "9.13.5.1", version: "1.1" }
         })
     ]

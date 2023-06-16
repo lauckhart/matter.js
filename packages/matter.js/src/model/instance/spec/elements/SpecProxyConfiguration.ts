@@ -26,7 +26,8 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "ConfigurationList", base: "list",
             access: "RW", conformance: "M", default: "empty", quality: "N",
-            details: "List of proxy configurations. There SHALL NOT be multiple entries in this list for the same fabric.",
+            details: "List of proxy configurations. There SHALL NOT be multiple entries in " +
+                     "this list for the same fabric",
             xref: { document: "core", section: "9.15.14.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
