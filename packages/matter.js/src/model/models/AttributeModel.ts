@@ -13,6 +13,22 @@ export class AttributeModel extends ValueModel implements AttributeElement {
     override tag: AttributeElement.Tag = AttributeElement.Tag;
     override id!: Mei;
 
+    get writable() {
+        return this.access.writable;
+    }
+
+    get fabricScoped() {
+        return !!this.access.fabric;
+    }
+
+    get fixed() {
+        return !!this.quality.fixed;
+    }
+
+    get nullable() {
+        return !!this.quality.nullable;
+    }
+
     constructor(definition: AttributeElement.Properties) {
         super(definition);
     }

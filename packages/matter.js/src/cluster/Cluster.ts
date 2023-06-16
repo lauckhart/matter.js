@@ -18,6 +18,7 @@ import { MatterCoreSpecificationV1_0 } from "../spec/Specifications.js";
 
 export const enum AccessLevel {
     View,
+    Operate,
     Manage,
     Administer,
 }

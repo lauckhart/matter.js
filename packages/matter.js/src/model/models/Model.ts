@@ -25,6 +25,7 @@ export abstract class Model implements BaseElement {
     errors?: DefinitionError[];
     accept?: string[];
     parent?: Model;
+    isGlobal?: boolean;
 
     /**
      * Did validation find errors?
@@ -147,23 +148,36 @@ export abstract class Model implements BaseElement {
     local<T>(type: Model.Constructor<T>): T[];
 
     /**
-     * Retrieve a model from local scope
+     * Retrieve a specific model from local scope.
+     */
+    local(key: string | number): Model;
+
+    /**
+     * Retrieve a model of specific type from local scope
      * 
      * @param type the element type to retrieve
      * @param key the ID or name of the model to retrieve
      */
     local<T>(type: Model.Constructor<T>, key: string | number): T | undefined;
 
-    local<T>(type: Model.Constructor<T>, key?: string | number): T | T[] | undefined {
-        // Not - not indexed.  Not currently a problem but should address if
+    local<T>(
+        type?: Model.Constructor<T> | string | number,
+        key?: string | number
+    ): T | T[] | undefined {
+        // Note - not indexed.  Not currently a problem but should address if
         // becomes problematically slow
+        if (typeof type != "function") {
+            type = undefined;
+            key = type;
+        }
+
         const found = key === undefined ? Array<T>() : undefined;
         for (const c of this.children) {
-            if (c instanceof type) {
+            if (type == undefined || c instanceof type) {
                 if (key === undefined) {
-                    found!.push(c);
+                    found!.push(c as T);
                 } else if (c.is(key)) {
-                    return c;
+                    return c as T;
                 }
             }
         }
