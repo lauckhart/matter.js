@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType } from "../definitions/index.js";
+import { ElementTag } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
 import { ClusterElement } from "./ClusterElement.js";
 import { DeviceTypeElement } from "./DeviceTypeElement.js";
@@ -32,17 +32,17 @@ import { NodeElement } from "./NodeElement.js";
  * to Matter Core Specification 1.1.
  */
 export type MatterElement = BaseElement & {
-    type: `${ElementType.Matter}`,
+    tag: `${ElementTag.Matter}`,
     version?: string
 }
 
 export function MatterElement(definition: MatterElement.Properties) {
-    return BaseElement(MatterElement.Type, definition) as MatterElement;
+    return BaseElement(MatterElement.Tag, definition) as MatterElement;
 }
 
 export namespace MatterElement {
-    export type Type = ElementType.Matter;
-    export const Type = ElementType.Matter;
+    export type Tag = ElementTag.Matter;
+    export const Tag = ElementTag.Matter;
     export type Properties = BaseElement.Properties<MatterElement>;
     export type Child = ClusterElement | DeviceTypeElement | FabricElement | NodeElement;
 }

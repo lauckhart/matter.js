@@ -26,16 +26,16 @@ export function ValidateModel(model: Model) {
         logger.debug(
             model.name,
             Logger.dict({
-                type: model.type,
+                tag: model.tag,
                 children: model.children.length || undefined,
                 id: model.id ? `0x${model.id?.toString(16)}` : undefined,
                 xref: model.xref
             })
         );
 
-        const Validator = ModelValidator.validators[model.type];
+        const Validator = ModelValidator.validators[model.tag];
         if (!Validator) {
-            model.error("UNKOWN_MODEL_TYPE", `No validator for ${model.type}`);
+            model.error("UNKOWN_MODEL_TYPE", `No validator for ${model.tag}`);
             return;
         }
 

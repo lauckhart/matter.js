@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType } from "../definitions/index.js";
+import { ElementTag } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
 import { NodeElement } from "./NodeElement.js";
 
@@ -13,16 +13,16 @@ import { NodeElement } from "./NodeElement.js";
  */
 export type FabricElement = BaseElement & {
     id: number,
-    type: `${FabricElement.Type}`,
+    tag: `${FabricElement.Tag}`,
     children: NodeElement[]
 }
 
 export function FabricElement(definition: FabricElement.Properties) {
-    return BaseElement(FabricElement.Type, definition);
+    return BaseElement(FabricElement.Tag, definition);
 }
 
 export namespace FabricElement {
-    export type Type = ElementType.Fabric;
-    export const Type = ElementType.Fabric;
+    export type Tag = ElementTag.Fabric;
+    export const Tag = ElementTag.Fabric;
     export type Properties = BaseElement.Properties<FabricElement>;
 }

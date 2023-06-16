@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType } from "../definitions/index.js";
+import { ElementTag } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
 import { DeviceTypeElement } from "./DeviceTypeElement.js";
 
@@ -13,16 +13,16 @@ import { DeviceTypeElement } from "./DeviceTypeElement.js";
  */
 export type EndpointElement = BaseElement & {
     id: number,
-    type: `${EndpointElement.Type}`,
+    tag: `${EndpointElement.Tag}`,
     children: DeviceTypeElement[]
 }
 
 export function EndpointElement(definition: EndpointElement.Properties) {
-    return BaseElement(EndpointElement.Type, definition) as EndpointElement;
+    return BaseElement(EndpointElement.Tag, definition) as EndpointElement;
 }
 
 export namespace EndpointElement {
-    export type Type = ElementType.Endpoint;
-    export const Type = ElementType.Endpoint;
+    export type Tag = ElementTag.Endpoint;
+    export const Tag = ElementTag.Endpoint;
     export type Properties = BaseElement.Properties<DeviceTypeElement>;
 }

@@ -5,7 +5,7 @@
  */
 
 import { InternalError } from "../src/common/index.js";
-import { AttributeModel, ClusterModel, ClusterVariance, CommandModel, Conformance, Datatype, DatatypeModel, ElementType, EventModel, MatterElement, MatterModel, MergeElements, Metatype, Model } from "../src/model/index.js";
+import { AttributeModel, ClusterModel, ClusterVariance, CommandModel, Conformance, Datatype, DatatypeModel, ElementTag, EventModel, MatterElement, MatterModel, MergeElements, Metatype, Model } from "../src/model/index.js";
 import { camelize, serialize } from "../src/util/index.js";
 import { Block, TsFile } from "./util/TsFile.js";
 import { wordWrap } from "./util/string.js";

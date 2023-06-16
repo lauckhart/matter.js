@@ -6,7 +6,7 @@
 
 import { InternalError } from "../../common/index.js";
 import { Logger } from "../../log/index.js";
-import { ElementType } from "../definitions/index.js";
+import { ElementTag } from "../definitions/index.js";
 import { AnyElement, ValueElement } from "../elements/index.js";
 import { ChipMatter, LocalMatter, SpecMatter } from "../instance/index.js";
 import { VisitElements } from "./VisitElements.js";
@@ -45,7 +45,7 @@ export function MergeElements({
             const merged = merge(state.parent, variants, state.clusterId);
 
             let clusterId = state.clusterId;
-            if (merged.type == ElementType.Cluster) {
+            if (merged.tag == ElementTag.Cluster) {
                 clusterId = merged.id;
                 canonicalNames[clusterId] = inferCanonicalNames(variants);
             }
@@ -57,7 +57,7 @@ export function MergeElements({
         },
 
         getName: (variant, parent, element) => {
-            if (parent.type == ElementType.Cluster && element.type == ElementType.Datatype) {
+            if (parent.tag == ElementTag.Cluster && element.tag == ElementTag.Datatype) {
                 return getCanonicalDatatypeName(parent.id, variant, element.name);
             }
             return element.name;
@@ -185,14 +185,13 @@ export function MergeElements({
         );
         keys.delete("children");
 
-        const type = pluck("*", "type", variantValues) as ElementType;
-        if (!type || typeof type != "string") {
-            // Really just checking to make TS happy
-            throw new InternalError("Type field missing from models");
+        const tag = pluck("*", "tag", variantValues) as ElementTag;
+        if (!tag || typeof tag != "string") {
+            throw new InternalError("Tag field missing from models");
         }
 
         const definition = Object.fromEntries(
-            Array.from(keys).map(k => [ k, pluck(type, k, variantValues, clusterId)])
+            Array.from(keys).map(k => [ k, pluck(tag, k, variantValues, clusterId)])
         ) as AnyElement;
 
         if (!parent.children) {
@@ -207,7 +206,7 @@ export function MergeElements({
      * Use priority rules to select a single value from available variants.
      */
     function pluck(
-        type: ElementType | "*",
+        type: ElementTag | "*",
         fieldName: string,
         variantValues: VariantValues,
         clusterId?: number

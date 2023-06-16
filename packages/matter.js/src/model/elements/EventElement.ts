@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType, Mei } from "../definitions/index.js";
+import { ElementTag, Mei } from "../definitions/index.js";
 import { ValueElement } from "./ValueElement.js";
 import { BaseElement } from "./BaseElement.js";
 
@@ -13,19 +13,19 @@ import { BaseElement } from "./BaseElement.js";
  */
 export type EventElement = ValueElement & {
     id: Mei,
-    type: `${EventElement.Type}`,
+    tag: `${EventElement.Tag}`,
 
     // Priority is required but we handle missing priority in validation
     priority?: `${EventElement.Priority}`
 }
 
 export function EventElement(definition: EventElement.Properties) {
-    return ValueElement(EventElement.Type, definition) as EventElement;
+    return ValueElement(EventElement.Tag, definition) as EventElement;
 }
 
 export namespace EventElement {
-    export type Type = ElementType.Event;
-    export const Type = ElementType.Event;
+    export type Tag = ElementTag.Event;
+    export const Tag = ElementTag.Event;
     export type Properties = BaseElement.Properties<EventElement>;
 
     /**

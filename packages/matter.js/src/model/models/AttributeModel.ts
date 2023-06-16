@@ -10,7 +10,7 @@ import { ValueModel } from "./ValueModel.js";
 import { Model } from "./Model.js";
 
 export class AttributeModel extends ValueModel implements AttributeElement {
-    override type: AttributeElement.Type = AttributeElement.Type;
+    override tag: AttributeElement.Tag = AttributeElement.Tag;
     override id!: Mei;
 
     constructor(definition: AttributeElement.Properties) {
@@ -18,6 +18,6 @@ export class AttributeModel extends ValueModel implements AttributeElement {
     }
 
     static {
-        Model.constructors[AttributeElement.Type] = this;
+        Model.constructors[AttributeElement.Tag] = this;
     }
 }

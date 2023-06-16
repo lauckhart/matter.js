@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType } from "../../definitions/index.js";
+import { ElementTag } from "../../definitions/index.js";
 import { Model } from "../../models/index.js";
 
 /**
@@ -87,6 +87,6 @@ export class ModelValidator<T extends Model> {
 
 export namespace ModelValidator {
     export const validators = {} as {
-        [key in ElementType]: new(model: any) => ModelValidator<any>
+        [key in ElementTag]: new(model: any) => ModelValidator<any>
     };
 }

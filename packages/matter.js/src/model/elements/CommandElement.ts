@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType, Mei } from "../definitions/index.js";
+import { ElementTag, Mei } from "../definitions/index.js";
 import { ValueElement } from "./ValueElement.js";
 import { BaseElement } from "./BaseElement.js";
 
@@ -13,7 +13,7 @@ import { BaseElement } from "./BaseElement.js";
  */
 export type CommandElement = ValueElement & {
     id: Mei,
-    type: `${CommandElement.Type}`,
+    tag: `${CommandElement.Tag}`,
 
     // Direction is required but we handling missing direction in validation
     direction?: `${CommandElement.Direction}`,
@@ -22,12 +22,12 @@ export type CommandElement = ValueElement & {
 }
 
 export function CommandElement(definition: CommandElement.Properties) {
-    return ValueElement(CommandElement.Type, definition) as CommandElement;
+    return ValueElement(CommandElement.Tag, definition) as CommandElement;
 }
 
 export namespace CommandElement {
-    export type Type = ElementType.Command;
-    export const Type = ElementType.Command;
+    export type Tag = ElementTag.Command;
+    export const Tag = ElementTag.Command;
     export type Properties = BaseElement.Properties<CommandElement>;
 
     /**

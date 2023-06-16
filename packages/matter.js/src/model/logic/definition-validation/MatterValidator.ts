@@ -8,7 +8,7 @@ import { MatterElement } from "../../elements/index.js";
 import { MatterModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
-ModelValidator.validators[MatterElement.Type] =
+ModelValidator.validators[MatterElement.Tag] =
 class MatterValidator extends ModelValidator<MatterModel> {
     override validate() {
         this.validateStructure(false);

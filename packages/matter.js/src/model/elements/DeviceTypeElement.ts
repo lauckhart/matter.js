@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType, Mei } from "../definitions/index.js";
+import { ElementTag, Mei } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
 import { ClusterElement } from "./ClusterElement.js";
 
@@ -15,18 +15,18 @@ import { ClusterElement } from "./ClusterElement.js";
  */
 export type DeviceTypeElement = BaseElement & {
     id: Mei,
-    type: `${DeviceTypeElement.Type}`,
+    tag: `${DeviceTypeElement.Tag}`,
     classification: `${DeviceTypeElement.Classification}`,
     children?: (DeviceTypeElement | ClusterElement)[]
 }
 
 export function DeviceTypeElement(definition: DeviceTypeElement.Properties) {
-    return BaseElement(DeviceTypeElement.Type, definition) as DeviceTypeElement;
+    return BaseElement(DeviceTypeElement.Tag, definition) as DeviceTypeElement;
 }
 
 export namespace DeviceTypeElement {
-    export type Type = ElementType.DeviceType;
-    export const Type = ElementType.DeviceType;
+    export type Tag = ElementTag.DeviceType;
+    export const Tag = ElementTag.DeviceType;
     export type Properties = BaseElement.Properties<DeviceTypeElement>;
 
     export enum Classification {

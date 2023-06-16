@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType } from "../definitions/index.js";
+import { ElementTag } from "../definitions/index.js";
 import { AnyElement } from "../elements/index.js";
 
 /**
@@ -96,12 +96,12 @@ export function VisitElements<T>({
 
 // For fields, if there is no explicit ID, use the index within the parent
 function effectiveId(parent: AnyElement, child: AnyElement, index: number) {
-    if (child.id == undefined && child.type == ElementType.Datatype) {
-        switch (parent.type) {
-            case ElementType.Attribute:
-            case ElementType.Command:
-            case ElementType.Datatype:
-            case ElementType.Event:
+    if (child.id == undefined && child.tag == ElementTag.Datatype) {
+        switch (parent.tag) {
+            case ElementTag.Attribute:
+            case ElementTag.Command:
+            case ElementTag.Datatype:
+            case ElementTag.Event:
                 return index;
         }
     }

@@ -121,8 +121,8 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
             case Datatype.map64:
                 if (!this.model.children.length) {
                     if (
-                        this.model.parent?.type == CommandElement.Type
-                        || this.model.parent?.type == DatatypeElement.Type
+                        this.model.parent?.tag == CommandElement.Tag
+                        || this.model.parent?.tag == DatatypeElement.Tag
                     ) {
                         // The specification defines some fields as enums without specific values, so
                         // allow this under command and datatype fields

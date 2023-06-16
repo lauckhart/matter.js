@@ -8,7 +8,7 @@ import { CommandElement } from "../../elements/index.js";
 import { CommandModel, DatatypeModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
-ModelValidator.validators[CommandElement.Type] =
+ModelValidator.validators[CommandElement.Tag] =
 class AttributeValidator extends ModelValidator<CommandModel> {
     override validate() {
         this.validateStructure(true, DatatypeModel);

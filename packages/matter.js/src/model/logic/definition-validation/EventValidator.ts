@@ -9,7 +9,7 @@ import { DatatypeModel, EventModel } from "../../models/index.js";
 import { DataValidator } from "./DataValidator.js";
 import { ModelValidator } from "./ModelValidator.js";
 
-ModelValidator.validators[EventElement.Type] =
+ModelValidator.validators[EventElement.Tag] =
 class EventValidator extends DataValidator<EventModel> {
     override validate() {
         this.validateStructure(true, DatatypeModel);

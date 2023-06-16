@@ -10,7 +10,7 @@ import { ValueModel } from "./ValueModel.js";
 import { Model } from "./Model.js";
 
 export class DatatypeModel extends ValueModel implements DatatypeElement {
-    override type: DatatypeElement.Type = DatatypeElement.Type;
+    override tag: DatatypeElement.Tag = DatatypeElement.Tag;
     override id?: Mei;
 
     override get actualBase() {
@@ -43,6 +43,6 @@ export class DatatypeModel extends ValueModel implements DatatypeElement {
     }
 
     static {
-        Model.constructors[DatatypeElement.Type] = this;
+        Model.constructors[DatatypeElement.Tag] = this;
     }
 }

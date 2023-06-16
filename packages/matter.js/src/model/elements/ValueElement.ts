@@ -5,7 +5,7 @@
  */
 
 import { Access, Conformance, Constraint, Quality } from "../aspects/index.js";
-import { ElementType } from "../definitions/index.js";
+import { ElementTag } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
 import { type AnyDataElement } from "./AnyDataElement.js";
 
@@ -59,7 +59,7 @@ export type ValueElement = BaseElement & {
     children?: AnyDataElement[]
 }
 
-export function ValueElement(type: ElementType, definition: ValueElement) {
+export function ValueElement(tag: ElementTag, definition: ValueElement) {
     definition = { ...definition };
     
     if (definition.constraint?.toString().toLowerCase() == "all") {
@@ -72,11 +72,11 @@ export function ValueElement(type: ElementType, definition: ValueElement) {
         }
     }
 
-    return BaseElement(type, definition) as ValueElement;
+    return BaseElement(tag, definition) as ValueElement;
 }
 
 export namespace ValueElement {
-    export type Properties = BaseElement.Properties<ValueElement & { type: `${ElementType}` }>;
+    export type Properties = BaseElement.Properties<ValueElement & { tag: `${ElementTag}` }>;
 
     /**
      * The general type of datatype (ignoring size).

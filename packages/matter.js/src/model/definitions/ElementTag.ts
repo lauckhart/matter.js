@@ -6,8 +6,10 @@
 
 /**
  * Types of elements per the Matter specification.
+ * 
+ * We use "tag" to differentiate elements so we can use "type" for datatypes.
  */
-export enum ElementType {
+export enum ElementTag {
     Fabric = "fabric",
     Node = "node",
     Endpoint = "endpoint",

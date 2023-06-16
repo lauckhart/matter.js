@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType, Mei } from "../definitions/index.js";
+import { ElementTag, Mei } from "../definitions/index.js";
 import { AttributeElement } from "./AttributeElement.js";
 import { BaseElement } from "./BaseElement.js";
 import { CommandElement } from "./CommandElement.js";
@@ -16,7 +16,7 @@ import { EventElement } from "./EventElement.js";
  */
 export type ClusterElement = BaseElement & {
     id: Mei,
-    type: `${ClusterElement.Type}`,
+    tag: `${ClusterElement.Tag}`,
 
     /**
      * Marks a cluster as a singleton per the Matter specification.
@@ -32,12 +32,12 @@ export type ClusterElement = BaseElement & {
 }
 
 export function ClusterElement(definition: ClusterElement.Properties) {
-    return BaseElement(ClusterElement.Type, definition) as ClusterElement;
+    return BaseElement(ClusterElement.Tag, definition) as ClusterElement;
 }
 
 export namespace ClusterElement {
-    export type Type = ElementType.Cluster;
-    export const Type = ElementType.Cluster;
+    export type Tag = ElementTag.Cluster;
+    export const Tag = ElementTag.Cluster;
     export type Properties = BaseElement.Properties<ClusterElement>;
     export type Child =
         DatatypeElement
