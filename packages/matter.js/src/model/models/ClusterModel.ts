@@ -5,7 +5,7 @@
  */
 
 import { Mei } from "../definitions/index.js";
-import { ClusterElement } from "../elements/index.js";
+import { ClusterElement, Globals } from "../elements/index.js";
 import { AttributeModel } from "./AttributeModel.js";
 import { CommandModel } from "./CommandModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";
@@ -32,6 +32,19 @@ export class ClusterModel extends Model implements ClusterElement {
 
     get datatypes() {
         return this.local(DatatypeModel);
+    }
+
+    get revision() {
+        let revision = 1;
+        const revisionAttr = this.local(AttributeModel, Globals.ClusterRevision.id);
+        if (revisionAttr?.default != undefined) {
+            revision = revisionAttr.default;
+        }
+        return revision;
+    }
+
+    get features() {
+        return this.local(AttributeModel, Globals.FeatureMap.id);
     }
 
     override get children(): ClusterModel.Child[] {

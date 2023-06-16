@@ -48,6 +48,11 @@ export type BaseElement = {
     children?: BaseElement[],
 
     /**
+     * Is this a global element?
+     */
+    isGlobal?: boolean,
+
+    /**
      * A list of errors to ignore.  Used when too little information is
      * available to properly model an element.
      */

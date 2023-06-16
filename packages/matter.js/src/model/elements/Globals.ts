@@ -13,35 +13,35 @@ import { EventElement } from "./EventElement.js";
 
 // Base type factories (types with metatypes)
 const bool = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.boolean });
+    DatatypeElement({ isGlobal: true, id, name, description, metatype: Metatype.boolean });
 const map = (id: number, name: string, description: string, byteSize: ValueElement.BitmapSize) =>
-    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.bitmap });
+    DatatypeElement({ isGlobal: true, id, name, description, byteSize, metatype: Metatype.bitmap });
 const int = (id: number, name: string, description: string, byteSize: ValueElement.Size) =>
-    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.integer });
+    DatatypeElement({ isGlobal: true, id, name, description, byteSize, metatype: Metatype.integer });
 const float = (id: number, name: string, description: string, byteSize: ValueElement.Size) =>
-    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.float });
+    DatatypeElement({ isGlobal: true, id, name, description, byteSize, metatype: Metatype.float });
 const octet = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.bytes });
+    DatatypeElement({ isGlobal: true, id, name, description, metatype: Metatype.bytes });
 const string = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.string });
+    DatatypeElement({ isGlobal: true, id, name, description, metatype: Metatype.string });
 const list = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.array });
+    DatatypeElement({ isGlobal: true, id, name, description, metatype: Metatype.array });
 const struct = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.object });
+    DatatypeElement({ isGlobal: true, id, name, description, metatype: Metatype.object });
 const enumt = (id: number, name: string, description: string, type: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.enum, type });
+    DatatypeElement({ isGlobal: true, id, name, description, metatype: Metatype.enum, type });
 
 // Derivative type factories (types that inherit metatypes)
 const extInt = (id: number, name: string, description: string, type: string) =>
-    DatatypeElement({ id, name, description, type });
+    DatatypeElement({ isGlobal: true, id, name, description, type });
 const depInt = (id: number, name: string, description: string, type: string) =>
-    DatatypeElement({ id, name, description, type, conformance: Conformance.Flag.Deprecated });
+    DatatypeElement({ isGlobal: true, id, name, description, type, conformance: Conformance.Flag.Deprecated });
 const extOctet = (id: number, name: string, description: string, constraint?: Constraint.Definition) =>
-    DatatypeElement({ id, name, description, type: Datatype.octstr, constraint });
+    DatatypeElement({ isGlobal: true, id, name, description, type: Datatype.octstr, constraint });
 const extEnum = (id: number, name: string, description: string, values: DatatypeElement.ValueMap) =>
-    DatatypeElement({ id, name, description, type: "enum8", children: DatatypeElement.ListValues(values) });
+    DatatypeElement({ isGlobal: true, id, name, description, type: "enum8", children: DatatypeElement.ListValues(values) });
 const extStruct = (id: number, name: string, description: string, children: DatatypeElement[]) =>
-    DatatypeElement({ id, name, description, type: Datatype.struct, children });
+    DatatypeElement({ isGlobal: true, id, name, description, type: Datatype.struct, children });
 
 const TodFields = [
     DatatypeElement({ type: "uint8", name: "hours" }),
@@ -160,24 +160,24 @@ export const Globals = {
 
     // Global elements
     ClusterRevision: AttributeElement({
-        id: 0xfffd, name: "ClusterRevision", type: "uint16",
+        id: 0xfffd, name: "ClusterRevision", type: "uint16", isGlobal: true,
         constraint: { min: 1 }, quality: "F", access: "R V", conformance: "M" }),
     FeatureMap: AttributeElement({
-        id: 0xfffc, name: "FeatureMap", type: "map32",
+        id: 0xfffc, name: "FeatureMap", type: "map32", isGlobal: true,
         quality: "F", access: "R V", default: 0, conformance: "M" }),
     AttributeList: AttributeElement({
-        id: 0xfffb, name: "AttributeList", type: "list[attrib-id]",
+        id: 0xfffb, name: "AttributeList", type: "list[attrib-id]", isGlobal: true,
         quality: "F", access: "R V", conformance: "M" }),
     EventList: AttributeElement({
-        id: 0xfffa, name: "EventList", type: "list[event-id]",
+        id: 0xfffa, name: "EventList", type: "list[event-id]", isGlobal: true,
         quality: "F", access: "R V", conformance: "P, M" }),
     AcceptedCommandListList: AttributeElement({
-        id: 0xfff9, name: "AcceptedCommandList", type: "list[command-id]",
+        id: 0xfff9, name: "AcceptedCommandList", type: "list[command-id]", isGlobal: true,
         quality: "F", access: "R V", conformance: "M" }),
     GeneratedCommandList: AttributeElement({
-        id: 0xfff8, name: "GeneratedCommandList", type: "list[command-id]",
+        id: 0xfff8, name: "GeneratedCommandList", type: "list[command-id]", isGlobal: true,
         quality: "F", access: "R V", conformance: "M" }),
     FabricIndex: DatatypeElement({
-        id: 0xfe, name: "FabricIndex", type: "fabric-idx",
+        id: 0xfe, name: "FabricIndex", type: "fabric-idx", isGlobal: true,
         constraint: "1 to 254", access: "R V F" })
 }

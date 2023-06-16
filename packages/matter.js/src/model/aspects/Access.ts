@@ -15,10 +15,18 @@ import { Aspect } from "./Aspect.js";
  */
 export class Access extends Aspect<Access.Definition> implements Access.Ast {
     rw?: Access.Rw;
-    fabric?: Access.Fabric;
     readPriv?: Access.Privilege;
     writePriv?: Access.Privilege;
+    fabric?: Access.Fabric;
     timed?: boolean;
+
+    get readable() {
+        return !this.rw || this.rw != Access.Rw.Write;
+    }
+
+    get writable() {
+        return !!this.rw && this.rw != Access.Rw.Read;
+    }
 
     override get empty() {
         return (!this.rw || this.rw == Access.Rw.Read) &&
@@ -262,6 +270,16 @@ export namespace Access {
          * Administer privilege.
          */
         Administer = "A"
+    }
+
+    /**
+     * Reverse map of Privilege.
+     */
+    export enum PrivilegeName {
+        V = "View",
+        O = "Operate",
+        M = "Manage",
+        A = "Administer"
     }
 
     /**

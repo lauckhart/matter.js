@@ -19,6 +19,10 @@ export class CommandModel extends ValueModel implements CommandElement {
         return Datatype.struct;
     }
 
+    get isRequest() {
+        return this.direction = CommandElement.Direction.Request;
+    }
+
     constructor(definition: CommandElement.Properties) {
         super(definition);
     }
