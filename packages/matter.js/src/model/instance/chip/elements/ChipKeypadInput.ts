@@ -19,7 +19,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "SendKeyResponse",
             children: [
                 DatatypeElement({
-                    name: "KeyCode", base: "CecKeyCode",
+                    name: "KeyCode", type: "CecKeyCode",
                     conformance: "M"
                 })
             ]
@@ -30,14 +30,14 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "KeypadInputStatusEnum",
+                    name: "Status", type: "KeypadInputStatusEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "KeypadInputStatusEnum", base: "enum8",
+            name: "KeypadInputStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -58,7 +58,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "CecKeyCode", base: "enum8",
+            name: "CecKeyCode", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -494,7 +494,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "KeypadInputFeature", base: "map32",
+            name: "KeypadInputFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

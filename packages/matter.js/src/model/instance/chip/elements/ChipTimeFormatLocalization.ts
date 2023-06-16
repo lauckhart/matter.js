@@ -15,27 +15,27 @@ ChipMatter.children!.push(ClusterElement({
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions may have differing preferences for how dates and times are conveyed. As such, Nodes that visually or audibly convey time information need a mechanism by which they can be configured to use a user’s preferred format.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "HourFormat", base: "HourFormatEnum",
+            id: 0x0000, name: "HourFormat", type: "HourFormatEnum",
             access: "RW", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ActiveCalendarType", base: "CalendarTypeEnum",
+            id: 0x0001, name: "ActiveCalendarType", type: "CalendarTypeEnum",
             access: "RW", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SupportedCalendarTypes", base: "list",
+            id: 0x0002, name: "SupportedCalendarTypes", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "CalendarTypeEnum"
+                    name: "entry", type: "CalendarTypeEnum"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "HourFormatEnum", base: "enum8",
+            name: "HourFormatEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -51,7 +51,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "CalendarTypeEnum", base: "enum8",
+            name: "CalendarTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({

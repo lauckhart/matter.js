@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -31,7 +31,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "HourFormat", base: "HourFormatEnum",
+            id: 0x0000, name: "HourFormat", type: "HourFormatEnum",
             access: "RW VM", conformance: "M", default: "null", quality: "X N",
             details: "The HourFormat attribute SHALL represent the format that the Node is " +
                      "currently configured to use when conveying the hour unit of time. If " +
@@ -40,7 +40,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ActiveCalendarType", base: "CalendarTypeEnum",
+            id: 0x0001, name: "ActiveCalendarType", type: "CalendarTypeEnum",
             access: "RW VM", conformance: "CALFMT", default: "null", quality: "X N",
             details: "The ActiveCalendarType attribute SHALL represent the calendar format " +
                      "that the Node is currently configured to use when conveying dates. If " +
@@ -50,7 +50,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SupportedCalendarTypes", base: "list",
+            id: 0x0002, name: "SupportedCalendarTypes", type: "list",
             access: "R V", conformance: "CALFMT", constraint: "desc", default: "N/A", quality: "F",
             details: "The SupportedCalendarTypes attribute SHALL represent a list of " +
                      "CalendarTypeEnum values that are supported by the Node. The list SHALL" +
@@ -61,13 +61,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.4.6.3", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "CalendarTypeEnum"
+                    name: "entry", type: "CalendarTypeEnum"
                 })
             ]
         }),
 
         DatatypeElement({
-            id: -1, name: "HourFormatEnum", base: "enum8",
+            id: -1, name: "HourFormatEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.4.5.1", version: "1.1" },
             children: [

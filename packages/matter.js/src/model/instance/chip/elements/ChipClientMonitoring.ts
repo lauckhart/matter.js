@@ -15,26 +15,26 @@ ChipMatter.children!.push(ClusterElement({
     details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on the server.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "IdleModeInterval", base: "uint32",
+            id: 0x0000, name: "IdleModeInterval", type: "uint32",
             conformance: "M", default: 300
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ActiveModeInterval", base: "uint32",
+            id: 0x0001, name: "ActiveModeInterval", type: "uint32",
             conformance: "M", default: 300
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ActiveModeThreshold", base: "uint16",
+            id: 0x0002, name: "ActiveModeThreshold", type: "uint16",
             conformance: "M", default: 4000
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ExpectedClients", base: "list",
+            id: 0x0003, name: "ExpectedClients", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "MonitoringRegistration"
+                    name: "entry", type: "MonitoringRegistration"
                 })
             ]
         }),
@@ -44,12 +44,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ClientNodeId", base: "node-id",
+                    name: "ClientNodeId", type: "node-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "ICid", type: "uint64",
                     conformance: "M"
                 })
             ]
@@ -60,12 +60,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ClientNodeId", base: "node-id",
+                    name: "ClientNodeId", type: "node-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "ICid", type: "uint64",
                     conformance: "M"
                 })
             ]
@@ -77,16 +77,16 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "MonitoringRegistration", base: "struct",
+            name: "MonitoringRegistration", type: "struct",
             access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ClientNodeId", base: "node-id",
+                    name: "ClientNodeId", type: "node-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ICid", base: "uint64",
+                    name: "ICid", type: "uint64",
                     conformance: "M"
                 })
             ]

@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "TargetList", base: "list",
+            id: 0x0000, name: "TargetList", type: "list",
             access: "R V", conformance: "M", default: "",
             details: "The TargetList attribute SHALL represent a list of targets that can be" +
                      " navigated to within the experience presented to the user by the " +
@@ -33,13 +33,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "cluster", section: "6.11.3.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "TargetInfoStruct"
+                    name: "entry", type: "TargetInfoStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "CurrentTarget", base: "uint8",
+            id: 0x0001, name: "CurrentTarget", type: "uint8",
             access: "R V", conformance: "O", constraint: "desc", default: "null", quality: "X",
             details: "The CurrentTarget attribute SHALL represent the Identifier for the " +
                      "target which is currently in foreground on the corresponding Endpoint" +
@@ -63,19 +63,19 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "TargetInfoStruct", base: "struct",
+            id: -1, name: "TargetInfoStruct", type: "struct",
             details: "This indicates an object describing the navigable target",
             xref: { document: "cluster", section: "6.11.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Identifier", base: "uint8",
+                    id: 0x0000, name: "Identifier", type: "uint8",
                     conformance: "M", default: 0,
                     details: "An unique id within the TargetList",
                     xref: { document: "cluster", section: "6.11.5.1.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Name", base: "string",
+                    id: 0x0001, name: "Name", type: "string",
                     conformance: "M", default: "",
                     details: "A name string for the TargetInfoStruct",
                     xref: { document: "cluster", section: "6.11.5.1.2", version: "1.1" }

@@ -15,17 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "Commands to trigger a Node to allow a new Administrator to commission it.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "WindowStatus", base: "CommissioningWindowStatusEnum",
+            id: 0x0000, name: "WindowStatus", type: "CommissioningWindowStatusEnum",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "AdminFabricIndex", base: "fabric-idx",
+            id: 0x0001, name: "AdminFabricIndex", type: "fabric-idx",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "AdminVendorId", base: "uint16",
+            id: 0x0002, name: "AdminVendorId", type: "uint16",
             conformance: "M", quality: "X"
         }),
 
@@ -34,27 +34,27 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "CommissioningTimeout", base: "uint16",
+                    name: "CommissioningTimeout", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "PakePasscodeVerifier", base: "octstr",
+                    name: "PakePasscodeVerifier", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Discriminator", base: "uint16",
+                    name: "Discriminator", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Iterations", base: "uint32",
+                    name: "Iterations", type: "uint32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Salt", base: "octstr",
+                    name: "Salt", type: "octstr",
                     conformance: "M"
                 })
             ]
@@ -65,7 +65,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "CommissioningTimeout", base: "uint16",
+                    name: "CommissioningTimeout", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -77,7 +77,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "StatusCode", base: "enum8",
+            name: "StatusCode", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -98,7 +98,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "CommissioningWindowStatusEnum", base: "enum8",
+            name: "CommissioningWindowStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({

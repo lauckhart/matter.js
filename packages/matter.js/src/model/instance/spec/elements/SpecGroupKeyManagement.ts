@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -31,20 +31,20 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "GroupKeyMap", base: "list",
+            id: 0x0000, name: "GroupKeyMap", type: "list",
             access: "RW F VM", conformance: "M", constraint: "desc", default: "empty", quality: "N",
             details: "This attribute is a list of GroupKeyMapStruct entries. Each entry " +
                      "associates a logical Group Id with a particular group key set",
             xref: { document: "core", section: "11.2.7.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "GroupKeyMapStruct"
+                    name: "entry", type: "GroupKeyMapStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "GroupTable", base: "list",
+            id: 0x0001, name: "GroupTable", type: "list",
             access: "R F", conformance: "M", constraint: "desc", default: "empty",
             details: "This attribute is a list of GroupInfoMapStruct entries. Each entry " +
                      "provides read-only information about how a given logical Group ID maps" +
@@ -55,13 +55,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.2.7.2", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "GroupInfoMapStruct"
+                    name: "entry", type: "GroupInfoMapStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "MaxGroupsPerFabric", base: "uint16",
+            id: 0x0002, name: "MaxGroupsPerFabric", type: "uint16",
             conformance: "M", default: 0, quality: "F",
             details: "This attribute SHALL indicate the maximum number of groups that this " +
                      "node supports per fabric. The value of this attribute SHALL be set to " +
@@ -73,7 +73,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "MaxGroupKeysPerFabric", base: "uint16",
+            id: 0x0003, name: "MaxGroupKeysPerFabric", type: "uint16",
             conformance: "M", constraint: "1 to 65535", default: 1, quality: "F",
             details: "This attribute SHALL indicate the maximum number of group key sets " +
                      "this node supports per fabric. The value of this attribute SHALL be " +
@@ -134,7 +134,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "GroupKeySecurityPolicyEnum", base: "enum8",
+            id: -1, name: "GroupKeySecurityPolicyEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.2.6.1", version: "1.1" },
             children: [

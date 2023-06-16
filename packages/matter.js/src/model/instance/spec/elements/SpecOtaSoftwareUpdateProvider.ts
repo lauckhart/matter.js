@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 

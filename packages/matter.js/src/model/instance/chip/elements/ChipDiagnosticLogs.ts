@@ -19,17 +19,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "RetrieveLogsResponse",
             children: [
                 DatatypeElement({
-                    name: "Intent", base: "IntentEnum",
+                    name: "Intent", type: "IntentEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "RequestedProtocol", base: "TransferProtocolEnum",
+                    name: "RequestedProtocol", type: "TransferProtocolEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TransferFileDesignator", base: "string",
+                    name: "TransferFileDesignator", type: "string",
                     conformance: "O"
                 })
             ]
@@ -40,29 +40,29 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "StatusEnum",
+                    name: "Status", type: "StatusEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LogContent", base: "octstr",
+                    name: "LogContent", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UtcTimeStamp", base: "epoch-us",
+                    name: "UtcTimeStamp", type: "epoch-us",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "TimeSinceBoot", base: "systime-us",
+                    name: "TimeSinceBoot", type: "systime-us",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "IntentEnum", base: "enum8",
+            name: "IntentEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -83,7 +83,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "StatusEnum", base: "enum8",
+            name: "StatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -114,7 +114,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "TransferProtocolEnum", base: "enum8",
+            name: "TransferProtocolEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({

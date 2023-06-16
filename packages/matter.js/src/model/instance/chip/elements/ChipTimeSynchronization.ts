@@ -15,62 +15,62 @@ ChipMatter.children!.push(ClusterElement({
     details: "Accurate time is required for a number of reasons, including scheduling, display and validating security materials.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "UtcTime", base: "epoch-us",
+            id: 0x0000, name: "UtcTime", type: "epoch-us",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "Granularity", base: "GranularityEnum",
+            id: 0x0001, name: "Granularity", type: "GranularityEnum",
             conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0002, name: "TimeSource", base: "TimeSourceEnum",
+            id: 0x0002, name: "TimeSource", type: "TimeSourceEnum",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0003, name: "TrustedTimeNodeId", base: "node-id",
+            id: 0x0003, name: "TrustedTimeNodeId", type: "node-id",
             access: "RW VA", conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "DefaultNtp", base: "string",
+            id: 0x0004, name: "DefaultNtp", type: "string",
             access: "RW VA", conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "TimeZone", base: "list",
+            id: 0x0005, name: "TimeZone", type: "list",
             access: "RW VM", conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "TimeZoneStruct"
+                    name: "entry", type: "TimeZoneStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0006, name: "DstOffset", base: "list",
+            id: 0x0006, name: "DstOffset", type: "list",
             access: "RW VM", conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "DstOffsetStruct"
+                    name: "entry", type: "DstOffsetStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0007, name: "LocalTime", base: "epoch-us",
+            id: 0x0007, name: "LocalTime", type: "epoch-us",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "TimeZoneDatabase", base: "bool",
+            id: 0x0008, name: "TimeZoneDatabase", type: "bool",
             conformance: "O", default: true
         }),
 
         AttributeElement({
-            id: 0x0009, name: "NtpServerPort", base: "uint16",
+            id: 0x0009, name: "NtpServerPort", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
@@ -79,24 +79,24 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "UtcTime", base: "epoch-us",
+                    name: "UtcTime", type: "epoch-us",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Granularity", base: "GranularityEnum",
+                    name: "Granularity", type: "GranularityEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TimeSource", base: "TimeSourceEnum",
+                    name: "TimeSource", type: "TimeSourceEnum",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "GranularityEnum", base: "enum8",
+            name: "GranularityEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -127,7 +127,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "TimeSourceEnum", base: "enum8",
+            name: "TimeSourceEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -218,42 +218,42 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "TimeZoneStruct", base: "struct",
+            name: "TimeZoneStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Offset", base: "int32",
+                    name: "Offset", type: "int32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ValidAt", base: "epoch-us",
+                    name: "ValidAt", type: "epoch-us",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "DstOffsetStruct", base: "struct",
+            name: "DstOffsetStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Offset", base: "int32",
+                    name: "Offset", type: "int32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ValidStarting", base: "epoch-us",
+                    name: "ValidStarting", type: "epoch-us",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ValidUntil", base: "epoch-us",
+                    name: "ValidUntil", type: "epoch-us",
                     conformance: "M"
                 })
             ]

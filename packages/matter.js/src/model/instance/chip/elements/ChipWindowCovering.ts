@@ -15,112 +15,112 @@ ChipMatter.children!.push(ClusterElement({
     details: "Provides an interface for controlling and adjusting automatic window coverings.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "WcType", base: "Type",
+            id: 0x0000, name: "WcType", type: "Type",
             conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0001, name: "WcPhysicalClosedLimitLift", base: "uint16",
+            id: 0x0001, name: "WcPhysicalClosedLimitLift", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0002, name: "WcPhysicalClosedLimitTilt", base: "uint16",
+            id: 0x0002, name: "WcPhysicalClosedLimitTilt", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0003, name: "WcCurrentPositionLift", base: "uint16",
+            id: 0x0003, name: "WcCurrentPositionLift", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "WcCurrentPositionTilt", base: "uint16",
+            id: 0x0004, name: "WcCurrentPositionTilt", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "WcNumberOfActuationsLift", base: "uint16",
+            id: 0x0005, name: "WcNumberOfActuationsLift", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0006, name: "WcNumberOfActuationsTilt", base: "uint16",
+            id: 0x0006, name: "WcNumberOfActuationsTilt", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0007, name: "WcConfigStatus", base: "ConfigStatus",
+            id: 0x0007, name: "WcConfigStatus", type: "ConfigStatus",
             conformance: "M", default: 3
         }),
 
         AttributeElement({
-            id: 0x0008, name: "WcCurrentPositionLiftPercentage", base: "percent",
+            id: 0x0008, name: "WcCurrentPositionLiftPercentage", type: "percent",
             conformance: "O", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0009, name: "WcCurrentPositionTiltPercentage", base: "percent",
+            id: 0x0009, name: "WcCurrentPositionTiltPercentage", type: "percent",
             conformance: "O", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x000a, name: "WcOperationalStatus", base: "OperationalStatus",
+            id: 0x000a, name: "WcOperationalStatus", type: "OperationalStatus",
             conformance: "M", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x000b, name: "WcTargetPositionLiftPercent100Ths", base: "percent100ths",
+            id: 0x000b, name: "WcTargetPositionLiftPercent100Ths", type: "percent100ths",
             conformance: "O", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x000c, name: "WcTargetPositionTiltPercent100Ths", base: "percent100ths",
+            id: 0x000c, name: "WcTargetPositionTiltPercent100Ths", type: "percent100ths",
             conformance: "O", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x000d, name: "WcEndProductType", base: "EndProductType",
+            id: 0x000d, name: "WcEndProductType", type: "EndProductType",
             conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x000e, name: "WcCurrentPositionLiftPercent100Ths", base: "percent100ths",
+            id: 0x000e, name: "WcCurrentPositionLiftPercent100Ths", type: "percent100ths",
             conformance: "O", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x000f, name: "WcCurrentPositionTiltPercent100Ths", base: "percent100ths",
+            id: 0x000f, name: "WcCurrentPositionTiltPercent100Ths", type: "percent100ths",
             conformance: "O", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0010, name: "WcInstalledOpenLimitLift", base: "uint16",
+            id: 0x0010, name: "WcInstalledOpenLimitLift", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0011, name: "WcInstalledClosedLimitLift", base: "uint16",
+            id: 0x0011, name: "WcInstalledClosedLimitLift", type: "uint16",
             conformance: "O", default: 65535
         }),
 
         AttributeElement({
-            id: 0x0012, name: "WcInstalledOpenLimitTilt", base: "uint16",
+            id: 0x0012, name: "WcInstalledOpenLimitTilt", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0013, name: "WcInstalledClosedLimitTilt", base: "uint16",
+            id: 0x0013, name: "WcInstalledClosedLimitTilt", type: "uint16",
             conformance: "O", default: 65535
         }),
 
         AttributeElement({
-            id: 0x0017, name: "WcMode", base: "Mode",
+            id: 0x0017, name: "WcMode", type: "Mode",
             access: "RW VM", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x001a, name: "WcSafetyStatus", base: "SafetyStatus",
+            id: 0x001a, name: "WcSafetyStatus", type: "SafetyStatus",
             conformance: "O", default: 0, quality: "P"
         }),
 
@@ -144,7 +144,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "LiftValue", base: "uint16",
+                    name: "LiftValue", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -155,7 +155,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "LiftPercent100ThsValue", base: "percent100ths",
+                    name: "LiftPercent100ThsValue", type: "percent100ths",
                     conformance: "M"
                 })
             ]
@@ -166,7 +166,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TiltValue", base: "uint16",
+                    name: "TiltValue", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -177,14 +177,14 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TiltPercent100ThsValue", base: "percent100ths",
+                    name: "TiltPercent100ThsValue", type: "percent100ths",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "Type", base: "enum8",
+            name: "Type", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -245,7 +245,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "EndProductType", base: "enum8",
+            name: "EndProductType", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -376,7 +376,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "Mode", base: "map8",
+            name: "Mode", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -402,7 +402,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OperationalStatus", base: "map8",
+            name: "OperationalStatus", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -423,7 +423,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ConfigStatus", base: "map8",
+            name: "ConfigStatus", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -464,7 +464,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "SafetyStatus", base: "map16",
+            name: "SafetyStatus", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -530,7 +530,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "WindowCoveringFeature", base: "map32",
+            name: "WindowCoveringFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

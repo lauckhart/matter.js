@@ -19,42 +19,42 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "QueryImageResponse",
             children: [
                 DatatypeElement({
-                    name: "VendorId", base: "vendor-id",
+                    name: "VendorId", type: "vendor-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ProductId", base: "uint16",
+                    name: "ProductId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "SoftwareVersion", type: "uint32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ProtocolsSupported", base: "OtaDownloadProtocol",
+                    name: "ProtocolsSupported", type: "OtaDownloadProtocol",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "HardwareVersion", base: "uint16",
+                    name: "HardwareVersion", type: "uint16",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Location", base: "string",
+                    name: "Location", type: "string",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "RequestorCanConsent", base: "bool",
+                    name: "RequestorCanConsent", type: "bool",
                     conformance: "O", default: true
                 }),
 
                 DatatypeElement({
-                    name: "MetadataForProvider", base: "octstr",
+                    name: "MetadataForProvider", type: "octstr",
                     conformance: "O"
                 })
             ]
@@ -65,42 +65,42 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "OtaQueryStatus",
+                    name: "Status", type: "OtaQueryStatus",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DelayedActionTime", base: "uint32",
+                    name: "DelayedActionTime", type: "uint32",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "ImageUri", base: "string",
+                    name: "ImageUri", type: "string",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "SoftwareVersion", type: "uint32",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersionString", base: "string",
+                    name: "SoftwareVersionString", type: "string",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "UpdateToken", type: "octstr",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "UserConsentNeeded", base: "bool",
+                    name: "UserConsentNeeded", type: "bool",
                     conformance: "O", default: true
                 }),
 
                 DatatypeElement({
-                    name: "MetadataForRequestor", base: "octstr",
+                    name: "MetadataForRequestor", type: "octstr",
                     conformance: "O"
                 })
             ]
@@ -111,12 +111,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "ApplyUpdateResponse",
             children: [
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "UpdateToken", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NewVersion", base: "uint32",
+                    name: "NewVersion", type: "uint32",
                     conformance: "M"
                 })
             ]
@@ -127,12 +127,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Action", base: "OtaApplyUpdateAction",
+                    name: "Action", type: "OtaApplyUpdateAction",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DelayedActionTime", base: "uint32",
+                    name: "DelayedActionTime", type: "uint32",
                     conformance: "M"
                 })
             ]
@@ -143,19 +143,19 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "UpdateToken", base: "octstr",
+                    name: "UpdateToken", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "SoftwareVersion", type: "uint32",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "OtaQueryStatus", base: "enum8",
+            name: "OtaQueryStatus", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -181,7 +181,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OtaApplyUpdateAction", base: "enum8",
+            name: "OtaApplyUpdateAction", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -202,7 +202,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OtaDownloadProtocol", base: "enum8",
+            name: "OtaDownloadProtocol", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({

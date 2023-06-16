@@ -15,22 +15,22 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for controlling the current Channel on a device.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ChannelList", base: "list",
+            id: 0x0000, name: "ChannelList", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "ChannelInfoStruct"
+                    name: "entry", type: "ChannelInfoStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ChannelLineup", base: "LineupInfoStruct",
+            id: 0x0001, name: "ChannelLineup", type: "LineupInfoStruct",
             conformance: "O", default: undefined, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ChannelCurrentChannel", base: "ChannelInfoStruct",
+            id: 0x0002, name: "ChannelCurrentChannel", type: "ChannelInfoStruct",
             conformance: "O", default: undefined, quality: "X"
         }),
 
@@ -39,7 +39,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "ChangeChannelResponse",
             children: [
                 DatatypeElement({
-                    name: "Match", base: "string",
+                    name: "Match", type: "string",
                     conformance: "M"
                 })
             ]
@@ -50,12 +50,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "MajorNumber", base: "uint16",
+                    name: "MajorNumber", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "MinorNumber", base: "uint16",
+                    name: "MinorNumber", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -66,7 +66,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Count", base: "uint16",
+                    name: "Count", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -77,76 +77,76 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "ChannelStatusEnum",
+                    name: "Status", type: "ChannelStatusEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "Data", type: "string",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "ChannelInfoStruct", base: "struct",
+            name: "ChannelInfoStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "MajorNumber", base: "uint16",
+                    name: "MajorNumber", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "MinorNumber", base: "uint16",
+                    name: "MinorNumber", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "CallSign", base: "string",
+                    name: "CallSign", type: "string",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "AffiliateCallSign", base: "string",
+                    name: "AffiliateCallSign", type: "string",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "LineupInfoStruct", base: "struct",
+            name: "LineupInfoStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "OperatorName", base: "string",
+                    name: "OperatorName", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LineupName", base: "string",
+                    name: "LineupName", type: "string",
                     conformance: "O", default: ""
                 }),
 
                 DatatypeElement({
-                    name: "PostalCode", base: "string",
+                    name: "PostalCode", type: "string",
                     conformance: "O", default: ""
                 }),
 
                 DatatypeElement({
-                    name: "LineupInfoType", base: "LineupInfoTypeEnum",
+                    name: "LineupInfoType", type: "LineupInfoTypeEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "LineupInfoTypeEnum", base: "enum8",
+            name: "LineupInfoTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -157,7 +157,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ChannelStatusEnum", base: "enum8",
+            name: "ChannelStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -178,7 +178,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ChannelFeature", base: "map32",
+            name: "ChannelFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

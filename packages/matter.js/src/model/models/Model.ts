@@ -320,9 +320,9 @@ export abstract class Model implements BaseElement {
             }
             delete properties.id;
         }
-        if (properties.base) {
-            summaryProps.base = properties.base;
-            delete properties.base;
+        if (properties.type) {
+            summaryProps.type = properties.type;
+            delete properties.type;
         }
         if (properties.xref) {
             summaryProps.xref = properties.xref;

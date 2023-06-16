@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 5, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -55,7 +55,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "Type", base: "enum8",
+            id: 0x0000, name: "Type", type: "enum8",
             access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F",
             details: "The Type attribute identifies the type of window covering being " +
                      "controlled by this endpoint and SHALL be set to one of the non-" +
@@ -64,7 +64,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "PhysicalClosedLimitLift", base: "uint16",
+            id: 0x0001, name: "PhysicalClosedLimitLift", type: "uint16",
             access: "R V", conformance: "[LF & P, A_LF & ABS]", default: 0, quality: "F",
             details: "The PhysicalClosedLimitLift attribute identifies the maximum possible " +
                      "encoder position possible (in centimeters) to position the height of " +
@@ -73,7 +73,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "PhysicalClosedLimitTilt", base: "uint16",
+            id: 0x0002, name: "PhysicalClosedLimitTilt", type: "uint16",
             access: "R V", conformance: "[TL & P, A_TL & ABS]", default: 0, quality: "F",
             details: "The PhysicalClosedLimitTilt attribute identifies the maximum possible " +
                      "encoder position possible (tenth of a degrees) to position the angle " +
@@ -82,19 +82,19 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CurrentPositionLift1", base: "uint16",
+            id: 0x0003, name: "CurrentPositionLift1", type: "uint16",
             access: "R V", conformance: "[LF & P, A_LF & ABS]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift", default: "null", quality: "X N",
             xref: { document: "cluster", section: "5.3.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0004, name: "CurrentPositionTilt1", base: "uint16",
+            id: 0x0004, name: "CurrentPositionTilt1", type: "uint16",
             access: "R V", conformance: "[TL & P, A_TL & ABS]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt", default: "null", quality: "X N",
             xref: { document: "cluster", section: "5.3.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0005, name: "NumberOfActuationsLift", base: "uint16",
+            id: 0x0005, name: "NumberOfActuationsLift", type: "uint16",
             access: "R V", conformance: "[LF]", default: 0, quality: "N",
             details: "The NumberOfActuationsLift attribute identifies the total number of " +
                      "lift/slide actuations applied to the Window Covering since the device " +
@@ -103,7 +103,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "NumberOfActuationsTilt", base: "uint16",
+            id: 0x0006, name: "NumberOfActuationsTilt", type: "uint16",
             access: "R V", conformance: "[TL]", default: 0, quality: "N",
             details: "The NumberOfActuationsTilt attribute identifies the total number of " +
                      "tilt actuations applied to the Window Covering since the device was " +
@@ -112,7 +112,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0007, name: "ConfigStatus", base: "map8",
+            id: 0x0007, name: "ConfigStatus", type: "map8",
             access: "R V", conformance: "M", constraint: "desc", default: "desc", quality: "N",
             details: "The ConfigStatus attribute makes configuration and status information " +
                      "available. To change settings, devices SHALL write to the Mode " +
@@ -123,19 +123,19 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0008, name: "CurrentPositionLiftPercentage1", base: "percent",
+            id: 0x0008, name: "CurrentPositionLiftPercentage1", type: "percent",
             access: "R V", conformance: "[LF & P, A_LF]", constraint: "0 to 100", default: "null", quality: "X N S P",
             xref: { document: "cluster", section: "5.3.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0009, name: "CurrentPositionTiltPercentage1", base: "percent",
+            id: 0x0009, name: "CurrentPositionTiltPercentage1", type: "percent",
             access: "R V", conformance: "[TL & P, A_TL]", constraint: "0 to 100", default: "null", quality: "X N S P",
             xref: { document: "cluster", section: "5.3.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x000a, name: "OperationalStatus", base: "map8",
+            id: 0x000a, name: "OperationalStatus", type: "map8",
             access: "R V", conformance: "M", default: 0, quality: "P",
             details: "The OperationalStatus attribute keeps track of currently ongoing " +
                      "operations and applies to all type of devices. See below for details " +
@@ -144,19 +144,19 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000b, name: "TargetPositionLiftPercent100Ths2", base: "percent100ths",
+            id: 0x000b, name: "TargetPositionLiftPercent100Ths2", type: "percent100ths",
             access: "R V", conformance: "LF & P, A_LF", constraint: "0 to 10000", default: "null", quality: "X S P",
             xref: { document: "cluster", section: "5.3.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x000c, name: "TargetPositionTiltPercent100Ths2", base: "percent100ths",
+            id: 0x000c, name: "TargetPositionTiltPercent100Ths2", type: "percent100ths",
             access: "R V", conformance: "TL & P, A_TL", constraint: "0 to 10000", default: "null", quality: "X S P",
             xref: { document: "cluster", section: "5.3.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x000d, name: "EndProductType", base: "enum8",
+            id: 0x000d, name: "EndProductType", type: "enum8",
             access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F",
             details: "The EndProductType attribute identifies the product type in complement" +
                      " of the main category indicated by the Type attribute. The window " +
@@ -165,19 +165,19 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000e, name: "CurrentPositionLiftPercent100Ths1", base: "percent100ths",
+            id: 0x000e, name: "CurrentPositionLiftPercent100Ths1", type: "percent100ths",
             access: "R V", conformance: "LF & P, A_LF", constraint: "0 to 10000", default: "null", quality: "X N P",
             xref: { document: "cluster", section: "5.3.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x000f, name: "CurrentPositionTiltPercent100Ths1", base: "percent100ths",
+            id: 0x000f, name: "CurrentPositionTiltPercent100Ths1", type: "percent100ths",
             access: "R V", conformance: "TL & P, A_TL", constraint: "0 to 10000", default: "null", quality: "X N P",
             xref: { document: "cluster", section: "5.3.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0010, name: "InstalledOpenLimitLift", base: "uint16",
+            id: 0x0010, name: "InstalledOpenLimitLift", type: "uint16",
             access: "R V", conformance: "LF & P, A_LF & ABS", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledOpenLimitLift attribute identifies the Open Limit for " +
                      "Lifting the Window Covering whether position (in centimeters) is " +
@@ -186,7 +186,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0011, name: "InstalledClosedLimitLift", base: "uint16",
+            id: 0x0011, name: "InstalledClosedLimitLift", type: "uint16",
             access: "R V", conformance: "LF & P, A_LF & ABS", constraint: "0 to 65534", default: 65534, quality: "N",
             details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for" +
                      " Lifting the Window Covering whether position (in centimeters) is " +
@@ -195,7 +195,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0012, name: "InstalledOpenLimitTilt", base: "uint16",
+            id: 0x0012, name: "InstalledOpenLimitTilt", type: "uint16",
             access: "R V", conformance: "TL & P, A_TL & ABS", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledOpenLimitTilt attribute identifies the Open Limit for " +
                      "Tilting the Window Covering whether position (in tenth of a degree) is" +
@@ -204,7 +204,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0013, name: "InstalledClosedLimitTilt", base: "uint16",
+            id: 0x0013, name: "InstalledClosedLimitTilt", type: "uint16",
             access: "R V", conformance: "TL & P, A_TL & ABS", constraint: "0 to 65534", default: 65534, quality: "N",
             details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for" +
                      " Tilting the Window Covering whether position (in tenth of a degree) " +
@@ -213,7 +213,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0017, name: "Mode", base: "map8",
+            id: 0x0017, name: "Mode", type: "map8",
             access: "RW VM", conformance: "M", default: 0, quality: "N",
             details: "The Mode attribute allows configuration of the Window Covering, such " +
                      "as: reversing the motor direction, placing the Window Covering into " +
@@ -223,7 +223,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001a, name: "SafetyStatus", base: "map16",
+            id: 0x001a, name: "SafetyStatus", type: "map16",
             access: "R V", conformance: "O", constraint: "desc", default: 0, quality: "P",
             details: "The SafetyStatus attribute reflects the state of the safety sensors " +
                      "and the common issues preventing movements. By default for nominal " +

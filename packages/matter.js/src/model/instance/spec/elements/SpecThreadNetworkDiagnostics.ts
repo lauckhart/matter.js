@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -49,7 +49,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "Channel", base: "uint16",
+            id: 0x0000, name: "Channel", type: "uint16",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The Channel attribute SHALL indicate the 802.15.4 channel number " +
                      "configured on the Node’s Thread interface (that is, the Active " +
@@ -60,7 +60,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "RoutingRole", base: "RoutingRoleEnum",
+            id: 0x0001, name: "RoutingRole", type: "RoutingRoleEnum",
             access: "R V", conformance: "M", default: "", quality: "X",
             details: "The RoutingRole attribute SHALL indicate the role that this Node has " +
                      "within the routing of messages through the Thread network, as defined " +
@@ -71,7 +71,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "NetworkName", base: "String",
+            id: 0x0002, name: "NetworkName", type: "String",
             access: "R V", conformance: "M", constraint: "max 16", default: "", quality: "X",
             details: "The NetworkName attribute SHALL indicate a human-readable (displayable" +
                      ") name for the Thread network that the Node has been configured to " +
@@ -81,7 +81,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PanId", base: "uint16",
+            id: 0x0003, name: "PanId", type: "uint16",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The PanId attribute SHALL indicate the 16-bit identifier of the Node " +
                      "on the Thread network. A value of null SHALL indicate that the Thread " +
@@ -90,7 +90,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "ExtendedPanId", base: "uint64",
+            id: 0x0004, name: "ExtendedPanId", type: "uint64",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The ExtendedPanId attribute SHALL indicate the unique 64-bit " +
                      "identifier of the Node on the Thread network. A value of null SHALL " +
@@ -100,7 +100,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "MeshLocalPrefix", base: "ipv6pre",
+            id: 0x0005, name: "MeshLocalPrefix", type: "ipv6pre",
             access: "R V", conformance: "M", default: "", quality: "X",
             details: "The MeshLocalPrefix attribute SHALL indicate the mesh-local IPv6 " +
                      "prefix for the Thread network that the Node has been configured to " +
@@ -110,7 +110,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "OverrunCount", base: "uint64",
+            id: 0x0006, name: "OverrunCount", type: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "C",
             details: "The OverrunCount attribute SHALL indicate the number of packets " +
                      "dropped either at ingress or egress, due to lack of buffer memory to " +
@@ -120,33 +120,33 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0007, name: "NeighborTable", base: "list",
+            id: 0x0007, name: "NeighborTable", type: "list",
             access: "R V", conformance: "M", default: "[]",
             details: "The NeighborTable attribute SHALL indicate the current list of Nodes " +
                      "that comprise the neighbor table on the Node",
             xref: { document: "core", section: "11.13.6.8", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "NeighborTableStruct"
+                    name: "entry", type: "NeighborTableStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0008, name: "RouteTable", base: "list",
+            id: 0x0008, name: "RouteTable", type: "list",
             access: "R V", conformance: "M", default: "[]",
             details: "The RouteTable attribute SHALL indicate the current list of router " +
                      "capable Nodes for which routes have been established",
             xref: { document: "core", section: "11.13.6.9", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "RouteTableStruct"
+                    name: "entry", type: "RouteTableStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0009, name: "PartitionId", base: "uint32",
+            id: 0x0009, name: "PartitionId", type: "uint32",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The PartitionId attribute SHALL indicate the Thread Leader Partition " +
                      "Id for the Thread network to which the Node is joined. This attribute " +
@@ -155,7 +155,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000a, name: "Weighting", base: "uint8",
+            id: 0x000a, name: "Weighting", type: "uint8",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The Weighting attribute SHALL indicate the Thread Leader Weight used " +
                      "when operating in the Leader role. This attribute SHALL be null if not" +
@@ -164,7 +164,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000b, name: "DataVersion", base: "uint8",
+            id: 0x000b, name: "DataVersion", type: "uint8",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The DataVersion attribute SHALL indicate the full Network Data Version" +
                      " the Node currently uses. This attribute SHALL be null if not attached" +
@@ -173,7 +173,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000c, name: "StableDataVersion", base: "uint8",
+            id: 0x000c, name: "StableDataVersion", type: "uint8",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The StableDataVersion attribute SHALL indicate the Network Data " +
                      "Version for the stable subset of",
@@ -181,7 +181,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000d, name: "LeaderRouterId", base: "uint8",
+            id: 0x000d, name: "LeaderRouterId", type: "uint8",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "The LeaderRouterId attribute SHALL indicate the 8-bit LeaderRouterId " +
                      "the Node shall attempt to utilize upon becoming a router or leader on " +
@@ -191,7 +191,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000e, name: "DetachedRoleCount", base: "uint16",
+            id: 0x000e, name: "DetachedRoleCount", type: "uint16",
             access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
             details: "The DetachedRoleCount attribute SHALL indicate the number of times the" +
                      " Node entered the OT_DEVICE_ROLE_DETACHED role as specified within the" +
@@ -201,7 +201,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000f, name: "ChildRoleCount", base: "uint16",
+            id: 0x000f, name: "ChildRoleCount", type: "uint16",
             access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
             details: "The ChildRoleCount attribute SHALL indicate the number of times the " +
                      "Node entered the OT_DEVICE_ROLE_CHILD role as specified within the " +
@@ -211,7 +211,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0010, name: "RouterRoleCount", base: "uint16",
+            id: 0x0010, name: "RouterRoleCount", type: "uint16",
             access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
             details: "The RouterRoleCount attribute SHALL indicate the number of times the " +
                      "Node entered the OT_DEVICE_ROLE_ROUTER role as specified within the " +
@@ -221,7 +221,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0011, name: "LeaderRoleCount", base: "uint16",
+            id: 0x0011, name: "LeaderRoleCount", type: "uint16",
             access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
             details: "The LeaderRoleCount attribute SHALL indicate the number of times the " +
                      "Node entered the OT_DEVICE_ROLE_LEADER role as specified within the " +
@@ -231,7 +231,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0012, name: "AttachAttemptCount", base: "uint16",
+            id: 0x0012, name: "AttachAttemptCount", type: "uint16",
             access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
             details: "The AttachAttemptCount attribute SHALL indicate the number of attempts" +
                      " that have been made to attach to a Thread network while the Node was " +
@@ -241,7 +241,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0013, name: "PartitionIdChangeCount", base: "uint16",
+            id: 0x0013, name: "PartitionIdChangeCount", type: "uint16",
             access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
             details: "The PartitionIdChangeCount attribute SHALL indicate the number of " +
                      "times that the Thread network that the Node is connected to has " +
@@ -251,7 +251,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0014, name: "BetterPartitionAttachAttemptCount", base: "uint16",
+            id: 0x0014, name: "BetterPartitionAttachAttemptCount", type: "uint16",
             access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
             details: "The BetterPartitionAttachAttemptCount attribute SHALL indicate the " +
                      "number of times a Node has attempted to attach to a different Thread " +
@@ -262,7 +262,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0015, name: "ParentChangeCount", base: "uint16",
+            id: 0x0015, name: "ParentChangeCount", type: "uint16",
             access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
             details: "The ParentChangeCount attribute SHALL indicate the number of times a " +
                      "Node has changed its parent. This value SHALL only be reset upon a " +
@@ -271,7 +271,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0016, name: "TxTotalCount", base: "uint32",
+            id: 0x0016, name: "TxTotalCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxTotalCount attribute SHALL indicate the total number of unique " +
                      "MAC frame transmission requests. The TxTotalCount attribute SHALL only" +
@@ -282,7 +282,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0017, name: "TxUnicastCount", base: "uint32",
+            id: 0x0017, name: "TxUnicastCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxUnicastCount attribute SHALL indicate the total number of unique" +
                      " unicast MAC frame transmission requests. The TxUnicastCount attribute" +
@@ -293,7 +293,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0018, name: "TxBroadcastCount", base: "uint32",
+            id: 0x0018, name: "TxBroadcastCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxBroadcastCount attribute SHALL indicate the total number of " +
                      "unique broadcast MAC frame transmission requests. The TxBroadcastCount" +
@@ -305,7 +305,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0019, name: "TxAckRequestedCount", base: "uint32",
+            id: 0x0019, name: "TxAckRequestedCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxAckRequestedCount attribute SHALL indicate the total number of " +
                      "unique MAC frame transmission requests with requested acknowledgment. " +
@@ -317,7 +317,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001a, name: "TxAckedCount", base: "uint32",
+            id: 0x001a, name: "TxAckedCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxAckedCount attribute SHALL indicate the total number of unique " +
                      "MAC frame transmission requests that were acked. The TxAckedCount " +
@@ -329,7 +329,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001b, name: "TxNoAckRequestedCount", base: "uint32",
+            id: 0x001b, name: "TxNoAckRequestedCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxNoAckRequestedCount attribute SHALL indicate the total number of" +
                      " unique MAC frame transmission requests without requested " +
@@ -341,7 +341,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001c, name: "TxDataCount", base: "uint32",
+            id: 0x001c, name: "TxDataCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxDataCount attribute SHALL indicate the total number of unique " +
                      "MAC Data frame transmission requests. The TxDataCount attribute SHALL " +
@@ -352,7 +352,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001d, name: "TxDataPollCount", base: "uint32",
+            id: 0x001d, name: "TxDataPollCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxDataPollCount attribute SHALL indicate the total number of " +
                      "unique MAC Data Poll frame transmission requests. The TxDataPollCount " +
@@ -364,7 +364,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001e, name: "TxBeaconCount", base: "uint32",
+            id: 0x001e, name: "TxBeaconCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxBeaconCount attribute SHALL indicate the total number of unique " +
                      "MAC Beacon frame transmission requests. The TxBeaconCount attribute " +
@@ -375,7 +375,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001f, name: "TxBeaconRequestCount", base: "uint32",
+            id: 0x001f, name: "TxBeaconRequestCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxBeaconRequestCount attribute SHALL indicate the total number of " +
                      "unique MAC Beacon Request frame transmission requests. The " +
@@ -387,7 +387,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0020, name: "TxOtherCount", base: "uint32",
+            id: 0x0020, name: "TxOtherCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxOtherCount attribute SHALL indicate the total number of unique " +
                      "MAC frame transmission requests that are not counted by any other " +
@@ -399,7 +399,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0021, name: "TxRetryCount", base: "uint32",
+            id: 0x0021, name: "TxRetryCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxRetryCount attribute SHALL indicate the total number of MAC " +
                      "retransmission attempts. The TxRetryCount attribute SHALL only be " +
@@ -410,7 +410,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0022, name: "TxDirectMaxRetryExpiryCount", base: "uint32",
+            id: 0x0022, name: "TxDirectMaxRetryExpiryCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxDirectMaxRetryExpiryCount attribute SHALL indicate the total " +
                      "number of unique MAC transmission packets that meet maximal retry " +
@@ -422,7 +422,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0023, name: "TxIndirectMaxRetryExpiryCount", base: "uint32",
+            id: 0x0023, name: "TxIndirectMaxRetryExpiryCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxIndirectMaxRetryExpiryCount attribute SHALL indicate the total " +
                      "number of unique MAC transmission packets that meet maximal retry " +
@@ -434,7 +434,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0024, name: "TxErrCcaCount", base: "uint32",
+            id: 0x0024, name: "TxErrCcaCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxErrCcaCount attribute SHALL indicate the total number of CCA " +
                      "failures. The TxErrCcaCount attribute SHALL only be incremented by 1 " +
@@ -444,7 +444,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0025, name: "TxErrAbortCount", base: "uint32",
+            id: 0x0025, name: "TxErrAbortCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxErrAbortCount attribute SHALL indicate the total number of " +
                      "unique MAC transmission request failures caused by an abort error. The" +
@@ -454,7 +454,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0026, name: "TxErrBusyChannelCount", base: "uint32",
+            id: 0x0026, name: "TxErrBusyChannelCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The TxErrBusyChannelCount attribute SHALL indicate the total number of" +
                      " unique MAC transmission request failures caused by an error as the " +
@@ -466,7 +466,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0027, name: "RxTotalCount", base: "uint32",
+            id: 0x0027, name: "RxTotalCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxTotalCount attribute SHALL indicate the total number of received" +
                      " unique MAC frames. This value SHALL only be reset upon a Node reboot",
@@ -474,7 +474,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0028, name: "RxUnicastCount", base: "uint32",
+            id: 0x0028, name: "RxUnicastCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxUnicastCount attribute SHALL indicate the total number of " +
                      "received unique unicast MAC frames. This value SHALL only be reset " +
@@ -483,7 +483,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0029, name: "RxBroadcastCount", base: "uint32",
+            id: 0x0029, name: "RxBroadcastCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxBroadcastCount attribute SHALL indicate the total number of " +
                      "received unique broadcast MAC frames. This value SHALL only be reset " +
@@ -492,7 +492,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002a, name: "RxDataCount", base: "uint32",
+            id: 0x002a, name: "RxDataCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxDataCount attribute SHALL indicate the total number of received " +
                      "unique MAC Data frames. This value SHALL only be reset upon a Node " +
@@ -501,7 +501,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002b, name: "RxDataPollCount", base: "uint32",
+            id: 0x002b, name: "RxDataPollCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxDataPollCount attribute SHALL indicate the total number of " +
                      "received unique MAC Data Poll frames. This value SHALL only be reset " +
@@ -510,7 +510,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002c, name: "RxBeaconCount", base: "uint32",
+            id: 0x002c, name: "RxBeaconCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxBeaconCount attribute SHALL indicate the total number of " +
                      "received unique MAC Beacon frames. This value SHALL only be reset upon" +
@@ -519,7 +519,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002d, name: "RxBeaconRequestCount", base: "uint32",
+            id: 0x002d, name: "RxBeaconRequestCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxBeaconRequestCount attribute SHALL indicate the total number of " +
                      "received unique MAC Beacon Request frames. This value SHALL only be " +
@@ -528,7 +528,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002e, name: "RxOtherCount", base: "uint32",
+            id: 0x002e, name: "RxOtherCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxOtherCount attribute SHALL indicate the total number of received" +
                      " unique MAC frame requests that are not counted by any other attribute" +
@@ -537,7 +537,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002f, name: "RxAddressFilteredCount", base: "uint32",
+            id: 0x002f, name: "RxAddressFilteredCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxAddressFilteredCount attribute SHALL indicate the total number " +
                      "of received unique MAC frame requests that have been dropped as a " +
@@ -547,7 +547,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0030, name: "RxDestAddrFilteredCount", base: "uint32",
+            id: 0x0030, name: "RxDestAddrFilteredCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxDestAddrFilteredCount attribute SHALL indicate the total number " +
                      "of received unique MAC frame requests that have been dropped as a " +
@@ -557,7 +557,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0031, name: "RxDuplicatedCount", base: "uint32",
+            id: 0x0031, name: "RxDuplicatedCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxDuplicatedCount attribute SHALL indicate the total number of " +
                      "received MAC frame requests that have been dropped as a result of " +
@@ -567,7 +567,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0032, name: "RxErrNoFrameCount", base: "uint32",
+            id: 0x0032, name: "RxErrNoFrameCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxErrNoFrameCount attribute SHALL indicate the total number of " +
                      "received unique MAC frame requests that have been dropped as a result " +
@@ -577,7 +577,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0033, name: "RxErrUnknownNeighborCount", base: "uint32",
+            id: 0x0033, name: "RxErrUnknownNeighborCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxErrUnknownNeighborCount attribute SHALL indicate the total " +
                      "number of received unique MAC frame requests that have been dropped as" +
@@ -587,7 +587,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0034, name: "RxErrInvalidScrAddrCount", base: "uint32",
+            id: 0x0034, name: "RxErrInvalidScrAddrCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxErrInvalidScrAddrCount attribute SHALL indicate the total number" +
                      " of received unique MAC frame requests that have been dropped as a " +
@@ -597,7 +597,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0035, name: "RxErrSecCount", base: "uint32",
+            id: 0x0035, name: "RxErrSecCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxErrSecCount attribute SHALL indicate the total number of " +
                      "received unique MAC frame requests that have been dropped as a result " +
@@ -607,7 +607,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0036, name: "RxErrFcsCount", base: "uint32",
+            id: 0x0036, name: "RxErrFcsCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxErrFcsCount attribute SHALL indicate the total number of " +
                      "received unique MAC frame requests that have been dropped as a result " +
@@ -617,7 +617,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0037, name: "RxErrOtherCount", base: "uint32",
+            id: 0x0037, name: "RxErrOtherCount", type: "uint32",
             access: "R V", conformance: "[M, ACCNT]", default: 0, quality: "C",
             details: "The RxErrOtherCount attribute SHALL indicate the total number of " +
                      "received unique MAC frame requests that have been dropped as a result " +
@@ -627,28 +627,28 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0038, name: "ActiveTimestamp", base: "uint64",
+            id: 0x0038, name: "ActiveTimestamp", type: "uint64",
             access: "R V", conformance: "O", default: 0, quality: "X",
             details: "This attribute SHALL be null when there is no dataset configured",
             xref: { document: "core", section: "11.13.6.57", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0039, name: "PendingTimestamp", base: "uint64",
+            id: 0x0039, name: "PendingTimestamp", type: "uint64",
             access: "R V", conformance: "O", default: 0, quality: "X",
             details: "This attribute SHALL be null when there is no dataset configured",
             xref: { document: "core", section: "11.13.6.58", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x003a, name: "Delay", base: "uint32",
+            id: 0x003a, name: "Delay", type: "uint32",
             access: "R V", conformance: "O", default: 0, quality: "X",
             details: "This attribute SHALL be null when there is no dataset configured",
             xref: { document: "core", section: "11.13.6.59", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x003b, name: "SecurityPolicy", base: "SecurityPolicy",
+            id: 0x003b, name: "SecurityPolicy", type: "SecurityPolicy",
             access: "R V", conformance: "M", default: "", quality: "X",
             details: "The SecurityPolicy attribute indicates the current security policies " +
                      "for the Thread partition to which a Node is connected. This attribute " +
@@ -657,7 +657,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x003c, name: "ChannelPage0Mask", base: "octstr",
+            id: 0x003c, name: "ChannelPage0Mask", type: "octstr",
             access: "R V", conformance: "M", constraint: "4", default: "", quality: "X",
             details: "The ChannelPage0Mask attribute indicates the channels within channel " +
                      "page 0, in the 2.4GHz ISM band. The channels are represented in most " +
@@ -670,7 +670,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x003d, name: "OperationalDatasetComponents", base: "OperationalDatasetComponents",
+            id: 0x003d, name: "OperationalDatasetComponents", type: "OperationalDatasetComponents",
             access: "R V", conformance: "M", default: "", quality: "X",
             details: "The OperationalDatasetComponents attribute is a collection of flags to" +
                      " indicate the presence of various operationally acquired values",
@@ -678,14 +678,14 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x003e, name: "ActiveNetworkFaults", base: "list",
+            id: 0x003e, name: "ActiveNetworkFaults", type: "list",
             access: "R V", conformance: "M", constraint: "max 4", default: "",
             details: "The ActiveNetworkFaults attribute SHALL indicate the set of faults " +
                      "currently detected by the Node",
             xref: { document: "core", section: "11.13.6.63", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "NetworkFaultEnum"
+                    name: "entry", type: "NetworkFaultEnum"
                 })
             ]
         }),
@@ -714,7 +714,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "NetworkFaultEnum", base: "enum8",
+            id: -1, name: "NetworkFaultEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.13.5.1", version: "1.1" },
             children: [

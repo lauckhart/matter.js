@@ -15,17 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for launching content on a media player device such as a TV or Speaker.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ContentLauncherAcceptHeader", base: "list",
+            id: 0x0000, name: "ContentLauncherAcceptHeader", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "string"
+                    name: "entry", type: "string"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ContentLauncherSupportedStreamingProtocols", base: "map32",
+            id: 0x0001, name: "ContentLauncherSupportedStreamingProtocols", type: "map32",
             access: "RW", conformance: "O", default: 0
         }),
 
@@ -34,17 +34,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "Search", base: "ContentSearchStruct",
+                    name: "Search", type: "ContentSearchStruct",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AutoPlay", base: "bool",
+                    name: "AutoPlay", type: "bool",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "Data", type: "string",
                     conformance: "O"
                 })
             ]
@@ -55,17 +55,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "ContentUrl", base: "string",
+                    name: "ContentUrl", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DisplayString", base: "string",
+                    name: "DisplayString", type: "string",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "BrandingInformation", base: "BrandingInformationStruct",
+                    name: "BrandingInformation", type: "BrandingInformationStruct",
                     conformance: "O"
                 })
             ]
@@ -76,46 +76,46 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "ContentLaunchStatusEnum",
+                    name: "Status", type: "ContentLaunchStatusEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "Data", type: "string",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "ContentSearchStruct", base: "struct",
+            name: "ContentSearchStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ParameterList", base: "ParameterStruct",
+                    name: "ParameterList", type: "ParameterStruct",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "AdditionalInfoStruct", base: "struct",
+            name: "AdditionalInfoStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "Value", type: "string",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "MetricTypeEnum", base: "enum8",
+            name: "MetricTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -131,85 +131,85 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DimensionStruct", base: "struct",
+            name: "DimensionStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Width", base: "double",
+                    name: "Width", type: "double",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Height", base: "double",
+                    name: "Height", type: "double",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Metric", base: "MetricTypeEnum",
+                    name: "Metric", type: "MetricTypeEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "StyleInformationStruct", base: "struct",
+            name: "StyleInformationStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ImageUrl", base: "string",
+                    name: "ImageUrl", type: "string",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Color", base: "string",
+                    name: "Color", type: "string",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Size", base: "DimensionStruct",
+                    name: "Size", type: "DimensionStruct",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "BrandingInformationStruct", base: "struct",
+            name: "BrandingInformationStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ProviderName", base: "string",
+                    name: "ProviderName", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Background", base: "StyleInformationStruct",
+                    name: "Background", type: "StyleInformationStruct",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Logo", base: "StyleInformationStruct",
+                    name: "Logo", type: "StyleInformationStruct",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "ProgressBar", base: "StyleInformationStruct",
+                    name: "ProgressBar", type: "StyleInformationStruct",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Splash", base: "StyleInformationStruct",
+                    name: "Splash", type: "StyleInformationStruct",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "WaterMark", base: "StyleInformationStruct",
+                    name: "WaterMark", type: "StyleInformationStruct",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "ParameterEnum", base: "enum8",
+            name: "ParameterEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -285,7 +285,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ContentLaunchStatusEnum", base: "enum8",
+            name: "ContentLaunchStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -306,28 +306,28 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ParameterStruct", base: "struct",
+            name: "ParameterStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Type", base: "ParameterEnum",
+                    name: "Type", type: "ParameterEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "Value", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ExternalIdList", base: "AdditionalInfoStruct",
+                    name: "ExternalIdList", type: "AdditionalInfoStruct",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "SupportedStreamingProtocol", base: "map32",
+            name: "SupportedStreamingProtocol", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -343,7 +343,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ContentLauncherFeature", base: "map32",
+            name: "ContentLauncherFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

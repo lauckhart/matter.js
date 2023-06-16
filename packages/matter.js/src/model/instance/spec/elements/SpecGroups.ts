@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "endpoint",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 4, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -31,7 +31,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "NameSupport", base: "map8",
+            id: 0x0000, name: "NameSupport", type: "map8",
             access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F",
             details: "This attribute provides legacy, read-only access to whether the Group " +
                      "Names feature is supported. The most significant bit, bit 7, SHALL be " +

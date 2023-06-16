@@ -14,40 +14,40 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "DefaultOtaProviders", base: "list",
+            id: 0x0000, name: "DefaultOtaProviders", type: "list",
             access: "RW F VA", conformance: "M", constraint: "desc", default: "[]",
             xref: { document: "core", section: "11.19.7.5", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "ProviderLocationStruct"
+                    name: "entry", type: "ProviderLocationStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "UpdatePossible", base: "bool",
+            id: 0x0001, name: "UpdatePossible", type: "bool",
             access: "R V", conformance: "M", default: true,
             xref: { document: "core", section: "11.19.7.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "UpdateState", base: "UpdateStateEnum",
+            id: 0x0002, name: "UpdateState", type: "UpdateStateEnum",
             access: "R V", conformance: "M", default: "Unknown",
             xref: { document: "core", section: "11.19.7.5", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0003, name: "UpdateStateProgress", base: "uint8",
+            id: 0x0003, name: "UpdateStateProgress", type: "uint8",
             access: "R V", conformance: "M", constraint: "0 to 100", default: "null", quality: "X",
             xref: { document: "core", section: "11.19.7.5", version: "1.1" }
         }),

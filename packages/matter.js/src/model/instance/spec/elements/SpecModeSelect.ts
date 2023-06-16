@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -31,14 +31,14 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "Description", base: "string",
+            id: 0x0000, name: "Description", type: "string",
             access: "R V", conformance: "M", constraint: "max 64", default: "MS", quality: "F",
             details: "This attribute describes the purpose of the server, in readable text",
             xref: { document: "cluster", section: "1.8.5.1", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "StandardNamespace", base: "enum16",
+            id: 0x0001, name: "StandardNamespace", type: "enum16",
             access: "R V", conformance: "M", constraint: "desc", default: "null", quality: "X F",
             details: "This attribute, when not null, SHALL indicate a single standard " +
                      "namespace for any standard semantic tag value supported in this or any" +
@@ -51,7 +51,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SupportedModes", base: "list",
+            id: 0x0002, name: "SupportedModes", type: "list",
             access: "R V", conformance: "M", constraint: "max 255", default: "MS", quality: "F",
             details: "This attribute is the list of supported modes that may be selected for" +
                      " the CurrentMode attribute. Each item in this list represents a unique" +
@@ -60,20 +60,20 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "cluster", section: "1.8.5.3", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "ModeOptionStruct"
+                    name: "entry", type: "ModeOptionStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CurrentMode", base: "uint8",
+            id: 0x0003, name: "CurrentMode", type: "uint8",
             access: "R V", conformance: "M", constraint: "desc", default: "MS", quality: "N S",
             details: "This attribute represents the current mode of the server",
             xref: { document: "cluster", section: "1.8.5.4", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0004, name: "StartUpMode", base: "uint8",
+            id: 0x0004, name: "StartUpMode", type: "uint8",
             access: "RW VO", conformance: "O", constraint: "desc", default: "MS", quality: "X N",
             details: "The StartUpMode attribute value indicates the desired startup mode for" +
                      " the server when it is supplied with power",
@@ -81,7 +81,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "OnMode", base: "uint8",
+            id: 0x0005, name: "OnMode", type: "uint8",
             access: "RW VO", conformance: "D, EPONOFF", constraint: "desc", default: "null", quality: "X N",
             details: "This attribute SHALL indicate the value of CurrentMode that depends on" +
                      " the state of the On/Off cluster on the same endpoint. If this " +
@@ -101,12 +101,12 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "ModeOptionStruct", base: "struct",
+            id: -1, name: "ModeOptionStruct", type: "struct",
             details: "This is a struct representing a possible mode of the server",
             xref: { document: "cluster", section: "1.8.8.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "Label", base: "string",
+                    id: 0x0000, name: "Label", type: "string",
                     conformance: "M", constraint: "max 64", default: "MS", quality: "F",
                     details: "This field is readable text that describes the mode option that can be" +
                              " used by a client to indicate to the user what this option means. This" +
@@ -115,7 +115,7 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Mode", base: "uint8",
+                    id: 0x0001, name: "Mode", type: "uint8",
                     conformance: "M", default: "MS", quality: "F",
                     details: "The Mode field is used to identify the mode option. The value SHALL be" +
                              " unique for every item in the SupportedModes attribute",
@@ -123,7 +123,7 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "SemanticTags", base: "list",
+                    id: 0x0002, name: "SemanticTags", type: "list",
                     conformance: "M", constraint: "max 64", default: "MS", quality: "F",
                     details: "This field is a list of semantic tags that map to the mode option. " +
                              "This MAY be used by clients to determine the meaning of the mode " +
@@ -135,7 +135,7 @@ SpecMatter.children!.push(ClusterElement({
                     xref: { document: "cluster", section: "1.8.8.1.3", version: "1.1" },
                     children: [
                         DatatypeElement({
-                            name: "entry", base: "SemanticTagStruct"
+                            name: "entry", type: "SemanticTagStruct"
                         })
                     ]
                 })

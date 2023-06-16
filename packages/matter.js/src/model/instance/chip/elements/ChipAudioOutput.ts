@@ -15,17 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for controlling the Output on a media device such as a TV.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "AudioOutputList", base: "list",
+            id: 0x0000, name: "AudioOutputList", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "OutputInfoStruct"
+                    name: "entry", type: "OutputInfoStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "AudioOutputCurrentOutput", base: "uint8",
+            id: 0x0001, name: "AudioOutputCurrentOutput", type: "uint8",
             conformance: "O", default: 0
         }),
 
@@ -34,7 +34,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
+                    name: "Index", type: "uint8",
                     conformance: "M"
                 })
             ]
@@ -45,40 +45,40 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
+                    name: "Index", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "OutputInfoStruct", base: "struct",
+            name: "OutputInfoStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Index", base: "uint8",
+                    name: "Index", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OutputType", base: "OutputTypeEnum",
+                    name: "OutputType", type: "OutputTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "OutputTypeEnum", base: "enum8",
+            name: "OutputTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -114,7 +114,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "AudioOutputFeature", base: "map32",
+            name: "AudioOutputFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

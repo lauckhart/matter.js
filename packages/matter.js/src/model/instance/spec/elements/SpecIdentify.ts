@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "endpoint",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 4, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -36,7 +36,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "IdentifyTime", base: "uint16",
+            id: 0x0000, name: "IdentifyTime", type: "uint16",
             access: "RW VO", conformance: "M", default: 0,
             details: "This attribute specifies the remaining length of time, in seconds, " +
                      "that the endpoint will continue to identify itself",
@@ -44,7 +44,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "IdentifyType", base: "enum8",
+            id: 0x0001, name: "IdentifyType", type: "enum8",
             access: "R V", conformance: "M", constraint: "desc", default: 0,
             details: "This attribute specifies how the identification state is presented to " +
                      "the user. This field SHALL contain one of the values listed below",

@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "endpoint",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "DeviceTypeList", base: "list",
+            id: 0x0000, name: "DeviceTypeList", type: "list",
             access: "R V", conformance: "M", constraint: "min 1", default: "desc", quality: "F",
             details: "This is a list of device types and corresponding revisions declaring " +
                      "endpoint conformance (see DeviceTypeStruct). At least one device type " +
@@ -32,39 +32,39 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "9.5.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "DeviceTypeStruct"
+                    name: "entry", type: "DeviceTypeStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ServerList", base: "list",
+            id: 0x0001, name: "ServerList", type: "list",
             access: "R V", conformance: "M", default: "empty", quality: "F",
             details: "This attribute SHALL list each cluster ID for the server clusters " +
                      "present on the endpoint instance",
             xref: { document: "core", section: "9.5.5.2", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "cluster-id"
+                    name: "entry", type: "cluster-id"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ClientList", base: "list",
+            id: 0x0002, name: "ClientList", type: "list",
             access: "R V", conformance: "M", default: "empty", quality: "F",
             details: "This attribute SHALL list each cluster ID for the client clusters " +
                      "present on the endpoint instance",
             xref: { document: "core", section: "9.5.5.3", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "cluster-id"
+                    name: "entry", type: "cluster-id"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PartsList", base: "list",
+            id: 0x0003, name: "PartsList", type: "list",
             access: "R V", conformance: "M", default: "empty",
             details: "This attribute indicates composition of the device type instance. " +
                      "Device type instance composition SHALL include the endpoints in this " +
@@ -73,26 +73,26 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "9.5.5.4", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "endpoint-no"
+                    name: "entry", type: "endpoint-no"
                 })
             ]
         }),
 
         DatatypeElement({
-            id: -1, name: "DeviceTypeStruct", base: "struct",
+            id: -1, name: "DeviceTypeStruct", type: "struct",
             details: "The device type and revision define endpoint conformance to a release " +
                      "of a device type definition. See the Data Model specification for more" +
                      " information",
             xref: { document: "core", section: "9.5.4.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "DeviceType", base: "devtype-id",
+                    id: 0x0000, name: "DeviceType", type: "devtype-id",
                     conformance: "M", default: 0,
                     xref: { document: "core", section: "9.5.4.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "Revision", base: "uint16",
+                    id: 0x0001, name: "Revision", type: "uint16",
                     conformance: "M", constraint: "min 1", default: 0,
                     xref: { document: "core", section: "9.5.4.1", version: "1.1" }
                 })

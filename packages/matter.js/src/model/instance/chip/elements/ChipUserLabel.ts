@@ -15,26 +15,26 @@ ChipMatter.children!.push(ClusterElement({
     details: "The User Label Cluster provides a feature to tag an endpoint with zero or more labels.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "LabelList", base: "list",
+            id: 0x0000, name: "LabelList", type: "list",
             access: "RW VM", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "LabelStruct"
+                    name: "entry", type: "LabelStruct"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "LabelStruct", base: "struct",
+            name: "LabelStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Label", base: "string",
+                    name: "Label", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Value", base: "string",
+                    name: "Value", type: "string",
                     conformance: "M"
                 })
             ]

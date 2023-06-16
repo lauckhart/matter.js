@@ -94,7 +94,7 @@ export function MergeElements({
      * Populate the canonical datatype name lookup for a specific cluster.
      * This is pretty ugly but in pseudo code:
      * 
-     * for each datatype that has a base:
+     * for each datatype that has a base type:
      *     find the name referenced by the variant of highest priority
      *     add a mapping from the referenced name to the name we found
      */
@@ -121,7 +121,7 @@ export function MergeElements({
                     // Only look at ValueElements with a base
                     const variantName = specPriority[i];
                     const ve = variants[variantName] as ValueElement | undefined;
-                    if (!ve?.base) {
+                    if (!ve?.type) {
                         continue;
                     }
 

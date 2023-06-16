@@ -15,12 +15,12 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for putting a device into Identification mode (e.g. flashing a light).",
     children: [
         AttributeElement({
-            id: 0x0000, name: "IdentifyTime", base: "uint16",
+            id: 0x0000, name: "IdentifyTime", type: "uint16",
             access: "RW", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0001, name: "IdentifyType", base: "enum8",
+            id: 0x0001, name: "IdentifyType", type: "enum8",
             conformance: "M", default: 0
         }),
 
@@ -29,7 +29,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "IdentifyTime", base: "uint16",
+                    name: "IdentifyTime", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -40,19 +40,19 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "EffectIdentifier", base: "IdentifyEffectIdentifier",
+                    name: "EffectIdentifier", type: "IdentifyEffectIdentifier",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "EffectVariant", base: "IdentifyEffectVariant",
+                    name: "EffectVariant", type: "IdentifyEffectVariant",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "IdentifyIdentifyType", base: "enum8",
+            name: "IdentifyIdentifyType", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -88,7 +88,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "IdentifyEffectIdentifier", base: "enum8",
+            name: "IdentifyEffectIdentifier", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -124,7 +124,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "IdentifyEffectVariant", base: "enum8",
+            name: "IdentifyEffectVariant", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({

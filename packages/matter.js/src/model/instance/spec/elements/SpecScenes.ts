@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 4, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -31,7 +31,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "SceneCount", base: "uint8",
+            id: 0x0000, name: "SceneCount", type: "uint8",
             access: "R V", conformance: "M", default: 0,
             details: "The SceneCount attribute specifies the number of scenes currently in " +
                      "the server’s Scene Table",
@@ -39,7 +39,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "CurrentScene", base: "uint8",
+            id: 0x0001, name: "CurrentScene", type: "uint8",
             access: "R V", conformance: "M", default: 0,
             details: "The CurrentScene attribute holds the scene identifier of the scene " +
                      "last invoked",
@@ -47,7 +47,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "CurrentGroup", base: "group-id",
+            id: 0x0002, name: "CurrentGroup", type: "group-id",
             access: "R V", conformance: "M", default: 0,
             details: "The CurrentGroup attribute holds the group identifier of the scene " +
                      "last invoked, or 0 if the scene last invoked is not associated with a " +
@@ -56,7 +56,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "SceneValid", base: "bool",
+            id: 0x0003, name: "SceneValid", type: "bool",
             access: "R V", conformance: "M", default: true,
             details: "The SceneValid attribute indicates whether the state of the server " +
                      "corresponds to that associated with the CurrentScene and CurrentGroup " +
@@ -66,7 +66,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "NameSupport", base: "map8",
+            id: 0x0004, name: "NameSupport", type: "map8",
             access: "R V", conformance: "M", constraint: "desc", default: 0,
             details: "This attribute provides legacy, read-only access to whether the Scene " +
                      "Names feature is supported. The most significant bit, bit 7, SHALL be " +
@@ -75,7 +75,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "LastConfiguredBy", base: "node-id",
+            id: 0x0005, name: "LastConfiguredBy", type: "node-id",
             access: "R V", conformance: "O", constraint: "", default: "null", quality: "X",
             details: "The LastConfiguredBy attribute holds the Node ID (the IEEE address in " +
                      "case of Zigbee) of the node that last configured the Scene Table",
@@ -229,13 +229,13 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "AttributeValuePair", base: "struct",
+            id: -1, name: "AttributeValuePair", type: "struct",
             details: "This data type indicates a combination of an identifier and the value " +
                      "of an attribute",
             xref: { document: "cluster", section: "1.4.6.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "AttributeId", base: "attribute-id",
+                    id: 0x0000, name: "AttributeId", type: "attribute-id",
                     access: "RW", conformance: "M, !Zigbee", default: "",
                     details: "This field SHALL be present or not present, for all instances in the " +
                              "Scenes cluster. If this field is not present, then the data type of " +
@@ -247,7 +247,7 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "AttributeValue", base: "variable",
+                    id: 0x0001, name: "AttributeValue", type: "variable",
                     access: "RW", conformance: "M", default: "",
                     details: "This is the attribute value as part of an extension field set. See " +
                              "AttributeID to determine the data type for this field",

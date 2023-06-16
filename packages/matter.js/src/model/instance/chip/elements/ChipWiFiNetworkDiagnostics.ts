@@ -15,67 +15,67 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "Bssid", base: "octstr",
+            id: 0x0000, name: "Bssid", type: "octstr",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "SecurityType", base: "SecurityTypeEnum",
+            id: 0x0001, name: "SecurityType", type: "SecurityTypeEnum",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "WifiVersion", base: "WiFiVersionEnum",
+            id: 0x0002, name: "WifiVersion", type: "WiFiVersionEnum",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ChannelNumber", base: "uint16",
+            id: 0x0003, name: "ChannelNumber", type: "uint16",
             conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "Rssi", base: "int8",
+            id: 0x0004, name: "Rssi", type: "int8",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "BeaconLostCount", base: "uint32",
+            id: 0x0005, name: "BeaconLostCount", type: "uint32",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "BeaconRxCount", base: "uint32",
+            id: 0x0006, name: "BeaconRxCount", type: "uint32",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "PacketMulticastRxCount", base: "uint32",
+            id: 0x0007, name: "PacketMulticastRxCount", type: "uint32",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "PacketMulticastTxCount", base: "uint32",
+            id: 0x0008, name: "PacketMulticastTxCount", type: "uint32",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0009, name: "PacketUnicastRxCount", base: "uint32",
+            id: 0x0009, name: "PacketUnicastRxCount", type: "uint32",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000a, name: "PacketUnicastTxCount", base: "uint32",
+            id: 0x000a, name: "PacketUnicastTxCount", type: "uint32",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000b, name: "CurrentMaxRate", base: "uint64",
+            id: 0x000b, name: "CurrentMaxRate", type: "uint64",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000c, name: "OverrunCount", base: "uint64",
+            id: 0x000c, name: "OverrunCount", type: "uint64",
             conformance: "O", default: 0, quality: "X"
         }),
 
@@ -89,7 +89,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ReasonCode", base: "uint16",
+                    name: "ReasonCode", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -100,12 +100,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "AssociationFailure", base: "AssociationFailureCauseEnum",
+                    name: "AssociationFailure", type: "AssociationFailureCauseEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "uint16",
+                    name: "Status", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -116,14 +116,14 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ConnectionStatus", base: "ConnectionStatusEnum",
+                    name: "ConnectionStatus", type: "ConnectionStatusEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "SecurityTypeEnum", base: "enum8",
+            name: "SecurityTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -159,7 +159,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "WiFiVersionEnum", base: "enum8",
+            name: "WiFiVersionEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -195,7 +195,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "AssociationFailureCauseEnum", base: "enum8",
+            name: "AssociationFailureCauseEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -221,7 +221,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ConnectionStatusEnum", base: "enum8",
+            name: "ConnectionStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -237,7 +237,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "WiFiNetworkDiagnosticsFeature", base: "map32",
+            name: "WiFiNetworkDiagnosticsFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

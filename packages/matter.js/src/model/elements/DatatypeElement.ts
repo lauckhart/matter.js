@@ -55,7 +55,7 @@ export namespace DatatypeElement {
                 result.push(DatatypeElement({
                     id: v,
                     name: k,
-                    base: "uint8",
+                    type: "uint8",
                     default: v
                 }));
             }

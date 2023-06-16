@@ -25,7 +25,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     function tlvTypeRef(model: DatatypeModel) {
         const base = model.metaBase;
         if (!base) {
-            throw new InternalError(`Unknown metabase type for ${model.base} ${model.name}`);
+            throw new InternalError(`Unknown metabase type for ${model.type} ${model.name}`);
         }
     
         let tlv: string;
@@ -50,7 +50,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
             case "enum8":
             case "enum16":
-                tlv = `TlvEnum<${model.base}>()`;
+                tlv = `TlvEnum<${model.type}>()`;
                 addImport("TlvEnum", "tlv/TlvNumber");
                 break;
 
@@ -160,7 +160,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 break;
 
             default:
-                throw new InternalError(`Could not determin numeric base for ${datatype.base} ${datatype.name}`);
+                throw new InternalError(`Could not determin numeric base for ${datatype.type} ${datatype.name}`);
         }
         addImport(tlvNum, "tlv/TlvNumber");
 

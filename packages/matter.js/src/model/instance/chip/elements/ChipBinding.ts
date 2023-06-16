@@ -15,36 +15,36 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for supporting the binding table.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "BindingList", base: "list",
+            id: 0x0000, name: "BindingList", type: "list",
             access: "RW", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "TargetStruct"
+                    name: "entry", type: "TargetStruct"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "TargetStruct", base: "struct",
+            name: "TargetStruct", type: "struct",
             access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Node", base: "node-id",
+                    name: "Node", type: "node-id",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Group", base: "group-id",
+                    name: "Group", type: "group-id",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Endpoint", base: "endpoint-no",
+                    name: "Endpoint", type: "endpoint-no",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Cluster", base: "cluster-id",
+                    name: "Cluster", type: "cluster-id",
                     conformance: "O"
                 })
             ]

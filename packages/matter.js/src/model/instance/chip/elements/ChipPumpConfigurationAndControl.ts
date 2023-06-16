@@ -15,117 +15,117 @@ ChipMatter.children!.push(ClusterElement({
     details: "An interface for configuring and controlling pumps.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "MaxPressure", base: "int16",
+            id: 0x0000, name: "MaxPressure", type: "int16",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "MaxSpeed", base: "uint16",
+            id: 0x0001, name: "MaxSpeed", type: "uint16",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "MaxFlow", base: "uint16",
+            id: 0x0002, name: "MaxFlow", type: "uint16",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "MinConstPressure", base: "int16",
+            id: 0x0003, name: "MinConstPressure", type: "int16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "MaxConstPressure", base: "int16",
+            id: 0x0004, name: "MaxConstPressure", type: "int16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "MinCompPressure", base: "int16",
+            id: 0x0005, name: "MinCompPressure", type: "int16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "MaxCompPressure", base: "int16",
+            id: 0x0006, name: "MaxCompPressure", type: "int16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "MinConstSpeed", base: "uint16",
+            id: 0x0007, name: "MinConstSpeed", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "MaxConstSpeed", base: "uint16",
+            id: 0x0008, name: "MaxConstSpeed", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0009, name: "MinConstFlow", base: "uint16",
+            id: 0x0009, name: "MinConstFlow", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000a, name: "MaxConstFlow", base: "uint16",
+            id: 0x000a, name: "MaxConstFlow", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000b, name: "MinConstTemp", base: "int16",
+            id: 0x000b, name: "MinConstTemp", type: "int16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000c, name: "MaxConstTemp", base: "int16",
+            id: 0x000c, name: "MaxConstTemp", type: "int16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0010, name: "PumpStatus", base: "PumpStatusBitmap",
+            id: 0x0010, name: "PumpStatus", type: "PumpStatusBitmap",
             conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0011, name: "EffectiveOperationMode", base: "OperationModeEnum",
+            id: 0x0011, name: "EffectiveOperationMode", type: "OperationModeEnum",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0012, name: "EffectiveControlMode", base: "ControlModeEnum",
+            id: 0x0012, name: "EffectiveControlMode", type: "ControlModeEnum",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0013, name: "Capacity", base: "int16",
+            id: 0x0013, name: "Capacity", type: "int16",
             conformance: "M", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0014, name: "Speed", base: "uint16",
+            id: 0x0014, name: "Speed", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0015, name: "LifetimeRunningHours", base: "uint24",
+            id: 0x0015, name: "LifetimeRunningHours", type: "uint24",
             access: "RW VM", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0016, name: "PumpPower", base: "uint24",
+            id: 0x0016, name: "PumpPower", type: "uint24",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0017, name: "LifetimeEnergyConsumed", base: "uint32",
+            id: 0x0017, name: "LifetimeEnergyConsumed", type: "uint32",
             access: "RW VM", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0020, name: "OperationMode", base: "OperationModeEnum",
+            id: 0x0020, name: "OperationMode", type: "OperationModeEnum",
             access: "RW VM", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0021, name: "ControlMode", base: "ControlModeEnum",
+            id: 0x0021, name: "ControlMode", type: "ControlModeEnum",
             access: "RW VM", conformance: "O", default: 0
         }),
 
@@ -215,7 +215,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "PumpStatusBitmap", base: "map16",
+            name: "PumpStatusBitmap", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -266,7 +266,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OperationModeEnum", base: "enum8",
+            name: "OperationModeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -292,7 +292,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ControlModeEnum", base: "enum8",
+            name: "ControlModeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -328,7 +328,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "PumpConfigurationAndControlFeature", base: "map32",
+            name: "PumpConfigurationAndControlFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

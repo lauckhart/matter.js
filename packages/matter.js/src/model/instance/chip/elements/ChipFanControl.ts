@@ -15,62 +15,62 @@ ChipMatter.children!.push(ClusterElement({
     details: "An interface for controlling a fan in a heating/cooling system.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "FanMode", base: "FanModeType",
+            id: 0x0000, name: "FanMode", type: "FanModeType",
             access: "RW", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0001, name: "FanModeSequence", base: "FanModeSequenceType",
+            id: 0x0001, name: "FanModeSequence", type: "FanModeSequenceType",
             access: "RW", conformance: "M", default: 2
         }),
 
         AttributeElement({
-            id: 0x0002, name: "PercentSetting", base: "uint8",
+            id: 0x0002, name: "PercentSetting", type: "uint8",
             access: "RW", conformance: "M", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PercentCurrent", base: "uint8",
+            id: 0x0003, name: "PercentCurrent", type: "uint8",
             conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0004, name: "SpeedMax", base: "uint8",
+            id: 0x0004, name: "SpeedMax", type: "uint8",
             conformance: "O", default: 1
         }),
 
         AttributeElement({
-            id: 0x0005, name: "SpeedSetting", base: "uint8",
+            id: 0x0005, name: "SpeedSetting", type: "uint8",
             access: "RW", conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "SpeedCurrent", base: "uint8",
+            id: 0x0006, name: "SpeedCurrent", type: "uint8",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0007, name: "RockSupport", base: "map8",
+            id: 0x0007, name: "RockSupport", type: "map8",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0008, name: "RockSetting", base: "map8",
+            id: 0x0008, name: "RockSetting", type: "map8",
             access: "RW", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0009, name: "WindSupport", base: "map8",
+            id: 0x0009, name: "WindSupport", type: "map8",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x000a, name: "WindSetting", base: "map8",
+            id: 0x000a, name: "WindSetting", type: "map8",
             access: "RW", conformance: "O", default: 0
         }),
 
         DatatypeElement({
-            name: "FanControlFeature", base: "map32",
+            name: "FanControlFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -96,7 +96,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "FanModeType", base: "enum8",
+            name: "FanModeType", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -137,7 +137,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "FanModeSequenceType", base: "enum8",
+            name: "FanModeSequenceType", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -173,7 +173,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "RockSupportMask", base: "map8",
+            name: "RockSupportMask", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -194,7 +194,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "WindSupportMask", base: "map8",
+            name: "WindSupportMask", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -210,7 +210,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "WindSettingMask", base: "map8",
+            name: "WindSettingMask", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({

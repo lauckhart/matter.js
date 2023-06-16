@@ -20,7 +20,7 @@ export type ValueElement = BaseElement & {
      * Elements may use the shortcut "list[EntryType]" to designate an element
      * as type "list" with a single child that is the entry type.
      */
-    base?: string,
+    type?: string,
 
     /**
      * Limits on values.

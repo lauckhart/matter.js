@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -37,14 +37,14 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "CurrentState", base: "PlaybackStateEnum",
+            id: 0x0000, name: "CurrentState", type: "PlaybackStateEnum",
             access: "R V", conformance: "M", constraint: "desc", default: 0,
             details: "This SHALL indicate the current playback state of media",
             xref: { document: "cluster", section: "6.10.3.1", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "StartTime", base: "epoch-us",
+            id: 0x0001, name: "StartTime", type: "epoch-us",
             access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the start time of the media, in case the media has" +
                      " a fixed start time (for example, live stream or television broadcast" +
@@ -53,7 +53,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "Duration", base: "uint64",
+            id: 0x0002, name: "Duration", type: "uint64",
             access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the duration, in milliseconds, of the current " +
                      "media being played back or null when duration is not applicable (for " +
@@ -63,7 +63,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "SampledPosition", base: "PlaybackPositionStruct",
+            id: 0x0003, name: "SampledPosition", type: "PlaybackPositionStruct",
             access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the position of playback (Position field) at the " +
                      "time (UpdateAt field) specified in the attribute. The client MAY use " +
@@ -78,7 +78,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "PlaybackSpeed", base: "single",
+            id: 0x0004, name: "PlaybackSpeed", type: "single",
             access: "R V", conformance: "AS", constraint: "desc", default: 0,
             details: "This SHALL indicate the speed at which the current media is being " +
                      "played. The new PlaybackSpeed",
@@ -86,7 +86,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "SeekRangeEnd", base: "uint64",
+            id: 0x0005, name: "SeekRangeEnd", type: "uint64",
             access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the furthest forward valid position to which a " +
                      "client MAY seek forward, in milliseconds from the start of the media. " +
@@ -101,7 +101,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "SeekRangeStart", base: "uint64",
+            id: 0x0006, name: "SeekRangeStart", type: "uint64",
             access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X",
             details: "This SHALL indicate the earliest valid position to which a client MAY " +
                      "seek back, in milliseconds from start of the media. A value of Nas " +
@@ -215,7 +215,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "PlaybackStateEnum", base: "enum8",
+            id: -1, name: "PlaybackStateEnum", type: "enum8",
             details: "PlaybackStateEnum Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.10.5.1", version: "1.1" },
             children: [

@@ -15,7 +15,7 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for group configuration and manipulation.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "GroupNameSupport", base: "map8",
+            id: 0x0000, name: "GroupNameSupport", type: "map8",
             conformance: "M"
         }),
 
@@ -24,12 +24,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F M", conformance: "M", direction: "request", response: "AddGroupResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
+                    name: "GroupId", type: "group-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupName", base: "string",
+                    name: "GroupName", type: "string",
                     conformance: "M"
                 })
             ]
@@ -40,7 +40,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F", conformance: "M", direction: "request", response: "ViewGroupResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
+                    name: "GroupId", type: "group-id",
                     conformance: "M"
                 })
             ]
@@ -51,7 +51,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F", conformance: "M", direction: "request", response: "GetGroupMembershipResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupList", base: "group-id",
+                    name: "GroupList", type: "group-id",
                     conformance: "M"
                 })
             ]
@@ -62,7 +62,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F M", conformance: "M", direction: "request", response: "RemoveGroupResponse",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
+                    name: "GroupId", type: "group-id",
                     conformance: "M"
                 })
             ]
@@ -78,12 +78,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
+                    name: "GroupId", type: "group-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupName", base: "string",
+                    name: "GroupName", type: "string",
                     conformance: "M"
                 })
             ]
@@ -94,12 +94,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8",
+                    name: "Status", type: "enum8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
+                    name: "GroupId", type: "group-id",
                     conformance: "M"
                 })
             ]
@@ -110,17 +110,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8",
+                    name: "Status", type: "enum8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
+                    name: "GroupId", type: "group-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupName", base: "string",
+                    name: "GroupName", type: "string",
                     conformance: "M"
                 })
             ]
@@ -131,12 +131,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Capacity", base: "uint8",
+                    name: "Capacity", type: "uint8",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "GroupList", base: "group-id",
+                    name: "GroupList", type: "group-id",
                     conformance: "M"
                 })
             ]
@@ -147,19 +147,19 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "enum8",
+                    name: "Status", type: "enum8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "GroupId", base: "group-id",
+                    name: "GroupId", type: "group-id",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "GroupsFeature", base: "map32",
+            name: "GroupsFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

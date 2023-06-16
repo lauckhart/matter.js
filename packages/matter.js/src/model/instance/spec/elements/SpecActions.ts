@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "ActionList", base: "list",
+            id: 0x0000, name: "ActionList", type: "list",
             access: "R V", conformance: "M", constraint: "max 256", default: "empty",
             details: "The ActionList attribute holds the list of actions. Each entry SHALL " +
                      "have an unique ActionID, and its EndpointListID SHALL exist in the " +
@@ -32,26 +32,26 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "9.14.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "ActionStruct"
+                    name: "entry", type: "ActionStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "EndpointLists", base: "list",
+            id: 0x0001, name: "EndpointLists", type: "list",
             access: "R V", conformance: "M", constraint: "max 256", default: "empty",
             details: "The EndpointLists attribute holds the list of endpoint lists. Each " +
                      "entry SHALL have an unique EndpointListID",
             xref: { document: "core", section: "9.14.5.2", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "EndpointListStruct"
+                    name: "entry", type: "EndpointListStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SetupUrl", base: "string",
+            id: 0x0002, name: "SetupUrl", type: "string",
             access: "R V", conformance: "O", constraint: "max 512", default: "empty",
             details: "The SetupURL attribute (when provided) SHALL indicate a URL; its " +
                      "syntax SHALL follow the syntax as specified in RFC 3986, max. 512 " +
@@ -163,7 +163,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "CommandBits", base: "map16",
+            id: -1, name: "CommandBits", type: "map16",
             details: "This data type is derived from map16",
             xref: { document: "core", section: "9.14.4.1", version: "1.1" },
             children: [

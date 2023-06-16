@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -55,7 +55,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "NumberOfPositions", base: "uint8",
+            id: 0x0000, name: "NumberOfPositions", type: "uint8",
             conformance: "M", constraint: "min 2", default: 2, quality: "F",
             details: "This attribute SHALL indicate the maximum number of positions the " +
                      "switch has. Any kind of switch has a minimum of 2 positions. Also see " +
@@ -65,7 +65,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "CurrentPosition", base: "uint8",
+            id: 0x0001, name: "CurrentPosition", type: "uint8",
             conformance: "M", constraint: "0 to NumberOfPositions1", default: 0, quality: "N",
             details: "This attribute SHALL indicate the position of the switch. The valid " +
                      "range is zero to NumberOfPositions-1. CurrentPosition value 0 SHALL be" +
@@ -76,7 +76,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "MultiPressMax", base: "uint8",
+            id: 0x0002, name: "MultiPressMax", type: "uint8",
             conformance: "M, SM", constraint: "min 2", default: 2, quality: "F",
             details: "This attribute SHALL indicate how many consecutive presses can be " +
                      "detected and reported by a momentary switch which supports multi-press" +

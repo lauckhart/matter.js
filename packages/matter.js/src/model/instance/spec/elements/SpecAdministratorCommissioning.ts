@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -31,13 +31,13 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "Window", base: "Commis",
+            id: 0x0000, name: "Window", type: "Commis",
             access: "R V", conformance: "M", default: "",
             xref: { document: "core", section: "11.18.7", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "AdminFabricIndex", base: "fabric-idx",
+            id: 0x0001, name: "AdminFabricIndex", type: "fabric-idx",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this " +
                      "attribute SHALL indicate the FabricIndex associated with the Fabric " +
@@ -48,7 +48,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "AdminVendorId", base: "vendor-id",
+            id: 0x0002, name: "AdminVendorId", type: "vendor-id",
             access: "R V", conformance: "M", default: 0, quality: "X",
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this " +
                      "attribute SHALL indicate the Vendor ID associated with the Fabric " +
@@ -87,7 +87,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "CommissioningWindowStatusEnum", base: "enum8",
+            id: -1, name: "CommissioningWindowStatusEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.18.5.1", version: "1.1" },
             children: [

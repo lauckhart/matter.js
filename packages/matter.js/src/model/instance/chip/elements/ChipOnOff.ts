@@ -15,27 +15,27 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for switching devices between 'On' and 'Off' states.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "OnOff", base: "bool",
+            id: 0x0000, name: "OnOff", type: "bool",
             conformance: "M", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x4000, name: "GlobalSceneControl", base: "bool",
+            id: 0x4000, name: "GlobalSceneControl", type: "bool",
             conformance: "O", default: true
         }),
 
         AttributeElement({
-            id: 0x4001, name: "OnTime", base: "uint16",
+            id: 0x4001, name: "OnTime", type: "uint16",
             access: "RW", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x4002, name: "OffWaitTime", base: "uint16",
+            id: 0x4002, name: "OffWaitTime", type: "uint16",
             access: "RW", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x4003, name: "StartUpOnOff", base: "OnOffStartUpOnOff",
+            id: 0x4003, name: "StartUpOnOff", type: "OnOffStartUpOnOff",
             access: "RW VM", conformance: "O", quality: "X"
         }),
 
@@ -59,12 +59,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "EffectIdentifier", base: "OnOffEffectIdentifier",
+                    name: "EffectIdentifier", type: "OnOffEffectIdentifier",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "EffectVariant", base: "uint8",
+                    name: "EffectVariant", type: "uint8",
                     conformance: "M"
                 })
             ]
@@ -80,24 +80,24 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "OnOffControl", base: "OnOffControl",
+                    name: "OnOffControl", type: "OnOffControl",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OnTime", base: "uint16",
+                    name: "OnTime", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OffWaitTime", base: "uint16",
+                    name: "OffWaitTime", type: "uint16",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "OnOffStartUpOnOff", base: "enum8",
+            name: "OnOffStartUpOnOff", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -118,7 +118,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OnOffEffectIdentifier", base: "enum8",
+            name: "OnOffEffectIdentifier", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -134,7 +134,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OnOffDelayedAllOffEffectVariant", base: "enum8",
+            name: "OnOffDelayedAllOffEffectVariant", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -155,7 +155,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OnOffDyingLightEffectVariant", base: "enum8",
+            name: "OnOffDyingLightEffectVariant", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -166,7 +166,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OnOffControl", base: "map8",
+            name: "OnOffControl", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -177,7 +177,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OnOffFeature", base: "map32",
+            name: "OnOffFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

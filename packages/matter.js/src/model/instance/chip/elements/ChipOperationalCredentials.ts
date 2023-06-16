@@ -15,47 +15,47 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster is used to add or remove Operational Credentials on a Commissionee or Node, as well as manage the associated Fabrics.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "Nocs", base: "list",
+            id: 0x0000, name: "Nocs", type: "list",
             access: "R A", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "NocStruct"
+                    name: "entry", type: "NocStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "Fabrics", base: "list",
+            id: 0x0001, name: "Fabrics", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "FabricDescriptorStruct"
+                    name: "entry", type: "FabricDescriptorStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SupportedFabrics", base: "uint8",
+            id: 0x0002, name: "SupportedFabrics", type: "uint8",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CommissionedFabrics", base: "uint8",
+            id: 0x0003, name: "CommissionedFabrics", type: "uint8",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "TrustedRootCertificates", base: "list",
+            id: 0x0004, name: "TrustedRootCertificates", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "octstr"
+                    name: "entry", type: "octstr"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0005, name: "CurrentFabricIndex", base: "uint8",
+            id: 0x0005, name: "CurrentFabricIndex", type: "uint8",
             conformance: "M"
         }),
 
@@ -64,7 +64,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "M", direction: "request", response: "AttestationResponse",
             children: [
                 DatatypeElement({
-                    name: "AttestationNonce", base: "octstr",
+                    name: "AttestationNonce", type: "octstr",
                     conformance: "M"
                 })
             ]
@@ -75,12 +75,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "AttestationElements", base: "octstr",
+                    name: "AttestationElements", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AttestationSignature", base: "octstr",
+                    name: "AttestationSignature", type: "octstr",
                     conformance: "M"
                 })
             ]
@@ -91,7 +91,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "M", direction: "request", response: "CertificateChainResponse",
             children: [
                 DatatypeElement({
-                    name: "CertificateType", base: "CertificateChainTypeEnum",
+                    name: "CertificateType", type: "CertificateChainTypeEnum",
                     conformance: "M"
                 })
             ]
@@ -102,7 +102,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Certificate", base: "octstr",
+                    name: "Certificate", type: "octstr",
                     conformance: "M"
                 })
             ]
@@ -113,12 +113,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "M", direction: "request", response: "CsrResponse",
             children: [
                 DatatypeElement({
-                    name: "CsrNonce", base: "octstr",
+                    name: "CsrNonce", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "IsForUpdateNoc", base: "bool",
+                    name: "IsForUpdateNoc", type: "bool",
                     conformance: "O"
                 })
             ]
@@ -129,12 +129,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "NocsrElements", base: "octstr",
+                    name: "NocsrElements", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AttestationSignature", base: "octstr",
+                    name: "AttestationSignature", type: "octstr",
                     conformance: "M"
                 })
             ]
@@ -145,27 +145,27 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "M", direction: "request", response: "NocResponse",
             children: [
                 DatatypeElement({
-                    name: "NocValue", base: "octstr",
+                    name: "NocValue", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "IcacValue", base: "octstr",
+                    name: "IcacValue", type: "octstr",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "IpkValue", base: "octstr",
+                    name: "IpkValue", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "CaseAdminSubject", base: "uint64",
+                    name: "CaseAdminSubject", type: "uint64",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "AdminVendorId", base: "vendor-id",
+                    name: "AdminVendorId", type: "vendor-id",
                     conformance: "M"
                 })
             ]
@@ -176,12 +176,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F A", conformance: "M", direction: "request", response: "NocResponse",
             children: [
                 DatatypeElement({
-                    name: "NocValue", base: "octstr",
+                    name: "NocValue", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "IcacValue", base: "octstr",
+                    name: "IcacValue", type: "octstr",
                     conformance: "O"
                 })
             ]
@@ -192,17 +192,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "StatusCode", base: "NodeOperationalCertStatusEnum",
+                    name: "StatusCode", type: "NodeOperationalCertStatusEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "FabricIndex", base: "fabric-idx",
+                    name: "FabricIndex", type: "fabric-idx",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "DebugText", base: "string",
+                    name: "DebugText", type: "string",
                     conformance: "O"
                 })
             ]
@@ -213,7 +213,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R F A", conformance: "M", direction: "request", response: "NocResponse",
             children: [
                 DatatypeElement({
-                    name: "Label", base: "string",
+                    name: "Label", type: "string",
                     conformance: "M"
                 })
             ]
@@ -224,7 +224,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "M", direction: "request", response: "NocResponse",
             children: [
                 DatatypeElement({
-                    name: "FabricIndex", base: "fabric-idx",
+                    name: "FabricIndex", type: "fabric-idx",
                     conformance: "M"
                 })
             ]
@@ -235,45 +235,45 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "RootCaCertificate", base: "octstr",
+                    name: "RootCaCertificate", type: "octstr",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "FabricDescriptorStruct", base: "struct",
+            name: "FabricDescriptorStruct", type: "struct",
             access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "RootPublicKey", base: "octstr",
+                    name: "RootPublicKey", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "VendorId", base: "vendor-id",
+                    name: "VendorId", type: "vendor-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "FabricId", base: "fabric-id",
+                    name: "FabricId", type: "fabric-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NodeId", base: "node-id",
+                    name: "NodeId", type: "node-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Label", base: "string",
+                    name: "Label", type: "string",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "NodeOperationalCertStatusEnum", base: "enum8",
+            name: "NodeOperationalCertStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -329,23 +329,23 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "NocStruct", base: "struct",
+            name: "NocStruct", type: "struct",
             access: "R F", conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Noc", base: "octstr",
+                    name: "Noc", type: "octstr",
                     access: "R S", conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Icac", base: "octstr",
+                    name: "Icac", type: "octstr",
                     access: "R S", conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "CertificateChainTypeEnum", base: "enum8",
+            name: "CertificateChainTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
