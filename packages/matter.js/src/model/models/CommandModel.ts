@@ -10,7 +10,7 @@ import { ValueModel } from "./ValueModel.js";
 import { Model } from "./Model.js";
 
 export class CommandModel extends ValueModel implements CommandElement {
-    override type: CommandElement.Type = CommandElement.Type;
+    override tag: CommandElement.Tag = CommandElement.Tag;
     override id!: Mei;
     direction?: CommandElement.Direction;
     response?: string
@@ -24,6 +24,6 @@ export class CommandModel extends ValueModel implements CommandElement {
     }
 
     static {
-        Model.constructors[CommandElement.Type] = this;
+        Model.constructors[CommandElement.Tag] = this;
     }
 }

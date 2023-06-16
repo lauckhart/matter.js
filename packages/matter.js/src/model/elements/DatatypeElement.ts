@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType, Mei, Metatype } from "../definitions/index.js";
+import { ElementTag, Mei, Metatype } from "../definitions/index.js";
 import { ValueElement } from "./ValueElement.js";
 import { BaseElement } from "./BaseElement.js";
 
@@ -12,7 +12,7 @@ import { BaseElement } from "./BaseElement.js";
  * A datatype element defines a standalone datatype.
  */
 export type DatatypeElement = ValueElement & {
-    type: `${DatatypeElement.Type}`,
+    tag: `${DatatypeElement.Tag}`,
 
     /**
      * A datatype defined locally within a cluster is referenced by name and
@@ -32,12 +32,12 @@ export type DatatypeElement = ValueElement & {
 }
 
 export function DatatypeElement(definition: DatatypeElement.Properties) {
-    return ValueElement(DatatypeElement.Type, definition) as DatatypeElement;
+    return ValueElement(DatatypeElement.Tag, definition) as DatatypeElement;
 }
 
 export namespace DatatypeElement {
-    export type Type = ElementType.Datatype;
-    export const Type = ElementType.Datatype;
+    export type Tag = ElementTag.Datatype;
+    export const Tag = ElementTag.Datatype;
     export type Properties = BaseElement.Properties<DatatypeElement>;
 
     /**

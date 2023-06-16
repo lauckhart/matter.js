@@ -13,7 +13,7 @@ import { EventModel } from "./EventModel.js";
 import { Model } from "./Model.js";
 
 export class ClusterModel extends Model implements ClusterElement {
-    override type!: ClusterElement.Type;
+    override tag!: ClusterElement.Tag;
     override id!: Mei;
     singleton?: boolean;
     classification?: ClusterElement.Classification;
@@ -47,7 +47,7 @@ export class ClusterModel extends Model implements ClusterElement {
     }
 
     static {
-        Model.constructors[ClusterElement.Type] = this;
+        Model.constructors[ClusterElement.Tag] = this;
     }
 }
 

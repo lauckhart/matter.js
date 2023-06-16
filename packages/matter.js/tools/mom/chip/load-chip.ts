@@ -65,7 +65,7 @@ function installCrossClusterDependencies(elements: MatterElement.Child[]) {
     for (const e of elements) {
         const elementNamespace = new Map<string, BaseElement>();
         for (const c of (e.children || [])) {
-            if (c.type == "datatype") {
+            if (c.tag == "datatype") {
                 globalNamespace.set(c.name, c);
                 elementNamespace.set(c.name, c);
             }

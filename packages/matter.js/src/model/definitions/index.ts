@@ -9,6 +9,6 @@ export * from "./StatusCode.js";
 export * from "./Datatype.js";
 export * from "./Metatype.js";
 export * from "./DefinitionError.js";
-export * from "./ElementType.js";
+export * from "./ElementTag.js";
 export * from "./Specification.js";
 export * from "./FeatureSet.js";

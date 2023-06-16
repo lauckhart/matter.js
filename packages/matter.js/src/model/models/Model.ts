@@ -6,7 +6,7 @@
 
 import { MatterError } from "../../common/index.js";
 import { Logger } from "../../log/index.js";
-import { DefinitionError, ElementType, Specification } from "../definitions/index.js";
+import { DefinitionError, ElementTag, Specification } from "../definitions/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
 
 const CHILDREN = Symbol("children");
@@ -16,7 +16,7 @@ const CHILDREN = Symbol("children");
  * the corresponding element type.
  */
 export abstract class Model implements BaseElement {
-    abstract readonly type: AnyElement["type"];
+    abstract readonly tag: AnyElement["tag"];
     id?: number;
     name!: string;
     description?: string;
@@ -37,7 +37,7 @@ export abstract class Model implements BaseElement {
      * The full path ("." delimited) in the Matter tree.
      */
     get path(): string {
-        if (this.parent && this.parent.type != ElementType.Matter) {
+        if (this.parent && this.parent.tag != ElementTag.Matter) {
             return `${this.parent.path}.${this.name}`;
         } else {
             return this.name;
@@ -96,7 +96,7 @@ export abstract class Model implements BaseElement {
                         } else {
                             newValue.parent = this;
                         }
-                    } else if (typeof newValue != "object" || newValue === null || !newValue.type) {
+                    } else if (typeof newValue != "object" || newValue === null || !newValue.tag) {
                         throw new MatterError("Node child must be Model or AnyElement");
                     }
                 }
@@ -131,10 +131,10 @@ export abstract class Model implements BaseElement {
         if (typeof definition != "object") {
             throw new MatterError(`Model definition must be object, not ${typeof definition}`);
         }
-        const t = definition["type"];
+        const t = definition["tag"];
         const constructor = Model.constructors[t];
         if (!constructor) {
-            throw new MatterError(`Unknown element type "${t}"`);
+            throw new MatterError(`Unknown element tag "${t}"`);
         }
         return new constructor(definition);
     }
@@ -307,8 +307,8 @@ export abstract class Model implements BaseElement {
         }
         const properties = this.valueOf() as any;
 
-        const summary = `${properties.type} ${properties.name}`;
-        delete properties.type;
+        const summary = `${properties.tag} ${properties.name}`;
+        delete properties.tag;
         delete properties.name;
 
         const summaryProps = {} as any;

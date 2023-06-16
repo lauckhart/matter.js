@@ -16,7 +16,7 @@ import { Model } from "./Model.js";
  * The root of a Matter model.
  */
 export class MatterModel extends Model implements MatterElement {
-    override type: MatterElement.Type = MatterElement.Type;
+    override tag: MatterElement.Tag = MatterElement.Tag;
     version?: string;
 
     /**
@@ -68,6 +68,6 @@ export class MatterModel extends Model implements MatterElement {
     }
 
     static {
-        Model.constructors[MatterElement.Type] = this;
+        Model.constructors[MatterElement.Tag] = this;
     }
 }

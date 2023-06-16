@@ -5,7 +5,7 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementType, EventElement } from "../../../src/model/index.js";
+import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementTag, EventElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/index.js";
 import { TypeMap } from "./type-map.js";
 
@@ -214,7 +214,7 @@ function createDataElement<T extends ValueElement>({
     propertyTag,
     propertyIsClass
 }: {
-    factory: ((properties: T) => T) & { Type: ElementType },
+    factory: ((properties: T) => T) & { Type: ElementTag },
     source: Element,
     target: ValueElement,
     isClass?: boolean,
@@ -226,7 +226,7 @@ function createDataElement<T extends ValueElement>({
     logger.debug(`${factory.Type} ${name}`);
 
     let id = int(source.getAttribute("code") || source.getAttribute("value") || source.getAttribute("mask"));
-    if (factory.Type != DatatypeElement.Type) {
+    if (factory.Type != DatatypeElement.Tag) {
         need(`${factory.Type} id`, id);
     }
 

@@ -10,14 +10,14 @@ import { Block } from "../../util/TsFile.js";
 import { wordWrap } from "../../util/string.js";
 
 export function generateElement(target: Block, element: AnyElement, prefix: string = "", suffix = "") {
-    const factory = camelize(`${element.type} element`);
+    const factory = camelize(`${element.tag} element`);
     const block = target.expressions(`${prefix}${factory}({`, `})${suffix}`);
 
     target.file.addImport("../../../elements/index", factory);
 
     const fields = element.valueOf() as { [ name: string ]: any };
     
-    delete fields.type;
+    delete fields.tag;
     delete fields.xref;
     delete fields.children;
     delete fields.details;

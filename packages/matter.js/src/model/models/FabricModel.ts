@@ -9,7 +9,7 @@ import { Model } from "./Model.js";
 import { NodeModel } from "./NodeModel.js";
 
 export class FabricModel extends Model implements FabricElement {
-    override type!: FabricElement.Type;
+    override tag!: FabricElement.Tag;
     override id!: number;
 
     get nodes() {
@@ -29,6 +29,6 @@ export class FabricModel extends Model implements FabricElement {
     }
 
     static {
-        Model.constructors[FabricElement.Type] = this;
+        Model.constructors[FabricElement.Tag] = this;
     }
 }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType, Specification } from "../definitions/index.js";
+import { ElementTag, Specification } from "../definitions/index.js";
 
 /**
  * Per the Matter specification, an element is a data construct that supports
@@ -54,8 +54,8 @@ export type BaseElement = {
     accept?: string[]
 }
 
-export function BaseElement(type: ElementType, definition: BaseElement) {
-    const result: any = { type: type };
+export function BaseElement(tag: ElementTag, definition: BaseElement) {
+    const result: any = { tag: tag };
     for (const [ k, v ] of Object.entries(definition)) {
         if (v !== undefined) {
             result[k] = v;
@@ -70,5 +70,5 @@ export namespace BaseElement {
     /**
      * Element with optional type; used for factory functions and constructors.
      */
-    export type Properties<T extends { type: `${ElementType}` }> = Omit<T, "type"> & Partial<Pick<T, "type">>;
+    export type Properties<T extends { tag: `${ElementTag}` }> = Omit<T, "tag"> & Partial<Pick<T, "tag">>;
 }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementType } from "../definitions/index.js";
+import { ElementTag } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
 import { EndpointElement } from "./EndpointElement.js";
 
@@ -13,16 +13,16 @@ import { EndpointElement } from "./EndpointElement.js";
  */
 export type NodeElement = BaseElement & {
     id: number,
-    type: `${NodeElement.Type}`,    
+    tag: `${NodeElement.Tag}`,    
     children?: EndpointElement[]
 }
 
 export function NodeElement(definition: NodeElement.Properties) {
-    return BaseElement(NodeElement.Type, definition) as NodeElement;
+    return BaseElement(NodeElement.Tag, definition) as NodeElement;
 }
 
 export namespace NodeElement {
-    export type Type = ElementType.Node;
-    export const Type = ElementType.Node;
+    export type Tag = ElementTag.Node;
+    export const Tag = ElementTag.Node;
     export type Properties = BaseElement.Properties<NodeElement>;
 }

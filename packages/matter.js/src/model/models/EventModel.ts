@@ -10,7 +10,7 @@ import { ValueModel } from "./ValueModel.js";
 import { Model } from "./Model.js";
 
 export class EventModel extends ValueModel implements EventElement {
-    override type!: EventElement.Type;
+    override tag!: EventElement.Tag;
     override id!: Mei;
     priority?: EventElement.Priority;
 
@@ -23,6 +23,6 @@ export class EventModel extends ValueModel implements EventElement {
     }
 
     static {
-        Model.constructors[EventElement.Type] = this;
+        Model.constructors[EventElement.Tag] = this;
     }
 }

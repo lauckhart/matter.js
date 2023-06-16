@@ -8,7 +8,7 @@ import { ClusterElement } from "../../elements/index.js";
 import { AttributeModel, ClusterModel, CommandModel, DatatypeModel, EventModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
-ModelValidator.validators[ClusterElement.Type] =
+ModelValidator.validators[ClusterElement.Tag] =
 class DeviceTypeValidator extends ModelValidator<ClusterModel> {
     override validate() {
 
