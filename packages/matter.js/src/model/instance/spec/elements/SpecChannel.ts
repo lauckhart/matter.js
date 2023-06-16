@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -37,19 +37,19 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "ChannelList", base: "list",
+            id: 0x0000, name: "ChannelList", type: "list",
             access: "R V", conformance: "CL", constraint: "None", default: "empty",
             details: "This optional list provides the channels supported",
             xref: { document: "cluster", section: "6.6.3.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "ChannelInfoStruct"
+                    name: "entry", type: "ChannelInfoStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "Lineup", base: "LineupInfoStruct",
+            id: 0x0001, name: "Lineup", type: "LineupInfoStruct",
             access: "R V", conformance: "LI", constraint: "desc", default: "",
             details: "This optional field identifies the channel lineup using external data " +
                      "sources",
@@ -57,7 +57,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "CurrentChannel", base: "ChannelInfoStruct",
+            id: 0x0002, name: "CurrentChannel", type: "ChannelInfoStruct",
             access: "R V", conformance: "O", constraint: "desc", default: undefined, quality: "X",
             details: "This optional field contains the current channel. When supported but a" +
                      " channel is not currently tuned to (if a content application is in " +
@@ -98,12 +98,12 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "ChannelInfoStruct", base: "struct",
+            id: -1, name: "ChannelInfoStruct", type: "struct",
             details: "This indicates a channel in a channel lineup",
             xref: { document: "cluster", section: "6.6.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "MajorNumber", base: "uint16",
+                    id: 0x0000, name: "MajorNumber", type: "uint16",
                     conformance: "M", default: 0,
                     details: "This SHALL indicate the channel major number value (for example, using" +
                              " ATSC format). When the channel number is expressed as a string, such " +
@@ -112,7 +112,7 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "MinorNumber", base: "uint16",
+                    id: 0x0001, name: "MinorNumber", type: "uint16",
                     conformance: "M", default: 0,
                     details: "This SHALL indicate the channel minor number value (for example, using" +
                              " ATSC format). When the channel number is expressed as a string, such " +
@@ -121,7 +121,7 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0002, name: "Name", base: "string",
+                    id: 0x0002, name: "Name", type: "string",
                     conformance: "O", default: "empty",
                     details: "This SHALL indicate the marketing name for the channel, such as “The " +
                              "CW\" or \"Comedy Central\". This field is optional, but SHOULD be " +
@@ -130,7 +130,7 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0003, name: "CallSign", base: "string",
+                    id: 0x0003, name: "CallSign", type: "string",
                     conformance: "O", default: "empty",
                     details: "This SHALL indicate the call sign of the channel, such as \"PBS\". This " +
                              "field is optional, but SHOULD be provided when known",
@@ -138,7 +138,7 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0004, name: "AffiliateCallSign", base: "string",
+                    id: 0x0004, name: "AffiliateCallSign", type: "string",
                     conformance: "O", default: "empty",
                     details: "This SHALL indicate the local affiliate call sign, such as \"KCTS\". " +
                              "This field is optional, but SHOULD be provided when known",

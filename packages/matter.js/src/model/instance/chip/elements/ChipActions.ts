@@ -15,27 +15,27 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to expose action information.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ActionList", base: "list",
+            id: 0x0000, name: "ActionList", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "ActionStruct"
+                    name: "entry", type: "ActionStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "EndpointList", base: "list",
+            id: 0x0001, name: "EndpointList", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "EndpointListStruct"
+                    name: "entry", type: "EndpointListStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SetupUrl", base: "string",
+            id: 0x0002, name: "SetupUrl", type: "string",
             conformance: "O"
         }),
 
@@ -44,12 +44,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 })
             ]
@@ -60,17 +60,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "TransitionTime", base: "uint16",
+                    name: "TransitionTime", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -81,12 +81,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 })
             ]
@@ -97,17 +97,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "Duration", type: "uint32",
                     conformance: "M"
                 })
             ]
@@ -118,12 +118,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 })
             ]
@@ -134,12 +134,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 })
             ]
@@ -150,17 +150,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "Duration", type: "uint32",
                     conformance: "M"
                 })
             ]
@@ -171,12 +171,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 })
             ]
@@ -187,12 +187,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 })
             ]
@@ -203,17 +203,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "Duration", type: "uint32",
                     conformance: "M"
                 })
             ]
@@ -224,12 +224,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 })
             ]
@@ -240,17 +240,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Duration", base: "uint32",
+                    name: "Duration", type: "uint32",
                     conformance: "M"
                 })
             ]
@@ -261,17 +261,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NewState", base: "ActionStateEnum",
+                    name: "NewState", type: "ActionStateEnum",
                     conformance: "M"
                 })
             ]
@@ -282,29 +282,29 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "InvokeId", base: "uint32",
+                    name: "InvokeId", type: "uint32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NewState", base: "ActionStateEnum",
+                    name: "NewState", type: "ActionStateEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Error", base: "ActionErrorEnum",
+                    name: "Error", type: "ActionErrorEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "CommandBits", base: "map16",
+            name: "CommandBits", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -370,7 +370,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ActionErrorEnum", base: "enum8",
+            name: "ActionErrorEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -386,7 +386,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ActionStateEnum", base: "enum8",
+            name: "ActionStateEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -412,7 +412,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ActionTypeEnum", base: "enum8",
+            name: "ActionTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -453,7 +453,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "EndpointListTypeEnum", base: "enum8",
+            name: "EndpointListTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -474,62 +474,62 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ActionStruct", base: "struct",
+            name: "ActionStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "ActionId", base: "uint16",
+                    name: "ActionId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "ActionTypeEnum",
+                    name: "Type", type: "ActionTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "EndpointListId", base: "uint16",
+                    name: "EndpointListId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SupportedCommands", base: "CommandBits",
+                    name: "SupportedCommands", type: "CommandBits",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "State", base: "ActionStateEnum",
+                    name: "State", type: "ActionStateEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "EndpointListStruct", base: "struct",
+            name: "EndpointListStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "EndpointListId", base: "uint16",
+                    name: "EndpointListId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "EndpointListTypeEnum",
+                    name: "Type", type: "EndpointListTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Endpoints", base: "endpoint-no",
+                    name: "Endpoints", type: "endpoint-no",
                     conformance: "M"
                 })
             ]

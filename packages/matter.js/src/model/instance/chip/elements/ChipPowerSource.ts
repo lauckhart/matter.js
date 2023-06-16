@@ -15,171 +15,171 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster is used to describe the configuration and capabilities of a physical power source that provides power to the Node.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "PowerSourceStatus", base: "PowerSourceStatusEnum",
+            id: 0x0000, name: "PowerSourceStatus", type: "PowerSourceStatusEnum",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "PowerSourceOrder", base: "uint8",
+            id: 0x0001, name: "PowerSourceOrder", type: "uint8",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "PowerSourceDescription", base: "string",
+            id: 0x0002, name: "PowerSourceDescription", type: "string",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PowerSourceWiredAssessedInputVoltage", base: "uint32",
+            id: 0x0003, name: "PowerSourceWiredAssessedInputVoltage", type: "uint32",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "PowerSourceWiredAssessedInputFrequency", base: "uint16",
+            id: 0x0004, name: "PowerSourceWiredAssessedInputFrequency", type: "uint16",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "PowerSourceWiredCurrentType", base: "WiredCurrentTypeEnum",
+            id: 0x0005, name: "PowerSourceWiredCurrentType", type: "WiredCurrentTypeEnum",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "PowerSourceWiredAssessedCurrent", base: "uint32",
+            id: 0x0006, name: "PowerSourceWiredAssessedCurrent", type: "uint32",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "PowerSourceWiredNominalVoltage", base: "uint32",
+            id: 0x0007, name: "PowerSourceWiredNominalVoltage", type: "uint32",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "PowerSourceWiredMaximumCurrent", base: "uint32",
+            id: 0x0008, name: "PowerSourceWiredMaximumCurrent", type: "uint32",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0009, name: "PowerSourceWiredPresent", base: "bool",
+            id: 0x0009, name: "PowerSourceWiredPresent", type: "bool",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000a, name: "PowerSourceActiveWiredFaults", base: "list",
+            id: 0x000a, name: "PowerSourceActiveWiredFaults", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "WiredFaultEnum"
+                    name: "entry", type: "WiredFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x000b, name: "PowerSourceBatVoltage", base: "uint32",
+            id: 0x000b, name: "PowerSourceBatVoltage", type: "uint32",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000c, name: "PowerSourceBatPercentRemaining", base: "uint8",
+            id: 0x000c, name: "PowerSourceBatPercentRemaining", type: "uint8",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000d, name: "PowerSourceBatTimeRemaining", base: "uint32",
+            id: 0x000d, name: "PowerSourceBatTimeRemaining", type: "uint32",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x000e, name: "PowerSourceBatChargeLevel", base: "BatChargeLevelEnum",
+            id: 0x000e, name: "PowerSourceBatChargeLevel", type: "BatChargeLevelEnum",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000f, name: "PowerSourceBatReplacementNeeded", base: "bool",
+            id: 0x000f, name: "PowerSourceBatReplacementNeeded", type: "bool",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0010, name: "PowerSourceBatReplaceability", base: "BatReplaceabilityEnum",
+            id: 0x0010, name: "PowerSourceBatReplaceability", type: "BatReplaceabilityEnum",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0011, name: "PowerSourceBatPresent", base: "bool",
+            id: 0x0011, name: "PowerSourceBatPresent", type: "bool",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0012, name: "PowerSourceActiveBatFaults", base: "list",
+            id: 0x0012, name: "PowerSourceActiveBatFaults", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "BatFaultEnum"
+                    name: "entry", type: "BatFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0013, name: "PowerSourceBatReplacementDescription", base: "string",
+            id: 0x0013, name: "PowerSourceBatReplacementDescription", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0014, name: "PowerSourceBatCommonDesignation", base: "BatCommonDesignationEnum",
+            id: 0x0014, name: "PowerSourceBatCommonDesignation", type: "BatCommonDesignationEnum",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0015, name: "PowerSourceBatAnsiDesignation", base: "string",
+            id: 0x0015, name: "PowerSourceBatAnsiDesignation", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0016, name: "PowerSourceBatIecDesignation", base: "string",
+            id: 0x0016, name: "PowerSourceBatIecDesignation", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0017, name: "PowerSourceBatApprovedChemistry", base: "BatApprovedChemistryEnum",
+            id: 0x0017, name: "PowerSourceBatApprovedChemistry", type: "BatApprovedChemistryEnum",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0018, name: "PowerSourceBatCapacity", base: "uint32",
+            id: 0x0018, name: "PowerSourceBatCapacity", type: "uint32",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0019, name: "PowerSourceBatQuantity", base: "uint8",
+            id: 0x0019, name: "PowerSourceBatQuantity", type: "uint8",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001a, name: "PowerSourceBatChargeState", base: "BatChargeStateEnum",
+            id: 0x001a, name: "PowerSourceBatChargeState", type: "BatChargeStateEnum",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001b, name: "PowerSourceBatTimeToFullCharge", base: "uint32",
+            id: 0x001b, name: "PowerSourceBatTimeToFullCharge", type: "uint32",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x001c, name: "PowerSourceBatFunctionalWhileCharging", base: "bool",
+            id: 0x001c, name: "PowerSourceBatFunctionalWhileCharging", type: "bool",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001d, name: "PowerSourceBatChargingCurrent", base: "uint32",
+            id: 0x001d, name: "PowerSourceBatChargingCurrent", type: "uint32",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x001e, name: "PowerSourceActiveBatChargeFaults", base: "list",
+            id: 0x001e, name: "PowerSourceActiveBatChargeFaults", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "BatChargeFaultEnum"
+                    name: "entry", type: "BatChargeFaultEnum"
                 })
             ]
         }),
@@ -189,12 +189,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "WiredFaultEnum",
+                    name: "Current", type: "WiredFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "WiredFaultEnum",
+                    name: "Previous", type: "WiredFaultEnum",
                     conformance: "M"
                 })
             ]
@@ -205,12 +205,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "BatFaultEnum",
+                    name: "Current", type: "BatFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "BatFaultEnum",
+                    name: "Previous", type: "BatFaultEnum",
                     conformance: "M"
                 })
             ]
@@ -221,19 +221,19 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "BatChargeFaultEnum",
+                    name: "Current", type: "BatChargeFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "BatChargeFaultEnum",
+                    name: "Previous", type: "BatChargeFaultEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "PowerSourceFeature", base: "map32",
+            name: "PowerSourceFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -259,7 +259,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "WiredFaultEnum", base: "enum8",
+            name: "WiredFaultEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -280,7 +280,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "BatFaultEnum", base: "enum8",
+            name: "BatFaultEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -301,7 +301,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "BatChargeFaultEnum", base: "enum8",
+            name: "BatChargeFaultEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -362,7 +362,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "PowerSourceStatusEnum", base: "enum8",
+            name: "PowerSourceStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -388,7 +388,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "WiredCurrentTypeEnum", base: "enum8",
+            name: "WiredCurrentTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -404,7 +404,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "BatChargeLevelEnum", base: "enum8",
+            name: "BatChargeLevelEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -425,7 +425,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "BatReplaceabilityEnum", base: "enum8",
+            name: "BatReplaceabilityEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -451,7 +451,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "BatChargeStateEnum", base: "enum8",
+            name: "BatChargeStateEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -477,7 +477,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "BatCommonDesignationEnum", base: "enum16",
+            name: "BatCommonDesignationEnum", type: "enum16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -888,7 +888,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "BatApprovedChemistryEnum", base: "enum16",
+            name: "BatApprovedChemistryEnum", type: "enum16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1059,48 +1059,48 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "WiredFaultChangeType", base: "struct",
+            name: "WiredFaultChangeType", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "WiredFaultEnum",
+                    name: "Current", type: "WiredFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "WiredFaultEnum",
+                    name: "Previous", type: "WiredFaultEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "BatFaultChangeType", base: "struct",
+            name: "BatFaultChangeType", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "BatFaultEnum",
+                    name: "Current", type: "BatFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "BatFaultEnum",
+                    name: "Previous", type: "BatFaultEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "BatChargeFaultChangeType", base: "struct",
+            name: "BatChargeFaultChangeType", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "BatChargeFaultEnum",
+                    name: "Current", type: "BatChargeFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "BatChargeFaultEnum",
+                    name: "Previous", type: "BatChargeFaultEnum",
                     conformance: "M"
                 })
             ]

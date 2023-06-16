@@ -15,7 +15,7 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for managing low power mode on a device that supports the Wake On LAN protocol.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "WakeOnLanMacAddress", base: "string",
+            id: 0x0000, name: "WakeOnLanMacAddress", type: "string",
             conformance: "O"
         })
     ]

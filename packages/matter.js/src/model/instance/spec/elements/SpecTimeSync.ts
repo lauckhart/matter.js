@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -43,7 +43,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "UtcTime", base: "epoch-us",
+            id: 0x0000, name: "UtcTime", type: "epoch-us",
             access: "R V", conformance: "M", default: "null", quality: "X C",
             details: "If the server has achieved time synchronization, this SHALL indicate " +
                      "the current time as a UTC epoch-us (Epoch Time in Microseconds",
@@ -51,7 +51,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "Granularity", base: "GranularityEnum",
+            id: 0x0001, name: "Granularity", type: "GranularityEnum",
             access: "R V", conformance: "M", constraint: "desc", default: 0,
             details: "The granularity of the error that the server is willing to guarantee " +
                      "on the time synchronization. It is of type GranularityEnum",
@@ -59,7 +59,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "TimeSource", base: "TimeSourceEnum",
+            id: 0x0002, name: "TimeSource", type: "TimeSourceEnum",
             access: "R V", conformance: "O", constraint: "desc", default: "None",
             details: "The server’s time source. This attribute indicates what method the " +
                      "server is using to sync, whether the source uses NTS or not and " +
@@ -70,7 +70,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "TrustedTimeNodeId", base: "node-id",
+            id: 0x0003, name: "TrustedTimeNodeId", type: "node-id",
             access: "RW VA", conformance: "M", default: "null", quality: "X",
             details: "The Node ID of a trusted Time Cluster. The TrustedTimeNodeId Node is " +
                      "used as a check on external time sync sources and MAY be used as the " +
@@ -83,7 +83,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "DefaultNtp", base: "string",
+            id: 0x0004, name: "DefaultNtp", type: "string",
             access: "RW VA", conformance: "NTPC", constraint: "max 128", default: "null", quality: "X",
             details: "The default NTP server the server’s Node may use if other time sources" +
                      " are unavailable. This attribute may contain a domain name or a static" +
@@ -96,7 +96,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "TimeZone", base: "list",
+            id: 0x0005, name: "TimeZone", type: "list",
             access: "RW VM", conformance: "TZ", constraint: "1 to 2", default: "{0,0}",
             details: "A list of time zone offsets from UTC and when they SHALL take effect. " +
                      "This attribute uses a list of time offset configurations to allow " +
@@ -106,26 +106,26 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.16.8.6", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "TimeZoneStruct"
+                    name: "entry", type: "TimeZoneStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0006, name: "DstOffset", base: "list",
+            id: 0x0006, name: "DstOffset", type: "list",
             access: "RW VM", conformance: "TZ", constraint: "max 20", default: "{}",
             details: "A list of offsets to apply for daylight savings time, and their " +
                      "validity period. List entries SHALL be sorted by ValidStarting time",
             xref: { document: "core", section: "11.16.8.7", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "DSTOffsetStruct"
+                    name: "entry", type: "DSTOffsetStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0007, name: "LocalTime", base: "epoch-us",
+            id: 0x0007, name: "LocalTime", type: "epoch-us",
             access: "R V", conformance: "TZ", default: 0, quality: "X C",
             details: "The computed current local time of the server as a epoch-us (Epoch " +
                      "Time in Microseconds). The local time offset of the value is the sum " +
@@ -135,7 +135,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0008, name: "TimeZoneDatabase", base: "bool",
+            id: 0x0008, name: "TimeZoneDatabase", type: "bool",
             access: "R V", conformance: "TZ", default: true, quality: "F",
             details: "Indicates whether the server has access to a time zone database. Nodes" +
                      " with a time zone database MAY update their own DSTOffset attribute to" +
@@ -145,7 +145,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0009, name: "NtpServerPort", base: "uint16",
+            id: 0x0009, name: "NtpServerPort", type: "uint16",
             access: "R V", conformance: "NTPS", default: "null", quality: "X",
             details: "If the server is running an NTP server, this value SHALL be the port " +
                      "number for the service. If the server is not currently running an NTP " +
@@ -187,7 +187,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "GranularityEnum", base: "enum8",
+            id: -1, name: "GranularityEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.16.6.1", version: "1.1" },
             children: [

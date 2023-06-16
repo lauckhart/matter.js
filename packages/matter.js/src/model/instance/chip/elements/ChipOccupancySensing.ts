@@ -15,67 +15,67 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring occupancy sensing, and reporting occupancy status.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "Occupancy", base: "OccupancyBitmap",
+            id: 0x0000, name: "Occupancy", type: "OccupancyBitmap",
             conformance: "M", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "OccupancySensorType", base: "OccupancySensorTypeEnum",
+            id: 0x0001, name: "OccupancySensorType", type: "OccupancySensorTypeEnum",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "OccupancySensorTypeBitmap", base: "OccupancySensorTypeBitmap",
+            id: 0x0002, name: "OccupancySensorTypeBitmap", type: "OccupancySensorTypeBitmap",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0010, name: "PirOccupiedToUnoccupiedDelay", base: "uint16",
+            id: 0x0010, name: "PirOccupiedToUnoccupiedDelay", type: "uint16",
             access: "RW VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0011, name: "PirUnoccupiedToOccupiedDelay", base: "uint16",
+            id: 0x0011, name: "PirUnoccupiedToOccupiedDelay", type: "uint16",
             access: "RW VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0012, name: "PirUnoccupiedToOccupiedThreshold", base: "uint8",
+            id: 0x0012, name: "PirUnoccupiedToOccupiedThreshold", type: "uint8",
             access: "RW VM", conformance: "O", default: 1
         }),
 
         AttributeElement({
-            id: 0x0020, name: "UltrasonicOccupiedToUnoccupiedDelay", base: "uint16",
+            id: 0x0020, name: "UltrasonicOccupiedToUnoccupiedDelay", type: "uint16",
             access: "RW VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0021, name: "UltrasonicUnoccupiedToOccupiedDelay", base: "uint16",
+            id: 0x0021, name: "UltrasonicUnoccupiedToOccupiedDelay", type: "uint16",
             access: "RW VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0022, name: "UltrasonicUnoccupiedToOccupiedThreshold", base: "uint8",
+            id: 0x0022, name: "UltrasonicUnoccupiedToOccupiedThreshold", type: "uint8",
             access: "RW VM", conformance: "O", default: 1
         }),
 
         AttributeElement({
-            id: 0x0030, name: "PhysicalContactOccupiedToUnoccupiedDelay", base: "uint16",
+            id: 0x0030, name: "PhysicalContactOccupiedToUnoccupiedDelay", type: "uint16",
             access: "RW VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0031, name: "PhysicalContactUnoccupiedToOccupiedDelay", base: "uint16",
+            id: 0x0031, name: "PhysicalContactUnoccupiedToOccupiedDelay", type: "uint16",
             access: "RW VM", conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0032, name: "PhysicalContactUnoccupiedToOccupiedThreshold", base: "uint8",
+            id: 0x0032, name: "PhysicalContactUnoccupiedToOccupiedThreshold", type: "uint8",
             access: "RW VM", conformance: "O", default: 1
         }),
 
         DatatypeElement({
-            name: "OccupancyBitmap", base: "map8",
+            name: "OccupancyBitmap", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -86,7 +86,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OccupancySensorTypeEnum", base: "enum8",
+            name: "OccupancySensorTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -112,7 +112,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OccupancySensorTypeBitmap", base: "map8",
+            name: "OccupancySensorTypeBitmap", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({

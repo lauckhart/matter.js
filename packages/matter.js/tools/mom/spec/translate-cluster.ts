@@ -190,7 +190,7 @@ function translateFields(desc: string, fields?: DetailedReference) {
     const records = translateTable(desc, fields, {
         id: Integer,
         name: Identifier,
-        base: Alias(NoSpace, "type"),
+        type: NoSpace,
         constraint: Optional(Str),
         quality: Optional(Str),
         default: Optional(NoSpace),
@@ -350,30 +350,30 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             logger.warn(`no text to search for base type`);
         }
         let match = text?.match(/derived from ([a-z0-9\-_]+)/i);
-        let base = match?.[1];
+        let type = match?.[1];
     
         let description: string | undefined;
         let children: DatatypeElement[] | undefined;
-        let translator: undefined | ((entries: DetailedReference, base: string) => DatatypeElement[] | undefined);
+        let translator: undefined | ((entries: DetailedReference, type: string) => DatatypeElement[] | undefined);
     
-        if (name.match(/enum$/i) || base?.match(/^enum/i)) {
-            if (!base) {
+        if (name.match(/enum$/i) || type?.match(/^enum/i)) {
+            if (!type) {
                 logger.warn(`no base detected, guessing enum8`)
-                base = "enum8";
+                type = "enum8";
             }
             translator = translateEnum;
-        } else if (name.match(/bits$/i) || base?.match(/^map/i)) {
-            if (!base) {
+        } else if (name.match(/bits$/i) || type?.match(/^map/i)) {
+            if (!type) {
                 logger.warn(`no base detected, guessing map8`);
-                base = "map8";
+                type = "map8";
             }
             translator = translateBitmap;
         } else if (name.match(/struct$/i)
-            || base == "struct"
+            || type == "struct"
             || (datatype.table?.rows[0].type)
         ) {
-            if (!base) {
-                base = "struct";
+            if (!type) {
+                type = "struct";
             }
             translator = translateStruct;
         } else if (match = name.match(/(.+) \((\S+) type\)/i)) {
@@ -381,7 +381,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             name = match [2];
         }
     
-        if (!base) {
+        if (!type) {
             logger.warn(`no base detected for ${name}`);
             return;
         }
@@ -391,13 +391,13 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
                 logger.warn(`compound datatype has no defining table`);
                 return;
             }
-            children = translator(datatype, base);
+            children = translator(datatype, type);
             if (!children) {
                 return;
             }
         }
     
-        return DatatypeElement({ id: -1, base, name, description, xref: datatype.xref, children: children });
+        return DatatypeElement({ id: -1, type: type, name, description, xref: datatype.xref, children: children });
     }
 }
 

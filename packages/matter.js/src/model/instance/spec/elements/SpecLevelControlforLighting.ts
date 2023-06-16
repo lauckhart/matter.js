@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 5, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -46,7 +46,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "CurrentLevel", base: "uint8",
+            id: 0x0000, name: "CurrentLevel", type: "uint8",
             access: "R V", conformance: "M", constraint: "MinLevel to MaxLevel", default: "null", quality: "X N S",
             details: "The CurrentLevel attribute represents the current level of this device" +
                      ". The meaning of 'level' is device dependent",
@@ -54,7 +54,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "RemainingTime", base: "uint16",
+            id: 0x0001, name: "RemainingTime", type: "uint16",
             access: "R V", conformance: "LT", default: 0,
             details: "The RemainingTime attribute represents the time remaining until the " +
                      "current command is complete - it is specified in 1/10ths of a second",
@@ -62,7 +62,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "MinLevel", base: "uint8",
+            id: 0x0002, name: "MinLevel", type: "uint8",
             access: "R V", conformance: "O", default: "!LT:0LT:1",
             details: "The MinLevel attribute indicates the minimum value of CurrentLevel " +
                      "that is capable of being assigned",
@@ -70,7 +70,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "MaxLevel", base: "uint8",
+            id: 0x0003, name: "MaxLevel", type: "uint8",
             access: "R V", conformance: "O", constraint: "MinLevel to 254", default: 254,
             details: "The MaxLevel attribute indicates the maximum value of CurrentLevel " +
                      "that is capable of being assigned",
@@ -78,7 +78,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "CurrentFrequency", base: "uint16",
+            id: 0x0004, name: "CurrentFrequency", type: "uint16",
             access: "R V", conformance: "FQ", constraint: "MinFrequency to MaxFrequency", default: 0, quality: "S P",
             details: "The CurrentFrequency attribute represents the frequency at which the " +
                      "device is at CurrentLevel. A CurrentFrequency of 0 is unknown",
@@ -86,7 +86,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "MinFrequency", base: "uint16",
+            id: 0x0005, name: "MinFrequency", type: "uint16",
             access: "R V", conformance: "FQ", constraint: "0 to MaxFrequency", default: 0,
             details: "The MinFrequency attribute indicates the minimum value of " +
                      "CurrentFrequency that is capable of being assigned. MinFrequency SHALL" +
@@ -96,7 +96,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "MaxFrequency", base: "uint16",
+            id: 0x0006, name: "MaxFrequency", type: "uint16",
             access: "R V", conformance: "FQ", constraint: "min MinFrequency", default: 0,
             details: "The MaxFrequency attribute indicates the maximum value of " +
                      "CurrentFrequency that is capable of being assigned. MaxFrequency SHALL" +
@@ -106,7 +106,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0010, name: "OnOffTransitionTime", base: "uint16",
+            id: 0x0010, name: "OnOffTransitionTime", type: "uint16",
             access: "RW VO", conformance: "O", default: 0,
             details: "The OnOffTransitionTime attribute represents the time taken to move to" +
                      " or from the target level when On or Off commands are received by an " +
@@ -116,7 +116,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0011, name: "OnLevel", base: "uint8",
+            id: 0x0011, name: "OnLevel", type: "uint8",
             access: "RW VO", conformance: "M", constraint: "MinLevel to MaxLevel", default: "null", quality: "X",
             details: "The OnLevel attribute determines the value that the CurrentLevel " +
                      "attribute is set to when the OnOff attribute of an On/Off cluster on " +
@@ -128,7 +128,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0012, name: "OnTransitionTime", base: "uint16",
+            id: 0x0012, name: "OnTransitionTime", type: "uint16",
             access: "RW VO", conformance: "O", default: "null", quality: "X",
             details: "The OnTransitionTime attribute represents the time taken to move the " +
                      "current level from the minimum level to the maximum level when an On " +
@@ -139,7 +139,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0013, name: "OffTransitionTime", base: "uint16",
+            id: 0x0013, name: "OffTransitionTime", type: "uint16",
             access: "RW VO", conformance: "O", default: "null", quality: "X",
             details: "The OffTransitionTime attribute represents the time taken to move the " +
                      "current level from the maximum level to the minimum level when an Off " +
@@ -150,7 +150,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0014, name: "DefaultMoveRate", base: "uint8",
+            id: 0x0014, name: "DefaultMoveRate", type: "uint8",
             access: "RW VO", conformance: "O", default: "MS", quality: "X",
             details: "The DefaultMoveRate attribute determines the movement rate, in units " +
                      "per second, when a Move command is received with a null value Rate " +
@@ -159,7 +159,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000f, name: "Options", base: "map8",
+            id: 0x000f, name: "Options", type: "map8",
             access: "RW VO", conformance: "M", constraint: "desc", default: 0,
             details: "The Options attribute is meant to be changed only during commissioning" +
                      ". The Options attribute is a bitmap that determines the default " +
@@ -173,7 +173,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x4000, name: "StartUpCurrentLevel", base: "uint8",
+            id: 0x4000, name: "StartUpCurrentLevel", type: "uint8",
             access: "RW VM", conformance: "LT", constraint: "desc", default: "MS", quality: "X N",
             details: "The StartUpCurrentLevel attribute SHALL define the desired startup " +
                      "level for a device when it is supplied with power and this level SHALL" +

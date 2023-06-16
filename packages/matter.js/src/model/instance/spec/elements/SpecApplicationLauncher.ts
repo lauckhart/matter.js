@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -31,7 +31,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "CatalogList", base: "list",
+            id: 0x0000, name: "CatalogList", type: "list",
             access: "R V", conformance: "AP", constraint: "None", default: "", quality: "N",
             details: "This attribute SHALL specify the list of supported application " +
                      "catalogs, where each entry in the list is the CSA-issued vendor ID for" +
@@ -40,13 +40,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "cluster", section: "6.4.3.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "uint16"
+                    name: "entry", type: "uint16"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "CurrentApp", base: "ApplicationEPStruct",
+            id: 0x0001, name: "CurrentApp", type: "ApplicationEPStruct",
             access: "R V", conformance: "O", constraint: "desc", default: "null", quality: "X",
             details: "This attribute SHALL specify the current in-focus application, " +
                      "identified using an Application ID, catalog vendor ID and the " +
@@ -89,7 +89,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "StatusEnum", base: "enum8",
+            id: -1, name: "StatusEnum", type: "enum8",
             details: "StatusEnum Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.4.5.1", version: "1.1" },
             children: [

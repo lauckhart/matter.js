@@ -210,33 +210,33 @@ function createDataElement<T extends ValueElement>({
     source,
     target,
     isClass,
-    base,
+    type,
     propertyTag,
     propertyIsClass
 }: {
-    factory: ((properties: T) => T) & { Type: ElementTag },
+    factory: ((properties: T) => T) & { Tag: ElementTag },
     source: Element,
     target: ValueElement,
     isClass?: boolean,
-    base?: string,
+    type?: string,
     propertyTag?: string,
     propertyIsClass?: boolean
 }): T {
-    let name = camelize(need(`${factory.Type} name`, source.getAttribute("name") || source.getAttribute("define")), isClass);
-    logger.debug(`${factory.Type} ${name}`);
+    let name = camelize(need(`${factory.Tag} name`, source.getAttribute("name") || source.getAttribute("define")), isClass);
+    logger.debug(`${factory.Tag} ${name}`);
 
     let id = int(source.getAttribute("code") || source.getAttribute("value") || source.getAttribute("mask"));
-    if (factory.Type != DatatypeElement.Tag) {
-        need(`${factory.Type} id`, id);
+    if (factory.Tag != DatatypeElement.Tag) {
+        need(`${factory.Tag} id`, id);
     }
 
-    base = mapType(base);
+    type = mapType(type);
 
-    const element = factory({ id: id, name: name, base: base } as T);
+    const element = factory({ id: id, name: name, type: type } as T);
 
     let value = str(source.getAttribute("default"));
     if (value != undefined) {
-        if (element.base?.match(/struct$/i) && value == "0x0") {
+        if (element.type?.match(/struct$/i) && value == "0x0") {
             value = "null";
         }
         element.default = value;
@@ -250,14 +250,14 @@ function createDataElement<T extends ValueElement>({
                 element.children = [];
             }
 
-            const childBase = str(propertyEl.getAttribute("type"));
+            const childType = str(propertyEl.getAttribute("type"));
 
             createDataElement({
                 factory: DatatypeElement,
                 source: propertyEl,
                 target: element,
                 isClass: propertyIsClass,
-                base: childBase
+                type: childType
             });
         })
     }
@@ -270,7 +270,7 @@ function createDataElement<T extends ValueElement>({
     if (!element.children?.length) {
         const entryType = source.getAttribute("entryType");
         if (entryType) {
-            element.children = [ DatatypeElement({ name: "entry", base: mapType(entryType) }) ];
+            element.children = [ DatatypeElement({ name: "entry", type: mapType(entryType) }) ];
         }
     }
 
@@ -285,7 +285,7 @@ const translators: { [name: string]: Translator } = {
             factory: AttributeElement,
             source,
             target,
-            base: need("attribute type", str(source.getAttribute("type")))
+            type: need("attribute type", str(source.getAttribute("type")))
         });
     },
 
@@ -331,7 +331,7 @@ const translators: { [name: string]: Translator } = {
             source,
             target,
             isClass: true,
-            base: str(source.getAttribute("type")) ?? "STRUCT",
+            type: str(source.getAttribute("type")) ?? "STRUCT",
             propertyTag: "item"
         });
     },
@@ -342,7 +342,7 @@ const translators: { [name: string]: Translator } = {
             source,
             target,
             isClass: true,
-            base: need("enum type", str(source.getAttribute("type"))),
+            type: need("enum type", str(source.getAttribute("type"))),
             propertyTag: "item",
             propertyIsClass: true
         })
@@ -354,7 +354,7 @@ const translators: { [name: string]: Translator } = {
             source,
             target,
             isClass: true,
-            base: need("bitmap type", str(source.getAttribute("type"))),
+            type: need("bitmap type", str(source.getAttribute("type"))),
             propertyTag: "field",
             propertyIsClass: true
         })

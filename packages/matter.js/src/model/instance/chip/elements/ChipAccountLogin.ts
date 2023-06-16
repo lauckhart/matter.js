@@ -19,7 +19,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "GetSetupPinResponse",
             children: [
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "string",
+                    name: "TempAccountIdentifier", type: "string",
                     conformance: "M"
                 })
             ]
@@ -30,12 +30,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "TempAccountIdentifier", base: "string",
+                    name: "TempAccountIdentifier", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SetupPin", base: "string",
+                    name: "SetupPin", type: "string",
                     conformance: "M"
                 })
             ]
@@ -51,7 +51,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "SetupPin", base: "string",
+                    name: "SetupPin", type: "string",
                     conformance: "M"
                 })
             ]

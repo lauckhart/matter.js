@@ -15,17 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "An interface for configuring the user interface of a thermostat (which may be remote from the thermostat).",
     children: [
         AttributeElement({
-            id: 0x0000, name: "TemperatureDisplayMode", base: "enum8",
+            id: 0x0000, name: "TemperatureDisplayMode", type: "enum8",
             access: "RW", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0001, name: "KeypadLockout", base: "enum8",
+            id: 0x0001, name: "KeypadLockout", type: "enum8",
             access: "RW VM", conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ScheduleProgrammingVisibility", base: "enum8",
+            id: 0x0002, name: "ScheduleProgrammingVisibility", type: "enum8",
             access: "RW VM", conformance: "O"
         })
     ]

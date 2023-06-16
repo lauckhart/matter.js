@@ -15,182 +15,182 @@ ChipMatter.children!.push(ClusterElement({
     details: "An interface to a generic way to secure a door",
     children: [
         AttributeElement({
-            id: 0x0000, name: "LockState", base: "DlLockState",
+            id: 0x0000, name: "LockState", type: "DlLockState",
             conformance: "M", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "LockType", base: "DlLockType",
+            id: 0x0001, name: "LockType", type: "DlLockType",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ActuatorEnabled", base: "bool",
+            id: 0x0002, name: "ActuatorEnabled", type: "bool",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "DoorState", base: "DoorStateEnum",
+            id: 0x0003, name: "DoorState", type: "DoorStateEnum",
             conformance: "O", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "DoorOpenEvents", base: "uint32",
+            id: 0x0004, name: "DoorOpenEvents", type: "uint32",
             access: "RW VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "DoorClosedEvents", base: "uint32",
+            id: 0x0005, name: "DoorClosedEvents", type: "uint32",
             access: "RW VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "OpenPeriod", base: "uint16",
+            id: 0x0006, name: "OpenPeriod", type: "uint16",
             access: "RW VM", conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0011, name: "NumTotalUsersSupported", base: "uint16",
+            id: 0x0011, name: "NumTotalUsersSupported", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0012, name: "NumPinUsersSupported", base: "uint16",
+            id: 0x0012, name: "NumPinUsersSupported", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0013, name: "NumRfidUsersSupported", base: "uint16",
+            id: 0x0013, name: "NumRfidUsersSupported", type: "uint16",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0014, name: "NumWeekdaySchedulesSupportedPerUser", base: "uint8",
+            id: 0x0014, name: "NumWeekdaySchedulesSupportedPerUser", type: "uint8",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0015, name: "NumYeardaySchedulesSupportedPerUser", base: "uint8",
+            id: 0x0015, name: "NumYeardaySchedulesSupportedPerUser", type: "uint8",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0016, name: "NumHolidaySchedulesSupported", base: "uint8",
+            id: 0x0016, name: "NumHolidaySchedulesSupported", type: "uint8",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0017, name: "MaxPinLength", base: "uint8",
+            id: 0x0017, name: "MaxPinLength", type: "uint8",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0018, name: "MinPinLength", base: "uint8",
+            id: 0x0018, name: "MinPinLength", type: "uint8",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0019, name: "MaxRfidCodeLength", base: "uint8",
+            id: 0x0019, name: "MaxRfidCodeLength", type: "uint8",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001a, name: "MinRfidCodeLength", base: "uint8",
+            id: 0x001a, name: "MinRfidCodeLength", type: "uint8",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x001b, name: "CredentialRulesSupport", base: "DlCredentialRuleMask",
+            id: 0x001b, name: "CredentialRulesSupport", type: "DlCredentialRuleMask",
             conformance: "O", default: 1
         }),
 
         AttributeElement({
-            id: 0x001c, name: "NumCredentialsSupportedPerUser", base: "uint8",
+            id: 0x001c, name: "NumCredentialsSupportedPerUser", type: "uint8",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0021, name: "Language", base: "string",
+            id: 0x0021, name: "Language", type: "string",
             access: "RW VM", conformance: "O", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0022, name: "LedSettings", base: "uint8",
+            id: 0x0022, name: "LedSettings", type: "uint8",
             access: "RW VM", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0023, name: "AutoRelockTime", base: "uint32",
+            id: 0x0023, name: "AutoRelockTime", type: "uint32",
             access: "RW VM", conformance: "M", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0024, name: "SoundVolume", base: "uint8",
+            id: 0x0024, name: "SoundVolume", type: "uint8",
             access: "RW VM", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0025, name: "OperatingMode", base: "OperatingModeEnum",
+            id: 0x0025, name: "OperatingMode", type: "OperatingModeEnum",
             access: "RW VM", conformance: "M", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0026, name: "SupportedOperatingModes", base: "DlSupportedOperatingModes",
+            id: 0x0026, name: "SupportedOperatingModes", type: "DlSupportedOperatingModes",
             conformance: "M", default: 65526
         }),
 
         AttributeElement({
-            id: 0x0027, name: "DefaultConfigurationRegister", base: "DlDefaultConfigurationRegister",
+            id: 0x0027, name: "DefaultConfigurationRegister", type: "DlDefaultConfigurationRegister",
             conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0028, name: "EnableLocalProgramming", base: "bool",
+            id: 0x0028, name: "EnableLocalProgramming", type: "bool",
             access: "RW VA", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0029, name: "EnableOneTouchLocking", base: "bool",
+            id: 0x0029, name: "EnableOneTouchLocking", type: "bool",
             access: "RW VM", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x002a, name: "EnableInsideStatusLed", base: "bool",
+            id: 0x002a, name: "EnableInsideStatusLed", type: "bool",
             access: "RW VM", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x002b, name: "EnablePrivacyModeButton", base: "bool",
+            id: 0x002b, name: "EnablePrivacyModeButton", type: "bool",
             access: "RW VM", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x002c, name: "LocalProgrammingFeatures", base: "DlLocalProgrammingFeatures",
+            id: 0x002c, name: "LocalProgrammingFeatures", type: "DlLocalProgrammingFeatures",
             access: "RW VA", conformance: "O", default: 0, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0030, name: "WrongCodeEntryLimit", base: "uint8",
+            id: 0x0030, name: "WrongCodeEntryLimit", type: "uint8",
             access: "RW VA", conformance: "O", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0031, name: "UserCodeTemporaryDisableTime", base: "uint8",
+            id: 0x0031, name: "UserCodeTemporaryDisableTime", type: "uint8",
             access: "RW VA", conformance: "O", quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0032, name: "SendPinOverTheAir", base: "bool",
+            id: 0x0032, name: "SendPinOverTheAir", type: "bool",
             access: "RW VA", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0033, name: "RequirePinForRemoteOperation", base: "bool",
+            id: 0x0033, name: "RequirePinForRemoteOperation", type: "bool",
             access: "RW VA", conformance: "O", default: true, quality: "P"
         }),
 
         AttributeElement({
-            id: 0x0035, name: "ExpiringUserTimeout", base: "uint16",
+            id: 0x0035, name: "ExpiringUserTimeout", type: "uint16",
             access: "RW VA", conformance: "O", quality: "P"
         }),
 
@@ -199,7 +199,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "PinCode", base: "octstr",
+                    name: "PinCode", type: "octstr",
                     conformance: "O"
                 })
             ]
@@ -210,7 +210,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "PinCode", base: "octstr",
+                    name: "PinCode", type: "octstr",
                     conformance: "O"
                 })
             ]
@@ -221,12 +221,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Timeout", base: "uint16",
+                    name: "Timeout", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "PinCode", base: "octstr",
+                    name: "PinCode", type: "octstr",
                     conformance: "O"
                 })
             ]
@@ -237,37 +237,37 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "WeekDayIndex", base: "uint8",
+                    name: "WeekDayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DaysMask", base: "DaysMaskMap",
+                    name: "DaysMask", type: "DaysMaskMap",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "StartHour", base: "uint8",
+                    name: "StartHour", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "StartMinute", base: "uint8",
+                    name: "StartMinute", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "EndHour", base: "uint8",
+                    name: "EndHour", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "EndMinute", base: "uint8",
+                    name: "EndMinute", type: "uint8",
                     conformance: "M"
                 })
             ]
@@ -278,12 +278,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request", response: "GetWeekDayScheduleResponse",
             children: [
                 DatatypeElement({
-                    name: "WeekDayIndex", base: "uint8",
+                    name: "WeekDayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -294,42 +294,42 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "WeekDayIndex", base: "uint8",
+                    name: "WeekDayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "DlStatus",
+                    name: "Status", type: "DlStatus",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DaysMask", base: "DaysMaskMap",
+                    name: "DaysMask", type: "DaysMaskMap",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "StartHour", base: "uint8",
+                    name: "StartHour", type: "uint8",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "StartMinute", base: "uint8",
+                    name: "StartMinute", type: "uint8",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "EndHour", base: "uint8",
+                    name: "EndHour", type: "uint8",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "EndMinute", base: "uint8",
+                    name: "EndMinute", type: "uint8",
                     conformance: "O"
                 })
             ]
@@ -340,12 +340,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "WeekDayIndex", base: "uint8",
+                    name: "WeekDayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -356,22 +356,22 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "YearDayIndex", base: "uint8",
+                    name: "YearDayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LocalStartTime", base: "epoch-s",
+                    name: "LocalStartTime", type: "epoch-s",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LocalEndTime", base: "epoch-s",
+                    name: "LocalEndTime", type: "epoch-s",
                     conformance: "M"
                 })
             ]
@@ -382,12 +382,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request", response: "GetYearDayScheduleResponse",
             children: [
                 DatatypeElement({
-                    name: "YearDayIndex", base: "uint8",
+                    name: "YearDayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -398,27 +398,27 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "YearDayIndex", base: "uint8",
+                    name: "YearDayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "DlStatus",
+                    name: "Status", type: "DlStatus",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LocalStartTime", base: "epoch-s",
+                    name: "LocalStartTime", type: "epoch-s",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "LocalEndTime", base: "epoch-s",
+                    name: "LocalEndTime", type: "epoch-s",
                     conformance: "O"
                 })
             ]
@@ -429,12 +429,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "YearDayIndex", base: "uint8",
+                    name: "YearDayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -445,22 +445,22 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "HolidayIndex", base: "uint8",
+                    name: "HolidayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LocalStartTime", base: "epoch-s",
+                    name: "LocalStartTime", type: "epoch-s",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LocalEndTime", base: "epoch-s",
+                    name: "LocalEndTime", type: "epoch-s",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OperatingMode", base: "OperatingModeEnum",
+                    name: "OperatingMode", type: "OperatingModeEnum",
                     conformance: "M"
                 })
             ]
@@ -471,7 +471,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request", response: "GetHolidayScheduleResponse",
             children: [
                 DatatypeElement({
-                    name: "HolidayIndex", base: "uint8",
+                    name: "HolidayIndex", type: "uint8",
                     conformance: "M"
                 })
             ]
@@ -482,27 +482,27 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "HolidayIndex", base: "uint8",
+                    name: "HolidayIndex", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Status", base: "DlStatus",
+                    name: "Status", type: "DlStatus",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "LocalStartTime", base: "epoch-s",
+                    name: "LocalStartTime", type: "epoch-s",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "LocalEndTime", base: "epoch-s",
+                    name: "LocalEndTime", type: "epoch-s",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "OperatingMode", base: "OperatingModeEnum",
+                    name: "OperatingMode", type: "OperatingModeEnum",
                     conformance: "O"
                 })
             ]
@@ -513,7 +513,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "HolidayIndex", base: "uint8",
+                    name: "HolidayIndex", type: "uint8",
                     conformance: "M"
                 })
             ]
@@ -524,37 +524,37 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "OperationType", base: "DataOperationTypeEnum",
+                    name: "OperationType", type: "DataOperationTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserName", base: "string",
+                    name: "UserName", type: "string",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "UserUniqueId", base: "uint32",
+                    name: "UserUniqueId", type: "uint32",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "UserStatus", base: "UserStatusEnum",
+                    name: "UserStatus", type: "UserStatusEnum",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "UserType", base: "UserTypeEnum",
+                    name: "UserType", type: "UserTypeEnum",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "CredentialRule", base: "CredentialRuleEnum",
+                    name: "CredentialRule", type: "CredentialRuleEnum",
                     conformance: "M", quality: "X"
                 })
             ]
@@ -565,7 +565,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request", response: "GetUserResponse",
             children: [
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -576,52 +576,52 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserName", base: "string",
+                    name: "UserName", type: "string",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "UserUniqueId", base: "uint32",
+                    name: "UserUniqueId", type: "uint32",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "UserStatus", base: "UserStatusEnum",
+                    name: "UserStatus", type: "UserStatusEnum",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "UserType", base: "UserTypeEnum",
+                    name: "UserType", type: "UserTypeEnum",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "CredentialRule", base: "CredentialRuleEnum",
+                    name: "CredentialRule", type: "CredentialRuleEnum",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "Credentials", base: "CredentialStruct",
+                    name: "Credentials", type: "CredentialStruct",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "CreatorFabricIndex", base: "fabric-idx",
+                    name: "CreatorFabricIndex", type: "fabric-idx",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "LastModifiedFabricIndex", base: "fabric-idx",
+                    name: "LastModifiedFabricIndex", type: "fabric-idx",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "NextUserIndex", base: "uint16",
+                    name: "NextUserIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 })
             ]
@@ -632,7 +632,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M"
                 })
             ]
@@ -643,32 +643,32 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request", response: "SetCredentialResponse",
             children: [
                 DatatypeElement({
-                    name: "OperationType", base: "DataOperationTypeEnum",
+                    name: "OperationType", type: "DataOperationTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Credential", base: "CredentialStruct",
+                    name: "Credential", type: "CredentialStruct",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "CredentialData", base: "octstr",
+                    name: "CredentialData", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "UserStatus", base: "UserStatusEnum",
+                    name: "UserStatus", type: "UserStatusEnum",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "UserType", base: "UserTypeEnum",
+                    name: "UserType", type: "UserTypeEnum",
                     conformance: "M", quality: "X"
                 })
             ]
@@ -679,17 +679,17 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "DlStatus",
+                    name: "Status", type: "DlStatus",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "NextCredentialIndex", base: "uint16",
+                    name: "NextCredentialIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 })
             ]
@@ -700,7 +700,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request", response: "GetCredentialStatusResponse",
             children: [
                 DatatypeElement({
-                    name: "Credential", base: "CredentialStruct",
+                    name: "Credential", type: "CredentialStruct",
                     conformance: "M"
                 })
             ]
@@ -711,27 +711,27 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "CredentialExists", base: "bool",
+                    name: "CredentialExists", type: "bool",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "CreatorFabricIndex", base: "fabric-idx",
+                    name: "CreatorFabricIndex", type: "fabric-idx",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "LastModifiedFabricIndex", base: "fabric-idx",
+                    name: "LastModifiedFabricIndex", type: "fabric-idx",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "NextCredentialIndex", base: "uint16",
+                    name: "NextCredentialIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 })
             ]
@@ -742,7 +742,7 @@ ChipMatter.children!.push(ClusterElement({
             access: "R A", conformance: "O", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Credential", base: "CredentialStruct",
+                    name: "Credential", type: "CredentialStruct",
                     conformance: "M", quality: "X"
                 })
             ]
@@ -753,7 +753,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "AlarmCode", base: "AlarmCodeEnum",
+                    name: "AlarmCode", type: "AlarmCodeEnum",
                     conformance: "M"
                 })
             ]
@@ -764,7 +764,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "DoorState", base: "DoorStateEnum",
+                    name: "DoorState", type: "DoorStateEnum",
                     conformance: "M"
                 })
             ]
@@ -775,32 +775,32 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "LockOperationType", base: "LockOperationTypeEnum",
+                    name: "LockOperationType", type: "LockOperationTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OperationSource", base: "OperationSourceEnum",
+                    name: "OperationSource", type: "OperationSourceEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "FabricIndex", base: "fabric-idx",
+                    name: "FabricIndex", type: "fabric-idx",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "SourceNode", base: "node-id",
+                    name: "SourceNode", type: "node-id",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "Credentials", base: "CredentialStruct",
+                    name: "Credentials", type: "CredentialStruct",
                     conformance: "O", quality: "X"
                 })
             ]
@@ -811,37 +811,37 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "LockOperationType", base: "LockOperationTypeEnum",
+                    name: "LockOperationType", type: "LockOperationTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OperationSource", base: "OperationSourceEnum",
+                    name: "OperationSource", type: "OperationSourceEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OperationError", base: "OperationErrorEnum",
+                    name: "OperationError", type: "OperationErrorEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "FabricIndex", base: "fabric-idx",
+                    name: "FabricIndex", type: "fabric-idx",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "SourceNode", base: "node-id",
+                    name: "SourceNode", type: "node-id",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "Credentials", base: "CredentialStruct",
+                    name: "Credentials", type: "CredentialStruct",
                     conformance: "O", quality: "X"
                 })
             ]
@@ -852,44 +852,44 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "LockDataType", base: "LockDataTypeEnum",
+                    name: "LockDataType", type: "LockDataTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "DataOperationType", base: "DataOperationTypeEnum",
+                    name: "DataOperationType", type: "DataOperationTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OperationSource", base: "OperationSourceEnum",
+                    name: "OperationSource", type: "OperationSourceEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "UserIndex", base: "uint16",
+                    name: "UserIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "FabricIndex", base: "fabric-idx",
+                    name: "FabricIndex", type: "fabric-idx",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "SourceNode", base: "node-id",
+                    name: "SourceNode", type: "node-id",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "DataIndex", base: "uint16",
+                    name: "DataIndex", type: "uint16",
                     conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "AlarmCodeEnum", base: "enum8",
+            name: "AlarmCodeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -935,7 +935,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "CredentialRuleEnum", base: "enum8",
+            name: "CredentialRuleEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -956,7 +956,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlCredentialRuleMask", base: "map8",
+            name: "DlCredentialRuleMask", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -977,23 +977,23 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "CredentialStruct", base: "struct",
+            name: "CredentialStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "CredentialType", base: "CredentialTypeEnum",
+                    name: "CredentialType", type: "CredentialTypeEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "CredentialIndex", base: "uint16",
+                    name: "CredentialIndex", type: "uint16",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "CredentialTypeEnum", base: "enum8",
+            name: "CredentialTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1029,7 +1029,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DataOperationTypeEnum", base: "enum8",
+            name: "DataOperationTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1050,7 +1050,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DaysMaskMap", base: "map8",
+            name: "DaysMaskMap", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1091,7 +1091,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DoorStateEnum", base: "enum8",
+            name: "DoorStateEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1127,7 +1127,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "LockDataTypeEnum", base: "enum8",
+            name: "LockDataTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1188,7 +1188,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "LockOperationTypeEnum", base: "enum8",
+            name: "LockOperationTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1214,7 +1214,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OperationErrorEnum", base: "enum8",
+            name: "OperationErrorEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1245,7 +1245,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OperatingModeEnum", base: "enum8",
+            name: "OperatingModeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1276,7 +1276,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "OperationSourceEnum", base: "enum8",
+            name: "OperationSourceEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1332,7 +1332,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "UserStatusEnum", base: "enum8",
+            name: "UserStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1353,7 +1353,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "UserTypeEnum", base: "enum8",
+            name: "UserTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1409,7 +1409,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlLockState", base: "enum8",
+            name: "DlLockState", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1430,7 +1430,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlLockType", base: "enum8",
+            name: "DlLockType", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1491,7 +1491,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlCredentialRulesSupport", base: "map8",
+            name: "DlCredentialRulesSupport", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1512,7 +1512,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlSupportedOperatingModes", base: "map16",
+            name: "DlSupportedOperatingModes", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1543,7 +1543,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlDefaultConfigurationRegister", base: "map16",
+            name: "DlDefaultConfigurationRegister", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1579,7 +1579,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlLocalProgrammingFeatures", base: "map8",
+            name: "DlLocalProgrammingFeatures", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1605,7 +1605,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlKeypadOperationEventMask", base: "map16",
+            name: "DlKeypadOperationEventMask", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1651,7 +1651,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlRemoteOperationEventMask", base: "map16",
+            name: "DlRemoteOperationEventMask", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1692,7 +1692,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlManualOperationEventMask", base: "map16",
+            name: "DlManualOperationEventMask", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1753,7 +1753,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlRfidOperationEventMask", base: "map16",
+            name: "DlRfidOperationEventMask", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1794,7 +1794,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlKeypadProgrammingEventMask", base: "map16",
+            name: "DlKeypadProgrammingEventMask", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1825,7 +1825,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlRemoteProgrammingEventMask", base: "map16",
+            name: "DlRemoteProgrammingEventMask", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1866,7 +1866,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlRfidProgrammingEventMask", base: "map16",
+            name: "DlRfidProgrammingEventMask", type: "map16",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1887,7 +1887,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DlStatus", base: "enum8",
+            name: "DlStatus", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1928,7 +1928,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DoorLockFeature", base: "map32",
+            name: "DoorLockFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -1994,7 +1994,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DoorLockSetPinOrIdStatus", base: "enum8",
+            name: "DoorLockSetPinOrIdStatus", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -2020,7 +2020,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DoorLockOperationEventCode", base: "enum8",
+            name: "DoorLockOperationEventCode", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -2101,7 +2101,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DoorLockProgrammingEventCode", base: "enum8",
+            name: "DoorLockProgrammingEventCode", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -2142,7 +2142,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DoorLockUserStatus", base: "enum8",
+            name: "DoorLockUserStatus", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -2168,7 +2168,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DoorLockUserType", base: "enum8",
+            name: "DoorLockUserType", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -2204,7 +2204,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "DoorLockDayOfWeek", base: "map8",
+            name: "DoorLockDayOfWeek", type: "map8",
             conformance: "M",
             children: [
                 DatatypeElement({

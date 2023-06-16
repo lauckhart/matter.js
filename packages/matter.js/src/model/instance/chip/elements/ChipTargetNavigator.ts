@@ -15,17 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for UX navigation within a set of targets on a device or endpoint.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "TargetNavigatorList", base: "list",
+            id: 0x0000, name: "TargetNavigatorList", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "TargetInfoStruct"
+                    name: "entry", type: "TargetInfoStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "TargetNavigatorCurrentTarget", base: "uint8",
+            id: 0x0001, name: "TargetNavigatorCurrentTarget", type: "uint8",
             conformance: "O", default: 0
         }),
 
@@ -34,12 +34,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "NavigateTargetResponse",
             children: [
                 DatatypeElement({
-                    name: "Target", base: "uint8",
+                    name: "Target", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "Data", type: "string",
                     conformance: "O"
                 })
             ]
@@ -50,19 +50,19 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "TargetNavigatorStatusEnum",
+                    name: "Status", type: "TargetNavigatorStatusEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "Data", type: "string",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "TargetNavigatorStatusEnum", base: "enum8",
+            name: "TargetNavigatorStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -83,16 +83,16 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "TargetInfoStruct", base: "struct",
+            name: "TargetInfoStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Identifier", base: "uint8",
+                    name: "Identifier", type: "uint8",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "M"
                 })
             ]

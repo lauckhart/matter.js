@@ -15,107 +15,107 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides attributes and events for determining basic information about Nodes, which supports both Commissioning and operational determination of Node characteristics, such as Vendor ID, Product ID and serial number, which apply to the whole Node. Also allows setting user device information such as location.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "DataModelRevision", base: "uint16",
+            id: 0x0000, name: "DataModelRevision", type: "uint16",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "VendorName", base: "string",
+            id: 0x0001, name: "VendorName", type: "string",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "VendorId", base: "vendor-id",
+            id: 0x0002, name: "VendorId", type: "vendor-id",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ProductName", base: "string",
+            id: 0x0003, name: "ProductName", type: "string",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "ProductId", base: "uint16",
+            id: 0x0004, name: "ProductId", type: "uint16",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "NodeLabel", base: "string",
+            id: 0x0005, name: "NodeLabel", type: "string",
             access: "RW VM", conformance: "M", default: ""
         }),
 
         AttributeElement({
-            id: 0x0006, name: "Location", base: "string",
+            id: 0x0006, name: "Location", type: "string",
             access: "RW VA", conformance: "M", default: "XX"
         }),
 
         AttributeElement({
-            id: 0x0007, name: "HardwareVersion", base: "uint16",
+            id: 0x0007, name: "HardwareVersion", type: "uint16",
             conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0008, name: "HardwareVersionString", base: "string",
+            id: 0x0008, name: "HardwareVersionString", type: "string",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0009, name: "SoftwareVersion", base: "uint32",
+            id: 0x0009, name: "SoftwareVersion", type: "uint32",
             conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x000a, name: "SoftwareVersionString", base: "string",
+            id: 0x000a, name: "SoftwareVersionString", type: "string",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x000b, name: "ManufacturingDate", base: "string",
+            id: 0x000b, name: "ManufacturingDate", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000c, name: "PartNumber", base: "string",
+            id: 0x000c, name: "PartNumber", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000d, name: "ProductUrl", base: "string",
+            id: 0x000d, name: "ProductUrl", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000e, name: "ProductLabel", base: "string",
+            id: 0x000e, name: "ProductLabel", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x000f, name: "SerialNumber", base: "string",
+            id: 0x000f, name: "SerialNumber", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0010, name: "LocalConfigDisabled", base: "bool",
+            id: 0x0010, name: "LocalConfigDisabled", type: "bool",
             access: "RW VM", conformance: "O", default: true
         }),
 
         AttributeElement({
-            id: 0x0011, name: "Reachable", base: "bool",
+            id: 0x0011, name: "Reachable", type: "bool",
             conformance: "O", default: true
         }),
 
         AttributeElement({
-            id: 0x0012, name: "UniqueId", base: "string",
+            id: 0x0012, name: "UniqueId", type: "string",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0013, name: "CapabilityMinima", base: "CapabilityMinimaStruct",
+            id: 0x0013, name: "CapabilityMinima", type: "CapabilityMinimaStruct",
             conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0014, name: "ProductAppearance", base: "ProductAppearanceStruct",
+            id: 0x0014, name: "ProductAppearance", type: "ProductAppearanceStruct",
             conformance: "O"
         }),
 
@@ -124,7 +124,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "SoftwareVersion", base: "uint32",
+                    name: "SoftwareVersion", type: "uint32",
                     conformance: "M"
                 })
             ]
@@ -140,7 +140,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "FabricIndex", base: "fabric-idx",
+                    name: "FabricIndex", type: "fabric-idx",
                     conformance: "M"
                 })
             ]
@@ -151,30 +151,30 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "info",
             children: [
                 DatatypeElement({
-                    name: "ReachableNewValue", base: "bool",
+                    name: "ReachableNewValue", type: "bool",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "CapabilityMinimaStruct", base: "struct",
+            name: "CapabilityMinimaStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "CaseSessionsPerFabric", base: "uint16",
+                    name: "CaseSessionsPerFabric", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "SubscriptionsPerFabric", base: "uint16",
+                    name: "SubscriptionsPerFabric", type: "uint16",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "ProductFinishEnum", base: "enum8",
+            name: "ProductFinishEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -210,7 +210,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ColorEnum", base: "enum8",
+            name: "ColorEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -321,16 +321,16 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ProductAppearanceStruct", base: "struct",
+            name: "ProductAppearanceStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Finish", base: "ProductFinishEnum",
+                    name: "Finish", type: "ProductFinishEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "PrimaryColor", base: "ColorEnum",
+                    name: "PrimaryColor", type: "ColorEnum",
                     conformance: "M", quality: "X"
                 })
             ]

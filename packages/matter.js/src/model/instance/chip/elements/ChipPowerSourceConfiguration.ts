@@ -15,11 +15,11 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster is used to describe the configuration and capabilities of a Device's power system.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "Sources", base: "list",
+            id: 0x0000, name: "Sources", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "uint8"
+                    name: "entry", type: "uint8"
                 })
             ]
         })

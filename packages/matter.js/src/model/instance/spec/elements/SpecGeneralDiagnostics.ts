@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "NetworkInterfaces", base: "list",
+            id: 0x0000, name: "NetworkInterfaces", type: "list",
             access: "R V", conformance: "M", constraint: "max 8", default: "",
             details: "The NetworkInterfaces attribute SHALL be a list of NetworkInterface " +
                      "structs. Each logical network interface on the Node SHALL be " +
@@ -32,13 +32,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.11.6.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "NetworkInterface"
+                    name: "entry", type: "NetworkInterface"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "RebootCount", base: "uint16",
+            id: 0x0001, name: "RebootCount", type: "uint16",
             access: "R V", conformance: "M", default: 0, quality: "N",
             details: "The RebootCount attribute SHALL indicate a best-effort count of the " +
                      "number of times the Node has rebooted. The RebootCount attribute " +
@@ -50,7 +50,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "UpTime", base: "uint64",
+            id: 0x0002, name: "UpTime", type: "uint64",
             access: "R V", conformance: "O", default: 0, quality: "C",
             details: "The UpTime attribute SHALL indicate a best-effort assessment of the " +
                      "length of time, in seconds, since the Node’s last reboot. The UpTime " +
@@ -61,7 +61,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "TotalOperationalHours", base: "uint32",
+            id: 0x0003, name: "TotalOperationalHours", type: "uint32",
             access: "R V", conformance: "O", default: 0, quality: "N C",
             details: "The TotalOperationalHours attribute SHALL indicate a best-effort " +
                      "attempt at tracking the length of time, in hours, that the Node has " +
@@ -72,7 +72,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "BootReason", base: "BootReasonEnum",
+            id: 0x0004, name: "BootReason", type: "BootReasonEnum",
             access: "R V", conformance: "O", default: "",
             details: "The BootReason attribute SHALL indicate the reason for the Node’s most" +
                      " recent boot",
@@ -80,7 +80,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "ActiveHardwareFaults", base: "list",
+            id: 0x0005, name: "ActiveHardwareFaults", type: "list",
             access: "R V", conformance: "O", constraint: "max 11", default: "",
             details: "The ActiveHardwareFaults attribute SHALL indicate the set of faults " +
                      "currently detected by the Node. When the Node detects a fault has been" +
@@ -96,13 +96,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.11.6.6", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "HardwareFaultEnum"
+                    name: "entry", type: "HardwareFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0006, name: "ActiveRadioFaults", base: "list",
+            id: 0x0006, name: "ActiveRadioFaults", type: "list",
             access: "R V", conformance: "O", constraint: "max 7", default: "",
             details: "The ActiveRadioFaults attribute SHALL indicate the set of faults " +
                      "currently detected by the Node. When the Node detects a fault has been" +
@@ -118,13 +118,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.11.6.7", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "RadioFaultEnum"
+                    name: "entry", type: "RadioFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0007, name: "ActiveNetworkFaults", base: "list",
+            id: 0x0007, name: "ActiveNetworkFaults", type: "list",
             access: "R V", conformance: "O", constraint: "max 4", default: "",
             details: "The ActiveNetworkFaults attribute SHALL indicate the set of faults " +
                      "currently detected by the Node. When the Node detects a fault has been" +
@@ -140,13 +140,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.11.6.8", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "NetworkFaultEnum"
+                    name: "entry", type: "NetworkFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0008, name: "TestEventTriggersEnabled", base: "bool",
+            id: 0x0008, name: "TestEventTriggersEnabled", type: "bool",
             access: "R V", conformance: "M", default: false,
             details: "The TestEventTriggersEnabled attribute SHALL indicate whether the Node" +
                      " has any TestEventTrigger configured. When this attribute is true, the" +
@@ -205,7 +205,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "HardwareFaultEnum", base: "enum8",
+            id: -1, name: "HardwareFaultEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.11.4.1", version: "1.1" },
             children: [

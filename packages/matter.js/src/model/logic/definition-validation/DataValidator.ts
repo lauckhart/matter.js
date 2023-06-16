@@ -42,7 +42,7 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
     }
 
     private validateType() {
-        if (this.model.actualBase == undefined) {
+        if (this.model.actualType == undefined) {
             if ((Globals as any)[this.model.name]) {
                 // Not a derivative type
                 return;
@@ -55,13 +55,13 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
         
         const base = this.model.baseModel;
         if (base == undefined) {
-            this.error("TYPE_UNKOWN", `Unknown type ${this.model.base}`);
+            this.error("TYPE_UNKOWN", `Unknown type ${this.model.type}`);
             return;
         }
 
         const metatype = this.model.metaBase?.metatype;
         if (metatype == undefined) {
-            this.error("METATYPE_UNKOWN", `No metatype for ${this.model.base}`);
+            this.error("METATYPE_UNKOWN", `No metatype for ${this.model.type}`);
             return;
         }
 
@@ -73,7 +73,7 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
                     switch (this.model.parent.metaBase?.metatype) {
                         case Metatype.enum:
                         case Metatype.bitmap:
-                            this.error("MISSING_ITEM_ID", `No ID for ${this.model.parent.base} child`)
+                            this.error("MISSING_ITEM_ID", `No ID for ${this.model.parent.type} child`)
                     }
                 }
             }
@@ -97,7 +97,7 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
                 if (member) {
                     this.model.default = member.id;
                 } else {
-                    this.error("INVALID_ENTRY", `"${value}" is not in ${metatype} ${this.model.base}`);
+                    this.error("INVALID_ENTRY", `"${value}" is not in ${metatype} ${this.model.type}`);
                 }
             }
         }
@@ -106,7 +106,7 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
     private validateEntries() {
         // Note - these checks only apply for first-order derived types so
         // only apply for specific bases
-        switch (this.model.base) {
+        switch (this.model.type) {
             case Datatype.struct:
                 if (this.model.metatype || !this.model.children.length) {
                     this.error("CHILDLESS_STRUCT", `struct element with no children`);
@@ -130,8 +130,8 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
                     }
 
                     this.error(
-                        `CHILDLESS_${this.model.base.toUpperCase()}`,
-                        `${this.model.base} with no children`);
+                        `CHILDLESS_${this.model.type.toUpperCase()}`,
+                        `${this.model.type} with no children`);
                 }
                 const ids = new Set<number>();
                 const names = new Set<string>();
@@ -139,16 +139,16 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
                     if (c.id) {
                         if (ids.has(c.id)) {
                             this.error(
-                                `DUPLICATE_${this.model.base.toUpperCase()}_ID`,
-                                `${this.model.base} ID 0x${c.id.toString(16)} appears more than once`);
+                                `DUPLICATE_${this.model.type.toUpperCase()}_ID`,
+                                `${this.model.type} ID 0x${c.id.toString(16)} appears more than once`);
                         } else {
                             ids.add(c.id);
                         }
                     }
                     if (names.has(c.name)) {
                         this.error(
-                            `DUPLICATE_${this.model.base.toUpperCase()}_NAME`,
-                            `${this.model.base} name "${c.name}" appears more than once`)
+                            `DUPLICATE_${this.model.type.toUpperCase()}_NAME`,
+                            `${this.model.type} name "${c.name}" appears more than once`)
                     }
                 }
                 break;

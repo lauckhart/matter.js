@@ -13,15 +13,15 @@ export class DatatypeModel extends ValueModel implements DatatypeElement {
     override tag: DatatypeElement.Tag = DatatypeElement.Tag;
     override id?: Mei;
 
-    override get actualBase() {
-        const base = super.actualBase;
+    override get actualType() {
+        const base = super.actualType;
         if (base || !(this.parent instanceof DatatypeModel)) {
             return base;
         }
 
         // If this is an untyped item parented by an enum or bitmap, infer
         // the base type as the corresponding unsigned integer type
-        switch (this.parent.base) {
+        switch (this.parent.type) {
             case "enum8":
             case Datatype.map8:
                 return Datatype.uint8;

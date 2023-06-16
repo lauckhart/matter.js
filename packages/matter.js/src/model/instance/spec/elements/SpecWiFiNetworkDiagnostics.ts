@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -37,7 +37,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "Bssid", base: "octstr",
+            id: 0x0000, name: "Bssid", type: "octstr",
             access: "R V", conformance: "M", constraint: "6", default: "null", quality: "X",
             details: "The BSSID attribute SHALL indicate the BSSID for which the Wi-Fi " +
                      "network the Node is currently connected",
@@ -45,7 +45,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "SecurityType", base: "SecurityTypeEnum",
+            id: 0x0001, name: "SecurityType", type: "SecurityTypeEnum",
             access: "R V", conformance: "M", default: "null", quality: "X",
             details: "The SecurityType attribute SHALL indicate the current type of Wi-Fi " +
                      "security used",
@@ -53,7 +53,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "WiFiVersion", base: "WiFiVersionEnum",
+            id: 0x0002, name: "WiFiVersion", type: "WiFiVersionEnum",
             access: "R V", conformance: "M", default: "null", quality: "X",
             details: "The WiFiVersion attribute SHALL indicate the current 802.11 standard " +
                      "version in use by the Node, per the table below",
@@ -61,7 +61,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ChannelNumber", base: "uint16",
+            id: 0x0003, name: "ChannelNumber", type: "uint16",
             access: "R V", conformance: "M", default: "null", quality: "X",
             details: "The ChannelNumber attribute SHALL indicate the channel that Wi-Fi " +
                      "communication is currently operating on",
@@ -69,7 +69,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "Rssi", base: "int8",
+            id: 0x0004, name: "Rssi", type: "int8",
             access: "R V", conformance: "M", constraint: "-120 to 0", default: "null", quality: "X C",
             details: "The RSSI attribute SHALL indicate the current RSSI of the Node’s Wi-Fi" +
                      " radio in dBm",
@@ -77,7 +77,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "BeaconLostCount", base: "uint32",
+            id: 0x0005, name: "BeaconLostCount", type: "uint32",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "X C",
             details: "The BeaconLostCount attribute SHALL indicate the count of the number " +
                      "of missed beacons the Node has detected. If the Node does not have an " +
@@ -87,7 +87,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "BeaconRxCount", base: "uint32",
+            id: 0x0006, name: "BeaconRxCount", type: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
             details: "The BeaconRxCount attribute SHALL indicate the count of the number of " +
                      "received beacons. The total number of expected beacons that could have" +
@@ -99,7 +99,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0007, name: "PacketMulticastRxCount", base: "uint32",
+            id: 0x0007, name: "PacketMulticastRxCount", type: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
             details: "The PacketMulticastRxCount attribute SHALL indicate the number of " +
                      "multicast packets received by",
@@ -107,7 +107,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0008, name: "PacketMulticastTxCount", base: "uint32",
+            id: 0x0008, name: "PacketMulticastTxCount", type: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
             details: "The PacketMulticastTxCount attribute SHALL indicate the number of " +
                      "multicast packets transmitted by the Node",
@@ -115,7 +115,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0009, name: "PacketUnicastRxCount", base: "uint32",
+            id: 0x0009, name: "PacketUnicastRxCount", type: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
             details: "The PacketUnicastRxCount attribute SHALL indicate the number of " +
                      "unicast packets received by the Node",
@@ -123,7 +123,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000a, name: "PacketUnicastTxCount", base: "uint32",
+            id: 0x000a, name: "PacketUnicastTxCount", type: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
             details: "The PacketUnicastTxCount attribute SHALL indicate the number of " +
                      "unicast packets transmitted by the Node",
@@ -131,7 +131,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000b, name: "CurrentMaxRate", base: "uint64",
+            id: 0x000b, name: "CurrentMaxRate", type: "uint64",
             access: "R V", conformance: "O", default: 0, quality: "X C",
             details: "The CurrentMaxRate attribute SHALL indicate the current maximum PHY " +
                      "rate of transfer of data in bits-per-second",
@@ -139,7 +139,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000c, name: "OverrunCount", base: "uint64",
+            id: 0x000c, name: "OverrunCount", type: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "X C",
             details: "The OverrunCount attribute SHALL indicate the number of packets " +
                      "dropped either at ingress or egress, due to lack of buffer memory to " +
@@ -185,7 +185,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "SecurityTypeEnum", base: "enum8",
+            id: -1, name: "SecurityTypeEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.14.5.1", version: "1.1" },
             children: [

@@ -15,37 +15,37 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media device such as a TV or Speaker.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "MediaPlaybackState", base: "PlaybackStateEnum",
+            id: 0x0000, name: "MediaPlaybackState", type: "PlaybackStateEnum",
             conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0001, name: "MediaPlaybackStartTime", base: "epoch-us",
+            id: 0x0001, name: "MediaPlaybackStartTime", type: "epoch-us",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "MediaPlaybackDuration", base: "uint64",
+            id: 0x0002, name: "MediaPlaybackDuration", type: "uint64",
             conformance: "O", default: 0, quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "MediaPlaybackPlaybackPosition", base: "PlaybackPositionStruct",
+            id: 0x0003, name: "MediaPlaybackPlaybackPosition", type: "PlaybackPositionStruct",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0004, name: "MediaPlaybackPlaybackSpeed", base: "single",
+            id: 0x0004, name: "MediaPlaybackPlaybackSpeed", type: "single",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0005, name: "MediaPlaybackPlaybackSeekRangeEnd", base: "uint64",
+            id: 0x0005, name: "MediaPlaybackPlaybackSeekRangeEnd", type: "uint64",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0006, name: "MediaPlaybackPlaybackSeekRangeStart", base: "uint64",
+            id: 0x0006, name: "MediaPlaybackPlaybackSeekRangeStart", type: "uint64",
             conformance: "O", quality: "X"
         }),
 
@@ -94,7 +94,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "DeltaPositionMilliseconds", base: "uint64",
+                    name: "DeltaPositionMilliseconds", type: "uint64",
                     conformance: "M"
                 })
             ]
@@ -105,7 +105,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "DeltaPositionMilliseconds", base: "uint64",
+                    name: "DeltaPositionMilliseconds", type: "uint64",
                     conformance: "M"
                 })
             ]
@@ -116,7 +116,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", direction: "request", response: "PlaybackResponse",
             children: [
                 DatatypeElement({
-                    name: "Position", base: "uint64",
+                    name: "Position", type: "uint64",
                     conformance: "M"
                 })
             ]
@@ -127,35 +127,35 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "MediaPlaybackStatusEnum",
+                    name: "Status", type: "MediaPlaybackStatusEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "string",
+                    name: "Data", type: "string",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "PlaybackPositionStruct", base: "struct",
+            name: "PlaybackPositionStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "UpdatedAt", base: "epoch-us",
+                    name: "UpdatedAt", type: "epoch-us",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Position", base: "uint64",
+                    name: "Position", type: "uint64",
                     conformance: "M", quality: "X"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "PlaybackStateEnum", base: "enum8",
+            name: "PlaybackStateEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -181,7 +181,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "MediaPlaybackStatusEnum", base: "enum8",
+            name: "MediaPlaybackStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -217,7 +217,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "MediaPlaybackFeature", base: "map32",
+            name: "MediaPlaybackFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

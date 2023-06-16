@@ -15,47 +15,47 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "PhyRate", base: "PhyRateEnum",
+            id: 0x0000, name: "PhyRate", type: "PhyRateEnum",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "FullDuplex", base: "bool",
+            id: 0x0001, name: "FullDuplex", type: "bool",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "PacketRxCount", base: "uint64",
+            id: 0x0002, name: "PacketRxCount", type: "uint64",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PacketTxCount", base: "uint64",
+            id: 0x0003, name: "PacketTxCount", type: "uint64",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0004, name: "TxErrCount", base: "uint64",
+            id: 0x0004, name: "TxErrCount", type: "uint64",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0005, name: "CollisionCount", base: "uint64",
+            id: 0x0005, name: "CollisionCount", type: "uint64",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0006, name: "EthernetOverrunCount", base: "uint64",
+            id: 0x0006, name: "EthernetOverrunCount", type: "uint64",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0007, name: "CarrierDetect", base: "bool",
+            id: 0x0007, name: "CarrierDetect", type: "bool",
             conformance: "O", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0008, name: "TimeSinceReset", base: "uint64",
+            id: 0x0008, name: "TimeSinceReset", type: "uint64",
             conformance: "O", default: 0
         }),
 
@@ -65,7 +65,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "PhyRateEnum", base: "enum8",
+            name: "PhyRateEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -121,7 +121,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "EthernetNetworkDiagnosticsFeature", base: "map32",
+            name: "EthernetNetworkDiagnosticsFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

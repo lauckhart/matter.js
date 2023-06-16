@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "ActiveLocale", base: "string",
+            id: 0x0000, name: "ActiveLocale", type: "string",
             access: "RW VM", conformance: "M", constraint: "max 35", default: "MS", quality: "N",
             details: "The ActiveLocale attribute SHALL represent the locale that the Node is" +
                      " currently configured to use when conveying information. The " +
@@ -36,7 +36,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "SupportedLocales", base: "list",
+            id: 0x0001, name: "SupportedLocales", type: "list",
             access: "R V", conformance: "M", constraint: "max 32[max 35]", default: "MS", quality: "F",
             details: "The SupportedLocales attribute SHALL represent a list of locale " +
                      "strings that are valid values for the ActiveLocale attribute. The list" +
@@ -45,7 +45,7 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.3.4.2", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "string"
+                    name: "entry", type: "string"
                 })
             ]
         })

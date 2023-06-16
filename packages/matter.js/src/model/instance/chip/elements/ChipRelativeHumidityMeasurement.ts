@@ -15,22 +15,22 @@ ChipMatter.children!.push(ClusterElement({
     details: "Attributes and commands for configuring the measurement of relative humidity, and reporting relative humidity measurements.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "RelativeHumidityMeasuredValue", base: "uint16",
+            id: 0x0000, name: "RelativeHumidityMeasuredValue", type: "uint16",
             conformance: "M", quality: "X P"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "RelativeHumidityMinMeasuredValue", base: "uint16",
+            id: 0x0001, name: "RelativeHumidityMinMeasuredValue", type: "uint16",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0002, name: "RelativeHumidityMaxMeasuredValue", base: "uint16",
+            id: 0x0002, name: "RelativeHumidityMaxMeasuredValue", type: "uint16",
             conformance: "M", quality: "X"
         }),
 
         AttributeElement({
-            id: 0x0003, name: "RelativeHumidityTolerance", base: "uint16",
+            id: 0x0003, name: "RelativeHumidityTolerance", type: "uint16",
             conformance: "O"
         })
     ]

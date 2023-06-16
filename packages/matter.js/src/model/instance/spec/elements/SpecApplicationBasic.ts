@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "VendorName", base: "string",
+            id: 0x0000, name: "VendorName", type: "string",
             access: "R V", conformance: "O", constraint: "max 32", default: "empty", quality: "F",
             details: "This attribute SHALL specify a human readable (displayable) name of " +
                      "the vendor for the Content App",
@@ -32,7 +32,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "VendorId", base: "vendor-id",
+            id: 0x0001, name: "VendorId", type: "vendor-id",
             access: "R V", conformance: "O", default: 0, quality: "F",
             details: "This attribute, if present, SHALL specify the Connectivity Standards " +
                      "Alliance assigned Vendor ID for the Content App",
@@ -40,7 +40,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ApplicationName", base: "string",
+            id: 0x0002, name: "ApplicationName", type: "string",
             access: "R V", conformance: "M", constraint: "desc", default: "", quality: "F",
             details: "This attribute SHALL specify a human readable (displayable) name of " +
                      "the Content App assigned by the vendor. For example, \"NPR On Demand\". " +
@@ -50,7 +50,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ProductId", base: "uint16",
+            id: 0x0003, name: "ProductId", type: "uint16",
             access: "R V", conformance: "O", default: 0, quality: "F",
             details: "This attribute, if present, SHALL specify a numeric ID assigned by the" +
                      " vendor to identify a specific Content App made by them. If the " +
@@ -61,7 +61,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "Application", base: "ApplicationStruct",
+            id: 0x0004, name: "Application", type: "ApplicationStruct",
             access: "R V", conformance: "M", constraint: "desc", default: "", quality: "F",
             details: "This attribute SHALL specify a Content App which consists of an " +
                      "Application ID using a specified catalog",
@@ -69,7 +69,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "Status", base: "ApplicationStatusEnum",
+            id: 0x0005, name: "Status", type: "ApplicationStatusEnum",
             access: "R V", conformance: "M", constraint: "desc", default: "ms",
             details: "This attribute SHALL specify the current running status of the " +
                      "application",
@@ -77,7 +77,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "ApplicationVersion", base: "string",
+            id: 0x0006, name: "ApplicationVersion", type: "string",
             access: "R V", conformance: "M", constraint: "max 32", default: "", quality: "F",
             details: "This attribute SHALL specify a human readable (displayable) version of" +
                      " the Content App assigned by the vendor. The maximum length of the " +
@@ -86,24 +86,24 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0007, name: "AllowedVendorList", base: "list",
+            id: 0x0007, name: "AllowedVendorList", type: "list",
             access: "R A", conformance: "M", constraint: "None", default: "", quality: "F",
             details: "This is a list of vendor IDs. Each entry is a vendor-id",
             xref: { document: "cluster", section: "6.3.3.8", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "vendor-id"
+                    name: "entry", type: "vendor-id"
                 })
             ]
         }),
 
         DatatypeElement({
-            id: -1, name: "ApplicationStruct", base: "struct",
+            id: -1, name: "ApplicationStruct", type: "struct",
             details: "This indicates a global identifier for an Application given a catalog",
             xref: { document: "cluster", section: "6.3.4.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "CatalogVendorId", base: "uint16",
+                    id: 0x0000, name: "CatalogVendorId", type: "uint16",
                     conformance: "M", default: 0,
                     details: "This SHALL indicate the Connectivity Standards Alliance issued vendor " +
                              "ID for the catalog. The DIAL registry SHALL use value 0x0000",
@@ -111,7 +111,7 @@ SpecMatter.children!.push(ClusterElement({
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "ApplicationId", base: "string",
+                    id: 0x0001, name: "ApplicationId", type: "string",
                     conformance: "M", default: "",
                     details: "This SHALL indicate the application identifier, expressed as a string" +
                              ", such as \"123456-5433\", \"PruneVideo\" or \"Company X\". This field SHALL" +

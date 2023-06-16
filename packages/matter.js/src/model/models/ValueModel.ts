@@ -26,7 +26,7 @@ const QUALITY: unique symbol = Symbol("quality");
  * this class.
  */
 export abstract class ValueModel extends Model implements ValueElement {
-    base?: string;
+    type?: string;
     byteSize?: ValueElement.Size;
     default?: any;
     metatype?: Metatype;
@@ -104,8 +104,8 @@ export abstract class ValueModel extends Model implements ValueElement {
      * 
      * Does not recurse so only returns the direct base type.
      */
-    get actualBase() {
-        return this.base;
+    get actualType() {
+        return this.type;
     }
 
     /**
@@ -125,7 +125,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Get a Model for my base type, if any.
      */
     get baseModel() {
-        const base = this.actualBase;
+        const base = this.actualType;
         if (base) {
             return this.scope.global(ValueModel.constructors.datatype, base);
         }
@@ -208,10 +208,10 @@ export abstract class ValueModel extends Model implements ValueElement {
     protected constructor(definition: ValueElement.Properties) {
         super(definition);
 
-        const match = this.base?.match(/^list\[(.*)\]$/);
+        const match = this.type?.match(/^list\[(.*)\]$/);
         if (match) {
-            this.base = "list";
-            this.children.push(new Model.constructors.datatype({ name: "entry", base: match[1] }) as DatatypeModel);
+            this.type = "list";
+            this.children.push(new Model.constructors.datatype({ name: "entry", type: match[1] }) as DatatypeModel);
         }
     }
 

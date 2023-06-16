@@ -15,16 +15,16 @@ ChipMatter.children!.push(ClusterElement({
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions may have differing common languages, units of measurements, and numerical formatting standards. As such, Nodes that visually or audibly convey information need a mechanism by which they can be configured to use a user’s preferred language, units, etc",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ActiveLocale", base: "string",
+            id: 0x0000, name: "ActiveLocale", type: "string",
             access: "RW", conformance: "M"
         }),
 
         AttributeElement({
-            id: 0x0001, name: "SupportedLocales", base: "list",
+            id: 0x0001, name: "SupportedLocales", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "string"
+                    name: "entry", type: "string"
                 })
             ]
         })

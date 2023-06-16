@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -49,7 +49,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "Status", base: "PowerSourceStatusEnum",
+            id: 0x0000, name: "Status", type: "PowerSourceStatusEnum",
             access: "R V", conformance: "M", constraint: "desc", default: "",
             details: "This attribute SHALL indicate the participation of this power source " +
                      "in providing power to the Node as specified in PowerSourceStatusEnum",
@@ -57,7 +57,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "Order", base: "uint8",
+            id: 0x0001, name: "Order", type: "uint8",
             access: "R V", conformance: "M", default: 0, quality: "N",
             details: "This attribute SHALL indicate the relative preference with which the " +
                      "Node will select this source to provide power. A source with a lower " +
@@ -68,7 +68,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "Description", base: "string",
+            id: 0x0002, name: "Description", type: "string",
             access: "R V", conformance: "M", constraint: "max 60", default: "", quality: "F",
             details: "This attribute SHALL provide a user-facing description of this source" +
                      ", used to distinguish it from other power sources, e.g. \"DC Power\", \"" +
@@ -78,7 +78,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "WiredAssessedInputVoltage", base: "uint32",
+            id: 0x0003, name: "WiredAssessedInputVoltage", type: "uint32",
             access: "R V", conformance: "[WIRED]", default: 0, quality: "X C",
             details: "This attribute SHALL indicate the assessed RMS or DC voltage currently" +
                      " provided by the hard-wired source, in mV (millivolts). A value of " +
@@ -89,7 +89,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "WiredAssessedInputFrequency", base: "uint16",
+            id: 0x0004, name: "WiredAssessedInputFrequency", type: "uint16",
             access: "R V", conformance: "[WIRED]", default: 0, quality: "X C",
             details: "This attribute SHALL indicate the assessed frequency of the voltage, " +
                      "currently provided by the hard-wired source, in Hz. A value of NULL " +
@@ -100,7 +100,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "WiredCurrentType", base: "WiredCurrentTypeEnum",
+            id: 0x0005, name: "WiredCurrentType", type: "WiredCurrentTypeEnum",
             access: "R V", conformance: "WIRED", constraint: "desc", default: "", quality: "F",
             details: "This attribute SHALL indicate the type of current the Node expects to " +
                      "be provided by the hard- wired source as specified in " +
@@ -109,7 +109,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "WiredAssessedCurrent", base: "uint32",
+            id: 0x0006, name: "WiredAssessedCurrent", type: "uint32",
             access: "R V", conformance: "[WIRED]", default: 0, quality: "X C",
             details: "This attribute SHALL indicate the assessed instantaneous current draw " +
                      "of the Node on the hard- wired source, in mA (milliamps). A value of " +
@@ -120,7 +120,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0007, name: "WiredNominalVoltage", base: "uint32",
+            id: 0x0007, name: "WiredNominalVoltage", type: "uint32",
             access: "R V", conformance: "[WIRED]", default: 0, quality: "F",
             details: "This attribute SHALL indicate the nominal voltage, printed as part of " +
                      "the Node’s regulatory compliance label in mV (millivolts), expected to" +
@@ -129,7 +129,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0008, name: "WiredMaximumCurrent", base: "uint32",
+            id: 0x0008, name: "WiredMaximumCurrent", type: "uint32",
             access: "R V", conformance: "[WIRED]", default: 0, quality: "F",
             details: "This attribute SHALL indicate the maximum current, printed as part of " +
                      "the Node’s regulatory compliance label in mA (milliamps), expected to " +
@@ -138,7 +138,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0009, name: "WiredPresent", base: "bool",
+            id: 0x0009, name: "WiredPresent", type: "bool",
             access: "R V", conformance: "[WIRED]", default: false,
             details: "This attribute SHALL indicate if the Node detects that the hard-wired " +
                      "power source is properly connected",
@@ -146,7 +146,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000a, name: "ActiveWiredFaults", base: "list",
+            id: 0x000a, name: "ActiveWiredFaults", type: "list",
             access: "R V", conformance: "[WIRED]", default: "",
             details: "This attribute SHALL indicate the set of wired faults currently " +
                      "detected by the Node on this power source. This set is represented as " +
@@ -163,13 +163,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.7.6.11", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "WiredFaultEnum"
+                    name: "entry", type: "WiredFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x000b, name: "BatVoltage", base: "uint32",
+            id: 0x000b, name: "BatVoltage", type: "uint32",
             access: "R V", conformance: "[BAT]", default: 0, quality: "X C",
             details: "This attribute SHALL indicate the currently measured output voltage of" +
                      " the battery in mV (millivolts). A value of NULL SHALL indicate the " +
@@ -178,7 +178,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000c, name: "BatPercentRemaining", base: "uint8",
+            id: 0x000c, name: "BatPercentRemaining", type: "uint8",
             access: "R V", conformance: "[BAT]", constraint: "0 to 200", default: 0, quality: "X C",
             details: "This attribute SHALL indicate the estimated percentage of battery " +
                      "charge remaining until the battery will no longer be able to provide " +
@@ -189,7 +189,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000d, name: "BatTimeRemaining", base: "uint32",
+            id: 0x000d, name: "BatTimeRemaining", type: "uint32",
             access: "R V", conformance: "[BAT]", default: 0, quality: "X C",
             details: "This attribute SHALL indicate the estimated time in seconds before the" +
                      " battery will no longer be able to provide power to the Node. A value " +
@@ -199,7 +199,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000e, name: "BatChargeLevel", base: "BatChargeLevelEnum",
+            id: 0x000e, name: "BatChargeLevel", type: "BatChargeLevelEnum",
             access: "R V", conformance: "BAT", constraint: "desc", default: "",
             details: "This attribute SHALL indicate a coarse ranking of the charge level of " +
                      "the battery, used to indicate when intervention is required as " +
@@ -208,7 +208,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000f, name: "BatReplacementNeeded", base: "bool",
+            id: 0x000f, name: "BatReplacementNeeded", type: "bool",
             access: "R V", conformance: "BAT", default: false,
             details: "This attribute SHALL indicate if the battery needs to be replaced. " +
                      "Replacement MAY be simple routine maintenance, such as with a single " +
@@ -219,7 +219,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0010, name: "BatReplaceability", base: "BatReplaceabilityEnum",
+            id: 0x0010, name: "BatReplaceability", type: "BatReplaceabilityEnum",
             access: "R V", conformance: "BAT", default: "", quality: "F",
             details: "This attribute SHALL indicate the replaceability of the battery as " +
                      "specified in BatReplaceabilityEnum",
@@ -227,7 +227,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0011, name: "BatPresent", base: "bool",
+            id: 0x0011, name: "BatPresent", type: "bool",
             access: "R V", conformance: "[BAT]", default: false,
             details: "This attribute SHALL indicate whether the Node detects that the " +
                      "batteries are properly installed",
@@ -235,7 +235,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0012, name: "ActiveBatFaults", base: "list",
+            id: 0x0012, name: "ActiveBatFaults", type: "list",
             access: "R V", conformance: "[BAT]", default: "",
             details: "This attribute SHALL indicate the set of battery faults currently " +
                      "detected by the Node on this power source. This set is represented as " +
@@ -252,13 +252,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.7.6.19", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "BatFaultEnum"
+                    name: "entry", type: "BatFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0013, name: "BatReplacementDescription", base: "string",
+            id: 0x0013, name: "BatReplacementDescription", type: "string",
             access: "R V", conformance: "REPLC", constraint: "max 60", default: "", quality: "F",
             details: "This attribute SHALL provide a user-facing description of this battery" +
                      ", which SHOULD contain information required to identify a replacement" +
@@ -267,7 +267,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0014, name: "BatCommonDesignation", base: "BatCommonDesignationEnum",
+            id: 0x0014, name: "BatCommonDesignation", type: "BatCommonDesignationEnum",
             access: "R V", conformance: "[REPLC]", constraint: "desc", default: "", quality: "F",
             details: "This attribute SHALL indicate the ID of the common or colloquial " +
                      "designation of the battery, as specified in BatCommonDesignationEnum",
@@ -275,7 +275,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0015, name: "BatAnsiDesignation", base: "string",
+            id: 0x0015, name: "BatAnsiDesignation", type: "string",
             access: "R V", conformance: "[REPLC]", constraint: "max 20", default: "", quality: "F",
             details: "This attribute SHALL indicate the string representing the ANSI " +
                      "designation for the battery as specified in ANSI C18",
@@ -283,7 +283,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0016, name: "BatIecDesignation", base: "string",
+            id: 0x0016, name: "BatIecDesignation", type: "string",
             access: "R V", conformance: "[REPLC]", constraint: "max 20", default: "", quality: "F",
             details: "This attribute SHALL indicate the string representing the IEC " +
                      "designation for the battery as specified in IEC 60086",
@@ -291,7 +291,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0017, name: "BatApprovedChemistry", base: "BatApprovedChemistryEnum",
+            id: 0x0017, name: "BatApprovedChemistry", type: "BatApprovedChemistryEnum",
             access: "R V", conformance: "[REPLC]", constraint: "desc", default: "", quality: "F",
             details: "This attribute SHALL indicate the ID of the preferred chemistry of the" +
                      " battery source as specified in BatApprovedChemistryEnum",
@@ -299,7 +299,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0018, name: "BatCapacity", base: "uint32",
+            id: 0x0018, name: "BatCapacity", type: "uint32",
             access: "R V", conformance: "[REPLC]", default: 0, quality: "F",
             details: "This attribute SHALL indicate the preferred minimum charge capacity " +
                      "rating in mAh of individual, user- or factory-serviceable battery " +
@@ -308,7 +308,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0019, name: "BatQuantity", base: "uint8",
+            id: 0x0019, name: "BatQuantity", type: "uint8",
             access: "R V", conformance: "REPLC", default: 0, quality: "F",
             details: "This attribute SHALL indicate the quantity of individual, user- or " +
                      "factory-serviceable battery cells or packs in the battery source",
@@ -316,7 +316,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001a, name: "BatChargeState", base: "BatChargeStateEnum",
+            id: 0x001a, name: "BatChargeState", type: "BatChargeStateEnum",
             access: "R V", conformance: "RECHG", constraint: "desc", default: "",
             details: "This attribute SHALL indicate the current state of the battery source " +
                      "with respect to charging as specified in BatChargeStateEnum",
@@ -324,7 +324,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001b, name: "BatTimeToFullCharge", base: "uint32",
+            id: 0x001b, name: "BatTimeToFullCharge", type: "uint32",
             access: "R V", conformance: "[RECHG]", default: 0, quality: "X C",
             details: "This attribute SHALL indicate the estimated time in seconds before the" +
                      " battery source will be at full charge. A value of NULL SHALL indicate" +
@@ -333,7 +333,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001c, name: "BatFunctionalWhileCharging", base: "bool",
+            id: 0x001c, name: "BatFunctionalWhileCharging", type: "bool",
             access: "R V", conformance: "RECHG", default: false,
             details: "This attribute SHALL indicate whether the Node can remain operational " +
                      "while the battery source is charging",
@@ -341,7 +341,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001d, name: "BatChargingCurrent", base: "uint32",
+            id: 0x001d, name: "BatChargingCurrent", type: "uint32",
             access: "R V", conformance: "[RECHG]", default: 0, quality: "X C",
             details: "This attribute SHALL indicate assessed current in mA (milliamps) " +
                      "presently supplied to charge the battery source. A value of NULL SHALL" +
@@ -350,7 +350,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001e, name: "ActiveBatChargeFaults", base: "list",
+            id: 0x001e, name: "ActiveBatChargeFaults", type: "list",
             access: "R V", conformance: "[RECHG]", default: "",
             details: "This attribute SHALL indicate the set of charge faults currently " +
                      "detected by the Node on this power source. This set is represented as " +
@@ -368,7 +368,7 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.7.6.31", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "BatChargeFaultEnum"
+                    name: "entry", type: "BatChargeFaultEnum"
                 })
             ]
         }),
@@ -402,7 +402,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "WiredFaultEnum", base: "enum8",
+            id: -1, name: "WiredFaultEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.7.5.1", version: "1.1" },
             children: [

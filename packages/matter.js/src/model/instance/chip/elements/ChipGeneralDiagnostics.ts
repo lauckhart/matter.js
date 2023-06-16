@@ -15,67 +15,67 @@ ChipMatter.children!.push(ClusterElement({
     details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "NetworkInterfaces", base: "list",
+            id: 0x0000, name: "NetworkInterfaces", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "NetworkInterface"
+                    name: "entry", type: "NetworkInterface"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "RebootCount", base: "uint16",
+            id: 0x0001, name: "RebootCount", type: "uint16",
             conformance: "M", default: 0
         }),
 
         AttributeElement({
-            id: 0x0002, name: "UpTime", base: "uint64",
+            id: 0x0002, name: "UpTime", type: "uint64",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0003, name: "TotalOperationalHours", base: "uint32",
+            id: 0x0003, name: "TotalOperationalHours", type: "uint32",
             conformance: "O", default: 0
         }),
 
         AttributeElement({
-            id: 0x0004, name: "BootReasons", base: "BootReasonEnum",
+            id: 0x0004, name: "BootReasons", type: "BootReasonEnum",
             conformance: "O"
         }),
 
         AttributeElement({
-            id: 0x0005, name: "ActiveHardwareFaults", base: "list",
+            id: 0x0005, name: "ActiveHardwareFaults", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "HardwareFaultEnum"
+                    name: "entry", type: "HardwareFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0006, name: "ActiveRadioFaults", base: "list",
+            id: 0x0006, name: "ActiveRadioFaults", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "RadioFaultEnum"
+                    name: "entry", type: "RadioFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0007, name: "ActiveNetworkFaults", base: "list",
+            id: 0x0007, name: "ActiveNetworkFaults", type: "list",
             conformance: "O",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "NetworkFaultEnum"
+                    name: "entry", type: "NetworkFaultEnum"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0008, name: "TestEventTriggersEnabled", base: "bool",
+            id: 0x0008, name: "TestEventTriggersEnabled", type: "bool",
             conformance: "M"
         }),
 
@@ -84,12 +84,12 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "EnableKey", base: "octstr",
+                    name: "EnableKey", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "EventTrigger", base: "uint64",
+                    name: "EventTrigger", type: "uint64",
                     conformance: "M"
                 })
             ]
@@ -100,12 +100,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "HardwareFaultEnum",
+                    name: "Current", type: "HardwareFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "HardwareFaultEnum",
+                    name: "Previous", type: "HardwareFaultEnum",
                     conformance: "M"
                 })
             ]
@@ -116,12 +116,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "RadioFaultEnum",
+                    name: "Current", type: "RadioFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "RadioFaultEnum",
+                    name: "Previous", type: "RadioFaultEnum",
                     conformance: "M"
                 })
             ]
@@ -132,12 +132,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "O", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "Current", base: "NetworkFaultEnum",
+                    name: "Current", type: "NetworkFaultEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Previous", base: "NetworkFaultEnum",
+                    name: "Previous", type: "NetworkFaultEnum",
                     conformance: "M"
                 })
             ]
@@ -148,14 +148,14 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", priority: "critical",
             children: [
                 DatatypeElement({
-                    name: "BootReason", base: "BootReasonEnum",
+                    name: "BootReason", type: "BootReasonEnum",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "HardwareFaultEnum", base: "enum8",
+            name: "HardwareFaultEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -216,7 +216,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "RadioFaultEnum", base: "enum8",
+            name: "RadioFaultEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -257,7 +257,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "NetworkFaultEnum", base: "enum8",
+            name: "NetworkFaultEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -283,7 +283,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "BootReasonEnum", base: "enum8",
+            name: "BootReasonEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -324,7 +324,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "InterfaceTypeEnum", base: "enum8",
+            name: "InterfaceTypeEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -355,46 +355,46 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "NetworkInterface", base: "struct",
+            name: "NetworkInterface", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Name", base: "string",
+                    name: "Name", type: "string",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "IsOperational", base: "bool",
+                    name: "IsOperational", type: "bool",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "OffPremiseServicesReachableIPv4", base: "bool",
+                    name: "OffPremiseServicesReachableIPv4", type: "bool",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "OffPremiseServicesReachableIPv6", base: "bool",
+                    name: "OffPremiseServicesReachableIPv6", type: "bool",
                     conformance: "M", quality: "X"
                 }),
 
                 DatatypeElement({
-                    name: "HardwareAddress", base: "octstr",
+                    name: "HardwareAddress", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "IPv4Addresses", base: "octstr",
+                    name: "IPv4Addresses", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "IPv6Addresses", base: "octstr",
+                    name: "IPv6Addresses", type: "octstr",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Type", base: "InterfaceTypeEnum",
+                    name: "Type", type: "InterfaceTypeEnum",
                     conformance: "M"
                 })
             ]

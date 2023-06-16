@@ -15,17 +15,17 @@ ChipMatter.children!.push(ClusterElement({
     details: "This cluster provides an interface for launching content on a media player device such as a TV or Speaker.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "ApplicationLauncherList", base: "list",
+            id: 0x0000, name: "ApplicationLauncherList", type: "list",
             conformance: "O", quality: "P",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "uint16"
+                    name: "entry", type: "uint16"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ApplicationLauncherCurrentApp", base: "ApplicationEpStruct",
+            id: 0x0001, name: "ApplicationLauncherCurrentApp", type: "ApplicationEpStruct",
             access: "RW", conformance: "O", default: undefined, quality: "X"
         }),
 
@@ -34,12 +34,12 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "Application", base: "ApplicationStruct",
+                    name: "Application", type: "ApplicationStruct",
                     conformance: "O"
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "octstr",
+                    name: "Data", type: "octstr",
                     conformance: "O"
                 })
             ]
@@ -50,7 +50,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "Application", base: "ApplicationStruct",
+                    name: "Application", type: "ApplicationStruct",
                     conformance: "O"
                 })
             ]
@@ -61,7 +61,7 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "request", response: "LauncherResponse",
             children: [
                 DatatypeElement({
-                    name: "Application", base: "ApplicationStruct",
+                    name: "Application", type: "ApplicationStruct",
                     conformance: "O"
                 })
             ]
@@ -72,51 +72,51 @@ ChipMatter.children!.push(ClusterElement({
             conformance: "M", direction: "response",
             children: [
                 DatatypeElement({
-                    name: "Status", base: "ApplicationLauncherStatusEnum",
+                    name: "Status", type: "ApplicationLauncherStatusEnum",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Data", base: "octstr",
+                    name: "Data", type: "octstr",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "ApplicationEpStruct", base: "struct",
+            name: "ApplicationEpStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "Application", base: "ApplicationStruct",
+                    name: "Application", type: "ApplicationStruct",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Endpoint", base: "endpoint-no",
+                    name: "Endpoint", type: "endpoint-no",
                     conformance: "O"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "ApplicationStruct", base: "struct",
+            name: "ApplicationStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "CatalogVendorId", base: "uint16",
+                    name: "CatalogVendorId", type: "uint16",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "ApplicationId", base: "string",
+                    name: "ApplicationId", type: "string",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "ApplicationLauncherStatusEnum", base: "enum8",
+            name: "ApplicationLauncherStatusEnum", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({
@@ -137,7 +137,7 @@ ChipMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            name: "ApplicationLauncherFeature", base: "map32",
+            name: "ApplicationLauncherFeature", type: "map32",
             conformance: "M",
             children: [
                 DatatypeElement({

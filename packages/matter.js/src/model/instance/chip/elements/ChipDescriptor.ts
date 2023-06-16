@@ -15,56 +15,56 @@ ChipMatter.children!.push(ClusterElement({
     details: "The Descriptor Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for describing a node, its endpoints and clusters.",
     children: [
         AttributeElement({
-            id: 0x0000, name: "DeviceList", base: "list",
+            id: 0x0000, name: "DeviceList", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "DeviceTypeStruct"
+                    name: "entry", type: "DeviceTypeStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "ServerList", base: "list",
+            id: 0x0001, name: "ServerList", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "cluster-id"
+                    name: "entry", type: "cluster-id"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ClientList", base: "list",
+            id: 0x0002, name: "ClientList", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "cluster-id"
+                    name: "entry", type: "cluster-id"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PartsList", base: "list",
+            id: 0x0003, name: "PartsList", type: "list",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "entry", base: "endpoint-no"
+                    name: "entry", type: "endpoint-no"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "DeviceTypeStruct", base: "struct",
+            name: "DeviceTypeStruct", type: "struct",
             conformance: "M",
             children: [
                 DatatypeElement({
-                    name: "DeviceType", base: "devtype-id",
+                    name: "DeviceType", type: "devtype-id",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Revision", base: "uint16",
+                    name: "Revision", type: "uint16",
                     conformance: "M"
                 })
             ]

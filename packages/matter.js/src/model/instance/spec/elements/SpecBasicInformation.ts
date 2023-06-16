@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "DataModelRevision", base: "uint16",
+            id: 0x0000, name: "DataModelRevision", type: "uint16",
             access: "R V", conformance: "M", default: "MS", quality: "F",
             details: "This attribute SHALL be set to the revision number of the Data Model " +
                      "against which the Node is certified",
@@ -32,7 +32,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "VendorName", base: "string",
+            id: 0x0001, name: "VendorName", type: "string",
             access: "R V", conformance: "M", constraint: "max 32", default: "MS", quality: "F",
             details: "This attribute SHALL specify a human readable (displayable) name of " +
                      "the vendor for the Node",
@@ -40,14 +40,14 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "VendorId", base: "vendor-id",
+            id: 0x0002, name: "VendorId", type: "vendor-id",
             access: "R V", conformance: "M", default: "MS", quality: "F",
             details: "This attribute SHALL specify the Vendor ID",
             xref: { document: "core", section: "11.1.5.3", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0003, name: "ProductName", base: "string",
+            id: 0x0003, name: "ProductName", type: "string",
             access: "R V", conformance: "M", constraint: "max 32", default: "MS", quality: "F",
             details: "This attribute SHALL specify a human readable (displayable) name of " +
                      "the model for the Node such as the model number (or other identifier) " +
@@ -56,7 +56,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "ProductId", base: "uint16",
+            id: 0x0004, name: "ProductId", type: "uint16",
             access: "R V", conformance: "M", default: "MS", quality: "F",
             details: "This attribute SHALL specify the Product ID assigned by the vendor " +
                      "that is unique to the specific product of the Node",
@@ -64,7 +64,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "NodeLabel", base: "string",
+            id: 0x0005, name: "NodeLabel", type: "string",
             access: "RW VM", conformance: "M", constraint: "max 32", default: "\"\"", quality: "N",
             details: "This attribute SHALL represent a user defined name for the Node. This " +
                      "attribute SHOULD be set during initial commissioning and MAY be " +
@@ -73,7 +73,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "Location", base: "string",
+            id: 0x0006, name: "Location", type: "string",
             access: "RW VA", conformance: "M", constraint: "2", default: "\"XX\"", quality: "N",
             details: "This attribute SHALL be an ISO 3166-1 alpha-2 code to represent the " +
                      "country, dependent territory, or special area of geographic interest " +
@@ -93,7 +93,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0007, name: "HardwareVersion", base: "uint16",
+            id: 0x0007, name: "HardwareVersion", type: "uint16",
             access: "R V", conformance: "M", default: 0, quality: "F",
             details: "This attribute SHALL specify the version number of the hardware of the" +
                      " Node. The meaning of its value, and the versioning scheme, are vendor" +
@@ -102,7 +102,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0008, name: "HardwareVersionString", base: "string",
+            id: 0x0008, name: "HardwareVersionString", type: "string",
             access: "R V", conformance: "M", constraint: "1 to 64", default: "MS", quality: "F",
             details: "This attribute SHALL specify the version number of the hardware of the" +
                      " Node. The meaning of its value, and the versioning scheme, are vendor" +
@@ -113,7 +113,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0009, name: "SoftwareVersion", base: "uint32",
+            id: 0x0009, name: "SoftwareVersion", type: "uint32",
             access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F",
             details: "This attribute SHALL contain the current version number for the " +
                      "software running on this Node. The version number can be compared " +
@@ -127,7 +127,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000a, name: "SoftwareVersionString", base: "string",
+            id: 0x000a, name: "SoftwareVersionString", type: "string",
             access: "R V", conformance: "M", constraint: "1 to 64", default: "MS", quality: "F",
             details: "This attribute SHALL contain a current human-readable representation " +
                      "for the software running on the Node. This version information MAY be " +
@@ -139,7 +139,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000b, name: "ManufacturingDate", base: "string",
+            id: 0x000b, name: "ManufacturingDate", type: "string",
             access: "R V", conformance: "O", constraint: "8 to 16", default: "MS", quality: "F",
             details: "This attribute SHALL specify the date that the Node was manufactured. " +
                      "The first 8 characters SHALL specify the date of manufacture of the " +
@@ -151,7 +151,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000c, name: "PartNumber", base: "string",
+            id: 0x000c, name: "PartNumber", type: "string",
             access: "R V", conformance: "O", constraint: "max 32", default: "MS", quality: "F",
             details: "This attribute SHALL specify a human-readable (displayable) vendor " +
                      "assigned part number for the Node whose meaning and numbering scheme " +
@@ -160,7 +160,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000d, name: "ProductUrl", base: "string",
+            id: 0x000d, name: "ProductUrl", type: "string",
             access: "R V", conformance: "O", constraint: "max 256", default: "MS", quality: "F",
             details: "This attribute SHALL specify a link to a product specific web page. " +
                      "The syntax of the ProductURL attribute SHALL follow the syntax as " +
@@ -172,7 +172,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000e, name: "ProductLabel", base: "string",
+            id: 0x000e, name: "ProductLabel", type: "string",
             access: "R V", conformance: "O", constraint: "max 64", default: "MS", quality: "F",
             details: "This attribute SHALL specify a vendor specific human readable (" +
                      "displayable) product label. The ProductLabel attribute MAY be used to " +
@@ -183,7 +183,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x000f, name: "SerialNumber", base: "string",
+            id: 0x000f, name: "SerialNumber", type: "string",
             access: "R V", conformance: "O", constraint: "max 32", default: "MS", quality: "F",
             details: "This attributes SHALL specify a human readable (displayable) serial " +
                      "number",
@@ -191,7 +191,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0010, name: "LocalConfigDisabled", base: "bool",
+            id: 0x0010, name: "LocalConfigDisabled", type: "bool",
             access: "RW VM", conformance: "O", default: true, quality: "N",
             details: "This attribute SHALL allow a local Node configuration to be disabled. " +
                      "When this attribute is set to True the Node SHALL disable the ability " +
@@ -203,7 +203,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0011, name: "Reachable", base: "bool",
+            id: 0x0011, name: "Reachable", type: "bool",
             access: "R V", conformance: "O", default: true,
             details: "This attribute (when used) SHALL indicate whether the Node can be " +
                      "reached. For a native Node this is implicitly True (and its use is " +
@@ -212,7 +212,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0012, name: "UniqueId", base: "string",
+            id: 0x0012, name: "UniqueId", type: "string",
             access: "R V", conformance: "O", constraint: "max 32", default: "MS", quality: "F",
             details: "This attribute (when used) SHALL indicate a unique identifier for the " +
                      "device, which is constructed in a manufacturer specific manner",
@@ -220,7 +220,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0013, name: "CapabilityMinima", base: "CapabilityMinimaStruct",
+            id: 0x0013, name: "CapabilityMinima", type: "CapabilityMinimaStruct",
             access: "R V", conformance: "M", default: "MS", quality: "F",
             details: "This attribute SHALL provide the minimum guaranteed value for some " +
                      "system-wide resource capabilities that are not otherwise cluster-" +
@@ -275,19 +275,19 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "CapabilityMinimaStruct", base: "struct",
+            id: -1, name: "CapabilityMinimaStruct", type: "struct",
             details: "This structure provides constant values related to overall global " +
                      "capabilities of this Node, that are not cluster-specific",
             xref: { document: "core", section: "11.1.4.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    id: 0x0000, name: "CaseSessionsPerFabric", base: "uint16",
+                    id: 0x0000, name: "CaseSessionsPerFabric", type: "uint16",
                     conformance: "M", constraint: "min 3", default: 3,
                     xref: { document: "core", section: "11.1.4.1", version: "1.1" }
                 }),
 
                 DatatypeElement({
-                    id: 0x0001, name: "SubscriptionsPerFabric", base: "uint16",
+                    id: 0x0001, name: "SubscriptionsPerFabric", type: "uint16",
                     conformance: "M", constraint: "min 3", default: 3,
                     xref: { document: "core", section: "11.1.4.1", version: "1.1" }
                 })

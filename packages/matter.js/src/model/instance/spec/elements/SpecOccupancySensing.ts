@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 3, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         DatatypeElement({
-            id: -1, name: "OccupancyBitmap", base: "bitmap8",
+            id: -1, name: "OccupancyBitmap", type: "bitmap8",
             details: "This data type is derived from bitmap8",
             xref: { document: "cluster", section: "2.7.5.1", version: "1.1" }
         })

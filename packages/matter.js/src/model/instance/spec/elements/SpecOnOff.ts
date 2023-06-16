@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 4, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -31,7 +31,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "OnOff", base: "bool",
+            id: 0x0000, name: "OnOff", type: "bool",
             access: "R V", conformance: "M", default: true, quality: "N S",
             details: "The OnOff attribute indicates whether the device type implemented on " +
                      "the endpoint is turned off or turned on, in these cases the value of " +
@@ -40,7 +40,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x4000, name: "GlobalSceneControl", base: "bool",
+            id: 0x4000, name: "GlobalSceneControl", type: "bool",
             access: "R V", conformance: "LT", default: true,
             details: "In order to support the use case where the user gets back the last " +
                      "setting of a set of devices (e.g. level settings for lights), a global" +
@@ -52,7 +52,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x4001, name: "OnTime", base: "uint16",
+            id: 0x4001, name: "OnTime", type: "uint16",
             access: "RW VO", conformance: "LT", default: 0, quality: "X",
             details: "The OnTime attribute specifies the length of time (in 1/10ths second) " +
                      "that the ‘On’ state SHALL be maintained before automatically " +
@@ -64,7 +64,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x4002, name: "OffWaitTime", base: "uint16",
+            id: 0x4002, name: "OffWaitTime", type: "uint16",
             access: "RW VO", conformance: "LT", default: 0, quality: "X",
             details: "The OffWaitTime attribute specifies the length of time (in 1/10ths " +
                      "second) that the ‘Off’ state SHALL be guarded to prevent another " +
@@ -79,7 +79,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x4003, name: "StartUpOnOff", base: "StartUpOnOffEnum",
+            id: 0x4003, name: "StartUpOnOff", type: "StartUpOnOffEnum",
             access: "RW VM", conformance: "LT", constraint: "desc", default: "MS", quality: "X N",
             details: "The StartUpOnOff attribute SHALL define the desired startup behavior " +
                      "of a device when it is supplied with power and this state SHALL be " +
@@ -139,7 +139,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "StartUpOnOffEnum", base: "enum8",
+            id: -1, name: "StartUpOnOffEnum", type: "enum8",
             details: "The data type StartUpOnOffEnum is derived from enum8. The values of " +
                      "the StartUpOnOffEnum data type are listed below",
             xref: { document: "cluster", section: "1.5.5.1", version: "1.1" },

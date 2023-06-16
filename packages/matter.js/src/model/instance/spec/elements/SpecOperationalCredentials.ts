@@ -14,30 +14,30 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "NoCs", base: "list",
+            id: 0x0000, name: "NoCs", type: "list",
             access: "R F A", conformance: "M", constraint: "max SupportedFabrics", default: "", quality: "N C",
             details: "This attribute contains all NOCs applicable to this Node, encoded as a" +
                      " read-only list of NOCStruct",
             xref: { document: "core", section: "11.17.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "NOCStruct"
+                    name: "entry", type: "NOCStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0001, name: "Fabrics", base: "list",
+            id: 0x0001, name: "Fabrics", type: "list",
             access: "R F V", conformance: "M", constraint: "max SupportedFabrics", default: "", quality: "N",
             details: "This attribute describes all fabrics to which this Node is " +
                      "commissioned, encoded as a read-only list of FabricDescriptorStruct. " +
@@ -45,13 +45,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.17.5.2", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "FabricDescriptorStruct"
+                    name: "entry", type: "FabricDescriptorStruct"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0002, name: "SupportedFabrics", base: "uint8",
+            id: 0x0002, name: "SupportedFabrics", type: "uint8",
             access: "R V", conformance: "M", constraint: "5 to 254", default: 0, quality: "F",
             details: "This attribute contains the number of Fabrics that are supported by " +
                      "the device. This value is fixed for a particular device",
@@ -59,7 +59,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "CommissionedFabrics", base: "uint8",
+            id: 0x0003, name: "CommissionedFabrics", type: "uint8",
             access: "R V", conformance: "M", constraint: "max SupportedFabrics", default: 0, quality: "N",
             details: "This attribute contains the number of Fabrics to which the device is " +
                      "currently commissioned. This attribute SHALL be equal to the following",
@@ -67,7 +67,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "TrustedRootCertificates", base: "list",
+            id: 0x0004, name: "TrustedRootCertificates", type: "list",
             access: "R V", conformance: "M", constraint: "max SupportedFabrics[max 400]", default: "", quality: "N C",
             details: "This attribute SHALL contain a read-only list of Trusted Root CA " +
                      "Certificates installed on the Node, as octet strings containing their " +
@@ -75,13 +75,13 @@ SpecMatter.children!.push(ClusterElement({
             xref: { document: "core", section: "11.17.5.5", version: "1.1" },
             children: [
                 DatatypeElement({
-                    name: "entry", base: "octstr"
+                    name: "entry", type: "octstr"
                 })
             ]
         }),
 
         AttributeElement({
-            id: 0x0005, name: "CurrentFabricIndex", base: "uint8",
+            id: 0x0005, name: "CurrentFabricIndex", type: "uint8",
             access: "R V", conformance: "M", default: 0,
             details: "This attribute SHALL contain accessing fabric index",
             xref: { document: "core", section: "11.17.5.6", version: "1.1" }
@@ -192,7 +192,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "CertificateChainTypeEnum", base: "enum8",
+            id: -1, name: "CertificateChainTypeEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.17.4.2", version: "1.1" },
             children: [

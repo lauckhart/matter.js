@@ -14,17 +14,17 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F"
         }),
 
         AttributeElement({
-            id: 0x0000, name: "MacAddress", base: "hwadr",
+            id: 0x0000, name: "MacAddress", type: "hwadr",
             access: "R V", conformance: "O", constraint: "desc", default: "", quality: "F",
             details: "This SHALL indicate the current MAC address of the device. Only 48-bit" +
                      " MAC Addresses SHALL be used for this attribute as required by the " +
@@ -33,7 +33,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "LinkLocalAddress", base: "ipv6adr",
+            id: 0x0001, name: "LinkLocalAddress", type: "ipv6adr",
             access: "R V", conformance: "O", constraint: "desc", default: "", quality: "F",
             details: "This SHALL indicate the current link-local address of the device. Only" +
                      " 128-bit IPv6 link-local addresses SHALL be used for this attribute",

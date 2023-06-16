@@ -19,27 +19,27 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Type", base: "FaultType",
+                    name: "Type", type: "FaultType",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "uint32",
+                    name: "Id", type: "uint32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NumCallsToSkip", base: "uint32",
+                    name: "NumCallsToSkip", type: "uint32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "NumCallsToFail", base: "uint32",
+                    name: "NumCallsToFail", type: "uint32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "TakeMutex", base: "bool",
+                    name: "TakeMutex", type: "bool",
                     conformance: "M"
                 })
             ]
@@ -50,24 +50,24 @@ ChipMatter.children!.push(ClusterElement({
             access: "R M", conformance: "M", direction: "request",
             children: [
                 DatatypeElement({
-                    name: "Type", base: "FaultType",
+                    name: "Type", type: "FaultType",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Id", base: "uint32",
+                    name: "Id", type: "uint32",
                     conformance: "M"
                 }),
 
                 DatatypeElement({
-                    name: "Percentage", base: "uint8",
+                    name: "Percentage", type: "uint8",
                     conformance: "M"
                 })
             ]
         }),
 
         DatatypeElement({
-            name: "FaultType", base: "enum8",
+            name: "FaultType", type: "enum8",
             conformance: "M",
             children: [
                 DatatypeElement({

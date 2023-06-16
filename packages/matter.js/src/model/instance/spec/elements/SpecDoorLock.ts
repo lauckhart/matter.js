@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "application",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 6, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -97,21 +97,21 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "LockState", base: "enum8",
+            id: 0x0000, name: "LockState", type: "enum8",
             access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "X S P",
             details: "This attribute has the following possible values",
             xref: { document: "cluster", section: "5.2.3.1", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0001, name: "LockType", base: "enum8",
+            id: 0x0001, name: "LockType", type: "enum8",
             access: "R V", conformance: "M", constraint: "desc", default: 0,
             details: "The LockType attribute is indicated by an enumeration",
             xref: { document: "cluster", section: "5.2.3.2", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0002, name: "ActuatorEnabled", base: "bool",
+            id: 0x0002, name: "ActuatorEnabled", type: "bool",
             access: "R V", conformance: "M", default: false,
             details: "The ActuatorEnabled attribute indicates if the lock is currently able " +
                      "to (Enabled) or not able to (Disabled) process remote Lock, Unlock, or" +
@@ -120,14 +120,14 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "DoorState", base: "enum8",
+            id: 0x0003, name: "DoorState", type: "enum8",
             access: "R V", conformance: "D, P, S", constraint: "desc", default: 0, quality: "X P",
             details: "The current door state as defined in DoorStateEnum",
             xref: { document: "cluster", section: "5.2.3.4", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0004, name: "DoorOpenEvents", base: "uint32",
+            id: 0x0004, name: "DoorOpenEvents", type: "uint32",
             access: "RW VM", conformance: "[D, P, S]", default: 0,
             details: "This attribute holds the number of door open events that have occurred" +
                      " since it was last zeroed",
@@ -135,7 +135,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "DoorClosedEvents", base: "uint32",
+            id: 0x0005, name: "DoorClosedEvents", type: "uint32",
             access: "RW VM", conformance: "[D, P, S]", default: 0,
             details: "This attribute holds the number of door closed events that have " +
                      "occurred since it was last zeroed",
@@ -143,7 +143,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "OpenPeriod", base: "uint16",
+            id: 0x0006, name: "OpenPeriod", type: "uint16",
             access: "RW VM", conformance: "[D, P, S]", default: 0,
             details: "This attribute holds the number of minutes the door has been open " +
                      "since the last time it transitioned from closed to open",
@@ -151,49 +151,49 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0010, name: "NumberOfLogRecordsSupported", base: "uint16",
+            id: 0x0010, name: "NumberOfLogRecordsSupported", type: "uint16",
             access: "R V", conformance: "LOG", default: 0, quality: "F",
             details: "The number of available log records",
             xref: { document: "cluster", section: "5.2.3.8", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0011, name: "NumberOfTotalUsersSupported", base: "uint16",
+            id: 0x0011, name: "NumberOfTotalUsersSupported", type: "uint16",
             access: "R V", conformance: "USR", default: 0, quality: "F",
             details: "Number of total users supported by the lock",
             xref: { document: "cluster", section: "5.2.3.9", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0012, name: "NumberOfPinUsersSupported", base: "uint16",
+            id: 0x0012, name: "NumberOfPinUsersSupported", type: "uint16",
             access: "R V", conformance: "P, IN", default: 0, quality: "F",
             details: "The number of PIN users supported",
             xref: { document: "cluster", section: "5.2.3.10", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0013, name: "NumberOfRfidUsersSupported", base: "uint16",
+            id: 0x0013, name: "NumberOfRfidUsersSupported", type: "uint16",
             access: "R V", conformance: "RID", default: 0, quality: "F",
             details: "The number of RFID users supported",
             xref: { document: "cluster", section: "5.2.3.11", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0014, name: "NumberOfWeekDaySchedulesSupportedPerUser", base: "uint8",
+            id: 0x0014, name: "NumberOfWeekDaySchedulesSupportedPerUser", type: "uint8",
             access: "R V", conformance: "WDSCH", default: 0, quality: "F",
             details: "The number of configurable week day schedule supported per user",
             xref: { document: "cluster", section: "5.2.3.12", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0015, name: "NumberOfYearDaySchedulesSupportedPerUser", base: "uint8",
+            id: 0x0015, name: "NumberOfYearDaySchedulesSupportedPerUser", type: "uint8",
             access: "R V", conformance: "YDSCH", default: 0, quality: "F",
             details: "The number of configurable year day schedule supported per user",
             xref: { document: "cluster", section: "5.2.3.13", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0016, name: "NumberOfHolidaySchedulesSupported", base: "uint8",
+            id: 0x0016, name: "NumberOfHolidaySchedulesSupported", type: "uint8",
             access: "R V", conformance: "HDSCH", default: 0, quality: "F",
             details: "The number of holiday schedules supported for the entire door lock " +
                      "device",
@@ -201,7 +201,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0017, name: "MaxPinCodeLength", base: "uint8",
+            id: 0x0017, name: "MaxPinCodeLength", type: "uint8",
             access: "R V", conformance: "P, IN", default: "MS", quality: "F",
             details: "An 8 bit value indicates the maximum length in bytes of a PIN Code on " +
                      "this device",
@@ -209,7 +209,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0018, name: "MinPinCodeLength", base: "uint8",
+            id: 0x0018, name: "MinPinCodeLength", type: "uint8",
             access: "R V", conformance: "P, IN", default: "MS", quality: "F",
             details: "An 8 bit value indicates the minimum length in bytes of a PIN Code on " +
                      "this device",
@@ -217,7 +217,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0019, name: "MaxRfidCodeLength", base: "uint8",
+            id: 0x0019, name: "MaxRfidCodeLength", type: "uint8",
             access: "R V", conformance: "RID", default: "MS", quality: "F",
             details: "An 8 bit value indicates the maximum length in bytes of a RFID Code on" +
                      " this device. The value depends on the RFID code range specified by " +
@@ -228,7 +228,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001a, name: "MinRfidCodeLength", base: "uint8",
+            id: 0x001a, name: "MinRfidCodeLength", type: "uint8",
             access: "R V", conformance: "RID", default: "MS", quality: "F",
             details: "An 8 bit value indicates the minimum length in bytes of a RFID Code on" +
                      " this device. The value depends on the RFID code range specified by " +
@@ -239,7 +239,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001b, name: "CredentialRulesSupport", base: "map8",
+            id: 0x001b, name: "CredentialRulesSupport", type: "map8",
             access: "R V", conformance: "USR", default: 1, quality: "F",
             details: "This bitmap contains a bit for every value of CredentialRuleEnum " +
                      "supported on this device",
@@ -247,14 +247,14 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x001c, name: "NumberOfCredentialsSupportedPerUser", base: "uint8",
+            id: 0x001c, name: "NumberOfCredentialsSupportedPerUser", type: "uint8",
             access: "R V", conformance: "USR", default: 0, quality: "F",
             details: "The number of credentials that could be assigned for each user",
             xref: { document: "cluster", section: "5.2.3.20", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0020, name: "EnableLogging", base: "bool",
+            id: 0x0020, name: "EnableLogging", type: "bool",
             access: "R[W] VA", conformance: "LOG", default: true, quality: "P",
             details: "Enable/disable event logging. When event logging is enabled, all event" +
                      " messages are stored on the lock for retrieval. Logging events can be " +
@@ -266,7 +266,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0021, name: "Language", base: "string",
+            id: 0x0021, name: "Language", type: "string",
             access: "R[W] VM", conformance: "O", constraint: "max 3", default: "MS", quality: "P",
             details: "Modifies the language for the on-screen or audible user interface " +
                      "using a 2-byte language code from ISO-639-1",
@@ -274,14 +274,14 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0022, name: "LedSettings", base: "uint8",
+            id: 0x0022, name: "LedSettings", type: "uint8",
             access: "R[W] VM", conformance: "O", constraint: "desc", default: 0, quality: "P",
             details: "The settings for the LED support three different modes, shown below",
             xref: { document: "cluster", section: "5.2.3.25", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0023, name: "AutoRelockTime", base: "uint32",
+            id: 0x0023, name: "AutoRelockTime", type: "uint32",
             access: "R[W] VM", conformance: "O", default: "MS", quality: "P",
             details: "The number of seconds to wait after unlocking a lock before it " +
                      "automatically locks again. 0=disabled. If set, unlock operations from " +
@@ -291,7 +291,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0024, name: "SoundVolume", base: "uint8",
+            id: 0x0024, name: "SoundVolume", type: "uint8",
             access: "R[W] VM", conformance: "O", constraint: "desc", default: 0, quality: "P",
             details: "The sound volume on a door lock has four possible settings: silent, " +
                      "low, high and medium volumes, shown below",
@@ -299,14 +299,14 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0025, name: "OperatingMode", base: "enum8",
+            id: 0x0025, name: "OperatingMode", type: "enum8",
             access: "R[W] VM", conformance: "M", constraint: "desc", default: 0, quality: "P",
             details: "The current operating mode of the lock (see OperatingModeEnum",
             xref: { document: "cluster", section: "5.2.3.23", version: "1.1" }
         }),
 
         AttributeElement({
-            id: 0x0026, name: "SupportedOperatingModes", base: "map16",
+            id: 0x0026, name: "SupportedOperatingModes", type: "map16",
             access: "R V", conformance: "M", default: 65526, quality: "F",
             details: "This bitmap contains all operating bits of the Operating Mode " +
                      "Attribute supported by the lock. All operating modes NOT supported by " +
@@ -316,7 +316,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0027, name: "DefaultConfigurationRegister", base: "map16",
+            id: 0x0027, name: "DefaultConfigurationRegister", type: "map16",
             access: "R V", conformance: "O", default: 0, quality: "P",
             details: "This attribute represents the default configurations as they are " +
                      "physically set on the device (example: hardware dip switch setting, " +
@@ -327,7 +327,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0028, name: "EnableLocalProgramming", base: "bool",
+            id: 0x0028, name: "EnableLocalProgramming", type: "bool",
             access: "R[W] VA", conformance: "O", default: true, quality: "P",
             details: "Enable/disable local programming on the door lock of certain features" +
                      " (see LocalProgrammingFeatures attribute). If this value is set to " +
@@ -340,7 +340,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0029, name: "EnableOneTouchLocking", base: "bool",
+            id: 0x0029, name: "EnableOneTouchLocking", type: "bool",
             access: "RW VM", conformance: "O", default: true, quality: "P",
             details: "Enable/disable the ability to lock the door lock with a single touch " +
                      "on the door lock",
@@ -348,7 +348,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002a, name: "EnableInsideStatusLed", base: "bool",
+            id: 0x002a, name: "EnableInsideStatusLed", type: "bool",
             access: "RW VM", conformance: "O", default: true, quality: "P",
             details: "Enable/disable an inside LED that allows the user to see at a glance " +
                      "if the door is locked",
@@ -356,7 +356,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002b, name: "EnablePrivacyModeButton", base: "bool",
+            id: 0x002b, name: "EnablePrivacyModeButton", type: "bool",
             access: "RW VM", conformance: "O", default: true, quality: "P",
             details: "Enable/disable a button inside the door that is used to put the lock " +
                      "into privacy mode. When the lock is in privacy mode it cannot be " +
@@ -365,7 +365,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x002c, name: "LocalProgrammingFeatures", base: "map8",
+            id: 0x002c, name: "LocalProgrammingFeatures", type: "map8",
             access: "R[W] VA", conformance: "O", default: 0, quality: "P",
             details: "The local programming features that will be disabled when " +
                      "EnableLocalProgramming attribute is set to False. If a door lock doesn" +
@@ -378,7 +378,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0030, name: "WrongCodeEntryLimit", base: "uint8",
+            id: 0x0030, name: "WrongCodeEntryLimit", type: "uint8",
             access: "R[W] VA", conformance: "P, IN | RID", constraint: "1 to 255", default: "MS", quality: "P",
             details: "The number of incorrect Pin codes or RFID presentment attempts a user " +
                      "is allowed to enter before the lock will enter a lockout state. The " +
@@ -393,7 +393,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0031, name: "UserCodeTemporaryDisableTime", base: "uint8",
+            id: 0x0031, name: "UserCodeTemporaryDisableTime", type: "uint8",
             access: "R[W] VA", conformance: "P, IN | RID", constraint: "1 to 255", default: "MS", quality: "P",
             details: "The number of seconds that the lock shuts down following wrong code " +
                      "entry. Valid range is 1-255 seconds. Device can shut down to lock user" +
@@ -405,7 +405,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0032, name: "SendPinOverTheAir", base: "bool",
+            id: 0x0032, name: "SendPinOverTheAir", type: "bool",
             access: "R[W] VA", conformance: "[P, IN]", default: true, quality: "P",
             details: "Boolean set to True if it is ok for the door lock server to send PINs " +
                      "over the air. This attribute determines the behavior of the server’s " +
@@ -415,7 +415,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0033, name: "RequirePiNforRemoteOperation", base: "bool",
+            id: 0x0033, name: "RequirePiNforRemoteOperation", type: "bool",
             access: "R[W] VA", conformance: "COTA & P, IN", default: true, quality: "P",
             details: "Boolean set to True if the door lock server requires that an optional " +
                      "PINs be included in the payload of remote lock operation events like " +
@@ -424,7 +424,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0035, name: "ExpiringUserTimeout", base: "uint16",
+            id: 0x0035, name: "ExpiringUserTimeout", type: "uint16",
             access: "R[W] VA", conformance: "[USR]", constraint: "1 to 2880", default: "MS", quality: "P",
             details: "Number of minutes a PIN, RFID, Fingerprint, or other credential " +
                      "associated with a user of type ExpiringUser SHALL remain valid after " +
@@ -435,7 +435,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0040, name: "AlarmMask", base: "map16",
+            id: 0x0040, name: "AlarmMask", type: "map16",
             access: "RW VA", conformance: "O", default: 65535, quality: "P",
             details: "This attribute is only supported if the Alarms cluster is on the same " +
                      "endpoint. The alarm mask is used to turn on/off alarms for particular " +
@@ -447,7 +447,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0041, name: "KeypadOperationEventMask", base: "map16",
+            id: 0x0041, name: "KeypadOperationEventMask", type: "map16",
             access: "RW VA", conformance: "[NOT & P, IN]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off the transmission of keypad " +
                      "operation events. This mask DOES NOT apply to the storing of events in" +
@@ -457,7 +457,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0042, name: "RemoteOperationEventMask", base: "map16",
+            id: 0x0042, name: "RemoteOperationEventMask", type: "map16",
             access: "RW VA", conformance: "[NOT]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off the transmission of remote " +
                      "operation events. This mask DOES NOT apply to the storing of events in" +
@@ -466,7 +466,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0043, name: "ManualOperationEventMask", base: "map16",
+            id: 0x0043, name: "ManualOperationEventMask", type: "map16",
             access: "RW VA", conformance: "[NOT]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off manual operation events. This mask " +
                      "DOES NOT apply to the storing of events in the event log. This mask " +
@@ -475,7 +475,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0044, name: "RfidOperationEventMask", base: "map16",
+            id: 0x0044, name: "RfidOperationEventMask", type: "map16",
             access: "RW VA", conformance: "[NOT & RID]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off RFID operation events. This mask " +
                      "DOES NOT apply to the storing of events in the event log. This mask " +
@@ -484,7 +484,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0045, name: "KeypadProgrammingEventMask", base: "map16",
+            id: 0x0045, name: "KeypadProgrammingEventMask", type: "map16",
             access: "RW VA", conformance: "[NOT & P, IN]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off keypad programming events. This " +
                      "mask DOES NOT apply to the storing of events in the event log. This " +
@@ -493,7 +493,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0046, name: "RemoteProgrammingEventMask", base: "map16",
+            id: 0x0046, name: "RemoteProgrammingEventMask", type: "map16",
             access: "RW VA", conformance: "[NOT]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off remote programming events. This " +
                      "mask DOES NOT apply to the storing of events in the event log. This " +
@@ -502,7 +502,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0047, name: "RfidProgrammingEventMask", base: "map16",
+            id: 0x0047, name: "RfidProgrammingEventMask", type: "map16",
             access: "RW VA", conformance: "[NOT & RID]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off RFID programming events. This mask " +
                      "DOES NOT apply to the storing of events in the event log. This mask " +
@@ -823,7 +823,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "AlarmCodeEnum", base: "enum8",
+            id: -1, name: "AlarmCodeEnum", type: "enum8",
             details: "The Alarm Code enum SHALL indicate the alarm type. The data type of " +
                      "the Alarm Code enum is derived from enum8",
             xref: { document: "cluster", section: "5.2.6.1", version: "1.1" },

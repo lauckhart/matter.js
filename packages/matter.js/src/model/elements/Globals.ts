@@ -28,33 +28,33 @@ const list = (id: number, name: string, description: string) =>
     DatatypeElement({ id, name, description, metatype: Metatype.array });
 const struct = (id: number, name: string, description: string) =>
     DatatypeElement({ id, name, description, metatype: Metatype.object });
-const enumt = (id: number, name: string, description: string, base: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.enum, base });
+const enumt = (id: number, name: string, description: string, type: string) =>
+    DatatypeElement({ id, name, description, metatype: Metatype.enum, type });
 
 // Derivative type factories (types that inherit metatypes)
-const extInt = (id: number, name: string, description: string, base: string) =>
-    DatatypeElement({ id, name, description, base });
-const depInt = (id: number, name: string, description: string, base: string) =>
-    DatatypeElement({ id, name, description, base, conformance: Conformance.Flag.Deprecated });
+const extInt = (id: number, name: string, description: string, type: string) =>
+    DatatypeElement({ id, name, description, type });
+const depInt = (id: number, name: string, description: string, type: string) =>
+    DatatypeElement({ id, name, description, type, conformance: Conformance.Flag.Deprecated });
 const extOctet = (id: number, name: string, description: string, constraint?: Constraint.Definition) =>
-    DatatypeElement({ id, name, description, base: Datatype.octstr, constraint });
+    DatatypeElement({ id, name, description, type: Datatype.octstr, constraint });
 const extEnum = (id: number, name: string, description: string, values: DatatypeElement.ValueMap) =>
-    DatatypeElement({ id, name, description, base: "enum8", children: DatatypeElement.ListValues(values) });
+    DatatypeElement({ id, name, description, type: "enum8", children: DatatypeElement.ListValues(values) });
 const extStruct = (id: number, name: string, description: string, children: DatatypeElement[]) =>
-    DatatypeElement({ id, name, description, base: Datatype.struct, children });
+    DatatypeElement({ id, name, description, type: Datatype.struct, children });
 
 const TodFields = [
-    DatatypeElement({ base: "uint8", name: "hours" }),
-    DatatypeElement({ base: "uint8", name: "minutes" }),
-    DatatypeElement({ base: "uint8", name: "seconds" }),
-    DatatypeElement({ base: "uint8", name: "hundredths" })
+    DatatypeElement({ type: "uint8", name: "hours" }),
+    DatatypeElement({ type: "uint8", name: "minutes" }),
+    DatatypeElement({ type: "uint8", name: "seconds" }),
+    DatatypeElement({ type: "uint8", name: "hundredths" })
 ];
 
 const DateFields = [
-    DatatypeElement({ base: "uint8", name: "year" }),
-    DatatypeElement({ base: "uint8", name: "month" }),
-    DatatypeElement({ base: "uint8", name: "day" }),
-    DatatypeElement({ base: "uint8", name: "dow" })
+    DatatypeElement({ type: "uint8", name: "year" }),
+    DatatypeElement({ type: "uint8", name: "month" }),
+    DatatypeElement({ type: "uint8", name: "day" }),
+    DatatypeElement({ type: "uint8", name: "dow" })
 ];
 
 /**
@@ -160,24 +160,24 @@ export const Globals = {
 
     // Global elements
     ClusterRevision: AttributeElement({
-        id: 0xfffd, name: "ClusterRevision", base: "uint16",
+        id: 0xfffd, name: "ClusterRevision", type: "uint16",
         constraint: { min: 1 }, quality: "F", access: "R V", conformance: "M" }),
     FeatureMap: AttributeElement({
-        id: 0xfffc, name: "FeatureMap", base: "map32",
+        id: 0xfffc, name: "FeatureMap", type: "map32",
         quality: "F", access: "R V", default: 0, conformance: "M" }),
     AttributeList: AttributeElement({
-        id: 0xfffb, name: "AttributeList", base: "list[attrib-id]",
+        id: 0xfffb, name: "AttributeList", type: "list[attrib-id]",
         quality: "F", access: "R V", conformance: "M" }),
     EventList: AttributeElement({
-        id: 0xfffa, name: "EventList", base: "list[event-id]",
+        id: 0xfffa, name: "EventList", type: "list[event-id]",
         quality: "F", access: "R V", conformance: "P, M" }),
     AcceptedCommandListList: AttributeElement({
-        id: 0xfff9, name: "AcceptedCommandList", base: "list[command-id]",
+        id: 0xfff9, name: "AcceptedCommandList", type: "list[command-id]",
         quality: "F", access: "R V", conformance: "M" }),
     GeneratedCommandList: AttributeElement({
-        id: 0xfff8, name: "GeneratedCommandList", base: "list[command-id]",
+        id: 0xfff8, name: "GeneratedCommandList", type: "list[command-id]",
         quality: "F", access: "R V", conformance: "M" }),
     FabricIndex: DatatypeElement({
-        id: 0xfe, name: "FabricIndex", base: "fabric-idx",
+        id: 0xfe, name: "FabricIndex", type: "fabric-idx",
         constraint: "1 to 254", access: "R V F" })
 }

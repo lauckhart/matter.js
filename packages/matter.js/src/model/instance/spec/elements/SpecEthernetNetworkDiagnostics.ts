@@ -14,12 +14,12 @@ SpecMatter.children!.push(ClusterElement({
     classification: "node",
     children: [
         AttributeElement({
-            id: 0xfffd, name: "ClusterRevision", base: "uint16",
+            id: 0xfffd, name: "ClusterRevision", type: "uint16",
             access: "R V", conformance: "M", constraint: "min 1", default: 1, quality: "F"
         }),
 
         AttributeElement({
-            id: 0xfffc, name: "FeatureMap", base: "map32",
+            id: 0xfffc, name: "FeatureMap", type: "map32",
             access: "R V", conformance: "M", default: 0, quality: "F",
             children: [
                 DatatypeElement({
@@ -37,7 +37,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0000, name: "PhyRate", base: "PHYRateEnum",
+            id: 0x0000, name: "PhyRate", type: "PHYRateEnum",
             access: "R V", conformance: "O", default: "null", quality: "X",
             details: "The PHYRate attribute SHALL indicate the current nominal, usable speed" +
                      " at the top of the physical layer of the Node. A value of null SHALL " +
@@ -46,7 +46,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0001, name: "FullDuplex", base: "bool",
+            id: 0x0001, name: "FullDuplex", type: "bool",
             access: "R V", conformance: "O", default: true, quality: "X",
             details: "The FullDuplex attribute SHALL indicate if the Node is currently " +
                      "utilizing the full-duplex operating mode. A value of null SHALL " +
@@ -55,7 +55,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0002, name: "PacketRxCount", base: "uint64",
+            id: 0x0002, name: "PacketRxCount", type: "uint64",
             access: "R V", conformance: "P, KTCNT", default: 0,
             details: "The PacketRxCount attribute SHALL indicate the number of packets that " +
                      "have been received on the ethernet network interface. The " +
@@ -64,7 +64,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0003, name: "PacketTxCount", base: "uint64",
+            id: 0x0003, name: "PacketTxCount", type: "uint64",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "C",
             details: "The PacketTxCount attribute SHALL indicate the number of packets that " +
                      "have been successfully transferred on the ethernet network interface. " +
@@ -74,7 +74,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0004, name: "TxErrCount", base: "uint64",
+            id: 0x0004, name: "TxErrCount", type: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "C",
             details: "The TxErrCount attribute SHALL indicate the number of failed packet " +
                      "transmissions that have occurred on the ethernet network interface. " +
@@ -83,7 +83,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0005, name: "CollisionCount", base: "uint64",
+            id: 0x0005, name: "CollisionCount", type: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "C",
             details: "The CollisionCount attribute SHALL indicate the number of collisions " +
                      "that have occurred while attempting to transmit a packet on the " +
@@ -93,7 +93,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0006, name: "OverrunCount", base: "uint64",
+            id: 0x0006, name: "OverrunCount", type: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "C",
             details: "The OverrunCount attribute SHALL indicate the number of packets " +
                      "dropped either at ingress or egress, due to lack of buffer memory to " +
@@ -103,7 +103,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0007, name: "CarrierDetect", base: "bool",
+            id: 0x0007, name: "CarrierDetect", type: "bool",
             access: "R V", conformance: "O", default: true, quality: "X C",
             details: "The CarrierDetect attribute SHALL indicate the value of the Carrier " +
                      "Detect control signal present on the ethernet network interface. A " +
@@ -113,7 +113,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         AttributeElement({
-            id: 0x0008, name: "TimeSinceReset", base: "uint64",
+            id: 0x0008, name: "TimeSinceReset", type: "uint64",
             access: "R V", conformance: "O", default: 0, quality: "C",
             xref: { document: "core", section: "11.15.6", version: "1.1" }
         }),
@@ -126,7 +126,7 @@ SpecMatter.children!.push(ClusterElement({
         }),
 
         DatatypeElement({
-            id: -1, name: "PHYRateEnum", base: "enum8",
+            id: -1, name: "PHYRateEnum", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.15.5.1", version: "1.1" },
             children: [
