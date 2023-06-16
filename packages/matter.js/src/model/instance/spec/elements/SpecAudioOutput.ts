@@ -33,7 +33,7 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "OutputList", base: "list",
             access: "R V", conformance: "M", constraint: "None", default: "",
-            details: "This list provides the outputs supported by the device.",
+            details: "This list provides the outputs supported by the device",
             xref: { document: "cluster", section: "6.5.3.1", version: "1.1" },
             children: [
                 DatatypeElement({
@@ -45,7 +45,8 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0001, name: "CurrentOutput", base: "uint8",
             access: "R V", conformance: "M", default: 0,
-            details: "This field contains the value of the index field of the currently selected OutputInfoStruct.",
+            details: "This field contains the value of the index field of the currently " +
+                     "selected OutputInfoStruct",
             xref: { document: "cluster", section: "6.5.3.2", version: "1.1" }
         }),
 
@@ -58,19 +59,20 @@ SpecMatter.children!.push(ClusterElement({
         CommandElement({
             id: 0x0001, name: "RenameOutput",
             access: "M", conformance: "NU", direction: "request", response: "status",
-            details: "Upon receipt, this SHALL rename the output at a specific index in the Output List.",
+            details: "Upon receipt, this SHALL rename the output at a specific index in the " +
+                     "Output List",
             xref: { document: "cluster", section: "6.5.4.2", version: "1.1" }
         }),
 
         DatatypeElement({
             id: -1, name: "OutputInfoStruct", base: "struct",
-            details: "This contains information about an output.",
+            details: "This contains information about an output",
             xref: { document: "cluster", section: "6.5.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
                     id: 0x0000, name: "Index", base: "uint8",
                     conformance: "M", default: 0,
-                    details: "This SHALL indicate the unique index into the list of outputs.",
+                    details: "This SHALL indicate the unique index into the list of outputs",
                     xref: { document: "cluster", section: "6.5.5.1.1", version: "1.1" }
                 }),
 
@@ -84,7 +86,9 @@ SpecMatter.children!.push(ClusterElement({
                 DatatypeElement({
                     id: 0x0002, name: "Name", base: "string",
                     conformance: "M", default: "",
-                    details: "The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be blank, but SHOULD be provided when known.",
+                    details: "The device defined and user editable output name, such as “Soundbar" +
+                             "”, “Speakers”. This field may be blank, but SHOULD be provided when " +
+                             "known",
                     xref: { document: "cluster", section: "6.5.5.1.3", version: "1.1" }
                 })
             ]

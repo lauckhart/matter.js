@@ -7,6 +7,7 @@
 import { AnyElement } from "../../../src/model/index.js";
 import { camelize, serialize } from "../../../src/util/String.js";
 import { Block } from "../../util/TsFile.js";
+import { wordWrap } from "../../util/string.js";
 
 export function generateElement(target: Block, element: AnyElement, prefix: string = "", suffix = "") {
     const factory = camelize(`${element.type} element`);
@@ -49,7 +50,15 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
 
     // Next row: Details
     if (element.details) {
-        block.atom("details", serialize(element.details));
+        const lines = wordWrap(element.details, 70);
+        for (let i = 0; i < lines.length; i++) {
+            const prefix = i
+                ? "         "
+                : "details: ";
+            const suffix = i < lines.length - 1 ? " +" : "";
+            lines[i] = `${prefix}${serialize(lines[i] == "" ? "\n" : lines[i])}${suffix}`;
+        }
+        block.atom(lines.join("\n"));
     }
 
     // Next row: Cross reference

@@ -5,6 +5,7 @@
  */
 
 import { writeMatterFile } from "./file.js";
+import { wordWrap } from "./string.js";
 
 const HEADER = `/**
  * @license
@@ -13,6 +14,9 @@ const HEADER = `/**
  */
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/`;
+
+const TAB_SIZE = 4;
+const WRAP_WIDTH = 120;
 
 export class Block extends Array<any> {
     constructor(private parentBlock: Block | undefined, ...entries: any[]) {
@@ -99,6 +103,21 @@ export class Block extends Array<any> {
         return this;
     }
 
+    /** Add a TsDoc style comment */
+    document(content: string) {
+        let width = WRAP_WIDTH - 3;
+        const other = this;
+        while (other.parent) {
+            if (other instanceof StatementBlock) {
+                width -= TAB_SIZE;
+            }
+        }
+        const lines = wordWrap(content);
+        this.add("/**");
+        lines.forEach(l => this.add(` * ${l}`));
+        this.add(" */");
+    }
+
     protected delimiterAfter(_index: number) {
         return "";
     }
@@ -111,7 +130,10 @@ class Atom {
         if (entry == undefined) {
             this.content = labelOrEntry;
         } else {
-            this.content = `${labelOrEntry}: ${entry}`;
+            const label = !labelOrEntry.match(/^[\$_a-z][\$_a-z0-9]*$/i)
+                ? JSON.stringify(labelOrEntry)
+                : labelOrEntry;
+            this.content = `${label}: ${entry}`;
         }
     }
 
@@ -126,7 +148,7 @@ class NestedBlock extends Block {
     }
 
     override toString() {
-        let contents = super.toString("    ");
+        let contents = super.toString("".padStart(TAB_SIZE));
         if (contents) contents = `${contents}\n`;
         let text = `${contents}`;
         if (this.prefix) text = `${this.prefix}${text}`;

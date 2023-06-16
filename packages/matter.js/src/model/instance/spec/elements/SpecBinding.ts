@@ -26,7 +26,7 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "Binding", base: "list",
             access: "RW F VM", conformance: "M", constraint: "desc", default: "[]", quality: "N",
-            details: "Each entry SHALL represent a binding. Here are some examples:",
+            details: "Each entry SHALL represent a binding. Here are some examples",
             xref: { document: "core", section: "9.6.6.1", version: "1.1" },
             children: [
                 DatatypeElement({

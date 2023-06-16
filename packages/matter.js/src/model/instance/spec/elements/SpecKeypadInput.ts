@@ -45,20 +45,22 @@ SpecMatter.children!.push(ClusterElement({
         CommandElement({
             id: 0x0000, name: "SendKey",
             access: "O", conformance: "M", direction: "request", response: "SendKeyResponse",
-            details: "Upon receipt, this SHALL process a keycode as input to the media device.",
+            details: "Upon receipt, this SHALL process a keycode as input to the media " +
+                     "device",
             xref: { document: "cluster", section: "6.8.3.1", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0001, name: "SendKeyResponse",
             conformance: "M", direction: "response",
-            details: "This command SHALL be generated in response to a SendKey command. The data for this command SHALL be as follows:",
+            details: "This command SHALL be generated in response to a SendKey command. The " +
+                     "data for this command SHALL be as follows",
             xref: { document: "cluster", section: "6.8.3.2", version: "1.1" }
         }),
 
         DatatypeElement({
             id: -1, name: "StatusEnum", base: "enum8",
-            details: "Status Data Type is derived from enum8.",
+            details: "Status Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.8.4.1", version: "1.1" },
             children: [
                 DatatypeElement({

@@ -26,7 +26,8 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "ValidProxyList", base: "list",
             access: "RW", conformance: "M", default: "empty", quality: "N F",
-            details: "List of valid proxies that can proxy this Node. Each entry in this list is fabric-scoped.",
+            details: "List of valid proxies that can proxy this Node. Each entry in this " +
+                     "list is fabric-scoped",
             xref: { document: "core", section: "9.15.15.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
@@ -49,7 +50,7 @@ SpecMatter.children!.push(ClusterElement({
 
         DatatypeElement({
             id: -1, name: "ValidProxyStruct", base: "struct",
-            details: "Encapsulates the Node ID of a Valid Proxy.",
+            details: "Encapsulates the Node ID of a Valid Proxy",
             xref: { document: "core", section: "9.15.15.4.1", version: "1.1" },
             children: [
                 DatatypeElement({

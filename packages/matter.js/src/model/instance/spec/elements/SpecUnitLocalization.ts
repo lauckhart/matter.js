@@ -33,13 +33,16 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "TemperatureUnit", base: "TempUnitEnum",
             access: "RW VM", conformance: "TEMP", default: "null", quality: "X N",
-            details: "The TemperatureUnit attribute SHALL indicate the unit for the Node to use only when conveying temperature in communication to the user. If provided, this value SHALL take priority over any unit implied through the ActiveLocale Attribute.",
+            details: "The TemperatureUnit attribute SHALL indicate the unit for the Node to " +
+                     "use only when conveying temperature in communication to the user. If " +
+                     "provided, this value SHALL take priority over any unit implied through" +
+                     " the ActiveLocale Attribute",
             xref: { document: "core", section: "11.5.6.1", version: "1.1" }
         }),
 
         DatatypeElement({
             id: -1, name: "TempUnitEnum", base: "enum8",
-            details: "This data type is derived from enum8.",
+            details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.5.5.1", version: "1.1" },
             children: [
                 DatatypeElement({

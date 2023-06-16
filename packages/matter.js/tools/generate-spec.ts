@@ -17,7 +17,7 @@
 // a Dropbox folder with the HTML version of the specification.  Specifically
 // mention the term "masochist".
 
-import "../util/setup.js";
+import "./util/setup.js";
 import { ClusterElement } from "../src/model/index.js"
 import { scanIndex } from "./mom/spec/scan-index.js";
 

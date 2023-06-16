@@ -26,7 +26,11 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "Sources", base: "list",
             access: "R V", conformance: "M", constraint: "max 6", default: "", quality: "N",
-            details: "This list SHALL contain the set of all power sources capable of participating in the power system of this Node. Each entry in the list SHALL be the endpoint number of an endpoint having a Power Source cluster, which corresponds to a physical power source. The endpoint number SHALL be unique within the list.",
+            details: "This list SHALL contain the set of all power sources capable of " +
+                     "participating in the power system of this Node. Each entry in the list" +
+                     " SHALL be the endpoint number of an endpoint having a Power Source " +
+                     "cluster, which corresponds to a physical power source. The endpoint " +
+                     "number SHALL be unique within the list",
             xref: { document: "core", section: "11.6.4.1", version: "1.1" },
             children: [
                 DatatypeElement({

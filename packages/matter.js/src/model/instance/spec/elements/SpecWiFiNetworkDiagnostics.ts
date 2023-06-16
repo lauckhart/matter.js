@@ -39,125 +39,154 @@ SpecMatter.children!.push(ClusterElement({
         AttributeElement({
             id: 0x0000, name: "Bssid", base: "octstr",
             access: "R V", conformance: "M", constraint: "6", default: "null", quality: "X",
-            details: "The BSSID attribute SHALL indicate the BSSID for which the Wi-Fi network the Node is currently connected.",
+            details: "The BSSID attribute SHALL indicate the BSSID for which the Wi-Fi " +
+                     "network the Node is currently connected",
             xref: { document: "core", section: "11.14.6.1", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0001, name: "SecurityType", base: "SecurityTypeEnum",
             access: "R V", conformance: "M", default: "null", quality: "X",
-            details: "The SecurityType attribute SHALL indicate the current type of Wi-Fi security used.",
+            details: "The SecurityType attribute SHALL indicate the current type of Wi-Fi " +
+                     "security used",
             xref: { document: "core", section: "11.14.6.2", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0002, name: "WiFiVersion", base: "WiFiVersionEnum",
             access: "R V", conformance: "M", default: "null", quality: "X",
-            details: "The WiFiVersion attribute SHALL indicate the current 802.11 standard version in use by the Node, per the table below.",
+            details: "The WiFiVersion attribute SHALL indicate the current 802.11 standard " +
+                     "version in use by the Node, per the table below",
             xref: { document: "core", section: "11.14.6.3", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0003, name: "ChannelNumber", base: "uint16",
             access: "R V", conformance: "M", default: "null", quality: "X",
-            details: "The ChannelNumber attribute SHALL indicate the channel that Wi-Fi communication is currently operating on.",
+            details: "The ChannelNumber attribute SHALL indicate the channel that Wi-Fi " +
+                     "communication is currently operating on",
             xref: { document: "core", section: "11.14.6.4", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0004, name: "Rssi", base: "int8",
             access: "R V", conformance: "M", constraint: "-120 to 0", default: "null", quality: "X C",
-            details: "The RSSI attribute SHALL indicate the current RSSI of the Node’s Wi-Fi radio in dBm.",
+            details: "The RSSI attribute SHALL indicate the current RSSI of the Node’s Wi-Fi" +
+                     " radio in dBm",
             xref: { document: "core", section: "11.14.6.5", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0005, name: "BeaconLostCount", base: "uint32",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "X C",
-            details: "The BeaconLostCount attribute SHALL indicate the count of the number of missed beacons the Node has detected. If the Node does not have an ability to count beacons expected and not received, this value MAY remain set to zero.",
+            details: "The BeaconLostCount attribute SHALL indicate the count of the number " +
+                     "of missed beacons the Node has detected. If the Node does not have an " +
+                     "ability to count beacons expected and not received, this value MAY " +
+                     "remain set to zero",
             xref: { document: "core", section: "11.14.6.6", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0006, name: "BeaconRxCount", base: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
-            details: "The BeaconRxCount attribute SHALL indicate the count of the number of received beacons. The total number of expected beacons that could have been received during the interval since association SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to report count of beacons received, this value MAY remain set to zero.",
+            details: "The BeaconRxCount attribute SHALL indicate the count of the number of " +
+                     "received beacons. The total number of expected beacons that could have" +
+                     " been received during the interval since association SHOULD match the " +
+                     "sum of BeaconRxCount and BeaconLostCount. If the Node does not have an" +
+                     " ability to report count of beacons received, this value MAY remain " +
+                     "set to zero",
             xref: { document: "core", section: "11.14.6.7", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0007, name: "PacketMulticastRxCount", base: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
-            details: "The PacketMulticastRxCount attribute SHALL indicate the number of multicast packets received by",
+            details: "The PacketMulticastRxCount attribute SHALL indicate the number of " +
+                     "multicast packets received by",
             xref: { document: "core", section: "11.14.6.8", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0008, name: "PacketMulticastTxCount", base: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
-            details: "The PacketMulticastTxCount attribute SHALL indicate the number of multicast packets transmitted by the Node.",
+            details: "The PacketMulticastTxCount attribute SHALL indicate the number of " +
+                     "multicast packets transmitted by the Node",
             xref: { document: "core", section: "11.14.6.9", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x0009, name: "PacketUnicastRxCount", base: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
-            details: "The PacketUnicastRxCount attribute SHALL indicate the number of unicast packets received by the Node.",
+            details: "The PacketUnicastRxCount attribute SHALL indicate the number of " +
+                     "unicast packets received by the Node",
             xref: { document: "core", section: "11.14.6.10", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x000a, name: "PacketUnicastTxCount", base: "uint32",
             access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C",
-            details: "The PacketUnicastTxCount attribute SHALL indicate the number of unicast packets transmitted by the Node.",
+            details: "The PacketUnicastTxCount attribute SHALL indicate the number of " +
+                     "unicast packets transmitted by the Node",
             xref: { document: "core", section: "11.14.6.11", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x000b, name: "CurrentMaxRate", base: "uint64",
             access: "R V", conformance: "O", default: 0, quality: "X C",
-            details: "The CurrentMaxRate attribute SHALL indicate the current maximum PHY rate of transfer of data in bits-per-second.",
+            details: "The CurrentMaxRate attribute SHALL indicate the current maximum PHY " +
+                     "rate of transfer of data in bits-per-second",
             xref: { document: "core", section: "11.14.6.12", version: "1.1" }
         }),
 
         AttributeElement({
             id: 0x000c, name: "OverrunCount", base: "uint64",
             access: "R V", conformance: "ERRCNT", default: 0, quality: "X C",
-            details: "The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or egress, due to lack of buffer memory to retain all packets on the network interface. The OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+            details: "The OverrunCount attribute SHALL indicate the number of packets " +
+                     "dropped either at ingress or egress, due to lack of buffer memory to " +
+                     "retain all packets on the network interface. The OverrunCount " +
+                     "attribute SHALL be reset to 0 upon a reboot of the Node",
             xref: { document: "core", section: "11.14.6.13", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0000, name: "Disconnection",
             access: "V", conformance: "O", priority: "info",
-            details: "The Disconnection Event SHALL indicate that a Node’s Wi-Fi connection has been disconnected as a result of de-authenticated or dis-association and indicates the reason.",
+            details: "The Disconnection Event SHALL indicate that a Node’s Wi-Fi connection " +
+                     "has been disconnected as a result of de-authenticated or dis-" +
+                     "association and indicates the reason",
             xref: { document: "core", section: "11.14.8.1", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0001, name: "AssociationFailure",
             access: "V", conformance: "O", priority: "info",
-            details: "The AssociationFailure event SHALL indicate that a Node has attempted to connect, or reconnect, to a Wi-Fi access point, but is unable to successfully associate or authenticate, after exhausting all internal retries of its supplicant.",
+            details: "The AssociationFailure event SHALL indicate that a Node has attempted " +
+                     "to connect, or reconnect, to a Wi-Fi access point, but is unable to " +
+                     "successfully associate or authenticate, after exhausting all internal " +
+                     "retries of its supplicant",
             xref: { document: "core", section: "11.14.8.2", version: "1.1" }
         }),
 
         EventElement({
             id: 0x0002, name: "ConnectionStatus",
             access: "V", conformance: "O", priority: "info",
-            details: "The ConnectionStatus Event SHALL indicate that a Node’s connection status to a Wi-Fi network has changed. Connected, in this context, SHALL mean that a Node acting as a Wi-Fi station is successfully associated to a Wi-Fi Access Point.",
+            details: "The ConnectionStatus Event SHALL indicate that a Node’s connection " +
+                     "status to a Wi-Fi network has changed. Connected, in this context, " +
+                     "SHALL mean that a Node acting as a Wi-Fi station is successfully " +
+                     "associated to a Wi-Fi Access Point",
             xref: { document: "core", section: "11.14.8.3", version: "1.1" }
         }),
 
         CommandElement({
             id: 0x0000, name: "ResetCounts",
             access: "O", conformance: "ERRCNT", direction: "request", response: "status",
-            details: "Reception of this command SHALL reset the following attributes to 0:",
+            details: "Reception of this command SHALL reset the following attributes to 0",
             xref: { document: "core", section: "11.14.7.1", version: "1.1" }
         }),
 
         DatatypeElement({
             id: -1, name: "SecurityTypeEnum", base: "enum8",
-            details: "This data type is derived from enum8.",
+            details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.14.5.1", version: "1.1" },
             children: [
                 DatatypeElement({
