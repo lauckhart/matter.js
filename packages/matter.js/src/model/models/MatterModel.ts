@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AnyElement, Globals, MatterElement } from "../elements/index.js";
+import { Globals, MatterElement } from "../elements/index.js";
+import { Matter } from "../instance/index.js";
 import { AttributeModel } from "./AttributeModel.js";
 import { ClusterModel } from "./ClusterModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";
@@ -54,15 +55,15 @@ export class MatterModel extends Model implements MatterElement {
         return this.local(FabricModel);
     }
 
-    override get children(): Model[] {
+    override get children(): MatterModel.Child[] {
         return super.children as any;
     }
 
-    override set children(children: (Model | AnyElement)[]) {
+    override set children(children: (MatterModel.Child | MatterElement.Child)[]) {
         super.children = children;
     }
 
-    constructor(definition: MatterElement.Properties, globals = Object.values(Globals)) {
+    constructor(definition: MatterElement.Properties = Matter, globals = Object.values(Globals)) {
         const children = [ ...globals, ...(definition.children || []) ]
         super({ ...definition, children: children });
     }
@@ -70,4 +71,13 @@ export class MatterModel extends Model implements MatterElement {
     static {
         Model.constructors[MatterElement.Tag] = this;
     }
+}
+
+export namespace MatterModel {
+    export type Child =
+        ClusterModel
+        | DeviceTypeModel
+        | DatatypeModel
+        | AttributeModel
+        | FabricModel;
 }

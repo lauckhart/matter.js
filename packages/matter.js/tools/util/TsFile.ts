@@ -112,7 +112,7 @@ export class Block extends Array<any> {
                 width -= TAB_SIZE;
             }
         }
-        const lines = wordWrap(content);
+        const lines = wordWrap(content, width);
         this.add("/**");
         lines.forEach(l => this.add(` * ${l}`));
         this.add(" */");

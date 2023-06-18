@@ -362,10 +362,12 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
                 type = "enum8";
             }
             translator = translateEnum;
-        } else if (name.match(/bits$/i) || type?.match(/^map/i)) {
+        } else if (name.match(/bits$/i) || type?.match(/^map/i) || type?.match(/^bitmap/i)) {
             if (!type) {
                 logger.warn(`no base detected, guessing map8`);
                 type = "map8";
+            } else if (type.match(/^bitmap/)) {
+                type = type.slice(3);
             }
             translator = translateBitmap;
         } else if (name.match(/struct$/i)
@@ -397,7 +399,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             }
         }
     
-        return DatatypeElement({ id: -1, type: type, name, description, xref: datatype.xref, children: children });
+        return DatatypeElement({ type: type, name, description, xref: datatype.xref, children: children });
     }
 }
 

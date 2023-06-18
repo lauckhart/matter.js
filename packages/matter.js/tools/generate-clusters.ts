@@ -13,9 +13,7 @@ import {
     Datatype,
     EventElement,
     EventModel,
-    MatterElement,
     MatterModel,
-    MergeElements,
     Metatype,
     Model,
     ValueModel
@@ -25,7 +23,7 @@ import { camelize, serialize } from "../src/util/index.js";
 import { Block, TsFile } from "./util/TsFile.js";
 import { wordWrap } from "./util/string.js";
 
-const mom = new MatterModel(MergeElements() as MatterElement);
+const mom = new MatterModel();
 for (const cluster of mom.clusters) {
     const file = new TsFile(`src/cluster2/${cluster.name}Cluster`);
     generateCluster(file, cluster);
@@ -172,7 +170,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
         definedDatatypes.add(model);
 
-        switch (model.metatype) {
+        switch (model.effectiveMetatype) {
             case Metatype.enum:
                 defineEnum(name, model);
                 break;
@@ -186,16 +184,16 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 break;
 
             default:
-                throw new InternalError(`Unsupported top-level ${model.metatype} ${model.name}`);
+                throw new InternalError(`${model.path}: Top-level ${model.effectiveMetatype} is unsupported`);
         }
 
         return name;
     }
 
-    function tlvTypeRef(model: ValueModel) {
+    function tlvTypeRef(model: ValueModel): string {
         const base = model.metaBase;
         if (!base) {
-            throw new InternalError(`Unknown metabase type for ${model.type} ${model.name}`);
+            throw new InternalError(`${model.path}: No base type ${model.type}`);
         }
 
         if (model.type) {
@@ -225,9 +223,16 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 addImport(tlv, "tlv/TlvNumber");
                 break;
 
+            case Datatype.map8:
+            case Datatype.map16:
+            case Datatype.map32:
+            case Datatype.map64:
+                tlv = defineDatatype(model);
+                break;
+
             case "enum8":
             case "enum16":
-                tlv = `TlvEnum<${model.type}>()`;
+                tlv = `TlvEnum<${defineDatatype(model)}>()`;
                 addImport("TlvEnum", "tlv/TlvNumber");
                 break;
 
@@ -253,11 +258,11 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 break;
 
             case Datatype.struct:
-                tlv = `Tlv${defineDatatype(model)}`;
+                tlv = defineDatatype(model);
                 break;
 
             default:
-                throw new InternalError(`No tlv mapping for ${base.name} ${model.name}`);
+                throw new InternalError(`${model.path}: No tlv mapping for base type ${base.name}`);
         }
         if (model.quality.nullable) {
             addImport("TlvNullable", "tlv/TlvNullable");
@@ -331,16 +336,24 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
         let tlvNum;
         switch (model.metaBase?.name) {
-            case "enum8":
+            case "map8":
                 tlvNum = "TlvUint8";
                 break;
 
-            case "enum16":
+            case "map16":
                 tlvNum = "TlvUint16";
                 break;
 
+            case "map32":
+                tlvNum = "TlvUint32";
+                break;
+
+            case "map64":
+                tlvNum = "TlvUint64";
+                break;
+
             default:
-                throw new InternalError(`Could not determine numeric base for ${model.type} ${model.name}`);
+                throw new InternalError(`${model.path}: Could not determine numeric type for ${model.type}`);
         }
         addImport(tlvNum, "tlv/TlvNumber");
 

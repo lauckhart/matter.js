@@ -7,7 +7,7 @@
 import { Access, Conformance, Constraint, Quality } from "../aspects/index.js";
 import { ElementTag } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
-import { type AnyDataElement } from "./AnyDataElement.js";
+import { type AnyValueElement } from "./AnyValueElement.js";
 
 /**
  * A base element for all elements that represent data values.
@@ -56,7 +56,7 @@ export type ValueElement = BaseElement & {
      * Nested structures that may have data elements include enums, structs and
      * lists.
      */
-    children?: AnyDataElement[]
+    children?: AnyValueElement[]
 }
 
 export function ValueElement(tag: ElementTag, definition: ValueElement) {

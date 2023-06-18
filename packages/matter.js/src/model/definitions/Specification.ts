@@ -33,11 +33,6 @@ export namespace Specification {
         document: `${Specification}`,
 
         /**
-         * The version of the element's defining document.
-         */
-        version: string,
-
-        /**
          * The section of the defining document that most specifically
          * addresses the element.
          */

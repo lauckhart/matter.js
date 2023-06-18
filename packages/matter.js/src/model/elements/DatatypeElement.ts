@@ -26,7 +26,7 @@ export type DatatypeElement = ValueElement & {
      * only when the datatype should map directly to a specific native (JS)
      * type.
      */
-    metatype?: Metatype,
+    metatype?: `${Metatype}`,
 
     children?: DatatypeElement[]
 }

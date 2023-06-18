@@ -26,7 +26,7 @@ import { ClusterReference, HtmlReference } from "./mom/spec/spec-types.js";
 import { loadCluster } from "./mom/spec/load-cluster.js";
 import { translateCluster } from "./mom/spec/translate-cluster.js";
 import { Logger } from "../src/log/Logger.js";
-import { generateModel } from "./mom/common/generate-model.js";
+import { generateIntermediateModel } from "./mom/common/generate-intermediate.js";
 
 const clusters = Array<ClusterElement>();
 const logger = Logger.get("generate-spec");
@@ -54,4 +54,4 @@ paths.forEach(path => {
     });
 });
 
-generateModel("spec", clusters);
+generateIntermediateModel("spec", clusters);

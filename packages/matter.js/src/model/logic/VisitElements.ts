@@ -29,15 +29,18 @@ export function VisitElements<T>({
     ) => string
 }) {
     state = visitor(state, variants);
-    
-    // List of children associated by ID or name (ID gets priority)
-    const slots = Array<VisitElements.Variants>();
 
-    // Map of IDs to first slot the ID appeared
-    const idToSlot = {} as { [id: number]: number };
+    type ChildMapping = {
+        // List of children associated by ID or name (ID gets priority)
+        slots: VisitElements.Variants[],
 
-    // Map of names to first slot the name appeared
-    const nameToSlot = {} as { [name: string]: number };
+        // Map of IDs to first slot the ID appeared
+        idToSlot: { [id: number]: number },
+
+        // Map of names to first slot the name appeared
+        nameToSlot: { [name: string]: number }
+    }
+    const mappings = {} as { [tag: string]: ChildMapping };
 
     // Iterate over each model variant
     for (const variantName in variants) {
@@ -50,6 +53,8 @@ export function VisitElements<T>({
         // For each child of this variant, associated it with a slot
         for (let i = 0; i < element.children.length; i++) {
             const child = element.children[i] as AnyElement;
+            const mapping = mappings[child.tag] ||
+                (mappings[child.tag] = { slots: [], idToSlot: {}, nameToSlot: {} });
 
             const childId = effectiveId(element, child, i);
             const childName = getName(variantName, element, child);
@@ -57,40 +62,42 @@ export function VisitElements<T>({
             let slot;
             if (childId != undefined) {
                 // Find existing slot by ID
-                slot = idToSlot[childId];
+                slot = mapping.idToSlot[childId];
             }
 
             // Find existing slot by name
             if (!slot) {
-                slot = nameToSlot[childName];
+                slot = mapping.nameToSlot[childName];
             }
 
             // Create a new slot if necessary
-            if (!slot) {
-                slot = slots.length;
-                slots.push({});
+            if (slot == undefined) {
+                slot = mapping.slots.length;
+                mapping.slots.push({});
             }
 
             // Map the child's ID to the slot
             if (childId != undefined) {
-                if (idToSlot[childId] === undefined) {
-                    idToSlot[childId] = slot;
+                if (mapping.idToSlot[childId] === undefined) {
+                    mapping.idToSlot[childId] = slot;
                 }
             }
 
             // Map the child's name to the slot
-            if (nameToSlot[childName] === undefined) {
-                nameToSlot[childName] = slot;
+            if (mapping.nameToSlot[childName] === undefined) {
+                mapping.nameToSlot[childName] = slot;
             }
 
             // Update the slot
-            slots[slot][variantName] = child;
+            mapping.slots[slot][variantName] = child;
         }
     }
 
     // Visit children
-    for (const variants of slots) {
-        VisitElements({ state: state, variants, visitor, getName });
+    for (const mapping of Object.values(mappings)) {
+        for (const variants of mapping.slots) {
+            VisitElements({ state: state, variants, visitor, getName });
+        }
     }
 }
 

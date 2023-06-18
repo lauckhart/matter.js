@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./spec/index.js";
-export * from "./chip/index.js";
-export * from "./local/index.js";
+export * from "./Matter.js";
+
+// Load generated elements
+import "./elements/index.js";

@@ -8,7 +8,6 @@ import { InternalError } from "../../common/index.js";
 import { Logger } from "../../log/index.js";
 import { ElementTag } from "../definitions/index.js";
 import { AnyElement, ValueElement } from "../elements/index.js";
-import { ChipMatter, LocalMatter, SpecMatter } from "../instance/index.js";
 import { VisitElements } from "./VisitElements.js";
 
 const logger = Logger.get("MergeElements");
@@ -16,16 +15,14 @@ const logger = Logger.get("MergeElements");
 /**
  * Merge multiple variants of an element into a single element.
  */
-export function MergeElements({
-    variants = MergeElements.DefaultVariants,
-    priorities = MergeElements.DefaultPriorities
-}: {
+export function MergeElements(
     variants: VisitElements.Variants,
-    priorities: MergeElements.Priorities
-} = {
-    variants: MergeElements.DefaultVariants,
-    priorities: MergeElements.DefaultPriorities
-}): AnyElement {
+    priorities = MergeElements.DefaultPriorities
+): AnyElement {
+    if (!priorities) {
+        priorities = MergeElements.DefaultPriorities
+    }
+
     // Cluster datatypes don't have explicit IDs and names can vary between
     // sources.  So we infer equivalence based on usage.  The canonical name
     // for each datatype in each variant is stored here after inference
@@ -276,14 +273,5 @@ export namespace MergeElements {
             // Prefer spec for datatype names
             "base": [ "local", "spec", "chip" ]
         }
-    }
-
-    /**
-     * A variant set with all variants included with matter.js.
-     */
-    export const DefaultVariants: VisitElements.Variants = {
-        spec: SpecMatter,
-        chip: ChipMatter,
-        local: LocalMatter
     }
 }

@@ -83,8 +83,7 @@ export function scanIndex(path: string) {
 
         const xref = {
             section: heading.section,
-            document: spec,
-            version: version 
+            document: spec
         };
 
         // Core spec convention for clusters is heading suffixed with "Cluster"
