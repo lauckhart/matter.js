@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BaseElement, ElementTag, Mei } from "../index.js";
+import { ElementTag, Mei } from "../definitions/index.js";
+import { BaseElement } from "./BaseElement.js";
 import { ValueElement } from "./ValueElement.js";
 
 /**

@@ -7,7 +7,7 @@
 import { Logger } from "../../../log/index.js";
 import { Conformance } from "../../aspects/index.js";
 import { ValueModel } from "../../models/index.js";
-import { ValidatorBuilder } from "./ValidatorBuilder.js";
+import { type ValidatorBuilder } from "./ValidatorBuilder.js";
 
 const logger = Logger.get("conformance-validation");
 

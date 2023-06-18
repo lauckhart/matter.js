@@ -10,7 +10,7 @@ import { homedir } from "os";
 import { resolve } from "path";
 import { Logger } from "../../../src/log/Logger.js";
 import { JSDOM } from "jsdom";
-import { BaseElement, Globals, MatterElement } from "../../../src/model/index.js";
+import { AnyElement, Globals, MatterElement } from "../../../src/model/index.js";
 import { translateChip } from "./translate-chip.js";
 
 const AUTH_FILE = resolve(homedir(), ".gh-auth");
@@ -57,13 +57,13 @@ export async function loadChip() {
 // cluster to simulate this broken behavior.  If/when they fix the behavior
 // this kludge can be removed but it won't hurt anything in the meantime.
 function installCrossClusterDependencies(elements: MatterElement.Child[]) {
-    const globalNamespace = new Map<string, BaseElement>();
-    const elementNamespaces = new Map<string, Map<string, BaseElement>>();
+    const globalNamespace = new Map<string, AnyElement>();
+    const elementNamespaces = new Map<string, Map<string, AnyElement>>();
 
     // One pass to build indices.  Only index direct children of top-level
     // children
     for (const e of elements) {
-        const elementNamespace = new Map<string, BaseElement>();
+        const elementNamespace = new Map<string, AnyElement>();
         for (const c of (e.children || [])) {
             if (c.tag == "datatype") {
                 globalNamespace.set(c.name, c);
@@ -78,7 +78,7 @@ function installCrossClusterDependencies(elements: MatterElement.Child[]) {
     for (const e of elements) {
         const elementNamespace = elementNamespaces.get(e.name)!;
 
-        function visit(d: BaseElement) {
+        function visit(d: AnyElement) {
             const base = (d as any).base as string;
             if (base && !(Globals as any)[base] && !elementNamespace.has(base)) {
                 const childToBringOver = globalNamespace.get(base);

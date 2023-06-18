@@ -5,6 +5,7 @@
  */
 
 import { ElementTag, Specification } from "../definitions/index.js";
+import type { AnyElement } from "./AnyElement.js";
 
 /**
  * Per the Matter specification, an element is a data construct that supports
@@ -45,7 +46,7 @@ export type BaseElement = {
     /**
      * Child elements.
      */
-    children?: BaseElement[],
+    children?: AnyElement[],
 
     /**
      * Is this a global element?

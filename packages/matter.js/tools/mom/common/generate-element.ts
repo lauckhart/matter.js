@@ -5,15 +5,12 @@
  */
 
 import { AnyElement } from "../../../src/model/index.js";
-import { camelize, serialize } from "../../../src/util/String.js";
+import { serialize } from "../../../src/util/String.js";
 import { Block } from "../../util/TsFile.js";
 import { wordWrap } from "../../util/string.js";
 
 export function generateElement(target: Block, element: AnyElement, prefix: string = "", suffix = "") {
-    const factory = camelize(`${element.tag} element`);
-    const block = target.expressions(`${prefix}${factory}({`, `})${suffix}`);
-
-    target.file.addImport("../../../elements/index", factory);
+    const block = target.expressions(`${prefix}{`, `}${suffix}`);
 
     const fields = element.valueOf() as { [ name: string ]: any };
     
@@ -22,8 +19,8 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
     delete fields.children;
     delete fields.details;
 
-    // ID/name/base on first row
-    const row1 = Array<string>();
+    // Tag/ID/name/type on first row
+    const row1 = Array<string>(`tag: ${serialize(element.tag)}`);
     if (element.id != undefined) {
         const idStr = element.id < 0
             ? `${element.id}`
@@ -58,7 +55,10 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
             const suffix = i < lines.length - 1 ? " +" : "";
             lines[i] = `${prefix}${serialize(lines[i] == "" ? "\n" : lines[i])}${suffix}`;
         }
-        block.atom(lines.join("\n"));
+        const text = lines.join("\n");
+        if (text) {
+            block.atom(text);
+        }
     }
 
     // Next row: Cross reference
@@ -67,10 +67,11 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
     }
 
     // Children
-    if (element.children?.length) {
-        const children = block.expressions(`children: [`, "]");
-        for (const child of element.children) {
-            generateElement(children, child as AnyElement);
+    const children = element.children?.filter(c => !c.isGlobal);
+    if (children?.length) {
+        const childBlock = block.expressions(`children: [`, "]");
+        for (const child of children) {
+            generateElement(childBlock, child as AnyElement);
         }
     }
 }

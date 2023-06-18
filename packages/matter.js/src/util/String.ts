@@ -70,7 +70,7 @@ export function camelize(name: string, upperFirst = true) {
 }
 
 /**
- * Like JSON.stringify but targets well-formed JS and is slightly more readable
+ * Like JSON.stringify but targets well-formed JS and is slightly more readable.
  */
 export function serialize(value: any) {
     const visited = new Set();

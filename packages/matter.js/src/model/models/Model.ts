@@ -15,7 +15,7 @@ const CHILDREN = Symbol("children");
  * A "model" is a class that implements runtime functionality associated with
  * the corresponding element type.
  */
-export abstract class Model implements BaseElement {
+export abstract class Model {
     abstract readonly tag: AnyElement["tag"];
     id?: number;
     name!: string;
@@ -394,13 +394,11 @@ export namespace Model {
 
     export class CrossReference implements Specification.CrossReference {
         document: Specification;
-        version: string;
         section: string;
 
-        constructor({ document, section, version }: Specification.CrossReference) {
+        constructor({ document, section }: Specification.CrossReference) {
             this.document = document as Specification;
             this.section = section;
-            this.version = version;
         }
 
         toString() {

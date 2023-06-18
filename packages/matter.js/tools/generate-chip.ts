@@ -9,7 +9,7 @@
 
 import "./util/setup.js";
 import { loadChip } from "./mom/chip/load-chip.js";
-import { generateModel } from "./mom/common/generate-model.js";
+import { generateIntermediateModel } from "./mom/common/generate-intermediate.js";
 
 const elements = await loadChip();
-generateModel("chip", elements);
+generateIntermediateModel("chip", elements);

@@ -122,6 +122,16 @@ export abstract class ValueModel extends Model implements ValueElement {
     }
 
     /**
+     * The working metatype for this object.
+     */
+    get effectiveMetatype() {
+        const metaBase = this.metaBase;
+        if (metaBase) {
+            return metaBase.metatype;
+        }
+    }
+
+    /**
      * Get a Model for my base type, if any.
      */
     get baseModel() {

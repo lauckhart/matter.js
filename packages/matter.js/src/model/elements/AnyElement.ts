@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AnyDataElement } from "./AnyDataElement.js";
+import { AnyValueElement } from "./AnyValueElement.js";
 import { ClusterElement } from "./ClusterElement.js";
 import { DeviceTypeElement } from "./DeviceTypeElement.js";
 import { EndpointElement } from "./EndpointElement.js";
@@ -16,7 +16,7 @@ import { NodeElement } from "./NodeElement.js";
  * Any Matter element.
  */
 export type AnyElement =
-    AnyDataElement
+    AnyValueElement
     | ClusterElement
     | DeviceTypeElement
     | EndpointElement

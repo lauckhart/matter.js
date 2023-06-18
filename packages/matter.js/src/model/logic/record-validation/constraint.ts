@@ -7,7 +7,7 @@
 import { Constraint } from "../../aspects/index.js";
 import { Metatype } from "../../definitions/index.js";
 import { ValueModel } from "../../models/index.js";
-import { ValidatorBuilder } from "./ValidatorBuilder.js";
+import { type ValidatorBuilder } from "./ValidatorBuilder.js";
 
 export function addConstraint(builder: ValidatorBuilder, model: ValueModel, constraint: Constraint) {
     builder.addTest(generateConstraintExpr(model, constraint), "CONSTRAINT_VIOLATION", model, "Value disallowed by constraint");

@@ -6,7 +6,7 @@
 
 import { Quality } from "../../aspects/index.js";
 import { ValueModel } from "../../models/index.js";
-import { ValidatorBuilder } from "./ValidatorBuilder.js";
+import { type ValidatorBuilder } from "./ValidatorBuilder.js";
 
 export function addQuality(builder: ValidatorBuilder, child: ValueModel, quality: Quality) {
     if (!quality.nullable) {

@@ -5,7 +5,7 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementTag, EventElement } from "../../../src/model/index.js";
+import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementTag, EventElement, AnyValueElement } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/index.js";
 import { TypeMap } from "./type-map.js";
 
@@ -205,7 +205,7 @@ function mapType(chipType: string | undefined) {
 }
 
 // Create a MOM element with data properties translated from CHIP XML
-function createDataElement<T extends ValueElement>({
+function createValueElement<T extends AnyValueElement>({
     factory,
     source,
     target,
@@ -252,7 +252,7 @@ function createDataElement<T extends ValueElement>({
 
             const childType = str(propertyEl.getAttribute("type"));
 
-            createDataElement({
+            createValueElement({
                 factory: DatatypeElement,
                 source: propertyEl,
                 target: element,
@@ -281,7 +281,7 @@ type Translator = (source: Element, target: ClusterElement) => void;
 
 const translators: { [name: string]: Translator } = {
     attribute: (source, target) => {
-        return createDataElement({
+        return createValueElement({
             factory: AttributeElement,
             source,
             target,
@@ -290,7 +290,7 @@ const translators: { [name: string]: Translator } = {
     },
 
     event: (source, target) => {
-        const event = createDataElement({
+        const event = createValueElement({
             factory: EventElement,
             source,
             target,
@@ -302,7 +302,7 @@ const translators: { [name: string]: Translator } = {
     },
 
     command: (source, target) => {
-        const command = createDataElement({
+        const command = createValueElement({
             factory: CommandElement,
             source,
             target,
@@ -326,7 +326,7 @@ const translators: { [name: string]: Translator } = {
     },
 
     struct: (source, target) => {
-        return createDataElement({
+        return createValueElement({
             factory: DatatypeElement,
             source,
             target,
@@ -337,7 +337,7 @@ const translators: { [name: string]: Translator } = {
     },
 
     enum: (source, target) => {
-        return createDataElement({
+        return createValueElement({
             factory: DatatypeElement,
             source,
             target,
@@ -349,7 +349,7 @@ const translators: { [name: string]: Translator } = {
     },
 
     bitmap: (source, target) => {
-        return createDataElement({
+        return createValueElement({
             factory: DatatypeElement,
             source,
             target,
