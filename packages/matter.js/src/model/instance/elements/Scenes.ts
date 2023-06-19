@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "SceneCount",
-            access: "R V", conformance: "M", default: 0, type: "uint8",
+            access: "R V", conformance: "M", default: undefined, type: "uint8",
             details: "The SceneCount attribute specifies the number of scenes currently in " +
                      "the server’s Scene Table",
             xref: { document: "cluster", section: "1.4.7.1" }
@@ -22,7 +22,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "CurrentScene",
-            access: "R V", conformance: "M", default: 0, type: "uint8",
+            access: "R V", conformance: "M", default: undefined, type: "uint8",
             details: "The CurrentScene attribute holds the scene identifier of the scene " +
                      "last invoked",
             xref: { document: "cluster", section: "1.4.7.2" }
@@ -30,7 +30,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "CurrentGroup",
-            access: "R V", conformance: "M", default: 0, type: "group-id",
+            access: "R V", conformance: "M", default: undefined, type: "group-id",
             details: "The CurrentGroup attribute holds the group identifier of the scene " +
                      "last invoked, or 0 if the scene last invoked is not associated with a " +
                      "group",
@@ -48,8 +48,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0004, name: "SceneNameSupport",
-            access: "R V", conformance: "M", constraint: "desc", default: 0, type: "map8",
+            tag: "attribute", id: 0x0004, name: "NameSupport",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, type: "map8",
             details: "This attribute provides legacy, read-only access to whether the Scene " +
                      "Names feature is supported. The most significant bit, bit 7, SHALL be " +
                      "equal to bit 0 of the FeatureMap attribute. All other bits SHALL be 0",
@@ -58,7 +58,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "LastConfiguredBy",
-            access: "R V", conformance: "O", default: "null", quality: "X", type: "node-id",
+            access: "R V", conformance: "O", default: undefined, quality: "X", type: "node-id",
             details: "The LastConfiguredBy attribute holds the Node ID (the IEEE address in " +
                      "case of Zigbee) of the node that last configured the Scene Table",
             xref: { document: "cluster", section: "1.4.7.6" }
@@ -364,8 +364,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ScenesFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "AttributeValuePair",
+            conformance: "M", type: "struct",
             details: "This data type indicates a combination of an identifier and the value " +
                      "of an attribute",
             xref: { document: "cluster", section: "1.4.6.1" },
@@ -383,7 +383,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "SceneNames",
+                    tag: "datatype", id: 0x0001, name: "AttributeValue",
                     access: "RW", conformance: "M", default: "", type: "variable",
                     details: "This is the attribute value as part of an extension field set. See " +
                              "AttributeID to determine the data type for this field",
@@ -399,6 +399,22 @@ Matter.children.push({
                 {
                     tag: "datatype", id: 0x0001, name: "CopyAllScenes",
                     conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "AttributeValuePair",
+            conformance: "M", type: "struct",
+            children: [
+                {
+                    tag: "datatype", name: "AttributeId",
+                    conformance: "O", type: "attrib-id"
+                },
+
+                {
+                    tag: "datatype", name: "AttributeValue",
+                    conformance: "M", type: "uint8"
                 }
             ]
         },

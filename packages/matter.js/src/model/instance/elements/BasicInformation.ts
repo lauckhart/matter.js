@@ -83,7 +83,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0007, name: "HardwareVersion",
-            access: "R V", conformance: "M", default: 0, quality: "F", type: "uint16",
+            access: "R V", conformance: "M", default: undefined, quality: "F", type: "uint16",
             details: "This attribute SHALL specify the version number of the hardware of the" +
                      " Node. The meaning of its value, and the versioning scheme, are vendor" +
                      " defined",
@@ -103,7 +103,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0009, name: "SoftwareVersion",
-            access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F", type: "uint32",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, quality: "F", type: "uint32",
             details: "This attribute SHALL contain the current version number for the " +
                      "software running on this Node. The version number can be compared " +
                      "using a total ordering to determine if a version is logically newer " +
@@ -287,7 +287,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ProductAppearanceStruct",
+            tag: "datatype", name: "CapabilityMinimaStruct",
             conformance: "M", type: "struct",
             details: "This structure provides constant values related to overall global " +
                      "capabilities of this Node, that are not cluster-specific",
@@ -300,14 +300,30 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "PrimaryColor",
-                    conformance: "M", constraint: "min 3", default: 3, quality: "X", type: "ColorEnum",
+                    tag: "datatype", id: 0x0001, name: "SubscriptionsPerFabric",
+                    conformance: "M", constraint: "min 3", default: 3, quality: "X", type: "uint16",
                     xref: { document: "core", section: "11.1.4.1" }
                 },
 
                 {
                     tag: "datatype", name: "Finish",
                     conformance: "M", type: "ProductFinishEnum"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "CapabilityMinimaStruct",
+            conformance: "M", type: "struct",
+            children: [
+                {
+                    tag: "datatype", name: "CaseSessionsPerFabric",
+                    conformance: "M", type: "uint16"
+                },
+
+                {
+                    tag: "datatype", name: "SubscriptionsPerFabric",
+                    conformance: "M", type: "uint16"
                 }
             ]
         },

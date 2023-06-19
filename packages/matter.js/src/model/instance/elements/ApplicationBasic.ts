@@ -21,8 +21,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "ApplicationVendorId",
-            access: "R V", conformance: "O", default: 0, quality: "F", type: "vendor-id",
+            tag: "attribute", id: 0x0001, name: "VendorId",
+            access: "R V", conformance: "O", default: undefined, quality: "F", type: "vendor-id",
             details: "This attribute, if present, SHALL specify the Connectivity Standards " +
                      "Alliance assigned Vendor ID for the Content App",
             xref: { document: "cluster", section: "6.3.3.2" }
@@ -39,8 +39,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "ApplicationProductId",
-            access: "R V", conformance: "O", default: 0, quality: "F", type: "uint16",
+            tag: "attribute", id: 0x0003, name: "ProductId",
+            access: "R V", conformance: "O", default: undefined, quality: "F", type: "uint16",
             details: "This attribute, if present, SHALL specify a numeric ID assigned by the" +
                      " vendor to identify a specific Content App made by them. If the " +
                      "Content App is certified by the Connectivity Standards Alliance, then " +
@@ -50,15 +50,15 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0004, name: "ApplicationApp",
-            access: "R V", conformance: "M", constraint: "desc", default: "", quality: "F", type: "ApplicationStruct",
+            tag: "attribute", id: 0x0004, name: "Application",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, quality: "F", type: "ApplicationStruct",
             details: "This attribute SHALL specify a Content App which consists of an " +
                      "Application ID using a specified catalog",
             xref: { document: "cluster", section: "6.3.3.5" }
         },
 
         {
-            tag: "attribute", id: 0x0005, name: "ApplicationStatus",
+            tag: "attribute", id: 0x0005, name: "Status",
             access: "R V", conformance: "M", constraint: "desc", default: 1, type: "ApplicationStatusEnum",
             details: "This attribute SHALL specify the current running status of the " +
                      "application",
@@ -75,8 +75,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0007, name: "ApplicationAllowedVendorList",
-            access: "R A", conformance: "M", constraint: "None", default: "", quality: "F", type: "list",
+            tag: "attribute", id: 0x0007, name: "AllowedVendorList",
+            access: "R A", conformance: "M", constraint: "None", default: undefined, quality: "F", type: "list",
             details: "This is a list of vendor IDs. Each entry is a vendor-id",
             xref: { document: "cluster", section: "6.3.3.8" },
             children: [
@@ -93,21 +93,21 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ApplicationStatusEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "ApplicationStruct",
+            conformance: "M", type: "struct",
             details: "This indicates a global identifier for an Application given a catalog",
             xref: { document: "cluster", section: "6.3.4.1" },
             children: [
                 {
                     tag: "datatype", id: 0x0000, name: "CatalogVendorId",
-                    conformance: "M", default: 0, type: "uint16",
+                    conformance: "M", default: undefined, type: "uint16",
                     details: "This SHALL indicate the Connectivity Standards Alliance issued vendor " +
                              "ID for the catalog. The DIAL registry SHALL use value 0x0000",
                     xref: { document: "cluster", section: "6.3.4.1.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "ActiveVisibleFocus",
+                    tag: "datatype", id: 0x0001, name: "ApplicationId",
                     conformance: "M", default: "", type: "string",
                     details: "This SHALL indicate the application identifier, expressed as a string" +
                              ", such as \"123456-5433\", \"PruneVideo\" or \"Company X\". This field SHALL" +

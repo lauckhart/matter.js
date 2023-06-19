@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "ThreadMetrics",
-            access: "R V", conformance: "O", constraint: "max 64", default: "", type: "list",
+            access: "R V", conformance: "O", constraint: "max 64", default: undefined, type: "list",
             details: "The ThreadMetrics attribute SHALL be a list of ThreadMetricsStruct " +
                      "structs. Each active thread on the Node SHALL be represented by a " +
                      "single entry within the ThreadMetrics attribute",
@@ -29,7 +29,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "CurrentHeapFree",
-            access: "R V", conformance: "O", default: 0, type: "uint64",
+            access: "R V", conformance: "O", default: undefined, type: "uint64",
             details: "The CurrentHeapFree attribute SHALL indicate the current amount of " +
                      "heap memory, in bytes, that are free for allocation. The effective " +
                      "amount MAY be smaller due to heap fragmentation or other reasons",
@@ -38,7 +38,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "CurrentHeapUsed",
-            access: "R V", conformance: "O", default: 0, type: "uint64",
+            access: "R V", conformance: "O", default: undefined, type: "uint64",
             details: "The CurrentHeapUsed attribute SHALL indicate the current amount of " +
                      "heap memory, in bytes, that is being used",
             xref: { document: "core", section: "11.12.6.3" }
@@ -46,7 +46,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "CurrentHeapHighWatermark",
-            access: "R V", conformance: "WTRMRK", default: 0, type: "uint64",
+            access: "R V", conformance: "WTRMRK", default: undefined, type: "uint64",
             details: "The CurrentHeapHighWatermark attribute SHALL indicate the maximum " +
                      "amount of heap memory, in bytes, that has been used by the Node. This " +
                      "value SHALL only be reset upon a Node reboot or upon receiving of the " +
@@ -87,19 +87,19 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "SoftwareDiagnosticsFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "ThreadMetricsStruct",
+            conformance: "M", type: "struct",
             details: "ID Field",
             xref: { document: "core", section: "11.12.5.1" },
             children: [
                 {
                     tag: "datatype", id: 0x0000, name: "Id",
-                    conformance: "M", default: 0, type: "uint64",
+                    conformance: "M", default: undefined, type: "uint64",
                     xref: { document: "core", section: "11.12.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "WaterMarks",
+                    tag: "datatype", id: 0x0001, name: "Name",
                     conformance: "O", constraint: "max 8", default: "empty", type: "string",
                     xref: { document: "core", section: "11.12.5.1" }
                 },
@@ -120,6 +120,37 @@ Matter.children.push({
                     tag: "datatype", id: 0x0004, name: "StackSize",
                     conformance: "O", default: "MS", type: "uint32",
                     xref: { document: "core", section: "11.12.5.1" }
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "ThreadMetricsStruct",
+            conformance: "M", type: "struct",
+            children: [
+                {
+                    tag: "datatype", name: "Id",
+                    conformance: "M", type: "uint64"
+                },
+
+                {
+                    tag: "datatype", name: "Name",
+                    conformance: "O", type: "string"
+                },
+
+                {
+                    tag: "datatype", name: "StackFreeCurrent",
+                    conformance: "O", type: "uint32"
+                },
+
+                {
+                    tag: "datatype", name: "StackFreeMinimum",
+                    conformance: "O", type: "uint32"
+                },
+
+                {
+                    tag: "datatype", name: "StackSize",
+                    conformance: "O", type: "uint32"
                 }
             ]
         }

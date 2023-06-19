@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "ConfigurationList",
-            access: "RW", conformance: "M", default: "empty", quality: "N", type: "list",
+            access: "RW", conformance: "M", default: [], quality: "N", type: "list",
             details: "List of proxy configurations. There SHALL NOT be multiple entries in " +
                      "this list for the same fabric",
             xref: { document: "core", section: "9.15.14.5.1" },
@@ -39,7 +39,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", id: 0x0002, name: "SourceList",
-                    access: "RW", conformance: "M", constraint: "desc", default: "empty", type: "list",
+                    access: "RW", conformance: "M", constraint: "desc", default: [], type: "list",
                     xref: { document: "core", section: "9.15.14.4.1" },
                     children: [
                         {

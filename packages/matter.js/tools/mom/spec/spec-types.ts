@@ -22,7 +22,8 @@ export type HtmlReference = {
     name: string,
     path: string,
     table?: Table,
-    firstParagraph?: HTMLParagraphElement
+    firstParagraph?: HTMLParagraphElement,
+    details?: HtmlReference[]
 }
 
 // A reference with details on sub-elements

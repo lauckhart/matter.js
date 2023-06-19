@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "PhyRate",
-            access: "R V", conformance: "O", default: "null", quality: "X", type: "PhyRateEnum",
+            access: "R V", conformance: "O", default: undefined, quality: "X", type: "PHYRateEnum",
             details: "The PHYRate attribute SHALL indicate the current nominal, usable speed" +
                      " at the top of the physical layer of the Node. A value of null SHALL " +
                      "indicate that the interface is not currently configured or operational",
@@ -32,7 +32,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "PacketRxCount",
-            access: "R V", conformance: "P, KTCNT", default: 0, type: "uint64",
+            access: "R V", conformance: "P, KTCNT", default: undefined, type: "uint64",
             details: "The PacketRxCount attribute SHALL indicate the number of packets that " +
                      "have been received on the ethernet network interface. The " +
                      "PacketRxCount attribute SHALL be reset to 0 upon a reboot of the Node",
@@ -41,7 +41,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "PacketTxCount",
-            access: "R V", conformance: "P, KTCNT", default: 0, quality: "C", type: "uint64",
+            access: "R V", conformance: "P, KTCNT", default: undefined, quality: "C", type: "uint64",
             details: "The PacketTxCount attribute SHALL indicate the number of packets that " +
                      "have been successfully transferred on the ethernet network interface. " +
                      "The PacketTxCount attribute SHALL be reset to 0 upon a reboot of the " +
@@ -51,7 +51,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0004, name: "TxErrCount",
-            access: "R V", conformance: "ERRCNT", default: 0, quality: "C", type: "uint64",
+            access: "R V", conformance: "ERRCNT", default: undefined, quality: "C", type: "uint64",
             details: "The TxErrCount attribute SHALL indicate the number of failed packet " +
                      "transmissions that have occurred on the ethernet network interface. " +
                      "The TxErrCount attribute SHALL be reset to 0 upon a reboot of the Node",
@@ -60,7 +60,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "CollisionCount",
-            access: "R V", conformance: "ERRCNT", default: 0, quality: "C", type: "uint64",
+            access: "R V", conformance: "ERRCNT", default: undefined, quality: "C", type: "uint64",
             details: "The CollisionCount attribute SHALL indicate the number of collisions " +
                      "that have occurred while attempting to transmit a packet on the " +
                      "ethernet network interface. The CollisionCount attribute SHALL be " +
@@ -69,8 +69,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0006, name: "EthernetOverrunCount",
-            access: "R V", conformance: "ERRCNT", default: 0, quality: "C", type: "uint64",
+            tag: "attribute", id: 0x0006, name: "OverrunCount",
+            access: "R V", conformance: "ERRCNT", default: undefined, quality: "C", type: "uint64",
             details: "The OverrunCount attribute SHALL indicate the number of packets " +
                      "dropped either at ingress or egress, due to lack of buffer memory to " +
                      "retain all packets on the ethernet network interface. The OverrunCount" +
@@ -90,7 +90,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0008, name: "TimeSinceReset",
-            access: "R V", conformance: "O", default: 0, quality: "C", type: "uint64",
+            access: "R V", conformance: "O", default: undefined, quality: "C", type: "uint64",
             xref: { document: "core", section: "11.15.6" }
         },
 
@@ -102,8 +102,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "EthernetNetworkDiagnosticsFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "PHYRateEnum",
+            conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.15.5.1" },
             children: [
@@ -114,13 +114,13 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "PacketCounts",
+                    tag: "datatype", id: 0x0001, name: "Rate100M",
                     conformance: "M",
                     xref: { document: "core", section: "11.15.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "ErrorCounts",
+                    tag: "datatype", id: 0x0002, name: "Rate1G",
                     conformance: "M",
                     xref: { document: "core", section: "11.15.5.1" }
                 },

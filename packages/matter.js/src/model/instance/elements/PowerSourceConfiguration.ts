@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "Sources",
-            access: "R V", conformance: "M", constraint: "max 6", default: "", quality: "N", type: "list",
+            access: "R V", conformance: "M", constraint: "max 6", default: undefined, quality: "N", type: "list",
             details: "This list SHALL contain the set of all power sources capable of " +
                      "participating in the power system of this Node. Each entry in the list" +
                      " SHALL be the endpoint number of an endpoint having a Power Source " +
@@ -24,7 +24,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "entry",
-                    type: "uint8"
+                    type: "endpoint-no"
                 }
             ]
         }

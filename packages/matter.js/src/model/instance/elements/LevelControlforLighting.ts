@@ -9,8 +9,8 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x001c, name: "PulseWidthModulation",
-    classification: "application", description: "Pulse Width Modulation",
+    tag: "cluster", id: 0x0008, name: "LevelControlforLighting",
+    classification: "application", description: "Level Control",
     children: [
         {
             tag: "attribute", id: 0x0000, name: "CurrentLevel",
@@ -30,7 +30,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "MinLevel",
-            access: "R V", conformance: "O", default: "!LT:0LT:1", type: "uint8",
+            access: "R V", conformance: "O", default: undefined, type: "uint8",
             details: "The MinLevel attribute indicates the minimum value of CurrentLevel " +
                      "that is capable of being assigned",
             xref: { document: "cluster", section: "1.6.5.3" }
@@ -74,7 +74,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0010, name: "OnOffTransitionTime",
-            access: "RW VO", conformance: "O", default: undefined, type: "uint16",
+            access: "RW", conformance: "O", default: undefined, type: "uint16",
             details: "The OnOffTransitionTime attribute represents the time taken to move to" +
                      " or from the target level when On or Off commands are received by an " +
                      "On/Off cluster on the same endpoint. It is specified in 1/10ths of a " +
@@ -84,7 +84,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0011, name: "OnLevel",
-            access: "RW VO", conformance: "M", constraint: "MinLevel to MaxLevel", default: undefined, quality: "X", type: "uint8",
+            access: "RW", conformance: "M", constraint: "MinLevel to MaxLevel", default: undefined, quality: "X", type: "uint8",
             details: "The OnLevel attribute determines the value that the CurrentLevel " +
                      "attribute is set to when the OnOff attribute of an On/Off cluster on " +
                      "the same endpoint is set to TRUE, as a result of processing an On/Off " +
@@ -96,7 +96,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0012, name: "OnTransitionTime",
-            access: "RW VO", conformance: "O", default: undefined, quality: "X", type: "uint16",
+            access: "RW", conformance: "O", default: undefined, quality: "X", type: "uint16",
             details: "The OnTransitionTime attribute represents the time taken to move the " +
                      "current level from the minimum level to the maximum level when an On " +
                      "command is received by an On/Off cluster on the same endpoint. It is " +
@@ -107,7 +107,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0013, name: "OffTransitionTime",
-            access: "RW VO", conformance: "O", default: undefined, quality: "X", type: "uint16",
+            access: "RW", conformance: "O", default: undefined, quality: "X", type: "uint16",
             details: "The OffTransitionTime attribute represents the time taken to move the " +
                      "current level from the maximum level to the minimum level when an Off " +
                      "command is received by an On/Off cluster on the same endpoint. It is " +
@@ -118,7 +118,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0014, name: "DefaultMoveRate",
-            access: "RW VO", conformance: "O", default: "MS", quality: "X", type: "uint8",
+            access: "RW", conformance: "O", default: "MS", quality: "X", type: "uint8",
             details: "The DefaultMoveRate attribute determines the movement rate, in units " +
                      "per second, when a Move command is received with a null value Rate " +
                      "parameter",
@@ -127,7 +127,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x000f, name: "Options",
-            access: "RW VO", conformance: "M", constraint: "desc", default: undefined, type: "map8",
+            access: "RW", conformance: "M", constraint: "desc", default: undefined, type: "map8",
             details: "The Options attribute is meant to be changed only during commissioning" +
                      ". The Options attribute is a bitmap that determines the default " +
                      "behavior of some cluster commands. Each command that is dependent on " +
@@ -153,52 +153,210 @@ Matter.children.push({
             tag: "command", id: 0x0000, name: "MoveToLevel",
             access: "O", conformance: "M", direction: "request", response: "status",
             details: "The MoveToLevel command SHALL have the following data fields",
-            xref: { document: "cluster", section: "1.6.6.1" }
+            xref: { document: "cluster", section: "1.6.6.1" },
+            children: [
+                {
+                    tag: "datatype", name: "Level",
+                    conformance: "M", type: "uint8"
+                },
+
+                {
+                    tag: "datatype", name: "TransitionTime",
+                    conformance: "M", quality: "X", type: "uint16"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsMask",
+                    conformance: "M", type: "LevelControlOptions"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsOverride",
+                    conformance: "M", type: "LevelControlOptions"
+                }
+            ]
         },
 
         {
             tag: "command", id: 0x0001, name: "Move",
             access: "O", conformance: "M", direction: "request", response: "status",
             details: "The Move command SHALL have the following data fields",
-            xref: { document: "cluster", section: "1.6.6.2" }
+            xref: { document: "cluster", section: "1.6.6.2" },
+            children: [
+                {
+                    tag: "datatype", name: "MoveMode",
+                    conformance: "M", type: "MoveMode"
+                },
+
+                {
+                    tag: "datatype", name: "Rate",
+                    conformance: "M", quality: "X", type: "uint8"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsMask",
+                    conformance: "M", type: "LevelControlOptions"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsOverride",
+                    conformance: "M", type: "LevelControlOptions"
+                }
+            ]
         },
 
         {
             tag: "command", id: 0x0002, name: "Step",
             access: "O", conformance: "M", direction: "request", response: "status",
             details: "The Step command SHALL have the following data fields",
-            xref: { document: "cluster", section: "1.6.6.3" }
+            xref: { document: "cluster", section: "1.6.6.3" },
+            children: [
+                {
+                    tag: "datatype", name: "StepMode",
+                    conformance: "M", type: "StepMode"
+                },
+
+                {
+                    tag: "datatype", name: "StepSize",
+                    conformance: "M", type: "uint8"
+                },
+
+                {
+                    tag: "datatype", name: "TransitionTime",
+                    conformance: "M", quality: "X", type: "uint16"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsMask",
+                    conformance: "M", type: "LevelControlOptions"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsOverride",
+                    conformance: "M", type: "LevelControlOptions"
+                }
+            ]
         },
 
         {
             tag: "command", id: 0x0003, name: "Stop",
             access: "O", conformance: "M", direction: "request", response: "status",
             details: "The Stop command SHALL have the following data fields",
-            xref: { document: "cluster", section: "1.6.6.4" }
+            xref: { document: "cluster", section: "1.6.6.4" },
+            children: [
+                {
+                    tag: "datatype", name: "OptionsMask",
+                    conformance: "M", type: "LevelControlOptions"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsOverride",
+                    conformance: "M", type: "LevelControlOptions"
+                }
+            ]
         },
 
         {
             tag: "command", id: 0x0004, name: "MoveToLevelWithOnOff",
             access: "O", conformance: "M", direction: "request", response: "status",
-            xref: { document: "cluster", section: "1.6.6" }
+            xref: { document: "cluster", section: "1.6.6" },
+            children: [
+                {
+                    tag: "datatype", name: "Level",
+                    conformance: "M", type: "uint8"
+                },
+
+                {
+                    tag: "datatype", name: "TransitionTime",
+                    conformance: "M", quality: "X", type: "uint16"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsMask",
+                    conformance: "M", type: "LevelControlOptions"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsOverride",
+                    conformance: "M", type: "LevelControlOptions"
+                }
+            ]
         },
 
         {
             tag: "command", id: 0x0005, name: "MoveWithOnOff",
             access: "O", conformance: "M", direction: "request", response: "status",
-            xref: { document: "cluster", section: "1.6.6" }
+            xref: { document: "cluster", section: "1.6.6" },
+            children: [
+                {
+                    tag: "datatype", name: "MoveMode",
+                    conformance: "M", type: "MoveMode"
+                },
+
+                {
+                    tag: "datatype", name: "Rate",
+                    conformance: "M", quality: "X", type: "uint8"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsMask",
+                    conformance: "M", type: "LevelControlOptions"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsOverride",
+                    conformance: "M", type: "LevelControlOptions"
+                }
+            ]
         },
 
         {
             tag: "command", id: 0x0006, name: "StepWithOnOff",
             access: "O", conformance: "M", direction: "request", response: "status",
-            xref: { document: "cluster", section: "1.6.6" }
+            xref: { document: "cluster", section: "1.6.6" },
+            children: [
+                {
+                    tag: "datatype", name: "StepMode",
+                    conformance: "M", type: "StepMode"
+                },
+
+                {
+                    tag: "datatype", name: "StepSize",
+                    conformance: "M", type: "uint8"
+                },
+
+                {
+                    tag: "datatype", name: "TransitionTime",
+                    conformance: "M", quality: "X", type: "uint16"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsMask",
+                    conformance: "M", type: "LevelControlOptions"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsOverride",
+                    conformance: "M", type: "LevelControlOptions"
+                }
+            ]
         },
 
         {
             tag: "command", id: 0x0007, name: "StopWithOnOff",
             access: "O", conformance: "M", direction: "request", response: "status",
-            xref: { document: "cluster", section: "1.6.6" }
+            xref: { document: "cluster", section: "1.6.6" },
+            children: [
+                {
+                    tag: "datatype", name: "OptionsMask",
+                    conformance: "M", type: "LevelControlOptions"
+                },
+
+                {
+                    tag: "datatype", name: "OptionsOverride",
+                    conformance: "M", type: "LevelControlOptions"
+                }
+            ]
         },
 
         {
@@ -206,7 +364,82 @@ Matter.children.push({
             access: "O", conformance: "FQ", direction: "request", response: "status",
             details: "The MoveToClosestFrequency command SHALL have the following data " +
                      "fields",
-            xref: { document: "cluster", section: "1.6.6.5" }
+            xref: { document: "cluster", section: "1.6.6.5" },
+            children: [
+                {
+                    tag: "datatype", name: "Frequency",
+                    conformance: "M", type: "uint16"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "LevelControlFeature",
+            conformance: "M", type: "map32",
+            children: [
+                {
+                    tag: "datatype", id: 0x0001, name: "OnOff",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "Lighting",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0004, name: "Frequency",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "MoveMode",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "Up",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "Down",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "StepMode",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "Up",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "Down",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "LevelControlOptions",
+            conformance: "M", type: "map8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0001, name: "ExecuteIfOff",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "CoupleColorTempToLevel",
+                    conformance: "M"
+                }
+            ]
         }
     ]
 });

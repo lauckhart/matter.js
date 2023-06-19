@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "NoCs",
-            access: "R F A", conformance: "M", constraint: "max SupportedFabrics", default: "", quality: "N C", type: "list",
+            access: "R F A", conformance: "M", constraint: "max SupportedFabrics", default: undefined, quality: "N C", type: "list",
             details: "This attribute contains all NOCs applicable to this Node, encoded as a" +
                      " read-only list of NOCStruct",
             xref: { document: "core", section: "11.17.5.1" },
@@ -28,7 +28,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "Fabrics",
-            access: "R F V", conformance: "M", constraint: "max SupportedFabrics", default: "", quality: "N", type: "list",
+            access: "R F V", conformance: "M", constraint: "max SupportedFabrics", default: undefined, quality: "N", type: "list",
             details: "This attribute describes all fabrics to which this Node is " +
                      "commissioned, encoded as a read-only list of FabricDescriptorStruct. " +
                      "This information MAY be computed directly from the NOCs attribute",
@@ -43,7 +43,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "SupportedFabrics",
-            access: "R V", conformance: "M", constraint: "5 to 254", default: 0, quality: "F", type: "uint8",
+            access: "R V", conformance: "M", constraint: "5 to 254", default: undefined, quality: "F", type: "uint8",
             details: "This attribute contains the number of Fabrics that are supported by " +
                      "the device. This value is fixed for a particular device",
             xref: { document: "core", section: "11.17.5.3" }
@@ -51,7 +51,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "CommissionedFabrics",
-            access: "R V", conformance: "M", constraint: "max SupportedFabrics", default: 0, quality: "N", type: "uint8",
+            access: "R V", conformance: "M", constraint: "max SupportedFabrics", default: undefined, quality: "N", type: "uint8",
             details: "This attribute contains the number of Fabrics to which the device is " +
                      "currently commissioned. This attribute SHALL be equal to the following",
             xref: { document: "core", section: "11.17.5.4" }
@@ -59,7 +59,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0004, name: "TrustedRootCertificates",
-            access: "R V", conformance: "M", constraint: "max SupportedFabrics[max 400]", default: "", quality: "N C", type: "list",
+            access: "R V", conformance: "M", constraint: "max SupportedFabrics[max 400]", default: undefined, quality: "N C", type: "list",
             details: "This attribute SHALL contain a read-only list of Trusted Root CA " +
                      "Certificates installed on the Node, as octet strings containing their " +
                      "Matter Certificate Encoding representation",
@@ -74,7 +74,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "CurrentFabricIndex",
-            access: "R V", conformance: "M", default: 0, type: "uint8",
+            access: "R V", conformance: "M", default: undefined, type: "uint8",
             details: "This attribute SHALL contain accessing fabric index",
             xref: { document: "core", section: "11.17.5.6" }
         },

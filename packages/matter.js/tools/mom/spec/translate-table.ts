@@ -5,9 +5,9 @@
  */
 
 import { camelize } from "../../../src/util/String.js";
-import { DetailedReference } from "./spec-types.js";
+import { HtmlReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
-import { Specification } from "../../../src/model/index.js";
+import { AnyElement, DatatypeElement, Specification } from "../../../src/model/index.js";
 
 const logger = Logger.get("table-translate");
 
@@ -62,6 +62,12 @@ type Constant<T> = { option: "constant", value: any };
 export const Constant = <T> (value: T): Constant<T> =>
     ({ option: "constant", value });
 
+// Converts detail section into children
+type ChildTranslator = (parentRecord: any, definition: HtmlReference) => DatatypeElement[] | undefined;
+type Children = { option: "children", translator: ChildTranslator}
+export const Children = (translator: ChildTranslator) =>
+    ({ option: "children", translator });
+
 // A simple schema format.  This is all a little fancy for an ugly scraping
 // tool but accuracy and repeatability is the goal
 type TableSchema = {
@@ -71,6 +77,7 @@ type TableSchema = {
 type FieldType<F>
     = F extends Optional<infer W> ? W | undefined
     : F extends Alias<infer W> | Translator<infer W> | Constant<infer W> ? W
+    : F extends Children ? DatatypeElement[]
     : never;
 
 // Create TS object type from schema definition
@@ -84,7 +91,7 @@ const has = (object: Object, name: string) =>
 // Translates an array of key => HTMLElement records into a proper TS type
 export function translateTable<T extends TableSchema>(
     desc: string,
-    definition: DetailedReference | undefined,
+    definition: HtmlReference | undefined,
     schema: T
 ): Array<TableRecord<T>> {
     if (!definition) {
@@ -102,8 +109,9 @@ export function translateTable<T extends TableSchema>(
     const aliases = Array<[string, string]>();
     const optional = new Set<String>();
     const translators = Array<[string, Translator<any>]>();
+    let childTranslator: ChildTranslator | undefined;
 
-    for (let [ k, v ] of Object.entries(schema)) {
+    nextValue: for (let [ k, v ] of Object.entries(schema)) {
         while (typeof v == "object") {
             switch (v.option) {
                 case "optional":
@@ -121,6 +129,10 @@ export function translateTable<T extends TableSchema>(
                 case "constant":
                     v = v.value;
                     break;
+
+                case "children":
+                    childTranslator = v.children;
+                    continue nextValue;
             }
         }
 
@@ -160,11 +172,13 @@ export function translateTable<T extends TableSchema>(
     }
 
     if (missing.size) {
-        logger.error(`ignored one or more ${desc} rows due to missing fields: ${Array(...missing).join(', ')}`);
+        logger.error(`§ ${definition.xref.section} ignored one or more ${desc} rows due to missing fields: ${Array(...missing).join(', ')}`);
         logger.error(`keys present are: ${Object.keys(definition.table.rows[0]).join(', ')}`);
     }
 
-    installPreciseDetails(desc, definition, result);
+    if (definition.details != undefined) {
+        installPreciseDetails(desc, definition.details, result, childTranslator);
+    }
 
     return result;
 }
@@ -187,7 +201,7 @@ export function translateRecordsToMatter<R, E extends { id?: number, name: strin
         logger.debug(`${desc} ${mapped.name} = ${mapped.id ?? "(anon)"}`);
         result.push(mapped as E);
     }
-    if (result.length == undefined) {
+    if (!result.length) {
         return undefined;
     }
     return result;
@@ -196,11 +210,12 @@ export function translateRecordsToMatter<R, E extends { id?: number, name: strin
 // Attempt to install more specific xref and details
 function installPreciseDetails(
     desc: string,
-    definition: DetailedReference,
-    records: Array<{ name?: string, xref?: Specification.CrossReference, details?: string }>
+    definitions: HtmlReference[],
+    records: Array<{ name?: string, xref?: Specification.CrossReference, details?: string, children?: AnyElement[] }>,
+    childTranslator?: ChildTranslator
 ) {
     const lookup = Object.fromEntries(
-        definition.details.map((detail) =>
+        definitions.map((detail) =>
             [ detail.name.toLowerCase(), detail ]
         )
     );
@@ -215,6 +230,9 @@ function installPreciseDetails(
         if (detail) {
             r.xref = detail.xref;
             detail.firstParagraph && (r.details = Str(detail.firstParagraph));
+            if (childTranslator) {
+                r.children = childTranslator(r, detail);
+            }
         }
     })
 }

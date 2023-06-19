@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "ActionList",
-            access: "R V", conformance: "M", constraint: "max 256", default: "empty", type: "list",
+            access: "R V", conformance: "M", constraint: "max 256", default: [], type: "list",
             details: "The ActionList attribute holds the list of actions. Each entry SHALL " +
                      "have an unique ActionID, and its EndpointListID SHALL exist in the " +
                      "EndpointLists attribute",
@@ -28,8 +28,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "EndpointList",
-            access: "R V", conformance: "M", constraint: "max 256", default: "empty", type: "list",
+            tag: "attribute", id: 0x0001, name: "EndpointLists",
+            access: "R V", conformance: "M", constraint: "max 256", default: [], type: "list",
             details: "The EndpointLists attribute holds the list of endpoint lists. Each " +
                      "entry SHALL have an unique EndpointListID",
             xref: { document: "core", section: "9.14.5.2" },
@@ -348,8 +348,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "EndpointListStruct",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "CommandBits",
+            conformance: "M", type: "map16",
             details: "This data type is derived from map16",
             xref: { document: "core", section: "9.14.4.1" },
             children: [
@@ -360,19 +360,19 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Name",
+                    tag: "datatype", id: 0x0001, name: "InstantActionWithTransition",
                     conformance: "M", description: "Indicate support for InstantActionWithTransition command", type: "string",
                     xref: { document: "core", section: "9.14.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Type",
+                    tag: "datatype", id: 0x0002, name: "StartAction",
                     conformance: "M", description: "Indicate support for StartAction command", type: "EndpointListTypeEnum",
                     xref: { document: "core", section: "9.14.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0003, name: "Endpoints",
+                    tag: "datatype", id: 0x0003, name: "StartActionWithDuration",
                     conformance: "M", description: "Indicate support for StartActionWithDuration command", type: "endpoint-no",
                     xref: { document: "core", section: "9.14.4.1" }
                 },
@@ -428,6 +428,72 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "EndpointListId",
                     conformance: "M", type: "uint16"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "CommandBits",
+            conformance: "M", type: "map16",
+            children: [
+                {
+                    tag: "datatype", id: 0x0001, name: "InstantAction",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "InstantActionWithTransition",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0004, name: "StartAction",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0008, name: "StartActionWithDuration",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0010, name: "StopAction",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0020, name: "PauseAction",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0040, name: "PauseActionWithDuration",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0080, name: "ResumeAction",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0100, name: "EnableAction",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0200, name: "EnableActionWithDuration",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0400, name: "DisableAction",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0800, name: "DisableActionWithDuration",
+                    conformance: "M"
                 }
             ]
         },

@@ -104,7 +104,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      * 
      * Does not recurse so only returns the direct base type.
      */
-    get actualType() {
+    get effectiveType() {
         return this.type;
     }
 
@@ -135,7 +135,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Get a Model for my base type, if any.
      */
     get baseModel() {
-        const base = this.actualType;
+        const base = this.effectiveType;
         if (base) {
             return this.scope.global(ValueModel.constructors.datatype, base);
         }

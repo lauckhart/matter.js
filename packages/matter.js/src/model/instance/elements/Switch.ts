@@ -24,7 +24,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "CurrentPosition",
-            conformance: "M", constraint: "0 to NumberOfPositions1", default: 0, quality: "N", type: "uint8",
+            conformance: "M", constraint: "0 to NumberOfPositions1", default: undefined, quality: "N", type: "uint8",
             details: "This attribute SHALL indicate the position of the switch. The valid " +
                      "range is zero to NumberOfPositions-1. CurrentPosition value 0 SHALL be" +
                      " assigned to the default position of the switch: for example the \"open" +

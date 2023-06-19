@@ -13,9 +13,9 @@ export class DatatypeModel extends ValueModel implements DatatypeElement {
     override tag: DatatypeElement.Tag = DatatypeElement.Tag;
     override id?: Mei;
 
-    override get actualType() {
-        const base = super.actualType;
-        if (base || !(this.parent instanceof DatatypeModel)) {
+    override get effectiveType() {
+        const base = super.effectiveType;
+        if (base || !(this.parent instanceof ValueModel)) {
             return base;
         }
 

@@ -74,7 +74,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0007, name: "HardwareVersion",
-            conformance: "O", default: 0, type: "uint16"
+            conformance: "O", default: undefined, type: "uint16"
         },
 
         {
@@ -84,7 +84,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0009, name: "SoftwareVersion",
-            conformance: "O", default: 0, type: "uint32"
+            conformance: "O", default: undefined, type: "uint32"
         },
 
         {

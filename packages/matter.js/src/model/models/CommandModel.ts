@@ -15,7 +15,7 @@ export class CommandModel extends ValueModel implements CommandElement {
     direction?: CommandElement.Direction;
     response?: string
 
-    override get actualType() {
+    override get effectiveType() {
         return Datatype.struct;
     }
 

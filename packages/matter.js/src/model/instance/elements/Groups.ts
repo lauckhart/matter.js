@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "NameSupport",
-            access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F", type: "map8",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, quality: "F", type: "map8",
             details: "This attribute provides legacy, read-only access to whether the Group " +
                      "Names feature is supported. The most significant bit, bit 7, SHALL be " +
                      "equal to bit 0 of the FeatureMap attribute. All other bits SHALL be 0",

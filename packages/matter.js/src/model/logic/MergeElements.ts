@@ -270,8 +270,11 @@ export namespace MergeElements {
             "constraint": [ "local", "spec", "chip" ],
             "quality": [ "local", "spec", "chip" ],
 
+            // Prefer spec for element names
+            "name": [ "local", "spec", "chip" ],
+
             // Prefer spec for datatype names
-            "base": [ "local", "spec", "chip" ]
+            "type": [ "local", "spec", "chip" ]
         }
     }
 }

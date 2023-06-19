@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "InputList",
-            access: "R V", conformance: "M", default: "", type: "list",
+            access: "R V", conformance: "M", default: undefined, type: "list",
             details: "This list provides the media inputs supported by the device",
             xref: { document: "cluster", section: "6.9.3.1" },
             children: [
@@ -26,8 +26,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "MediaInputCurrentInput",
-            access: "R V", conformance: "M", default: 0, type: "uint8",
+            tag: "attribute", id: 0x0001, name: "CurrentInput",
+            access: "R V", conformance: "M", default: undefined, type: "uint8",
             details: "This field contains the value of the index field of the currently " +
                      "selected InputInfoStruct",
             xref: { document: "cluster", section: "6.9.3.2" }
@@ -94,21 +94,21 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "MediaInputFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "InputInfoStruct",
+            conformance: "M", type: "struct",
             details: "This contains information about an input",
             xref: { document: "cluster", section: "6.9.5.1" },
             children: [
                 {
                     tag: "datatype", id: 0x0000, name: "Index",
-                    conformance: "M", default: 0, type: "uint8",
+                    conformance: "M", default: undefined, type: "uint8",
                     details: "This SHALL indicate the unique index into the list of Inputs",
                     xref: { document: "cluster", section: "6.9.5.1.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "NameUpdates",
-                    conformance: "M", constraint: "desc", default: 0, type: "InputTypeEnum",
+                    tag: "datatype", id: 0x0001, name: "InputType",
+                    conformance: "M", constraint: "desc", default: undefined, type: "InputTypeEnum",
                     details: "This SHALL indicate the type of input",
                     xref: { document: "cluster", section: "6.9.5.1.2" }
                 },
@@ -128,6 +128,32 @@ Matter.children.push({
                              "Living room Playstation”. This field may be blank, but SHOULD be " +
                              "provided when known",
                     xref: { document: "cluster", section: "6.9.5.1.4" }
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "InputInfoStruct",
+            conformance: "M", type: "struct",
+            children: [
+                {
+                    tag: "datatype", name: "Index",
+                    conformance: "M", type: "uint8"
+                },
+
+                {
+                    tag: "datatype", name: "InputType",
+                    conformance: "M", type: "InputTypeEnum"
+                },
+
+                {
+                    tag: "datatype", name: "Name",
+                    conformance: "M", type: "string"
+                },
+
+                {
+                    tag: "datatype", name: "Description",
+                    conformance: "M", type: "string"
                 }
             ]
         },
