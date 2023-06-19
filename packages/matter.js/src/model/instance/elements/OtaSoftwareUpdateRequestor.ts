@@ -14,12 +14,12 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "DefaultOtaProviders",
-            access: "RW", conformance: "M", constraint: "desc", default: "[]", type: "list",
+            access: "RW", conformance: "M", constraint: "desc", default: [], type: "list",
             xref: { document: "core", section: "11.19.7.5" },
             children: [
                 {
                     tag: "datatype", name: "entry",
-                    type: "ProviderLocation"
+                    type: "ProviderLocationStruct"
                 }
             ]
         },
@@ -32,13 +32,13 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "UpdateState",
-            access: "R V", conformance: "M", default: 0, type: "OtaUpdateStateEnum",
+            access: "R V", conformance: "M", default: 0, type: "UpdateStateEnum",
             xref: { document: "core", section: "11.19.7.5" }
         },
 
         {
             tag: "attribute", id: 0x0003, name: "UpdateStateProgress",
-            access: "R V", conformance: "M", constraint: "0 to 100", default: "null", quality: "X", type: "uint8",
+            access: "R V", conformance: "M", constraint: "0 to 100", default: undefined, quality: "X", type: "uint8",
             xref: { document: "core", section: "11.19.7.5" }
         },
 

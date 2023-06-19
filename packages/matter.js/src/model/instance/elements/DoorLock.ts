@@ -14,21 +14,21 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "LockState",
-            access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "X S P", type: "DlLockState",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, quality: "X S P", type: "enum8",
             details: "This attribute has the following possible values",
             xref: { document: "cluster", section: "5.2.3.1" }
         },
 
         {
             tag: "attribute", id: 0x0001, name: "LockType",
-            access: "R V", conformance: "M", constraint: "desc", default: 0, type: "DlLockType",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, type: "enum8",
             details: "The LockType attribute is indicated by an enumeration",
             xref: { document: "cluster", section: "5.2.3.2" }
         },
 
         {
             tag: "attribute", id: 0x0002, name: "ActuatorEnabled",
-            access: "R V", conformance: "M", default: false, type: "bool",
+            access: "R V", conformance: "M", default: undefined, type: "bool",
             details: "The ActuatorEnabled attribute indicates if the lock is currently able " +
                      "to (Enabled) or not able to (Disabled) process remote Lock, Unlock, or" +
                      " Unlock with Timeout commands",
@@ -37,14 +37,14 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "DoorState",
-            access: "R V", conformance: "D, P, S", constraint: "desc", default: 0, quality: "X P", type: "DoorStateEnum",
+            access: "R V", conformance: "D, P, S", constraint: "desc", default: undefined, quality: "X P", type: "enum8",
             details: "The current door state as defined in DoorStateEnum",
             xref: { document: "cluster", section: "5.2.3.4" }
         },
 
         {
             tag: "attribute", id: 0x0004, name: "DoorOpenEvents",
-            access: "RW VM", conformance: "[D, P, S]", default: 0, type: "uint32",
+            access: "RW VM", conformance: "[D, P, S]", default: undefined, type: "uint32",
             details: "This attribute holds the number of door open events that have occurred" +
                      " since it was last zeroed",
             xref: { document: "cluster", section: "5.2.3.5" }
@@ -52,7 +52,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "DoorClosedEvents",
-            access: "RW VM", conformance: "[D, P, S]", default: 0, type: "uint32",
+            access: "RW VM", conformance: "[D, P, S]", default: undefined, type: "uint32",
             details: "This attribute holds the number of door closed events that have " +
                      "occurred since it was last zeroed",
             xref: { document: "cluster", section: "5.2.3.6" }
@@ -60,7 +60,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0006, name: "OpenPeriod",
-            access: "RW VM", conformance: "[D, P, S]", default: 0, type: "uint16",
+            access: "RW VM", conformance: "[D, P, S]", default: undefined, type: "uint16",
             details: "This attribute holds the number of minutes the door has been open " +
                      "since the last time it transitioned from closed to open",
             xref: { document: "cluster", section: "5.2.3.7" }
@@ -68,56 +68,56 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0010, name: "NumberOfLogRecordsSupported",
-            access: "R V", conformance: "LOG", default: 0, quality: "F", type: "uint16",
+            access: "R V", conformance: "LOG", default: undefined, quality: "F", type: "uint16",
             details: "The number of available log records",
             xref: { document: "cluster", section: "5.2.3.8" }
         },
 
         {
-            tag: "attribute", id: 0x0011, name: "NumTotalUsersSupported",
-            access: "R V", conformance: "USR", default: 0, quality: "F", type: "uint16",
+            tag: "attribute", id: 0x0011, name: "NumberOfTotalUsersSupported",
+            access: "R V", conformance: "USR", default: undefined, quality: "F", type: "uint16",
             details: "Number of total users supported by the lock",
             xref: { document: "cluster", section: "5.2.3.9" }
         },
 
         {
-            tag: "attribute", id: 0x0012, name: "NumPinUsersSupported",
-            access: "R V", conformance: "P, IN", default: 0, quality: "F", type: "uint16",
+            tag: "attribute", id: 0x0012, name: "NumberOfPinUsersSupported",
+            access: "R V", conformance: "P, IN", default: undefined, quality: "F", type: "uint16",
             details: "The number of PIN users supported",
             xref: { document: "cluster", section: "5.2.3.10" }
         },
 
         {
-            tag: "attribute", id: 0x0013, name: "NumRfidUsersSupported",
-            access: "R V", conformance: "RID", default: 0, quality: "F", type: "uint16",
+            tag: "attribute", id: 0x0013, name: "NumberOfRfidUsersSupported",
+            access: "R V", conformance: "RID", default: undefined, quality: "F", type: "uint16",
             details: "The number of RFID users supported",
             xref: { document: "cluster", section: "5.2.3.11" }
         },
 
         {
-            tag: "attribute", id: 0x0014, name: "NumWeekdaySchedulesSupportedPerUser",
-            access: "R V", conformance: "WDSCH", default: 0, quality: "F", type: "uint8",
+            tag: "attribute", id: 0x0014, name: "NumberOfWeekDaySchedulesSupportedPerUser",
+            access: "R V", conformance: "WDSCH", default: undefined, quality: "F", type: "uint8",
             details: "The number of configurable week day schedule supported per user",
             xref: { document: "cluster", section: "5.2.3.12" }
         },
 
         {
-            tag: "attribute", id: 0x0015, name: "NumYeardaySchedulesSupportedPerUser",
-            access: "R V", conformance: "YDSCH", default: 0, quality: "F", type: "uint8",
+            tag: "attribute", id: 0x0015, name: "NumberOfYearDaySchedulesSupportedPerUser",
+            access: "R V", conformance: "YDSCH", default: undefined, quality: "F", type: "uint8",
             details: "The number of configurable year day schedule supported per user",
             xref: { document: "cluster", section: "5.2.3.13" }
         },
 
         {
-            tag: "attribute", id: 0x0016, name: "NumHolidaySchedulesSupported",
-            access: "R V", conformance: "HDSCH", default: 0, quality: "F", type: "uint8",
+            tag: "attribute", id: 0x0016, name: "NumberOfHolidaySchedulesSupported",
+            access: "R V", conformance: "HDSCH", default: undefined, quality: "F", type: "uint8",
             details: "The number of holiday schedules supported for the entire door lock " +
                      "device",
             xref: { document: "cluster", section: "5.2.3.14" }
         },
 
         {
-            tag: "attribute", id: 0x0017, name: "MaxPinLength",
+            tag: "attribute", id: 0x0017, name: "MaxPinCodeLength",
             access: "R V", conformance: "P, IN", default: "MS", quality: "F", type: "uint8",
             details: "An 8 bit value indicates the maximum length in bytes of a PIN Code on " +
                      "this device",
@@ -125,7 +125,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0018, name: "MinPinLength",
+            tag: "attribute", id: 0x0018, name: "MinPinCodeLength",
             access: "R V", conformance: "P, IN", default: "MS", quality: "F", type: "uint8",
             details: "An 8 bit value indicates the minimum length in bytes of a PIN Code on " +
                      "this device",
@@ -156,15 +156,15 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x001b, name: "CredentialRulesSupport",
-            access: "R V", conformance: "USR", default: 1, quality: "F", type: "DlCredentialRuleMask",
+            access: "R V", conformance: "USR", default: 1, quality: "F", type: "map8",
             details: "This bitmap contains a bit for every value of CredentialRuleEnum " +
                      "supported on this device",
             xref: { document: "cluster", section: "5.2.3.19" }
         },
 
         {
-            tag: "attribute", id: 0x001c, name: "NumCredentialsSupportedPerUser",
-            access: "R V", conformance: "USR", default: 0, quality: "F", type: "uint8",
+            tag: "attribute", id: 0x001c, name: "NumberOfCredentialsSupportedPerUser",
+            access: "R V", conformance: "USR", default: undefined, quality: "F", type: "uint8",
             details: "The number of credentials that could be assigned for each user",
             xref: { document: "cluster", section: "5.2.3.20" }
         },
@@ -191,7 +191,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0022, name: "LedSettings",
-            access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "P", type: "uint8",
+            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "P", type: "uint8",
             details: "The settings for the LED support three different modes, shown below",
             xref: { document: "cluster", section: "5.2.3.25" }
         },
@@ -208,7 +208,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0024, name: "SoundVolume",
-            access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "P", type: "uint8",
+            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "P", type: "uint8",
             details: "The sound volume on a door lock has four possible settings: silent, " +
                      "low, high and medium volumes, shown below",
             xref: { document: "cluster", section: "5.2.3.27" }
@@ -216,14 +216,14 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0025, name: "OperatingMode",
-            access: "RW VM", conformance: "M", constraint: "desc", default: 0, quality: "P", type: "OperatingModeEnum",
+            access: "RW VM", conformance: "M", constraint: "desc", default: undefined, quality: "P", type: "enum8",
             details: "The current operating mode of the lock (see OperatingModeEnum",
             xref: { document: "cluster", section: "5.2.3.23" }
         },
 
         {
             tag: "attribute", id: 0x0026, name: "SupportedOperatingModes",
-            access: "R V", conformance: "M", default: 65526, quality: "F", type: "DlSupportedOperatingModes",
+            access: "R V", conformance: "M", default: 65526, quality: "F", type: "map16",
             details: "This bitmap contains all operating bits of the Operating Mode " +
                      "Attribute supported by the lock. All operating modes NOT supported by " +
                      "a lock SHALL be set to one. The value of the OperatingMode enumeration" +
@@ -233,7 +233,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0027, name: "DefaultConfigurationRegister",
-            access: "R V", conformance: "O", default: 0, quality: "P", type: "DlDefaultConfigurationRegister",
+            access: "R V", conformance: "O", default: undefined, quality: "P", type: "map16",
             details: "This attribute represents the default configurations as they are " +
                      "physically set on the device (example: hardware dip switch setting, " +
                      "etc…) and represents the default setting for some of the attributes " +
@@ -282,7 +282,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x002c, name: "LocalProgrammingFeatures",
-            access: "RW VA", conformance: "O", default: 0, quality: "P", type: "DlLocalProgrammingFeatures",
+            access: "RW VA", conformance: "O", default: undefined, quality: "P", type: "map8",
             details: "The local programming features that will be disabled when " +
                      "EnableLocalProgramming attribute is set to False. If a door lock doesn" +
                      "’t support disabling one aspect of local programming it SHALL return " +
@@ -331,7 +331,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0033, name: "RequirePinForRemoteOperation",
+            tag: "attribute", id: 0x0033, name: "RequirePiNforRemoteOperation",
             access: "RW VA", conformance: "COTA & P, IN", default: true, quality: "P", type: "bool",
             details: "Boolean set to True if the door lock server requires that an optional " +
                      "PINs be included in the payload of remote lock operation events like " +
@@ -614,7 +614,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", id: 0x0003, name: "UnlockWithTimeout",
+            tag: "command", id: 0x0003, name: "UnlockwithTimeout",
             access: "O T", conformance: "O", direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
             children: [
@@ -1212,8 +1212,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "DoorLockDayOfWeek",
-            conformance: "M", type: "map8",
+            tag: "datatype", name: "AlarmCodeEnum",
+            conformance: "M", type: "enum8",
             details: "The Alarm Code enum SHALL indicate the alarm type. The data type of " +
                      "the Alarm Code enum is derived from enum8",
             xref: { document: "cluster", section: "5.2.6.1" },
@@ -1225,7 +1225,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Sunday",
+                    tag: "datatype", id: 0x0001, name: "LockFactoryReset",
                     conformance: "O", description: "Lock Reset to Factory Defaults",
                     xref: { document: "cluster", section: "5.2.6.1" }
                 },
@@ -1237,7 +1237,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0004, name: "Tuesday",
+                    tag: "datatype", id: 0x0004, name: "WrongCodeEntryLimit",
                     conformance: "[USR]", description: "Tamper Alarm - wrong code entry limit",
                     xref: { document: "cluster", section: "5.2.6.1" }
                 },
@@ -1261,7 +1261,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0008, name: "Wednesday",
+                    tag: "datatype", id: 0x0008, name: "ForcedUser",
                     conformance: "[USR]", description: "Force User SOS alarm",
                     details: "User has ability to open lock but a ForcedUser LockOperationType and " +
                              "ForcedUser silent alarm will be emitted to allow a notified Node to " +
@@ -1286,6 +1286,52 @@ Matter.children.push({
 
                 {
                     tag: "datatype", id: 0x0040, name: "Saturday",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "AlarmCodeEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "LockJammed",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "LockFactoryReset",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0003, name: "LockRadioPowerCycled",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0004, name: "WrongCodeEntryLimit",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0005, name: "FrontEsceutcheonRemoved",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0006, name: "DoorForcedOpen",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0007, name: "DoorAjar",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0008, name: "ForcedUser",
                     conformance: "M"
                 }
             ]

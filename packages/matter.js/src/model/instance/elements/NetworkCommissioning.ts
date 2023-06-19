@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "MaxNetworks",
-            access: "R A", conformance: "M", constraint: "min 1", default: 0, quality: "F", type: "uint8",
+            access: "R A", conformance: "M", constraint: "min 1", default: undefined, quality: "F", type: "uint8",
             details: "This SHALL indicate the maximum number of network configuration " +
                      "entries that can be added, based on available device resources. The " +
                      "length of the Networks attribute list SHALL be less than or equal to " +
@@ -24,7 +24,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "Networks",
-            access: "R A", conformance: "M", constraint: "max MaxNetworks", default: "empty", type: "list",
+            access: "R A", conformance: "M", constraint: "max MaxNetworks", default: [], type: "list",
             details: "This attribute SHALL indicate the network configurations that are " +
                      "usable on the network interface represented by this cluster server " +
                      "instance",
@@ -32,14 +32,14 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "entry",
-                    type: "NetworkInfo"
+                    type: "NetworkInfoStruct"
                 }
             ]
         },
 
         {
             tag: "attribute", id: 0x0002, name: "ScanMaxTimeSeconds",
-            access: "R V", conformance: "WI | TH", constraint: "desc", default: 0, quality: "F", type: "uint8",
+            access: "R V", conformance: "WI | TH", constraint: "desc", default: undefined, quality: "F", type: "uint8",
             details: "This attribute SHALL indicate the maximum duration taken, in seconds, " +
                      "by the network interface on this cluster server instance to provide " +
                      "scan results",
@@ -48,7 +48,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "ConnectMaxTimeSeconds",
-            access: "R V", conformance: "WI | TH", constraint: "desc", default: 0, quality: "F", type: "uint8",
+            access: "R V", conformance: "WI | TH", constraint: "desc", default: undefined, quality: "F", type: "uint8",
             details: "This attribute SHALL indicate the maximum duration taken, in seconds, " +
                      "by the network interface on this cluster server instance to report a " +
                      "successful or failed network connection indication. This maximum time " +
@@ -69,7 +69,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "LastNetworkingStatus",
-            access: "R A", conformance: "M", default: "null", quality: "X", type: "NetworkCommissioningStatus",
+            access: "R A", conformance: "M", default: "null", quality: "X", type: "NetworkCommissioningStatusEnum",
             details: "This attribute SHALL indicate the status of the last attempt either " +
                      "scan or connect to an operational network, using this interface, " +
                      "whether by invocation of the ConnectNetwork command or by autonomous " +
@@ -81,7 +81,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0006, name: "LastNetworkId",
-            access: "R A", conformance: "M", constraint: "1 to 32", default: "null", quality: "X", type: "octstr",
+            access: "R A", conformance: "M", constraint: "1 to 32", default: undefined, quality: "X", type: "octstr",
             details: "This attribute SHALL indicate the NetworkID used in the last attempt " +
                      "to connect to an operational network, using this interface, whether by" +
                      " invocation of the ConnectNetwork command or by autonomous connection " +
@@ -93,7 +93,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0007, name: "LastConnectErrorValue",
-            access: "R A", conformance: "M", default: "null", quality: "X", type: "int32",
+            access: "R A", conformance: "M", default: undefined, quality: "X", type: "int32",
             details: "This attribute SHALL indicate the ErrorValue used in the last failed " +
                      "attempt to connect to an operational network, using this interface, " +
                      "whether by invocation of the ConnectNetwork command or by autonomous " +
@@ -312,8 +312,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "NetworkCommissioningFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "WiFiSecurityBitmap",
+            conformance: "M", type: "map8",
             details: "This data type is derived from map8",
             xref: { document: "core", section: "11.8.5.1" },
             children: [
@@ -324,13 +324,13 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "WiFiNetworkInterface",
+                    tag: "datatype", id: 0x0001, name: "Wep",
                     conformance: "M", description: "Supports Wi-Fi using WEP security",
                     xref: { document: "core", section: "11.8.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "ThreadNetworkInterface",
+                    tag: "datatype", id: 0x0002, name: "WpaPersonal",
                     conformance: "M", description: "Supports Wi-Fi using WPA-Personal security",
                     xref: { document: "core", section: "11.8.5.1" }
                 },
@@ -342,7 +342,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0004, name: "EthernetNetworkInterface",
+                    tag: "datatype", id: 0x0004, name: "Wpa3Personal",
                     conformance: "M", description: "Supports Wi-Fi using WPA3-Personal security",
                     xref: { document: "core", section: "11.8.5.1" }
                 }

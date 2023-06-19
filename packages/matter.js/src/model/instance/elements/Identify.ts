@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "IdentifyTime",
-            access: "RW", conformance: "M", default: 0, type: "uint16",
+            access: "RW", conformance: "M", default: undefined, type: "uint16",
             details: "This attribute specifies the remaining length of time, in seconds, " +
                      "that the endpoint will continue to identify itself",
             xref: { document: "cluster", section: "1.2.5.1" }
@@ -22,7 +22,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "IdentifyType",
-            access: "R V", conformance: "M", constraint: "desc", default: 0, type: "enum8",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, type: "enum8",
             details: "This attribute specifies how the identification state is presented to " +
                      "the user. This field SHALL contain one of the values listed below",
             xref: { document: "cluster", section: "1.2.5.2" }

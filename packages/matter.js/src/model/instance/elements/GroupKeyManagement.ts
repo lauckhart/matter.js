@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "GroupKeyMap",
-            access: "RW VM", conformance: "M", constraint: "desc", default: "empty", quality: "N", type: "list",
+            access: "RW VM", conformance: "M", constraint: "desc", default: [], quality: "N", type: "list",
             details: "This attribute is a list of GroupKeyMapStruct entries. Each entry " +
                      "associates a logical Group Id with a particular group key set",
             xref: { document: "core", section: "11.2.7.1" },
@@ -28,7 +28,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "GroupTable",
-            access: "R F", conformance: "M", constraint: "desc", default: "empty", type: "list",
+            access: "R F", conformance: "M", constraint: "desc", default: [], type: "list",
             details: "This attribute is a list of GroupInfoMapStruct entries. Each entry " +
                      "provides read-only information about how a given logical Group ID maps" +
                      " to a particular set of endpoints, and a name for the group. The " +
@@ -46,7 +46,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "MaxGroupsPerFabric",
-            conformance: "M", default: 0, quality: "F", type: "uint16",
+            conformance: "M", default: undefined, quality: "F", type: "uint16",
             details: "This attribute SHALL indicate the maximum number of groups that this " +
                      "node supports per fabric. The value of this attribute SHALL be set to " +
                      "be no less than the required minimum supported groups as specified in " +

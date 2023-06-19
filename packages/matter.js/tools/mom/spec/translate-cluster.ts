@@ -5,12 +5,12 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals } from "../../../src/model/index.js";
+import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter } from "./translate-table.js";
+import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children } from "./translate-table.js";
 
-const logger = Logger.get("cluster-translate");
+const logger = Logger.get("translate-cluster");
 
 // Translate from DOM -> MOM
 export function* translateCluster(definition: ClusterReference) {
@@ -141,7 +141,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
 
 // For some reason, "default" fabric access appears in an informational row
 // instead of the access column in many of the core definitions.  Fix this.
-function applyAccessNotes(fields?: DetailedReference, records?: { access?: string }[]) {
+function applyAccessNotes(fields?: HtmlReference, records?: { access?: string }[]) {
     if (!fields?.table?.notes.length || !records) {
         return;
     }
@@ -186,7 +186,7 @@ function applyAccessNotes(fields?: DetailedReference, records?: { access?: strin
 }
 
 // Translate fields for an attribute or struct
-function translateFields(desc: string, fields?: DetailedReference) {
+function translateFields(desc: string, fields?: HtmlReference) {
     const records = translateTable(desc, fields, {
         id: Integer,
         name: Identifier,
@@ -195,12 +195,61 @@ function translateFields(desc: string, fields?: DetailedReference) {
         quality: Optional(Str),
         default: Optional(NoSpace),
         access: Optional(Str),
-        conformance: Optional(Str)
+        conformance: Optional(Str),
+        children: Children(translateValueChildren)
+    });
+
+    records.forEach(r => {
+        switch (r.default) {
+            case "desc": // See description
+            case "N/A": // Not available
+            case "MS": // Manufacturer specific
+            case "-": // Sometimes used for "none"
+                delete r.default;
+                break;
+        }
     });
 
     applyAccessNotes(fields, records);
 
     return records;
+}
+
+// Translate children of enums, bitmaps, structs, commands, attributes and
+// events.  If "parent" is none of these returns undefined
+function translateValueChildren(parent: undefined | { type?: string }, definition: HtmlReference): DatatypeElement[] | undefined {
+    const type = parent?.type;
+    if (type == undefined) {
+        return;
+    }
+
+    const dt = (Globals as any)[type];
+    switch (dt?.metatype) {
+        case Metatype.enum: {
+            const records = translateTable("value", definition, {
+                id: Alias(Integer, "value"),
+                name: Alias(Identifier, "type"),
+                conformance: Optional(Str),
+                description: Optional(Str),
+                meaning: Optional(Str)
+            });
+            return translateRecordsToMatter("value", records, DatatypeElement)
+        }
+
+        case Metatype.bitmap: {
+            const records = translateTable("bit", definition, {
+                id: Alias(Integer, "bit"),
+                name: Identifier,
+                description: Optional(Alias(Str, "summary"))
+            });
+            return translateRecordsToMatter("bit", records, DatatypeElement);
+        }
+
+        case Metatype.object: {
+            const records = translateFields("field", definition);
+            return translateRecordsToMatter("field", records, DatatypeElement);
+        }
+    }
 }
 
 // Load attributes, events and commands
@@ -224,7 +273,8 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             direction: Str,
             response: Optional(Identifier),
             access: Optional(Str),
-            conformance: Optional(Str)
+            conformance: Optional(Str),
+            children: Children(translateValueChildren)
         });
 
         applyAccessNotes(definition.commands, records);
@@ -264,7 +314,8 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             name: Identifier,
             priority: Optional(LowerIdentifier),
             access: Optional(Str),
-            conformance: Optional(Str)
+            conformance: Optional(Str),
+            children: Children(translateValueChildren)
         });
 
         applyAccessNotes(definition.events, records);
@@ -306,7 +357,6 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
     }
 
     for (const datatype of definition.datatypes) {
-        logger.debug(`datatype ${datatype.name}`);
         Logger.nest(() => {
             const child = translateDatatype(datatype);
             if (child) {
@@ -316,36 +366,9 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         });
     }
     
-    function translateEnum(datatype: DetailedReference) {
-        const records = translateTable("value", datatype, {
-            id: Alias(Integer, "value"),
-            name: Alias(Identifier, "type"),
-            conformance: Optional(Str),
-            description: Optional(Str),
-            meaning: Optional(Str)
-        });
-        return translateRecordsToMatter("value", records, DatatypeElement)
-    }
-    
-    function translateBitmap(datatype: DetailedReference) {
-        
-
-        const records = translateTable("bit", datatype, {
-            id: Alias(Integer, "bit"),
-            name: Identifier,
-            description: Optional(Alias(Str, "summary"))
-        });
-        return translateRecordsToMatter("bit", records, DatatypeElement);
-    }
-    
-    function translateStruct(datatype: DetailedReference) {
-        const records = translateFields("field", datatype);
-        return translateRecordsToMatter("field", records, DatatypeElement);
-    }
-    
-    function translateDatatype(datatype: DetailedReference) {
-        let name = datatype.name;
-        const text = datatype.firstParagraph?.textContent;
+    function translateDatatype(definition: DetailedReference) {
+        let name = definition.name;
+        const text = definition.firstParagraph?.textContent;
         if (!text) {
             logger.warn(`no text to search for base type`);
         }
@@ -353,31 +376,37 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         let type = match?.[1];
     
         let description: string | undefined;
-        let children: DatatypeElement[] | undefined;
-        let translator: undefined | ((entries: DetailedReference, type: string) => DatatypeElement[] | undefined);
+
+        // Fix type errors
+        switch (type) {
+            case "attribute-id":
+                type = "attr-id";
+                break;
+
+            case "bitmap8":
+                type = "map8";
+                break;
+        }
     
         if (name.match(/enum$/i) || type?.match(/^enum/i)) {
             if (!type) {
                 logger.warn(`no base detected, guessing enum8`)
                 type = "enum8";
             }
-            translator = translateEnum;
-        } else if (name.match(/bits$/i) || type?.match(/^map/i) || type?.match(/^bitmap/i)) {
+        } else if (name.match(/bits$/i) || type?.match(/^map/i)) {
             if (!type) {
                 logger.warn(`no base detected, guessing map8`);
                 type = "map8";
             } else if (type.match(/^bitmap/)) {
                 type = type.slice(3);
             }
-            translator = translateBitmap;
         } else if (name.match(/struct$/i)
             || type == "struct"
-            || (datatype.table?.rows[0].type)
+            || (definition.table?.rows[0].type)
         ) {
             if (!type) {
                 type = "struct";
             }
-            translator = translateStruct;
         } else if (match = name.match(/(.+) \((\S+) type\)/i)) {
             description = match[1];
             name = match [2];
@@ -388,18 +417,9 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             return;
         }
     
-        if (translator) {
-            if (!datatype.table) {
-                logger.warn(`compound datatype has no defining table`);
-                return;
-            }
-            children = translator(datatype, type);
-            if (!children) {
-                return;
-            }
-        }
-    
-        return DatatypeElement({ type: type, name, description, xref: datatype.xref, children: children });
+        const datatype = DatatypeElement({ type: type, name, description, xref: definition.xref });
+        datatype.children = translateValueChildren(datatype, definition);
+        return datatype;
     }
 }
 

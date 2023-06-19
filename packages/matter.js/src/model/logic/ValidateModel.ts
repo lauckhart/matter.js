@@ -9,7 +9,7 @@ import { DefinitionError } from "../definitions/index.js";
 import { Model } from "../models/index.js";
 import { ModelValidator } from "./definition-validation/ModelValidator.js";
 
-const logger = Logger.get("ModelValidator");
+const logger = Logger.get("ValidateModel");
 
 /**
  * Ensures that a model's definition is correct.  Places errors into the error
@@ -23,8 +23,21 @@ const logger = Logger.get("ModelValidator");
  */
 export function ValidateModel(model: Model) {
     function validate(model: Model) {
+        const Validator = ModelValidator.validators[model.tag];
+        if (!Validator) {
+            model.error("UNKOWN_MODEL_TYPE", `No validator for ${model.tag}`);
+            return;
+        }
+
+        try {
+            new Validator(model).validate();
+        } catch (e) {
+            console.error(`Error validating ${model.path}`)
+            throw e;
+        }
+       
         logger.debug(
-            model.name,
+            `${model.valid ? "✅": "❌"} ${model.name}`,
             Logger.dict({
                 tag: model.tag,
                 children: model.children.length || undefined,
@@ -32,14 +45,6 @@ export function ValidateModel(model: Model) {
                 xref: model.xref
             })
         );
-
-        const Validator = ModelValidator.validators[model.tag];
-        if (!Validator) {
-            model.error("UNKOWN_MODEL_TYPE", `No validator for ${model.tag}`);
-            return;
-        }
-
-        new Validator(model).validate();
 
         Logger.nest(() => {
             model.children.forEach(validate);

@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "NetworkInterfaces",
-            access: "R V", conformance: "M", constraint: "max 8", default: "", type: "list",
+            access: "R V", conformance: "M", constraint: "max 8", default: undefined, type: "list",
             details: "The NetworkInterfaces attribute SHALL be a list of NetworkInterface " +
                      "structs. Each logical network interface on the Node SHALL be " +
                      "represented by a single entry within the NetworkInterfaces attribute",
@@ -29,7 +29,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "RebootCount",
-            access: "R V", conformance: "M", default: 0, quality: "N", type: "uint16",
+            access: "R V", conformance: "M", default: undefined, quality: "N", type: "uint16",
             details: "The RebootCount attribute SHALL indicate a best-effort count of the " +
                      "number of times the Node has rebooted. The RebootCount attribute " +
                      "SHOULD be incremented each time the Node reboots. The RebootCount " +
@@ -41,7 +41,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "UpTime",
-            access: "R V", conformance: "O", default: 0, quality: "C", type: "uint64",
+            access: "R V", conformance: "O", default: undefined, quality: "C", type: "uint64",
             details: "The UpTime attribute SHALL indicate a best-effort assessment of the " +
                      "length of time, in seconds, since the Node’s last reboot. The UpTime " +
                      "attribute SHOULD be incremented to account for the periods of time " +
@@ -52,7 +52,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "TotalOperationalHours",
-            access: "R V", conformance: "O", default: 0, quality: "N C", type: "uint32",
+            access: "R V", conformance: "O", default: undefined, quality: "N C", type: "uint32",
             details: "The TotalOperationalHours attribute SHALL indicate a best-effort " +
                      "attempt at tracking the length of time, in hours, that the Node has " +
                      "been operational. The TotalOperationalHours attribute SHOULD be " +
@@ -62,8 +62,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0004, name: "BootReasons",
-            access: "R V", conformance: "O", default: 0, type: "BootReasonEnum",
+            tag: "attribute", id: 0x0004, name: "BootReason",
+            access: "R V", conformance: "O", default: undefined, type: "BootReasonEnum",
             details: "The BootReason attribute SHALL indicate the reason for the Node’s most" +
                      " recent boot",
             xref: { document: "core", section: "11.11.6.5" }
@@ -71,7 +71,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "ActiveHardwareFaults",
-            access: "R V", conformance: "O", constraint: "max 11", default: "", type: "list",
+            access: "R V", conformance: "O", constraint: "max 11", default: undefined, type: "list",
             details: "The ActiveHardwareFaults attribute SHALL indicate the set of faults " +
                      "currently detected by the Node. When the Node detects a fault has been" +
                      " raised, the appropriate HardwareFaultEnum value SHALL be added to " +
@@ -94,7 +94,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0006, name: "ActiveRadioFaults",
-            access: "R V", conformance: "O", constraint: "max 7", default: "", type: "list",
+            access: "R V", conformance: "O", constraint: "max 7", default: undefined, type: "list",
             details: "The ActiveRadioFaults attribute SHALL indicate the set of faults " +
                      "currently detected by the Node. When the Node detects a fault has been" +
                      " raised, the appropriate RadioFaultEnum value SHALL be added to this " +
@@ -117,7 +117,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0007, name: "ActiveNetworkFaults",
-            access: "R V", conformance: "O", constraint: "max 4", default: "", type: "list",
+            access: "R V", conformance: "O", constraint: "max 4", default: undefined, type: "list",
             details: "The ActiveNetworkFaults attribute SHALL indicate the set of faults " +
                      "currently detected by the Node. When the Node detects a fault has been" +
                      " raised, the appropriate NetworkFaultEnum value SHALL be added to this" +
@@ -140,7 +140,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0008, name: "TestEventTriggersEnabled",
-            access: "R V", conformance: "M", default: false, type: "bool",
+            access: "R V", conformance: "M", default: undefined, type: "bool",
             details: "The TestEventTriggersEnabled attribute SHALL indicate whether the Node" +
                      " has any TestEventTrigger configured. When this attribute is true, the" +
                      " Node has been configured with one or more test event triggers by " +
@@ -248,8 +248,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "NetworkInterface",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "HardwareFaultEnum",
+            conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.11.4.1" },
             children: [
@@ -260,43 +260,43 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "IsOperational",
+                    tag: "datatype", id: 0x0001, name: "Radio",
                     conformance: "O", type: "bool",
                     xref: { document: "core", section: "11.11.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "OffPremiseServicesReachableIPv4",
+                    tag: "datatype", id: 0x0002, name: "Sensor",
                     conformance: "O", quality: "X", type: "bool",
                     xref: { document: "core", section: "11.11.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0003, name: "OffPremiseServicesReachableIPv6",
+                    tag: "datatype", id: 0x0003, name: "ResettableOverTemp",
                     conformance: "O", quality: "X", type: "bool",
                     xref: { document: "core", section: "11.11.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0004, name: "HardwareAddress",
+                    tag: "datatype", id: 0x0004, name: "NonResettableOverTemp",
                     conformance: "O", type: "octstr",
                     xref: { document: "core", section: "11.11.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0005, name: "IPv4Addresses",
+                    tag: "datatype", id: 0x0005, name: "PowerSource",
                     conformance: "O", type: "octstr",
                     xref: { document: "core", section: "11.11.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0006, name: "IPv6Addresses",
+                    tag: "datatype", id: 0x0006, name: "VisualDisplayFault",
                     conformance: "O", type: "octstr",
                     xref: { document: "core", section: "11.11.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0007, name: "Type",
+                    tag: "datatype", id: 0x0007, name: "AudioOutputFault",
                     conformance: "O", type: "InterfaceTypeEnum",
                     xref: { document: "core", section: "11.11.4.1" }
                 },
@@ -322,6 +322,67 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Name",
                     conformance: "M", type: "string"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "HardwareFaultEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "Unspecified",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "Radio",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "Sensor",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0003, name: "ResettableOverTemp",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0004, name: "NonResettableOverTemp",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0005, name: "PowerSource",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0006, name: "VisualDisplayFault",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0007, name: "AudioOutputFault",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0008, name: "UserInterfaceFault",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0009, name: "NonVolatileMemoryError",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x000a, name: "TamperDetected",
+                    conformance: "M"
                 }
             ]
         },

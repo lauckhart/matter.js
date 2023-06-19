@@ -14,12 +14,12 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "Measured",
-            access: "R V", conformance: "M", constraint: "MinMea", default: 0, quality: "X P", type: "int16",
+            access: "R V", conformance: "M", constraint: "MinMea", default: undefined, quality: "X P", type: "int16",
             xref: { document: "cluster", section: "2.3.4" }
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "TempMinMeasuredValue",
+            tag: "attribute", id: 0x0001, name: "MinMeasuredValue",
             access: "R V", conformance: "M", default: 32768, quality: "X", type: "int16",
             details: "The MinMeasuredValue attribute indicates the minimum value of " +
                      "MeasuredValue that is capable of being measured. See Measured Value " +
@@ -28,7 +28,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "TempMaxMeasuredValue",
+            tag: "attribute", id: 0x0002, name: "MaxMeasuredValue",
             access: "R V", conformance: "M", constraint: "MinMeasuredValue1 to 32767", default: 32768, quality: "X", type: "int16",
             details: "The MaxMeasuredValue attribute indicates the maximum value of " +
                      "MeasuredValue that is capable of being measured. See Measured Value " +
@@ -37,8 +37,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "TempTolerance",
-            access: "R V", conformance: "O", constraint: "0 to 2048", default: 0, type: "uint16",
+            tag: "attribute", id: 0x0003, name: "Tolerance",
+            access: "R V", conformance: "O", constraint: "0 to 2048", default: undefined, type: "uint16",
             details: "See Measured Value",
             xref: { document: "cluster", section: "2.3.4.4" }
         },

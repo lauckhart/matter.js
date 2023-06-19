@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "Binding",
-            access: "RW F VM", conformance: "M", constraint: "desc", default: "[]", quality: "N", type: "list",
+            access: "RW F VM", conformance: "M", constraint: "desc", default: [], quality: "N", type: "list",
             details: "Each entry SHALL represent a binding. Here are some examples",
             xref: { document: "core", section: "9.6.6.1" },
             children: [
@@ -44,25 +44,25 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", id: 0x0001, name: "Node",
-                    access: "F", conformance: "Endpoint", default: 0, type: "node-id",
+                    access: "F", conformance: "Endpoint", default: undefined, type: "node-id",
                     xref: { document: "core", section: "9.6.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Endpoint",
-                    access: "F", conformance: "!Endpoint", default: 0, type: "endpoint-no",
+                    tag: "datatype", id: 0x0002, name: "Group",
+                    access: "F", conformance: "!Endpoint", default: undefined, type: "group-id",
                     xref: { document: "core", section: "9.6.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0003, name: "Cluster",
-                    access: "F", conformance: "!Group", default: 0, type: "cluster-id",
+                    tag: "datatype", id: 0x0003, name: "Endpoint",
+                    access: "F", conformance: "!Group", default: undefined, type: "endpoint-no",
                     xref: { document: "core", section: "9.6.5.1" }
                 },
 
                 {
                     tag: "datatype", id: 0x0004, name: "Cluster",
-                    access: "F", conformance: "O", default: 0, type: "cluster-id",
+                    access: "F", conformance: "O", default: undefined, type: "cluster-id",
                     xref: { document: "core", section: "9.6.5.1" }
                 }
             ]

@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "TemperatureUnit",
-            access: "RW", conformance: "TEMP", default: "null", quality: "X N", type: "TempUnitEnum",
+            access: "RW", conformance: "TEMP", default: undefined, quality: "X N", type: "TempUnitEnum",
             details: "The TemperatureUnit attribute SHALL indicate the unit for the Node to " +
                      "use only when conveying temperature in communication to the user. If " +
                      "provided, this value SHALL take priority over any unit implied through" +
@@ -23,8 +23,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "UnitLocalizationFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "TempUnitEnum",
+            conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.5.5.1" },
             children: [
@@ -35,7 +35,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "TemperatureUnit",
+                    tag: "datatype", id: 0x0001, name: "Celsius",
                     conformance: "M",
                     xref: { document: "core", section: "11.5.5.1" }
                 },
@@ -44,6 +44,27 @@ Matter.children.push({
                     tag: "datatype", id: 0x0002, name: "Kelvin",
                     conformance: "M",
                     xref: { document: "core", section: "11.5.5.1" }
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "TempUnitEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "Fahrenheit",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "Celsius",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "Kelvin",
+                    conformance: "M"
                 }
             ]
         }

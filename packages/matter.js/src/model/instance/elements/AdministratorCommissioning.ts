@@ -20,7 +20,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "AdminFabricIndex",
-            access: "R V", conformance: "M", default: 0, quality: "X", type: "fabric-idx",
+            access: "R V", conformance: "M", default: undefined, quality: "X", type: "fabric-idx",
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this " +
                      "attribute SHALL indicate the FabricIndex associated with the Fabric " +
                      "scoping of the Administrator that opened the window. This MAY be used " +
@@ -31,7 +31,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "AdminVendorId",
-            access: "R V", conformance: "M", default: 0, quality: "X", type: "uint16",
+            access: "R V", conformance: "M", default: undefined, quality: "X", type: "vendor-id",
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this " +
                      "attribute SHALL indicate the Vendor ID associated with the Fabric " +
                      "scoping of the Administrator that opened the window. This field SHALL " +

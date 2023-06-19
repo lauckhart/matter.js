@@ -5,13 +5,13 @@
  */
 
 export * from "./ModelValidator.js";
-export * from "./DataValidator.js";
+export * from "./ValueValidator.js";
 
 import "./AttributeValidator.js";
 import "./ClusterValidator.js";
 import "./CommandValidator.js";
 import "./DatatypeValidator.js";
-import "./DataValidator.js";
+import "./ValueValidator.js";
 import "./DeviceTypeValidator.js";
 import "./EndpointValidator.js";
 import "./EventValidator.js";

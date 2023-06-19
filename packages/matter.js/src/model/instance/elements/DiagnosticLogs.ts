@@ -66,7 +66,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "TransferProtocolEnum",
+            tag: "datatype", name: "IntentEnum",
             conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.10.4.1" },
@@ -78,7 +78,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Bdx",
+                    tag: "datatype", id: 0x0001, name: "NetworkDiag",
                     conformance: "M",
                     xref: { document: "core", section: "11.10.4.1" }
                 },
@@ -91,6 +91,27 @@ Matter.children.push({
 
                 {
                     tag: "datatype", id: 0x0000, name: "ResponsePayload",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "IntentEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "EndUserSupport",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "NetworkDiag",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "CrashLogs",
                     conformance: "M"
                 }
             ]

@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "AcceptHeader",
-            access: "R V", conformance: "UP", constraint: "max 100[max 1024]", default: "empty", quality: "N", type: "list",
+            access: "R V", conformance: "UP", constraint: "max 100[max 1024]", default: [], quality: "N", type: "list",
             details: "This list provides list of content types supported by the Video Player" +
                      " or Content App in the form of entries in the HTTP \"Accept\" request " +
                      "header",
@@ -28,8 +28,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "ContentLauncherSupportedStreamingProtocols",
-            access: "RW", conformance: "UP", default: 0, quality: "N", type: "map32",
+            tag: "attribute", id: 0x0001, name: "SupportedStreamingProtocols",
+            access: "RW", conformance: "UP", default: undefined, quality: "N", type: "map32",
             details: "This attribute provides information about supported streaming " +
                      "protocols",
             xref: { document: "cluster", section: "6.7.3.2" }
@@ -113,8 +113,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ContentLauncherFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "StatusEnum",
+            conformance: "M", type: "enum8",
             details: "StatusEnum Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.7.5.1" },
             children: [
@@ -125,13 +125,13 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "ContentSearch",
+                    tag: "datatype", id: 0x0001, name: "UrlNotAvailable",
                     conformance: "M", description: "Requested URL could not be reached by device.",
                     xref: { document: "cluster", section: "6.7.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "UrlPlayback",
+                    tag: "datatype", id: 0x0002, name: "AuthFailed",
                     conformance: "M", description: "Requested URL returned 401 error code.",
                     xref: { document: "cluster", section: "6.7.5.1" }
                 }

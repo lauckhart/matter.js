@@ -21,7 +21,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "StandardNamespace",
-            access: "R V", conformance: "M", constraint: "desc", default: "null", quality: "X F", type: "enum16",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, quality: "X F", type: "enum16",
             details: "This attribute, when not null, SHALL indicate a single standard " +
                      "namespace for any standard semantic tag value supported in this or any" +
                      " other cluster instance with the same value of this attribute. A null " +
@@ -65,7 +65,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "OnMode",
-            access: "RW", conformance: "D, EPONOFF", constraint: "desc", default: "null", quality: "X N", type: "uint8",
+            access: "RW", conformance: "D, EPONOFF", constraint: "desc", default: undefined, quality: "X N", type: "uint8",
             details: "This attribute SHALL indicate the value of CurrentMode that depends on" +
                      " the state of the On/Off cluster on the same endpoint. If this " +
                      "attribute is not present or is set to null, it SHALL NOT have an " +
@@ -95,8 +95,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ModeSelectFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "ModeOptionStruct",
+            conformance: "M", type: "struct",
             details: "This is a struct representing a possible mode of the server",
             xref: { document: "cluster", section: "1.8.8.1" },
             children: [
@@ -110,7 +110,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Deponoff",
+                    tag: "datatype", id: 0x0001, name: "Mode",
                     conformance: "M", default: "MS", quality: "F", type: "uint8",
                     details: "The Mode field is used to identify the mode option. The value SHALL be" +
                              " unique for every item in the SupportedModes attribute",
@@ -150,6 +150,27 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Value",
                     conformance: "M", type: "enum16"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "ModeOptionStruct",
+            conformance: "M", type: "struct",
+            children: [
+                {
+                    tag: "datatype", name: "Label",
+                    conformance: "M", type: "string"
+                },
+
+                {
+                    tag: "datatype", name: "Mode",
+                    conformance: "M", type: "uint8"
+                },
+
+                {
+                    tag: "datatype", name: "SemanticTags",
+                    conformance: "M", type: "SemanticTagStruct"
                 }
             ]
         }

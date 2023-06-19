@@ -70,6 +70,17 @@ export namespace Metatype {
             return value;
         }
 
+        if (value == "null") {
+            return null;
+        }
+
+        if (value == "") {
+            if (type == Metatype.string) {
+                return "";
+            }
+            return undefined;
+        }
+
         switch (type) {
             case Metatype.string:
                 return value.toString();
@@ -135,6 +146,9 @@ export namespace Metatype {
                 return value;
 
             case Metatype.array:
+                if (value == "empty" || value == "[]") {
+                    return [];
+                }
                 if (!Array.isArray(value)) {
                     return Invalid;
                 }

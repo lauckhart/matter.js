@@ -14,14 +14,14 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "CurrentState",
-            access: "R V", conformance: "M", constraint: "desc", default: 0, type: "PlaybackStateEnum",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, type: "PlaybackStateEnum",
             details: "This SHALL indicate the current playback state of media",
             xref: { document: "cluster", section: "6.10.3.1" }
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "MediaPlaybackStartTime",
-            access: "R V", conformance: "AS", constraint: "desc", default: 0, quality: "X", type: "epoch-us",
+            tag: "attribute", id: 0x0001, name: "StartTime",
+            access: "R V", conformance: "AS", constraint: "desc", default: undefined, quality: "X", type: "epoch-us",
             details: "This SHALL indicate the start time of the media, in case the media has" +
                      " a fixed start time (for example, live stream or television broadcast" +
                      "), or null when start time does not apply to the current",
@@ -29,8 +29,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "MediaPlaybackDuration",
-            access: "R V", conformance: "AS", constraint: "desc", default: 0, quality: "X", type: "uint64",
+            tag: "attribute", id: 0x0002, name: "Duration",
+            access: "R V", conformance: "AS", constraint: "desc", default: undefined, quality: "X", type: "uint64",
             details: "This SHALL indicate the duration, in milliseconds, of the current " +
                      "media being played back or null when duration is not applicable (for " +
                      "example, in live streaming content with no known duration). This " +
@@ -39,7 +39,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "MediaPlaybackPlaybackPosition",
+            tag: "attribute", id: 0x0003, name: "SampledPosition",
             access: "R V", conformance: "AS", constraint: "desc", default: undefined, quality: "X", type: "PlaybackPositionStruct",
             details: "This SHALL indicate the position of playback (Position field) at the " +
                      "time (UpdateAt field) specified in the attribute. The client MAY use " +
@@ -54,16 +54,16 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0004, name: "MediaPlaybackPlaybackSpeed",
-            access: "R V", conformance: "AS", constraint: "desc", default: 0, type: "single",
+            tag: "attribute", id: 0x0004, name: "PlaybackSpeed",
+            access: "R V", conformance: "AS", constraint: "desc", default: undefined, type: "single",
             details: "This SHALL indicate the speed at which the current media is being " +
                      "played. The new PlaybackSpeed",
             xref: { document: "cluster", section: "6.10.3.5" }
         },
 
         {
-            tag: "attribute", id: 0x0005, name: "MediaPlaybackPlaybackSeekRangeEnd",
-            access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X", type: "uint64",
+            tag: "attribute", id: 0x0005, name: "SeekRangeEnd",
+            access: "R V", conformance: "AS", constraint: "desc", default: undefined, quality: "X", type: "uint64",
             details: "This SHALL indicate the furthest forward valid position to which a " +
                      "client MAY seek forward, in milliseconds from the start of the media. " +
                      "When the media has an associated StartTime, a value of null SHALL " +
@@ -77,8 +77,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0006, name: "MediaPlaybackPlaybackSeekRangeStart",
-            access: "R V", conformance: "AS", constraint: "desc", default: "null", quality: "X", type: "uint64",
+            tag: "attribute", id: 0x0006, name: "SeekRangeStart",
+            access: "R V", conformance: "AS", constraint: "desc", default: undefined, quality: "X", type: "uint64",
             details: "This SHALL indicate the earliest valid position to which a client MAY " +
                      "seek back, in milliseconds from start of the media. A value of Nas " +
                      "SHALL indicate that seeking backwards is not allowed",
@@ -87,7 +87,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0000, name: "MediaPlaybackState",
-            conformance: "M", default: 0, type: "PlaybackStateEnum"
+            conformance: "M", default: undefined, type: "PlaybackStateEnum"
         },
 
         {
@@ -225,8 +225,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "MediaPlaybackFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "PlaybackStateEnum",
+            conformance: "M", type: "enum8",
             details: "PlaybackStateEnum Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.10.5.1" },
             children: [
@@ -237,13 +237,13 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "AdvancedSeek",
+                    tag: "datatype", id: 0x0001, name: "Paused",
                     conformance: "M", description: "Media is currently paused",
                     xref: { document: "cluster", section: "6.10.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "VariableSpeed",
+                    tag: "datatype", id: 0x0002, name: "NotPlaying",
                     conformance: "M", description: "Media is not currently playing",
                     xref: { document: "cluster", section: "6.10.5.1" }
                 },
@@ -268,6 +268,32 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Position",
                     conformance: "M", quality: "X", type: "uint64"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "PlaybackStateEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "Playing",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "Paused",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "NotPlaying",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0003, name: "Buffering",
+                    conformance: "M"
                 }
             ]
         },

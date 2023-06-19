@@ -421,17 +421,17 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0000, name: "ColorControlCurrentHue",
-            conformance: "O", default: 0, quality: "P", type: "uint8"
+            conformance: "O", default: undefined, quality: "P", type: "uint8"
         },
 
         {
             tag: "attribute", id: 0x0001, name: "ColorControlCurrentSaturation",
-            conformance: "O", default: 0, quality: "P", type: "uint8"
+            conformance: "O", default: undefined, quality: "P", type: "uint8"
         },
 
         {
             tag: "attribute", id: 0x0002, name: "ColorControlRemainingTime",
-            conformance: "O", default: 0, type: "uint16"
+            conformance: "O", default: undefined, type: "uint16"
         },
 
         {
@@ -466,7 +466,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x000f, name: "ColorControlOptions",
-            access: "RW", conformance: "M", default: 0, type: "map8"
+            access: "RW", conformance: "M", default: undefined, type: "map8"
         },
 
         {

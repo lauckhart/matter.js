@@ -125,8 +125,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "AccessControlExtensionStruct",
-            access: "R F", conformance: "M", type: "struct",
+            tag: "datatype", name: "ChangeTypeEnum",
+            access: "R F", conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "9.10.4.1" },
             children: [
@@ -202,6 +202,27 @@ Matter.children.push({
 
                 {
                     tag: "datatype", id: 0x0003, name: "Group",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "ChangeTypeEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "Changed",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "Added",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "Removed",
                     conformance: "M"
                 }
             ]

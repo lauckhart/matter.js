@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "Breadcrumb",
-            access: "RW VA", conformance: "M", default: 0, type: "uint64",
+            access: "RW VA", conformance: "M", default: undefined, type: "uint64",
             details: "This attribute allows for the storage of a client-provided small " +
                      "payload which Administrators and Commissioners MAY write and then " +
                      "subsequently read, to keep track of their own progress. This MAY be " +
@@ -34,7 +34,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "RegulatoryConfig",
-            access: "R V", conformance: "M", default: "LocationCapability", type: "RegulatoryLocationType",
+            access: "R V", conformance: "M", default: "LocationCapability", type: "RegulatoryLocationTypeEnum",
             details: "This attribute SHALL indicate the regulatory configuration for the " +
                      "product",
             xref: { document: "core", section: "11.9.5.3" }
@@ -42,7 +42,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "LocationCapability",
-            access: "R V", conformance: "M", default: 2, quality: "F", type: "RegulatoryLocationType",
+            access: "R V", conformance: "M", default: "IndoorOutdoor", quality: "F", type: "RegulatoryLocationTypeEnum",
             details: "LocationCapability is statically set by the manufacturer and indicates" +
                      " if this Node needs to be told an exact RegulatoryLocation. For " +
                      "example a Node which is \"Indoor Only\" would not be certified for " +
@@ -160,8 +160,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "BasicCommissioningInfo",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "CommissioningErrorEnum",
+            conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.9.4.1" },
             children: [
@@ -172,7 +172,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "MaxCumulativeFailsafeSeconds",
+                    tag: "datatype", id: 0x0001, name: "ValueOutsideRange",
                     conformance: "M", type: "uint16",
                     xref: { document: "core", section: "11.9.4.1" }
                 },

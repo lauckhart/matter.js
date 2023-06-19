@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "TargetList",
-            access: "R V", conformance: "M", default: "", type: "list",
+            access: "R V", conformance: "M", default: undefined, type: "list",
             details: "The TargetList attribute SHALL represent a list of targets that can be" +
                      " navigated to within the experience presented to the user by the " +
                      "Endpoint (Video Player or Content App). The list SHALL not contain any" +
@@ -29,8 +29,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "TargetNavigatorCurrentTarget",
-            access: "R V", conformance: "O", constraint: "desc", default: 0, quality: "X", type: "uint8",
+            tag: "attribute", id: 0x0001, name: "CurrentTarget",
+            access: "R V", conformance: "O", constraint: "desc", default: undefined, quality: "X", type: "uint8",
             details: "The CurrentTarget attribute SHALL represent the Identifier for the " +
                      "target which is currently in foreground on the corresponding Endpoint" +
                      " (Video Player or Content App), or null to indicate that no target is " +
@@ -93,7 +93,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", id: 0x0000, name: "Identifier",
-                    conformance: "M", default: 0, type: "uint8",
+                    conformance: "M", default: undefined, type: "uint8",
                     details: "An unique id within the TargetList",
                     xref: { document: "cluster", section: "6.11.5.1.1" }
                 },

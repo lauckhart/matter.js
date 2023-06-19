@@ -24,7 +24,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "BallastStatus",
-            conformance: "O", default: 0, type: "map8"
+            conformance: "O", default: undefined, type: "map8"
         },
 
         {
@@ -69,12 +69,12 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0033, name: "LampBurnHours",
-            access: "RW", conformance: "O", default: 0, quality: "X", type: "uint24"
+            access: "RW", conformance: "O", default: undefined, quality: "X", type: "uint24"
         },
 
         {
             tag: "attribute", id: 0x0034, name: "LampAlarmMode",
-            access: "RW", conformance: "O", default: 0, type: "map8"
+            access: "RW", conformance: "O", default: undefined, type: "map8"
         },
 
         {

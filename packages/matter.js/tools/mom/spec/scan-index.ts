@@ -9,7 +9,7 @@ import { HtmlReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
 import { Specification } from "../../../src/model/index.js";
 
-const logger = Logger.get("index-scan");
+const logger = Logger.get("scan-index");
 
 const FAKE_CLUSTER_NAMES = [
     "New",

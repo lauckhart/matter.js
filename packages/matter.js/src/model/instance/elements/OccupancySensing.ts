@@ -13,7 +13,7 @@ Matter.children.push({
     classification: "application", description: "Occupancy Sensing",
     children: [
         {
-            tag: "datatype", name: "OccupancySensorTypeBitmap",
+            tag: "datatype", name: "OccupancyBitmap",
             conformance: "M", type: "map8",
             details: "This data type is derived from bitmap8",
             xref: { document: "cluster", section: "2.7.5.1" },
@@ -36,6 +36,17 @@ Matter.children.push({
 
                 {
                     tag: "datatype", id: 0x0004, name: "PhysicalContact",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "OccupancyBitmap",
+            conformance: "M", type: "map8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0001, name: "Occupied",
                     conformance: "M"
                 }
             ]
@@ -84,12 +95,12 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0010, name: "PirOccupiedToUnoccupiedDelay",
-            access: "RW VM", conformance: "O", default: 0, type: "uint16"
+            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
         },
 
         {
             tag: "attribute", id: 0x0011, name: "PirUnoccupiedToOccupiedDelay",
-            access: "RW VM", conformance: "O", default: 0, type: "uint16"
+            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
         },
 
         {
@@ -99,12 +110,12 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0020, name: "UltrasonicOccupiedToUnoccupiedDelay",
-            access: "RW VM", conformance: "O", default: 0, type: "uint16"
+            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
         },
 
         {
             tag: "attribute", id: 0x0021, name: "UltrasonicUnoccupiedToOccupiedDelay",
-            access: "RW VM", conformance: "O", default: 0, type: "uint16"
+            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
         },
 
         {
@@ -114,12 +125,12 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0030, name: "PhysicalContactOccupiedToUnoccupiedDelay",
-            access: "RW VM", conformance: "O", default: 0, type: "uint16"
+            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
         },
 
         {
             tag: "attribute", id: 0x0031, name: "PhysicalContactUnoccupiedToOccupiedDelay",
-            access: "RW VM", conformance: "O", default: 0, type: "uint16"
+            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
         },
 
         {

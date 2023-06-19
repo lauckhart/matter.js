@@ -10,7 +10,7 @@ import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types
 import { scanSection } from "./scan-section.js";
 import { Specification } from "../../../src/model/index.js";
 
-const logger = Logger.get("cluster-load");
+const logger = Logger.get("load-cluster");
 
 type SubsectionCollector = {
     subsection: string,
@@ -77,6 +77,10 @@ export function loadCluster(clusterRef: HtmlReference) {
     for (const subref of scanSection(clusterRef)) {
         applyPatches(subref, clusterRef);
 
+        while (collectors.length && !subref.xref.section.startsWith(collectors[collectors.length - 1].subsection)) {
+            collectors.pop();
+        }
+
         if (subref.xref.section == clusterRef.xref.section) {
             definition.firstParagraph = clusterRef.firstParagraph;
         }
@@ -129,7 +133,7 @@ export function loadCluster(clusterRef: HtmlReference) {
                             // Probably a struct, enum or bitmap.  These are
                             // sometimes followed with sections that detail
                             // individual items
-                            collectDetails(subref, datatypeDef);
+                            collectDetails(dtRef, datatypeDef);
                         }
                     }
                 })
@@ -138,9 +142,6 @@ export function loadCluster(clusterRef: HtmlReference) {
             default:
                 // If we don't recognize the section name explicitly, pass to
                 // collectors so long as we're still in the relevant section
-                while (collectors.length && !subref.xref.section.startsWith(collectors[collectors.length - 1].subsection)) {
-                    collectors.pop();
-                }
                 if (collectors.length) {
                     collectors[collectors.length - 1].collector(subref);
                 }

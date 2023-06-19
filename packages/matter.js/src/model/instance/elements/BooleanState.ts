@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "StateValue",
-            access: "R V", conformance: "M", default: false, quality: "P", type: "bool",
+            access: "R V", conformance: "M", default: undefined, quality: "P", type: "bool",
             details: "This represents a Boolean state",
             xref: { document: "cluster", section: "1.7.4.1" }
         },

@@ -13,7 +13,7 @@ import { ModelValidator } from "./ModelValidator.js";
 /**
  * Validates models that extend DataModel.
  */
-export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
+export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
     override validate() {
         this.validateProperty({ name: "base", type: "string" });
         this.validateProperty({ name: "byteSize", type: "number" });
@@ -42,7 +42,7 @@ export class DataValidator<T extends ValueModel> extends ModelValidator<T> {
     }
 
     private validateType() {
-        if (this.model.actualType == undefined) {
+        if (this.model.effectiveType == undefined) {
             if ((Globals as any)[this.model.name]) {
                 // Not a derivative type
                 return;

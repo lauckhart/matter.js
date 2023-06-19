@@ -111,7 +111,10 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
         let responseType;
         let responseId;
-        if (model.response) {
+        // Note - we end up mapping "status" response type to TlvNoResponse.
+        // This doesn't seem technically correct but is the way we've
+        // historically done it so sticking with that for now
+        if (model.response && model.response != "status") {
             const responseModel = cluster.local(CommandModel, model.response);
             if (responseModel) {
                 responseId = responseModel.id;

@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "ChannelList",
-            access: "R V", conformance: "CL", constraint: "None", default: "empty", type: "list",
+            access: "R V", conformance: "CL", constraint: "None", default: [], type: "list",
             details: "This optional list provides the channels supported",
             xref: { document: "cluster", section: "6.6.3.1" },
             children: [
@@ -26,15 +26,15 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "ChannelLineup",
-            access: "R V", conformance: "LI", constraint: "desc", default: "", quality: "X", type: "LineupInfoStruct",
+            tag: "attribute", id: 0x0001, name: "Lineup",
+            access: "R V", conformance: "LI", constraint: "desc", default: undefined, quality: "X", type: "LineupInfoStruct",
             details: "This optional field identifies the channel lineup using external data " +
                      "sources",
             xref: { document: "cluster", section: "6.6.3.2" }
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "ChannelCurrentChannel",
+            tag: "attribute", id: 0x0002, name: "CurrentChannel",
             access: "R V", conformance: "O", constraint: "desc", quality: "X", type: "ChannelInfoStruct",
             details: "This optional field contains the current channel. When supported but a" +
                      " channel is not currently tuned to (if a content application is in " +
@@ -109,14 +109,14 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ChannelFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "ChannelInfoStruct",
+            conformance: "M", type: "struct",
             details: "This indicates a channel in a channel lineup",
             xref: { document: "cluster", section: "6.6.5.1" },
             children: [
                 {
                     tag: "datatype", id: 0x0000, name: "MajorNumber",
-                    conformance: "M", default: 0, type: "uint16",
+                    conformance: "M", default: undefined, type: "uint16",
                     details: "This SHALL indicate the channel major number value (for example, using" +
                              " ATSC format). When the channel number is expressed as a string, such " +
                              "as \"13.1\" or \"256\", the major number would be 13 or 256, respectively",
@@ -124,8 +124,8 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "ChannelList",
-                    conformance: "M", default: 0, type: "uint16",
+                    tag: "datatype", id: 0x0001, name: "MinorNumber",
+                    conformance: "M", default: undefined, type: "uint16",
                     details: "This SHALL indicate the channel minor number value (for example, using" +
                              " ATSC format). When the channel number is expressed as a string, such " +
                              "as \"13.1\" or \"256\", the minor number would be 1 or 0, respectively",
@@ -133,7 +133,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "LineupInfo",
+                    tag: "datatype", id: 0x0002, name: "Name",
                     conformance: "O", default: "empty", type: "string",
                     details: "This SHALL indicate the marketing name for the channel, such as “The " +
                              "CW\" or \"Comedy Central\". This field is optional, but SHOULD be " +
@@ -155,6 +155,37 @@ Matter.children.push({
                     details: "This SHALL indicate the local affiliate call sign, such as \"KCTS\". " +
                              "This field is optional, but SHOULD be provided when known",
                     xref: { document: "cluster", section: "6.6.5.1.5" }
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "ChannelInfoStruct",
+            conformance: "M", type: "struct",
+            children: [
+                {
+                    tag: "datatype", name: "MajorNumber",
+                    conformance: "M", type: "uint16"
+                },
+
+                {
+                    tag: "datatype", name: "MinorNumber",
+                    conformance: "M", type: "uint16"
+                },
+
+                {
+                    tag: "datatype", name: "Name",
+                    conformance: "O", type: "string"
+                },
+
+                {
+                    tag: "datatype", name: "CallSign",
+                    conformance: "O", type: "string"
+                },
+
+                {
+                    tag: "datatype", name: "AffiliateCallSign",
+                    conformance: "O", type: "string"
                 }
             ]
         },

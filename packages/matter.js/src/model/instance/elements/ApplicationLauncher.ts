@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "CatalogList",
-            access: "R V", conformance: "AP", constraint: "None", default: "", quality: "N", type: "list",
+            access: "R V", conformance: "AP", constraint: "None", default: undefined, quality: "N", type: "list",
             details: "This attribute SHALL specify the list of supported application " +
                      "catalogs, where each entry in the list is the CSA-issued vendor ID for" +
                      " the catalog. The DIAL registry (see [DIAL Registry]) SHALL use value " +
@@ -29,8 +29,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "ApplicationLauncherCurrentApp",
-            access: "RW", conformance: "O", constraint: "desc", default: undefined, quality: "X", type: "ApplicationEpStruct",
+            tag: "attribute", id: 0x0001, name: "CurrentApp",
+            access: "RW", conformance: "O", constraint: "desc", default: "null", quality: "X", type: "ApplicationEPStruct",
             details: "This attribute SHALL specify the current in-focus application, " +
                      "identified using an Application ID, catalog vendor ID and the " +
                      "corresponding endpoint number when the application is represented by a" +
@@ -117,8 +117,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ApplicationLauncherFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "StatusEnum",
+            conformance: "M", type: "enum8",
             details: "StatusEnum Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.4.5.1" },
             children: [
@@ -129,7 +129,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "ApplicationPlatform",
+                    tag: "datatype", id: 0x0001, name: "AppNotAvailable",
                     conformance: "M", description: "Requested app is not available.",
                     xref: { document: "cluster", section: "6.4.5.1" }
                 },

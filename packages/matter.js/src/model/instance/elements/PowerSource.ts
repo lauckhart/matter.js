@@ -14,15 +14,15 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "Status",
-            access: "R V", conformance: "M", constraint: "desc", default: 0, type: "PowerSourceStatusEnum",
+            access: "R V", conformance: "M", constraint: "desc", default: undefined, type: "PowerSourceStatusEnum",
             details: "This attribute SHALL indicate the participation of this power source " +
                      "in providing power to the Node as specified in PowerSourceStatusEnum",
             xref: { document: "core", section: "11.7.6.1" }
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "PowerSourceOrder",
-            access: "R V", conformance: "M", default: 0, quality: "N", type: "uint8",
+            tag: "attribute", id: 0x0001, name: "Order",
+            access: "R V", conformance: "M", default: undefined, quality: "N", type: "uint8",
             details: "This attribute SHALL indicate the relative preference with which the " +
                      "Node will select this source to provide power. A source with a lower " +
                      "order SHALL be selected by the Node to provide power before any other " +
@@ -32,7 +32,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "PowerSourceDescription",
+            tag: "attribute", id: 0x0002, name: "Description",
             access: "R V", conformance: "M", constraint: "max 60", default: "", quality: "F", type: "string",
             details: "This attribute SHALL provide a user-facing description of this source" +
                      ", used to distinguish it from other power sources, e.g. \"DC Power\", \"" +
@@ -42,8 +42,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "PowerSourceWiredAssessedInputVoltage",
-            access: "R V", conformance: "[WIRED]", default: 0, quality: "X C", type: "uint32",
+            tag: "attribute", id: 0x0003, name: "WiredAssessedInputVoltage",
+            access: "R V", conformance: "[WIRED]", default: undefined, quality: "X C", type: "uint32",
             details: "This attribute SHALL indicate the assessed RMS or DC voltage currently" +
                      " provided by the hard-wired source, in mV (millivolts). A value of " +
                      "NULL SHALL indicate the Node is currently unable to assess the value. " +
@@ -53,8 +53,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0004, name: "PowerSourceWiredAssessedInputFrequency",
-            access: "R V", conformance: "[WIRED]", default: 0, quality: "X C", type: "uint16",
+            tag: "attribute", id: 0x0004, name: "WiredAssessedInputFrequency",
+            access: "R V", conformance: "[WIRED]", default: undefined, quality: "X C", type: "uint16",
             details: "This attribute SHALL indicate the assessed frequency of the voltage, " +
                      "currently provided by the hard-wired source, in Hz. A value of NULL " +
                      "SHALL indicate the Node is currently unable to assess the value. If " +
@@ -64,8 +64,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0005, name: "PowerSourceWiredCurrentType",
-            access: "R V", conformance: "WIRED", constraint: "desc", default: 0, quality: "F", type: "WiredCurrentTypeEnum",
+            tag: "attribute", id: 0x0005, name: "WiredCurrentType",
+            access: "R V", conformance: "WIRED", constraint: "desc", default: undefined, quality: "F", type: "WiredCurrentTypeEnum",
             details: "This attribute SHALL indicate the type of current the Node expects to " +
                      "be provided by the hard- wired source as specified in " +
                      "WiredCurrentTypeEnum",
@@ -73,8 +73,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0006, name: "PowerSourceWiredAssessedCurrent",
-            access: "R V", conformance: "[WIRED]", default: 0, quality: "X C", type: "uint32",
+            tag: "attribute", id: 0x0006, name: "WiredAssessedCurrent",
+            access: "R V", conformance: "[WIRED]", default: undefined, quality: "X C", type: "uint32",
             details: "This attribute SHALL indicate the assessed instantaneous current draw " +
                      "of the Node on the hard- wired source, in mA (milliamps). A value of " +
                      "NULL SHALL indicate the Node is currently unable to assess the value. " +
@@ -84,8 +84,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0007, name: "PowerSourceWiredNominalVoltage",
-            access: "R V", conformance: "[WIRED]", default: 0, quality: "F", type: "uint32",
+            tag: "attribute", id: 0x0007, name: "WiredNominalVoltage",
+            access: "R V", conformance: "[WIRED]", default: undefined, quality: "F", type: "uint32",
             details: "This attribute SHALL indicate the nominal voltage, printed as part of " +
                      "the Node’s regulatory compliance label in mV (millivolts), expected to" +
                      " be provided by the hard-wired source",
@@ -93,8 +93,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0008, name: "PowerSourceWiredMaximumCurrent",
-            access: "R V", conformance: "[WIRED]", default: 0, quality: "F", type: "uint32",
+            tag: "attribute", id: 0x0008, name: "WiredMaximumCurrent",
+            access: "R V", conformance: "[WIRED]", default: undefined, quality: "F", type: "uint32",
             details: "This attribute SHALL indicate the maximum current, printed as part of " +
                      "the Node’s regulatory compliance label in mA (milliamps), expected to " +
                      "be provided by the hard-wired source",
@@ -102,16 +102,16 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0009, name: "PowerSourceWiredPresent",
-            access: "R V", conformance: "[WIRED]", default: false, type: "bool",
+            tag: "attribute", id: 0x0009, name: "WiredPresent",
+            access: "R V", conformance: "[WIRED]", default: undefined, type: "bool",
             details: "This attribute SHALL indicate if the Node detects that the hard-wired " +
                      "power source is properly connected",
             xref: { document: "core", section: "11.7.6.10" }
         },
 
         {
-            tag: "attribute", id: 0x000a, name: "PowerSourceActiveWiredFaults",
-            access: "R V", conformance: "[WIRED]", default: "", type: "list",
+            tag: "attribute", id: 0x000a, name: "ActiveWiredFaults",
+            access: "R V", conformance: "[WIRED]", default: undefined, type: "list",
             details: "This attribute SHALL indicate the set of wired faults currently " +
                      "detected by the Node on this power source. This set is represented as " +
                      "a list of WiredFaultEnum. When the Node detects a fault has been " +
@@ -134,8 +134,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x000b, name: "PowerSourceBatVoltage",
-            access: "R V", conformance: "[BAT]", default: 0, quality: "X C", type: "uint32",
+            tag: "attribute", id: 0x000b, name: "BatVoltage",
+            access: "R V", conformance: "[BAT]", default: undefined, quality: "X C", type: "uint32",
             details: "This attribute SHALL indicate the currently measured output voltage of" +
                      " the battery in mV (millivolts). A value of NULL SHALL indicate the " +
                      "Node is currently unable to assess the value",
@@ -143,8 +143,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x000c, name: "PowerSourceBatPercentRemaining",
-            access: "R V", conformance: "[BAT]", constraint: "0 to 200", default: 0, quality: "X C", type: "uint8",
+            tag: "attribute", id: 0x000c, name: "BatPercentRemaining",
+            access: "R V", conformance: "[BAT]", constraint: "0 to 200", default: undefined, quality: "X C", type: "uint8",
             details: "This attribute SHALL indicate the estimated percentage of battery " +
                      "charge remaining until the battery will no longer be able to provide " +
                      "power to the Node. Values are expressed in half percent units, ranging" +
@@ -154,8 +154,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x000d, name: "PowerSourceBatTimeRemaining",
-            access: "R V", conformance: "[BAT]", default: 0, quality: "X C", type: "uint32",
+            tag: "attribute", id: 0x000d, name: "BatTimeRemaining",
+            access: "R V", conformance: "[BAT]", default: undefined, quality: "X C", type: "uint32",
             details: "This attribute SHALL indicate the estimated time in seconds before the" +
                      " battery will no longer be able to provide power to the Node. A value " +
                      "of NULL SHALL indicate the Node is currently unable to assess the " +
@@ -164,8 +164,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x000e, name: "PowerSourceBatChargeLevel",
-            access: "R V", conformance: "BAT", constraint: "desc", default: 0, type: "BatChargeLevelEnum",
+            tag: "attribute", id: 0x000e, name: "BatChargeLevel",
+            access: "R V", conformance: "BAT", constraint: "desc", default: undefined, type: "BatChargeLevelEnum",
             details: "This attribute SHALL indicate a coarse ranking of the charge level of " +
                      "the battery, used to indicate when intervention is required as " +
                      "specified in BatChargeLevelEnum",
@@ -173,8 +173,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x000f, name: "PowerSourceBatReplacementNeeded",
-            access: "R V", conformance: "BAT", default: false, type: "bool",
+            tag: "attribute", id: 0x000f, name: "BatReplacementNeeded",
+            access: "R V", conformance: "BAT", default: undefined, type: "bool",
             details: "This attribute SHALL indicate if the battery needs to be replaced. " +
                      "Replacement MAY be simple routine maintenance, such as with a single " +
                      "use, non-rechargeable cell. Replacement, however, MAY also indicate " +
@@ -184,24 +184,24 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0010, name: "PowerSourceBatReplaceability",
-            access: "R V", conformance: "BAT", default: 0, quality: "F", type: "BatReplaceabilityEnum",
+            tag: "attribute", id: 0x0010, name: "BatReplaceability",
+            access: "R V", conformance: "BAT", default: undefined, quality: "F", type: "BatReplaceabilityEnum",
             details: "This attribute SHALL indicate the replaceability of the battery as " +
                      "specified in BatReplaceabilityEnum",
             xref: { document: "core", section: "11.7.6.17" }
         },
 
         {
-            tag: "attribute", id: 0x0011, name: "PowerSourceBatPresent",
-            access: "R V", conformance: "[BAT]", default: false, type: "bool",
+            tag: "attribute", id: 0x0011, name: "BatPresent",
+            access: "R V", conformance: "[BAT]", default: undefined, type: "bool",
             details: "This attribute SHALL indicate whether the Node detects that the " +
                      "batteries are properly installed",
             xref: { document: "core", section: "11.7.6.18" }
         },
 
         {
-            tag: "attribute", id: 0x0012, name: "PowerSourceActiveBatFaults",
-            access: "R V", conformance: "[BAT]", default: "", type: "list",
+            tag: "attribute", id: 0x0012, name: "ActiveBatFaults",
+            access: "R V", conformance: "[BAT]", default: undefined, type: "list",
             details: "This attribute SHALL indicate the set of battery faults currently " +
                      "detected by the Node on this power source. This set is represented as " +
                      "a list of BatFaultEnum. When the Node detects a fault has been raised" +
@@ -224,7 +224,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0013, name: "PowerSourceBatReplacementDescription",
+            tag: "attribute", id: 0x0013, name: "BatReplacementDescription",
             access: "R V", conformance: "REPLC", constraint: "max 60", default: "", quality: "F", type: "string",
             details: "This attribute SHALL provide a user-facing description of this battery" +
                      ", which SHOULD contain information required to identify a replacement" +
@@ -233,15 +233,15 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0014, name: "PowerSourceBatCommonDesignation",
-            access: "R V", conformance: "[REPLC]", constraint: "desc", default: 0, quality: "F", type: "BatCommonDesignationEnum",
+            tag: "attribute", id: 0x0014, name: "BatCommonDesignation",
+            access: "R V", conformance: "[REPLC]", constraint: "desc", default: undefined, quality: "F", type: "BatCommonDesignationEnum",
             details: "This attribute SHALL indicate the ID of the common or colloquial " +
                      "designation of the battery, as specified in BatCommonDesignationEnum",
             xref: { document: "core", section: "11.7.6.21" }
         },
 
         {
-            tag: "attribute", id: 0x0015, name: "PowerSourceBatAnsiDesignation",
+            tag: "attribute", id: 0x0015, name: "BatAnsiDesignation",
             access: "R V", conformance: "[REPLC]", constraint: "max 20", default: "", quality: "F", type: "string",
             details: "This attribute SHALL indicate the string representing the ANSI " +
                      "designation for the battery as specified in ANSI C18",
@@ -249,7 +249,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0016, name: "PowerSourceBatIecDesignation",
+            tag: "attribute", id: 0x0016, name: "BatIecDesignation",
             access: "R V", conformance: "[REPLC]", constraint: "max 20", default: "", quality: "F", type: "string",
             details: "This attribute SHALL indicate the string representing the IEC " +
                      "designation for the battery as specified in IEC 60086",
@@ -257,16 +257,16 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0017, name: "PowerSourceBatApprovedChemistry",
-            access: "R V", conformance: "[REPLC]", constraint: "desc", default: 0, quality: "F", type: "BatApprovedChemistryEnum",
+            tag: "attribute", id: 0x0017, name: "BatApprovedChemistry",
+            access: "R V", conformance: "[REPLC]", constraint: "desc", default: undefined, quality: "F", type: "BatApprovedChemistryEnum",
             details: "This attribute SHALL indicate the ID of the preferred chemistry of the" +
                      " battery source as specified in BatApprovedChemistryEnum",
             xref: { document: "core", section: "11.7.6.24" }
         },
 
         {
-            tag: "attribute", id: 0x0018, name: "PowerSourceBatCapacity",
-            access: "R V", conformance: "[REPLC]", default: 0, quality: "F", type: "uint32",
+            tag: "attribute", id: 0x0018, name: "BatCapacity",
+            access: "R V", conformance: "[REPLC]", default: undefined, quality: "F", type: "uint32",
             details: "This attribute SHALL indicate the preferred minimum charge capacity " +
                      "rating in mAh of individual, user- or factory-serviceable battery " +
                      "cells or packs in the battery source",
@@ -274,24 +274,24 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x0019, name: "PowerSourceBatQuantity",
-            access: "R V", conformance: "REPLC", default: 0, quality: "F", type: "uint8",
+            tag: "attribute", id: 0x0019, name: "BatQuantity",
+            access: "R V", conformance: "REPLC", default: undefined, quality: "F", type: "uint8",
             details: "This attribute SHALL indicate the quantity of individual, user- or " +
                      "factory-serviceable battery cells or packs in the battery source",
             xref: { document: "core", section: "11.7.6.26" }
         },
 
         {
-            tag: "attribute", id: 0x001a, name: "PowerSourceBatChargeState",
-            access: "R V", conformance: "RECHG", constraint: "desc", default: 0, type: "BatChargeStateEnum",
+            tag: "attribute", id: 0x001a, name: "BatChargeState",
+            access: "R V", conformance: "RECHG", constraint: "desc", default: undefined, type: "BatChargeStateEnum",
             details: "This attribute SHALL indicate the current state of the battery source " +
                      "with respect to charging as specified in BatChargeStateEnum",
             xref: { document: "core", section: "11.7.6.27" }
         },
 
         {
-            tag: "attribute", id: 0x001b, name: "PowerSourceBatTimeToFullCharge",
-            access: "R V", conformance: "[RECHG]", default: 0, quality: "X C", type: "uint32",
+            tag: "attribute", id: 0x001b, name: "BatTimeToFullCharge",
+            access: "R V", conformance: "[RECHG]", default: undefined, quality: "X C", type: "uint32",
             details: "This attribute SHALL indicate the estimated time in seconds before the" +
                      " battery source will be at full charge. A value of NULL SHALL indicate" +
                      " the Node is currently unable to assess the value",
@@ -299,16 +299,16 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x001c, name: "PowerSourceBatFunctionalWhileCharging",
-            access: "R V", conformance: "RECHG", default: false, type: "bool",
+            tag: "attribute", id: 0x001c, name: "BatFunctionalWhileCharging",
+            access: "R V", conformance: "RECHG", default: undefined, type: "bool",
             details: "This attribute SHALL indicate whether the Node can remain operational " +
                      "while the battery source is charging",
             xref: { document: "core", section: "11.7.6.29" }
         },
 
         {
-            tag: "attribute", id: 0x001d, name: "PowerSourceBatChargingCurrent",
-            access: "R V", conformance: "[RECHG]", default: 0, quality: "X C", type: "uint32",
+            tag: "attribute", id: 0x001d, name: "BatChargingCurrent",
+            access: "R V", conformance: "[RECHG]", default: undefined, quality: "X C", type: "uint32",
             details: "This attribute SHALL indicate assessed current in mA (milliamps) " +
                      "presently supplied to charge the battery source. A value of NULL SHALL" +
                      " indicate the Node is currently unable to assess the value",
@@ -316,8 +316,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", id: 0x001e, name: "PowerSourceActiveBatChargeFaults",
-            access: "R V", conformance: "[RECHG]", default: "", type: "list",
+            tag: "attribute", id: 0x001e, name: "ActiveBatChargeFaults",
+            access: "R V", conformance: "[RECHG]", default: undefined, type: "list",
             details: "This attribute SHALL indicate the set of charge faults currently " +
                      "detected by the Node on this power source. This set is represented as " +
                      "a list of BatChargeFaultEnum. When the Node detects a fault has been " +
@@ -407,8 +407,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "BatChargeFaultChangeType",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "WiredFaultEnum",
+            conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.7.5.1" },
             children: [
@@ -419,7 +419,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Previous",
+                    tag: "datatype", id: 0x0001, name: "OverVoltage",
                     conformance: "M", type: "BatChargeFaultEnum",
                     xref: { document: "core", section: "11.7.5.1" }
                 },
@@ -458,6 +458,27 @@ Matter.children.push({
 
                 {
                     tag: "datatype", id: 0x0008, name: "Replaceable",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "WiredFaultEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "Unspecified",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "OverVoltage",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "UnderVoltage",
                     conformance: "M"
                 }
             ]

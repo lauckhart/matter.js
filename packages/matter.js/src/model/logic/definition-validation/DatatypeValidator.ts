@@ -6,11 +6,11 @@
 
 import { DatatypeElement } from "../../elements/index.js";
 import { DatatypeModel } from "../../models/index.js";
-import { DataValidator } from "./DataValidator.js";
+import { ValueValidator } from "./ValueValidator.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[DatatypeElement.Tag] =
-class AttributeValidator extends DataValidator<DatatypeModel> {
+class AttributeValidator extends ValueValidator<DatatypeModel> {
     override validate() {
         this.validateStructure(false, DatatypeModel);
 

@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "HourFormat",
-            access: "RW", conformance: "M", default: "null", quality: "X N", type: "HourFormatEnum",
+            access: "RW", conformance: "M", default: undefined, quality: "X N", type: "HourFormatEnum",
             details: "The HourFormat attribute SHALL represent the format that the Node is " +
                      "currently configured to use when conveying the hour unit of time. If " +
                      "provided, this value SHALL take priority over any unit",
@@ -50,7 +50,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "CalendarTypeEnum",
+            tag: "datatype", name: "HourFormatEnum",
             conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.4.5.1" },
@@ -62,7 +62,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Chinese",
+                    tag: "datatype", id: 0x0001, name: "24Hr",
                     conformance: "M",
                     xref: { document: "core", section: "11.4.5.1" }
                 },
@@ -119,6 +119,22 @@ Matter.children.push({
 
                 {
                     tag: "datatype", id: 0x000b, name: "Taiwanese",
+                    conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "HourFormatEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "12Hr",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "24Hr",
                     conformance: "M"
                 }
             ]

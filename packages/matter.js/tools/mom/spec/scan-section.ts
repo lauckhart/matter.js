@@ -60,6 +60,9 @@ function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlRef
 
     function* emit() {
         if (currentRef) {
+            if (currentRef.table && !currentRef.table.rows.length) {
+                delete currentRef.table;
+            }
             yield currentRef;
             currentRef = undefined;
         }

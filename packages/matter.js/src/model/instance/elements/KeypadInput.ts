@@ -41,8 +41,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "KeypadInputFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "StatusEnum",
+            conformance: "M", type: "enum8",
             details: "Status Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.8.4.1" },
             children: [
@@ -53,13 +53,13 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "NavigationKeyCodes",
+                    tag: "datatype", id: 0x0001, name: "UnsupportedKey",
                     conformance: "M", description: "Command failed: Key code is not supported.",
                     xref: { document: "cluster", section: "6.8.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "LocationKeys",
+                    tag: "datatype", id: 0x0002, name: "InvalidKeyInCurrentState",
                     conformance: "M", description: "Command failed: Requested key code is invalid in the context of the responder’s current state.",
                     xref: { document: "cluster", section: "6.8.4.1" }
                 },

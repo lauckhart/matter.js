@@ -14,7 +14,7 @@ export class EventModel extends ValueModel implements EventElement {
     override id!: Mei;
     priority?: EventElement.Priority;
 
-    override get actualType() {
+    override get effectiveType() {
         return Datatype.struct;
     }
 

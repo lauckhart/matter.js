@@ -35,7 +35,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x4001, name: "OnTime",
-            access: "RW", conformance: "LT", default: 0, quality: "X", type: "uint16",
+            access: "RW", conformance: "LT", default: undefined, quality: "X", type: "uint16",
             details: "The OnTime attribute specifies the length of time (in 1/10ths second) " +
                      "that the ‘On’ state SHALL be maintained before automatically " +
                      "transitioning to the ‘Off’ state when using the OnWithTimedOff command" +
@@ -47,7 +47,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x4002, name: "OffWaitTime",
-            access: "RW", conformance: "LT", default: 0, quality: "X", type: "uint16",
+            access: "RW", conformance: "LT", default: undefined, quality: "X", type: "uint16",
             details: "The OffWaitTime attribute specifies the length of time (in 1/10ths " +
                      "second) that the ‘Off’ state SHALL be guarded to prevent another " +
                      "OnWithTimedOff command turning the server back to its ‘On’ state (e.g" +
@@ -62,7 +62,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x4003, name: "StartUpOnOff",
-            access: "RW VM", conformance: "LT", constraint: "desc", default: "MS", quality: "X N", type: "OnOffStartUpOnOff",
+            access: "RW VM", conformance: "LT", constraint: "desc", default: "MS", quality: "X N", type: "StartUpOnOffEnum",
             details: "The StartUpOnOff attribute SHALL define the desired startup behavior " +
                      "of a device when it is supplied with power and this state SHALL be " +
                      "reflected in the OnOff attribute. If the value is null, the OnOff " +
@@ -148,8 +148,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "OnOffFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "StartUpOnOffEnum",
+            conformance: "M", type: "enum8",
             details: "The data type StartUpOnOffEnum is derived from enum8. The values of " +
                      "the StartUpOnOffEnum data type are listed below",
             xref: { document: "cluster", section: "1.5.5.1" },
@@ -161,7 +161,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Lighting",
+                    tag: "datatype", id: 0x0001, name: "On",
                     conformance: "M", description: "Set the OnOff attribute to TRUE",
                     xref: { document: "cluster", section: "1.5.5.1" }
                 },

@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "LabelList",
-            access: "R V", conformance: "M", default: "empty", quality: "N", type: "list",
+            access: "R V", conformance: "M", default: [], quality: "N", type: "list",
             xref: { document: "core", section: "9.8.4" },
             children: [
                 {

@@ -29,7 +29,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "ServerList",
-            access: "R V", conformance: "M", default: "empty", quality: "F", type: "list",
+            access: "R V", conformance: "M", default: [], quality: "F", type: "list",
             details: "This attribute SHALL list each cluster ID for the server clusters " +
                      "present on the endpoint instance",
             xref: { document: "core", section: "9.5.5.2" },
@@ -43,7 +43,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0002, name: "ClientList",
-            access: "R V", conformance: "M", default: "empty", quality: "F", type: "list",
+            access: "R V", conformance: "M", default: [], quality: "F", type: "list",
             details: "This attribute SHALL list each cluster ID for the client clusters " +
                      "present on the endpoint instance",
             xref: { document: "core", section: "9.5.5.3" },
@@ -57,7 +57,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "PartsList",
-            access: "R V", conformance: "M", default: "empty", type: "list",
+            access: "R V", conformance: "M", default: [], type: "list",
             details: "This attribute indicates composition of the device type instance. " +
                      "Device type instance composition SHALL include the endpoints in this " +
                      "list. See Endpoint Composition for more information which endpoints to" +
@@ -92,13 +92,13 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", id: 0x0000, name: "DeviceType",
-                    conformance: "M", default: 0, type: "devtype-id",
+                    conformance: "M", default: undefined, type: "devtype-id",
                     xref: { document: "core", section: "9.5.4.1" }
                 },
 
                 {
                     tag: "datatype", id: 0x0001, name: "Revision",
-                    conformance: "M", constraint: "min 1", default: 0, type: "uint16",
+                    conformance: "M", constraint: "min 1", default: undefined, type: "uint16",
                     xref: { document: "core", section: "9.5.4.1" }
                 }
             ]

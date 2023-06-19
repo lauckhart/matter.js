@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "FanMode",
-            access: "RW", conformance: "M", constraint: "0 to 6", default: 0, quality: "N", type: "FanModeType",
+            access: "RW", conformance: "M", constraint: "0 to 6", default: undefined, quality: "N", type: "enum8",
             details: "This attribute SHALL indicate the current speed mode of the fan. This " +
                      "attribute MAY be written by the client to indicate a new speed mode of" +
                      " the fan. This attribute SHALL be set to one of the values in the " +
@@ -24,14 +24,14 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "FanModeSequence",
-            access: "RW", conformance: "M", constraint: "0 to 5", default: 2, quality: "N", type: "FanModeSequenceType",
+            access: "RW", conformance: "M", constraint: "0 to 5", default: 2, quality: "N", type: "enum8",
             details: "This indicates the fan speed ranges that SHALL be supported",
             xref: { document: "cluster", section: "4.4.6.2" }
         },
 
         {
             tag: "attribute", id: 0x0002, name: "PercentSetting",
-            access: "RW", conformance: "M", constraint: "0 to 100", default: 0, quality: "X", type: "uint8",
+            access: "RW", conformance: "M", constraint: "0 to 100", default: undefined, quality: "X", type: "uint8",
             details: "This attribute SHALL indicate the speed setting for the fan. This " +
                      "attribute MAY be written by the client to indicate a new fan speed. If" +
                      " the client writes null to this attribute, the attribute value SHALL " +
@@ -42,7 +42,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "PercentCurrent",
-            access: "R V", conformance: "M", constraint: "0 to 100", default: 0, type: "uint8",
+            access: "R V", conformance: "M", constraint: "0 to 100", default: undefined, type: "uint8",
             details: "This attribute SHALL indicate the actual currently operating fan speed" +
                      ", or zero to indicate that the fan is off. See Section 4.4.6.3.1 for " +
                      "more details",
@@ -59,7 +59,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "SpeedSetting",
-            access: "RW", conformance: "SPD", constraint: "0 to SpeedMax", default: 0, quality: "X", type: "uint8",
+            access: "RW", conformance: "SPD", constraint: "0 to SpeedMax", default: undefined, quality: "X", type: "uint8",
             details: "This attribute SHALL indicate the speed setting for the fan. This " +
                      "attribute MAY be written by the client to indicate a new fan speed. If" +
                      " the client writes null to this attribute, the attribute value SHALL " +
@@ -71,7 +71,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0006, name: "SpeedCurrent",
-            access: "R V", conformance: "SPD", constraint: "0 to SpeedMax", default: 0, quality: "P", type: "uint8",
+            access: "R V", conformance: "SPD", constraint: "0 to SpeedMax", default: undefined, quality: "P", type: "uint8",
             details: "This attribute SHALL indicate the actual currently operating fan speed" +
                      ", or zero to indicate that the fan is off",
             xref: { document: "cluster", section: "4.4.6.7" }
@@ -79,7 +79,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0007, name: "RockSupport",
-            access: "R V", conformance: "RCK", constraint: "desc", default: 0, quality: "F", type: "map8",
+            access: "R V", conformance: "RCK", constraint: "desc", default: undefined, quality: "F", type: "map8",
             details: "This attribute is a bitmap that indicates what rocking motions the " +
                      "server supports. The bitmap is shown in the table below",
             xref: { document: "cluster", section: "4.4.6.8" }
@@ -87,7 +87,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0008, name: "RockSetting",
-            access: "RW", conformance: "RCK", constraint: "desc", default: 0, quality: "P", type: "map8",
+            access: "RW", conformance: "RCK", constraint: "desc", default: undefined, quality: "P", type: "map8",
             details: "This attribute is a bitmap that indicates the current active fan " +
                      "rocking motion settings. Each bit SHALL only be set to 1, if the " +
                      "corresponding bit in the RockSupport attribute is set to 1, otherwise " +
@@ -97,7 +97,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0009, name: "WindSupport",
-            access: "R V", conformance: "WND", constraint: "desc", default: 0, quality: "F", type: "map8",
+            access: "R V", conformance: "WND", constraint: "desc", default: undefined, quality: "F", type: "map8",
             details: "This attribute is a bitmap that indicates what wind modes the server " +
                      "supports. At least one wind mode bit SHALL be set. The bitmap is shown" +
                      " in the table below",
@@ -106,7 +106,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x000a, name: "WindSetting",
-            access: "RW", conformance: "WND", constraint: "desc", default: 0, quality: "P", type: "map8",
+            access: "RW", conformance: "WND", constraint: "desc", default: undefined, quality: "P", type: "map8",
             details: "This attribute is a bitmap that indicates the current active fan wind " +
                      "feature settings. Each bit SHALL only be set to 1, if the " +
                      "corresponding bit in the WindSupport attribute is set to 1, otherwise " +

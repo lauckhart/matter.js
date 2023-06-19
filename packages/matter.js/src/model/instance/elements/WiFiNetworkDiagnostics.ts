@@ -14,7 +14,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", id: 0x0000, name: "Bssid",
-            access: "R V", conformance: "M", constraint: "6", default: "null", quality: "X", type: "octstr",
+            access: "R V", conformance: "M", constraint: "6", default: undefined, quality: "X", type: "octstr",
             details: "The BSSID attribute SHALL indicate the BSSID for which the Wi-Fi " +
                      "network the Node is currently connected",
             xref: { document: "core", section: "11.14.6.1" }
@@ -22,15 +22,15 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0001, name: "SecurityType",
-            access: "R V", conformance: "M", default: "null", quality: "X", type: "SecurityTypeEnum",
+            access: "R V", conformance: "M", default: undefined, quality: "X", type: "SecurityTypeEnum",
             details: "The SecurityType attribute SHALL indicate the current type of Wi-Fi " +
                      "security used",
             xref: { document: "core", section: "11.14.6.2" }
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "WifiVersion",
-            access: "R V", conformance: "M", default: "null", quality: "X", type: "WiFiVersionEnum",
+            tag: "attribute", id: 0x0002, name: "WiFiVersion",
+            access: "R V", conformance: "M", default: undefined, quality: "X", type: "WiFiVersionEnum",
             details: "The WiFiVersion attribute SHALL indicate the current 802.11 standard " +
                      "version in use by the Node, per the table below",
             xref: { document: "core", section: "11.14.6.3" }
@@ -38,7 +38,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0003, name: "ChannelNumber",
-            access: "R V", conformance: "M", default: 0, quality: "X", type: "uint16",
+            access: "R V", conformance: "M", default: undefined, quality: "X", type: "uint16",
             details: "The ChannelNumber attribute SHALL indicate the channel that Wi-Fi " +
                      "communication is currently operating on",
             xref: { document: "core", section: "11.14.6.4" }
@@ -46,7 +46,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0004, name: "Rssi",
-            access: "R V", conformance: "M", constraint: "-120 to 0", default: "null", quality: "X C", type: "int8",
+            access: "R V", conformance: "M", constraint: "-120 to 0", default: undefined, quality: "X C", type: "int8",
             details: "The RSSI attribute SHALL indicate the current RSSI of the Node’s Wi-Fi" +
                      " radio in dBm",
             xref: { document: "core", section: "11.14.6.5" }
@@ -54,7 +54,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0005, name: "BeaconLostCount",
-            access: "R V", conformance: "ERRCNT", default: 0, quality: "X C", type: "uint32",
+            access: "R V", conformance: "ERRCNT", default: undefined, quality: "X C", type: "uint32",
             details: "The BeaconLostCount attribute SHALL indicate the count of the number " +
                      "of missed beacons the Node has detected. If the Node does not have an " +
                      "ability to count beacons expected and not received, this value MAY " +
@@ -64,7 +64,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0006, name: "BeaconRxCount",
-            access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C", type: "uint32",
+            access: "R V", conformance: "P, KTCNT", default: undefined, quality: "X C", type: "uint32",
             details: "The BeaconRxCount attribute SHALL indicate the count of the number of " +
                      "received beacons. The total number of expected beacons that could have" +
                      " been received during the interval since association SHOULD match the " +
@@ -76,7 +76,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0007, name: "PacketMulticastRxCount",
-            access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C", type: "uint32",
+            access: "R V", conformance: "P, KTCNT", default: undefined, quality: "X C", type: "uint32",
             details: "The PacketMulticastRxCount attribute SHALL indicate the number of " +
                      "multicast packets received by",
             xref: { document: "core", section: "11.14.6.8" }
@@ -84,7 +84,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0008, name: "PacketMulticastTxCount",
-            access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C", type: "uint32",
+            access: "R V", conformance: "P, KTCNT", default: undefined, quality: "X C", type: "uint32",
             details: "The PacketMulticastTxCount attribute SHALL indicate the number of " +
                      "multicast packets transmitted by the Node",
             xref: { document: "core", section: "11.14.6.9" }
@@ -92,7 +92,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x0009, name: "PacketUnicastRxCount",
-            access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C", type: "uint32",
+            access: "R V", conformance: "P, KTCNT", default: undefined, quality: "X C", type: "uint32",
             details: "The PacketUnicastRxCount attribute SHALL indicate the number of " +
                      "unicast packets received by the Node",
             xref: { document: "core", section: "11.14.6.10" }
@@ -100,7 +100,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x000a, name: "PacketUnicastTxCount",
-            access: "R V", conformance: "P, KTCNT", default: 0, quality: "X C", type: "uint32",
+            access: "R V", conformance: "P, KTCNT", default: undefined, quality: "X C", type: "uint32",
             details: "The PacketUnicastTxCount attribute SHALL indicate the number of " +
                      "unicast packets transmitted by the Node",
             xref: { document: "core", section: "11.14.6.11" }
@@ -108,7 +108,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x000b, name: "CurrentMaxRate",
-            access: "R V", conformance: "O", default: 0, quality: "X C", type: "uint64",
+            access: "R V", conformance: "O", default: undefined, quality: "X C", type: "uint64",
             details: "The CurrentMaxRate attribute SHALL indicate the current maximum PHY " +
                      "rate of transfer of data in bits-per-second",
             xref: { document: "core", section: "11.14.6.12" }
@@ -116,7 +116,7 @@ Matter.children.push({
 
         {
             tag: "attribute", id: 0x000c, name: "OverrunCount",
-            access: "R V", conformance: "ERRCNT", default: 0, quality: "X C", type: "uint64",
+            access: "R V", conformance: "ERRCNT", default: undefined, quality: "X C", type: "uint64",
             details: "The OverrunCount attribute SHALL indicate the number of packets " +
                      "dropped either at ingress or egress, due to lack of buffer memory to " +
                      "retain all packets on the network interface. The OverrunCount " +
@@ -184,8 +184,8 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "WiFiNetworkDiagnosticsFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "SecurityTypeEnum",
+            conformance: "M", type: "enum8",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.14.5.1" },
             children: [
@@ -196,13 +196,13 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "PacketCounts",
+                    tag: "datatype", id: 0x0001, name: "None",
                     conformance: "M",
                     xref: { document: "core", section: "11.14.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "ErrorCounts",
+                    tag: "datatype", id: 0x0002, name: "Wep",
                     conformance: "M",
                     xref: { document: "core", section: "11.14.5.1" }
                 },
@@ -223,6 +223,42 @@ Matter.children.push({
                     tag: "datatype", id: 0x0005, name: "Wpa3",
                     conformance: "M",
                     xref: { document: "core", section: "11.14.5.1" }
+                }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "SecurityTypeEnum",
+            conformance: "M", type: "enum8",
+            children: [
+                {
+                    tag: "datatype", id: 0x0000, name: "Unspecified",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0001, name: "None",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0002, name: "Wep",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0003, name: "Wpa",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0004, name: "Wpa2",
+                    conformance: "M"
+                },
+
+                {
+                    tag: "datatype", id: 0x0005, name: "Wpa3",
+                    conformance: "M"
                 }
             ]
         },
