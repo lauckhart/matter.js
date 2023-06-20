@@ -6,7 +6,7 @@
 
 import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
 import { Datatype, Metatype } from "../../definitions/index.js";
-import { CommandElement, DatatypeElement, Globals } from "../../elements/index.js";
+import { CommandElement, DatatypeElement } from "../../elements/index.js";
 import { ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
@@ -15,7 +15,7 @@ import { ModelValidator } from "./ModelValidator.js";
  */
 export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
     override validate() {
-        this.validateProperty({ name: "base", type: "string" });
+        this.validateProperty({ name: "type", type: "string" });
         this.validateProperty({ name: "byteSize", type: "number" });
         this.validateProperty({ name: "constraint", type: Constraint });
         this.validateProperty({ name: "conformance", type: Conformance });
@@ -43,7 +43,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
     private validateType() {
         if (this.model.effectiveType == undefined) {
-            if ((Globals as any)[this.model.name]) {
+            if (this.model.metatype) {
                 // Not a derivative type
                 return;
             }
@@ -59,9 +59,9 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             return;
         }
 
-        const metatype = this.model.metabase?.metatype;
+        const metatype = this.model.effectiveMetatype;
         if (metatype == undefined) {
-            this.error("METATYPE_UNKOWN", `No metatype for ${this.model.type}`);
+            this.error("METATYPE_UNKNOWN", `No metatype for ${this.model.type}`);
             return;
         }
 

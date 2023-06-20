@@ -74,7 +74,7 @@ export const Constant = <T> (value: T): Constant<T> =>
     ({ option: "constant", value });
 
 // Converts detail section into children
-type ChildTranslator = (parentRecord: any, definition: HtmlReference) => DatatypeElement[] | undefined;
+type ChildTranslator = (tag: string, parentRecord: any, definition: HtmlReference) => DatatypeElement[] | undefined;
 type Children = { option: "children", translator: ChildTranslator}
 export const Children = (translator: ChildTranslator) =>
     ({ option: "children", translator });
@@ -101,7 +101,7 @@ const has = (object: Object, name: string) =>
 
 // Translates an array of key => HTMLElement records into a proper TS type
 export function translateTable<T extends TableSchema>(
-    desc: string,
+    tag: string,
     definition: HtmlReference | undefined,
     schema: T
 ): Array<TableRecord<T>> {
@@ -110,7 +110,7 @@ export function translateTable<T extends TableSchema>(
     }
 
     if (!definition.table) {
-        logger.warn(`no ${desc} table § ${definition.xref.section}`);
+        logger.warn(`no ${tag} table § ${definition.xref.section}`);
         return [];
     }
 
@@ -171,24 +171,27 @@ export function translateTable<T extends TableSchema>(
             const value = el == undefined ? undefined : translator(el);
 
             // Ignore the row if required values are missing
-            if ((value == undefined || value === "" || Number.isNaN(value)) && !optional.has(name)) {
+            const empty = value == undefined || value === "" || Number.isNaN(value);
+            if (empty && !optional.has(name)) {
                 missing.add(name);
                 continue nextRow;
             }
 
             // Set the column
-            (record as any)[name] = value;
+            if (!empty) {
+                (record as any)[name] = value;
+            }
         }
         result.push(record);
     }
 
     if (missing.size) {
-        logger.error(`§ ${definition.xref.section} ignored one or more ${desc} rows due to missing fields: ${Array(...missing).join(', ')}`);
+        logger.error(`§ ${definition.xref.section} ignored one or more ${tag} rows due to missing fields: ${Array(...missing).join(', ')}`);
         logger.error(`keys present are: ${Object.keys(definition.table.rows[0]).join(', ')}`);
     }
 
     if (definition.details != undefined) {
-        installPreciseDetails(desc, definition.details, result, childTranslator);
+        installPreciseDetails(tag, definition.details, result, childTranslator);
     }
 
     return result;
@@ -220,7 +223,7 @@ export function translateRecordsToMatter<R, E extends { id?: number, name: strin
 
 // Attempt to install more specific xref and details
 function installPreciseDetails(
-    desc: string,
+    tag: string,
     definitions: HtmlReference[],
     records: Array<{ name?: string, xref?: Specification.CrossReference, details?: string, children?: AnyElement[] }>,
     childTranslator?: ChildTranslator
@@ -236,13 +239,13 @@ function installPreciseDetails(
             return;
         }
 
-        const detail = lookup[`${r.name.toLowerCase()} ${desc}`]
+        const detail = lookup[`${r.name.toLowerCase()} ${tag}`]
             || lookup[`${r.name.toLowerCase()}`];
         if (detail) {
             r.xref = detail.xref;
             detail.firstParagraph && (r.details = Str(detail.firstParagraph));
             if (childTranslator) {
-                r.children = childTranslator(r, detail);
+                r.children = childTranslator(tag, r, detail);
             }
         }
     })

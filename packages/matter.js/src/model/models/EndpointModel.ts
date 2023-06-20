@@ -9,7 +9,7 @@ import { DeviceTypeModel } from "./DeviceTypeModel.js";
 import { Model } from "./Model.js";
 
 export class EndpointModel extends Model implements EndpointElement {
-    override tag!: EndpointElement.Tag;
+    override tag: EndpointElement.Tag = EndpointElement.Tag;
     override id!: number;
 
     get deviceTypes() {

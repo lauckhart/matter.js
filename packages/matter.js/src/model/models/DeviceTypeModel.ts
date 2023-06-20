@@ -10,7 +10,7 @@ import { ClusterModel } from "./ClusterModel.js";
 import { Model } from "./Model.js";
 
 export class DeviceTypeModel extends Model implements DeviceTypeElement {
-    override tag!: DeviceTypeElement.Tag;
+    override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
     override id!: Mei;
     classification!: DeviceTypeElement.Classification;
 

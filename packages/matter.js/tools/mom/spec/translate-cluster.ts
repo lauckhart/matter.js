@@ -148,7 +148,13 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         });
     
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
-        values && children.push({ ...Globals.FeatureMap, children: values, type: Globals.FeatureMap.name });
+        values && children.push({
+            tag: Globals.FeatureMap.tag,
+            id: Globals.FeatureMap.id,
+            name: Globals.FeatureMap.name,
+            type: "FeatureMap",
+            children: values
+        });
     }
 }
 
@@ -216,13 +222,19 @@ function translateFields(desc: string, fields?: HtmlReference) {
     });
 
     records.forEach(r => {
-        switch (r.default) {
-            case "desc": // See description
-            case "N/A": // Not available
-            case "MS": // Manufacturer specific
-            case "-": // Sometimes used for "none"
-                delete r.default;
-                break;
+        if (typeof r.default == "string") {
+            switch (r.default.toLowerCase()) {
+                case "desc": // See description
+                case "n/a": // Not available
+                case "ms": // Manufacturer specific
+                case "-": // Sometimes used for "none"
+                    delete r.default;
+                    break;
+
+                case "varied":
+                    r.default = "any";
+                    break;
+            }
         }
     });
 
@@ -233,10 +245,18 @@ function translateFields(desc: string, fields?: HtmlReference) {
 
 // Translate children of enums, bitmaps, structs, commands, attributes and
 // events.  If "parent" is none of these, returns undefined
-function translateValueChildren(parent: undefined | { type?: string }, definition: HtmlReference): DatatypeElement[] | undefined {
-    const type = parent?.type;
+function translateValueChildren(tag: string, parent: undefined | { type?: string }, definition: HtmlReference): DatatypeElement[] | undefined {
+    let type = parent?.type;
     if (type == undefined) {
-        return;
+        switch (tag) {
+            case "command":
+            case "event":
+                type = "struct";
+                break;
+
+            default:
+                return;
+        }
     }
 
     const dt = (Globals as any)[type];
@@ -443,7 +463,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         }
 
         const datatype = DatatypeElement({ type: type, name, description, xref: definition.xref });
-        datatype.children = translateValueChildren(datatype, definition);
+        datatype.children = translateValueChildren("datatype", datatype, definition);
         return datatype;
     }
 }

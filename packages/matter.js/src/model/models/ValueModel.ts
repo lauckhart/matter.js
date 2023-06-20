@@ -76,6 +76,17 @@ export abstract class ValueModel extends Model implements ValueElement {
     }
 
     /**
+     * The "effective type" may be inferred from context.
+     */
+    override get effectiveType(): string | undefined {
+        const type = super.effectiveType;
+        if (type) {
+            return type;
+        }
+        return new ModelTraversal().getTypeName(this);
+    }
+
+    /**
      * The working metatype for this object.
      */
     get effectiveMetatype() {

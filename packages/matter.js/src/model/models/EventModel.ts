@@ -4,19 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Datatype, Mei } from "../definitions/index.js";
+import { Mei } from "../definitions/index.js";
 import { EventElement } from "../elements/index.js";
 import { ValueModel } from "./ValueModel.js";
 import { Model } from "./Model.js";
 
 export class EventModel extends ValueModel implements EventElement {
-    override tag!: EventElement.Tag;
+    override tag: EventElement.Tag = EventElement.Tag;
     override id!: Mei;
     priority?: EventElement.Priority;
-
-    override get effectiveType() {
-        return Datatype.struct;
-    }
 
     constructor(definition: EventElement.Properties) {
         super(definition);

@@ -19,35 +19,51 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
     delete fields.children;
     delete fields.details;
 
-    // Tag/ID/name/type on first row
-    const row1 = Array<string>(`tag: ${serialize(element.tag)}`);
+    // First, tag/ID/name/type
+    const properties = Array<string>(
+        `tag: ${serialize(element.tag)}`,
+        `name: ${serialize(element.name)}`
+    );
     if (element.id != undefined) {
         const idStr = element.id < 0
             ? `${element.id}`
-            : `0x${element.id.toString(16).padStart(4, "0")}`;
-        row1.push(`id: ${idStr}`);
+            : `0x${element.id.toString(16)}`;
+        properties.push(`id: ${idStr}`);
     }
-    row1.push(`name: ${serialize(element.name)}`);
     delete fields.id;
     delete fields.name;
-    if (fields.base) {
-        row1.push(`base: ${serialize((element as any).base)}`);
-        delete fields.base;
+    if (fields.type) {
+        properties.push(`type: ${serialize((element as any).type)}`);
+        delete fields.type;
     }
-    block.atom(row1.join(", "));
     
-    // Next row: Other fields
-    const row2 = Object.entries(fields)
-        .sort((a, b) => a[0].toLowerCase().localeCompare(b[0].toLowerCase()))
-        .map(([k, v]) => `${k}: ${serialize(v)}`)
-        .join(', ');
-    if (row2 != "") {
-        block.atom(row2);
+    // Next: Other fields
+    properties.push(
+        ...Object.entries(fields)
+            .sort((a, b) => a[0].toLowerCase().localeCompare(b[0].toLowerCase()))
+            .map(([k, v]) => `${k}: ${serialize(v)}`)
+    );
+
+    // Segment properties into rows
+    let row = Array<string>();
+    let length = 0;
+    for (const property of properties) {
+        length += property.length + (length ? 2 : 0);
+        if (row.length && length >= 100) {
+            block.atom(row.join(", "));
+            row = [ property ];
+            length = property.length;
+        } else {
+            row.push(property);
+        }
+    }
+    if (row.length) {
+        block.atom(row.join(", "));
     }
 
     // Next row: Details
     if (element.details) {
-        const lines = wordWrap(element.details, 70);
+        const lines = wordWrap(element.details, 100);
         for (let i = 0; i < lines.length; i++) {
             const prefix = i
                 ? "         "
