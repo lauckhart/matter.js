@@ -15,28 +15,29 @@ import { Model } from "./Model.js";
 export class ClusterModel extends Model implements ClusterElement {
     override tag!: ClusterElement.Tag;
     override id!: Mei;
+    override isTypeScope = true;
     singleton?: boolean;
     classification?: ClusterElement.Classification;
 
     get attributes() {
-        return this.local(AttributeModel);
+        return this.childrenOfType(AttributeModel);
     }
 
     get commands() {
-        return this.local(CommandModel);
+        return this.childrenOfType(CommandModel);
     }
 
     get events() {
-        return this.local(EventModel);
+        return this.childrenOfType(EventModel);
     }
 
     get datatypes() {
-        return this.local(DatatypeModel);
+        return this.childrenOfType(DatatypeModel);
     }
 
     get revision() {
         let revision = 1;
-        const revisionAttr = this.local(AttributeModel, Globals.ClusterRevision.id);
+        const revisionAttr = this.childOfType(AttributeModel, Globals.ClusterRevision.id);
         if (revisionAttr?.default != undefined) {
             revision = revisionAttr.default;
         }
@@ -44,7 +45,7 @@ export class ClusterModel extends Model implements ClusterElement {
     }
 
     get features() {
-        return this.local(AttributeModel, Globals.FeatureMap.id);
+        return this.childOfType(AttributeModel, Globals.FeatureMap.id);
     }
 
     override get children(): ClusterModel.Child[] {

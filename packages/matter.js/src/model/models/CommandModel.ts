@@ -8,6 +8,7 @@ import { Datatype, Mei } from "../definitions/index.js";
 import { CommandElement } from "../elements/index.js";
 import { ValueModel } from "./ValueModel.js";
 import { Model } from "./Model.js";
+import { ModelTraversal } from "../logic/ModelTraversal.js";
 
 export class CommandModel extends ValueModel implements CommandElement {
     override tag: CommandElement.Tag = CommandElement.Tag;
@@ -21,6 +22,12 @@ export class CommandModel extends ValueModel implements CommandElement {
 
     get isRequest() {
         return this.direction = CommandElement.Direction.Request;
+    }
+
+    get responseModel() {
+        if (this.response && this.response != "status") {
+            return new ModelTraversal().findType(this, this.response, [ CommandElement.Tag ])
+        }
     }
 
     constructor(definition: CommandElement.Properties) {

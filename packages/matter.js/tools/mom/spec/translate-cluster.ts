@@ -8,7 +8,7 @@ import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children } from "./translate-table.js";
+import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children, Bit, LimitedIdentifier } from "./translate-table.js";
 
 const logger = Logger.get("translate-cluster");
 
@@ -31,7 +31,9 @@ export function* translateCluster(definition: ClusterReference) {
             id: id,
             name: name,
             classification: metadata.classification,
-            children: children
+            children: children,
+            type: metadata.derivesFrom,
+            xref: definition.xref
         });
 
         addDetails(cluster, definition);
@@ -48,14 +50,15 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         return;
     }
 
-    const classification = translateClassification();
+    const { classification, derivesFrom } = translateClassification();
     const revision = translateRevision();
     translateFeatures();
 
     return {
         ids: ids,
         classification: classification,
-        revision: revision
+        revision: revision,
+        derivesFrom
     }
 
     function translateIds() {
@@ -85,7 +88,8 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
     
     function translateClassification() {
         const classifications = translateTable("classfication", definition.classifications, {
-            role: LowerIdentifier,
+            hierarchy: Optional(Str),
+            role: Optional(LowerIdentifier),
             scope: Optional(Alias(LowerIdentifier, "context"))
         });
     
@@ -99,8 +103,17 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         } else {
             classification = ClusterElement.Classification.Application;
         }
+
+        let derivesFrom = classifications[0]?.hierarchy;
+        if (derivesFrom) {
+            derivesFrom = derivesFrom.replace(/^derive[sd] from /i, "");
+            derivesFrom = camelize(derivesFrom);
+            if (derivesFrom == "Base") {
+                derivesFrom = undefined;
+            }
+        }
     
-        return classification;
+        return { classification, derivesFrom };
     }
     
     function translateRevision() {
@@ -135,7 +148,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         });
     
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
-        values && children.push({ ...Globals.FeatureMap, children: values });
+        values && children.push({ ...Globals.FeatureMap, children: values, type: Globals.FeatureMap.name });
     }
 }
 
@@ -190,7 +203,10 @@ function translateFields(desc: string, fields?: HtmlReference) {
     const records = translateTable(desc, fields, {
         id: Integer,
         name: Identifier,
-        type: NoSpace,
+
+        // Not really optional but we want to process rows even if missing
+        type: Optional(NoSpace),
+
         constraint: Optional(Str),
         quality: Optional(Str),
         default: Optional(NoSpace),
@@ -216,7 +232,7 @@ function translateFields(desc: string, fields?: HtmlReference) {
 }
 
 // Translate children of enums, bitmaps, structs, commands, attributes and
-// events.  If "parent" is none of these returns undefined
+// events.  If "parent" is none of these, returns undefined
 function translateValueChildren(parent: undefined | { type?: string }, definition: HtmlReference): DatatypeElement[] | undefined {
     const type = parent?.type;
     if (type == undefined) {
@@ -227,21 +243,31 @@ function translateValueChildren(parent: undefined | { type?: string }, definitio
     switch (dt?.metatype) {
         case Metatype.enum: {
             const records = translateTable("value", definition, {
-                id: Alias(Integer, "value"),
-                name: Alias(Identifier, "type"),
+                id: Alias(Integer, "value", "enum"),
+                name: Alias(Identifier, "type", "description"),
                 conformance: Optional(Str),
                 description: Optional(Str),
                 meaning: Optional(Str)
             });
-            return translateRecordsToMatter("value", records, DatatypeElement)
+            return translateRecordsToMatter("value", records, DatatypeElement);
         }
 
         case Metatype.bitmap: {
-            const records = translateTable("bit", definition, {
-                id: Alias(Integer, "bit"),
-                name: Identifier,
-                description: Optional(Alias(Str, "summary"))
-            });
+            let records;
+            if (definition.table?.rows[0]?.attributebitmask) {
+                // Lock cluster does not adhere to standard
+                records = translateTable("bit", definition, {
+                    id: Alias(Bit, "attributebitmask"),
+                    name: Alias(LimitedIdentifier, "eventdescription")
+                })
+            } else {
+                // Standard bitmap table
+                records = translateTable("bit", definition, {
+                    id: Alias(Integer, "bit"),
+                    name: Identifier,
+                    description: Optional(Alias(Str, "summary"))
+                });
+            }
             return translateRecordsToMatter("bit", records, DatatypeElement);
         }
 
@@ -386,6 +412,10 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             case "bitmap8":
                 type = "map8";
                 break;
+
+            case "node-idx":
+                type = "node-id";
+                break;
         }
     
         if (name.match(/enum$/i) || type?.match(/^enum/i)) {
@@ -409,14 +439,9 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             }
         } else if (match = name.match(/(.+) \((\S+) type\)/i)) {
             description = match[1];
-            name = match [2];
+            name = match[2];
         }
-    
-        if (!type) {
-            logger.warn(`no base detected for ${name}`);
-            return;
-        }
-    
+
         const datatype = DatatypeElement({ type: type, name, description, xref: definition.xref });
         datatype.children = translateValueChildren(datatype, definition);
         return datatype;

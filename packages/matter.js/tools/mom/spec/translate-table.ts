@@ -33,6 +33,12 @@ export const NoSpace = (el: HTMLElement) => Str(el).replace(/\s/g, "");
 // Number parsed as integer
 export const Integer = (el: HTMLElement) => Number.parseInt(NoSpace(el));
 
+// Number encoded as BIT(n)
+export const Bit = (el: HTMLElement) => {
+    const text = Str(el).replace(/bit\((\d+)\)/i, "$1");
+    return Number.parseInt(text);
+}
+
 // CamelCase identifier.  Note we replace "Fo o" with "Foo" because space
 // errors are very common in the PDFs, especially in narrow columns and we
 // don't want to end up with FoO
@@ -40,6 +46,11 @@ export const Identifier = (el: HTMLElement) => camelize(Str(el)
     .replace(/[^\sA-Za-z0-9\-_]/g, "")
     .replace(/ +([a-z])/g, "$1"),
     true);
+
+// CamelCase identifier but only consider first paragraph
+export const LimitedIdentifier = (el: HTMLElement) => {
+    return el.firstChild ? Identifier(el.firstChild as HTMLElement) : "";
+}
 
 // Identifier, all lowercase
 export const LowerIdentifier = (el: HTMLElement) => Identifier(el).toLowerCase();
@@ -131,7 +142,7 @@ export function translateTable<T extends TableSchema>(
                     break;
 
                 case "children":
-                    childTranslator = v.children;
+                    childTranslator = v.translator;
                     continue nextValue;
             }
         }

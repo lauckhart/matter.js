@@ -23,11 +23,8 @@ class AttributeValidator extends ModelValidator<CommandModel> {
         });
 
         const response = this.model.response;
-        if (response && response != "status") {
-            const responseModel = this.model.global(CommandModel, response);
-            if (!responseModel) {
-                this.error("RESPONSE_NOT_FOUND", `response type ${response} not found`);
-            }
+        if (response && response != "status" && !this.model.responseModel) {
+            this.error("RESPONSE_NOT_FOUND", `response type ${response} not found`);
         }
 
         super.validate();

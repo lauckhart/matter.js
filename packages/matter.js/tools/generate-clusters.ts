@@ -115,7 +115,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         // This doesn't seem technically correct but is the way we've
         // historically done it so sticking with that for now
         if (model.response && model.response != "status") {
-            const responseModel = cluster.local(CommandModel, model.response);
+            const responseModel = cluster.childOfType(CommandModel, model.response);
             if (responseModel) {
                 responseId = responseModel.id;
                 responseType = tlvTypeRef(responseModel);
@@ -194,14 +194,14 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     }
 
     function tlvTypeRef(model: ValueModel): string {
-        const base = model.metaBase;
+        const base = model.metabase;
         if (!base) {
             throw new InternalError(`${model.path}: No base type ${model.type}`);
         }
 
         if (model.type) {
-            const definition = cluster.local(model.type);
-            if (definition instanceof ValueModel) {
+            const definition = cluster.childOfType(ValueModel, model.type);
+            if (definition) {
                 return tlvTypeRef(definition);
             }
         }
@@ -338,7 +338,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         document(file, model);
 
         let tlvNum;
-        switch (model.metaBase?.name) {
+        switch (model.metabase?.name) {
             case "map8":
                 tlvNum = "TlvUint8";
                 break;

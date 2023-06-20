@@ -18,41 +18,42 @@ import { Model } from "./Model.js";
  */
 export class MatterModel extends Model implements MatterElement {
     override tag: MatterElement.Tag = MatterElement.Tag;
+    override isTypeScope = true;
     version?: string;
 
     /**
      * Clusters.
      */
     get clusters() {
-        return this.local(ClusterModel)
+        return this.childrenOfType(ClusterModel)
     }
 
     /**
      * Device types.
      */
     get deviceTypes() {
-        return this.local(DeviceTypeModel);
+        return this.childrenOfType(DeviceTypeModel);
     }
 
     /**
      * Global datatypes.
      */
     get datatypes() {
-        return this.local(DatatypeModel);
+        return this.childrenOfType(DatatypeModel);
     }
 
     /**
      * Global attributes.
      */
     get attributes() {
-        return this.local(AttributeModel);
+        return this.childrenOfType(AttributeModel);
     }
 
     /**
      * Fabrics.
      */
     get fabrics() {
-        return this.local(FabricModel);
+        return this.childrenOfType(FabricModel);
     }
 
     override get children(): MatterModel.Child[] {
