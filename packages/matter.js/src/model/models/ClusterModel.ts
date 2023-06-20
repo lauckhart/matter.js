@@ -13,7 +13,7 @@ import { EventModel } from "./EventModel.js";
 import { Model } from "./Model.js";
 
 export class ClusterModel extends Model implements ClusterElement {
-    override tag!: ClusterElement.Tag;
+    override tag: ClusterElement.Tag = ClusterElement.Tag;
     override id!: Mei;
     override isTypeScope = true;
     singleton?: boolean;

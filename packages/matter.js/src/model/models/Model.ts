@@ -241,6 +241,8 @@ export abstract class Model {
 
         delete result.parent;
         delete result.errors;
+        delete result.isTypeScope;
+        delete result.isType;
         
         return result as AnyElement;
     }

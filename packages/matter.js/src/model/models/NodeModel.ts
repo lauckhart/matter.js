@@ -9,7 +9,7 @@ import { EndpointModel } from "./EndpointModel.js";
 import { Model } from "./Model.js";
 
 export class NodeModel extends Model implements NodeElement {
-    override tag!: NodeElement.Tag;
+    override tag: NodeElement.Tag = NodeElement.Tag;
     override id!: number;
 
     get endpoints() {

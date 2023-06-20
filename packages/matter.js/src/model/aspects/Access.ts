@@ -95,7 +95,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                     break;
 
                 default:
-                    access.error("UNKOWN_ACCESS_FLAG", `Unknown flag "${definition[i]}"`);
+                    access.error("UNKNOWN_ACCESS_FLAG", `Unknown flag "${definition[i]}"`);
                     i++;
                     break;
             }

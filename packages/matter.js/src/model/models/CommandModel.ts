@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Datatype, Mei } from "../definitions/index.js";
+import { Mei } from "../definitions/index.js";
 import { CommandElement } from "../elements/index.js";
 import { ValueModel } from "./ValueModel.js";
 import { Model } from "./Model.js";
@@ -15,10 +15,6 @@ export class CommandModel extends ValueModel implements CommandElement {
     override id!: Mei;
     direction?: CommandElement.Direction;
     response?: string
-
-    override get effectiveType() {
-        return Datatype.struct;
-    }
 
     get isRequest() {
         return this.direction = CommandElement.Direction.Request;

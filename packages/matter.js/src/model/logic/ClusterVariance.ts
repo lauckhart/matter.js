@@ -157,7 +157,7 @@ function getSimpleVariance(element: ValueModel) {
 }
 
 function getValidCombinations(cluster: ClusterModel): FeatureSet[] {
-    const featureMap = cluster.childrenOfType(AttributeModel, "featureMap");
+    const featureMap = cluster.childOfType(AttributeModel, "featureMap");
     const featureModels = featureMap?.children || [];
     const features = new FeatureSet(featureModels.map(f => f.name));
 
@@ -174,11 +174,11 @@ function getValidCombinations(cluster: ClusterModel): FeatureSet[] {
 }
 
 function getFeatures(cluster: ClusterModel): FeatureSet {
-    const featureMap = cluster.childrenOfType(AttributeModel, "featureMap");
+    const featureMap = cluster.childOfType(AttributeModel, "featureMap");
     if (!featureMap) {
         return new FeatureSet();
     }
-    return new FeatureSet(featureMap.local(DatatypeModel).map(f => f.name))
+    return new FeatureSet(featureMap.childrenOfType(DatatypeModel).map(f => f.name))
 }
 
 function permute<T>(array: T[]): T[][] {

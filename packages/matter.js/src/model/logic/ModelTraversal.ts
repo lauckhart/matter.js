@@ -19,16 +19,36 @@ import type { Model } from "../models/index.js";
  * problem but may need to address if it becomes too inefficient.
  */
 export class ModelTraversal {
-    private dismissed?: Set<Model>;
+    private dismissed?: Map<undefined | string, Set<Model>>;
 
     /**
-     * Dismiss a model from consideration.
+     * Dismiss a model from consideration.  In addition to organization, this
+     * is the primary purpose of this class.  Once searched, a model should be
+     * dismissed to prevent it from being searched again.
+     * 
+     * This simplifies and optimizes search algorithms and reduces the impact
+     * of definition errors that would otherwise lead to infinite loops or
+     * stack overflow.
+     * 
+     * @param model the model to dismiss
+     * @param context limits the scope of dismissal
      */
-    dismiss(model: Model) {
+    dismiss(model: Model, context?: string) {
         if (!this.dismissed) {
-            this.dismissed = new Set<Model>;
+            this.dismissed = new Map();
         }
-        this.dismissed.add(model);
+        let pool = this.dismissed.get(context);
+        if (!pool) {
+            this.dismissed.set(context, pool = new Set<Model>());
+        }
+        pool.add(model);
+    }
+
+    /**
+     * Check a model for dismissal.
+     */
+    isDismissed(model: Model, context?: string) {
+        return this.dismissed?.get(context)?.has(model);
     }
 
     /**
@@ -37,29 +57,55 @@ export class ModelTraversal {
      * some datatypes based on their parent's type.
      */
     getTypeName(model: Model | undefined): string | undefined {
-        if (model?.type || model?.tag != ElementTag.Datatype) {
-            return model?.type;
+        if (!model) {
+            return undefined;
         }
 
-        this.dismiss(model);
-        const metabase = this.findMetabase(model.parent);
-        if (metabase) {
-            switch (metabase.name) {
-                case "enum8":
-                case Datatype.map8:
-                    return Datatype.uint8;
-    
-                case "enum16":
-                case Datatype.map16:
-                    return Datatype.uint16;
-    
-                case Datatype.map32:
-                    return Datatype.uint32;
-    
-                case Datatype.map64:
-                    return Datatype.uint64;
-            }
+        if (model.type) {
+            return model.type;
         }
+
+        // Commands and events always represent structs
+        if (model.tag == ElementTag.Command || model.tag == ElementTag.Event) {
+            return "struct";
+        }
+
+        let result: string | undefined;
+        const name = model.name;
+        this.visitInheritance(model.parent, (ancestor) => {
+            // If parented by enum or bitmap, infer type as uint of same size
+            if ((ancestor as any).metatype) {
+                switch (ancestor.name) {
+                    case Datatype.enum8:
+                    case Datatype.map8:
+                        result = Datatype.uint8;
+                        return false;
+        
+                    case Datatype.enum16:
+                    case Datatype.map16:
+                        result = Datatype.uint16;
+                        return false;
+        
+                    case Datatype.map32:
+                        result = Datatype.uint32;
+                        return false;
+        
+                    case Datatype.map64:
+                        result = Datatype.uint64;
+                        return false;
+                }
+            }
+
+            // If I override a field my type is the same as the overridden
+            // field
+            const overridden = this.findLocal(ancestor, name, [ model.tag ]);
+            if (overridden?.type) {
+                result = overridden.type;
+                return false;
+            }
+        });
+
+        return result;
     }
 
     /**
@@ -77,13 +123,14 @@ export class ModelTraversal {
      * Find the model a model derives from, if any.
      */
     findBase(model: Model | undefined): Model | undefined {
-        if (!model || this.dismissed?.has(model)) {
+        if (!model || this.isDismissed(model, "findBase")) {
             return;
         }
-        let type = model.effectiveType;
+        this.dismiss(model, "findBase");
+        let type = this.getTypeName(model);
         if (type != undefined) {
-            this.dismiss(model);
-            return this.findType(model.parent, type!, model.allowedBaseTags);
+            this.dismiss(model, `findLocal ${type}`);
+            return this.findType(model.parent, type, model.allowedBaseTags);
         }
     }
 
@@ -91,7 +138,7 @@ export class ModelTraversal {
      * Search inherited scope for a named member.
      */
     findMember(scope: Model | undefined, key: string | number, allowedTags: ElementTag[]): Model | undefined {
-        while (scope && !this.dismissed?.has(scope)) {
+        while (scope && !this.isDismissed(scope)) {
             const result = this.findLocal(scope, key, allowedTags);
             if (result) {
                 return result;
@@ -110,7 +157,7 @@ export class ModelTraversal {
         }
         const queue = Array<Model>(scope);
         while (scope = queue.shift()) {
-            if (this.dismissed?.has(scope)) {
+            if (this.isDismissed(scope, `findType ${name}`)) {
                 continue;
             }
 
@@ -121,13 +168,13 @@ export class ModelTraversal {
                 }
             }
 
-            this.dismiss(scope);
-
             // Search inherited scope next
             let inheritedScope = this.findBase(scope);
             if (inheritedScope) {
                 queue.unshift(inheritedScope);
             }
+
+            this.dismiss(scope, `findType ${name}`);
 
             // Search parent scope once all inherited scope is searched
             if (scope.parent) {
@@ -140,7 +187,7 @@ export class ModelTraversal {
      * Visit all nodes in the model tree.
      */
     visit(model: Model, visitor: (model: Model) => boolean | void): boolean | undefined {
-        if (this.dismissed?.has(model)) {
+        if (this.isDismissed(model)) {
             return;
         }
         if (visitor(model) === false) {
@@ -159,13 +206,15 @@ export class ModelTraversal {
      * Visit all nodes in the inheritance hierarchy.
      */
     visitInheritance(model: Model | undefined, visitor: (model: Model) => boolean | void): boolean | undefined {
-        if (!model || this.dismissed?.has(model)) {
+        if (!model || this.isDismissed(model, "visitInheritance")) {
             return;
         }
+        this.dismiss(model, "visitInheritance");
         if (visitor(model) === false) {
             return false;
         }
-        this.visitInheritance(this.findBase(model), visitor);
+        const base = this.findBase(model);
+        this.visitInheritance(base, visitor);
     }
 
     /**
@@ -173,7 +222,7 @@ export class ModelTraversal {
      */
     private findLocal(scope: Model, key: string | number, allowedTags: ElementTag[]) {
         for (const c of scope.children) {
-            if (c.is(key) && allowedTags.indexOf(c.tag) != -1 && !this.dismissed?.has(c)) {
+            if (c.is(key) && allowedTags.indexOf(c.tag) != -1 && !this.isDismissed(c, `findLocal ${c.name}`)) {
                 return c;
             }
         }

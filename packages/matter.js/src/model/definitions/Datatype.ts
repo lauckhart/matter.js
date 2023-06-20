@@ -34,5 +34,14 @@ export enum Datatype {
     double = "double",
     octstr = "octstr",
     list = "list",
-    struct = "struct"
+    struct = "struct",
+
+    // Formally these are derived datatypes, however we largely treat them
+    // like non-derived so define them here
+    string = "string",
+    enum8 = "enum8",
+    enum16 = "enum16",
+
+    // Extension -- any value is allowed
+    any = "any"
 }

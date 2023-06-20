@@ -25,7 +25,7 @@ export function ValidateModel(model: Model) {
     function validate(model: Model) {
         const Validator = ModelValidator.validators[model.tag];
         if (!Validator) {
-            model.error("UNKOWN_MODEL_TYPE", `No validator for ${model.tag}`);
+            model.error("UNKNOWN_MODEL_TYPE", `No validator for ${model.tag}`);
             return;
         }
 
