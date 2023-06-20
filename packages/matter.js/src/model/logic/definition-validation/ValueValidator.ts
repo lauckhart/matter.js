@@ -52,14 +52,14 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             this.error("NO_TYPE", "No type information");
             return;
         }
-        
-        const base = this.model.baseModel;
+
+        const base = this.model.base;
         if (base == undefined) {
-            this.error("TYPE_UNKOWN", `Unknown type ${this.model.type}`);
+            this.error("TYPE_UNKNOWN", `Unknown type ${this.model.type}`);
             return;
         }
 
-        const metatype = this.model.metaBase?.metatype;
+        const metatype = this.model.metabase?.metatype;
         if (metatype == undefined) {
             this.error("METATYPE_UNKOWN", `No metatype for ${this.model.type}`);
             return;
@@ -70,7 +70,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         if (this.model.default == undefined) {
             if (this.model.parent instanceof ValueModel) {
                 if (this.model.id === undefined) {
-                    switch (this.model.parent.metaBase?.metatype) {
+                    switch (this.model.parent.metabase?.metatype) {
                         case Metatype.enum:
                         case Metatype.bitmap:
                             this.error("MISSING_ITEM_ID", `No ID for ${this.model.parent.type} child`)

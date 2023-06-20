@@ -19,6 +19,14 @@ export class ModelValidator<T extends Model> {
         this.validateProperty({ name: "description", type: "string" });
         this.validateProperty({ name: "details", type: "string" });
         this.validateProperty({ name: "children", type: Array });
+        this.validateProperty({ name: "type", type: "string" });
+
+        if (this.model.type) {
+            const base = this.model.base;
+            if (base == undefined) {
+                this.error("UNRESOLVED_BASE", `Type ${this.model.type} does not resolve`);
+            }
+        }
     }
 
     error(code: string, message: string) {

@@ -35,9 +35,9 @@ export function ValidateModel(model: Model) {
             console.error(`Error validating ${model.path}`)
             throw e;
         }
-       
+
         logger.debug(
-            `${model.valid ? "✅": "❌"} ${model.name}`,
+            `${model.valid ? "✔": "✘"} ${model.name}`,
             Logger.dict({
                 tag: model.tag,
                 children: model.children.length || undefined,

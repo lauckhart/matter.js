@@ -31,7 +31,7 @@ function applyPatches(subref: HtmlReference, clusterRef: HtmlReference) {
 }
 
 // Collect the bits that define a cluster.  Here we are just building a tree
-// of HTML nodes.  Conversion to Matter models happens in translate-cluster
+// of HTML nodes.  Conversion to Matter elements happens in translate-cluster
 export function loadCluster(clusterRef: HtmlReference) {
     // The definition we are building
     const definition: ClusterReference = { ...clusterRef };

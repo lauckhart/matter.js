@@ -5,9 +5,9 @@
  */
 
 import { MatterError } from "../../common/index.js";
-import { Logger } from "../../log/index.js";
 import { DefinitionError, ElementTag, Specification } from "../definitions/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
+import { ModelTraversal } from "../logic/ModelTraversal.js";
 
 const CHILDREN = Symbol("children");
 
@@ -16,16 +16,39 @@ const CHILDREN = Symbol("children");
  * the corresponding element type.
  */
 export abstract class Model {
-    abstract readonly tag: AnyElement["tag"];
+    // These fields are defined in BaseElement.  This base class does not
+    // implement an element but subclasses do
+    abstract readonly tag: ElementTag;
     id?: number;
     name!: string;
+    type?: string;
     description?: string;
     details?: string;
     xref?: Model.CrossReference;
     errors?: DefinitionError[];
-    accept?: string[];
+
+    /**
+     * The structural parent.  This is the model for the element that contains
+     * this element's definition.
+     */
     parent?: Model;
+
+    /**
+     * Flag set on elements loaded from Globals.
+     */
     isGlobal?: boolean;
+
+    /**
+     * Indicates that an element may have type definitions as children.
+     */
+    isTypeScope?: boolean;
+
+    /**
+     * Indicates that an element defines a datatype.
+     */
+    isType?: boolean;
+
+    private [CHILDREN]!: Array<any>;
 
     /**
      * Did validation find errors?
@@ -112,17 +135,28 @@ export abstract class Model {
      */
     static constructors = {} as { [ type: string ]: new(definition: any) => Model };
 
-    private [CHILDREN]!: Array<any>;
+    /**
+     * In some circumstances the base type can be inferred.  This inference
+     * happens here.
+     * 
+     * Does not recurse so only returns the direct base type.
+     */
+    get effectiveType() {
+        return this.type;
+    }
 
     /**
-     * Access the top-most element in the model.
+     * Get a Model for my base type, if any.
      */
-    get root(): Model {
-        return this.search(
-            model => model.parent,
-            model => model.parent ? undefined : model,
-            true
-        ) as Model;
+    get base(): Model | undefined {
+        return new ModelTraversal().findBase(this);
+    }
+
+    /**
+     * The set of tags from which this model may derive.
+     */
+    get allowedBaseTags() {
+        return [ this.tag ];
     }
 
     /**
@@ -143,102 +177,20 @@ export abstract class Model {
     /**
      * Retrieve all models of a specific element type from local scope.
      * 
-     * @param type the element type to retrieve
+     * @param test model class or a predicate object
      */
-    local<T>(type: Model.Constructor<T>): T[];
-
-    /**
-     * Retrieve a specific model from local scope.
-     */
-    local(key: string | number): Model;
-
-    /**
-     * Retrieve a model of specific type from local scope
-     * 
-     * @param type the element type to retrieve
-     * @param key the ID or name of the model to retrieve
-     */
-    local<T>(type: Model.Constructor<T>, key: string | number): T | undefined;
-
-    local<T>(
-        type?: Model.Constructor<T> | string | number,
-        key?: string | number
-    ): T | T[] | undefined {
-        // Note - not indexed.  Not currently a problem but should address if
-        // becomes problematically slow
-        if (typeof type != "function") {
-            type = undefined;
-            key = type;
-        }
-
-        const found = key === undefined ? Array<T>() : undefined;
-        for (const c of this.children) {
-            if (type == undefined || c instanceof type) {
-                if (key === undefined) {
-                    found!.push(c as T);
-                } else if (c.is(key)) {
-                    return c as T;
-                }
-            }
-        }
-        return found;
+    childrenOfType<T>(constructor: abstract new(...args: any[]) => T) {
+        return this.children.filter(c => c instanceof constructor) as T[];
     }
 
     /**
-     * Retrieve all models of a specific element type from global scope.
-     * 
-     * @param type the element type to retrieve
+     * Retrieve a specific model by ID or name.
      */
-    global<T>(type: Model.Constructor<T>): T[];
-
-    /**
-     * Retrieve a model from global scope.
-     * 
-     * @param type the element type to retrieve
-     * @param key the ID or name of the model to retrieve
-     */
-    global<T>(type: Model.Constructor<T>, key: string | number): T;
-
-    global<T>(type: Model.Constructor<T>, key?: string | number): T | T[] | undefined {
-        return this.search(
-            current => current.parent,
-            current => current.local(type, key as any),
-            key !== undefined
-        );
-    }
-
-    /**
-     * Perform an iterative search for a custom model relationship.
-     * 
-     * @param next retrieves the next model
-     * @param test returns the result of the search or undefined to continue
-     * @param first this model from which to search
-     * @returns the result of the search
-     */
-    search<T>(
-        next: (current: Model) => Model | undefined,
-        test: (current: Model) => T | undefined,
-        first: boolean
-    ): T[] | T | undefined {
-        const found = first ? undefined : Array<T>();
-        const visited = new Set<Model>();
-        for (let current: Model | undefined = this; current; current = next(current)) {
-            if (visited.has(current)) {
-                throw new MatterError("Recursive model structure detected");
-            }
-            const result = test(current);
-            if (result !== undefined) {
-                if (first) {
-                    return result;
-                } else {
-                    found!.push(result);
-                }
-            }
-            visited.add(this);
-        }
-        if (!first) {
-            return found;
-        }
+    childOfType<T>(constructor: abstract new(...args: any[]) => T, key: number | string) {
+        return this.children.find(
+            c => c instanceof constructor
+            && typeof key == "number" ? c.effectiveId == key : c.name == key
+        ) as T;
     }
 
     /**
@@ -255,10 +207,6 @@ export abstract class Model {
      * Record a validation error for this model.
      */
     error(code: string, message: string) {
-        if (this.accept && this.accept.indexOf(code) != -1) {
-            return;
-        }
-
         if (!this.errors) {
             this.errors = [];
         }
@@ -300,72 +248,11 @@ export abstract class Model {
     /**
      * Apply a function to all tree elements.
      */
-    visit(visitor: (model: Model) => boolean | void): boolean {
-        if (visitor(this) === false) {
-            return false;
-        }
-        for (const c of this.children) {
-            if (c.visit(visitor) === false) {
-                return false;
-            }
-        }
-        return true;
+    visit(visitor: (model: Model) => boolean | void) {
+        return new ModelTraversal().visit(this, visitor);
     }
 
-    /**
-     * Write model structure to log.
-     */
-    log({ logger }: { logger?: Logger } = {}) {
-        if (!logger) {
-            logger = Logger.get(this.name);
-        }
-        const properties = this.valueOf() as any;
-
-        const summary = `${properties.tag} ${properties.name}`;
-        delete properties.tag;
-        delete properties.name;
-
-        const summaryProps = {} as any;
-        if (properties.id != undefined) {
-            if (typeof this.id == "number" && this.id >= 0) {
-                summaryProps.id = `0x${this.id.toString(16).padStart(4, "0")}`;
-            } else {
-                summaryProps.id = this.id;
-            }
-            delete properties.id;
-        }
-        if (properties.type) {
-            summaryProps.type = properties.type;
-            delete properties.type;
-        }
-        if (properties.xref) {
-            summaryProps.xref = properties.xref;
-            delete properties.xref;
-        }
-        logger.debug(summary, Logger.dict(summaryProps));
-
-        const details = properties.details;
-        if (details) {
-            delete properties.details;
-        }
-
-        Logger.nest(() => {
-            if (Object.keys(properties).length) {
-                logger!.debug(Logger.dict(properties));
-            }
-            if (details) {
-                logger!.debug(Logger.dict({ details: details }));
-            }
-            if (this.children.length) {
-                logger!.debug(Logger.dict({ children: "" }));
-                Logger.nest(() => {
-                    this.children.forEach(child => child.log({ logger }));
-                });
-            }
-        });
-    }
-
-    protected constructor(definition: BaseElement) {
+    constructor(definition: BaseElement) {
         // Copy all definition properties.  Types will be wrong for some of
         // them but constructors correct this.  Properties for which type is
         // correct are suffixed with "!" to indicate no further initialization
@@ -382,7 +269,9 @@ export abstract class Model {
 }
 
 export namespace Model {
-    export type Constructor<T> = new(...args: any) => T;
+    export type Constructor<T> = abstract new(...args: any) => T;
+
+    export type LookupPredicate<T> = Constructor<T> | { type: Constructor<T>, test: (model: Model) => boolean };
 
     export type PropertyValidation = {
         name: string,

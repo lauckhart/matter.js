@@ -87,7 +87,11 @@ const ANSI_CODES = {
 function ansiLogFormatter(now: Date, level: Level, facility: string, values: any[]) {
     const levelCode = (<any>ANSI_CODES)[`LEVEL_${Level[level]}`];
 
-    const formattedValues = formatValues(values, (key) => `${ANSI_CODES.KEY}${key}:${levelCode} `);
+    const formattedValues = formatValues(values,
+        (key) => `${ANSI_CODES.KEY}${key}:${levelCode} `,
+        (value) => value
+            .replace(/([✓✔])/g, `${ANSI_CODES.LEVEL_INFO}$1${levelCode}`)
+            .replace(/([✗✘])/g, `${ANSI_CODES.LEVEL_ERROR}$1${levelCode}`));
     const formattedFacility = facility.length > 20 ? `${facility.slice(0, 10)}~${facility.slice(facility.length - 9)}` : facility.padEnd(20);
 
     return `${ANSI_CODES.PREFIX}${formatTime(now)} ${Level[level].padEnd(5)}${ANSI_CODES.NONE} ${ANSI_CODES.FACILITY}${formattedFacility}${ANSI_CODES.NONE} ${nestingPrefix()}${levelCode}${formattedValues}${ANSI_CODES.NONE}`;

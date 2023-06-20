@@ -87,10 +87,11 @@ function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlRef
                 break;
 
             case "P":
+                const text = element.textContent?.trim().replace(/(\s\u200c)+/, "");
+
                 // Sometimes heading is just in a P so we have to guess as to
                 // "headingness"
-                const text = element.textContent?.trim();
-                if (text?.match(/^(\d+\.)+ [ a-zA-Z0-9]+$/)) {
+                if (text?.match(/^(\d+\.)+ [ a-zA-Z0-9]+$/) || text?.match(/^(\d+\.)+ .+ \(.+ type\)/)) {
                     const possibleHeading = parseHeading(element);
                     if (possibleHeading && possibleHeading.section.startsWith(ref.xref.section)) {
                         // Yep, looks like a heading
@@ -126,14 +127,8 @@ function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlRef
                 }
 
                 // Save the first paragraph of the section
-                if (currentRef && !currentRef.firstParagraph) {
-                    let text = element.textContent;
-                    if (text) {
-                        text = text.replace(/(\s\u200c)+/, "");
-                        if (text) {
-                            currentRef.firstParagraph = element as HTMLParagraphElement;
-                        }
-                    }
+                if (text && currentRef && !currentRef.firstParagraph) {
+                    currentRef.firstParagraph = element as HTMLParagraphElement;
                 }
                 break;
 

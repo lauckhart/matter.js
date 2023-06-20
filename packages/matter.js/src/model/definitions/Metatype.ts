@@ -102,6 +102,12 @@ export namespace Metatype {
                 return id;
             
             case Metatype.integer:
+                // Temperature type used by thermostat
+                if (typeof value == "string" && value.endsWith("°C")) {
+                    value = Math.floor(Number.parseFloat(value) * 100);
+                    return Number.isNaN(value) ? Invalid : value;
+                }
+
                 try {
                     const i = BigInt(value);
                     const n = Number(i);
@@ -146,7 +152,7 @@ export namespace Metatype {
                 return value;
 
             case Metatype.array:
-                if (value == "empty" || value == "[]") {
+                if (value == "empty" || value == "[]" || value == "{}") {
                     return [];
                 }
                 if (!Array.isArray(value)) {
