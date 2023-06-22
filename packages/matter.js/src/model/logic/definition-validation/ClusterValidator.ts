@@ -12,7 +12,7 @@ ModelValidator.validators[ClusterElement.Tag] =
 class DeviceTypeValidator extends ModelValidator<ClusterModel> {
     override validate() {
 
-        this.validateStructure(true, DatatypeModel, AttributeModel, CommandModel, EventModel);
+        this.validateStructure(false, DatatypeModel, AttributeModel, CommandModel, EventModel);
 
         this.validateProperty({ name: "singleton", type: "boolean" });
         this.validateProperty({ name: "classification", type: ClusterElement.Classification });

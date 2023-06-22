@@ -154,6 +154,7 @@ export namespace Conformance {
     }
     
     export function serialize(ast: Ast): string {
+        if (!ast) debugger;
         switch (ast.type) {
             case Operator.OR:
             case Operator.XOR:
@@ -192,9 +193,14 @@ export namespace Conformance {
                 const o = ast.param as Conformance.Ast.Option;
                 return `[${serialize(o)}]`;
 
-            default:
-                // Flag, name or value
+            case Special.Name:
+            case Special.Value:
+                // Name or value
                 return `${ast.param}`;
+
+            default:
+                // Flag
+                return ast.type;
         }
     }
 }
@@ -465,14 +471,14 @@ class Parser {
 
         // Collect binary expressions into an array so we can back up and
         // apply operator precedence
-        let expr = this.parseUnaryExpression();
+        let expr = this.parseAtomicExpression();
         if (expr) {
             elements.push(expr);
         }
         while (this.token && this.token.type == Tokenizer.TokenType.Special && Parser.BinaryOperators.has(this.token.value)) {
             elements.push(this.token.value);
             this.next();
-            expr = this.parseUnaryExpression();
+            expr = this.parseAtomicExpression();
             if (expr) {
                 elements.push(expr);
             }
@@ -494,8 +500,8 @@ class Parser {
         return elements[0] as Conformance.Ast;
     }
 
-    private parseUnaryExpression(): string | Conformance.Ast | undefined {
-        const expr = this.parseUnaryExpressionWithoutChoice();
+    private parseAtomicExpression(): string | Conformance.Ast | undefined {
+        const expr = this.parseAtomicExpressionWithoutChoice();
 
         // Parse choice suffix
         if (this.atSpecial(Tokenizer.Special.Dot)) {
@@ -528,13 +534,19 @@ class Parser {
         return expr;
     }
 
-    private parseUnaryExpressionWithoutChoice(): string | Conformance.Ast | undefined {
+    private parseAtomicExpressionWithoutChoice(): string | Conformance.Ast | undefined {
         if (!this.token) {
             this.conformance.error("PREMATURE_CONFORMANCE_TERMINATION", "Terminated with expression expected");
             return;
         }
 
-        if (this.token.type == Tokenizer.TokenType.Flag || this.token.type == Tokenizer.TokenType.Name || this.token.type == Tokenizer.TokenType.Number) {
+        if (this.token.type == Tokenizer.TokenType.Flag) {
+            const value = this.token.value;
+            this.next();
+            return { type: value };
+        }
+
+        if (this.token.type == Tokenizer.TokenType.Name || this.token.type == Tokenizer.TokenType.Number) {
             const value = this.token.value;
             this.next();
             return { type: Conformance.Special.Value, param: value };
@@ -542,7 +554,7 @@ class Parser {
 
         if (this.atSpecial(Tokenizer.Special.Not)) {
             this.next();
-            return { type: Conformance.Operator.NOT, param: this.parseUnaryExpression() };
+            return { type: Conformance.Operator.NOT, param: this.parseAtomicExpression() };
         }
 
         if (this.atSpecial(Tokenizer.Special.GroupBegin)) {

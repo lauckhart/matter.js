@@ -23,6 +23,8 @@ export type HtmlReference = {
     path: string,
     table?: Table,
     firstParagraph?: HTMLParagraphElement,
+    detailSection?: string,
+    ignore?: boolean;
     details?: HtmlReference[]
 }
 
@@ -41,5 +43,6 @@ export type ClusterReference = HtmlReference & {
     attributes?: DetailedReference,
     commands?: DetailedReference,
     events?: DetailedReference,
+    statusCodes?: DetailedReference,
     datatypes?: DetailedReference[]
 }

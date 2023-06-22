@@ -31,7 +31,7 @@ describe("Model", () => {
         })
 
         it("finds local base type", () => {
-            expect(Fixtures.cluster1StructField.base).toBe(Fixtures.cluster1StructType);
+            expect(Fixtures.cluster1StructField1.base).toBe(Fixtures.cluster1StructType);
         })
 
         it("finds inherited base type", () => {
@@ -41,6 +41,14 @@ describe("Model", () => {
         it("is inferred from inherited base", () => {
             expect(Fixtures.feature.base?.name).toBe(Datatype.uint32);
         })
+
+        it("finds attribute struct", () => {
+            expect(Fixtures.cluster1StructAttr.base).toBe(Fixtures.cluster1StructType);
+        })
+
+        it("is inferred from struct attribute override", () => {
+            expect(Fixtures.cluster2Attr2.base).toBe(Fixtures.cluster1StructType);
+        })
     })
 
     describe("metatype", () => {
@@ -49,7 +57,7 @@ describe("Model", () => {
         })
 
         it("represents local base type", () => {
-            expect(Fixtures.cluster1StructField.effectiveMetatype).toBe(Metatype.object);
+            expect(Fixtures.cluster1StructField1.effectiveMetatype).toBe(Metatype.object);
         })
 
         it("represents inherited base type", () => {
@@ -81,7 +89,7 @@ describe("Model", () => {
         })
 
         it("is inherited on attribute override", () => {
-            expect(Fixtures.cluster2Attr.effectiveType).toBe(Datatype.uint8);
+            expect(Fixtures.cluster2Attr1.effectiveType).toBe(Datatype.uint8);
         })
     });
 })
@@ -98,7 +106,8 @@ namespace Fixtures {
         cluster1StructFieldOverride
     ]});
 
-    export const cluster1StructField = new DatatypeModel({ name: "structField", type: "ClusterDatatype" });
+    export const cluster1StructField1 = new DatatypeModel({ name: "structField", type: "ClusterDatatype" });
+    export const cluster1StructAttr = new AttributeModel({ id: 3, name: "structAttr2", type: "ClusterDatatype" });
 
     export const globalAttr = new AttributeModel({ id: 1, name: "Attr1" });
 
@@ -109,11 +118,12 @@ namespace Fixtures {
             feature
         ]},
         { tag: "attribute", id: 1, name: "byteAttr", type: "uint8" },
-        { tag: "attribute", id: 2, name: "structAttr", type: "struct", children: [
+        { tag: "attribute", id: 2, name: "structAttr1", type: "struct", children: [
             { tag: "datatype", name: "numField", type: "double" },
             { tag: "datatype", name: "enumField", type: "GlobalEnum" },
-            cluster1StructField
+            cluster1StructField1
         ]},
+        cluster1StructAttr,
         cluster1StructType
     ]});
 
@@ -121,7 +131,8 @@ namespace Fixtures {
     export const cluster2StructField = new DatatypeModel({ id: 1, name: "inheritedStruct", type: "ClusterDatatype", children: [
         cluster2StructFieldOverride
     ]});
-    export const cluster2Attr = new AttributeModel({ id: 1, name: "byteAttr" });
+    export const cluster2Attr1 = new AttributeModel({ id: 1, name: "byteAttr" });
+    export const cluster2Attr2 = new AttributeModel({ id: 3, name: "structAttr2" });
 
     export const enumValue2 = new DatatypeModel({ name: "Value2"});
 
@@ -131,7 +142,8 @@ namespace Fixtures {
             cluster1,
             { tag: "cluster", id: 2, name: "Cluster2", type: "Cluster1", children: [
                 cluster2StructField,
-                cluster2Attr 
+                cluster2Attr1,
+                cluster2Attr2
             ]},
             { tag: "cluster", id: 3, name: "Cluster3" },
             globalAttr,

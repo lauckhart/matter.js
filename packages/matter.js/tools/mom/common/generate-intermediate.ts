@@ -21,8 +21,10 @@ export function generateIntermediateModel(source: string, elements: MatterElemen
         name: `${camelize(source)}Matter`,
         children: elements
     });
+
+    let validationResult: ValidateModel.Result | undefined;
     Logger.nest(() => {
-        ValidateModel(matter);
+        validationResult = ValidateModel(matter);
     });
 
     const file = new TsFile(`${INTERMEDIATE_PATH}/${source}`);
@@ -30,5 +32,5 @@ export function generateIntermediateModel(source: string, elements: MatterElemen
     generateElement(file, matter, `export const ${camelize(source)}Matter: MatterElement = `);
     file.save();
 
-    ValidateModel.report(matter);
+    validationResult!.report();
 }

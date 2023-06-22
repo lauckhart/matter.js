@@ -9,160 +9,164 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0004, name: "Groups",
-    classification: "endpoint", description: "Groups",
+    tag: "cluster", name: "Groups", id: 0x4, classification: "endpoint", description: "Groups",
+    details: "Attributes and commands for group configuration and manipulation",
+    xref: { document: "cluster", section: "1.3" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "NameSupport",
-            access: "R V", conformance: "M", constraint: "desc", default: undefined, quality: "F", type: "map8",
-            details: "This attribute provides legacy, read-only access to whether the Group " +
-                     "Names feature is supported. The most significant bit, bit 7, SHALL be " +
-                     "equal to bit 0 of the FeatureMap attribute. All other bits SHALL be 0",
-            xref: { document: "cluster", section: "1.3.6.1" }
+            tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            children: [
+                {
+                    tag: "datatype", name: "GROUPNAMES", id: 0x0,
+                    description: "The ability to store a name for a group.",
+                    xref: { document: "cluster", section: "1.3.4" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0000, name: "GroupNameSupport",
-            conformance: "M", type: "map8"
+            tag: "attribute", name: "NameSupport", id: 0x0, type: "map8", access: "R V", conformance: "M",
+            constraint: "desc", quality: "F",
+            details: "This attribute provides legacy, read-only access to whether the Group Names feature is supported. " +
+                     "The most significant bit, bit 7, SHALL be equal to bit 0 of the FeatureMap attribute. All other bits" +
+                     " SHALL be 0",
+            xref: { document: "cluster", section: "1.3.6.1" },
+            children: [
+                {
+                    tag: "datatype", name: "GroupNames", id: 0x7,
+                    description: "The ability to store a name for a group.",
+                    xref: { document: "cluster", section: "1.3.6.1" }
+                }
+            ]
         },
 
         {
-            tag: "command", id: 0x0000, name: "AddGroup",
-            access: "R F M", conformance: "M", direction: "request", response: "AddGroupResponse",
-            details: "The AddGroup command allows a client to add group membership in a " +
-                     "particular group for the server endpoint",
+            tag: "command", name: "AddGroup", id: 0x0, access: "R F M", conformance: "M", direction: "request",
+            response: "AddGroupResponse",
+            details: "The AddGroup command allows a client to add group membership in a particular group for the server " +
+                     "endpoint",
             xref: { document: "cluster", section: "1.3.7.1" },
             children: [
                 {
-                    tag: "datatype", name: "GroupId",
-                    conformance: "M", type: "group-id"
+                    tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
+                    xref: { document: "cluster", section: "1.3.7.1" }
                 },
 
                 {
-                    tag: "datatype", name: "GroupName",
-                    conformance: "M", type: "string"
+                    tag: "datatype", name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
+                    xref: { document: "cluster", section: "1.3.7.1" }
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0001, name: "ViewGroupResponse",
-            conformance: "M", direction: "response",
-            details: "The ViewGroupResponse command is sent by the Groups cluster server in " +
-                     "response to a ViewGroup command",
+            tag: "command", name: "ViewGroupResponse", id: 0x1, conformance: "M", direction: "response",
+            details: "The ViewGroupResponse command is sent by the Groups cluster server in response to a ViewGroup " +
+                     "command",
             xref: { document: "cluster", section: "1.3.7.8" },
             children: [
                 {
-                    tag: "datatype", name: "Status",
-                    conformance: "M", type: "enum8"
+                    tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    xref: { document: "cluster", section: "1.3.7.8" }
                 },
 
                 {
-                    tag: "datatype", name: "GroupId",
-                    conformance: "M", type: "group-id"
+                    tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
+                    xref: { document: "cluster", section: "1.3.7.8" }
                 },
 
                 {
-                    tag: "datatype", name: "GroupName",
-                    conformance: "M", type: "string"
+                    tag: "datatype", name: "GroupName", id: 0x2, type: "string", conformance: "M", constraint: "max 16",
+                    xref: { document: "cluster", section: "1.3.7.8" }
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0002, name: "GetGroupMembershipResponse",
-            conformance: "M", direction: "response",
-            details: "The GetGroupMembershipResponse command is sent by the Groups cluster " +
-                     "server in response to a GetGroupMembership command",
+            tag: "command", name: "GetGroupMembershipResponse", id: 0x2, conformance: "M",
+            direction: "response",
+            details: "The GetGroupMembershipResponse command is sent by the Groups cluster server in response to a " +
+                     "GetGroupMembership command",
             xref: { document: "cluster", section: "1.3.7.9" },
             children: [
                 {
-                    tag: "datatype", name: "Capacity",
-                    conformance: "M", quality: "X", type: "uint8"
+                    tag: "datatype", name: "Capacity", id: 0x0, type: "uint8", conformance: "M", quality: "X",
+                    xref: { document: "cluster", section: "1.3.7.9" }
                 },
 
                 {
-                    tag: "datatype", name: "GroupList",
-                    conformance: "M", type: "group-id"
+                    tag: "datatype", name: "GroupList", id: 0x1, type: "list", conformance: "M",
+                    constraint: "all[min 1]",
+                    xref: { document: "cluster", section: "1.3.7.9" },
+                    children: [
+                        {
+                            tag: "datatype", name: "entry", type: "group-id"
+                        }
+                    ]
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0003, name: "RemoveGroupResponse",
-            conformance: "M", direction: "response",
-            details: "The RemoveGroupResponse command is generated by the server in response" +
-                     " to the receipt of a RemoveGroup command",
+            tag: "command", name: "RemoveGroupResponse", id: 0x3, conformance: "M", direction: "response",
+            details: "The RemoveGroupResponse command is generated by the server in response to the receipt of a " +
+                     "RemoveGroup command",
             xref: { document: "cluster", section: "1.3.7.10" },
             children: [
                 {
-                    tag: "datatype", name: "Status",
-                    conformance: "M", type: "enum8"
+                    tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    xref: { document: "cluster", section: "1.3.7.10" }
                 },
 
                 {
-                    tag: "datatype", name: "GroupId",
-                    conformance: "M", type: "group-id"
+                    tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
+                    xref: { document: "cluster", section: "1.3.7.10" }
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0004, name: "RemoveAllGroups",
-            access: "R F M", conformance: "M", direction: "request", response: "status",
-            details: "The RemoveAllGroups command allows a client to direct the server to " +
-                     "remove all group associations for the server endpoint",
+            tag: "command", name: "RemoveAllGroups", id: 0x4, access: "R F M", conformance: "M",
+            direction: "request", response: "status",
+            details: "The RemoveAllGroups command allows a client to direct the server to remove all group associations " +
+                     "for the server endpoint",
             xref: { document: "cluster", section: "1.3.7.5" }
         },
 
         {
-            tag: "command", id: 0x0005, name: "AddGroupIfIdentifying",
-            access: "R F M", conformance: "M", direction: "request", response: "status",
-            details: "The AddGroupIfIdentifying command allows a client to add group " +
-                     "membership in a particular group for the server endpoint, on condition" +
-                     " that the endpoint is identifying itself. Identifying functionality is" +
-                     " controlled using the Identify cluster, (see Identify",
+            tag: "command", name: "AddGroupIfIdentifying", id: 0x5, access: "R F M", conformance: "M",
+            direction: "request", response: "status",
+            details: "The AddGroupIfIdentifying command allows a client to add group membership in a particular group for " +
+                     "the server endpoint, on condition that the endpoint is identifying itself. Identifying functionality" +
+                     " is controlled using the Identify cluster, (see Identify",
             xref: { document: "cluster", section: "1.3.7.6" },
             children: [
                 {
-                    tag: "datatype", name: "GroupId",
-                    conformance: "M", type: "group-id"
+                    tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
+                    xref: { document: "cluster", section: "1.3.7.6" }
                 },
 
                 {
-                    tag: "datatype", name: "GroupName",
-                    conformance: "M", type: "string"
+                    tag: "datatype", name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
+                    xref: { document: "cluster", section: "1.3.7.6" }
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0000, name: "AddGroupResponse",
-            conformance: "M", direction: "response",
-            details: "The AddGroupResponse is sent by the Groups cluster server in response " +
-                     "to an AddGroup command. The AddGroupResponse command SHALL have the " +
-                     "following data fields",
+            tag: "command", name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
+            details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command. The " +
+                     "AddGroupResponse command SHALL have the following data fields",
             xref: { document: "cluster", section: "1.3.7.7" },
             children: [
                 {
-                    tag: "datatype", name: "Status",
-                    conformance: "M", type: "enum8"
+                    tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    xref: { document: "cluster", section: "1.3.7.7" }
                 },
 
                 {
-                    tag: "datatype", name: "GroupId",
-                    conformance: "M", type: "group-id"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "GroupsFeature",
-            conformance: "M", type: "map32",
-            children: [
-                {
-                    tag: "datatype", id: 0x0001, name: "GroupNames",
-                    conformance: "M"
+                    tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
+                    xref: { document: "cluster", section: "1.3.7.7" }
                 }
             ]
         }

@@ -9,521 +9,446 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0509, name: "KeypadInput",
-    classification: "application", description: "Keypad Input",
+    tag: "cluster", name: "KeypadInput", id: 0x509, classification: "application",
+    description: "Keypad Input",
+    details: "This cluster provides an interface for controlling a device like a TV using action commands such as " +
+             "UP, DOWN, and SELECT",
+    xref: { document: "cluster", section: "6.8" },
     children: [
         {
-            tag: "command", id: 0x0000, name: "SendKey",
-            access: "O", conformance: "M", direction: "request", response: "SendKeyResponse",
-            details: "Upon receipt, this SHALL process a keycode as input to the media " +
-                     "device",
+            tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            children: [
+                {
+                    tag: "datatype", name: "NV", id: 0x0,
+                    description: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU",
+                    xref: { document: "cluster", section: "6.8.2" }
+                },
+
+                {
+                    tag: "datatype", name: "LK", id: 0x1,
+                    description: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)",
+                    xref: { document: "cluster", section: "6.8.2" }
+                },
+
+                {
+                    tag: "datatype", name: "NK", id: 0x2, description: "Supports numeric input 0..9",
+                    xref: { document: "cluster", section: "6.8.2" }
+                }
+            ]
+        },
+
+        {
+            tag: "command", name: "SendKey", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "SendKeyResponse",
+            details: "Upon receipt, this SHALL process a keycode as input to the media device",
             xref: { document: "cluster", section: "6.8.3.1" },
             children: [
                 {
-                    tag: "datatype", name: "KeyCode",
-                    conformance: "M", type: "CecKeyCode"
+                    tag: "datatype", name: "KeyCode", id: 0x0, type: "uint8", conformance: "M",
+                    xref: { document: "cluster", section: "6.8.3.1" }
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0001, name: "SendKeyResponse",
-            conformance: "M", direction: "response",
-            details: "This command SHALL be generated in response to a SendKey command. The " +
-                     "data for this command SHALL be as follows",
+            tag: "command", name: "SendKeyResponse", id: 0x1, conformance: "M", direction: "response",
+            details: "This command SHALL be generated in response to a SendKey command. The data for this command SHALL be" +
+                     " as follows",
             xref: { document: "cluster", section: "6.8.3.2" },
             children: [
                 {
-                    tag: "datatype", name: "Status",
-                    conformance: "M", type: "KeypadInputStatusEnum"
+                    tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
+                    xref: { document: "cluster", section: "6.8.3.2" }
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "StatusEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "StatusEnum", type: "enum8",
             details: "Status Data Type is derived from enum8",
             xref: { document: "cluster", section: "6.8.4.1" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Success",
-                    conformance: "M", description: "Command succeeded",
+                    tag: "datatype", name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
                     xref: { document: "cluster", section: "6.8.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "UnsupportedKey",
-                    conformance: "M", description: "Command failed: Key code is not supported.",
+                    tag: "datatype", name: "UnsupportedKey", id: 0x1, conformance: "M",
+                    description: "Command failed: Key code is not supported.",
                     xref: { document: "cluster", section: "6.8.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "InvalidKeyInCurrentState",
-                    conformance: "M", description: "Command failed: Requested key code is invalid in the context of the responder’s current state.",
+                    tag: "datatype", name: "InvalidKeyInCurrentState", id: 0x2, conformance: "M",
+                    description: "Command failed: Requested key code is invalid in the context of the responder’s current state.",
                     xref: { document: "cluster", section: "6.8.4.1" }
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "NumberKeys",
-                    conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "KeypadInputStatusEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "CecKeyCode", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Success",
-                    conformance: "M"
+                    tag: "datatype", name: "Select", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "UnsupportedKey",
-                    conformance: "M"
+                    tag: "datatype", name: "Up", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "InvalidKeyInCurrentState",
-                    conformance: "M"
+                    tag: "datatype", name: "Down", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Left", id: 0x3, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Right", id: 0x4, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "RightUp", id: 0x5, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "RightDown", id: 0x6, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "LeftUp", id: 0x7, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "LeftDown", id: 0x8, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "RootMenu", id: 0x9, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SetupMenu", id: 0xa, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ContentsMenu", id: 0xb, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "FavoriteMenu", id: 0xc, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Exit", id: 0xd, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "MediaTopMenu", id: 0x10, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "MediaContextSensitiveMenu", id: 0x11, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "NumberEntryMode", id: 0x1d, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Number11", id: 0x1e, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Number12", id: 0x1f, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Number0OrNumber10", id: 0x20, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers1", id: 0x21, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers2", id: 0x22, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers3", id: 0x23, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers4", id: 0x24, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers5", id: 0x25, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers6", id: 0x26, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers7", id: 0x27, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers8", id: 0x28, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Numbers9", id: 0x29, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Dot", id: 0x2a, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Enter", id: 0x2b, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Clear", id: 0x2c, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "NextFavorite", id: 0x2f, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ChannelUp", id: 0x30, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ChannelDown", id: 0x31, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PreviousChannel", id: 0x32, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SoundSelect", id: 0x33, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "InputSelect", id: 0x34, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "DisplayInformation", id: 0x35, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Help", id: 0x36, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PageUp", id: 0x37, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PageDown", id: 0x38, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Power", id: 0x40, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "VolumeUp", id: 0x41, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "VolumeDown", id: 0x42, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Mute", id: 0x43, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Play", id: 0x44, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Stop", id: 0x45, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Pause", id: 0x46, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Record", id: 0x47, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Rewind", id: 0x48, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "FastForward", id: 0x49, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Eject", id: 0x4a, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Forward", id: 0x4b, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Backward", id: 0x4c, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "StopRecord", id: 0x4d, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PauseRecord", id: 0x4e, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Reserved", id: 0x4f, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Angle", id: 0x50, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SubPicture", id: 0x51, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "VideoOnDemand", id: 0x52, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ElectronicProgramGuide", id: 0x53, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "TimerProgramming", id: 0x54, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "InitialConfiguration", id: 0x55, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SelectBroadcastType", id: 0x56, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SelectSoundPresentation", id: 0x57, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PlayFunction", id: 0x60, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PausePlayFunction", id: 0x61, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "RecordFunction", id: 0x62, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PauseRecordFunction", id: 0x63, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "StopFunction", id: 0x64, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "MuteFunction", id: 0x65, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "RestoreVolumeFunction", id: 0x66, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "TuneFunction", id: 0x67, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SelectMediaFunction", id: 0x68, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SelectAvInputFunction", id: 0x69, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SelectAudioInputFunction", id: 0x6a, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PowerToggleFunction", id: 0x6b, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PowerOffFunction", id: 0x6c, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "PowerOnFunction", id: 0x6d, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "F1Blue", id: 0x71, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "F2Red", id: 0x72, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "F3Green", id: 0x73, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "F4Yellow", id: 0x74, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "F5", id: 0x75, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Data", id: 0x76, conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "CecKeyCode",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "KeypadInputStatusEnum", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Select",
-                    conformance: "M"
+                    tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Up",
-                    conformance: "M"
+                    tag: "datatype", name: "UnsupportedKey", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Down",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0003, name: "Left",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "Right",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0005, name: "RightUp",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0006, name: "RightDown",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0007, name: "LeftUp",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0008, name: "LeftDown",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0009, name: "RootMenu",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x000a, name: "SetupMenu",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x000b, name: "ContentsMenu",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x000c, name: "FavoriteMenu",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x000d, name: "Exit",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0010, name: "MediaTopMenu",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0011, name: "MediaContextSensitiveMenu",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x001d, name: "NumberEntryMode",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x001e, name: "Number11",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x001f, name: "Number12",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0020, name: "Number0OrNumber10",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0021, name: "Numbers1",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0022, name: "Numbers2",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0023, name: "Numbers3",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0024, name: "Numbers4",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0025, name: "Numbers5",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0026, name: "Numbers6",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0027, name: "Numbers7",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0028, name: "Numbers8",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0029, name: "Numbers9",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x002a, name: "Dot",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x002b, name: "Enter",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x002c, name: "Clear",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x002f, name: "NextFavorite",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0030, name: "ChannelUp",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0031, name: "ChannelDown",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0032, name: "PreviousChannel",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0033, name: "SoundSelect",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0034, name: "InputSelect",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0035, name: "DisplayInformation",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0036, name: "Help",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0037, name: "PageUp",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0038, name: "PageDown",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0040, name: "Power",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0041, name: "VolumeUp",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0042, name: "VolumeDown",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0043, name: "Mute",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0044, name: "Play",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0045, name: "Stop",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0046, name: "Pause",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0047, name: "Record",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0048, name: "Rewind",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0049, name: "FastForward",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x004a, name: "Eject",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x004b, name: "Forward",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x004c, name: "Backward",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x004d, name: "StopRecord",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x004e, name: "PauseRecord",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x004f, name: "Reserved",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0050, name: "Angle",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0051, name: "SubPicture",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0052, name: "VideoOnDemand",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0053, name: "ElectronicProgramGuide",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0054, name: "TimerProgramming",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0055, name: "InitialConfiguration",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0056, name: "SelectBroadcastType",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0057, name: "SelectSoundPresentation",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0060, name: "PlayFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0061, name: "PausePlayFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0062, name: "RecordFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0063, name: "PauseRecordFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0064, name: "StopFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0065, name: "MuteFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0066, name: "RestoreVolumeFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0067, name: "TuneFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0068, name: "SelectMediaFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0069, name: "SelectAvInputFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x006a, name: "SelectAudioInputFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x006b, name: "PowerToggleFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x006c, name: "PowerOffFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x006d, name: "PowerOnFunction",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0071, name: "F1Blue",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0072, name: "F2Red",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0073, name: "F3Green",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0074, name: "F4Yellow",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0075, name: "F5",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0076, name: "Data",
-                    conformance: "M"
+                    tag: "datatype", name: "InvalidKeyInCurrentState", id: 0x2, conformance: "M"
                 }
             ]
         }

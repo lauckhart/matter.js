@@ -9,156 +9,121 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x050b, name: "AudioOutput",
-    classification: "application", description: "Audio Output",
+    tag: "cluster", name: "AudioOutput", id: 0x50b, classification: "application",
+    description: "Audio Output",
+    details: "This cluster provides an interface for controlling the Output on a media device such as a TV",
+    xref: { document: "cluster", section: "6.5" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "OutputList",
-            access: "R V", conformance: "M", constraint: "None", default: undefined, type: "list",
+            tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            children: [
+                {
+                    tag: "datatype", name: "NU", id: 0x0, description: "Supports updates to output names",
+                    xref: { document: "cluster", section: "6.5.2" }
+                }
+            ]
+        },
+
+        {
+            tag: "attribute", name: "OutputList", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "None",
             details: "This list provides the outputs supported by the device",
             xref: { document: "cluster", section: "6.5.3.1" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "OutputInfoStruct"
+                    tag: "datatype", name: "entry", type: "OutputInfoStruct"
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "CurrentOutput",
-            access: "R V", conformance: "M", default: undefined, type: "uint8",
-            details: "This field contains the value of the index field of the currently " +
-                     "selected OutputInfoStruct",
+            tag: "attribute", name: "CurrentOutput", id: 0x1, type: "uint8", access: "R V", conformance: "M",
+            details: "This field contains the value of the index field of the currently selected OutputInfoStruct",
             xref: { document: "cluster", section: "6.5.3.2" }
         },
 
         {
-            tag: "attribute", id: 0x0000, name: "AudioOutputList",
-            conformance: "M", type: "list",
-            children: [
-                {
-                    tag: "datatype", name: "entry",
-                    type: "OutputInfoStruct"
-                }
-            ]
-        },
-
-        {
-            tag: "command", id: 0x0000, name: "SelectOutput",
-            access: "O", conformance: "M", direction: "request", response: "status",
+            tag: "command", name: "SelectOutput", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "status",
             xref: { document: "cluster", section: "6.5.4" },
             children: [
                 {
-                    tag: "datatype", name: "Index",
-                    conformance: "M", type: "uint8"
+                    tag: "datatype", name: "Index", type: "uint8", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0001, name: "RenameOutput",
-            access: "M", conformance: "NU", direction: "request", response: "status",
-            details: "Upon receipt, this SHALL rename the output at a specific index in the " +
-                     "Output List",
+            tag: "command", name: "RenameOutput", id: 0x1, access: "M", conformance: "NU", direction: "request",
+            response: "status",
+            details: "Upon receipt, this SHALL rename the output at a specific index in the Output List",
             xref: { document: "cluster", section: "6.5.4.2" },
             children: [
                 {
-                    tag: "datatype", name: "Index",
-                    conformance: "M", type: "uint8"
+                    tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M",
+                    xref: { document: "cluster", section: "6.5.4.2" }
                 },
 
                 {
-                    tag: "datatype", name: "Name",
-                    conformance: "M", type: "string"
+                    tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "M",
+                    xref: { document: "cluster", section: "6.5.4.2" }
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OutputInfoStruct",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "OutputInfoStruct", type: "struct", conformance: "M",
             details: "This contains information about an output",
             xref: { document: "cluster", section: "6.5.5.1" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Index",
-                    conformance: "M", default: undefined, type: "uint8",
+                    tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M",
                     details: "This SHALL indicate the unique index into the list of outputs",
                     xref: { document: "cluster", section: "6.5.5.1.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "OutputType",
-                    conformance: "M", constraint: "desc", default: undefined, type: "OutputTypeEnum",
+                    tag: "datatype", name: "OutputType", id: 0x1, type: "OutputTypeEnum", conformance: "M",
+                    constraint: "desc",
                     details: "This SHALL indicate the type of output",
                     xref: { document: "cluster", section: "6.5.5.1.2" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Name",
-                    conformance: "M", default: "", type: "string",
-                    details: "The device defined and user editable output name, such as “Soundbar" +
-                             "”, “Speakers”. This field may be blank, but SHOULD be provided when " +
-                             "known",
+                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "M",
+                    details: "The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be " +
+                             "blank, but SHOULD be provided when known",
                     xref: { document: "cluster", section: "6.5.5.1.3" }
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OutputInfoStruct",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "OutputTypeEnum", type: "enum8", conformance: "M",
+            xref: { document: "cluster", section: "6.5.5.2" },
             children: [
                 {
-                    tag: "datatype", name: "Index",
-                    conformance: "M", type: "uint8"
+                    tag: "datatype", name: "Hdmi", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "OutputType",
-                    conformance: "M", type: "OutputTypeEnum"
+                    tag: "datatype", name: "Bt", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Name",
-                    conformance: "M", type: "string"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "OutputTypeEnum",
-            conformance: "M", type: "enum8",
-            children: [
-                {
-                    tag: "datatype", id: 0x0000, name: "Hdmi",
-                    conformance: "M"
+                    tag: "datatype", name: "Optical", id: 0x2, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Bt",
-                    conformance: "M"
+                    tag: "datatype", name: "Headphone", id: 0x3, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Optical",
-                    conformance: "M"
+                    tag: "datatype", name: "Internal", id: 0x4, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0003, name: "Headphone",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "Internal",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0005, name: "Other",
-                    conformance: "M"
+                    tag: "datatype", name: "Other", id: 0x5, conformance: "M"
                 }
             ]
         }

@@ -83,7 +83,7 @@ export function serialize(value: any) {
     }
     
     function serializeOne(value: any): string | undefined {
-        if (value == undefined || typeof value == "function") {
+        if (value === undefined || typeof value == "function") {
             return undefined;
         }
         if (value == null) {

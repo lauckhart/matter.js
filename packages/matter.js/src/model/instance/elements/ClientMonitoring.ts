@@ -9,84 +9,75 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x1046, name: "ClientMonitoring",
-    description: "Client Monitoring",
+    tag: "cluster", name: "ClientMonitoring", id: 0x1046, description: "Client Monitoring",
+    details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on" +
+             " the server",
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "IdleModeInterval",
-            conformance: "M", default: 300, type: "uint32"
+            tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 300
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "ActiveModeInterval",
-            conformance: "M", default: 300, type: "uint32"
+            tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M",
+            default: 300
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "ActiveModeThreshold",
-            conformance: "M", default: 4000, type: "uint16"
+            tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M",
+            default: 4000
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "ExpectedClients",
-            conformance: "M", type: "list",
+            tag: "attribute", name: "ExpectedClients", id: 0x3, type: "list", conformance: "M",
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "MonitoringRegistration"
+                    tag: "datatype", name: "entry", type: "MonitoringRegistration"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0000, name: "RegisterClientMonitoring",
-            access: "R M", conformance: "M", direction: "request",
+            tag: "command", name: "RegisterClientMonitoring", id: 0x0, access: "R M", conformance: "M",
+            direction: "request",
             children: [
                 {
-                    tag: "datatype", name: "ClientNodeId",
-                    conformance: "M", type: "node-id"
+                    tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ICid",
-                    conformance: "M", type: "uint64"
+                    tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0001, name: "UnregisterClientMonitoring",
-            access: "R M", conformance: "M", direction: "request",
+            tag: "command", name: "UnregisterClientMonitoring", id: 0x1, access: "R M", conformance: "M",
+            direction: "request",
             children: [
                 {
-                    tag: "datatype", name: "ClientNodeId",
-                    conformance: "M", type: "node-id"
+                    tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ICid",
-                    conformance: "M", type: "uint64"
+                    tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0002, name: "StayAwakeRequest",
-            access: "R M", conformance: "O", direction: "request"
+            tag: "command", name: "StayAwakeRequest", id: 0x2, access: "R M", conformance: "O",
+            direction: "request"
         },
 
         {
-            tag: "datatype", name: "MonitoringRegistration",
-            access: "R F", conformance: "M", type: "struct",
+            tag: "datatype", name: "MonitoringRegistration", type: "struct", access: "R F", conformance: "M",
             children: [
                 {
-                    tag: "datatype", name: "ClientNodeId",
-                    conformance: "M", type: "node-id"
+                    tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ICid",
-                    conformance: "M", type: "uint64"
+                    tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
                 }
             ]
         }

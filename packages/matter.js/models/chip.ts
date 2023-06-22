@@ -12,225 +12,195 @@ export const ChipMatter: MatterElement = {
     tag: "matter", name: "ChipMatter",
     children: [
         {
-            tag: "cluster", id: 0x001f, name: "AccessControl",
-            description: "Access Control",
+            tag: "cluster", name: "AccessControl", id: 0x1f, description: "Access Control",
+            details: "The Access Control Cluster exposes a data model view of a Node's Access Control List (ACL), which " +
+                     "codifies the rules used to manage and enforce Access Control for the Node's endpoints and their " +
+                     "associated cluster instances",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "Acl",
-                    access: "RW A", conformance: "M", type: "list",
+                    tag: "attribute", name: "Acl", id: 0x0, type: "list", access: "RW A", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "AccessControlEntryStruct"
+                            tag: "datatype", name: "entry", type: "AccessControlEntryStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "Extension",
-                    access: "RW A", conformance: "O", type: "list",
+                    tag: "attribute", name: "Extension", id: 0x1, type: "list", access: "RW A", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "AccessControlExtensionStruct"
+                            tag: "datatype", name: "entry", type: "AccessControlExtensionStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "SubjectsPerAccessControlEntry",
-                    access: "R V", conformance: "M", type: "uint16"
+                    tag: "attribute", name: "SubjectsPerAccessControlEntry", id: 0x2, type: "uint16", access: "R V",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "TargetsPerAccessControlEntry",
-                    access: "R V", conformance: "M", type: "uint16"
+                    tag: "attribute", name: "TargetsPerAccessControlEntry", id: 0x3, type: "uint16", access: "R V",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "AccessControlEntriesPerFabric",
-                    access: "R V", conformance: "M", type: "uint16"
+                    tag: "attribute", name: "AccessControlEntriesPerFabric", id: 0x4, type: "uint16", access: "R V",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "AccessControlEntryChanged",
-                    access: "R S A", conformance: "M", priority: "info",
+                    tag: "event", name: "AccessControlEntryChanged", id: 0x0, access: "R S A", conformance: "M",
+                    priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "AdminNodeId",
-                            conformance: "M", quality: "X", type: "node-id"
+                            tag: "datatype", name: "AdminNodeId", type: "node-id", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "AdminPasscodeId",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "AdminPasscodeId", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "ChangeType",
-                            conformance: "M", type: "ChangeTypeEnum"
+                            tag: "datatype", name: "ChangeType", type: "ChangeTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LatestValue",
-                            conformance: "M", quality: "X", type: "AccessControlEntryStruct"
+                            tag: "datatype", name: "LatestValue", type: "AccessControlEntryStruct", conformance: "M",
+                            quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "AccessControlExtensionChanged",
-                    access: "R S A", conformance: "M", priority: "info",
+                    tag: "event", name: "AccessControlExtensionChanged", id: 0x1, access: "R S A", conformance: "M",
+                    priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "AdminNodeId",
-                            conformance: "M", quality: "X", type: "node-id"
+                            tag: "datatype", name: "AdminNodeId", type: "node-id", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "AdminPasscodeId",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "AdminPasscodeId", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "ChangeType",
-                            conformance: "M", type: "ChangeTypeEnum"
+                            tag: "datatype", name: "ChangeType", type: "ChangeTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LatestValue",
-                            conformance: "M", quality: "X", type: "AccessControlExtensionStruct"
+                            tag: "datatype", name: "LatestValue", type: "AccessControlExtensionStruct", conformance: "M",
+                            quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "AccessControlEntryPrivilegeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "AccessControlEntryStruct", type: "struct", access: "R F", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "View",
+                            tag: "datatype", name: "Privilege", type: "AccessControlEntryPrivilegeEnum", access: "R S",
                             conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "ProxyView",
+                            tag: "datatype", name: "AuthMode", type: "AccessControlEntryAuthModeEnum", access: "R S",
                             conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Operate",
-                            conformance: "M"
+                            tag: "datatype", name: "Subjects", type: "uint64", access: "R S", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Manage",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "Administer",
-                            conformance: "M"
+                            tag: "datatype", name: "Targets", type: "Target", access: "R S", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "AccessControlEntryAuthModeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "AccessControlEntryPrivilegeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Pase",
-                            conformance: "M"
+                            tag: "datatype", name: "View", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Case",
-                            conformance: "M"
+                            tag: "datatype", name: "ProxyView", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Group",
-                            conformance: "M"
+                            tag: "datatype", name: "Operate", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Manage", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Administer", id: 0x5, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ChangeTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "AccessControlEntryAuthModeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Changed",
-                            conformance: "M"
+                            tag: "datatype", name: "Pase", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Added",
-                            conformance: "M"
+                            tag: "datatype", name: "Case", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Removed",
-                            conformance: "M"
+                            tag: "datatype", name: "Group", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "Target",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "Target", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Cluster",
-                            conformance: "M", quality: "X", type: "cluster-id"
+                            tag: "datatype", name: "Cluster", type: "cluster-id", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "Endpoint",
-                            conformance: "M", quality: "X", type: "endpoint-no"
+                            tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "DeviceType",
-                            conformance: "M", quality: "X", type: "devtype-id"
+                            tag: "datatype", name: "DeviceType", type: "devtype-id", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "AccessControlEntryStruct",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "AccessControlExtensionStruct", type: "struct", access: "R F",
+                    conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Privilege",
-                            access: "R S", conformance: "M", type: "AccessControlEntryPrivilegeEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "AuthMode",
-                            access: "R S", conformance: "M", type: "AccessControlEntryAuthModeEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "Subjects",
-                            access: "R S", conformance: "M", quality: "X", type: "uint64"
-                        },
-
-                        {
-                            tag: "datatype", name: "Targets",
-                            access: "R S", conformance: "M", quality: "X", type: "Target"
+                            tag: "datatype", name: "Data", type: "octstr", access: "R S", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "AccessControlExtensionStruct",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "ChangeTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Data",
-                            access: "R S", conformance: "M", type: "octstr"
+                            tag: "datatype", name: "Changed", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Added", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Removed", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -238,48 +208,44 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x050e, name: "AccountLogin",
-            description: "Account Login",
+            tag: "cluster", name: "AccountLogin", id: 0x50e, description: "Account Login",
+            details: "This cluster provides commands that facilitate user account login on a Content App or a node. For " +
+                     "example, a Content App running on a Video Player device, which is represented as an endpoint (see [" +
+                     "TV Architecture]), can use this cluster to help make the user account on the Content App match the " +
+                     "user account on the Client",
             children: [
                 {
-                    tag: "command", id: 0x0000, name: "GetSetupPin",
-                    conformance: "M", direction: "request", response: "GetSetupPinResponse",
+                    tag: "command", name: "GetSetupPin", id: 0x0, conformance: "M", direction: "request",
+                    response: "GetSetupPinResponse",
                     children: [
                         {
-                            tag: "datatype", name: "TempAccountIdentifier",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "TempAccountIdentifier", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "Login",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "Login", id: 0x2, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "TempAccountIdentifier",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "TempAccountIdentifier", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SetupPin",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "SetupPin", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "Logout",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "Logout", id: 0x3, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "GetSetupPinResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "GetSetupPinResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "SetupPin",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "SetupPin", type: "string", conformance: "M"
                         }
                     ]
                 }
@@ -287,528 +253,430 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0025, name: "Actions",
-            description: "Actions",
+            tag: "cluster", name: "Actions", id: 0x25, description: "Actions",
+            details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to " +
+                     "expose action information",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ActionList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "ActionList", id: 0x0, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "ActionStruct"
+                            tag: "datatype", name: "entry", type: "ActionStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "EndpointList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "EndpointList", id: 0x1, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "EndpointListStruct"
+                            tag: "datatype", name: "entry", type: "EndpointListStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "SetupUrl",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "SetupUrl", id: 0x2, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "InstantAction",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "InstantAction", id: 0x0, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "InstantActionWithTransition",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "InstantActionWithTransition", id: 0x1, conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "StartAction",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "StartAction", id: 0x2, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "StartActionWithDuration",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "StartActionWithDuration", id: 0x3, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Duration",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "Duration", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "StopAction",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "StopAction", id: 0x4, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "PauseAction",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "PauseAction", id: 0x5, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0006, name: "PauseActionWithDuration",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "PauseActionWithDuration", id: 0x6, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Duration",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "Duration", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0007, name: "ResumeAction",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "ResumeAction", id: 0x7, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0008, name: "EnableAction",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "EnableAction", id: 0x8, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0009, name: "EnableActionWithDuration",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "EnableActionWithDuration", id: 0x9, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Duration",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "Duration", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000a, name: "DisableAction",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "DisableAction", id: 0xa, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000b, name: "DisableActionWithDuration",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "DisableActionWithDuration", id: 0xb, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Duration",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "Duration", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "StateChanged",
-                    conformance: "M", priority: "info",
+                    tag: "event", name: "StateChanged", id: 0x0, conformance: "M", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NewState",
-                            conformance: "M", type: "ActionStateEnum"
+                            tag: "datatype", name: "NewState", type: "ActionStateEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "ActionFailed",
-                    conformance: "M", priority: "info",
+                    tag: "event", name: "ActionFailed", id: 0x1, conformance: "M", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InvokeId",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "InvokeId", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NewState",
-                            conformance: "M", type: "ActionStateEnum"
+                            tag: "datatype", name: "NewState", type: "ActionStateEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Error",
-                            conformance: "M", type: "ActionErrorEnum"
+                            tag: "datatype", name: "Error", type: "ActionErrorEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "CommandBits",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "ActionStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "InstantAction",
-                            conformance: "M"
+                            tag: "datatype", name: "ActionId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "InstantActionWithTransition",
-                            conformance: "M"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "StartAction",
-                            conformance: "M"
+                            tag: "datatype", name: "Type", type: "ActionTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "StartActionWithDuration",
-                            conformance: "M"
+                            tag: "datatype", name: "EndpointListId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "StopAction",
-                            conformance: "M"
+                            tag: "datatype", name: "SupportedCommands", type: "CommandBits", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "PauseAction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0040, name: "PauseActionWithDuration",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0080, name: "ResumeAction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0100, name: "EnableAction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0200, name: "EnableActionWithDuration",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0400, name: "DisableAction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0800, name: "DisableActionWithDuration",
-                            conformance: "M"
+                            tag: "datatype", name: "State", type: "ActionStateEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ActionErrorEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ActionTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "Other", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Interrupted",
-                            conformance: "M"
+                            tag: "datatype", name: "Scene", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sequence", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Automation", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Exception", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Notification", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Alarm", id: 0x6, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ActionStateEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "CommandBits", type: "map16", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Inactive",
-                            conformance: "M"
+                            tag: "datatype", name: "InstantAction", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Active",
-                            conformance: "M"
+                            tag: "datatype", name: "InstantActionWithTransition", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Paused",
-                            conformance: "M"
+                            tag: "datatype", name: "StartAction", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Disabled",
-                            conformance: "M"
+                            tag: "datatype", name: "StartActionWithDuration", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "StopAction", id: 0x10, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PauseAction", id: 0x20, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PauseActionWithDuration", id: 0x40, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ResumeAction", id: 0x80, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "EnableAction", id: 0x100, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "EnableActionWithDuration", id: 0x200, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "DisableAction", id: 0x400, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "DisableActionWithDuration", id: 0x800, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ActionTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ActionStateEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Other",
-                            conformance: "M"
+                            tag: "datatype", name: "Inactive", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Scene",
-                            conformance: "M"
+                            tag: "datatype", name: "Active", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Sequence",
-                            conformance: "M"
+                            tag: "datatype", name: "Paused", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Automation",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Exception",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "Notification",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "Alarm",
-                            conformance: "M"
+                            tag: "datatype", name: "Disabled", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "EndpointListTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "EndpointListStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Other",
-                            conformance: "M"
+                            tag: "datatype", name: "EndpointListId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Room",
-                            conformance: "M"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Zone",
-                            conformance: "M"
+                            tag: "datatype", name: "Type", type: "EndpointListTypeEnum", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Endpoints", type: "endpoint-no", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ActionStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "EndpointListTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ActionId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Other", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Room", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Type",
-                            conformance: "M", type: "ActionTypeEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "EndpointListId",
-                            conformance: "M", type: "uint16"
-                        },
-
-                        {
-                            tag: "datatype", name: "SupportedCommands",
-                            conformance: "M", type: "CommandBits"
-                        },
-
-                        {
-                            tag: "datatype", name: "State",
-                            conformance: "M", type: "ActionStateEnum"
+                            tag: "datatype", name: "Zone", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "EndpointListStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ActionErrorEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "EndpointListId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Unknown", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
-                        },
-
-                        {
-                            tag: "datatype", name: "Type",
-                            conformance: "M", type: "EndpointListTypeEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "Endpoints",
-                            conformance: "M", type: "endpoint-no"
+                            tag: "datatype", name: "Interrupted", id: 0x1, conformance: "M"
                         }
                     ]
                 }
@@ -816,109 +684,78 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x003c, name: "AdministratorCommissioning",
+            tag: "cluster", name: "AdministratorCommissioning", id: 0x3c,
             description: "Administrator Commissioning",
+            details: "Commands to trigger a Node to allow a new Administrator to commission it",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "WindowStatus",
-                    conformance: "M", type: "CommissioningWindowStatusEnum"
+                    tag: "attribute", name: "WindowStatus", id: 0x0, type: "CommissioningWindowStatusEnum",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "AdminFabricIndex",
-                    conformance: "M", quality: "X", type: "fabric-idx"
+                    tag: "attribute", name: "AdminFabricIndex", id: 0x1, type: "fabric-idx", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "AdminVendorId",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "AdminVendorId", id: 0x2, type: "uint16", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "OpenCommissioningWindow",
-                    access: "R A", conformance: "M", direction: "request",
+                    tag: "command", name: "OpenCommissioningWindow", id: 0x0, access: "R A", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "CommissioningTimeout",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "CommissioningTimeout", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "PakePasscodeVerifier",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "PakePasscodeVerifier", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Discriminator",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Discriminator", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Iterations",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "Iterations", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Salt",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "Salt", type: "octstr", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "OpenBasicCommissioningWindow",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "OpenBasicCommissioningWindow", id: 0x1, access: "R A", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "CommissioningTimeout",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "CommissioningTimeout", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "RevokeCommissioning",
-                    access: "R A", conformance: "M", direction: "request"
+                    tag: "command", name: "RevokeCommissioning", id: 0x2, access: "R A", conformance: "M",
+                    direction: "request"
                 },
 
                 {
-                    tag: "datatype", name: "StatusCode",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "CommissioningWindowStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0002, name: "Busy",
-                            conformance: "M"
+                            tag: "datatype", name: "WindowNotOpen", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "PakeParameterError",
-                            conformance: "M"
+                            tag: "datatype", name: "EnhancedWindowOpen", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "WindowNotOpen",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "CommissioningWindowStatusEnum",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "WindowNotOpen",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "EnhancedWindowOpen",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "BasicWindowOpen",
-                            conformance: "M"
+                            tag: "datatype", name: "BasicWindowOpen", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -926,77 +763,81 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x050d, name: "ApplicationBasic",
-            description: "Application Basic",
+            tag: "cluster", name: "ApplicationBasic", id: 0x50d, description: "Application Basic",
+            details: "This cluster provides information about an application running on a TV or media player device which " +
+                     "is represented as an endpoint",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ApplicationVendorName",
-                    conformance: "O", default: "", type: "string"
+                    tag: "attribute", name: "ApplicationVendorName", id: 0x0, type: "string", conformance: "O",
+                    default: ""
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "ApplicationVendorId",
-                    conformance: "O", default: 0, type: "vendor-id"
+                    tag: "attribute", name: "ApplicationVendorId", id: 0x1, type: "vendor-id", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ApplicationName",
-                    conformance: "M", type: "string"
+                    tag: "attribute", name: "ApplicationName", id: 0x2, type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "ApplicationProductId",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "ApplicationProductId", id: 0x3, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "ApplicationApp",
-                    conformance: "M", type: "ApplicationStruct"
+                    tag: "attribute", name: "ApplicationApp", id: 0x4, type: "ApplicationStruct", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "ApplicationStatus",
-                    conformance: "M", default: 1, type: "ApplicationStatusEnum"
+                    tag: "attribute", name: "ApplicationStatus", id: 0x5, type: "ApplicationStatusEnum",
+                    conformance: "M", default: 1
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "ApplicationVersion",
-                    conformance: "M", type: "string"
+                    tag: "attribute", name: "ApplicationVersion", id: 0x6, type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "ApplicationAllowedVendorList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "ApplicationAllowedVendorList", id: 0x7, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "vendor-id"
+                            tag: "datatype", name: "entry", type: "vendor-id"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ApplicationStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ApplicationStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Stopped",
-                            conformance: "M"
+                            tag: "datatype", name: "CatalogVendorId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "ActiveVisibleFocus",
-                            conformance: "M"
+                            tag: "datatype", name: "ApplicationId", type: "string", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "ApplicationStatusEnum", type: "enum8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "Stopped", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "ActiveHidden",
-                            conformance: "M"
+                            tag: "datatype", name: "ActiveVisibleFocus", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "ActiveVisibleNotFocus",
-                            conformance: "M"
+                            tag: "datatype", name: "ActiveHidden", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ActiveVisibleNotFocus", id: 0x3, conformance: "M"
                         }
                     ]
                 }
@@ -1004,139 +845,111 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x050c, name: "ApplicationLauncher",
-            description: "Application Launcher",
+            tag: "cluster", name: "ApplicationLauncher", id: 0x50c, description: "Application Launcher",
+            details: "This cluster provides an interface for launching content on a media player device such as a TV or " +
+                     "Speaker",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ApplicationLauncherList",
-                    conformance: "O", quality: "P", type: "list",
+                    tag: "attribute", name: "ApplicationLauncherList", id: 0x0, type: "list", conformance: "O",
+                    quality: "P",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "uint16"
+                            tag: "datatype", name: "entry", type: "uint16"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "ApplicationLauncherCurrentApp",
-                    access: "RW", conformance: "O", default: undefined, quality: "X", type: "ApplicationEpStruct"
+                    tag: "attribute", name: "ApplicationLauncherCurrentApp", id: 0x1, type: "ApplicationEpStruct",
+                    access: "RW", conformance: "O", default: null, quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "LaunchApp",
-                    conformance: "M", direction: "request", response: "LauncherResponse",
+                    tag: "command", name: "LaunchApp", id: 0x0, conformance: "M", direction: "request",
+                    response: "LauncherResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Application",
-                            conformance: "O", type: "ApplicationStruct"
+                            tag: "datatype", name: "Application", type: "ApplicationStruct", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Data",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "Data", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "StopApp",
-                    conformance: "M", direction: "request", response: "LauncherResponse",
+                    tag: "command", name: "StopApp", id: 0x1, conformance: "M", direction: "request",
+                    response: "LauncherResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Application",
-                            conformance: "O", type: "ApplicationStruct"
+                            tag: "datatype", name: "Application", type: "ApplicationStruct", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "HideApp",
-                    conformance: "M", direction: "request", response: "LauncherResponse",
+                    tag: "command", name: "HideApp", id: 0x2, conformance: "M", direction: "request",
+                    response: "LauncherResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Application",
-                            conformance: "O", type: "ApplicationStruct"
+                            tag: "datatype", name: "Application", type: "ApplicationStruct", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "LauncherResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "LauncherResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "ApplicationLauncherStatusEnum"
+                            tag: "datatype", name: "Status", type: "ApplicationLauncherStatusEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Data",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "Data", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ApplicationEpStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ApplicationEpStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Application",
-                            conformance: "M", type: "ApplicationStruct"
+                            tag: "datatype", name: "Application", type: "ApplicationStruct", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Endpoint",
-                            conformance: "O", type: "endpoint-no"
+                            tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ApplicationStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ApplicationStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "CatalogVendorId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "CatalogVendorId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ApplicationId",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "ApplicationId", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ApplicationLauncherStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ApplicationLauncherStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "AppNotAvailable",
-                            conformance: "M"
+                            tag: "datatype", name: "AppNotAvailable", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "SystemBusy",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ApplicationLauncherFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "ApplicationPlatform",
-                            conformance: "M"
+                            tag: "datatype", name: "SystemBusy", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -1144,116 +957,87 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x050b, name: "AudioOutput",
-            description: "Audio Output",
+            tag: "cluster", name: "AudioOutput", id: 0x50b, description: "Audio Output",
+            details: "This cluster provides an interface for controlling the Output on a media device such as a TV",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "AudioOutputList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "AudioOutputList", id: 0x0, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "OutputInfoStruct"
+                            tag: "datatype", name: "entry", type: "OutputInfoStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "AudioOutputCurrentOutput",
-                    conformance: "O", default: 0, type: "uint8"
+                    tag: "attribute", name: "AudioOutputCurrentOutput", id: 0x1, type: "uint8", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "SelectOutput",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "SelectOutput", id: 0x0, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Index",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Index", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "RenameOutput",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "RenameOutput", id: 0x1, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Index",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Index", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OutputInfoStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "OutputInfoStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Index",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Index", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OutputType",
-                            conformance: "M", type: "OutputTypeEnum"
+                            tag: "datatype", name: "OutputType", type: "OutputTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OutputTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OutputTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Hdmi",
-                            conformance: "M"
+                            tag: "datatype", name: "Hdmi", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Bt",
-                            conformance: "M"
+                            tag: "datatype", name: "Bt", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Optical",
-                            conformance: "M"
+                            tag: "datatype", name: "Optical", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Headphone",
-                            conformance: "M"
+                            tag: "datatype", name: "Headphone", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Internal",
-                            conformance: "M"
+                            tag: "datatype", name: "Internal", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Other",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "AudioOutputFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "NameUpdates",
-                            conformance: "M"
+                            tag: "datatype", name: "Other", id: 0x5, conformance: "M"
                         }
                     ]
                 }
@@ -1261,403 +1045,358 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0301, name: "BallastConfiguration",
-            description: "Ballast Configuration",
+            tag: "cluster", name: "BallastConfiguration", id: 0x301, description: "Ballast Configuration",
+            details: "Attributes and commands for configuring a lighting ballast",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "PhysicalMinLevel",
-                    conformance: "M", default: 1, type: "uint8"
+                    tag: "attribute", name: "PhysicalMinLevel", id: 0x0, type: "uint8", conformance: "M", default: 1
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "PhysicalMaxLevel",
-                    conformance: "M", default: 254, type: "uint8"
+                    tag: "attribute", name: "PhysicalMaxLevel", id: 0x1, type: "uint8", conformance: "M", default: 254
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "BallastStatus",
-                    conformance: "O", default: 0, type: "map8"
+                    tag: "attribute", name: "BallastStatus", id: 0x2, type: "map8", conformance: "O", default: 0,
+                    children: [
+                        {
+                            tag: "datatype", name: "NonOperational", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LampNotInSocket", id: 0x2, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0010, name: "MinLevel",
-                    access: "RW", conformance: "M", default: 1, type: "uint8"
+                    tag: "attribute", name: "MinLevel", id: 0x10, type: "uint8", access: "RW", conformance: "M",
+                    default: 1
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "MaxLevel",
-                    access: "RW", conformance: "M", default: 254, type: "uint8"
+                    tag: "attribute", name: "MaxLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M",
+                    default: 254
                 },
 
                 {
-                    tag: "attribute", id: 0x0014, name: "IntrinsicBallastFactor",
-                    access: "RW", conformance: "O", quality: "X", type: "uint8"
+                    tag: "attribute", name: "IntrinsicBallastFactor", id: 0x14, type: "uint8", access: "RW",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0015, name: "BallastFactorAdjustment",
-                    access: "RW", conformance: "O", default: 255, quality: "X", type: "uint8"
+                    tag: "attribute", name: "BallastFactorAdjustment", id: 0x15, type: "uint8", access: "RW",
+                    conformance: "O", default: 255, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0020, name: "LampQuantity",
-                    conformance: "M", type: "uint8"
+                    tag: "attribute", name: "LampQuantity", id: 0x20, type: "uint8", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0030, name: "LampType",
-                    access: "RW", conformance: "O", type: "string"
+                    tag: "attribute", name: "LampType", id: 0x30, type: "string", access: "RW", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0031, name: "LampManufacturer",
-                    access: "RW", conformance: "O", type: "string"
+                    tag: "attribute", name: "LampManufacturer", id: 0x31, type: "string", access: "RW",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0032, name: "LampRatedHours",
-                    access: "RW", conformance: "O", default: 16777215, quality: "X", type: "uint24"
+                    tag: "attribute", name: "LampRatedHours", id: 0x32, type: "uint24", access: "RW", conformance: "O",
+                    default: 16777215, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0033, name: "LampBurnHours",
-                    access: "RW", conformance: "O", default: 0, quality: "X", type: "uint24"
+                    tag: "attribute", name: "LampBurnHours", id: 0x33, type: "uint24", access: "RW", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0034, name: "LampAlarmMode",
-                    access: "RW", conformance: "O", default: 0, type: "map8"
+                    tag: "attribute", name: "LampAlarmMode", id: 0x34, type: "map8", access: "RW", conformance: "O",
+                    default: 0,
+                    children: [
+                        {
+                            tag: "datatype", name: "LampBurnHours", id: 0x1, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0035, name: "LampBurnHoursTripPoint",
-                    access: "RW", conformance: "O", default: 16777215, quality: "X", type: "uint24"
+                    tag: "attribute", name: "LampBurnHoursTripPoint", id: 0x35, type: "uint24", access: "RW",
+                    conformance: "O", default: 16777215, quality: "X"
                 }
             ]
         },
 
         {
-            tag: "cluster", id: 0x0028, name: "BasicInformation",
-            description: "Basic Information", singleton: true,
+            tag: "cluster", name: "BasicInformation", id: 0x28, description: "Basic Information",
+            singleton: true,
+            details: "This cluster provides attributes and events for determining basic information about Nodes, which " +
+                     "supports both Commissioning and operational determination of Node characteristics, such as Vendor ID" +
+                     ", Product ID and serial number, which apply to the whole Node. Also allows setting user device " +
+                     "information such as location",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "DataModelRevision",
-                    conformance: "M", type: "uint16"
+                    tag: "attribute", name: "DataModelRevision", id: 0x0, type: "uint16", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "VendorName",
-                    conformance: "M", type: "string"
+                    tag: "attribute", name: "VendorName", id: 0x1, type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "VendorId",
-                    conformance: "M", type: "vendor-id"
+                    tag: "attribute", name: "VendorId", id: 0x2, type: "vendor-id", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "ProductName",
-                    conformance: "M", type: "string"
+                    tag: "attribute", name: "ProductName", id: 0x3, type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "ProductId",
-                    conformance: "M", type: "uint16"
+                    tag: "attribute", name: "ProductId", id: 0x4, type: "uint16", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "NodeLabel",
-                    access: "RW VM", conformance: "M", default: "", type: "string"
+                    tag: "attribute", name: "NodeLabel", id: 0x5, type: "string", access: "RW VM", conformance: "M",
+                    default: ""
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "Location",
-                    access: "RW VA", conformance: "M", default: "XX", type: "string"
+                    tag: "attribute", name: "Location", id: 0x6, type: "string", access: "RW VA", conformance: "M",
+                    default: "XX"
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "HardwareVersion",
-                    conformance: "M", default: 0, type: "uint16"
+                    tag: "attribute", name: "HardwareVersion", id: 0x7, type: "uint16", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "HardwareVersionString",
-                    conformance: "M", type: "string"
+                    tag: "attribute", name: "HardwareVersionString", id: 0x8, type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "SoftwareVersion",
-                    conformance: "M", default: 0, type: "uint32"
+                    tag: "attribute", name: "SoftwareVersion", id: 0x9, type: "uint32", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x000a, name: "SoftwareVersionString",
-                    conformance: "M", type: "string"
+                    tag: "attribute", name: "SoftwareVersionString", id: 0xa, type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x000b, name: "ManufacturingDate",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "ManufacturingDate", id: 0xb, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000c, name: "PartNumber",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "PartNumber", id: 0xc, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000d, name: "ProductUrl",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "ProductUrl", id: 0xd, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000e, name: "ProductLabel",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "ProductLabel", id: 0xe, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000f, name: "SerialNumber",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "SerialNumber", id: 0xf, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0010, name: "LocalConfigDisabled",
-                    access: "RW VM", conformance: "O", default: true, type: "bool"
+                    tag: "attribute", name: "LocalConfigDisabled", id: 0x10, type: "bool", access: "RW VM",
+                    conformance: "O", default: true
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "Reachable",
-                    conformance: "O", default: true, type: "bool"
+                    tag: "attribute", name: "Reachable", id: 0x11, type: "bool", conformance: "O", default: true
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "UniqueId",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "UniqueId", id: 0x12, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0013, name: "CapabilityMinima",
-                    conformance: "M", type: "CapabilityMinimaStruct"
+                    tag: "attribute", name: "CapabilityMinima", id: 0x13, type: "CapabilityMinimaStruct",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0014, name: "ProductAppearance",
-                    conformance: "O", type: "ProductAppearanceStruct"
+                    tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "StartUp",
-                    conformance: "M", priority: "critical",
+                    tag: "event", name: "StartUp", id: 0x0, conformance: "M", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "SoftwareVersion",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "ShutDown",
-                    conformance: "O", priority: "critical"
+                    tag: "event", name: "ShutDown", id: 0x1, conformance: "O", priority: "critical"
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "Leave",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "Leave", id: 0x2, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "FabricIndex",
-                            conformance: "M", type: "fabric-idx"
+                            tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0003, name: "ReachableChanged",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "ReachableChanged", id: 0x3, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "ReachableNewValue",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "ReachableNewValue", type: "bool", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "CapabilityMinimaStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "CapabilityMinimaStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "CaseSessionsPerFabric",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "CaseSessionsPerFabric", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SubscriptionsPerFabric",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "SubscriptionsPerFabric", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ProductFinishEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ProductAppearanceStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Other",
-                            conformance: "M"
+                            tag: "datatype", name: "Finish", type: "ProductFinishEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Matte",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Satin",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Polished",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Rugged",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "Fabric",
-                            conformance: "M"
+                            tag: "datatype", name: "PrimaryColor", type: "ColorEnum", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ColorEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ProductFinishEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Black",
-                            conformance: "M"
+                            tag: "datatype", name: "Other", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Navy",
-                            conformance: "M"
+                            tag: "datatype", name: "Matte", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Green",
-                            conformance: "M"
+                            tag: "datatype", name: "Satin", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Teal",
-                            conformance: "M"
+                            tag: "datatype", name: "Polished", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Maroon",
-                            conformance: "M"
+                            tag: "datatype", name: "Rugged", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Purple",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "Olive",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "Gray",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "Blue",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "Lime",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "Aqua",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "Red",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000c, name: "Fuchsia",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000d, name: "Yellow",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000e, name: "White",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000f, name: "Nickel",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "Chrome",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0011, name: "Brass",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0012, name: "Copper",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0013, name: "Silver",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0014, name: "Gold",
-                            conformance: "M"
+                            tag: "datatype", name: "Fabric", id: 0x5, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ProductAppearanceStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ColorEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Finish",
-                            conformance: "M", type: "ProductFinishEnum"
+                            tag: "datatype", name: "Black", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "PrimaryColor",
-                            conformance: "M", quality: "X", type: "ColorEnum"
+                            tag: "datatype", name: "Navy", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Green", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Teal", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Maroon", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Purple", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Olive", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Gray", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Blue", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Lime", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Aqua", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Red", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Fuchsia", id: 0xc, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Yellow", id: 0xd, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "White", id: 0xe, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Nickel", id: 0xf, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Chrome", id: 0x10, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Brass", id: 0x11, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Copper", id: 0x12, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Silver", id: 0x13, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Gold", id: 0x14, conformance: "M"
                         }
                     ]
                 }
@@ -1665,42 +1404,36 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x001e, name: "Binding",
-            description: "Binding",
+            tag: "cluster", name: "Binding", id: 0x1e, description: "Binding",
+            details: "The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
+                     "supporting the binding table",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "BindingList",
-                    access: "RW", conformance: "M", type: "list",
+                    tag: "attribute", name: "BindingList", id: 0x0, type: "list", access: "RW", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "TargetStruct"
+                            tag: "datatype", name: "entry", type: "TargetStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "TargetStruct",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "TargetStruct", type: "struct", access: "R F", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Node",
-                            conformance: "O", type: "node-id"
+                            tag: "datatype", name: "Node", type: "node-id", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Group",
-                            conformance: "O", type: "group-id"
+                            tag: "datatype", name: "Group", type: "group-id", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Endpoint",
-                            conformance: "O", type: "endpoint-no"
+                            tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Cluster",
-                            conformance: "O", type: "cluster-id"
+                            tag: "datatype", name: "Cluster", type: "cluster-id", conformance: "O"
                         }
                     ]
                 }
@@ -1708,21 +1441,18 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0045, name: "BooleanState",
-            description: "Boolean State",
+            tag: "cluster", name: "BooleanState", id: 0x45, description: "Boolean State",
+            details: "This cluster provides an interface to a boolean state called StateValue",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "StateValue",
-                    conformance: "M", quality: "P", type: "bool"
+                    tag: "attribute", name: "StateValue", id: 0x0, type: "bool", conformance: "M", quality: "P"
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "StateChange",
-                    conformance: "M", priority: "info",
+                    tag: "event", name: "StateChange", id: 0x0, conformance: "M", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "StateValue",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "StateValue", type: "bool", conformance: "M"
                         }
                     ]
                 }
@@ -1730,280 +1460,233 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0039, name: "BridgedDeviceBasicInformation",
+            tag: "cluster", name: "BridgedDeviceBasicInformation", id: 0x39,
             description: "Bridged Device Basic Information",
+            details: "This Cluster serves two purposes towards a Node communicating with a Bridge: indicate that the " +
+                     "functionality on the Endpoint where it is placed (and its Parts) is bridged from a non-CHIP " +
+                     "technology; and provide a centralized collection of attributes that the Node MAY collect to aid in " +
+                     "conveying information regarding the Bridged Device to a user, such as the vendor name, the model " +
+                     "name, or user-assigned name",
             children: [
                 {
-                    tag: "attribute", id: 0x0001, name: "VendorName",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "VendorName", id: 0x1, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "VendorId",
-                    conformance: "O", type: "vendor-id"
+                    tag: "attribute", name: "VendorId", id: 0x2, type: "vendor-id", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "ProductName",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "ProductName", id: 0x3, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "NodeLabel",
-                    access: "RW", conformance: "O", default: "", type: "string"
+                    tag: "attribute", name: "NodeLabel", id: 0x5, type: "string", access: "RW", conformance: "O",
+                    default: ""
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "HardwareVersion",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "HardwareVersion", id: 0x7, type: "uint16", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "HardwareVersionString",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "HardwareVersionString", id: 0x8, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "SoftwareVersion",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "SoftwareVersion", id: 0x9, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x000a, name: "SoftwareVersionString",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "SoftwareVersionString", id: 0xa, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000b, name: "ManufacturingDate",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "ManufacturingDate", id: 0xb, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000c, name: "PartNumber",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "PartNumber", id: 0xc, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000d, name: "ProductUrl",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "ProductUrl", id: 0xd, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000e, name: "ProductLabel",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "ProductLabel", id: 0xe, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000f, name: "SerialNumber",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "SerialNumber", id: 0xf, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "Reachable",
-                    conformance: "M", default: true, type: "bool"
+                    tag: "attribute", name: "Reachable", id: 0x11, type: "bool", conformance: "M", default: true
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "UniqueId",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "UniqueId", id: 0x12, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0014, name: "ProductAppearance",
-                    conformance: "O", type: "ProductAppearanceStruct"
+                    tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "StartUp",
-                    conformance: "O", priority: "critical",
+                    tag: "event", name: "StartUp", id: 0x0, conformance: "O", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "SoftwareVersion",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "ShutDown",
-                    conformance: "O", priority: "critical"
+                    tag: "event", name: "ShutDown", id: 0x1, conformance: "O", priority: "critical"
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "Leave",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "Leave", id: 0x2, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0003, name: "ReachableChanged",
-                    conformance: "M", priority: "info",
+                    tag: "event", name: "ReachableChanged", id: 0x3, conformance: "M", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "ReachableNewValue",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "ReachableNewValue", type: "bool", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ProductFinishEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ProductAppearanceStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Other",
-                            conformance: "M"
+                            tag: "datatype", name: "Finish", type: "ProductFinishEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Matte",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Satin",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Polished",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Rugged",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "Fabric",
-                            conformance: "M"
+                            tag: "datatype", name: "PrimaryColor", type: "ColorEnum", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ColorEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ProductFinishEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Black",
-                            conformance: "M"
+                            tag: "datatype", name: "Other", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Navy",
-                            conformance: "M"
+                            tag: "datatype", name: "Matte", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Green",
-                            conformance: "M"
+                            tag: "datatype", name: "Satin", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Teal",
-                            conformance: "M"
+                            tag: "datatype", name: "Polished", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Maroon",
-                            conformance: "M"
+                            tag: "datatype", name: "Rugged", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Purple",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "Olive",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "Gray",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "Blue",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "Lime",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "Aqua",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "Red",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000c, name: "Fuchsia",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000d, name: "Yellow",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000e, name: "White",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000f, name: "Nickel",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "Chrome",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0011, name: "Brass",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0012, name: "Copper",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0013, name: "Silver",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0014, name: "Gold",
-                            conformance: "M"
+                            tag: "datatype", name: "Fabric", id: 0x5, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ProductAppearanceStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ColorEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Finish",
-                            conformance: "M", type: "ProductFinishEnum"
+                            tag: "datatype", name: "Black", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "PrimaryColor",
-                            conformance: "M", quality: "X", type: "ColorEnum"
+                            tag: "datatype", name: "Navy", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Green", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Teal", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Maroon", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Purple", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Olive", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Gray", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Blue", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Lime", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Aqua", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Red", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Fuchsia", id: 0xc, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Yellow", id: 0xd, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "White", id: 0xe, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Nickel", id: 0xf, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Chrome", id: 0x10, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Brass", id: 0x11, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Copper", id: 0x12, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Silver", id: 0x13, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Gold", id: 0x14, conformance: "M"
                         }
                     ]
                 }
@@ -2011,185 +1694,141 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0504, name: "Channel",
-            description: "Channel",
+            tag: "cluster", name: "Channel", id: 0x504, description: "Channel",
+            details: "This cluster provides an interface for controlling the current Channel on a device",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ChannelList",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "ChannelList", id: 0x0, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "ChannelInfoStruct"
+                            tag: "datatype", name: "entry", type: "ChannelInfoStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "ChannelLineup",
-                    conformance: "O", default: undefined, quality: "X", type: "LineupInfoStruct"
+                    tag: "attribute", name: "ChannelLineup", id: 0x1, type: "LineupInfoStruct", conformance: "O",
+                    default: null, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ChannelCurrentChannel",
-                    conformance: "O", default: undefined, quality: "X", type: "ChannelInfoStruct"
+                    tag: "attribute", name: "ChannelCurrentChannel", id: 0x2, type: "ChannelInfoStruct",
+                    conformance: "O", default: null, quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "ChangeChannel",
-                    conformance: "O", direction: "request", response: "ChangeChannelResponse",
+                    tag: "command", name: "ChangeChannel", id: 0x0, conformance: "O", direction: "request",
+                    response: "ChangeChannelResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Match",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Match", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "ChangeChannelByNumber",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "ChangeChannelByNumber", id: 0x2, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "MajorNumber",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "MajorNumber", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "MinorNumber",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "MinorNumber", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "SkipChannel",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "SkipChannel", id: 0x3, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Count",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Count", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "ChangeChannelResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "ChangeChannelResponse", id: 0x1, conformance: "O", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "ChannelStatusEnum"
+                            tag: "datatype", name: "Status", type: "ChannelStatusEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Data",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Data", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ChannelInfoStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ChannelInfoStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "MajorNumber",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "MajorNumber", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "MinorNumber",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "MinorNumber", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Name", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "CallSign",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "CallSign", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "AffiliateCallSign",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "AffiliateCallSign", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "LineupInfoStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "LineupInfoStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "OperatorName",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "OperatorName", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LineupName",
-                            conformance: "O", default: "", type: "string"
+                            tag: "datatype", name: "LineupName", type: "string", conformance: "O", default: ""
                         },
 
                         {
-                            tag: "datatype", name: "PostalCode",
-                            conformance: "O", default: "", type: "string"
+                            tag: "datatype", name: "PostalCode", type: "string", conformance: "O", default: ""
                         },
 
                         {
-                            tag: "datatype", name: "LineupInfoType",
-                            conformance: "M", type: "LineupInfoTypeEnum"
+                            tag: "datatype", name: "LineupInfoType", type: "LineupInfoTypeEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "LineupInfoTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "LineupInfoTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Mso",
-                            conformance: "M"
+                            tag: "datatype", name: "Mso", id: 0x0, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ChannelStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ChannelStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "MultipleMatches",
-                            conformance: "M"
+                            tag: "datatype", name: "MultipleMatches", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "NoMatches",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ChannelFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "ChannelList",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "LineupInfo",
-                            conformance: "M"
+                            tag: "datatype", name: "NoMatches", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -2197,218 +1836,180 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0029, name: "OtaSoftwareUpdateProvider",
+            tag: "cluster", name: "OtaSoftwareUpdateProvider", id: 0x29,
             description: "OTA Software Update Provider",
+            details: "Provides an interface for providing OTA software updates",
             children: [
                 {
-                    tag: "command", id: 0x0000, name: "QueryImage",
-                    conformance: "M", direction: "request", response: "QueryImageResponse",
+                    tag: "command", name: "QueryImage", id: 0x0, conformance: "M", direction: "request",
+                    response: "QueryImageResponse",
                     children: [
                         {
-                            tag: "datatype", name: "VendorId",
-                            conformance: "M", type: "vendor-id"
+                            tag: "datatype", name: "VendorId", type: "vendor-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ProductId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ProductId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SoftwareVersion",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ProtocolsSupported",
-                            conformance: "M", type: "OtaDownloadProtocol"
+                            tag: "datatype", name: "ProtocolsSupported", type: "OtaDownloadProtocol", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "HardwareVersion",
-                            conformance: "O", type: "uint16"
+                            tag: "datatype", name: "HardwareVersion", type: "uint16", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Location",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Location", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "RequestorCanConsent",
-                            conformance: "O", default: true, type: "bool"
+                            tag: "datatype", name: "RequestorCanConsent", type: "bool", conformance: "O", default: true
                         },
 
                         {
-                            tag: "datatype", name: "MetadataForProvider",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "MetadataForProvider", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "QueryImageResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "QueryImageResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "OtaQueryStatus"
+                            tag: "datatype", name: "Status", type: "OtaQueryStatus", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DelayedActionTime",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "DelayedActionTime", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "ImageUri",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "ImageUri", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "SoftwareVersion",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "SoftwareVersionString",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "SoftwareVersionString", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "UpdateToken",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "UpdateToken", type: "octstr", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "UserConsentNeeded",
-                            conformance: "O", default: true, type: "bool"
+                            tag: "datatype", name: "UserConsentNeeded", type: "bool", conformance: "O", default: true
                         },
 
                         {
-                            tag: "datatype", name: "MetadataForRequestor",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "MetadataForRequestor", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "ApplyUpdateRequest",
-                    conformance: "M", direction: "request", response: "ApplyUpdateResponse",
+                    tag: "command", name: "ApplyUpdateRequest", id: 0x2, conformance: "M", direction: "request",
+                    response: "ApplyUpdateResponse",
                     children: [
                         {
-                            tag: "datatype", name: "UpdateToken",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "UpdateToken", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NewVersion",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "NewVersion", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "ApplyUpdateResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "ApplyUpdateResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Action",
-                            conformance: "M", type: "OtaApplyUpdateAction"
+                            tag: "datatype", name: "Action", type: "OtaApplyUpdateAction", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DelayedActionTime",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "DelayedActionTime", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "NotifyUpdateApplied",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "NotifyUpdateApplied", id: 0x4, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "UpdateToken",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "UpdateToken", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SoftwareVersion",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OtaQueryStatus",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OtaDownloadProtocol", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "UpdateAvailable",
-                            conformance: "M"
+                            tag: "datatype", name: "BdxSynchronous", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Busy",
-                            conformance: "M"
+                            tag: "datatype", name: "BdxAsynchronous", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "NotAvailable",
-                            conformance: "M"
+                            tag: "datatype", name: "Https", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "DownloadProtocolNotSupported",
-                            conformance: "M"
+                            tag: "datatype", name: "VendorSpecific", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OtaApplyUpdateAction",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OtaQueryStatus", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Proceed",
-                            conformance: "M"
+                            tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "AwaitNextAction",
-                            conformance: "M"
+                            tag: "datatype", name: "Busy", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Discontinue",
-                            conformance: "M"
+                            tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OtaDownloadProtocol",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OtaApplyUpdateAction", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "BdxSynchronous",
-                            conformance: "M"
+                            tag: "datatype", name: "Proceed", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "BdxAsynchronous",
-                            conformance: "M"
+                            tag: "datatype", name: "AwaitNextAction", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Https",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "VendorSpecific",
-                            conformance: "M"
+                            tag: "datatype", name: "Discontinue", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -2416,249 +2017,206 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x002a, name: "OtaSoftwareUpdateRequestor",
+            tag: "cluster", name: "OtaSoftwareUpdateRequestor", id: 0x2a,
             description: "OTA Software Update Requestor",
+            details: "Provides an interface for downloading and applying OTA software updates",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "DefaultOtaProviders",
-                    access: "RW", conformance: "M", type: "list",
+                    tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW",
+                    conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "ProviderLocation"
+                            tag: "datatype", name: "entry", type: "ProviderLocation"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "UpdatePossible",
-                    conformance: "M", default: true, type: "bool"
+                    tag: "attribute", name: "UpdatePossible", id: 0x1, type: "bool", conformance: "M", default: true
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "UpdateState",
-                    conformance: "M", default: 0, type: "OtaUpdateStateEnum"
+                    tag: "attribute", name: "UpdateState", id: 0x2, type: "OtaUpdateStateEnum", conformance: "M",
+                    default: "Unknown"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "UpdateStateProgress",
-                    conformance: "M", quality: "X", type: "uint8"
+                    tag: "attribute", name: "UpdateStateProgress", id: 0x3, type: "uint8", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "AnnounceOtaProvider",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "AnnounceOtaProvider", id: 0x0, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ProviderNodeId",
-                            conformance: "M", type: "node-id"
+                            tag: "datatype", name: "ProviderNodeId", type: "node-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "VendorId",
-                            conformance: "M", type: "vendor-id"
+                            tag: "datatype", name: "VendorId", type: "vendor-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "AnnouncementReason",
-                            conformance: "M", type: "OtaAnnouncementReason"
+                            tag: "datatype", name: "AnnouncementReason", type: "OtaAnnouncementReason", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "MetadataForNode",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "MetadataForNode", type: "octstr", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Endpoint",
-                            conformance: "M", type: "endpoint-no"
+                            tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "StateTransition",
-                    conformance: "M", priority: "info",
+                    tag: "event", name: "StateTransition", id: 0x0, conformance: "M", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "PreviousState",
-                            conformance: "M", type: "OtaUpdateStateEnum"
+                            tag: "datatype", name: "PreviousState", type: "OtaUpdateStateEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NewState",
-                            conformance: "M", type: "OtaUpdateStateEnum"
+                            tag: "datatype", name: "NewState", type: "OtaUpdateStateEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Reason",
-                            conformance: "M", type: "OtaChangeReasonEnum"
+                            tag: "datatype", name: "Reason", type: "OtaChangeReasonEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TargetSoftwareVersion",
-                            conformance: "M", quality: "X", type: "uint32"
+                            tag: "datatype", name: "TargetSoftwareVersion", type: "uint32", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "VersionApplied",
-                    conformance: "M", priority: "critical",
+                    tag: "event", name: "VersionApplied", id: 0x1, conformance: "M", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "SoftwareVersion",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ProductId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ProductId", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "DownloadError",
-                    conformance: "M", priority: "info",
+                    tag: "event", name: "DownloadError", id: 0x2, conformance: "M", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "SoftwareVersion",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "BytesDownloaded",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "BytesDownloaded", type: "uint64", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ProgressPercent",
-                            conformance: "M", quality: "X", type: "uint8"
+                            tag: "datatype", name: "ProgressPercent", type: "uint8", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "PlatformCode",
-                            conformance: "M", quality: "X", type: "int64"
+                            tag: "datatype", name: "PlatformCode", type: "int64", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OtaAnnouncementReason",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ProviderLocation", type: "struct", access: "R F", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "SimpleAnnouncement",
-                            conformance: "M"
+                            tag: "datatype", name: "ProviderNodeId", type: "node-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "UpdateAvailable",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "UrgentUpdateAvailable",
-                            conformance: "M"
+                            tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OtaUpdateStateEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OtaUpdateStateEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "Unknown", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Idle",
-                            conformance: "M"
+                            tag: "datatype", name: "Idle", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Querying",
-                            conformance: "M"
+                            tag: "datatype", name: "Querying", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "DelayedOnQuery",
-                            conformance: "M"
+                            tag: "datatype", name: "DelayedOnQuery", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Downloading",
-                            conformance: "M"
+                            tag: "datatype", name: "Downloading", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Applying",
-                            conformance: "M"
+                            tag: "datatype", name: "Applying", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "DelayedOnApply",
-                            conformance: "M"
+                            tag: "datatype", name: "DelayedOnApply", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "RollingBack",
-                            conformance: "M"
+                            tag: "datatype", name: "RollingBack", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "DelayedOnUserConsent",
-                            conformance: "M"
+                            tag: "datatype", name: "DelayedOnUserConsent", id: 0x8, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OtaChangeReasonEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OtaAnnouncementReason", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "SimpleAnnouncement", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "UpdateAvailable", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Failure",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "TimeOut",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "DelayByProvider",
-                            conformance: "M"
+                            tag: "datatype", name: "UrgentUpdateAvailable", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ProviderLocation",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "OtaChangeReasonEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ProviderNodeId",
-                            conformance: "M", type: "node-id"
+                            tag: "datatype", name: "Unknown", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Endpoint",
-                            conformance: "M", type: "endpoint-no"
+                            tag: "datatype", name: "Success", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Failure", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TimeOut", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "DelayByProvider", id: 0x4, conformance: "M"
                         }
                     ]
                 }
@@ -2666,84 +2224,75 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x1046, name: "ClientMonitoring",
-            description: "Client Monitoring",
+            tag: "cluster", name: "ClientMonitoring", id: 0x1046, description: "Client Monitoring",
+            details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on" +
+                     " the server",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "IdleModeInterval",
-                    conformance: "M", default: 300, type: "uint32"
+                    tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 300
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "ActiveModeInterval",
-                    conformance: "M", default: 300, type: "uint32"
+                    tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M",
+                    default: 300
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ActiveModeThreshold",
-                    conformance: "M", default: 4000, type: "uint16"
+                    tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M",
+                    default: 4000
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "ExpectedClients",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "ExpectedClients", id: 0x3, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "MonitoringRegistration"
+                            tag: "datatype", name: "entry", type: "MonitoringRegistration"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "RegisterClientMonitoring",
-                    access: "R M", conformance: "M", direction: "request",
+                    tag: "command", name: "RegisterClientMonitoring", id: 0x0, access: "R M", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ClientNodeId",
-                            conformance: "M", type: "node-id"
+                            tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ICid",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "UnregisterClientMonitoring",
-                    access: "R M", conformance: "M", direction: "request",
+                    tag: "command", name: "UnregisterClientMonitoring", id: 0x1, access: "R M", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ClientNodeId",
-                            conformance: "M", type: "node-id"
+                            tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ICid",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "StayAwakeRequest",
-                    access: "R M", conformance: "O", direction: "request"
+                    tag: "command", name: "StayAwakeRequest", id: 0x2, access: "R M", conformance: "O",
+                    direction: "request"
                 },
 
                 {
-                    tag: "datatype", name: "MonitoringRegistration",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "MonitoringRegistration", type: "struct", access: "R F", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ClientNodeId",
-                            conformance: "M", type: "node-id"
+                            tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ICid",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
                         }
                     ]
                 }
@@ -2751,777 +2300,542 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0300, name: "ColorControl",
-            description: "Color Control",
+            tag: "cluster", name: "ColorControl", id: 0x300, description: "Color Control",
+            details: "Attributes and commands for controlling the color properties of a color-capable light",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ColorControlCurrentHue",
-                    conformance: "O", default: 0, quality: "P", type: "uint8"
+                    tag: "attribute", name: "ColorControlCurrentHue", id: 0x0, type: "uint8", conformance: "O",
+                    default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "ColorControlCurrentSaturation",
-                    conformance: "O", default: 0, quality: "P", type: "uint8"
+                    tag: "attribute", name: "ColorControlCurrentSaturation", id: 0x1, type: "uint8", conformance: "O",
+                    default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ColorControlRemainingTime",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "ColorControlRemainingTime", id: 0x2, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "ColorControlCurrentX",
-                    conformance: "O", default: 24939, quality: "P", type: "uint16"
+                    tag: "attribute", name: "ColorControlCurrentX", id: 0x3, type: "uint16", conformance: "O",
+                    default: 24939, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "ColorControlCurrentY",
-                    conformance: "O", default: 24701, quality: "P", type: "uint16"
+                    tag: "attribute", name: "ColorControlCurrentY", id: 0x4, type: "uint16", conformance: "O",
+                    default: 24701, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "ColorControlDriftCompensation",
-                    conformance: "O", type: "enum8"
+                    tag: "attribute", name: "ColorControlDriftCompensation", id: 0x5, type: "enum8", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "ColorControlCompensationText",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "ColorControlCompensationText", id: 0x6, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "ColorControlColorTemperature",
-                    conformance: "O", default: 250, quality: "P", type: "uint16"
+                    tag: "attribute", name: "ColorControlColorTemperature", id: 0x7, type: "uint16", conformance: "O",
+                    default: 250, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "ColorControlColorMode",
-                    conformance: "M", default: 1, type: "enum8"
+                    tag: "attribute", name: "ColorControlColorMode", id: 0x8, type: "enum8", conformance: "M",
+                    default: 1
                 },
 
                 {
-                    tag: "attribute", id: 0x000f, name: "ColorControlOptions",
-                    access: "RW", conformance: "M", default: 0, type: "map8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0010, name: "ColorControlNumberOfPrimaries",
-                    conformance: "M", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0011, name: "ColorControlPrimary1X",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0012, name: "ColorControlPrimary1Y",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0013, name: "ColorControlPrimary1Intensity",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0015, name: "ColorControlPrimary2X",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0016, name: "ColorControlPrimary2Y",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0017, name: "ColorControlPrimary2Intensity",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0019, name: "ColorControlPrimary3X",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x001a, name: "ColorControlPrimary3Y",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x001b, name: "ColorControlPrimary3Intensity",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0020, name: "ColorControlPrimary4X",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0021, name: "ColorControlPrimary4Y",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0022, name: "ColorControlPrimary4Intensity",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0024, name: "ColorControlPrimary5X",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0025, name: "ColorControlPrimary5Y",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0026, name: "ColorControlPrimary5Intensity",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0028, name: "ColorControlPrimary6X",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0029, name: "ColorControlPrimary6Y",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x002a, name: "ColorControlPrimary6Intensity",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0030, name: "ColorControlWhitePointX",
-                    access: "RW VM", conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0031, name: "ColorControlWhitePointY",
-                    access: "RW VM", conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0032, name: "ColorControlColorPointRX",
-                    access: "RW VM", conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0033, name: "ColorControlColorPointRY",
-                    access: "RW VM", conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0034, name: "ColorControlColorPointRIntensity",
-                    access: "RW VM", conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0036, name: "ColorControlColorPointGX",
-                    access: "RW VM", conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0037, name: "ColorControlColorPointGY",
-                    access: "RW VM", conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0038, name: "ColorControlColorPointGIntensity",
-                    access: "RW VM", conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x003a, name: "ColorControlColorPointBX",
-                    access: "RW VM", conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x003b, name: "ColorControlColorPointBY",
-                    access: "RW VM", conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x003c, name: "ColorControlColorPointBIntensity",
-                    access: "RW VM", conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x400d, name: "ColorControlTemperatureLevelMinMireds",
-                    conformance: "O", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x4010, name: "StartUpColorTemperatureMireds",
-                    access: "RW VM", conformance: "O", quality: "X", type: "uint16"
-                },
-
-                {
-                    tag: "command", id: 0x0000, name: "MoveToHue",
-                    conformance: "O", direction: "request",
+                    tag: "attribute", name: "ColorControlOptions", id: 0xf, type: "map8", access: "RW",
+                    conformance: "M", default: 0,
                     children: [
                         {
-                            tag: "datatype", name: "Hue",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "Direction",
-                            conformance: "M", type: "HueDirection"
-                        },
-
-                        {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "ExecuteIfOff", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "MoveHue",
-                    conformance: "O", direction: "request",
+                    tag: "attribute", name: "ColorControlNumberOfPrimaries", id: 0x10, type: "uint8", conformance: "M",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary1X", id: 0x11, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary1Y", id: 0x12, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary1Intensity", id: 0x13, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary2X", id: 0x15, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary2Y", id: 0x16, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary2Intensity", id: 0x17, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary3X", id: 0x19, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary3Y", id: 0x1a, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary3Intensity", id: 0x1b, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary4X", id: 0x20, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary4Y", id: 0x21, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary4Intensity", id: 0x22, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary5X", id: 0x24, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary5Y", id: 0x25, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary5Intensity", id: 0x26, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary6X", id: 0x28, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary6Y", id: 0x29, type: "uint16", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlPrimary6Intensity", id: 0x2a, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlWhitePointX", id: 0x30, type: "uint16", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlWhitePointY", id: 0x31, type: "uint16", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointRX", id: 0x32, type: "uint16", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointRY", id: 0x33, type: "uint16", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointRIntensity", id: 0x34, type: "uint8",
+                    access: "RW VM", conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointGX", id: 0x36, type: "uint16", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointGY", id: 0x37, type: "uint16", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointGIntensity", id: 0x38, type: "uint8",
+                    access: "RW VM", conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointBX", id: 0x3a, type: "uint16", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointBY", id: 0x3b, type: "uint16", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlColorPointBIntensity", id: 0x3c, type: "uint8",
+                    access: "RW VM", conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ColorControlTemperatureLevelMinMireds", id: 0x400d, type: "uint16",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "StartUpColorTemperatureMireds", id: 0x4010, type: "uint16",
+                    access: "RW VM", conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "command", name: "MoveToHue", id: 0x0, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "MoveMode",
-                            conformance: "M", type: "HueMoveMode"
+                            tag: "datatype", name: "Hue", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Rate",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Direction", type: "HueDirection", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "StepHue",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "MoveHue", id: 0x1, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "StepMode",
-                            conformance: "M", type: "HueStepMode"
+                            tag: "datatype", name: "MoveMode", type: "HueMoveMode", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "StepSize",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Rate", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "MoveToSaturation",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "StepHue", id: 0x2, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Saturation",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "StepMode", type: "HueStepMode", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "StepSize", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "TransitionTime", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "MoveSaturation",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "MoveToSaturation", id: 0x3, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "MoveMode",
-                            conformance: "M", type: "SaturationMoveMode"
+                            tag: "datatype", name: "Saturation", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Rate",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "StepSaturation",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "MoveSaturation", id: 0x4, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "StepMode",
-                            conformance: "M", type: "SaturationStepMode"
+                            tag: "datatype", name: "MoveMode", type: "SaturationMoveMode", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "StepSize",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Rate", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0006, name: "MoveToHueAndSaturation",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "StepSaturation", id: 0x5, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Hue",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "StepMode", type: "SaturationStepMode", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Saturation",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "StepSize", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "TransitionTime", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0007, name: "MoveToColor",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "MoveToHueAndSaturation", id: 0x6, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ColorX",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Hue", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ColorY",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Saturation", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0008, name: "MoveColor",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "MoveToColor", id: 0x7, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "RateX",
-                            conformance: "M", type: "int16"
+                            tag: "datatype", name: "ColorX", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "RateY",
-                            conformance: "M", type: "int16"
+                            tag: "datatype", name: "ColorY", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0009, name: "StepColor",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "MoveColor", id: 0x8, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "StepX",
-                            conformance: "M", type: "int16"
+                            tag: "datatype", name: "RateX", type: "int16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "StepY",
-                            conformance: "M", type: "int16"
+                            tag: "datatype", name: "RateY", type: "int16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000a, name: "MoveToColorTemperature",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "StepColor", id: 0x9, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "ColorTemperatureMireds",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "StepX", type: "int16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "StepY", type: "int16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "map8"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ColorControlFeature",
-                    conformance: "M", type: "map32",
+                    tag: "command", name: "MoveToColorTemperature", id: 0xa, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "HueAndSaturation",
-                            conformance: "M"
+                            tag: "datatype", name: "ColorTemperatureMireds", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "EnhancedHue",
-                            conformance: "M"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "ColorLoop",
-                            conformance: "M"
+                            tag: "datatype", name: "OptionsMask", type: "map8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Xy",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "ColorTemperature",
-                            conformance: "M"
+                            tag: "datatype", name: "OptionsOverride", type: "map8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "HueDirection",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "HueDirection", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "ShortestDistance",
-                            conformance: "M"
+                            tag: "datatype", name: "ShortestDistance", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "LongestDistance",
-                            conformance: "M"
+                            tag: "datatype", name: "LongestDistance", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Up",
-                            conformance: "M"
+                            tag: "datatype", name: "Up", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Down",
-                            conformance: "M"
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "HueMoveMode",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "HueMoveMode", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Stop",
-                            conformance: "M"
+                            tag: "datatype", name: "Stop", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Up",
-                            conformance: "M"
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Down",
-                            conformance: "M"
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "HueStepMode",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "HueStepMode", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Up",
-                            conformance: "M"
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Down",
-                            conformance: "M"
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "SaturationMoveMode",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "SaturationMoveMode", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Stop",
-                            conformance: "M"
+                            tag: "datatype", name: "Stop", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Up",
-                            conformance: "M"
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Down",
-                            conformance: "M"
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "SaturationStepMode",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "SaturationStepMode", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Up",
-                            conformance: "M"
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Down",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ColorMode",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "CurrentHueAndCurrentSaturation",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "CurrentXAndCurrentY",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "ColorTemperature",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ColorCapabilities",
-                    conformance: "M", type: "map16",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "HueSaturationSupported",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "EnhancedHueSupported",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "ColorLoopSupported",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "XyAttributesSupported",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "ColorTemperatureSupported",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ColorLoopUpdateFlags",
-                    conformance: "M", type: "map8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "UpdateAction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "UpdateDirection",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "UpdateTime",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "UpdateStartHue",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ColorLoopAction",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Deactivate",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "ActivateFromColorLoopStartEnhancedHue",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "ActivateFromEnhancedCurrentHue",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ColorLoopDirection",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "DecrementHue",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "IncrementHue",
-                            conformance: "M"
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
                         }
                     ]
                 }
@@ -3529,350 +2843,262 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x050a, name: "ContentLauncher",
-            description: "Content Launcher",
+            tag: "cluster", name: "ContentLauncher", id: 0x50a, description: "Content Launcher",
+            details: "This cluster provides an interface for launching content on a media player device such as a TV or " +
+                     "Speaker",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ContentLauncherAcceptHeader",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "ContentLauncherAcceptHeader", id: 0x0, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "string"
+                            tag: "datatype", name: "entry", type: "string"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "ContentLauncherSupportedStreamingProtocols",
-                    access: "RW", conformance: "O", default: 0, type: "map32"
+                    tag: "attribute", name: "ContentLauncherSupportedStreamingProtocols", id: 0x1, type: "map32",
+                    access: "RW", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "LaunchContent",
-                    conformance: "O", direction: "request", response: "LauncherResponse",
+                    tag: "command", name: "LaunchContent", id: 0x0, conformance: "O", direction: "request",
+                    response: "LauncherResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Search",
-                            conformance: "M", type: "ContentSearchStruct"
+                            tag: "datatype", name: "Search", type: "ContentSearchStruct", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "AutoPlay",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "AutoPlay", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Data",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Data", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "LaunchUrl",
-                    conformance: "O", direction: "request", response: "LauncherResponse",
+                    tag: "command", name: "LaunchUrl", id: 0x1, conformance: "O", direction: "request",
+                    response: "LauncherResponse",
                     children: [
                         {
-                            tag: "datatype", name: "ContentUrl",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "ContentUrl", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DisplayString",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "DisplayString", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "BrandingInformation",
-                            conformance: "O", type: "BrandingInformationStruct"
+                            tag: "datatype", name: "BrandingInformation", type: "BrandingInformationStruct", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "LauncherResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "LauncherResponse", id: 0x2, conformance: "O", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "ContentLaunchStatusEnum"
+                            tag: "datatype", name: "Status", type: "ContentLaunchStatusEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Data",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Data", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ContentSearchStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ContentSearchStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ParameterList",
-                            conformance: "M", type: "ParameterStruct"
+                            tag: "datatype", name: "ParameterList", type: "ParameterStruct", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "AdditionalInfoStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ParameterStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Type", type: "ParameterEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Value",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Value", type: "string", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ExternalIdList", type: "AdditionalInfoStruct", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "MetricTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ParameterEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Pixels",
-                            conformance: "M"
+                            tag: "datatype", name: "Actor", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Percentage",
-                            conformance: "M"
+                            tag: "datatype", name: "Channel", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Character", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Director", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Event", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Franchise", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Genre", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "League", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Popularity", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Provider", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sport", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SportsTeam", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Type", id: 0xc, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Video", id: 0xd, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DimensionStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "AdditionalInfoStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Width",
-                            conformance: "M", type: "double"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Height",
-                            conformance: "M", type: "double"
-                        },
-
-                        {
-                            tag: "datatype", name: "Metric",
-                            conformance: "M", type: "MetricTypeEnum"
+                            tag: "datatype", name: "Value", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "StyleInformationStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "BrandingInformationStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ImageUrl",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "ProviderName", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Color",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Background", type: "StyleInformationStruct", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Size",
-                            conformance: "O", type: "DimensionStruct"
+                            tag: "datatype", name: "Logo", type: "StyleInformationStruct", conformance: "O"
+                        },
+
+                        {
+                            tag: "datatype", name: "ProgressBar", type: "StyleInformationStruct", conformance: "O"
+                        },
+
+                        {
+                            tag: "datatype", name: "Splash", type: "StyleInformationStruct", conformance: "O"
+                        },
+
+                        {
+                            tag: "datatype", name: "WaterMark", type: "StyleInformationStruct", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BrandingInformationStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "StyleInformationStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ProviderName",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "ImageUrl", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Background",
-                            conformance: "O", type: "StyleInformationStruct"
+                            tag: "datatype", name: "Color", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "Logo",
-                            conformance: "O", type: "StyleInformationStruct"
-                        },
-
-                        {
-                            tag: "datatype", name: "ProgressBar",
-                            conformance: "O", type: "StyleInformationStruct"
-                        },
-
-                        {
-                            tag: "datatype", name: "Splash",
-                            conformance: "O", type: "StyleInformationStruct"
-                        },
-
-                        {
-                            tag: "datatype", name: "WaterMark",
-                            conformance: "O", type: "StyleInformationStruct"
+                            tag: "datatype", name: "Size", type: "DimensionStruct", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ParameterEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "DimensionStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Actor",
-                            conformance: "M"
+                            tag: "datatype", name: "Width", type: "double", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Channel",
-                            conformance: "M"
+                            tag: "datatype", name: "Height", type: "double", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Character",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Director",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Event",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "Franchise",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "Genre",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "League",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "Popularity",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "Provider",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "Sport",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "SportsTeam",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000c, name: "Type",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000d, name: "Video",
-                            conformance: "M"
+                            tag: "datatype", name: "Metric", type: "MetricTypeEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ContentLaunchStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "MetricTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "Pixels", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "UrlNotAvailable",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "AuthFailed",
-                            conformance: "M"
+                            tag: "datatype", name: "Percentage", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ParameterStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ContentLaunchStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Type",
-                            conformance: "M", type: "ParameterEnum"
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Value",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "UrlNotAvailable", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ExternalIdList",
-                            conformance: "O", type: "AdditionalInfoStruct"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "SupportedStreamingProtocol",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Dash",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Hls",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ContentLauncherFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "ContentSearch",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "UrlPlayback",
-                            conformance: "M"
+                            tag: "datatype", name: "AuthFailed", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -3880,65 +3106,55 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x001d, name: "Descriptor",
-            description: "Descriptor",
+            tag: "cluster", name: "Descriptor", id: 0x1d, description: "Descriptor",
+            details: "The Descriptor Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
+                     "describing a node, its endpoints and clusters",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "DeviceList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "DeviceList", id: 0x0, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "DeviceTypeStruct"
+                            tag: "datatype", name: "entry", type: "DeviceTypeStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "ServerList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "ServerList", id: 0x1, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "cluster-id"
+                            tag: "datatype", name: "entry", type: "cluster-id"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ClientList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "ClientList", id: 0x2, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "cluster-id"
+                            tag: "datatype", name: "entry", type: "cluster-id"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "PartsList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "PartsList", id: 0x3, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "endpoint-no"
+                            tag: "datatype", name: "entry", type: "endpoint-no"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DeviceTypeStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "DeviceTypeStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "DeviceType",
-                            conformance: "M", type: "devtype-id"
+                            tag: "datatype", name: "DeviceType", type: "devtype-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Revision",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Revision", type: "uint16", conformance: "M"
                         }
                     ]
                 }
@@ -3946,120 +3162,100 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0032, name: "DiagnosticLogs",
-            description: "Diagnostic Logs",
+            tag: "cluster", name: "DiagnosticLogs", id: 0x32, description: "Diagnostic Logs",
+            details: "The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be " +
+                     "used to aid in diagnostics",
             children: [
                 {
-                    tag: "command", id: 0x0000, name: "RetrieveLogsRequest",
-                    conformance: "M", direction: "request", response: "RetrieveLogsResponse",
+                    tag: "command", name: "RetrieveLogsRequest", id: 0x0, conformance: "M", direction: "request",
+                    response: "RetrieveLogsResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Intent",
-                            conformance: "M", type: "IntentEnum"
+                            tag: "datatype", name: "Intent", type: "IntentEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "RequestedProtocol",
-                            conformance: "M", type: "TransferProtocolEnum"
+                            tag: "datatype", name: "RequestedProtocol", type: "TransferProtocolEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransferFileDesignator",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "TransferFileDesignator", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "RetrieveLogsResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "RetrieveLogsResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "StatusEnum"
+                            tag: "datatype", name: "Status", type: "StatusEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LogContent",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "LogContent", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UtcTimeStamp",
-                            conformance: "O", type: "epoch-us"
+                            tag: "datatype", name: "UtcTimeStamp", type: "epoch-us", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "TimeSinceBoot",
-                            conformance: "O", type: "systime-us"
+                            tag: "datatype", name: "TimeSinceBoot", type: "systime-us", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "IntentEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "IntentEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "EndUserSupport",
-                            conformance: "M"
+                            tag: "datatype", name: "EndUserSupport", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "NetworkDiag",
-                            conformance: "M"
+                            tag: "datatype", name: "NetworkDiag", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "CrashLogs",
-                            conformance: "M"
+                            tag: "datatype", name: "CrashLogs", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "StatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "TransferProtocolEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "ResponsePayload", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Exhausted",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "NoLogs",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Busy",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Denied",
-                            conformance: "M"
+                            tag: "datatype", name: "Bdx", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "TransferProtocolEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "ResponsePayload",
-                            conformance: "M"
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Bdx",
-                            conformance: "M"
+                            tag: "datatype", name: "Exhausted", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NoLogs", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Busy", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Denied", id: 0x4, conformance: "M"
                         }
                     ]
                 }
@@ -4067,2235 +3263,1350 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0101, name: "DoorLock",
-            description: "Door Lock",
+            tag: "cluster", name: "DoorLock", id: 0x101, description: "Door Lock",
+            details: "An interface to a generic way to secure a door",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "LockState",
-                    conformance: "M", quality: "X P", type: "DlLockState"
+                    tag: "attribute", name: "LockState", id: 0x0, type: "DlLockState", conformance: "M", quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "LockType",
-                    conformance: "M", type: "DlLockType"
+                    tag: "attribute", name: "LockType", id: 0x1, type: "DlLockType", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ActuatorEnabled",
-                    conformance: "M", type: "bool"
+                    tag: "attribute", name: "ActuatorEnabled", id: 0x2, type: "bool", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "DoorState",
-                    conformance: "O", quality: "X P", type: "DoorStateEnum"
+                    tag: "attribute", name: "DoorState", id: 0x3, type: "DoorStateEnum", conformance: "O",
+                    quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "DoorOpenEvents",
-                    access: "RW VM", conformance: "O", type: "uint32"
+                    tag: "attribute", name: "DoorOpenEvents", id: 0x4, type: "uint32", access: "RW VM",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "DoorClosedEvents",
-                    access: "RW VM", conformance: "O", type: "uint32"
+                    tag: "attribute", name: "DoorClosedEvents", id: 0x5, type: "uint32", access: "RW VM",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "OpenPeriod",
-                    access: "RW VM", conformance: "O", type: "uint16"
+                    tag: "attribute", name: "OpenPeriod", id: 0x6, type: "uint16", access: "RW VM", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "NumTotalUsersSupported",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "NumTotalUsersSupported", id: 0x11, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "NumPinUsersSupported",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "NumPinUsersSupported", id: 0x12, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0013, name: "NumRfidUsersSupported",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "NumRfidUsersSupported", id: 0x13, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0014, name: "NumWeekdaySchedulesSupportedPerUser",
-                    conformance: "O", default: 0, type: "uint8"
+                    tag: "attribute", name: "NumWeekdaySchedulesSupportedPerUser", id: 0x14, type: "uint8",
+                    conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0015, name: "NumYeardaySchedulesSupportedPerUser",
-                    conformance: "O", default: 0, type: "uint8"
+                    tag: "attribute", name: "NumYeardaySchedulesSupportedPerUser", id: 0x15, type: "uint8",
+                    conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0016, name: "NumHolidaySchedulesSupported",
-                    conformance: "O", default: 0, type: "uint8"
+                    tag: "attribute", name: "NumHolidaySchedulesSupported", id: 0x16, type: "uint8", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0017, name: "MaxPinLength",
-                    conformance: "O", type: "uint8"
+                    tag: "attribute", name: "MaxPinLength", id: 0x17, type: "uint8", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0018, name: "MinPinLength",
-                    conformance: "O", type: "uint8"
+                    tag: "attribute", name: "MinPinLength", id: 0x18, type: "uint8", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0019, name: "MaxRfidCodeLength",
-                    conformance: "O", type: "uint8"
+                    tag: "attribute", name: "MaxRfidCodeLength", id: 0x19, type: "uint8", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x001a, name: "MinRfidCodeLength",
-                    conformance: "O", type: "uint8"
+                    tag: "attribute", name: "MinRfidCodeLength", id: 0x1a, type: "uint8", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x001b, name: "CredentialRulesSupport",
-                    conformance: "O", default: 1, type: "DlCredentialRuleMask"
+                    tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "DlCredentialRuleMask",
+                    conformance: "O", default: 1
                 },
 
                 {
-                    tag: "attribute", id: 0x001c, name: "NumCredentialsSupportedPerUser",
-                    conformance: "O", default: 0, type: "uint8"
+                    tag: "attribute", name: "NumCredentialsSupportedPerUser", id: 0x1c, type: "uint8", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0021, name: "Language",
-                    access: "RW VM", conformance: "O", quality: "P", type: "string"
+                    tag: "attribute", name: "Language", id: 0x21, type: "string", access: "RW VM", conformance: "O",
+                    quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0022, name: "LedSettings",
-                    access: "RW VM", conformance: "O", default: 0, quality: "P", type: "uint8"
+                    tag: "attribute", name: "LedSettings", id: 0x22, type: "uint8", access: "RW VM", conformance: "O",
+                    default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0023, name: "AutoRelockTime",
-                    access: "RW VM", conformance: "M", quality: "P", type: "uint32"
+                    tag: "attribute", name: "AutoRelockTime", id: 0x23, type: "uint32", access: "RW VM",
+                    conformance: "M", quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0024, name: "SoundVolume",
-                    access: "RW VM", conformance: "O", default: 0, quality: "P", type: "uint8"
+                    tag: "attribute", name: "SoundVolume", id: 0x24, type: "uint8", access: "RW VM", conformance: "O",
+                    default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0025, name: "OperatingMode",
-                    access: "RW VM", conformance: "M", quality: "P", type: "OperatingModeEnum"
+                    tag: "attribute", name: "OperatingMode", id: 0x25, type: "OperatingModeEnum", access: "RW VM",
+                    conformance: "M", quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0026, name: "SupportedOperatingModes",
-                    conformance: "M", default: 65526, type: "DlSupportedOperatingModes"
+                    tag: "attribute", name: "SupportedOperatingModes", id: 0x26, type: "DlSupportedOperatingModes",
+                    conformance: "M", default: 65526
                 },
 
                 {
-                    tag: "attribute", id: 0x0027, name: "DefaultConfigurationRegister",
-                    conformance: "O", default: 0, quality: "P", type: "DlDefaultConfigurationRegister"
+                    tag: "attribute", name: "DefaultConfigurationRegister", id: 0x27,
+                    type: "DlDefaultConfigurationRegister", conformance: "O", default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0028, name: "EnableLocalProgramming",
-                    access: "RW VA", conformance: "O", default: true, quality: "P", type: "bool"
+                    tag: "attribute", name: "EnableLocalProgramming", id: 0x28, type: "bool", access: "RW VA",
+                    conformance: "O", default: true, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0029, name: "EnableOneTouchLocking",
-                    access: "RW VM", conformance: "O", default: true, quality: "P", type: "bool"
+                    tag: "attribute", name: "EnableOneTouchLocking", id: 0x29, type: "bool", access: "RW VM",
+                    conformance: "O", default: true, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x002a, name: "EnableInsideStatusLed",
-                    access: "RW VM", conformance: "O", default: true, quality: "P", type: "bool"
+                    tag: "attribute", name: "EnableInsideStatusLed", id: 0x2a, type: "bool", access: "RW VM",
+                    conformance: "O", default: true, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x002b, name: "EnablePrivacyModeButton",
-                    access: "RW VM", conformance: "O", default: true, quality: "P", type: "bool"
+                    tag: "attribute", name: "EnablePrivacyModeButton", id: 0x2b, type: "bool", access: "RW VM",
+                    conformance: "O", default: true, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x002c, name: "LocalProgrammingFeatures",
-                    access: "RW VA", conformance: "O", default: 0, quality: "P", type: "DlLocalProgrammingFeatures"
+                    tag: "attribute", name: "LocalProgrammingFeatures", id: 0x2c, type: "DlLocalProgrammingFeatures",
+                    access: "RW VA", conformance: "O", default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0030, name: "WrongCodeEntryLimit",
-                    access: "RW VA", conformance: "O", quality: "P", type: "uint8"
+                    tag: "attribute", name: "WrongCodeEntryLimit", id: 0x30, type: "uint8", access: "RW VA",
+                    conformance: "O", quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0031, name: "UserCodeTemporaryDisableTime",
-                    access: "RW VA", conformance: "O", quality: "P", type: "uint8"
+                    tag: "attribute", name: "UserCodeTemporaryDisableTime", id: 0x31, type: "uint8", access: "RW VA",
+                    conformance: "O", quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0032, name: "SendPinOverTheAir",
-                    access: "RW VA", conformance: "O", default: true, quality: "P", type: "bool"
+                    tag: "attribute", name: "SendPinOverTheAir", id: 0x32, type: "bool", access: "RW VA",
+                    conformance: "O", default: true, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0033, name: "RequirePinForRemoteOperation",
-                    access: "RW VA", conformance: "O", default: true, quality: "P", type: "bool"
+                    tag: "attribute", name: "RequirePinForRemoteOperation", id: 0x33, type: "bool", access: "RW VA",
+                    conformance: "O", default: true, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0035, name: "ExpiringUserTimeout",
-                    access: "RW VA", conformance: "O", quality: "P", type: "uint16"
+                    tag: "attribute", name: "ExpiringUserTimeout", id: 0x35, type: "uint16", access: "RW VA",
+                    conformance: "O", quality: "P"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "LockDoor",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "LockDoor", id: 0x0, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "PinCode",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "PinCode", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "UnlockDoor",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "UnlockDoor", id: 0x1, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "PinCode",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "PinCode", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "UnlockWithTimeout",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "UnlockWithTimeout", id: 0x3, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Timeout",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Timeout", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "PinCode",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "PinCode", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000b, name: "SetWeekDaySchedule",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "SetWeekDaySchedule", id: 0xb, access: "R A", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "WeekDayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "WeekDayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DaysMask",
-                            conformance: "M", type: "DaysMaskMap"
+                            tag: "datatype", name: "DaysMask", type: "DaysMaskMap", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "StartHour",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "StartHour", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "StartMinute",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "StartMinute", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "EndHour",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "EndHour", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "EndMinute",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "EndMinute", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000c, name: "GetWeekDaySchedule",
-                    access: "R A", conformance: "O", direction: "request", response: "GetWeekDayScheduleResponse",
+                    tag: "command", name: "GetWeekDaySchedule", id: 0xc, access: "R A", conformance: "O",
+                    direction: "request", response: "GetWeekDayScheduleResponse",
                     children: [
                         {
-                            tag: "datatype", name: "WeekDayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "WeekDayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000c, name: "GetWeekDayScheduleResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "GetWeekDayScheduleResponse", id: 0xc, conformance: "O",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "WeekDayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "WeekDayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "DlStatus"
+                            tag: "datatype", name: "Status", type: "DlStatus", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DaysMask",
-                            conformance: "O", type: "DaysMaskMap"
+                            tag: "datatype", name: "DaysMask", type: "DaysMaskMap", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "StartHour",
-                            conformance: "O", type: "uint8"
+                            tag: "datatype", name: "StartHour", type: "uint8", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "StartMinute",
-                            conformance: "O", type: "uint8"
+                            tag: "datatype", name: "StartMinute", type: "uint8", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "EndHour",
-                            conformance: "O", type: "uint8"
+                            tag: "datatype", name: "EndHour", type: "uint8", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "EndMinute",
-                            conformance: "O", type: "uint8"
+                            tag: "datatype", name: "EndMinute", type: "uint8", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000d, name: "ClearWeekDaySchedule",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "ClearWeekDaySchedule", id: 0xd, access: "R A", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "WeekDayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "WeekDayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000e, name: "SetYearDaySchedule",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "SetYearDaySchedule", id: 0xe, access: "R A", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "YearDayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "YearDayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LocalStartTime",
-                            conformance: "M", type: "epoch-s"
+                            tag: "datatype", name: "LocalStartTime", type: "epoch-s", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LocalEndTime",
-                            conformance: "M", type: "epoch-s"
+                            tag: "datatype", name: "LocalEndTime", type: "epoch-s", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000f, name: "GetYearDaySchedule",
-                    access: "R A", conformance: "O", direction: "request", response: "GetYearDayScheduleResponse",
+                    tag: "command", name: "GetYearDaySchedule", id: 0xf, access: "R A", conformance: "O",
+                    direction: "request", response: "GetYearDayScheduleResponse",
                     children: [
                         {
-                            tag: "datatype", name: "YearDayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "YearDayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000f, name: "GetYearDayScheduleResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "GetYearDayScheduleResponse", id: 0xf, conformance: "O",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "YearDayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "YearDayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "DlStatus"
+                            tag: "datatype", name: "Status", type: "DlStatus", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LocalStartTime",
-                            conformance: "O", type: "epoch-s"
+                            tag: "datatype", name: "LocalStartTime", type: "epoch-s", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "LocalEndTime",
-                            conformance: "O", type: "epoch-s"
+                            tag: "datatype", name: "LocalEndTime", type: "epoch-s", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0010, name: "ClearYearDaySchedule",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "ClearYearDaySchedule", id: 0x10, access: "R A", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "YearDayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "YearDayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0011, name: "SetHolidaySchedule",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "SetHolidaySchedule", id: 0x11, access: "R A", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "HolidayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "HolidayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LocalStartTime",
-                            conformance: "M", type: "epoch-s"
+                            tag: "datatype", name: "LocalStartTime", type: "epoch-s", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LocalEndTime",
-                            conformance: "M", type: "epoch-s"
+                            tag: "datatype", name: "LocalEndTime", type: "epoch-s", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OperatingMode",
-                            conformance: "M", type: "OperatingModeEnum"
+                            tag: "datatype", name: "OperatingMode", type: "OperatingModeEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0012, name: "GetHolidaySchedule",
-                    access: "R A", conformance: "O", direction: "request", response: "GetHolidayScheduleResponse",
+                    tag: "command", name: "GetHolidaySchedule", id: 0x12, access: "R A", conformance: "O",
+                    direction: "request", response: "GetHolidayScheduleResponse",
                     children: [
                         {
-                            tag: "datatype", name: "HolidayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "HolidayIndex", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0012, name: "GetHolidayScheduleResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "GetHolidayScheduleResponse", id: 0x12, conformance: "O",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "HolidayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "HolidayIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "DlStatus"
+                            tag: "datatype", name: "Status", type: "DlStatus", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LocalStartTime",
-                            conformance: "O", type: "epoch-s"
+                            tag: "datatype", name: "LocalStartTime", type: "epoch-s", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "LocalEndTime",
-                            conformance: "O", type: "epoch-s"
+                            tag: "datatype", name: "LocalEndTime", type: "epoch-s", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "OperatingMode",
-                            conformance: "O", type: "OperatingModeEnum"
+                            tag: "datatype", name: "OperatingMode", type: "OperatingModeEnum", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0013, name: "ClearHolidaySchedule",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "ClearHolidaySchedule", id: 0x13, access: "R A", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "HolidayIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "HolidayIndex", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x001a, name: "SetUser",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "SetUser", id: 0x1a, access: "R A", conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "OperationType",
-                            conformance: "M", type: "DataOperationTypeEnum"
+                            tag: "datatype", name: "OperationType", type: "DataOperationTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserName",
-                            conformance: "M", quality: "X", type: "string"
+                            tag: "datatype", name: "UserName", type: "string", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "UserUniqueId",
-                            conformance: "M", quality: "X", type: "uint32"
+                            tag: "datatype", name: "UserUniqueId", type: "uint32", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "UserStatus",
-                            conformance: "M", quality: "X", type: "UserStatusEnum"
+                            tag: "datatype", name: "UserStatus", type: "UserStatusEnum", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "UserType",
-                            conformance: "M", quality: "X", type: "UserTypeEnum"
+                            tag: "datatype", name: "UserType", type: "UserTypeEnum", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "CredentialRule",
-                            conformance: "M", quality: "X", type: "CredentialRuleEnum"
+                            tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x001b, name: "GetUser",
-                    access: "R A", conformance: "O", direction: "request", response: "GetUserResponse",
+                    tag: "command", name: "GetUser", id: 0x1b, access: "R A", conformance: "O", direction: "request",
+                    response: "GetUserResponse",
                     children: [
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x001c, name: "GetUserResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "GetUserResponse", id: 0x1c, conformance: "O", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserName",
-                            conformance: "M", quality: "X", type: "string"
+                            tag: "datatype", name: "UserName", type: "string", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "UserUniqueId",
-                            conformance: "M", quality: "X", type: "uint32"
+                            tag: "datatype", name: "UserUniqueId", type: "uint32", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "UserStatus",
-                            conformance: "M", quality: "X", type: "UserStatusEnum"
+                            tag: "datatype", name: "UserStatus", type: "UserStatusEnum", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "UserType",
-                            conformance: "M", quality: "X", type: "UserTypeEnum"
+                            tag: "datatype", name: "UserType", type: "UserTypeEnum", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "CredentialRule",
-                            conformance: "M", quality: "X", type: "CredentialRuleEnum"
+                            tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "Credentials",
-                            conformance: "M", quality: "X", type: "CredentialStruct"
+                            tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "CreatorFabricIndex",
-                            conformance: "M", quality: "X", type: "fabric-idx"
+                            tag: "datatype", name: "CreatorFabricIndex", type: "fabric-idx", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "LastModifiedFabricIndex",
-                            conformance: "M", quality: "X", type: "fabric-idx"
+                            tag: "datatype", name: "LastModifiedFabricIndex", type: "fabric-idx", conformance: "M",
+                            quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "NextUserIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "NextUserIndex", type: "uint16", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x001d, name: "ClearUser",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "ClearUser", id: 0x1d, access: "R A", conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0022, name: "SetCredential",
-                    access: "R A", conformance: "O", direction: "request", response: "SetCredentialResponse",
+                    tag: "command", name: "SetCredential", id: 0x22, access: "R A", conformance: "O",
+                    direction: "request", response: "SetCredentialResponse",
                     children: [
                         {
-                            tag: "datatype", name: "OperationType",
-                            conformance: "M", type: "DataOperationTypeEnum"
+                            tag: "datatype", name: "OperationType", type: "DataOperationTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Credential",
-                            conformance: "M", type: "CredentialStruct"
+                            tag: "datatype", name: "Credential", type: "CredentialStruct", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "CredentialData",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "CredentialData", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "UserStatus",
-                            conformance: "M", quality: "X", type: "UserStatusEnum"
+                            tag: "datatype", name: "UserStatus", type: "UserStatusEnum", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "UserType",
-                            conformance: "M", quality: "X", type: "UserTypeEnum"
+                            tag: "datatype", name: "UserType", type: "UserTypeEnum", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0023, name: "SetCredentialResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "SetCredentialResponse", id: 0x23, conformance: "O", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "DlStatus"
+                            tag: "datatype", name: "Status", type: "DlStatus", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "NextCredentialIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "NextCredentialIndex", type: "uint16", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0024, name: "GetCredentialStatus",
-                    access: "R A", conformance: "O", direction: "request", response: "GetCredentialStatusResponse",
+                    tag: "command", name: "GetCredentialStatus", id: 0x24, access: "R A", conformance: "O",
+                    direction: "request", response: "GetCredentialStatusResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Credential",
-                            conformance: "M", type: "CredentialStruct"
+                            tag: "datatype", name: "Credential", type: "CredentialStruct", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0025, name: "GetCredentialStatusResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "GetCredentialStatusResponse", id: 0x25, conformance: "O",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "CredentialExists",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "CredentialExists", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "CreatorFabricIndex",
-                            conformance: "M", quality: "X", type: "fabric-idx"
+                            tag: "datatype", name: "CreatorFabricIndex", type: "fabric-idx", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "LastModifiedFabricIndex",
-                            conformance: "M", quality: "X", type: "fabric-idx"
+                            tag: "datatype", name: "LastModifiedFabricIndex", type: "fabric-idx", conformance: "M",
+                            quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "NextCredentialIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "NextCredentialIndex", type: "uint16", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0026, name: "ClearCredential",
-                    access: "R A", conformance: "O", direction: "request",
+                    tag: "command", name: "ClearCredential", id: 0x26, access: "R A", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Credential",
-                            conformance: "M", quality: "X", type: "CredentialStruct"
+                            tag: "datatype", name: "Credential", type: "CredentialStruct", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "DoorLockAlarm",
-                    conformance: "M", priority: "critical",
+                    tag: "event", name: "DoorLockAlarm", id: 0x0, conformance: "M", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "AlarmCode",
-                            conformance: "M", type: "AlarmCodeEnum"
+                            tag: "datatype", name: "AlarmCode", type: "AlarmCodeEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "DoorStateChange",
-                    conformance: "O", priority: "critical",
+                    tag: "event", name: "DoorStateChange", id: 0x1, conformance: "O", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "DoorState",
-                            conformance: "M", type: "DoorStateEnum"
+                            tag: "datatype", name: "DoorState", type: "DoorStateEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "LockOperation",
-                    conformance: "M", priority: "critical",
+                    tag: "event", name: "LockOperation", id: 0x2, conformance: "M", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "LockOperationType",
-                            conformance: "M", type: "LockOperationTypeEnum"
+                            tag: "datatype", name: "LockOperationType", type: "LockOperationTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OperationSource",
-                            conformance: "M", type: "OperationSourceEnum"
+                            tag: "datatype", name: "OperationSource", type: "OperationSourceEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "FabricIndex",
-                            conformance: "M", quality: "X", type: "fabric-idx"
+                            tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "SourceNode",
-                            conformance: "M", quality: "X", type: "node-id"
+                            tag: "datatype", name: "SourceNode", type: "node-id", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "Credentials",
-                            conformance: "O", quality: "X", type: "CredentialStruct"
+                            tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "O", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0003, name: "LockOperationError",
-                    conformance: "M", priority: "critical",
+                    tag: "event", name: "LockOperationError", id: 0x3, conformance: "M", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "LockOperationType",
-                            conformance: "M", type: "LockOperationTypeEnum"
+                            tag: "datatype", name: "LockOperationType", type: "LockOperationTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OperationSource",
-                            conformance: "M", type: "OperationSourceEnum"
+                            tag: "datatype", name: "OperationSource", type: "OperationSourceEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OperationError",
-                            conformance: "M", type: "OperationErrorEnum"
+                            tag: "datatype", name: "OperationError", type: "OperationErrorEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "FabricIndex",
-                            conformance: "M", quality: "X", type: "fabric-idx"
+                            tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "SourceNode",
-                            conformance: "M", quality: "X", type: "node-id"
+                            tag: "datatype", name: "SourceNode", type: "node-id", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "Credentials",
-                            conformance: "O", quality: "X", type: "CredentialStruct"
+                            tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "O", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0004, name: "LockUserChange",
-                    conformance: "M", priority: "info",
+                    tag: "event", name: "LockUserChange", id: 0x4, conformance: "M", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "LockDataType",
-                            conformance: "M", type: "LockDataTypeEnum"
+                            tag: "datatype", name: "LockDataType", type: "LockDataTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DataOperationType",
-                            conformance: "M", type: "DataOperationTypeEnum"
+                            tag: "datatype", name: "DataOperationType", type: "DataOperationTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OperationSource",
-                            conformance: "M", type: "OperationSourceEnum"
+                            tag: "datatype", name: "OperationSource", type: "OperationSourceEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "UserIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "FabricIndex",
-                            conformance: "M", quality: "X", type: "fabric-idx"
+                            tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "SourceNode",
-                            conformance: "M", quality: "X", type: "node-id"
+                            tag: "datatype", name: "SourceNode", type: "node-id", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "DataIndex",
-                            conformance: "M", quality: "X", type: "uint16"
+                            tag: "datatype", name: "DataIndex", type: "uint16", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "AlarmCodeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "DlLockState", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "LockJammed",
-                            conformance: "M"
+                            tag: "datatype", name: "NotFullyLocked", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "LockFactoryReset",
-                            conformance: "M"
+                            tag: "datatype", name: "Locked", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "LockRadioPowerCycled",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "WrongCodeEntryLimit",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "FrontEsceutcheonRemoved",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "DoorForcedOpen",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "DoorAjar",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "ForcedUser",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "CredentialRuleEnum",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Single",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Dual",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Tri",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "DlCredentialRuleMask",
-                    conformance: "M", type: "map8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Single",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Dual",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Tri",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "CredentialStruct",
-                    conformance: "M", type: "struct",
-                    children: [
-                        {
-                            tag: "datatype", name: "CredentialType",
-                            conformance: "M", type: "CredentialTypeEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "CredentialIndex",
-                            conformance: "M", type: "uint16"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "CredentialTypeEnum",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "ProgrammingPin",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Pin",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Rfid",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Fingerprint",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "FingerVein",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "Face",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "DataOperationTypeEnum",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Add",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Clear",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Modify",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "DaysMaskMap",
-                    conformance: "M", type: "map8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Sunday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Monday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Tuesday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "Wednesday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "Thursday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0020, name: "Friday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0040, name: "Saturday",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "DoorStateEnum",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "DoorOpen",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "DoorClosed",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "DoorJammed",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "DoorForcedOpen",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "DoorUnspecifiedError",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "DoorAjar",
-                            conformance: "M"
+                            tag: "datatype", name: "Unlocked", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "LockDataTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "DlLockType", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "DeadBolt", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "ProgrammingCode",
-                            conformance: "M"
+                            tag: "datatype", name: "Magnetic", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "UserIndex",
-                            conformance: "M"
+                            tag: "datatype", name: "Other", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "WeekDaySchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "Mortise", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "YearDaySchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "Rim", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "HolidaySchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "LatchBolt", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "Pin",
-                            conformance: "M"
+                            tag: "datatype", name: "CylindricalLock", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "Rfid",
-                            conformance: "M"
+                            tag: "datatype", name: "TubularLock", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Fingerprint",
-                            conformance: "M"
+                            tag: "datatype", name: "InterconnectedLock", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "FingerVein",
-                            conformance: "M"
+                            tag: "datatype", name: "DeadLatch", id: 0x9, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000a, name: "Face",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorFurniture", id: 0xa, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "LockOperationTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "DoorStateEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Lock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Unlock",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0002, name: "NonAccessUserEvent",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorOpen", id: 0x0, conformance: "M"
                         },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "ForcedUserEvent",
-                            conformance: "M"
-                        }
-                    ]
-                },
 
-                {
-                    tag: "datatype", name: "OperationErrorEnum",
-                    conformance: "M", type: "enum8",
-                    children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "InvalidCredential",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "DisabledUserDenied",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorForcedOpen", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Restricted",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorUnspecifiedError", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "InsufficientBattery",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorAjar", id: 0x5, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OperatingModeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "DlCredentialRuleMask", type: "map8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Normal",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Vacation",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0002, name: "Privacy",
-                            conformance: "M"
+                            tag: "datatype", name: "Single", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "NoRemoteLockUnlock",
-                            conformance: "M"
+                            tag: "datatype", name: "Dual", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Passage",
-                            conformance: "M"
+                            tag: "datatype", name: "Tri", id: 0x4, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OperationSourceEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OperatingModeEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Manual",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "ProprietaryRemote",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Keypad",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Auto",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "Button",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "Schedule",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0007, name: "Remote",
-                            conformance: "M"
+                            tag: "datatype", name: "Normal", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Rfid",
-                            conformance: "M"
+                            tag: "datatype", name: "Vacation", id: 0x1, conformance: "M"
                         },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "Biometric",
-                            conformance: "M"
-                        }
-                    ]
-                },
 
-                {
-                    tag: "datatype", name: "UserStatusEnum",
-                    conformance: "M", type: "enum8",
-                    children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Available",
-                            conformance: "M"
+                            tag: "datatype", name: "Privacy", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "OccupiedEnabled",
-                            conformance: "M"
+                            tag: "datatype", name: "NoRemoteLockUnlock", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "OccupiedDisabled",
-                            conformance: "M"
+                            tag: "datatype", name: "Passage", id: 0x4, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "UserTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "DlSupportedOperatingModes", type: "map16", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "UnrestrictedUser",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "YearDayScheduleUser",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "WeekDayScheduleUser",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0003, name: "ProgrammingUser",
-                            conformance: "M"
+                            tag: "datatype", name: "Normal", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "NonAccessUser",
-                            conformance: "M"
+                            tag: "datatype", name: "Vacation", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "ForcedUser",
-                            conformance: "M"
+                            tag: "datatype", name: "Privacy", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "DisposableUser",
-                            conformance: "M"
+                            tag: "datatype", name: "NoRemoteLockUnlock", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "ExpiringUser",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "ScheduleRestrictedUser",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "RemoteOnlyUser",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "DlLockState",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "NotFullyLocked",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Locked",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Unlocked",
-                            conformance: "M"
+                            tag: "datatype", name: "Passage", id: 0x10, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlLockType",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "DlDefaultConfigurationRegister", type: "map16", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "DeadBolt",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Magnetic",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Other",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Mortise",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Rim",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "LatchBolt",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "CylindricalLock",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0007, name: "TubularLock",
-                            conformance: "M"
+                            tag: "datatype", name: "EnableLocalProgrammingEnabled", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "InterconnectedLock",
-                            conformance: "M"
+                            tag: "datatype", name: "KeypadInterfaceDefaultAccessEnabled", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "DeadLatch",
-                            conformance: "M"
+                            tag: "datatype", name: "RemoteInterfaceDefaultAccessIsEnabled", id: 0x4, conformance: "M"
                         },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "DoorFurniture",
-                            conformance: "M"
-                        }
-                    ]
-                },
 
-                {
-                    tag: "datatype", name: "DlCredentialRulesSupport",
-                    conformance: "M", type: "map8",
-                    children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Single",
-                            conformance: "M"
+                            tag: "datatype", name: "SoundEnabled", id: 0x20, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Dual",
-                            conformance: "M"
+                            tag: "datatype", name: "AutoRelockTimeSet", id: 0x40, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Tri",
-                            conformance: "M"
+                            tag: "datatype", name: "LedSettingsSet", id: 0x80, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlSupportedOperatingModes",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "DlLocalProgrammingFeatures", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Normal",
-                            conformance: "M"
+                            tag: "datatype", name: "AddUsersCredentialsSchedulesLocally", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Vacation",
-                            conformance: "M"
+                            tag: "datatype", name: "ModifyUsersCredentialsSchedulesLocally", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Privacy",
-                            conformance: "M"
+                            tag: "datatype", name: "ClearUsersCredentialsSchedulesLocally", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "NoRemoteLockUnlock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "Passage",
-                            conformance: "M"
+                            tag: "datatype", name: "AdjustLockSettingsLocally", id: 0x8, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlDefaultConfigurationRegister",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "DaysMaskMap", type: "map8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "EnableLocalProgrammingEnabled",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "KeypadInterfaceDefaultAccessEnabled",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0004, name: "RemoteInterfaceDefaultAccessIsEnabled",
-                            conformance: "M"
+                            tag: "datatype", name: "Sunday", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "SoundEnabled",
-                            conformance: "M"
+                            tag: "datatype", name: "Monday", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "AutoRelockTimeSet",
-                            conformance: "M"
+                            tag: "datatype", name: "Tuesday", id: 0x4, conformance: "M"
                         },
-
-                        {
-                            tag: "datatype", id: 0x0080, name: "LedSettingsSet",
-                            conformance: "M"
-                        }
-                    ]
-                },
 
-                {
-                    tag: "datatype", name: "DlLocalProgrammingFeatures",
-                    conformance: "M", type: "map8",
-                    children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "AddUsersCredentialsSchedulesLocally",
-                            conformance: "M"
+                            tag: "datatype", name: "Wednesday", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "ModifyUsersCredentialsSchedulesLocally",
-                            conformance: "M"
+                            tag: "datatype", name: "Thursday", id: 0x10, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "ClearUsersCredentialsSchedulesLocally",
-                            conformance: "M"
+                            tag: "datatype", name: "Friday", id: 0x20, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "AdjustLockSettingsLocally",
-                            conformance: "M"
+                            tag: "datatype", name: "Saturday", id: 0x40, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlKeypadOperationEventMask",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "DlStatus", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Unknown",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0002, name: "Lock",
-                            conformance: "M"
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Unlock",
-                            conformance: "M"
+                            tag: "datatype", name: "Failure", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "LockInvalidPin",
-                            conformance: "M"
+                            tag: "datatype", name: "Duplicate", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "LockInvalidSchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "Occupied", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "UnlockInvalidCode",
-                            conformance: "M"
+                            tag: "datatype", name: "InvalidField", id: 0x85, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "UnlockInvalidSchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "ResourceExhausted", id: 0x89, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0080, name: "NonAccessUserOpEvent",
-                            conformance: "M"
+                            tag: "datatype", name: "NotFound", id: 0x8b, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlRemoteOperationEventMask",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "DataOperationTypeEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Unknown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Lock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Unlock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "LockInvalidCode",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0010, name: "LockInvalidSchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "Add", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "UnlockInvalidCode",
-                            conformance: "M"
+                            tag: "datatype", name: "Clear", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "UnlockInvalidSchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "Modify", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlManualOperationEventMask",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "UserStatusEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Unknown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "ThumbturnLock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "ThumbturnUnlock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "OneTouchLock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "KeyLock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0020, name: "KeyUnlock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0040, name: "AutoLock",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0080, name: "ScheduleLock",
-                            conformance: "M"
+                            tag: "datatype", name: "Available", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0100, name: "ScheduleUnlock",
-                            conformance: "M"
+                            tag: "datatype", name: "OccupiedEnabled", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0200, name: "ManualLock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0400, name: "ManualUnlock",
-                            conformance: "M"
+                            tag: "datatype", name: "OccupiedDisabled", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlRfidOperationEventMask",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "UserTypeEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Unknown",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0002, name: "Lock",
-                            conformance: "M"
+                            tag: "datatype", name: "UnrestrictedUser", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Unlock",
-                            conformance: "M"
+                            tag: "datatype", name: "YearDayScheduleUser", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "LockInvalidRfid",
-                            conformance: "M"
+                            tag: "datatype", name: "WeekDayScheduleUser", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "LockInvalidSchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "ProgrammingUser", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "UnlockInvalidRfid",
-                            conformance: "M"
+                            tag: "datatype", name: "NonAccessUser", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "UnlockInvalidSchedule",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "DlKeypadProgrammingEventMask",
-                    conformance: "M", type: "map16",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "ForcedUser", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "ProgrammingPinChanged",
-                            conformance: "M"
+                            tag: "datatype", name: "DisposableUser", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "PinAdded",
-                            conformance: "M"
+                            tag: "datatype", name: "ExpiringUser", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "PinCleared",
-                            conformance: "M"
+                            tag: "datatype", name: "ScheduleRestrictedUser", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "PinChanged",
-                            conformance: "M"
+                            tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlRemoteProgrammingEventMask",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "CredentialRuleEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Unknown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "ProgrammingPinChanged",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "PinAdded",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "PinCleared",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0010, name: "PinChanged",
-                            conformance: "M"
+                            tag: "datatype", name: "Single", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "RfidCodeAdded",
-                            conformance: "M"
+                            tag: "datatype", name: "Dual", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "RfidCodeCleared",
-                            conformance: "M"
+                            tag: "datatype", name: "Tri", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlRfidProgrammingEventMask",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "CredentialStruct", type: "struct", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Unknown",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0020, name: "RfidCodeAdded",
-                            conformance: "M"
+                            tag: "datatype", name: "CredentialType", type: "CredentialTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "RfidCodeCleared",
-                            conformance: "M"
+                            tag: "datatype", name: "CredentialIndex", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DlStatus",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "CredentialTypeEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0001, name: "Failure",
-                            conformance: "M"
+                            tag: "datatype", name: "ProgrammingPin", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Duplicate",
-                            conformance: "M"
+                            tag: "datatype", name: "Pin", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Occupied",
-                            conformance: "M"
+                            tag: "datatype", name: "Rfid", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0085, name: "InvalidField",
-                            conformance: "M"
+                            tag: "datatype", name: "Fingerprint", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0089, name: "ResourceExhausted",
-                            conformance: "M"
+                            tag: "datatype", name: "FingerVein", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x008b, name: "NotFound",
-                            conformance: "M"
+                            tag: "datatype", name: "Face", id: 0x5, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DoorLockFeature",
-                    conformance: "M", type: "map32",
+                    tag: "datatype", name: "AlarmCodeEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "PinCredential",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "RfidCredential",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "FingerCredentials",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "Logging",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0010, name: "WeekDayAccessSchedules",
-                            conformance: "M"
+                            tag: "datatype", name: "LockJammed", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "DoorPositionSensor",
-                            conformance: "M"
+                            tag: "datatype", name: "LockFactoryReset", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "FaceCredentials",
-                            conformance: "M"
+                            tag: "datatype", name: "LockRadioPowerCycled", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0080, name: "CredentialsOverTheAirAccess",
-                            conformance: "M"
+                            tag: "datatype", name: "WrongCodeEntryLimit", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0100, name: "User",
-                            conformance: "M"
+                            tag: "datatype", name: "FrontEsceutcheonRemoved", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0200, name: "Notification",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorForcedOpen", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0400, name: "YearDayAccessSchedules",
-                            conformance: "M"
+                            tag: "datatype", name: "DoorAjar", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0800, name: "HolidaySchedules",
-                            conformance: "M"
+                            tag: "datatype", name: "ForcedUser", id: 0x8, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DoorLockSetPinOrIdStatus",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "LockOperationTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "Lock", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "GeneralFailure",
-                            conformance: "M"
+                            tag: "datatype", name: "Unlock", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "MemoryFull",
-                            conformance: "M"
+                            tag: "datatype", name: "NonAccessUserEvent", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "DuplicateCodeError",
-                            conformance: "M"
+                            tag: "datatype", name: "ForcedUserEvent", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DoorLockOperationEventCode",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OperationSourceEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "UnknownOrMfgSpecific",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Lock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Unlock",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "LockInvalidPinOrId",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "LockInvalidSchedule",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0005, name: "UnlockInvalidPinOrId",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "UnlockInvalidSchedule",
-                            conformance: "M"
+                            tag: "datatype", name: "Manual", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "OneTouchLock",
-                            conformance: "M"
+                            tag: "datatype", name: "ProprietaryRemote", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "KeyLock",
-                            conformance: "M"
+                            tag: "datatype", name: "Keypad", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "KeyUnlock",
-                            conformance: "M"
+                            tag: "datatype", name: "Auto", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000a, name: "AutoLock",
-                            conformance: "M"
+                            tag: "datatype", name: "Button", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000b, name: "ScheduleLock",
-                            conformance: "M"
+                            tag: "datatype", name: "Schedule", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000c, name: "ScheduleUnlock",
-                            conformance: "M"
+                            tag: "datatype", name: "Remote", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000d, name: "ManualLock",
-                            conformance: "M"
+                            tag: "datatype", name: "Rfid", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000e, name: "ManualUnlock",
-                            conformance: "M"
+                            tag: "datatype", name: "Biometric", id: 0x9, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DoorLockProgrammingEventCode",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OperationErrorEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "UnknownOrMfgSpecific",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "MasterCodeChanged",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "PinAdded",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "PinDeleted",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "PinChanged",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0005, name: "IdAdded",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "IdDeleted",
-                            conformance: "M"
-                        }
-                    ]
-                },
 
-                {
-                    tag: "datatype", name: "DoorLockUserStatus",
-                    conformance: "M", type: "enum8",
-                    children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Available",
-                            conformance: "M"
+                            tag: "datatype", name: "InvalidCredential", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "OccupiedEnabled",
-                            conformance: "M"
+                            tag: "datatype", name: "DisabledUserDenied", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "OccupiedDisabled",
-                            conformance: "M"
+                            tag: "datatype", name: "Restricted", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x00ff, name: "NotSupported",
-                            conformance: "M"
+                            tag: "datatype", name: "InsufficientBattery", id: 0x4, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DoorLockUserType",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "LockDataTypeEnum", type: "enum8", conformance: "M",
                     children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Unrestricted",
-                            conformance: "M"
-                        },
-
                         {
-                            tag: "datatype", id: 0x0001, name: "YearDayScheduleUser",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "WeekDayScheduleUser",
-                            conformance: "M"
+                            tag: "datatype", name: "ProgrammingCode", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "MasterUser",
-                            conformance: "M"
+                            tag: "datatype", name: "UserIndex", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "NonAccessUser",
-                            conformance: "M"
+                            tag: "datatype", name: "WeekDaySchedule", id: 0x3, conformance: "M"
                         },
-
-                        {
-                            tag: "datatype", id: 0x00ff, name: "NotSupported",
-                            conformance: "M"
-                        }
-                    ]
-                },
 
-                {
-                    tag: "datatype", name: "DoorLockDayOfWeek",
-                    conformance: "M", type: "map8",
-                    children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Sunday",
-                            conformance: "M"
+                            tag: "datatype", name: "YearDaySchedule", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Monday",
-                            conformance: "M"
+                            tag: "datatype", name: "HolidaySchedule", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Tuesday",
-                            conformance: "M"
+                            tag: "datatype", name: "Pin", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Wednesday",
-                            conformance: "M"
+                            tag: "datatype", name: "Rfid", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "Thursday",
-                            conformance: "M"
+                            tag: "datatype", name: "Fingerprint", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "Friday",
-                            conformance: "M"
+                            tag: "datatype", name: "FingerVein", id: 0x9, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "Saturday",
-                            conformance: "M"
+                            tag: "datatype", name: "Face", id: 0xa, conformance: "M"
                         }
                     ]
                 }
@@ -6303,127 +4614,94 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0037, name: "EthernetNetworkDiagnostics",
+            tag: "cluster", name: "EthernetNetworkDiagnostics", id: 0x37,
             description: "Ethernet Network Diagnostics",
+            details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics " +
+                     "metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential " +
+                     "problems",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "PhyRate",
-                    conformance: "O", quality: "X", type: "PhyRateEnum"
+                    tag: "attribute", name: "PhyRate", id: 0x0, type: "PhyRateEnum", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "FullDuplex",
-                    conformance: "O", quality: "X", type: "bool"
+                    tag: "attribute", name: "FullDuplex", id: 0x1, type: "bool", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "PacketRxCount",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "PacketRxCount", id: 0x2, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "PacketTxCount",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "PacketTxCount", id: 0x3, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "TxErrCount",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "TxErrCount", id: 0x4, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "CollisionCount",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "CollisionCount", id: 0x5, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "EthernetOverrunCount",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "EthernetOverrunCount", id: 0x6, type: "uint64", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "CarrierDetect",
-                    conformance: "O", quality: "X", type: "bool"
+                    tag: "attribute", name: "CarrierDetect", id: 0x7, type: "bool", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "TimeSinceReset",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "TimeSinceReset", id: 0x8, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "ResetCounts",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "ResetCounts", id: 0x0, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "datatype", name: "PhyRateEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "PhyRateEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Rate10M",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate10M", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Rate100M",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate100M", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Rate1G",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate1G", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Rate25G",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate25G", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Rate5G",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate5G", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Rate10G",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate10G", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "Rate40G",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate40G", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "Rate100G",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate100G", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Rate200G",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate200G", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "Rate400G",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "EthernetNetworkDiagnosticsFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "PacketCounts",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "ErrorCounts",
-                            conformance: "M"
+                            tag: "datatype", name: "Rate400G", id: 0x9, conformance: "M"
                         }
                     ]
                 }
@@ -6431,216 +4709,117 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0202, name: "FanControl",
-            description: "Fan Control",
+            tag: "cluster", name: "FanControl", id: 0x202, description: "Fan Control",
+            details: "An interface for controlling a fan in a heating/cooling system",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "FanMode",
-                    access: "RW", conformance: "M", default: 0, type: "FanModeType"
+                    tag: "attribute", name: "FanMode", id: 0x0, type: "FanModeType", access: "RW", conformance: "M",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "FanModeSequence",
-                    access: "RW", conformance: "M", default: 2, type: "FanModeSequenceType"
+                    tag: "attribute", name: "FanModeSequence", id: 0x1, type: "FanModeSequenceType", access: "RW",
+                    conformance: "M", default: 2
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "PercentSetting",
-                    access: "RW", conformance: "M", default: 0, quality: "X", type: "uint8"
+                    tag: "attribute", name: "PercentSetting", id: 0x2, type: "uint8", access: "RW", conformance: "M",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "PercentCurrent",
-                    conformance: "M", default: 0, type: "uint8"
+                    tag: "attribute", name: "PercentCurrent", id: 0x3, type: "uint8", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "SpeedMax",
-                    conformance: "O", default: 1, type: "uint8"
+                    tag: "attribute", name: "SpeedMax", id: 0x4, type: "uint8", conformance: "O", default: 1
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "SpeedSetting",
-                    access: "RW", conformance: "O", default: 0, quality: "X", type: "uint8"
+                    tag: "attribute", name: "SpeedSetting", id: 0x5, type: "uint8", access: "RW", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "SpeedCurrent",
-                    conformance: "O", default: 0, type: "uint8"
+                    tag: "attribute", name: "SpeedCurrent", id: 0x6, type: "uint8", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "RockSupport",
-                    conformance: "O", default: 0, type: "map8"
+                    tag: "attribute", name: "RockSupport", id: 0x7, type: "map8", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "RockSetting",
-                    access: "RW", conformance: "O", default: 0, type: "map8"
+                    tag: "attribute", name: "RockSetting", id: 0x8, type: "map8", access: "RW", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "WindSupport",
-                    conformance: "O", default: 0, type: "map8"
+                    tag: "attribute", name: "WindSupport", id: 0x9, type: "map8", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x000a, name: "WindSetting",
-                    access: "RW", conformance: "O", default: 0, type: "map8"
+                    tag: "attribute", name: "WindSetting", id: 0xa, type: "map8", access: "RW", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "datatype", name: "FanControlFeature",
-                    conformance: "M", type: "map32",
+                    tag: "datatype", name: "FanModeType", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "MultiSpeed",
-                            conformance: "M"
+                            tag: "datatype", name: "Off", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Auto",
-                            conformance: "M"
+                            tag: "datatype", name: "Low", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Rocking",
-                            conformance: "M"
+                            tag: "datatype", name: "Medium", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Wind",
-                            conformance: "M"
+                            tag: "datatype", name: "High", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "On", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Auto", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Smart", id: 0x6, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "FanModeType",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "FanModeSequenceType", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Off",
-                            conformance: "M"
+                            tag: "datatype", name: "OffLowMedHigh", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Low",
-                            conformance: "M"
+                            tag: "datatype", name: "OffLowHigh", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Medium",
-                            conformance: "M"
+                            tag: "datatype", name: "OffLowMedHighAuto", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "High",
-                            conformance: "M"
+                            tag: "datatype", name: "OffLowHighAuto", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "On",
-                            conformance: "M"
+                            tag: "datatype", name: "OffOnAuto", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Auto",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "Smart",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "FanModeSequenceType",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "OffLowMedHigh",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "OffLowHigh",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "OffLowMedHighAuto",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "OffLowHighAuto",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "OffOnAuto",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "OffOn",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "RockSupportMask",
-                    conformance: "M", type: "map8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "RockLeftRight",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "RockUpDown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "RockRound",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "WindSupportMask",
-                    conformance: "M", type: "map8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "SleepWind",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "NaturalWind",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "WindSettingMask",
-                    conformance: "M", type: "map8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "SleepWind",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "NaturalWind",
-                            conformance: "M"
+                            tag: "datatype", name: "OffOn", id: 0x5, conformance: "M"
                         }
                     ]
                 }
@@ -6648,88 +4827,74 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0xfff1fc06, name: "FaultInjection",
-            description: "Fault Injection",
+            tag: "cluster", name: "FaultInjection", id: 0xfff1fc06, description: "Fault Injection",
+            details: "The Fault Injection Cluster provide a means for a test harness to configure faults(for example " +
+                     "triggering a fault in the system",
             children: [
                 {
-                    tag: "command", id: 0x0000, name: "FailAtFault",
-                    access: "R M", conformance: "M", direction: "request",
+                    tag: "command", name: "FailAtFault", id: 0x0, access: "R M", conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Type",
-                            conformance: "M", type: "FaultType"
+                            tag: "datatype", name: "Type", type: "FaultType", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Id",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "Id", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NumCallsToSkip",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "NumCallsToSkip", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NumCallsToFail",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "NumCallsToFail", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TakeMutex",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "TakeMutex", type: "bool", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "FailRandomlyAtFault",
-                    access: "R M", conformance: "M", direction: "request",
+                    tag: "command", name: "FailRandomlyAtFault", id: 0x1, access: "R M", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Type",
-                            conformance: "M", type: "FaultType"
+                            tag: "datatype", name: "Type", type: "FaultType", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Id",
-                            conformance: "M", type: "uint32"
+                            tag: "datatype", name: "Id", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Percentage",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Percentage", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "FaultType",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "FaultType", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "SystemFault",
-                            conformance: "M"
+                            tag: "datatype", name: "SystemFault", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "InetFault",
-                            conformance: "M"
+                            tag: "datatype", name: "InetFault", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "ChipFault",
-                            conformance: "M"
+                            tag: "datatype", name: "ChipFault", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "CertFault",
-                            conformance: "M"
+                            tag: "datatype", name: "CertFault", id: 0x4, conformance: "M"
                         }
                     ]
                 }
@@ -6737,32 +4902,28 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0040, name: "FixedLabel",
-            description: "Fixed Label",
+            tag: "cluster", name: "FixedLabel", id: 0x40, description: "Fixed Label",
+            details: "The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read " +
+                     "only labels",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "LabelList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "LabelList", id: 0x0, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "LabelStruct"
+                            tag: "datatype", name: "entry", type: "LabelStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "LabelStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "LabelStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Label",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Label", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Value",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Value", type: "string", conformance: "M"
                         }
                     ]
                 }
@@ -6770,214 +4931,188 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0404, name: "FlowMeasurement",
-            description: "Flow Measurement",
+            tag: "cluster", name: "FlowMeasurement", id: 0x404, description: "Flow Measurement",
+            details: "Attributes and commands for configuring the measurement of flow, and reporting flow measurements",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "FlowMeasuredValue",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "FlowMeasuredValue", id: 0x0, type: "uint16", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "FlowMinMeasuredValue",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "FlowMinMeasuredValue", id: 0x1, type: "uint16", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "FlowMaxMeasuredValue",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "FlowMaxMeasuredValue", id: 0x2, type: "uint16", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "FlowTolerance",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "FlowTolerance", id: 0x3, type: "uint16", conformance: "O", default: 0
                 }
             ]
         },
 
         {
-            tag: "cluster", id: 0x0030, name: "GeneralCommissioning",
-            description: "General Commissioning",
+            tag: "cluster", name: "GeneralCommissioning", id: 0x30, description: "General Commissioning",
+            details: "This cluster is used to manage global aspects of the Commissioning flow",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "Breadcrumb",
-                    access: "RW VA", conformance: "M", default: 0, type: "uint64"
+                    tag: "attribute", name: "Breadcrumb", id: 0x0, type: "uint64", access: "RW VA", conformance: "M",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "BasicCommissioningInfo",
-                    conformance: "M", type: "BasicCommissioningInfo"
+                    tag: "attribute", name: "BasicCommissioningInfo", id: 0x1, type: "BasicCommissioningInfo",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "RegulatoryConfig",
-                    conformance: "M", type: "RegulatoryLocationType"
+                    tag: "attribute", name: "RegulatoryConfig", id: 0x2, type: "RegulatoryLocationType",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "LocationCapability",
-                    conformance: "M", type: "RegulatoryLocationType"
+                    tag: "attribute", name: "LocationCapability", id: 0x3, type: "RegulatoryLocationType",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "SupportsConcurrentConnection",
-                    conformance: "M", default: true, type: "bool"
+                    tag: "attribute", name: "SupportsConcurrentConnection", id: 0x4, type: "bool", conformance: "M",
+                    default: true
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "ArmFailSafe",
-                    access: "R A", conformance: "M", direction: "request", response: "ArmFailSafeResponse",
+                    tag: "command", name: "ArmFailSafe", id: 0x0, access: "R A", conformance: "M", direction: "request",
+                    response: "ArmFailSafeResponse",
                     children: [
                         {
-                            tag: "datatype", name: "ExpiryLengthSeconds",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ExpiryLengthSeconds", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Breadcrumb",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "Breadcrumb", type: "uint64", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "ArmFailSafeResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "ArmFailSafeResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "ErrorCode",
-                            conformance: "M", type: "CommissioningError"
+                            tag: "datatype", name: "ErrorCode", type: "CommissioningError", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DebugText",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "DebugText", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "SetRegulatoryConfig",
-                    access: "R A", conformance: "M", direction: "request", response: "SetRegulatoryConfigResponse",
+                    tag: "command", name: "SetRegulatoryConfig", id: 0x2, access: "R A", conformance: "M",
+                    direction: "request", response: "SetRegulatoryConfigResponse",
                     children: [
                         {
-                            tag: "datatype", name: "NewRegulatoryConfig",
-                            conformance: "M", type: "RegulatoryLocationType"
+                            tag: "datatype", name: "NewRegulatoryConfig", type: "RegulatoryLocationType", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "CountryCode",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "CountryCode", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Breadcrumb",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "Breadcrumb", type: "uint64", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "SetRegulatoryConfigResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "SetRegulatoryConfigResponse", id: 0x3, conformance: "M",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "ErrorCode",
-                            conformance: "M", type: "CommissioningError"
+                            tag: "datatype", name: "ErrorCode", type: "CommissioningError", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DebugText",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "DebugText", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "CommissioningComplete",
-                    access: "R F A", conformance: "M", direction: "request", response: "CommissioningCompleteResponse"
+                    tag: "command", name: "CommissioningComplete", id: 0x4, access: "R F A", conformance: "M",
+                    direction: "request", response: "CommissioningCompleteResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "CommissioningCompleteResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "CommissioningCompleteResponse", id: 0x5, conformance: "M",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "ErrorCode",
-                            conformance: "M", type: "CommissioningError"
+                            tag: "datatype", name: "ErrorCode", type: "CommissioningError", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DebugText",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "DebugText", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "CommissioningError",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "BasicCommissioningInfo", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Ok",
-                            conformance: "M"
+                            tag: "datatype", name: "FailSafeExpiryLengthSeconds", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "ValueOutsideRange",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "InvalidAuthentication",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "NoFailSafe",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "BusyWithOtherAdmin",
-                            conformance: "M"
+                            tag: "datatype", name: "MaxCumulativeFailsafeSeconds", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "RegulatoryLocationType",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "RegulatoryLocationType", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Indoor",
-                            conformance: "M"
+                            tag: "datatype", name: "Indoor", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Outdoor",
-                            conformance: "M"
+                            tag: "datatype", name: "Outdoor", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "IndoorOutdoor",
-                            conformance: "M"
+                            tag: "datatype", name: "IndoorOutdoor", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BasicCommissioningInfo",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "CommissioningError", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "FailSafeExpiryLengthSeconds",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Ok", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "MaxCumulativeFailsafeSeconds",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ValueOutsideRange", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InvalidAuthentication", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NoFailSafe", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "BusyWithOtherAdmin", id: 0x4, conformance: "M"
                         }
                     ]
                 }
@@ -6985,395 +5120,326 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0033, name: "GeneralDiagnostics",
-            description: "General Diagnostics",
+            tag: "cluster", name: "GeneralDiagnostics", id: 0x33, description: "General Diagnostics",
+            details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire " +
+                     "standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node " +
+                     "in diagnosing potential problems",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "NetworkInterfaces",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "NetworkInterfaces", id: 0x0, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "NetworkInterface"
+                            tag: "datatype", name: "entry", type: "NetworkInterface"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "RebootCount",
-                    conformance: "M", default: 0, type: "uint16"
+                    tag: "attribute", name: "RebootCount", id: 0x1, type: "uint16", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "UpTime",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "UpTime", id: 0x2, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "TotalOperationalHours",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TotalOperationalHours", id: 0x3, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "BootReasons",
-                    conformance: "O", type: "BootReasonEnum"
+                    tag: "attribute", name: "BootReasons", id: 0x4, type: "BootReasonEnum", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "ActiveHardwareFaults",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "ActiveHardwareFaults", id: 0x5, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "HardwareFaultEnum"
+                            tag: "datatype", name: "entry", type: "HardwareFaultEnum"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "ActiveRadioFaults",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "ActiveRadioFaults", id: 0x6, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "RadioFaultEnum"
+                            tag: "datatype", name: "entry", type: "RadioFaultEnum"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "ActiveNetworkFaults",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "ActiveNetworkFaults", id: 0x7, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "NetworkFaultEnum"
+                            tag: "datatype", name: "entry", type: "NetworkFaultEnum"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "TestEventTriggersEnabled",
-                    conformance: "M", type: "bool"
+                    tag: "attribute", name: "TestEventTriggersEnabled", id: 0x8, type: "bool", conformance: "M"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "TestEventTrigger",
-                    access: "R M", conformance: "M", direction: "request",
+                    tag: "command", name: "TestEventTrigger", id: 0x0, access: "R M", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "EnableKey",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "EnableKey", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "EventTrigger",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "EventTrigger", type: "uint64", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "HardwareFaultChange",
-                    conformance: "O", priority: "critical",
+                    tag: "event", name: "HardwareFaultChange", id: 0x0, conformance: "O", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "HardwareFaultEnum"
+                            tag: "datatype", name: "Current", type: "HardwareFaultEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "HardwareFaultEnum"
+                            tag: "datatype", name: "Previous", type: "HardwareFaultEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "RadioFaultChange",
-                    conformance: "O", priority: "critical",
+                    tag: "event", name: "RadioFaultChange", id: 0x1, conformance: "O", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "RadioFaultEnum"
+                            tag: "datatype", name: "Current", type: "RadioFaultEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "RadioFaultEnum"
+                            tag: "datatype", name: "Previous", type: "RadioFaultEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "NetworkFaultChange",
-                    conformance: "O", priority: "critical",
+                    tag: "event", name: "NetworkFaultChange", id: 0x2, conformance: "O", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "NetworkFaultEnum"
+                            tag: "datatype", name: "Current", type: "NetworkFaultEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "NetworkFaultEnum"
+                            tag: "datatype", name: "Previous", type: "NetworkFaultEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0003, name: "BootReason",
-                    conformance: "M", priority: "critical",
+                    tag: "event", name: "BootReason", id: 0x3, conformance: "M", priority: "critical",
                     children: [
                         {
-                            tag: "datatype", name: "BootReason",
-                            conformance: "M", type: "BootReasonEnum"
+                            tag: "datatype", name: "BootReason", type: "BootReasonEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "HardwareFaultEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "NetworkInterface", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Radio",
-                            conformance: "M"
+                            tag: "datatype", name: "IsOperational", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Sensor",
-                            conformance: "M"
+                            tag: "datatype", name: "OffPremiseServicesReachableIPv4", type: "bool", conformance: "M",
+                            quality: "X"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "ResettableOverTemp",
-                            conformance: "M"
+                            tag: "datatype", name: "OffPremiseServicesReachableIPv6", type: "bool", conformance: "M",
+                            quality: "X"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "NonResettableOverTemp",
-                            conformance: "M"
+                            tag: "datatype", name: "HardwareAddress", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "PowerSource",
-                            conformance: "M"
+                            tag: "datatype", name: "IPv4Addresses", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "VisualDisplayFault",
-                            conformance: "M"
+                            tag: "datatype", name: "IPv6Addresses", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "AudioOutputFault",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "UserInterfaceFault",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "NonVolatileMemoryError",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "TamperDetected",
-                            conformance: "M"
+                            tag: "datatype", name: "Type", type: "InterfaceTypeEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "RadioFaultEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "InterfaceTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "WiFiFault",
-                            conformance: "M"
+                            tag: "datatype", name: "WiFi", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "CellularFault",
-                            conformance: "M"
+                            tag: "datatype", name: "Ethernet", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "ThreadFault",
-                            conformance: "M"
+                            tag: "datatype", name: "Cellular", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "NfcFault",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "BleFault",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "EthernetFault",
-                            conformance: "M"
+                            tag: "datatype", name: "Thread", id: 0x4, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "NetworkFaultEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "BootReasonEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "HardwareFailure",
-                            conformance: "M"
+                            tag: "datatype", name: "PowerOnReboot", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "NetworkJammed",
-                            conformance: "M"
+                            tag: "datatype", name: "BrownOutReset", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "ConnectionFailed",
-                            conformance: "M"
+                            tag: "datatype", name: "SoftwareWatchdogReset", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "HardwareWatchdogReset", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SoftwareUpdateCompleted", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SoftwareReset", id: 0x6, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BootReasonEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "HardwareFaultEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "PowerOnReboot",
-                            conformance: "M"
+                            tag: "datatype", name: "Radio", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "BrownOutReset",
-                            conformance: "M"
+                            tag: "datatype", name: "Sensor", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "SoftwareWatchdogReset",
-                            conformance: "M"
+                            tag: "datatype", name: "ResettableOverTemp", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "HardwareWatchdogReset",
-                            conformance: "M"
+                            tag: "datatype", name: "NonResettableOverTemp", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "SoftwareUpdateCompleted",
-                            conformance: "M"
+                            tag: "datatype", name: "PowerSource", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "SoftwareReset",
-                            conformance: "M"
+                            tag: "datatype", name: "VisualDisplayFault", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "AudioOutputFault", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "UserInterfaceFault", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NonVolatileMemoryError", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TamperDetected", id: 0xa, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "InterfaceTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "RadioFaultEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "WiFi",
-                            conformance: "M"
+                            tag: "datatype", name: "WiFiFault", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Ethernet",
-                            conformance: "M"
+                            tag: "datatype", name: "CellularFault", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Cellular",
-                            conformance: "M"
+                            tag: "datatype", name: "ThreadFault", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Thread",
-                            conformance: "M"
+                            tag: "datatype", name: "NfcFault", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "BleFault", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "EthernetFault", id: 0x6, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "NetworkInterface",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "NetworkFaultEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "IsOperational",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "HardwareFailure", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OffPremiseServicesReachableIPv4",
-                            conformance: "M", quality: "X", type: "bool"
+                            tag: "datatype", name: "NetworkJammed", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OffPremiseServicesReachableIPv6",
-                            conformance: "M", quality: "X", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "HardwareAddress",
-                            conformance: "M", type: "octstr"
-                        },
-
-                        {
-                            tag: "datatype", name: "IPv4Addresses",
-                            conformance: "M", type: "octstr"
-                        },
-
-                        {
-                            tag: "datatype", name: "IPv6Addresses",
-                            conformance: "M", type: "octstr"
-                        },
-
-                        {
-                            tag: "datatype", name: "Type",
-                            conformance: "M", type: "InterfaceTypeEnum"
+                            tag: "datatype", name: "ConnectionFailed", id: 0x3, conformance: "M"
                         }
                     ]
                 }
@@ -7381,202 +5447,171 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x003f, name: "GroupKeyManagement",
-            description: "Group Key Management",
+            tag: "cluster", name: "GroupKeyManagement", id: 0x3f, description: "Group Key Management",
+            details: "The Group Key Management Cluster is the mechanism by which group keys are managed",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "GroupKeyMap",
-                    access: "RW VM", conformance: "M", type: "list",
+                    tag: "attribute", name: "GroupKeyMap", id: 0x0, type: "list", access: "RW VM", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "GroupKeyMapStruct"
+                            tag: "datatype", name: "entry", type: "GroupKeyMapStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "GroupTable",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "GroupTable", id: 0x1, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "GroupInfoMapStruct"
+                            tag: "datatype", name: "entry", type: "GroupInfoMapStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "MaxGroupsPerFabric",
-                    conformance: "M", type: "uint16"
+                    tag: "attribute", name: "MaxGroupsPerFabric", id: 0x2, type: "uint16", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "MaxGroupKeysPerFabric",
-                    conformance: "M", type: "uint16"
+                    tag: "attribute", name: "MaxGroupKeysPerFabric", id: 0x3, type: "uint16", conformance: "M"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "KeySetWrite",
-                    access: "R F A", conformance: "M", direction: "request",
+                    tag: "command", name: "KeySetWrite", id: 0x0, access: "R F A", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "GroupKeySet",
-                            conformance: "M", type: "GroupKeySetStruct"
+                            tag: "datatype", name: "GroupKeySet", type: "GroupKeySetStruct", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "KeySetRead",
-                    access: "R F A", conformance: "M", direction: "request", response: "KeySetReadResponse",
+                    tag: "command", name: "KeySetRead", id: 0x1, access: "R F A", conformance: "M",
+                    direction: "request", response: "KeySetReadResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupKeySetId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "GroupKeySetId", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "KeySetReadResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "KeySetReadResponse", id: 0x2, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "GroupKeySet",
-                            conformance: "M", type: "GroupKeySetStruct"
+                            tag: "datatype", name: "GroupKeySet", type: "GroupKeySetStruct", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "KeySetRemove",
-                    access: "R F A", conformance: "M", direction: "request",
+                    tag: "command", name: "KeySetRemove", id: 0x3, access: "R F A", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "GroupKeySetId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "GroupKeySetId", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "KeySetReadAllIndices",
-                    access: "R F A", conformance: "M", direction: "request", response: "KeySetReadAllIndicesResponse",
+                    tag: "command", name: "KeySetReadAllIndices", id: 0x4, access: "R F A", conformance: "M",
+                    direction: "request", response: "KeySetReadAllIndicesResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupKeySetIDs",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "GroupKeySetIDs", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "KeySetReadAllIndicesResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "KeySetReadAllIndicesResponse", id: 0x5, conformance: "M",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "GroupKeySetIDs",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "GroupKeySetIDs", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "GroupKeyMapStruct",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "GroupKeyMapStruct", type: "struct", access: "R F", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupKeySetId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "GroupKeySetId", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "GroupInfoMapStruct",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "GroupInfoMapStruct", type: "struct", access: "R F", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Endpoints",
-                            conformance: "M", type: "endpoint-no"
+                            tag: "datatype", name: "Endpoints", type: "endpoint-no", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupName",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "GroupName", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "GroupKeySetStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "GroupKeySetStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "GroupKeySetId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "GroupKeySetId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupKeySecurityPolicy",
-                            conformance: "M", type: "GroupKeySecurityPolicyEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "EpochKey0",
-                            conformance: "M", quality: "X", type: "octstr"
-                        },
-
-                        {
-                            tag: "datatype", name: "EpochStartTime0",
-                            conformance: "M", quality: "X", type: "epoch-us"
-                        },
-
-                        {
-                            tag: "datatype", name: "EpochKey1",
-                            conformance: "M", quality: "X", type: "octstr"
-                        },
-
-                        {
-                            tag: "datatype", name: "EpochStartTime1",
-                            conformance: "M", quality: "X", type: "epoch-us"
-                        },
-
-                        {
-                            tag: "datatype", name: "EpochKey2",
-                            conformance: "M", quality: "X", type: "octstr"
-                        },
-
-                        {
-                            tag: "datatype", name: "EpochStartTime2",
-                            conformance: "M", quality: "X", type: "epoch-us"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "GroupKeySecurityPolicyEnum",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "TrustFirst",
+                            tag: "datatype", name: "GroupKeySecurityPolicy", type: "GroupKeySecurityPolicyEnum",
                             conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "CacheAndSync",
-                            conformance: "M"
+                            tag: "datatype", name: "EpochKey0", type: "octstr", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "EpochStartTime0", type: "epoch-us", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "EpochKey1", type: "octstr", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "EpochStartTime1", type: "epoch-us", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "EpochKey2", type: "octstr", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "EpochStartTime2", type: "epoch-us", conformance: "M", quality: "X"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "GroupKeySecurityPolicyEnum", type: "enum8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "TrustFirst", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "CacheAndSync", id: 0x1, conformance: "M"
                         }
                     ]
                 }
@@ -7584,160 +5619,129 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0004, name: "Groups",
-            description: "Groups",
+            tag: "cluster", name: "Groups", id: 0x4, description: "Groups",
+            details: "Attributes and commands for group configuration and manipulation",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "GroupNameSupport",
-                    conformance: "M", type: "map8"
+                    tag: "attribute", name: "GroupNameSupport", id: 0x0, type: "map8", conformance: "M"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "AddGroup",
-                    access: "R F M", conformance: "M", direction: "request", response: "AddGroupResponse",
+                    tag: "command", name: "AddGroup", id: 0x0, access: "R F M", conformance: "M", direction: "request",
+                    response: "AddGroupResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupName",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "GroupName", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "ViewGroup",
-                    access: "R F", conformance: "M", direction: "request", response: "ViewGroupResponse",
+                    tag: "command", name: "ViewGroup", id: 0x1, access: "R F", conformance: "M", direction: "request",
+                    response: "ViewGroupResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "GetGroupMembership",
-                    access: "R F", conformance: "M", direction: "request", response: "GetGroupMembershipResponse",
+                    tag: "command", name: "GetGroupMembership", id: 0x2, access: "R F", conformance: "M",
+                    direction: "request", response: "GetGroupMembershipResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupList",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupList", type: "group-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "RemoveGroup",
-                    access: "R F M", conformance: "M", direction: "request", response: "RemoveGroupResponse",
+                    tag: "command", name: "RemoveGroup", id: 0x3, access: "R F M", conformance: "M",
+                    direction: "request", response: "RemoveGroupResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "RemoveAllGroups",
-                    access: "R F M", conformance: "M", direction: "request"
+                    tag: "command", name: "RemoveAllGroups", id: 0x4, access: "R F M", conformance: "M",
+                    direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "AddGroupIfIdentifying",
-                    access: "R F M", conformance: "M", direction: "request",
+                    tag: "command", name: "AddGroupIfIdentifying", id: 0x5, access: "R F M", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupName",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "GroupName", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "AddGroupResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "ViewGroupResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "ViewGroupResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupName",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "GroupName", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "GetGroupMembershipResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "GetGroupMembershipResponse", id: 0x2, conformance: "M",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Capacity",
-                            conformance: "M", quality: "X", type: "uint8"
+                            tag: "datatype", name: "Capacity", type: "uint8", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "GroupList",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupList", type: "group-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "RemoveGroupResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "RemoveGroupResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "GroupsFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "GroupNames",
-                            conformance: "M"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         }
                     ]
                 }
@@ -7745,125 +5749,75 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0003, name: "Identify",
-            description: "Identify",
+            tag: "cluster", name: "Identify", id: 0x3, description: "Identify",
+            details: "Attributes and commands for putting a device into Identification mode (e.g. flashing a light",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "IdentifyTime",
-                    access: "RW", conformance: "M", default: 0, type: "uint16"
+                    tag: "attribute", name: "IdentifyTime", id: 0x0, type: "uint16", access: "RW", conformance: "M",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "IdentifyType",
-                    conformance: "M", default: 0, type: "enum8"
+                    tag: "attribute", name: "IdentifyType", id: 0x1, type: "enum8", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "Identify",
-                    access: "R M", conformance: "M", direction: "request",
+                    tag: "command", name: "Identify", id: 0x0, access: "R M", conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "IdentifyTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "IdentifyTime", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0040, name: "TriggerEffect",
-                    access: "R M", conformance: "O", direction: "request",
+                    tag: "command", name: "TriggerEffect", id: 0x40, access: "R M", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "EffectIdentifier",
-                            conformance: "M", type: "IdentifyEffectIdentifier"
+                            tag: "datatype", name: "EffectIdentifier", type: "IdentifyEffectIdentifier", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "EffectVariant",
-                            conformance: "M", type: "IdentifyEffectVariant"
+                            tag: "datatype", name: "EffectVariant", type: "IdentifyEffectVariant", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "IdentifyIdentifyType",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "IdentifyEffectIdentifier", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "None",
-                            conformance: "M"
+                            tag: "datatype", name: "Blink", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "VisibleLight",
-                            conformance: "M"
+                            tag: "datatype", name: "Breathe", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "VisibleLed",
-                            conformance: "M"
+                            tag: "datatype", name: "Okay", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "AudibleBeep",
-                            conformance: "M"
+                            tag: "datatype", name: "ChannelChange", id: 0xb, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Display",
-                            conformance: "M"
+                            tag: "datatype", name: "FinishEffect", id: 0xfe, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Actuator",
-                            conformance: "M"
+                            tag: "datatype", name: "StopEffect", id: 0xff, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "IdentifyEffectIdentifier",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "IdentifyEffectVariant", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Blink",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Breathe",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Okay",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "ChannelChange",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x00fe, name: "FinishEffect",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x00ff, name: "StopEffect",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "IdentifyEffectVariant",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Default",
-                            conformance: "M"
+                            tag: "datatype", name: "Default", id: 0x0, conformance: "M"
                         }
                     ]
                 }
@@ -7871,46 +5825,422 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0400, name: "IlluminanceMeasurement",
-            description: "Illuminance Measurement",
+            tag: "cluster", name: "IlluminanceMeasurement", id: 0x400, description: "Illuminance Measurement",
+            details: "Attributes and commands for configuring the measurement of illuminance, and reporting illuminance " +
+                     "measurements",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "IllumMeasuredValue",
-                    conformance: "M", default: 0, quality: "X P", type: "uint16"
+                    tag: "attribute", name: "IllumMeasuredValue", id: 0x0, type: "uint16", conformance: "M", default: 0,
+                    quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "IllumMinMeasuredValue",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "IllumMinMeasuredValue", id: 0x1, type: "uint16", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "IllumMaxMeasuredValue",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "IllumMaxMeasuredValue", id: 0x2, type: "uint16", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "IllumTolerance",
-                    conformance: "O", type: "uint16"
+                    tag: "attribute", name: "IllumTolerance", id: 0x3, type: "uint16", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "IllumLightSensorType",
-                    conformance: "O", default: 255, quality: "X", type: "enum8"
-                },
+                    tag: "attribute", name: "IllumLightSensorType", id: 0x4, type: "enum8", conformance: "O",
+                    default: 255, quality: "X"
+                }
+            ]
+        },
 
+        {
+            tag: "cluster", name: "KeypadInput", id: 0x509, description: "Keypad Input",
+            details: "This cluster provides an interface for controlling a device like a TV using action commands such as " +
+                     "UP, DOWN, and SELECT",
+            children: [
                 {
-                    tag: "datatype", name: "LightSensorType",
-                    conformance: "M", type: "enum8",
+                    tag: "command", name: "SendKey", id: 0x0, conformance: "M", direction: "request",
+                    response: "SendKeyResponse",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Photodiode",
-                            conformance: "M"
+                            tag: "datatype", name: "KeyCode", type: "CecKeyCode", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "command", name: "SendKeyResponse", id: 0x1, conformance: "M", direction: "response",
+                    children: [
+                        {
+                            tag: "datatype", name: "Status", type: "KeypadInputStatusEnum", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "CecKeyCode", type: "enum8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "Select", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Cmos",
-                            conformance: "M"
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Left", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Right", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RightUp", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RightDown", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LeftUp", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LeftDown", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RootMenu", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SetupMenu", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ContentsMenu", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "FavoriteMenu", id: 0xc, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Exit", id: 0xd, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "MediaTopMenu", id: 0x10, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "MediaContextSensitiveMenu", id: 0x11, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NumberEntryMode", id: 0x1d, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Number11", id: 0x1e, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Number12", id: 0x1f, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Number0OrNumber10", id: 0x20, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers1", id: 0x21, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers2", id: 0x22, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers3", id: 0x23, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers4", id: 0x24, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers5", id: 0x25, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers6", id: 0x26, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers7", id: 0x27, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers8", id: 0x28, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Numbers9", id: 0x29, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Dot", id: 0x2a, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Enter", id: 0x2b, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Clear", id: 0x2c, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NextFavorite", id: 0x2f, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ChannelUp", id: 0x30, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ChannelDown", id: 0x31, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PreviousChannel", id: 0x32, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SoundSelect", id: 0x33, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InputSelect", id: 0x34, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "DisplayInformation", id: 0x35, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Help", id: 0x36, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PageUp", id: 0x37, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PageDown", id: 0x38, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Power", id: 0x40, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "VolumeUp", id: 0x41, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "VolumeDown", id: 0x42, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Mute", id: 0x43, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Play", id: 0x44, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Stop", id: 0x45, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Pause", id: 0x46, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Record", id: 0x47, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Rewind", id: 0x48, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "FastForward", id: 0x49, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Eject", id: 0x4a, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Forward", id: 0x4b, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Backward", id: 0x4c, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "StopRecord", id: 0x4d, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PauseRecord", id: 0x4e, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Reserved", id: 0x4f, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Angle", id: 0x50, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SubPicture", id: 0x51, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "VideoOnDemand", id: 0x52, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ElectronicProgramGuide", id: 0x53, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TimerProgramming", id: 0x54, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InitialConfiguration", id: 0x55, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SelectBroadcastType", id: 0x56, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SelectSoundPresentation", id: 0x57, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PlayFunction", id: 0x60, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PausePlayFunction", id: 0x61, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RecordFunction", id: 0x62, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PauseRecordFunction", id: 0x63, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "StopFunction", id: 0x64, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "MuteFunction", id: 0x65, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RestoreVolumeFunction", id: 0x66, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TuneFunction", id: 0x67, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SelectMediaFunction", id: 0x68, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SelectAvInputFunction", id: 0x69, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SelectAudioInputFunction", id: 0x6a, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PowerToggleFunction", id: 0x6b, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PowerOffFunction", id: 0x6c, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PowerOnFunction", id: 0x6d, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "F1Blue", id: 0x71, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "F2Red", id: 0x72, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "F3Green", id: 0x73, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "F4Yellow", id: 0x74, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "F5", id: 0x75, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Data", id: 0x76, conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "KeypadInputStatusEnum", type: "enum8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "UnsupportedKey", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InvalidKeyInCurrentState", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -7918,505 +6248,279 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0509, name: "KeypadInput",
-            description: "Keypad Input",
+            tag: "cluster", name: "LevelControl", id: 0x8, description: "Level Control",
+            details: "Attributes and commands for controlling devices that can be set to a level between fully 'On' and " +
+                     "fully 'Off",
             children: [
                 {
-                    tag: "command", id: 0x0000, name: "SendKey",
-                    conformance: "M", direction: "request", response: "SendKeyResponse",
+                    tag: "attribute", name: "CurrentLevel", id: 0x0, type: "uint8", conformance: "M", default: 0,
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "LevelControlRemainingTime", id: 0x1, type: "uint16", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "MinimumLevel", id: 0x2, type: "uint8", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "MaximumLevel", id: 0x3, type: "uint8", conformance: "O", default: 254
+                },
+
+                {
+                    tag: "attribute", name: "CurrentFrequency", id: 0x4, type: "uint16", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "MinFrequency", id: 0x5, type: "uint16", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "MaxFrequency", id: 0x6, type: "uint16", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "OnOffTransitionTime", id: 0x10, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "OnLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "OnTransitionTime", id: 0x12, type: "uint16", access: "RW",
+                    conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "OffTransitionTime", id: 0x13, type: "uint16", access: "RW",
+                    conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "DefaultMoveRate", id: 0x14, type: "uint8", access: "RW", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "Options", id: 0xf, type: "LevelControlOptions", access: "RW",
+                    conformance: "M", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "StartUpCurrentLevel", id: 0x4000, type: "uint8", access: "RW VM",
+                    conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "command", name: "MoveToLevel", id: 0x0, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "KeyCode",
-                            conformance: "M", type: "CecKeyCode"
+                            tag: "datatype", name: "Level", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "SendKeyResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "Move", id: 0x1, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "KeypadInputStatusEnum"
+                            tag: "datatype", name: "MoveMode", type: "MoveMode", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Rate", type: "uint8", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "KeypadInputStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "command", name: "Step", id: 0x2, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "StepMode", type: "StepMode", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "UnsupportedKey",
-                            conformance: "M"
+                            tag: "datatype", name: "StepSize", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "InvalidKeyInCurrentState",
-                            conformance: "M"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "CecKeyCode",
-                    conformance: "M", type: "enum8",
+                    tag: "command", name: "Stop", id: 0x3, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Select",
-                            conformance: "M"
+                            tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Up",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Down",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Left",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Right",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "RightUp",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "RightDown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "LeftUp",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "LeftDown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "RootMenu",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "SetupMenu",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "ContentsMenu",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000c, name: "FavoriteMenu",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000d, name: "Exit",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "MediaTopMenu",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0011, name: "MediaContextSensitiveMenu",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001d, name: "NumberEntryMode",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001e, name: "Number11",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001f, name: "Number12",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0020, name: "Number0OrNumber10",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0021, name: "Numbers1",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0022, name: "Numbers2",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0023, name: "Numbers3",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0024, name: "Numbers4",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0025, name: "Numbers5",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0026, name: "Numbers6",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0027, name: "Numbers7",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0028, name: "Numbers8",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0029, name: "Numbers9",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002a, name: "Dot",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002b, name: "Enter",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002c, name: "Clear",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002f, name: "NextFavorite",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0030, name: "ChannelUp",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0031, name: "ChannelDown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0032, name: "PreviousChannel",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0033, name: "SoundSelect",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0034, name: "InputSelect",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0035, name: "DisplayInformation",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0036, name: "Help",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0037, name: "PageUp",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0038, name: "PageDown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0040, name: "Power",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0041, name: "VolumeUp",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0042, name: "VolumeDown",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0043, name: "Mute",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0044, name: "Play",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0045, name: "Stop",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0046, name: "Pause",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0047, name: "Record",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0048, name: "Rewind",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0049, name: "FastForward",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004a, name: "Eject",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004b, name: "Forward",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004c, name: "Backward",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004d, name: "StopRecord",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004e, name: "PauseRecord",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004f, name: "Reserved",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0050, name: "Angle",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0051, name: "SubPicture",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0052, name: "VideoOnDemand",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0053, name: "ElectronicProgramGuide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0054, name: "TimerProgramming",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0055, name: "InitialConfiguration",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0056, name: "SelectBroadcastType",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0057, name: "SelectSoundPresentation",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0060, name: "PlayFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0061, name: "PausePlayFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0062, name: "RecordFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0063, name: "PauseRecordFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0064, name: "StopFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0065, name: "MuteFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0066, name: "RestoreVolumeFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0067, name: "TuneFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0068, name: "SelectMediaFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0069, name: "SelectAvInputFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x006a, name: "SelectAudioInputFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x006b, name: "PowerToggleFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x006c, name: "PowerOffFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x006d, name: "PowerOnFunction",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0071, name: "F1Blue",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0072, name: "F2Red",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0073, name: "F3Green",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0074, name: "F4Yellow",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0075, name: "F5",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0076, name: "Data",
-                            conformance: "M"
+                            tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "KeypadInputFeature",
-                    conformance: "M", type: "map32",
+                    tag: "command", name: "MoveToLevelWithOnOff", id: 0x4, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "NavigationKeyCodes",
-                            conformance: "M"
+                            tag: "datatype", name: "Level", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "LocationKeys",
-                            conformance: "M"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "NumberKeys",
-                            conformance: "M"
+                            tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "command", name: "MoveWithOnOff", id: 0x5, conformance: "M", direction: "request",
+                    children: [
+                        {
+                            tag: "datatype", name: "MoveMode", type: "MoveMode", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Rate", type: "uint8", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "command", name: "StepWithOnOff", id: 0x6, conformance: "M", direction: "request",
+                    children: [
+                        {
+                            tag: "datatype", name: "StepMode", type: "StepMode", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "StepSize", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "command", name: "StopWithOnOff", id: 0x7, conformance: "M", direction: "request",
+                    children: [
+                        {
+                            tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "command", name: "MoveToClosestFrequency", id: 0x8, conformance: "O", direction: "request",
+                    children: [
+                        {
+                            tag: "datatype", name: "Frequency", type: "uint16", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "LevelControlOptions", type: "map8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "ExecuteIfOff", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "CoupleColorTempToLevel", id: 0x2, conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "MoveMode", type: "enum8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "Up", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x1, conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "StepMode", type: "enum8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "Up", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x1, conformance: "M"
                         }
                     ]
                 }
@@ -8424,375 +6528,22 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0008, name: "LevelControl",
-            description: "Level Control",
-            children: [
-                {
-                    tag: "attribute", id: 0x0000, name: "CurrentLevel",
-                    conformance: "M", default: 0, quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0001, name: "LevelControlRemainingTime",
-                    conformance: "O", default: 0, type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0002, name: "MinimumLevel",
-                    conformance: "O", default: 0, type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0003, name: "MaximumLevel",
-                    conformance: "O", default: 254, type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0004, name: "CurrentFrequency",
-                    conformance: "O", default: 0, type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0005, name: "MinFrequency",
-                    conformance: "O", default: 0, type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0006, name: "MaxFrequency",
-                    conformance: "O", default: 0, type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0010, name: "OnOffTransitionTime",
-                    access: "RW", conformance: "O", default: 0, type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0011, name: "OnLevel",
-                    access: "RW", conformance: "M", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0012, name: "OnTransitionTime",
-                    access: "RW", conformance: "O", quality: "X", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0013, name: "OffTransitionTime",
-                    access: "RW", conformance: "O", quality: "X", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0014, name: "DefaultMoveRate",
-                    access: "RW", conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x000f, name: "Options",
-                    access: "RW", conformance: "M", default: 0, type: "LevelControlOptions"
-                },
-
-                {
-                    tag: "attribute", id: 0x4000, name: "StartUpCurrentLevel",
-                    access: "RW VM", conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "command", id: 0x0000, name: "MoveToLevel",
-                    conformance: "M", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "Level",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", quality: "X", type: "uint16"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "LevelControlOptions"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "LevelControlOptions"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "command", id: 0x0001, name: "Move",
-                    conformance: "M", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "MoveMode",
-                            conformance: "M", type: "MoveMode"
-                        },
-
-                        {
-                            tag: "datatype", name: "Rate",
-                            conformance: "M", quality: "X", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "LevelControlOptions"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "LevelControlOptions"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "command", id: 0x0002, name: "Step",
-                    conformance: "M", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "StepMode",
-                            conformance: "M", type: "StepMode"
-                        },
-
-                        {
-                            tag: "datatype", name: "StepSize",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", quality: "X", type: "uint16"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "LevelControlOptions"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "LevelControlOptions"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "command", id: 0x0003, name: "Stop",
-                    conformance: "M", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "LevelControlOptions"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "LevelControlOptions"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "command", id: 0x0004, name: "MoveToLevelWithOnOff",
-                    conformance: "M", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "Level",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", quality: "X", type: "uint16"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "LevelControlOptions"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "LevelControlOptions"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "command", id: 0x0005, name: "MoveWithOnOff",
-                    conformance: "M", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "MoveMode",
-                            conformance: "M", type: "MoveMode"
-                        },
-
-                        {
-                            tag: "datatype", name: "Rate",
-                            conformance: "M", quality: "X", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "LevelControlOptions"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "LevelControlOptions"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "command", id: 0x0006, name: "StepWithOnOff",
-                    conformance: "M", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "StepMode",
-                            conformance: "M", type: "StepMode"
-                        },
-
-                        {
-                            tag: "datatype", name: "StepSize",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", quality: "X", type: "uint16"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "LevelControlOptions"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "LevelControlOptions"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "command", id: 0x0007, name: "StopWithOnOff",
-                    conformance: "M", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "OptionsMask",
-                            conformance: "M", type: "LevelControlOptions"
-                        },
-
-                        {
-                            tag: "datatype", name: "OptionsOverride",
-                            conformance: "M", type: "LevelControlOptions"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "command", id: 0x0008, name: "MoveToClosestFrequency",
-                    conformance: "O", direction: "request",
-                    children: [
-                        {
-                            tag: "datatype", name: "Frequency",
-                            conformance: "M", type: "uint16"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "LevelControlFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "OnOff",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "Lighting",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Frequency",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "MoveMode",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Up",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Down",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "StepMode",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Up",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Down",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "LevelControlOptions",
-                    conformance: "M", type: "map8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "ExecuteIfOff",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "CoupleColorTempToLevel",
-                            conformance: "M"
-                        }
-                    ]
-                }
-            ]
-        },
-
-        {
-            tag: "cluster", id: 0x002b, name: "LocalizationConfiguration",
+            tag: "cluster", name: "LocalizationConfiguration", id: 0x2b,
             description: "Localization Configuration",
+            details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
+                     "may have differing common languages, units of measurements, and numerical formatting standards. As " +
+                     "such, Nodes that visually or audibly convey information need a mechanism by which they can be " +
+                     "configured to use a user’s preferred language, units, etc",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ActiveLocale",
-                    access: "RW", conformance: "M", type: "string"
+                    tag: "attribute", name: "ActiveLocale", id: 0x0, type: "string", access: "RW", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "SupportedLocales",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "SupportedLocales", id: 0x1, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "string"
+                            tag: "datatype", name: "entry", type: "string"
                         }
                     ]
                 }
@@ -8800,172 +6551,133 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0508, name: "LowPower",
-            description: "Low Power",
+            tag: "cluster", name: "LowPower", id: 0x508, description: "Low Power",
+            details: "This cluster provides an interface for managing low power mode on a device",
             children: [
                 {
-                    tag: "command", id: 0x0000, name: "Sleep",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "Sleep", id: 0x0, conformance: "M", direction: "request"
                 }
             ]
         },
 
         {
-            tag: "cluster", id: 0x0507, name: "MediaInput",
-            description: "Media Input",
+            tag: "cluster", name: "MediaInput", id: 0x507, description: "Media Input",
+            details: "This cluster provides an interface for controlling the Input Selector on a media device such as a TV",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "MediaInputList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "MediaInputList", id: 0x0, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "InputInfoStruct"
+                            tag: "datatype", name: "entry", type: "InputInfoStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "MediaInputCurrentInput",
-                    conformance: "M", default: 0, type: "uint8"
+                    tag: "attribute", name: "MediaInputCurrentInput", id: 0x1, type: "uint8", conformance: "M",
+                    default: 0
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "SelectInput",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "SelectInput", id: 0x0, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Index",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Index", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "ShowInputStatus",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "ShowInputStatus", id: 0x1, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "HideInputStatus",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "HideInputStatus", id: 0x2, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "RenameInput",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "RenameInput", id: 0x3, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "Index",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Index", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "InputInfoStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "InputInfoStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Index",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Index", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "InputType",
-                            conformance: "M", type: "InputTypeEnum"
+                            tag: "datatype", name: "InputType", type: "InputTypeEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Description",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Description", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "InputTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "InputTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Internal",
-                            conformance: "M"
+                            tag: "datatype", name: "Internal", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Aux",
-                            conformance: "M"
+                            tag: "datatype", name: "Aux", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Coax",
-                            conformance: "M"
+                            tag: "datatype", name: "Coax", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Composite",
-                            conformance: "M"
+                            tag: "datatype", name: "Composite", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Hdmi",
-                            conformance: "M"
+                            tag: "datatype", name: "Hdmi", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Input",
-                            conformance: "M"
+                            tag: "datatype", name: "Input", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "Line",
-                            conformance: "M"
+                            tag: "datatype", name: "Line", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "Optical",
-                            conformance: "M"
+                            tag: "datatype", name: "Optical", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Video",
-                            conformance: "M"
+                            tag: "datatype", name: "Video", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "Scart",
-                            conformance: "M"
+                            tag: "datatype", name: "Scart", id: 0x9, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000a, name: "Usb",
-                            conformance: "M"
+                            tag: "datatype", name: "Usb", id: 0xa, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000b, name: "Other",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "MediaInputFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "NameUpdates",
-                            conformance: "M"
+                            tag: "datatype", name: "Other", id: 0xb, conformance: "M"
                         }
                     ]
                 }
@@ -8973,223 +6685,187 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0506, name: "MediaPlayback",
-            description: "Media Playback",
+            tag: "cluster", name: "MediaPlayback", id: 0x506, description: "Media Playback",
+            details: "This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media " +
+                     "device such as a TV or Speaker",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "MediaPlaybackState",
-                    conformance: "M", default: 0, type: "PlaybackStateEnum"
+                    tag: "attribute", name: "MediaPlaybackState", id: 0x0, type: "PlaybackStateEnum", conformance: "M",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "MediaPlaybackStartTime",
-                    conformance: "O", default: 0, quality: "X", type: "epoch-us"
+                    tag: "attribute", name: "MediaPlaybackStartTime", id: 0x1, type: "epoch-us", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "MediaPlaybackDuration",
-                    conformance: "O", default: 0, quality: "X", type: "uint64"
+                    tag: "attribute", name: "MediaPlaybackDuration", id: 0x2, type: "uint64", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "MediaPlaybackPlaybackPosition",
-                    conformance: "O", quality: "X", type: "PlaybackPositionStruct"
+                    tag: "attribute", name: "MediaPlaybackPlaybackPosition", id: 0x3, type: "PlaybackPositionStruct",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "MediaPlaybackPlaybackSpeed",
-                    conformance: "O", default: 0, type: "single"
+                    tag: "attribute", name: "MediaPlaybackPlaybackSpeed", id: 0x4, type: "single", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "MediaPlaybackPlaybackSeekRangeEnd",
-                    conformance: "O", quality: "X", type: "uint64"
+                    tag: "attribute", name: "MediaPlaybackPlaybackSeekRangeEnd", id: 0x5, type: "uint64",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "MediaPlaybackPlaybackSeekRangeStart",
-                    conformance: "O", quality: "X", type: "uint64"
+                    tag: "attribute", name: "MediaPlaybackPlaybackSeekRangeStart", id: 0x6, type: "uint64",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "Play",
-                    conformance: "M", direction: "request", response: "PlaybackResponse"
+                    tag: "command", name: "Play", id: 0x0, conformance: "M", direction: "request",
+                    response: "PlaybackResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "Pause",
-                    conformance: "M", direction: "request", response: "PlaybackResponse"
+                    tag: "command", name: "Pause", id: 0x1, conformance: "M", direction: "request",
+                    response: "PlaybackResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "Stop",
-                    conformance: "M", direction: "request", response: "PlaybackResponse"
+                    tag: "command", name: "Stop", id: 0x2, conformance: "M", direction: "request",
+                    response: "PlaybackResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "StartOver",
-                    conformance: "O", direction: "request", response: "PlaybackResponse"
+                    tag: "command", name: "StartOver", id: 0x3, conformance: "O", direction: "request",
+                    response: "PlaybackResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "Previous",
-                    conformance: "O", direction: "request", response: "PlaybackResponse"
+                    tag: "command", name: "Previous", id: 0x4, conformance: "O", direction: "request",
+                    response: "PlaybackResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "Next",
-                    conformance: "O", direction: "request", response: "PlaybackResponse"
+                    tag: "command", name: "Next", id: 0x5, conformance: "O", direction: "request",
+                    response: "PlaybackResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0006, name: "Rewind",
-                    conformance: "O", direction: "request", response: "PlaybackResponse"
+                    tag: "command", name: "Rewind", id: 0x6, conformance: "O", direction: "request",
+                    response: "PlaybackResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0007, name: "FastForward",
-                    conformance: "O", direction: "request", response: "PlaybackResponse"
+                    tag: "command", name: "FastForward", id: 0x7, conformance: "O", direction: "request",
+                    response: "PlaybackResponse"
                 },
 
                 {
-                    tag: "command", id: 0x0008, name: "SkipForward",
-                    conformance: "O", direction: "request", response: "PlaybackResponse",
+                    tag: "command", name: "SkipForward", id: 0x8, conformance: "O", direction: "request",
+                    response: "PlaybackResponse",
                     children: [
                         {
-                            tag: "datatype", name: "DeltaPositionMilliseconds",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "DeltaPositionMilliseconds", type: "uint64", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0009, name: "SkipBackward",
-                    conformance: "O", direction: "request", response: "PlaybackResponse",
+                    tag: "command", name: "SkipBackward", id: 0x9, conformance: "O", direction: "request",
+                    response: "PlaybackResponse",
                     children: [
                         {
-                            tag: "datatype", name: "DeltaPositionMilliseconds",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "DeltaPositionMilliseconds", type: "uint64", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000b, name: "Seek",
-                    conformance: "O", direction: "request", response: "PlaybackResponse",
+                    tag: "command", name: "Seek", id: 0xb, conformance: "O", direction: "request",
+                    response: "PlaybackResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Position",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "Position", type: "uint64", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000a, name: "PlaybackResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "PlaybackResponse", id: 0xa, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "MediaPlaybackStatusEnum"
+                            tag: "datatype", name: "Status", type: "MediaPlaybackStatusEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Data",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Data", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "PlaybackPositionStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "PlaybackStateEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "UpdatedAt",
-                            conformance: "M", type: "epoch-us"
+                            tag: "datatype", name: "Playing", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Position",
-                            conformance: "M", quality: "X", type: "uint64"
+                            tag: "datatype", name: "Paused", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NotPlaying", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Buffering", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "PlaybackStateEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "PlaybackPositionStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Playing",
-                            conformance: "M"
+                            tag: "datatype", name: "UpdatedAt", type: "epoch-us", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Paused",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "NotPlaying",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Buffering",
-                            conformance: "M"
+                            tag: "datatype", name: "Position", type: "uint64", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "MediaPlaybackStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "MediaPlaybackStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "InvalidStateForCommand",
-                            conformance: "M"
+                            tag: "datatype", name: "InvalidStateForCommand", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "NotAllowed",
-                            conformance: "M"
+                            tag: "datatype", name: "NotAllowed", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "NotActive",
-                            conformance: "M"
+                            tag: "datatype", name: "NotActive", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "SpeedOutOfRange",
-                            conformance: "M"
+                            tag: "datatype", name: "SpeedOutOfRange", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "SeekOutOfRange",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "MediaPlaybackFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "AdvancedSeek",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "VariableSpeed",
-                            conformance: "M"
+                            tag: "datatype", name: "SeekOutOfRange", id: 0x5, conformance: "M"
                         }
                     ]
                 }
@@ -9197,100 +6873,76 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0050, name: "ModeSelect",
-            description: "Mode Select",
+            tag: "cluster", name: "ModeSelect", id: 0x50, description: "Mode Select",
+            details: "Attributes and commands for selecting a mode from a list of supported options",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ModeDescription",
-                    conformance: "M", type: "string"
+                    tag: "attribute", name: "ModeDescription", id: 0x0, type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "StandardNamespace",
-                    conformance: "M", quality: "X", type: "enum16"
+                    tag: "attribute", name: "StandardNamespace", id: 0x1, type: "enum16", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "SupportedModes",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "SupportedModes", id: 0x2, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "ModeOptionStruct"
+                            tag: "datatype", name: "entry", type: "ModeOptionStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "CurrentMode",
-                    conformance: "M", quality: "P", type: "uint8"
+                    tag: "attribute", name: "CurrentMode", id: 0x3, type: "uint8", conformance: "M", quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "StartUpMode",
-                    access: "RW", conformance: "O", quality: "X", type: "uint8"
+                    tag: "attribute", name: "StartUpMode", id: 0x4, type: "uint8", access: "RW", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "OnMode",
-                    access: "RW", conformance: "O", quality: "X", type: "uint8"
+                    tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "ChangeToMode",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "ChangeToMode", id: 0x0, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "NewMode",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "NewMode", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "SemanticTagStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ModeOptionStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "MfgCode",
-                            conformance: "M", type: "vendor-id"
+                            tag: "datatype", name: "Label", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Value",
-                            conformance: "M", type: "enum16"
+                            tag: "datatype", name: "Mode", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SemanticTags", type: "SemanticTagStruct", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ModeOptionStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "SemanticTagStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Label",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "MfgCode", type: "vendor-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Mode",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "SemanticTags",
-                            conformance: "M", type: "SemanticTagStruct"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ModeSelectFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Deponoff",
-                            conformance: "M"
+                            tag: "datatype", name: "Value", type: "enum16", conformance: "M"
                         }
                     ]
                 }
@@ -9298,477 +6950,379 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0031, name: "NetworkCommissioning",
-            description: "Network Commissioning",
+            tag: "cluster", name: "NetworkCommissioning", id: 0x31, description: "Network Commissioning",
+            details: "Functionality to configure, enable, disable network credentials and access on a Matter device",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "MaxNetworks",
-                    access: "R A", conformance: "M", type: "uint8"
+                    tag: "attribute", name: "MaxNetworks", id: 0x0, type: "uint8", access: "R A", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "Networks",
-                    access: "R A", conformance: "M", type: "list",
+                    tag: "attribute", name: "Networks", id: 0x1, type: "list", access: "R A", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "NetworkInfo"
+                            tag: "datatype", name: "entry", type: "NetworkInfo"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ScanMaxTimeSeconds",
-                    conformance: "O", type: "uint8"
+                    tag: "attribute", name: "ScanMaxTimeSeconds", id: 0x2, type: "uint8", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "ConnectMaxTimeSeconds",
-                    conformance: "O", type: "uint8"
+                    tag: "attribute", name: "ConnectMaxTimeSeconds", id: 0x3, type: "uint8", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "InterfaceEnabled",
-                    access: "RW VA", conformance: "M", type: "bool"
+                    tag: "attribute", name: "InterfaceEnabled", id: 0x4, type: "bool", access: "RW VA",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "LastNetworkingStatus",
-                    access: "R A", conformance: "M", quality: "X", type: "NetworkCommissioningStatus"
+                    tag: "attribute", name: "LastNetworkingStatus", id: 0x5, type: "NetworkCommissioningStatus",
+                    access: "R A", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "LastNetworkId",
-                    access: "R A", conformance: "M", quality: "X", type: "octstr"
+                    tag: "attribute", name: "LastNetworkId", id: 0x6, type: "octstr", access: "R A", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "LastConnectErrorValue",
-                    access: "R A", conformance: "M", quality: "X", type: "int32"
+                    tag: "attribute", name: "LastConnectErrorValue", id: 0x7, type: "int32", access: "R A",
+                    conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "ScanNetworks",
-                    access: "R A", conformance: "M", direction: "request", response: "ScanNetworksResponse",
+                    tag: "command", name: "ScanNetworks", id: 0x0, access: "R A", conformance: "M",
+                    direction: "request", response: "ScanNetworksResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Ssid",
-                            conformance: "O", quality: "X", type: "octstr"
+                            tag: "datatype", name: "Ssid", type: "octstr", conformance: "O", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "Breadcrumb",
-                            conformance: "O", type: "uint64"
+                            tag: "datatype", name: "Breadcrumb", type: "uint64", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "ScanNetworksResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "ScanNetworksResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "NetworkingStatus",
-                            conformance: "M", type: "NetworkCommissioningStatus"
+                            tag: "datatype", name: "NetworkingStatus", type: "NetworkCommissioningStatus", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DebugText",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "DebugText", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "WiFiScanResults",
-                            conformance: "O", type: "WiFiInterfaceScanResult"
+                            tag: "datatype", name: "WiFiScanResults", type: "WiFiInterfaceScanResult", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "ThreadScanResults",
-                            conformance: "O", type: "ThreadInterfaceScanResult"
+                            tag: "datatype", name: "ThreadScanResults", type: "ThreadInterfaceScanResult", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "AddOrUpdateWiFiNetwork",
-                    access: "R A", conformance: "O", direction: "request", response: "NetworkConfigResponse",
+                    tag: "command", name: "AddOrUpdateWiFiNetwork", id: 0x2, access: "R A", conformance: "O",
+                    direction: "request", response: "NetworkConfigResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Ssid",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "Ssid", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Credentials",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "Credentials", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Breadcrumb",
-                            conformance: "O", type: "uint64"
+                            tag: "datatype", name: "Breadcrumb", type: "uint64", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "AddOrUpdateThreadNetwork",
-                    access: "R A", conformance: "O", direction: "request", response: "NetworkConfigResponse",
+                    tag: "command", name: "AddOrUpdateThreadNetwork", id: 0x3, access: "R A", conformance: "O",
+                    direction: "request", response: "NetworkConfigResponse",
                     children: [
                         {
-                            tag: "datatype", name: "OperationalDataset",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "OperationalDataset", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Breadcrumb",
-                            conformance: "O", type: "uint64"
+                            tag: "datatype", name: "Breadcrumb", type: "uint64", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "RemoveNetwork",
-                    access: "R A", conformance: "M", direction: "request", response: "NetworkConfigResponse",
+                    tag: "command", name: "RemoveNetwork", id: 0x4, access: "R A", conformance: "M",
+                    direction: "request", response: "NetworkConfigResponse",
                     children: [
                         {
-                            tag: "datatype", name: "NetworkId",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "NetworkId", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Breadcrumb",
-                            conformance: "O", type: "uint64"
+                            tag: "datatype", name: "Breadcrumb", type: "uint64", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "NetworkConfigResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "NetworkConfigResponse", id: 0x5, conformance: "O", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "NetworkingStatus",
-                            conformance: "M", type: "NetworkCommissioningStatus"
+                            tag: "datatype", name: "NetworkingStatus", type: "NetworkCommissioningStatus", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DebugText",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "DebugText", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "NetworkIndex",
-                            conformance: "O", type: "uint8"
+                            tag: "datatype", name: "NetworkIndex", type: "uint8", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0006, name: "ConnectNetwork",
-                    access: "R A", conformance: "M", direction: "request", response: "ConnectNetworkResponse",
+                    tag: "command", name: "ConnectNetwork", id: 0x6, access: "R A", conformance: "M",
+                    direction: "request", response: "ConnectNetworkResponse",
                     children: [
                         {
-                            tag: "datatype", name: "NetworkId",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "NetworkId", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Breadcrumb",
-                            conformance: "O", type: "uint64"
+                            tag: "datatype", name: "Breadcrumb", type: "uint64", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0007, name: "ConnectNetworkResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "ConnectNetworkResponse", id: 0x7, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "NetworkingStatus",
-                            conformance: "M", type: "NetworkCommissioningStatus"
+                            tag: "datatype", name: "NetworkingStatus", type: "NetworkCommissioningStatus", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DebugText",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "DebugText", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "ErrorValue",
-                            conformance: "M", quality: "X", type: "int32"
+                            tag: "datatype", name: "ErrorValue", type: "int32", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0008, name: "ReorderNetwork",
-                    access: "R A", conformance: "M", direction: "request", response: "NetworkConfigResponse",
+                    tag: "command", name: "ReorderNetwork", id: 0x8, access: "R A", conformance: "M",
+                    direction: "request", response: "NetworkConfigResponse",
                     children: [
                         {
-                            tag: "datatype", name: "NetworkId",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "NetworkId", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NetworkIndex",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "NetworkIndex", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Breadcrumb",
-                            conformance: "O", type: "uint64"
+                            tag: "datatype", name: "Breadcrumb", type: "uint64", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "NetworkCommissioningStatus",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "NetworkInfo", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "NetworkId", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "OutOfRange",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "BoundsExceeded",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "NetworkIdNotFound",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "DuplicateNetworkId",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "NetworkNotFound",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "RegulatoryError",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "AuthFailure",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "UnsupportedSecurity",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "OtherConnectionFailure",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "Ipv6Failed",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "IpBindFailed",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000c, name: "UnknownError",
-                            conformance: "M"
+                            tag: "datatype", name: "Connected", type: "bool", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "WiFiBand",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "NetworkCommissioningStatus", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "2G4",
-                            conformance: "M"
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "3G65",
-                            conformance: "M"
+                            tag: "datatype", name: "OutOfRange", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "5G",
-                            conformance: "M"
+                            tag: "datatype", name: "BoundsExceeded", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "6G",
-                            conformance: "M"
+                            tag: "datatype", name: "NetworkIdNotFound", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "60G",
-                            conformance: "M"
+                            tag: "datatype", name: "DuplicateNetworkId", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NetworkNotFound", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RegulatoryError", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "AuthFailure", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "UnsupportedSecurity", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "OtherConnectionFailure", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Ipv6Failed", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "IpBindFailed", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "UnknownError", id: 0xc, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "WiFiSecurity",
-                    conformance: "M", type: "map8",
+                    tag: "datatype", name: "WiFiInterfaceScanResult", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Unencrypted",
-                            conformance: "M"
+                            tag: "datatype", name: "Security", type: "WiFiSecurity", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Wep",
-                            conformance: "M"
+                            tag: "datatype", name: "Ssid", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "WpaPersonal",
-                            conformance: "M"
+                            tag: "datatype", name: "Bssid", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Wpa2Personal",
-                            conformance: "M"
+                            tag: "datatype", name: "Channel", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "Wpa3Personal",
-                            conformance: "M"
+                            tag: "datatype", name: "WiFiBand", type: "WiFiBand", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Rssi", type: "int8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "WiFiInterfaceScanResult",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "WiFiSecurity", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Security",
-                            conformance: "M", type: "WiFiSecurity"
+                            tag: "datatype", name: "Unencrypted", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Ssid",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "Wep", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Bssid",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "WpaPersonal", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Channel",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Wpa2Personal", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "WiFiBand",
-                            conformance: "M", type: "WiFiBand"
-                        },
-
-                        {
-                            tag: "datatype", name: "Rssi",
-                            conformance: "M", type: "int8"
+                            tag: "datatype", name: "Wpa3Personal", id: 0x10, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ThreadInterfaceScanResult",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "WiFiBand", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "PanId",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "2G4", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ExtendedPanId",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "3G65", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NetworkName",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "5G", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Channel",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "6G", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Version",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "ExtendedAddress",
-                            conformance: "M", type: "octstr"
-                        },
-
-                        {
-                            tag: "datatype", name: "Rssi",
-                            conformance: "M", type: "int8"
-                        },
-
-                        {
-                            tag: "datatype", name: "Lqi",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "60G", id: 0x4, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "NetworkInfo",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ThreadInterfaceScanResult", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "NetworkId",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "PanId", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Connected",
-                            conformance: "M", type: "bool"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "NetworkCommissioningFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "WiFiNetworkInterface",
-                            conformance: "M"
+                            tag: "datatype", name: "ExtendedPanId", type: "uint64", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "ThreadNetworkInterface",
-                            conformance: "M"
+                            tag: "datatype", name: "NetworkName", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "EthernetNetworkInterface",
-                            conformance: "M"
+                            tag: "datatype", name: "Channel", type: "uint16", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Version", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ExtendedAddress", type: "octstr", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Rssi", type: "int8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Lqi", type: "uint8", conformance: "M"
                         }
                     ]
                 }
@@ -9776,123 +7330,112 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0406, name: "OccupancySensing",
-            description: "Occupancy Sensing",
+            tag: "cluster", name: "OccupancySensing", id: 0x406, description: "Occupancy Sensing",
+            details: "Attributes and commands for configuring occupancy sensing, and reporting occupancy status",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "Occupancy",
-                    conformance: "M", quality: "P", type: "OccupancyBitmap"
+                    tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", conformance: "M",
+                    quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "OccupancySensorType",
-                    conformance: "M", type: "OccupancySensorTypeEnum"
+                    tag: "attribute", name: "OccupancySensorType", id: 0x1, type: "OccupancySensorTypeEnum",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "OccupancySensorTypeBitmap",
-                    conformance: "M", type: "OccupancySensorTypeBitmap"
+                    tag: "attribute", name: "OccupancySensorTypeBitmap", id: 0x2, type: "OccupancySensorTypeBitmap",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0010, name: "PirOccupiedToUnoccupiedDelay",
-                    access: "RW VM", conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "PirOccupiedToUnoccupiedDelay", id: 0x10, type: "uint16", access: "RW VM",
+                    conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "PirUnoccupiedToOccupiedDelay",
-                    access: "RW VM", conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "PirUnoccupiedToOccupiedDelay", id: 0x11, type: "uint16", access: "RW VM",
+                    conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "PirUnoccupiedToOccupiedThreshold",
-                    access: "RW VM", conformance: "O", default: 1, type: "uint8"
+                    tag: "attribute", name: "PirUnoccupiedToOccupiedThreshold", id: 0x12, type: "uint8",
+                    access: "RW VM", conformance: "O", default: 1
                 },
 
                 {
-                    tag: "attribute", id: 0x0020, name: "UltrasonicOccupiedToUnoccupiedDelay",
-                    access: "RW VM", conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "UltrasonicOccupiedToUnoccupiedDelay", id: 0x20, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0021, name: "UltrasonicUnoccupiedToOccupiedDelay",
-                    access: "RW VM", conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedDelay", id: 0x21, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0022, name: "UltrasonicUnoccupiedToOccupiedThreshold",
-                    access: "RW VM", conformance: "O", default: 1, type: "uint8"
+                    tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedThreshold", id: 0x22, type: "uint8",
+                    access: "RW VM", conformance: "O", default: 1
                 },
 
                 {
-                    tag: "attribute", id: 0x0030, name: "PhysicalContactOccupiedToUnoccupiedDelay",
-                    access: "RW VM", conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "PhysicalContactOccupiedToUnoccupiedDelay", id: 0x30, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0031, name: "PhysicalContactUnoccupiedToOccupiedDelay",
-                    access: "RW VM", conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedDelay", id: 0x31, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0032, name: "PhysicalContactUnoccupiedToOccupiedThreshold",
-                    access: "RW VM", conformance: "O", default: 1, type: "uint8"
+                    tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedThreshold", id: 0x32, type: "uint8",
+                    access: "RW VM", conformance: "O", default: 1
                 },
 
                 {
-                    tag: "datatype", name: "OccupancyBitmap",
-                    conformance: "M", type: "map8",
+                    tag: "datatype", name: "OccupancyBitmap", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Occupied",
-                            conformance: "M"
+                            tag: "datatype", name: "Occupied", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OccupancySensorTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OccupancySensorTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Pir",
-                            conformance: "M"
+                            tag: "datatype", name: "Pir", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Ultrasonic",
-                            conformance: "M"
+                            tag: "datatype", name: "Ultrasonic", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "PirAndUltrasonic",
-                            conformance: "M"
+                            tag: "datatype", name: "PirAndUltrasonic", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "PhysicalContact",
-                            conformance: "M"
+                            tag: "datatype", name: "PhysicalContact", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OccupancySensorTypeBitmap",
-                    conformance: "M", type: "map8",
+                    tag: "datatype", name: "OccupancySensorTypeBitmap", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Pir",
-                            conformance: "M"
+                            tag: "datatype", name: "Pir", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Ultrasonic",
-                            conformance: "M"
+                            tag: "datatype", name: "Ultrasonic", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "PhysicalContact",
-                            conformance: "M"
+                            tag: "datatype", name: "PhysicalContact", id: 0x4, conformance: "M"
                         }
                     ]
                 }
@@ -9900,178 +7443,115 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0006, name: "OnOff",
-            description: "On/Off",
+            tag: "cluster", name: "OnOff", id: 0x6, description: "On/Off",
+            details: "Attributes and commands for switching devices between 'On' and 'Off' states",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "OnOff",
-                    conformance: "M", default: true, quality: "P", type: "bool"
+                    tag: "attribute", name: "OnOff", id: 0x0, type: "bool", conformance: "M", default: true,
+                    quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x4000, name: "GlobalSceneControl",
-                    conformance: "O", default: true, type: "bool"
+                    tag: "attribute", name: "GlobalSceneControl", id: 0x4000, type: "bool", conformance: "O",
+                    default: true
                 },
 
                 {
-                    tag: "attribute", id: 0x4001, name: "OnTime",
-                    access: "RW", conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "OnTime", id: 0x4001, type: "uint16", access: "RW", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x4002, name: "OffWaitTime",
-                    access: "RW", conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "OffWaitTime", id: 0x4002, type: "uint16", access: "RW", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x4003, name: "StartUpOnOff",
-                    access: "RW VM", conformance: "O", quality: "X", type: "OnOffStartUpOnOff"
+                    tag: "attribute", name: "StartUpOnOff", id: 0x4003, type: "OnOffStartUpOnOff", access: "RW VM",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "Off",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "Off", id: 0x0, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "On",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "On", id: 0x1, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "Toggle",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "Toggle", id: 0x2, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0040, name: "OffWithEffect",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "OffWithEffect", id: 0x40, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "EffectIdentifier",
-                            conformance: "M", type: "OnOffEffectIdentifier"
+                            tag: "datatype", name: "EffectIdentifier", type: "OnOffEffectIdentifier", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "EffectVariant",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "EffectVariant", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0041, name: "OnWithRecallGlobalScene",
-                    conformance: "O", direction: "request"
+                    tag: "command", name: "OnWithRecallGlobalScene", id: 0x41, conformance: "O", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0042, name: "OnWithTimedOff",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "OnWithTimedOff", id: 0x42, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "OnOffControl",
-                            conformance: "M", type: "OnOffControl"
+                            tag: "datatype", name: "OnOffControl", type: "OnOffControl", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OnTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "OnTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "OffWaitTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "OffWaitTime", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OnOffStartUpOnOff",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OnOffStartUpOnOff", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Off",
-                            conformance: "M"
+                            tag: "datatype", name: "Off", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "On",
-                            conformance: "M"
+                            tag: "datatype", name: "On", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "TogglePreviousOnOff",
-                            conformance: "M"
+                            tag: "datatype", name: "TogglePreviousOnOff", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OnOffEffectIdentifier",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OnOffEffectIdentifier", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "DelayedAllOff",
-                            conformance: "M"
+                            tag: "datatype", name: "DelayedAllOff", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "DyingLight",
-                            conformance: "M"
+                            tag: "datatype", name: "DyingLight", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OnOffDelayedAllOffEffectVariant",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OnOffControl", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "FadeToOffIn0P8Seconds",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "NoFade",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "50PercentDimDownIn0P8SecondsThenFadeToOffIn12Seconds",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "OnOffDyingLightEffectVariant",
-                    conformance: "M", type: "enum8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "20PercenterDimUpIn0P5SecondsThenFadeToOffIn1Second",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "OnOffControl",
-                    conformance: "M", type: "map8",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "AcceptOnlyWhenOn",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "OnOffFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Lighting",
-                            conformance: "M"
+                            tag: "datatype", name: "AcceptOnlyWhenOn", id: 0x1, conformance: "M"
                         }
                     ]
                 }
@@ -10079,354 +7559,297 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x003e, name: "OperationalCredentials",
-            description: "Operational Credentials",
+            tag: "cluster", name: "OperationalCredentials", id: 0x3e, description: "Operational Credentials",
+            details: "This cluster is used to add or remove Operational Credentials on a Commissionee or Node, as well as " +
+                     "manage the associated Fabrics",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "Nocs",
-                    access: "R A", conformance: "M", type: "list",
+                    tag: "attribute", name: "Nocs", id: 0x0, type: "list", access: "R A", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "NocStruct"
+                            tag: "datatype", name: "entry", type: "NocStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "Fabrics",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "Fabrics", id: 0x1, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "FabricDescriptorStruct"
+                            tag: "datatype", name: "entry", type: "FabricDescriptorStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "SupportedFabrics",
-                    conformance: "M", type: "uint8"
+                    tag: "attribute", name: "SupportedFabrics", id: 0x2, type: "uint8", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "CommissionedFabrics",
-                    conformance: "M", type: "uint8"
+                    tag: "attribute", name: "CommissionedFabrics", id: 0x3, type: "uint8", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "TrustedRootCertificates",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "TrustedRootCertificates", id: 0x4, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "octstr"
+                            tag: "datatype", name: "entry", type: "octstr"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "CurrentFabricIndex",
-                    conformance: "M", type: "uint8"
+                    tag: "attribute", name: "CurrentFabricIndex", id: 0x5, type: "uint8", conformance: "M"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "AttestationRequest",
-                    access: "R A", conformance: "M", direction: "request", response: "AttestationResponse",
+                    tag: "command", name: "AttestationRequest", id: 0x0, access: "R A", conformance: "M",
+                    direction: "request", response: "AttestationResponse",
                     children: [
                         {
-                            tag: "datatype", name: "AttestationNonce",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "AttestationNonce", type: "octstr", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "AttestationResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "AttestationResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "AttestationElements",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "AttestationElements", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "AttestationSignature",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "AttestationSignature", type: "octstr", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "CertificateChainRequest",
-                    access: "R A", conformance: "M", direction: "request", response: "CertificateChainResponse",
+                    tag: "command", name: "CertificateChainRequest", id: 0x2, access: "R A", conformance: "M",
+                    direction: "request", response: "CertificateChainResponse",
                     children: [
                         {
-                            tag: "datatype", name: "CertificateType",
-                            conformance: "M", type: "CertificateChainTypeEnum"
+                            tag: "datatype", name: "CertificateType", type: "CertificateChainTypeEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "CertificateChainResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "CertificateChainResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Certificate",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "Certificate", type: "octstr", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "CsrRequest",
-                    access: "R A", conformance: "M", direction: "request", response: "CsrResponse",
+                    tag: "command", name: "CsrRequest", id: 0x4, access: "R A", conformance: "M", direction: "request",
+                    response: "CsrResponse",
                     children: [
                         {
-                            tag: "datatype", name: "CsrNonce",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "CsrNonce", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "IsForUpdateNoc",
-                            conformance: "O", type: "bool"
+                            tag: "datatype", name: "IsForUpdateNoc", type: "bool", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "CsrResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "CsrResponse", id: 0x5, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "NocsrElements",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "NocsrElements", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "AttestationSignature",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "AttestationSignature", type: "octstr", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0006, name: "AddNoc",
-                    access: "R A", conformance: "M", direction: "request", response: "NocResponse",
+                    tag: "command", name: "AddNoc", id: 0x6, access: "R A", conformance: "M", direction: "request",
+                    response: "NocResponse",
                     children: [
                         {
-                            tag: "datatype", name: "NocValue",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "NocValue", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "IcacValue",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "IcacValue", type: "octstr", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "IpkValue",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "IpkValue", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "CaseAdminSubject",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "CaseAdminSubject", type: "uint64", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "AdminVendorId",
-                            conformance: "M", type: "vendor-id"
+                            tag: "datatype", name: "AdminVendorId", type: "vendor-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0007, name: "UpdateNoc",
-                    access: "R F A", conformance: "M", direction: "request", response: "NocResponse",
+                    tag: "command", name: "UpdateNoc", id: 0x7, access: "R F A", conformance: "M", direction: "request",
+                    response: "NocResponse",
                     children: [
                         {
-                            tag: "datatype", name: "NocValue",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "NocValue", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "IcacValue",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "IcacValue", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0008, name: "NocResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "NocResponse", id: 0x8, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "StatusCode",
-                            conformance: "M", type: "NodeOperationalCertStatusEnum"
+                            tag: "datatype", name: "StatusCode", type: "NodeOperationalCertStatusEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "FabricIndex",
-                            conformance: "O", type: "fabric-idx"
+                            tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "DebugText",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "DebugText", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0009, name: "UpdateFabricLabel",
-                    access: "R F A", conformance: "M", direction: "request", response: "NocResponse",
+                    tag: "command", name: "UpdateFabricLabel", id: 0x9, access: "R F A", conformance: "M",
+                    direction: "request", response: "NocResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Label",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Label", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000a, name: "RemoveFabric",
-                    access: "R A", conformance: "M", direction: "request", response: "NocResponse",
+                    tag: "command", name: "RemoveFabric", id: 0xa, access: "R A", conformance: "M",
+                    direction: "request", response: "NocResponse",
                     children: [
                         {
-                            tag: "datatype", name: "FabricIndex",
-                            conformance: "M", type: "fabric-idx"
+                            tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x000b, name: "AddTrustedRootCertificate",
-                    access: "R A", conformance: "M", direction: "request",
+                    tag: "command", name: "AddTrustedRootCertificate", id: 0xb, access: "R A", conformance: "M",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "RootCaCertificate",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "RootCaCertificate", type: "octstr", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "FabricDescriptorStruct",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "NocStruct", type: "struct", access: "R F", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "RootPublicKey",
-                            conformance: "M", type: "octstr"
+                            tag: "datatype", name: "Noc", type: "octstr", access: "R S", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "VendorId",
-                            conformance: "M", type: "vendor-id"
-                        },
-
-                        {
-                            tag: "datatype", name: "FabricId",
-                            conformance: "M", type: "fabric-id"
-                        },
-
-                        {
-                            tag: "datatype", name: "NodeId",
-                            conformance: "M", type: "node-id"
-                        },
-
-                        {
-                            tag: "datatype", name: "Label",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "Icac", type: "octstr", access: "R S", conformance: "M", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "NodeOperationalCertStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "FabricDescriptorStruct", type: "struct", access: "R F", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Ok",
-                            conformance: "M"
+                            tag: "datatype", name: "RootPublicKey", type: "octstr", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "InvalidPublicKey",
-                            conformance: "M"
+                            tag: "datatype", name: "VendorId", type: "vendor-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "InvalidNodeOpId",
-                            conformance: "M"
+                            tag: "datatype", name: "FabricId", type: "fabric-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "InvalidNoc",
-                            conformance: "M"
+                            tag: "datatype", name: "NodeId", type: "node-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "MissingCsr",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "TableFull",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "InvalidAdminSubject",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "FabricConflict",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "LabelConflict",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "InvalidFabricIndex",
-                            conformance: "M"
+                            tag: "datatype", name: "Label", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "NocStruct",
-                    access: "R F", conformance: "M", type: "struct",
+                    tag: "datatype", name: "CertificateChainTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Noc",
-                            access: "R S", conformance: "M", type: "octstr"
+                            tag: "datatype", name: "DacCertificate", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Icac",
-                            access: "R S", conformance: "M", quality: "X", type: "octstr"
+                            tag: "datatype", name: "PaiCertificate", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "CertificateChainTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "NodeOperationalCertStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "DacCertificate",
-                            conformance: "M"
+                            tag: "datatype", name: "Ok", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "PaiCertificate",
-                            conformance: "M"
+                            tag: "datatype", name: "InvalidPublicKey", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InvalidNodeOpId", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InvalidNoc", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "MissingCsr", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TableFull", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InvalidAdminSubject", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "FabricConflict", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LabelConflict", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InvalidFabricIndex", id: 0xb, conformance: "M"
                         }
                     ]
                 }
@@ -10434,1100 +7857,844 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x002f, name: "PowerSource",
-            description: "Power Source",
+            tag: "cluster", name: "PowerSource", id: 0x2f, description: "Power Source",
+            details: "This cluster is used to describe the configuration and capabilities of a physical power source that " +
+                     "provides power to the Node",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "PowerSourceStatus",
-                    conformance: "M", type: "PowerSourceStatusEnum"
+                    tag: "attribute", name: "PowerSourceStatus", id: 0x0, type: "PowerSourceStatusEnum",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "PowerSourceOrder",
-                    conformance: "M", type: "uint8"
+                    tag: "attribute", name: "PowerSourceOrder", id: 0x1, type: "uint8", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "PowerSourceDescription",
-                    conformance: "M", type: "string"
+                    tag: "attribute", name: "PowerSourceDescription", id: 0x2, type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "PowerSourceWiredAssessedInputVoltage",
-                    conformance: "O", quality: "X", type: "uint32"
+                    tag: "attribute", name: "PowerSourceWiredAssessedInputVoltage", id: 0x3, type: "uint32",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "PowerSourceWiredAssessedInputFrequency",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "PowerSourceWiredAssessedInputFrequency", id: 0x4, type: "uint16",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "PowerSourceWiredCurrentType",
-                    conformance: "O", type: "WiredCurrentTypeEnum"
+                    tag: "attribute", name: "PowerSourceWiredCurrentType", id: 0x5, type: "WiredCurrentTypeEnum",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "PowerSourceWiredAssessedCurrent",
-                    conformance: "O", quality: "X", type: "uint32"
+                    tag: "attribute", name: "PowerSourceWiredAssessedCurrent", id: 0x6, type: "uint32",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "PowerSourceWiredNominalVoltage",
-                    conformance: "O", type: "uint32"
+                    tag: "attribute", name: "PowerSourceWiredNominalVoltage", id: 0x7, type: "uint32", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "PowerSourceWiredMaximumCurrent",
-                    conformance: "O", type: "uint32"
+                    tag: "attribute", name: "PowerSourceWiredMaximumCurrent", id: 0x8, type: "uint32", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "PowerSourceWiredPresent",
-                    conformance: "O", type: "bool"
+                    tag: "attribute", name: "PowerSourceWiredPresent", id: 0x9, type: "bool", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000a, name: "PowerSourceActiveWiredFaults",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "PowerSourceActiveWiredFaults", id: 0xa, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "WiredFaultEnum"
+                            tag: "datatype", name: "entry", type: "WiredFaultEnum"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x000b, name: "PowerSourceBatVoltage",
-                    conformance: "O", quality: "X", type: "uint32"
+                    tag: "attribute", name: "PowerSourceBatVoltage", id: 0xb, type: "uint32", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000c, name: "PowerSourceBatPercentRemaining",
-                    conformance: "O", quality: "X", type: "uint8"
+                    tag: "attribute", name: "PowerSourceBatPercentRemaining", id: 0xc, type: "uint8", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000d, name: "PowerSourceBatTimeRemaining",
-                    conformance: "O", quality: "X", type: "uint32"
+                    tag: "attribute", name: "PowerSourceBatTimeRemaining", id: 0xd, type: "uint32", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000e, name: "PowerSourceBatChargeLevel",
-                    conformance: "O", type: "BatChargeLevelEnum"
+                    tag: "attribute", name: "PowerSourceBatChargeLevel", id: 0xe, type: "BatChargeLevelEnum",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x000f, name: "PowerSourceBatReplacementNeeded",
-                    conformance: "O", type: "bool"
+                    tag: "attribute", name: "PowerSourceBatReplacementNeeded", id: 0xf, type: "bool", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0010, name: "PowerSourceBatReplaceability",
-                    conformance: "O", type: "BatReplaceabilityEnum"
+                    tag: "attribute", name: "PowerSourceBatReplaceability", id: 0x10, type: "BatReplaceabilityEnum",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "PowerSourceBatPresent",
-                    conformance: "O", type: "bool"
+                    tag: "attribute", name: "PowerSourceBatPresent", id: 0x11, type: "bool", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "PowerSourceActiveBatFaults",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "PowerSourceActiveBatFaults", id: 0x12, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "BatFaultEnum"
+                            tag: "datatype", name: "entry", type: "BatFaultEnum"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0013, name: "PowerSourceBatReplacementDescription",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "PowerSourceBatReplacementDescription", id: 0x13, type: "string",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0014, name: "PowerSourceBatCommonDesignation",
-                    conformance: "O", type: "BatCommonDesignationEnum"
+                    tag: "attribute", name: "PowerSourceBatCommonDesignation", id: 0x14,
+                    type: "BatCommonDesignationEnum", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0015, name: "PowerSourceBatAnsiDesignation",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "PowerSourceBatAnsiDesignation", id: 0x15, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0016, name: "PowerSourceBatIecDesignation",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "PowerSourceBatIecDesignation", id: 0x16, type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0017, name: "PowerSourceBatApprovedChemistry",
-                    conformance: "O", type: "BatApprovedChemistryEnum"
+                    tag: "attribute", name: "PowerSourceBatApprovedChemistry", id: 0x17,
+                    type: "BatApprovedChemistryEnum", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0018, name: "PowerSourceBatCapacity",
-                    conformance: "O", type: "uint32"
+                    tag: "attribute", name: "PowerSourceBatCapacity", id: 0x18, type: "uint32", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0019, name: "PowerSourceBatQuantity",
-                    conformance: "O", type: "uint8"
+                    tag: "attribute", name: "PowerSourceBatQuantity", id: 0x19, type: "uint8", conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x001a, name: "PowerSourceBatChargeState",
-                    conformance: "O", type: "BatChargeStateEnum"
+                    tag: "attribute", name: "PowerSourceBatChargeState", id: 0x1a, type: "BatChargeStateEnum",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x001b, name: "PowerSourceBatTimeToFullCharge",
-                    conformance: "O", quality: "X", type: "uint32"
+                    tag: "attribute", name: "PowerSourceBatTimeToFullCharge", id: 0x1b, type: "uint32",
+                    conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x001c, name: "PowerSourceBatFunctionalWhileCharging",
-                    conformance: "O", type: "bool"
+                    tag: "attribute", name: "PowerSourceBatFunctionalWhileCharging", id: 0x1c, type: "bool",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x001d, name: "PowerSourceBatChargingCurrent",
-                    conformance: "O", quality: "X", type: "uint32"
+                    tag: "attribute", name: "PowerSourceBatChargingCurrent", id: 0x1d, type: "uint32", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x001e, name: "PowerSourceActiveBatChargeFaults",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "PowerSourceActiveBatChargeFaults", id: 0x1e, type: "list",
+                    conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "BatChargeFaultEnum"
+                            tag: "datatype", name: "entry", type: "BatChargeFaultEnum"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "WiredFaultChange",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "WiredFaultChange", id: 0x0, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "WiredFaultEnum"
+                            tag: "datatype", name: "Current", type: "WiredFaultEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "WiredFaultEnum"
+                            tag: "datatype", name: "Previous", type: "WiredFaultEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "BatFaultChange",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "BatFaultChange", id: 0x1, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "BatFaultEnum"
+                            tag: "datatype", name: "Current", type: "BatFaultEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "BatFaultEnum"
+                            tag: "datatype", name: "Previous", type: "BatFaultEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "BatChargeFaultChange",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "BatChargeFaultChange", id: 0x2, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "BatChargeFaultEnum"
+                            tag: "datatype", name: "Current", type: "BatChargeFaultEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "BatChargeFaultEnum"
+                            tag: "datatype", name: "Previous", type: "BatChargeFaultEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "PowerSourceFeature",
-                    conformance: "M", type: "map32",
+                    tag: "datatype", name: "PowerSourceStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Wired",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Battery",
-                            conformance: "M"
+                            tag: "datatype", name: "Active", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Rechargeable",
-                            conformance: "M"
+                            tag: "datatype", name: "Standby", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Replaceable",
-                            conformance: "M"
+                            tag: "datatype", name: "Unavailable", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "WiredFaultEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "WiredCurrentTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Ac", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "OverVoltage",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "UnderVoltage",
-                            conformance: "M"
+                            tag: "datatype", name: "Dc", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BatFaultEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "WiredFaultEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "OverTemp",
-                            conformance: "M"
+                            tag: "datatype", name: "OverVoltage", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "UnderTemp",
-                            conformance: "M"
+                            tag: "datatype", name: "UnderVoltage", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BatChargeFaultEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "BatChargeLevelEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Ok", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "AmbientTooHot",
-                            conformance: "M"
+                            tag: "datatype", name: "Warning", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "AmbientTooCold",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "BatteryTooHot",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "BatteryTooCold",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "BatteryAbsent",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "BatteryOverVoltage",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "BatteryUnderVoltage",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "ChargerOverVoltage",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "ChargerUnderVoltage",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "SafetyTimeout",
-                            conformance: "M"
+                            tag: "datatype", name: "Critical", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "PowerSourceStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "BatReplaceabilityEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Active",
-                            conformance: "M"
+                            tag: "datatype", name: "NotReplaceable", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Standby",
-                            conformance: "M"
+                            tag: "datatype", name: "UserReplaceable", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Unavailable",
-                            conformance: "M"
+                            tag: "datatype", name: "FactoryReplaceable", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "WiredCurrentTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "BatFaultEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Ac",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Dc",
-                            conformance: "M"
+                            tag: "datatype", name: "OverTemp", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "UnderTemp", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BatChargeLevelEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "BatCommonDesignationEnum", type: "enum16", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Ok",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Warning",
-                            conformance: "M"
+                            tag: "datatype", name: "Aaa", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Critical",
-                            conformance: "M"
+                            tag: "datatype", name: "Aa", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "C", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "D", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "4V5", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "6V0", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "9V0", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "12Aa", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Aaaa", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "A", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "B", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "F", id: 0xc, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "N", id: 0xd, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "No6", id: 0xe, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SubC", id: 0xf, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "A23", id: 0x10, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "A27", id: 0x11, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Ba5800", id: 0x12, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Duplex", id: 0x13, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "4Sr44", id: 0x14, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "523", id: 0x15, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "531", id: 0x16, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "15V0", id: 0x17, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "22V5", id: 0x18, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "30V0", id: 0x19, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "45V0", id: 0x1a, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "67V5", id: 0x1b, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "J", id: 0x1c, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Cr123A", id: 0x1d, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Cr2", id: 0x1e, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "2Cr5", id: 0x1f, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "CrP2", id: 0x20, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "CrV3", id: 0x21, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr41", id: 0x22, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr43", id: 0x23, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr44", id: 0x24, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr45", id: 0x25, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr48", id: 0x26, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr54", id: 0x27, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr55", id: 0x28, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr57", id: 0x29, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr58", id: 0x2a, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr59", id: 0x2b, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr60", id: 0x2c, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr63", id: 0x2d, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr64", id: 0x2e, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr65", id: 0x2f, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr66", id: 0x30, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr67", id: 0x31, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr68", id: 0x32, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr69", id: 0x33, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr516", id: 0x34, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr731", id: 0x35, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Sr712", id: 0x36, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Lr932", id: 0x37, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "A5", id: 0x38, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "A10", id: 0x39, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "A13", id: 0x3a, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "A312", id: 0x3b, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "A675", id: 0x3c, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Ac41E", id: 0x3d, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "10180", id: 0x3e, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "10280", id: 0x3f, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "10440", id: 0x40, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "14250", id: 0x41, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "14430", id: 0x42, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "14500", id: 0x43, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "14650", id: 0x44, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "15270", id: 0x45, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "16340", id: 0x46, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Rcr123A", id: 0x47, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "17500", id: 0x48, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "17670", id: 0x49, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "18350", id: 0x4a, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "18500", id: 0x4b, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "18650", id: 0x4c, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "19670", id: 0x4d, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "25500", id: 0x4e, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "26650", id: 0x4f, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "32600", id: 0x50, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BatReplaceabilityEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "BatApprovedChemistryEnum", type: "enum16", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "NotReplaceable",
-                            conformance: "M"
+                            tag: "datatype", name: "Alkaline", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "UserReplaceable",
-                            conformance: "M"
+                            tag: "datatype", name: "LithiumCarbonFluoride", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "FactoryReplaceable",
-                            conformance: "M"
+                            tag: "datatype", name: "LithiumChromiumOxide", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumCopperOxide", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumIronDisulfide", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumManganeseDioxide", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumThionylChloride", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Magnesium", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "MercuryOxide", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NickelOxyhydride", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SilverOxide", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ZincAir", id: 0xc, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ZincCarbon", id: 0xd, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ZincChloride", id: 0xe, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ZincManganeseDioxide", id: 0xf, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LeadAcid", id: 0x10, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumCobaltOxide", id: 0x11, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumIon", id: 0x12, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumIonPolymer", id: 0x13, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumIronPhosphate", id: 0x14, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumSulfur", id: 0x15, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LithiumTitanate", id: 0x16, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NickelCadmium", id: 0x17, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NickelHydrogen", id: 0x18, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NickelIron", id: 0x19, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NickelMetalHydride", id: 0x1a, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NickelZinc", id: 0x1b, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SilverZinc", id: 0x1c, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SodiumIon", id: 0x1d, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SodiumSulfur", id: 0x1e, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ZincBromide", id: 0x1f, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ZincCerium", id: 0x20, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BatChargeStateEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "BatChargeStateEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "Unknown", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "IsCharging",
-                            conformance: "M"
+                            tag: "datatype", name: "IsCharging", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "IsAtFullCharge",
-                            conformance: "M"
+                            tag: "datatype", name: "IsAtFullCharge", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "IsNotCharging",
-                            conformance: "M"
+                            tag: "datatype", name: "IsNotCharging", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "BatCommonDesignationEnum",
-                    conformance: "M", type: "enum16",
+                    tag: "datatype", name: "BatChargeFaultEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Aaa",
-                            conformance: "M"
+                            tag: "datatype", name: "AmbientTooHot", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Aa",
-                            conformance: "M"
+                            tag: "datatype", name: "AmbientTooCold", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "C",
-                            conformance: "M"
+                            tag: "datatype", name: "BatteryTooHot", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "D",
-                            conformance: "M"
+                            tag: "datatype", name: "BatteryTooCold", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "4V5",
-                            conformance: "M"
+                            tag: "datatype", name: "BatteryAbsent", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "6V0",
-                            conformance: "M"
+                            tag: "datatype", name: "BatteryOverVoltage", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "9V0",
-                            conformance: "M"
+                            tag: "datatype", name: "BatteryUnderVoltage", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "12Aa",
-                            conformance: "M"
+                            tag: "datatype", name: "ChargerOverVoltage", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "Aaaa",
-                            conformance: "M"
+                            tag: "datatype", name: "ChargerUnderVoltage", id: 0x9, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000a, name: "A",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "B",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000c, name: "F",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000d, name: "N",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000e, name: "No6",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000f, name: "SubC",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "A23",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0011, name: "A27",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0012, name: "Ba5800",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0013, name: "Duplex",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0014, name: "4Sr44",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0015, name: "523",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0016, name: "531",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0017, name: "15V0",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0018, name: "22V5",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0019, name: "30V0",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001a, name: "45V0",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001b, name: "67V5",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001c, name: "J",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001d, name: "Cr123A",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001e, name: "Cr2",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001f, name: "2Cr5",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0020, name: "CrP2",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0021, name: "CrV3",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0022, name: "Sr41",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0023, name: "Sr43",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0024, name: "Sr44",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0025, name: "Sr45",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0026, name: "Sr48",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0027, name: "Sr54",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0028, name: "Sr55",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0029, name: "Sr57",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002a, name: "Sr58",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002b, name: "Sr59",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002c, name: "Sr60",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002d, name: "Sr63",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002e, name: "Sr64",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x002f, name: "Sr65",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0030, name: "Sr66",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0031, name: "Sr67",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0032, name: "Sr68",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0033, name: "Sr69",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0034, name: "Sr516",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0035, name: "Sr731",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0036, name: "Sr712",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0037, name: "Lr932",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0038, name: "A5",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0039, name: "A10",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x003a, name: "A13",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x003b, name: "A312",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x003c, name: "A675",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x003d, name: "Ac41E",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x003e, name: "10180",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x003f, name: "10280",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0040, name: "10440",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0041, name: "14250",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0042, name: "14430",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0043, name: "14500",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0044, name: "14650",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0045, name: "15270",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0046, name: "16340",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0047, name: "Rcr123A",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0048, name: "17500",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0049, name: "17670",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004a, name: "18350",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004b, name: "18500",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004c, name: "18650",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004d, name: "19670",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004e, name: "25500",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x004f, name: "26650",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0050, name: "32600",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "BatApprovedChemistryEnum",
-                    conformance: "M", type: "enum16",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0001, name: "Alkaline",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "LithiumCarbonFluoride",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "LithiumChromiumOxide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "LithiumCopperOxide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "LithiumIronDisulfide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "LithiumManganeseDioxide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "LithiumThionylChloride",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "Magnesium",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "MercuryOxide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "NickelOxyhydride",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "SilverOxide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000c, name: "ZincAir",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000d, name: "ZincCarbon",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000e, name: "ZincChloride",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000f, name: "ZincManganeseDioxide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "LeadAcid",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0011, name: "LithiumCobaltOxide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0012, name: "LithiumIon",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0013, name: "LithiumIonPolymer",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0014, name: "LithiumIronPhosphate",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0015, name: "LithiumSulfur",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0016, name: "LithiumTitanate",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0017, name: "NickelCadmium",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0018, name: "NickelHydrogen",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0019, name: "NickelIron",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001a, name: "NickelMetalHydride",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001b, name: "NickelZinc",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001c, name: "SilverZinc",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001d, name: "SodiumIon",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001e, name: "SodiumSulfur",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x001f, name: "ZincBromide",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0020, name: "ZincCerium",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "WiredFaultChangeType",
-                    conformance: "M", type: "struct",
-                    children: [
-                        {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "WiredFaultEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "WiredFaultEnum"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "BatFaultChangeType",
-                    conformance: "M", type: "struct",
-                    children: [
-                        {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "BatFaultEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "BatFaultEnum"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "BatChargeFaultChangeType",
-                    conformance: "M", type: "struct",
-                    children: [
-                        {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "BatChargeFaultEnum"
-                        },
-
-                        {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "BatChargeFaultEnum"
+                            tag: "datatype", name: "SafetyTimeout", id: 0xa, conformance: "M"
                         }
                     ]
                 }
@@ -11535,16 +8702,15 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x002e, name: "PowerSourceConfiguration",
+            tag: "cluster", name: "PowerSourceConfiguration", id: 0x2e,
             description: "Power Source Configuration",
+            details: "This cluster is used to describe the configuration and capabilities of a Device's power system",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "Sources",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "Sources", id: 0x0, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "uint8"
+                            tag: "datatype", name: "entry", type: "uint8"
                         }
                     ]
                 }
@@ -11552,436 +8718,328 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0403, name: "PressureMeasurement",
-            description: "Pressure Measurement",
+            tag: "cluster", name: "PressureMeasurement", id: 0x403, description: "Pressure Measurement",
+            details: "Attributes and commands for configuring the measurement of pressure, and reporting pressure " +
+                     "measurements",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "PressureMeasuredValue",
-                    conformance: "M", quality: "X P", type: "int16"
+                    tag: "attribute", name: "PressureMeasuredValue", id: 0x0, type: "int16", conformance: "M",
+                    quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "PressureMinMeasuredValue",
-                    conformance: "M", quality: "X", type: "int16"
+                    tag: "attribute", name: "PressureMinMeasuredValue", id: 0x1, type: "int16", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "PressureMaxMeasuredValue",
-                    conformance: "M", quality: "X", type: "int16"
+                    tag: "attribute", name: "PressureMaxMeasuredValue", id: 0x2, type: "int16", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "PressureTolerance",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "PressureTolerance", id: 0x3, type: "uint16", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0010, name: "PressureScaledValue",
-                    conformance: "O", default: 0, quality: "X", type: "int16"
+                    tag: "attribute", name: "PressureScaledValue", id: 0x10, type: "int16", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "PressureMinScaledValue",
-                    conformance: "O", default: 0, quality: "X", type: "int16"
+                    tag: "attribute", name: "PressureMinScaledValue", id: 0x11, type: "int16", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "PressureMaxScaledValue",
-                    conformance: "O", default: 0, quality: "X", type: "int16"
+                    tag: "attribute", name: "PressureMaxScaledValue", id: 0x12, type: "int16", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0013, name: "PressureScaledTolerance",
-                    conformance: "O", default: 0, quality: "P", type: "uint16"
+                    tag: "attribute", name: "PressureScaledTolerance", id: 0x13, type: "uint16", conformance: "O",
+                    default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0014, name: "PressureScale",
-                    conformance: "O", default: 0, type: "int8"
-                },
-
-                {
-                    tag: "datatype", name: "PressureMeasurementFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "Extended",
-                            conformance: "M"
-                        }
-                    ]
+                    tag: "attribute", name: "PressureScale", id: 0x14, type: "int8", conformance: "O", default: 0
                 }
             ]
         },
 
         {
-            tag: "cluster", id: 0x0042, name: "ProxyConfiguration",
-            description: "Proxy Configuration"
+            tag: "cluster", name: "ProxyConfiguration", id: 0x42, description: "Proxy Configuration",
+            details: "Cluster to control Proxy Configuration"
         },
 
         {
-            tag: "cluster", id: 0x0043, name: "ProxyDiscovery",
-            description: "Proxy Discovery"
+            tag: "cluster", name: "ProxyDiscovery", id: 0x43, description: "Proxy Discovery",
+            details: "Cluster to control Proxy Discovery"
         },
 
         {
-            tag: "cluster", id: 0x0044, name: "ProxyValid",
-            description: "Proxy Valid"
+            tag: "cluster", name: "ProxyValid", id: 0x44, description: "Proxy Valid",
+            details: "Cluster to control Proxy Valid"
         },
 
         {
-            tag: "cluster", id: 0x0200, name: "PumpConfigurationAndControl",
+            tag: "cluster", name: "PumpConfigurationAndControl", id: 0x200,
             description: "Pump Configuration and Control",
+            details: "An interface for configuring and controlling pumps",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "MaxPressure",
-                    conformance: "M", quality: "X", type: "int16"
+                    tag: "attribute", name: "MaxPressure", id: 0x0, type: "int16", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "MaxSpeed",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "MaxSpeed", id: 0x1, type: "uint16", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "MaxFlow",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "MaxFlow", id: 0x2, type: "uint16", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "MinConstPressure",
-                    conformance: "O", quality: "X", type: "int16"
+                    tag: "attribute", name: "MinConstPressure", id: 0x3, type: "int16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "MaxConstPressure",
-                    conformance: "O", quality: "X", type: "int16"
+                    tag: "attribute", name: "MaxConstPressure", id: 0x4, type: "int16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "MinCompPressure",
-                    conformance: "O", quality: "X", type: "int16"
+                    tag: "attribute", name: "MinCompPressure", id: 0x5, type: "int16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "MaxCompPressure",
-                    conformance: "O", quality: "X", type: "int16"
+                    tag: "attribute", name: "MaxCompPressure", id: 0x6, type: "int16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "MinConstSpeed",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "MinConstSpeed", id: 0x7, type: "uint16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "MaxConstSpeed",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "MaxConstSpeed", id: 0x8, type: "uint16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "MinConstFlow",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "MinConstFlow", id: 0x9, type: "uint16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000a, name: "MaxConstFlow",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "MaxConstFlow", id: 0xa, type: "uint16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000b, name: "MinConstTemp",
-                    conformance: "O", quality: "X", type: "int16"
+                    tag: "attribute", name: "MinConstTemp", id: 0xb, type: "int16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000c, name: "MaxConstTemp",
-                    conformance: "O", quality: "X", type: "int16"
+                    tag: "attribute", name: "MaxConstTemp", id: 0xc, type: "int16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0010, name: "PumpStatus",
-                    conformance: "O", default: 0, quality: "P", type: "PumpStatusBitmap"
+                    tag: "attribute", name: "PumpStatus", id: 0x10, type: "PumpStatusBitmap", conformance: "O",
+                    default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "EffectiveOperationMode",
-                    conformance: "M", type: "OperationModeEnum"
+                    tag: "attribute", name: "EffectiveOperationMode", id: 0x11, type: "OperationModeEnum",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "EffectiveControlMode",
-                    conformance: "M", type: "ControlModeEnum"
+                    tag: "attribute", name: "EffectiveControlMode", id: 0x12, type: "ControlModeEnum", conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0013, name: "Capacity",
-                    conformance: "M", quality: "X P", type: "int16"
+                    tag: "attribute", name: "Capacity", id: 0x13, type: "int16", conformance: "M", quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0014, name: "Speed",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "Speed", id: 0x14, type: "uint16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0015, name: "LifetimeRunningHours",
-                    access: "RW VM", conformance: "O", default: 0, quality: "X", type: "uint24"
+                    tag: "attribute", name: "LifetimeRunningHours", id: 0x15, type: "uint24", access: "RW VM",
+                    conformance: "O", default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0016, name: "PumpPower",
-                    conformance: "O", quality: "X", type: "uint24"
+                    tag: "attribute", name: "PumpPower", id: 0x16, type: "uint24", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0017, name: "LifetimeEnergyConsumed",
-                    access: "RW VM", conformance: "O", default: 0, quality: "X", type: "uint32"
+                    tag: "attribute", name: "LifetimeEnergyConsumed", id: 0x17, type: "uint32", access: "RW VM",
+                    conformance: "O", default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0020, name: "OperationMode",
-                    access: "RW VM", conformance: "M", default: 0, type: "OperationModeEnum"
+                    tag: "attribute", name: "OperationMode", id: 0x20, type: "OperationModeEnum", access: "RW VM",
+                    conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0021, name: "ControlMode",
-                    access: "RW VM", conformance: "O", default: 0, type: "ControlModeEnum"
+                    tag: "attribute", name: "ControlMode", id: 0x21, type: "ControlModeEnum", access: "RW VM",
+                    conformance: "O", default: 0
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "SupplyVoltageLow",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "SupplyVoltageLow", id: 0x0, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "SupplyVoltageHigh",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "SupplyVoltageHigh", id: 0x1, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "PowerMissingPhase",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "PowerMissingPhase", id: 0x2, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0003, name: "SystemPressureLow",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "SystemPressureLow", id: 0x3, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0004, name: "SystemPressureHigh",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "SystemPressureHigh", id: 0x4, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0005, name: "DryRunning",
-                    conformance: "O", priority: "critical"
+                    tag: "event", name: "DryRunning", id: 0x5, conformance: "O", priority: "critical"
                 },
 
                 {
-                    tag: "event", id: 0x0006, name: "MotorTemperatureHigh",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "MotorTemperatureHigh", id: 0x6, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0007, name: "PumpMotorFatalFailure",
-                    conformance: "O", priority: "critical"
+                    tag: "event", name: "PumpMotorFatalFailure", id: 0x7, conformance: "O", priority: "critical"
                 },
 
                 {
-                    tag: "event", id: 0x0008, name: "ElectronicTemperatureHigh",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "ElectronicTemperatureHigh", id: 0x8, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0009, name: "PumpBlocked",
-                    conformance: "O", priority: "critical"
+                    tag: "event", name: "PumpBlocked", id: 0x9, conformance: "O", priority: "critical"
                 },
 
                 {
-                    tag: "event", id: 0x000a, name: "SensorFailure",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "SensorFailure", id: 0xa, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x000b, name: "ElectronicNonFatalFailure",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "ElectronicNonFatalFailure", id: 0xb, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x000c, name: "ElectronicFatalFailure",
-                    conformance: "O", priority: "critical"
+                    tag: "event", name: "ElectronicFatalFailure", id: 0xc, conformance: "O", priority: "critical"
                 },
 
                 {
-                    tag: "event", id: 0x000d, name: "GeneralFault",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "GeneralFault", id: 0xd, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x000e, name: "Leakage",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "Leakage", id: 0xe, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x000f, name: "AirDetection",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "AirDetection", id: 0xf, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "event", id: 0x0010, name: "TurbineOperation",
-                    conformance: "O", priority: "info"
+                    tag: "event", name: "TurbineOperation", id: 0x10, conformance: "O", priority: "info"
                 },
 
                 {
-                    tag: "datatype", name: "PumpStatusBitmap",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "PumpStatusBitmap", type: "map16", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "DeviceFault",
-                            conformance: "M"
+                            tag: "datatype", name: "DeviceFault", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Supplyfault",
-                            conformance: "M"
+                            tag: "datatype", name: "Supplyfault", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "SpeedLow",
-                            conformance: "M"
+                            tag: "datatype", name: "SpeedLow", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "SpeedHigh",
-                            conformance: "M"
+                            tag: "datatype", name: "SpeedHigh", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "LocalOverride",
-                            conformance: "M"
+                            tag: "datatype", name: "LocalOverride", id: 0x10, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "Running",
-                            conformance: "M"
+                            tag: "datatype", name: "Running", id: 0x20, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "RemotePressure",
-                            conformance: "M"
+                            tag: "datatype", name: "RemotePressure", id: 0x40, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0080, name: "RemoteFlow",
-                            conformance: "M"
+                            tag: "datatype", name: "RemoteFlow", id: 0x80, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0100, name: "RemoteTemperature",
-                            conformance: "M"
+                            tag: "datatype", name: "RemoteTemperature", id: 0x100, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OperationModeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "OperationModeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Normal",
-                            conformance: "M"
+                            tag: "datatype", name: "Normal", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Minimum",
-                            conformance: "M"
+                            tag: "datatype", name: "Minimum", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Maximum",
-                            conformance: "M"
+                            tag: "datatype", name: "Maximum", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Local",
-                            conformance: "M"
+                            tag: "datatype", name: "Local", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ControlModeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ControlModeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "ConstantSpeed",
-                            conformance: "M"
+                            tag: "datatype", name: "ConstantSpeed", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "ConstantPressure",
-                            conformance: "M"
+                            tag: "datatype", name: "ConstantPressure", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "ProportionalPressure",
-                            conformance: "M"
+                            tag: "datatype", name: "ProportionalPressure", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "ConstantFlow",
-                            conformance: "M"
+                            tag: "datatype", name: "ConstantFlow", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "ConstantTemperature",
-                            conformance: "M"
+                            tag: "datatype", name: "ConstantTemperature", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "Automatic",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "PumpConfigurationAndControlFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "ConstantPressure",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "CompensatedPressure",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "ConstantFlow",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "ConstantSpeed",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "ConstantTemperature",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0020, name: "Automatic",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0040, name: "LocalOperation",
-                            conformance: "M"
+                            tag: "datatype", name: "Automatic", id: 0x7, conformance: "M"
                         }
                     ]
                 }
@@ -11989,539 +9047,447 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x001c, name: "PulseWidthModulation",
-            description: "Pulse Width Modulation"
+            tag: "cluster", name: "PulseWidthModulation", id: 0x1c, description: "Pulse Width Modulation",
+            details: "Cluster to control pulse width modulation"
         },
 
         {
-            tag: "cluster", id: 0x0405, name: "RelativeHumidityMeasurement",
+            tag: "cluster", name: "RelativeHumidityMeasurement", id: 0x405,
             description: "Relative Humidity Measurement",
+            details: "Attributes and commands for configuring the measurement of relative humidity, and reporting relative" +
+                     " humidity measurements",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "RelativeHumidityMeasuredValue",
-                    conformance: "M", quality: "X P", type: "uint16"
+                    tag: "attribute", name: "RelativeHumidityMeasuredValue", id: 0x0, type: "uint16", conformance: "M",
+                    quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "RelativeHumidityMinMeasuredValue",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "RelativeHumidityMinMeasuredValue", id: 0x1, type: "uint16",
+                    conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "RelativeHumidityMaxMeasuredValue",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "RelativeHumidityMaxMeasuredValue", id: 0x2, type: "uint16",
+                    conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "RelativeHumidityTolerance",
-                    conformance: "O", type: "uint16"
+                    tag: "attribute", name: "RelativeHumidityTolerance", id: 0x3, type: "uint16", conformance: "O"
                 }
             ]
         },
 
         {
-            tag: "cluster", id: 0x0005, name: "Scenes",
-            description: "Scenes",
+            tag: "cluster", name: "Scenes", id: 0x5, description: "Scenes",
+            details: "Attributes and commands for scene configuration and manipulation",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "SceneCount",
-                    conformance: "M", default: 0, type: "uint8"
+                    tag: "attribute", name: "SceneCount", id: 0x0, type: "uint8", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "CurrentScene",
-                    conformance: "M", default: 0, type: "uint8"
+                    tag: "attribute", name: "CurrentScene", id: 0x1, type: "uint8", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "CurrentGroup",
-                    conformance: "M", default: 0, type: "group-id"
+                    tag: "attribute", name: "CurrentGroup", id: 0x2, type: "group-id", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "SceneValid",
-                    conformance: "M", default: true, type: "bool"
+                    tag: "attribute", name: "SceneValid", id: 0x3, type: "bool", conformance: "M", default: true
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "SceneNameSupport",
-                    conformance: "M", default: 0, type: "map8"
+                    tag: "attribute", name: "SceneNameSupport", id: 0x4, type: "map8", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "LastConfiguredBy",
-                    conformance: "O", quality: "X", type: "node-id"
+                    tag: "attribute", name: "LastConfiguredBy", id: 0x5, type: "node-id", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "AddScene",
-                    access: "R F M", conformance: "M", direction: "request", response: "AddSceneResponse",
+                    tag: "command", name: "AddScene", id: 0x0, access: "R F M", conformance: "M", direction: "request",
+                    response: "AddSceneResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneName",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "SceneName", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ExtensionFieldSets",
-                            conformance: "M", type: "ExtensionFieldSet"
+                            tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "ViewScene",
-                    access: "R F", conformance: "M", direction: "request", response: "ViewSceneResponse",
+                    tag: "command", name: "ViewScene", id: 0x1, access: "R F", conformance: "M", direction: "request",
+                    response: "ViewSceneResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "RemoveScene",
-                    access: "R F M", conformance: "M", direction: "request", response: "RemoveSceneResponse",
+                    tag: "command", name: "RemoveScene", id: 0x2, access: "R F M", conformance: "M",
+                    direction: "request", response: "RemoveSceneResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "RemoveAllScenes",
-                    access: "R F M", conformance: "M", direction: "request", response: "RemoveAllScenesResponse",
+                    tag: "command", name: "RemoveAllScenes", id: 0x3, access: "R F M", conformance: "M",
+                    direction: "request", response: "RemoveAllScenesResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "StoreScene",
-                    access: "R F M", conformance: "M", direction: "request", response: "StoreSceneResponse",
+                    tag: "command", name: "StoreScene", id: 0x4, access: "R F M", conformance: "M",
+                    direction: "request", response: "StoreSceneResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "RecallScene",
-                    access: "R F", conformance: "M", direction: "request",
+                    tag: "command", name: "RecallScene", id: 0x5, access: "R F", conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "O", quality: "X", type: "uint16"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O", quality: "X"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0006, name: "GetSceneMembership",
-                    access: "R F", conformance: "M", direction: "request", response: "GetSceneMembershipResponse",
+                    tag: "command", name: "GetSceneMembership", id: 0x6, access: "R F", conformance: "M",
+                    direction: "request", response: "GetSceneMembershipResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0040, name: "EnhancedAddScene",
-                    access: "R F", conformance: "O", direction: "request", response: "EnhancedAddSceneResponse",
+                    tag: "command", name: "EnhancedAddScene", id: 0x40, access: "R F", conformance: "O",
+                    direction: "request", response: "EnhancedAddSceneResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneName",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "SceneName", type: "string", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ExtensionFieldSets",
-                            conformance: "M", type: "ExtensionFieldSet"
+                            tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0041, name: "EnhancedViewScene",
-                    access: "R F", conformance: "O", direction: "request", response: "EnhancedViewSceneResponse",
+                    tag: "command", name: "EnhancedViewScene", id: 0x41, access: "R F", conformance: "O",
+                    direction: "request", response: "EnhancedViewSceneResponse",
                     children: [
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0042, name: "CopyScene",
-                    access: "R F", conformance: "O", direction: "request", response: "CopySceneResponse",
+                    tag: "command", name: "CopyScene", id: 0x42, access: "R F", conformance: "O", direction: "request",
+                    response: "CopySceneResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Mode",
-                            conformance: "M", type: "ScenesCopyMode"
+                            tag: "datatype", name: "Mode", type: "ScenesCopyMode", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupIdentifierFrom",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupIdentifierFrom", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneIdentifierFrom",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneIdentifierFrom", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupIdentifierTo",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupIdentifierTo", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneIdentifierTo",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneIdentifierTo", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "AddSceneResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "ViewSceneResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "ViewSceneResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "O", type: "uint16"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "SceneName",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "SceneName", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "ExtensionFieldSets",
-                            conformance: "O", type: "ExtensionFieldSet"
+                            tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "RemoveSceneResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "RemoveSceneResponse", id: 0x2, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "RemoveAllScenesResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "RemoveAllScenesResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "StoreSceneResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "StoreSceneResponse", id: 0x4, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0006, name: "GetSceneMembershipResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "GetSceneMembershipResponse", id: 0x6, conformance: "M",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Capacity",
-                            conformance: "M", quality: "X", type: "uint8"
+                            tag: "datatype", name: "Capacity", type: "uint8", conformance: "M", quality: "X"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneList",
-                            conformance: "O", type: "uint8"
+                            tag: "datatype", name: "SceneList", type: "uint8", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0040, name: "EnhancedAddSceneResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "EnhancedAddSceneResponse", id: 0x40, conformance: "O", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0041, name: "EnhancedViewSceneResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "EnhancedViewSceneResponse", id: 0x41, conformance: "O",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupId",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupId", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneId", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "O", type: "uint16"
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "SceneName",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "SceneName", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "ExtensionFieldSets",
-                            conformance: "O", type: "ExtensionFieldSet"
+                            tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0042, name: "CopySceneResponse",
-                    conformance: "O", direction: "response",
+                    tag: "command", name: "CopySceneResponse", id: 0x42, conformance: "O", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "enum8"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "GroupIdentifierFrom",
-                            conformance: "M", type: "group-id"
+                            tag: "datatype", name: "GroupIdentifierFrom", type: "group-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "SceneIdentifierFrom",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SceneIdentifierFrom", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ScenesCopyMode",
-                    conformance: "M", type: "map8",
+                    tag: "datatype", name: "ExtensionFieldSet", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "CopyAllScenes",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "AttributeValuePair",
-                    conformance: "M", type: "struct",
-                    children: [
-                        {
-                            tag: "datatype", name: "AttributeId",
-                            conformance: "O", type: "attrib-id"
+                            tag: "datatype", name: "ClusterId", type: "cluster-id", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "AttributeValue",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "AttributeValueList", type: "AttributeValuePair", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ExtensionFieldSet",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "AttributeValuePair", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ClusterId",
-                            conformance: "M", type: "cluster-id"
+                            tag: "datatype", name: "AttributeId", type: "attrib-id", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "AttributeValueList",
-                            conformance: "M", type: "AttributeValuePair"
+                            tag: "datatype", name: "AttributeValue", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ScenesFeature",
-                    conformance: "M", type: "map32",
+                    tag: "datatype", name: "ScenesCopyMode", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "SceneNames",
-                            conformance: "M"
+                            tag: "datatype", name: "CopyAllScenes", id: 0x1, conformance: "M"
                         }
                     ]
                 }
@@ -12529,99 +9495,74 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0034, name: "SoftwareDiagnostics",
-            description: "Software Diagnostics",
+            tag: "cluster", name: "SoftwareDiagnostics", id: 0x34, description: "Software Diagnostics",
+            details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that " +
+                     "MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "ThreadMetrics",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "ThreadMetrics", id: 0x0, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "ThreadMetricsStruct"
+                            tag: "datatype", name: "entry", type: "ThreadMetricsStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "CurrentHeapFree",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "CurrentHeapFree", id: 0x1, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "CurrentHeapUsed",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "CurrentHeapUsed", id: 0x2, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "CurrentHeapHighWatermark",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "CurrentHeapHighWatermark", id: 0x3, type: "uint64", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "ResetWatermarks",
-                    conformance: "O", direction: "request"
+                    tag: "command", name: "ResetWatermarks", id: 0x0, conformance: "O", direction: "request"
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "SoftwareFault",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "SoftwareFault", id: 0x0, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "Id",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "Id", type: "uint64", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Name", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "FaultRecording",
-                            conformance: "O", type: "octstr"
+                            tag: "datatype", name: "FaultRecording", type: "octstr", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ThreadMetricsStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ThreadMetricsStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Id",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "Id", type: "uint64", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Name", type: "string", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "StackFreeCurrent",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "StackFreeCurrent", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "StackFreeMinimum",
-                            conformance: "O", type: "uint32"
+                            tag: "datatype", name: "StackFreeMinimum", type: "uint32", conformance: "O"
                         },
 
                         {
-                            tag: "datatype", name: "StackSize",
-                            conformance: "O", type: "uint32"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "SoftwareDiagnosticsFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "WaterMarks",
-                            conformance: "M"
+                            tag: "datatype", name: "StackSize", type: "uint32", conformance: "O"
                         }
                     ]
                 }
@@ -12629,138 +9570,94 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x003b, name: "Switch",
-            description: "Switch",
+            tag: "cluster", name: "Switch", id: 0x3b, description: "Switch",
+            details: "This cluster exposes interactions with a switch device, for the purpose of using those interactions " +
+                     "by other devices. Two types of switch devices are supported: latching switch (e.g. rocker switch) " +
+                     "and momentary switch (e.g. push button), distinguished with their feature flags. Interactions with " +
+                     "the switch device are exposed as attributes (for the latching switch) and as events (for both types " +
+                     "of switches). An interested party MAY subscribe to these attributes/events and thus be informed of " +
+                     "the interactions, and can perform actions based on this, for example by sending commands to perform " +
+                     "an action such as controlling a light or a window shade",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "NumberOfPositions",
-                    conformance: "M", default: 2, type: "uint8"
+                    tag: "attribute", name: "NumberOfPositions", id: 0x0, type: "uint8", conformance: "M", default: 2
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "CurrentPosition",
-                    conformance: "M", quality: "P", type: "uint8"
+                    tag: "attribute", name: "CurrentPosition", id: 0x1, type: "uint8", conformance: "M", quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "MultiPressMax",
-                    conformance: "O", default: 2, type: "uint8"
+                    tag: "attribute", name: "MultiPressMax", id: 0x2, type: "uint8", conformance: "O", default: 2
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "SwitchLatched",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "SwitchLatched", id: 0x0, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "NewPosition",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "NewPosition", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "InitialPress",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "InitialPress", id: 0x1, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "NewPosition",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "NewPosition", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "LongPress",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "LongPress", id: 0x2, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "NewPosition",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "NewPosition", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0003, name: "ShortRelease",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "ShortRelease", id: 0x3, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "PreviousPosition",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "PreviousPosition", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0004, name: "LongRelease",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "LongRelease", id: 0x4, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "PreviousPosition",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "PreviousPosition", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0005, name: "MultiPressOngoing",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "MultiPressOngoing", id: 0x5, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "NewPosition",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "NewPosition", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "CurrentNumberOfPressesCounted",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "CurrentNumberOfPressesCounted", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0006, name: "MultiPressComplete",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "MultiPressComplete", id: 0x6, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "PreviousPosition",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "PreviousPosition", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TotalNumberOfPressesCounted",
-                            conformance: "M", type: "uint8"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "SwitchFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "LatchingSwitch",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "MomentarySwitch",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "MomentarySwitchRelease",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "MomentarySwitchLongPress",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "MomentarySwitchMultiPress",
-                            conformance: "M"
+                            tag: "datatype", name: "TotalNumberOfPressesCounted", type: "uint8", conformance: "M"
                         }
                     ]
                 }
@@ -12768,90 +9665,76 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0505, name: "TargetNavigator",
-            description: "Target Navigator",
+            tag: "cluster", name: "TargetNavigator", id: 0x505, description: "Target Navigator",
+            details: "This cluster provides an interface for UX navigation within a set of targets on a device or endpoint",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "TargetNavigatorList",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "TargetNavigatorList", id: 0x0, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "TargetInfoStruct"
+                            tag: "datatype", name: "entry", type: "TargetInfoStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "TargetNavigatorCurrentTarget",
-                    conformance: "O", default: 0, type: "uint8"
+                    tag: "attribute", name: "TargetNavigatorCurrentTarget", id: 0x1, type: "uint8", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "NavigateTarget",
-                    conformance: "M", direction: "request", response: "NavigateTargetResponse",
+                    tag: "command", name: "NavigateTarget", id: 0x0, conformance: "M", direction: "request",
+                    response: "NavigateTargetResponse",
                     children: [
                         {
-                            tag: "datatype", name: "Target",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Target", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Data",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Data", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "NavigateTargetResponse",
-                    conformance: "M", direction: "response",
+                    tag: "command", name: "NavigateTargetResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "TargetNavigatorStatusEnum"
+                            tag: "datatype", name: "Status", type: "TargetNavigatorStatusEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Data",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Data", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "TargetNavigatorStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "TargetInfoStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Success",
-                            conformance: "M"
+                            tag: "datatype", name: "Identifier", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "TargetNotFound",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "NotAllowed",
-                            conformance: "M"
+                            tag: "datatype", name: "Name", type: "string", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "TargetInfoStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "TargetNavigatorStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Identifier",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "M", type: "string"
+                            tag: "datatype", name: "TargetNotFound", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NotAllowed", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -12859,613 +9742,539 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0402, name: "TemperatureMeasurement",
-            description: "Temperature Measurement",
+            tag: "cluster", name: "TemperatureMeasurement", id: 0x402, description: "Temperature Measurement",
+            details: "Attributes and commands for configuring the measurement of temperature, and reporting temperature " +
+                     "measurements",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "TempMeasuredValue",
-                    conformance: "M", quality: "X", type: "int16"
+                    tag: "attribute", name: "TempMeasuredValue", id: 0x0, type: "int16", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "TempMinMeasuredValue",
-                    conformance: "M", default: 32768, quality: "X", type: "int16"
+                    tag: "attribute", name: "TempMinMeasuredValue", id: 0x1, type: "int16", conformance: "M",
+                    default: 32768, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "TempMaxMeasuredValue",
-                    conformance: "M", default: 32768, quality: "X", type: "int16"
+                    tag: "attribute", name: "TempMaxMeasuredValue", id: 0x2, type: "int16", conformance: "M",
+                    default: 32768, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "TempTolerance",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "TempTolerance", id: 0x3, type: "uint16", conformance: "O", default: 0
                 }
             ]
         },
 
         {
-            tag: "cluster", id: 0x0201, name: "Thermostat",
-            description: "Thermostat",
+            tag: "cluster", name: "Thermostat", id: 0x201, description: "Thermostat",
+            details: "An interface for configuring and controlling the functionality of a thermostat",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "LocalTemperature",
-                    conformance: "M", quality: "X P", type: "int16"
+                    tag: "attribute", name: "LocalTemperature", id: 0x0, type: "int16", conformance: "M",
+                    quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "OutdoorTemperature",
-                    conformance: "O", quality: "X", type: "int16"
+                    tag: "attribute", name: "OutdoorTemperature", id: 0x1, type: "int16", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ThermostatOccupancy",
-                    conformance: "O", default: 1, type: "map8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0003, name: "AbsMinHeatSetpointLimit",
-                    conformance: "O", default: 700, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0004, name: "AbsMaxHeatSetpointLimit",
-                    conformance: "O", default: 3000, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0005, name: "AbsMinCoolSetpointLimit",
-                    conformance: "O", default: 1600, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0006, name: "AbsMaxCoolSetpointLimit",
-                    conformance: "O", default: 3200, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0007, name: "PiCoolingDemand",
-                    conformance: "O", quality: "P", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0008, name: "PiHeatingDemand",
-                    conformance: "O", quality: "P", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0009, name: "HvacSystemTypeConfiguration",
-                    access: "RW VM", conformance: "O", type: "map8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0010, name: "LocalTemperatureCalibration",
-                    access: "RW VM", conformance: "O", default: 0, type: "int8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0011, name: "OccupiedCoolingSetpoint",
-                    access: "RW", conformance: "O", default: 2600, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0012, name: "OccupiedHeatingSetpoint",
-                    access: "RW", conformance: "O", default: 2000, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0013, name: "UnoccupiedCoolingSetpoint",
-                    access: "RW", conformance: "O", default: 2600, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0014, name: "UnoccupiedHeatingSetpoint",
-                    access: "RW", conformance: "O", default: 2000, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0015, name: "MinHeatSetpointLimit",
-                    access: "RW VM", conformance: "O", default: 700, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0016, name: "MaxHeatSetpointLimit",
-                    access: "RW VM", conformance: "O", default: 3000, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0017, name: "MinCoolSetpointLimit",
-                    access: "RW VM", conformance: "O", default: 1600, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0018, name: "MaxCoolSetpointLimit",
-                    access: "RW VM", conformance: "O", default: 3200, type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0019, name: "MinSetpointDeadBand",
-                    access: "RW VM", conformance: "O", default: 25, type: "int8"
-                },
-
-                {
-                    tag: "attribute", id: 0x001a, name: "RemoteSensing",
-                    access: "RW VM", conformance: "O", default: 0, type: "map8"
-                },
-
-                {
-                    tag: "attribute", id: 0x001b, name: "ControlSequenceOfOperation",
-                    access: "RW VM", conformance: "M", default: 4, type: "ThermostatControlSequence"
-                },
-
-                {
-                    tag: "attribute", id: 0x001c, name: "SystemMode",
-                    access: "RW VM", conformance: "M", default: 1, type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x001e, name: "ThermostatRunningMode",
-                    conformance: "O", type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0020, name: "StartOfWeek",
-                    conformance: "O", type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0021, name: "NumberOfWeeklyTransitions",
-                    conformance: "O", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0022, name: "NumberOfDailyTransitions",
-                    conformance: "O", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0023, name: "TemperatureSetpointHold",
-                    access: "RW VM", conformance: "O", default: 0, type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0024, name: "TemperatureSetpointHoldDuration",
-                    access: "RW VM", conformance: "O", default: 65535, quality: "X", type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0025, name: "ThermostatProgrammingOperationMode",
-                    access: "RW VM", conformance: "O", default: 0, type: "map8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0029, name: "ThermostatRunningState",
-                    conformance: "O", type: "map16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0030, name: "SetpointChangeSource",
-                    conformance: "O", type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0031, name: "SetpointChangeAmount",
-                    conformance: "O", default: 32768, quality: "X", type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0032, name: "SetpointChangeSourceTimestamp",
-                    conformance: "O", type: "epoch-s"
-                },
-
-                {
-                    tag: "attribute", id: 0x0034, name: "OccupiedSetback",
-                    access: "RW VM", conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0035, name: "OccupiedSetbackMin",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0036, name: "OccupiedSetbackMax",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0037, name: "UnoccupiedSetback",
-                    access: "RW VM", conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0038, name: "UnoccupiedSetbackMin",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0039, name: "UnoccupiedSetbackMax",
-                    conformance: "O", quality: "X", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x003a, name: "EmergencyHeatDelta",
-                    access: "RW VM", conformance: "O", type: "uint8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0040, name: "AcType",
-                    access: "RW VM", conformance: "O", default: 0, type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0041, name: "AcCapacity",
-                    access: "RW VM", conformance: "O", default: 0, type: "uint16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0042, name: "AcRefrigerantType",
-                    access: "RW VM", conformance: "O", default: 0, type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0043, name: "AcCompressorType",
-                    access: "RW VM", conformance: "O", default: 0, type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0044, name: "AcErrorCode",
-                    access: "RW VM", conformance: "O", default: 0, type: "map32"
-                },
-
-                {
-                    tag: "attribute", id: 0x0045, name: "AcLouverPosition",
-                    access: "RW VM", conformance: "O", default: 0, type: "enum8"
-                },
-
-                {
-                    tag: "attribute", id: 0x0046, name: "AcCoilTemperature",
-                    conformance: "O", default: 32768, quality: "X", type: "int16"
-                },
-
-                {
-                    tag: "attribute", id: 0x0047, name: "AcCapacityFormat",
-                    access: "RW VM", conformance: "O", default: 0, type: "enum8"
-                },
-
-                {
-                    tag: "command", id: 0x0000, name: "SetpointRaiseLower",
-                    conformance: "M", direction: "request",
+                    tag: "attribute", name: "ThermostatOccupancy", id: 0x2, type: "map8", conformance: "O", default: 1,
                     children: [
                         {
-                            tag: "datatype", name: "Mode",
-                            conformance: "M", type: "SetpointAdjustMode"
-                        },
-
-                        {
-                            tag: "datatype", name: "Amount",
-                            conformance: "M", type: "int8"
+                            tag: "datatype", name: "Occupied", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "SetWeeklySchedule",
-                    access: "R M", conformance: "O", direction: "request",
+                    tag: "attribute", name: "AbsMinHeatSetpointLimit", id: 0x3, type: "int16", conformance: "O",
+                    default: 700
+                },
+
+                {
+                    tag: "attribute", name: "AbsMaxHeatSetpointLimit", id: 0x4, type: "int16", conformance: "O",
+                    default: 3000
+                },
+
+                {
+                    tag: "attribute", name: "AbsMinCoolSetpointLimit", id: 0x5, type: "int16", conformance: "O",
+                    default: 1600
+                },
+
+                {
+                    tag: "attribute", name: "AbsMaxCoolSetpointLimit", id: 0x6, type: "int16", conformance: "O",
+                    default: 3200
+                },
+
+                {
+                    tag: "attribute", name: "PiCoolingDemand", id: 0x7, type: "uint8", conformance: "O", quality: "P"
+                },
+
+                {
+                    tag: "attribute", name: "PiHeatingDemand", id: 0x8, type: "uint8", conformance: "O", quality: "P"
+                },
+
+                {
+                    tag: "attribute", name: "HvacSystemTypeConfiguration", id: 0x9, type: "map8", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "LocalTemperatureCalibration", id: 0x10, type: "int8", access: "RW VM",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "OccupiedCoolingSetpoint", id: 0x11, type: "int16", access: "RW",
+                    conformance: "O", default: 2600
+                },
+
+                {
+                    tag: "attribute", name: "OccupiedHeatingSetpoint", id: 0x12, type: "int16", access: "RW",
+                    conformance: "O", default: 2000
+                },
+
+                {
+                    tag: "attribute", name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "int16", access: "RW",
+                    conformance: "O", default: 2600
+                },
+
+                {
+                    tag: "attribute", name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "int16", access: "RW",
+                    conformance: "O", default: 2000
+                },
+
+                {
+                    tag: "attribute", name: "MinHeatSetpointLimit", id: 0x15, type: "int16", access: "RW VM",
+                    conformance: "O", default: 700
+                },
+
+                {
+                    tag: "attribute", name: "MaxHeatSetpointLimit", id: 0x16, type: "int16", access: "RW VM",
+                    conformance: "O", default: 3000
+                },
+
+                {
+                    tag: "attribute", name: "MinCoolSetpointLimit", id: 0x17, type: "int16", access: "RW VM",
+                    conformance: "O", default: 1600
+                },
+
+                {
+                    tag: "attribute", name: "MaxCoolSetpointLimit", id: 0x18, type: "int16", access: "RW VM",
+                    conformance: "O", default: 3200
+                },
+
+                {
+                    tag: "attribute", name: "MinSetpointDeadBand", id: 0x19, type: "int8", access: "RW VM",
+                    conformance: "O", default: 25
+                },
+
+                {
+                    tag: "attribute", name: "RemoteSensing", id: 0x1a, type: "map8", access: "RW VM", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "ControlSequenceOfOperation", id: 0x1b, type: "ThermostatControlSequence",
+                    access: "RW VM", conformance: "M", default: 4
+                },
+
+                {
+                    tag: "attribute", name: "SystemMode", id: 0x1c, type: "enum8", access: "RW VM", conformance: "M",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "ThermostatRunningMode", id: 0x1e, type: "enum8", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "NumberOfTransitionsForSequence",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "Off", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DayOfWeekForSequence",
-                            conformance: "M", type: "DayOfWeek"
+                            tag: "datatype", name: "Cool", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ModeForSequence",
-                            conformance: "M", type: "ModeForSequence"
-                        },
-
-                        {
-                            tag: "datatype", name: "Transitions",
-                            conformance: "M", type: "ThermostatScheduleTransition"
+                            tag: "datatype", name: "Heat", id: 0x4, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "GetWeeklySchedule",
-                    conformance: "O", direction: "request", response: "GetWeeklyScheduleResponse",
+                    tag: "attribute", name: "StartOfWeek", id: 0x20, type: "enum8", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "DaysToReturn",
-                            conformance: "M", type: "DayOfWeek"
+                            tag: "datatype", name: "Sunday", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ModeToReturn",
-                            conformance: "M", type: "ModeForSequence"
+                            tag: "datatype", name: "Monday", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Tuesday", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Wednesday", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Thursday", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Friday", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Saturday", id: 0x6, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0003, name: "ClearWeeklySchedule",
-                    access: "R M", conformance: "O", direction: "request"
+                    tag: "attribute", name: "NumberOfWeeklyTransitions", id: 0x21, type: "uint8", conformance: "O"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "GetWeeklyScheduleResponse",
-                    conformance: "O", direction: "response",
+                    tag: "attribute", name: "NumberOfDailyTransitions", id: 0x22, type: "uint8", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "TemperatureSetpointHold", id: 0x23, type: "enum8", access: "RW VM",
+                    conformance: "O", default: 0,
                     children: [
                         {
-                            tag: "datatype", name: "NumberOfTransitionsForSequence",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "SetpointHoldOff", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "DayOfWeekForSequence",
-                            conformance: "M", type: "DayOfWeek"
-                        },
-
-                        {
-                            tag: "datatype", name: "ModeForSequence",
-                            conformance: "M", type: "ModeForSequence"
-                        },
-
-                        {
-                            tag: "datatype", name: "Transitions",
-                            conformance: "M", type: "ThermostatScheduleTransition"
+                            tag: "datatype", name: "SetpointHoldOn", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ThermostatFeature",
-                    conformance: "M", type: "map32",
+                    tag: "attribute", name: "TemperatureSetpointHoldDuration", id: 0x24, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 65535, quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "ThermostatProgrammingOperationMode", id: 0x25, type: "map8",
+                    access: "RW VM", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "ThermostatRunningState", id: 0x29, type: "map16", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Heating",
-                            conformance: "M"
+                            tag: "datatype", name: "HeatStateOn", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Cooling",
-                            conformance: "M"
+                            tag: "datatype", name: "CoolStateOn", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Occupancy",
-                            conformance: "M"
+                            tag: "datatype", name: "FanStateOn", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "ScheduleConfiguration",
-                            conformance: "M"
+                            tag: "datatype", name: "HeatSecondStageStateOn", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "Setback",
-                            conformance: "M"
+                            tag: "datatype", name: "CoolSecondStageStateOn", id: 0x10, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "AutoMode",
-                            conformance: "M"
+                            tag: "datatype", name: "FanSecondStageStateOn", id: 0x20, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "FanThirdStageStateOn", id: 0x40, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DayOfWeek",
-                    conformance: "M", type: "map8",
+                    tag: "attribute", name: "SetpointChangeSource", id: 0x30, type: "enum8", conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "SetpointChangeAmount", id: 0x31, type: "int16", conformance: "O",
+                    default: 32768, quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "SetpointChangeSourceTimestamp", id: 0x32, type: "epoch-s",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "OccupiedSetback", id: 0x34, type: "uint8", access: "RW VM",
+                    conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "OccupiedSetbackMin", id: 0x35, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "OccupiedSetbackMax", id: 0x36, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "UnoccupiedSetback", id: 0x37, type: "uint8", access: "RW VM",
+                    conformance: "O", quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "UnoccupiedSetbackMin", id: 0x38, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "UnoccupiedSetbackMax", id: 0x39, type: "uint8", conformance: "O",
+                    quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "EmergencyHeatDelta", id: 0x3a, type: "uint8", access: "RW VM",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "AcType", id: 0x40, type: "enum8", access: "RW VM", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AcCapacity", id: 0x41, type: "uint16", access: "RW VM", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AcRefrigerantType", id: 0x42, type: "enum8", access: "RW VM",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AcCompressorType", id: 0x43, type: "enum8", access: "RW VM",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AcErrorCode", id: 0x44, type: "map32", access: "RW VM", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AcLouverPosition", id: 0x45, type: "enum8", access: "RW VM",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AcCoilTemperature", id: 0x46, type: "int16", conformance: "O",
+                    default: 32768, quality: "X"
+                },
+
+                {
+                    tag: "attribute", name: "AcCapacityFormat", id: 0x47, type: "enum8", access: "RW VM",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "command", name: "SetpointRaiseLower", id: 0x0, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Sunday",
-                            conformance: "M"
+                            tag: "datatype", name: "Mode", type: "SetpointAdjustMode", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Monday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Tuesday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "Wednesday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "Thursday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0020, name: "Friday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0040, name: "Saturday",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0080, name: "Away",
-                            conformance: "M"
+                            tag: "datatype", name: "Amount", type: "int8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ModeForSequence",
-                    conformance: "M", type: "map8",
+                    tag: "command", name: "SetWeeklySchedule", id: 0x1, access: "R M", conformance: "O",
+                    direction: "request",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "HeatSetpointPresent",
-                            conformance: "M"
+                            tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "CoolSetpointPresent",
-                            conformance: "M"
+                            tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ThermostatSystemMode",
-                    conformance: "M", type: "enum8",
+                    tag: "command", name: "GetWeeklySchedule", id: 0x2, conformance: "O", direction: "request",
+                    response: "GetWeeklyScheduleResponse",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Off",
-                            conformance: "M"
+                            tag: "datatype", name: "DaysToReturn", type: "DayOfWeek", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Auto",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0003, name: "Cool",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "Heat",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0005, name: "EmergencyHeat",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0006, name: "Precooling",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "FanOnly",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "Dry",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "Sleep",
-                            conformance: "M"
+                            tag: "datatype", name: "ModeToReturn", type: "ModeForSequence", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ThermostatRunningMode",
-                    conformance: "M", type: "enum8",
+                    tag: "command", name: "ClearWeeklySchedule", id: 0x3, access: "R M", conformance: "O",
+                    direction: "request"
+                },
+
+                {
+                    tag: "command", name: "GetWeeklyScheduleResponse", id: 0x0, conformance: "O", direction: "response",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Off",
-                            conformance: "M"
+                            tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Cool",
-                            conformance: "M"
+                            tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Heat",
-                            conformance: "M"
+                            tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ThermostatControlSequence",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ThermostatControlSequence", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "CoolingOnly",
-                            conformance: "M"
+                            tag: "datatype", name: "CoolingOnly", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "CoolingWithReheat",
-                            conformance: "M"
+                            tag: "datatype", name: "CoolingWithReheat", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "HeatingOnly",
-                            conformance: "M"
+                            tag: "datatype", name: "HeatingOnly", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "HeatingWithReheat",
-                            conformance: "M"
+                            tag: "datatype", name: "HeatingWithReheat", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "CoolingAndHeating",
-                            conformance: "M"
+                            tag: "datatype", name: "CoolingAndHeating", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "CoolingAndHeatingWithReheat",
-                            conformance: "M"
+                            tag: "datatype", name: "CoolingAndHeatingWithReheat", id: 0x5, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "SetpointAdjustMode",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "SetpointAdjustMode", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Heat",
-                            conformance: "M"
+                            tag: "datatype", name: "Heat", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Cool",
-                            conformance: "M"
+                            tag: "datatype", name: "Cool", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Both",
-                            conformance: "M"
+                            tag: "datatype", name: "Both", id: 0x2, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ThermostatScheduleTransition",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "DayOfWeek", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "TransitionTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Sunday", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "HeatSetpoint",
-                            conformance: "M", quality: "X", type: "int16"
+                            tag: "datatype", name: "Monday", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "CoolSetpoint",
-                            conformance: "M", quality: "X", type: "int16"
+                            tag: "datatype", name: "Tuesday", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Wednesday", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Thursday", id: 0x10, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Friday", id: 0x20, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Saturday", id: 0x40, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Away", id: 0x80, conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "ModeForSequence", type: "map8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "HeatSetpointPresent", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "CoolSetpointPresent", id: 0x2, conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "ThermostatScheduleTransition", type: "struct", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "HeatSetpoint", type: "int16", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "CoolSetpoint", type: "int16", conformance: "M", quality: "X"
                         }
                     ]
                 }
@@ -13473,714 +10282,618 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0204, name: "ThermostatUserInterfaceConfiguration",
+            tag: "cluster", name: "ThermostatUserInterfaceConfiguration", id: 0x204,
             description: "Thermostat User Interface Configuration",
+            details: "An interface for configuring the user interface of a thermostat (which may be remote from the " +
+                     "thermostat",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "TemperatureDisplayMode",
-                    access: "RW", conformance: "M", default: 0, type: "enum8"
+                    tag: "attribute", name: "TemperatureDisplayMode", id: 0x0, type: "enum8", access: "RW",
+                    conformance: "M", default: 0,
+                    children: [
+                        {
+                            tag: "datatype", name: "Celsius", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Fahrenheit", id: 0x1, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "KeypadLockout",
-                    access: "RW VM", conformance: "M", default: 0, type: "enum8"
+                    tag: "attribute", name: "KeypadLockout", id: 0x1, type: "enum8", access: "RW VM", conformance: "M",
+                    default: 0,
+                    children: [
+                        {
+                            tag: "datatype", name: "NoLockout", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LevelOneLockout", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LevelTwoLockout", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LevelThreeLockout", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LevelFourLockout", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LevelfiveLockout", id: 0x5, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "ScheduleProgrammingVisibility",
-                    access: "RW VM", conformance: "O", type: "enum8"
+                    tag: "attribute", name: "ScheduleProgrammingVisibility", id: 0x2, type: "enum8", access: "RW VM",
+                    conformance: "O"
                 }
             ]
         },
 
         {
-            tag: "cluster", id: 0x0035, name: "ThreadNetworkDiagnostics",
+            tag: "cluster", name: "ThreadNetworkDiagnostics", id: 0x35,
             description: "Thread Network Diagnostics",
+            details: "The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
+                     "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "Channel",
-                    conformance: "M", quality: "X", type: "uint16"
+                    tag: "attribute", name: "Channel", id: 0x0, type: "uint16", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "RoutingRole",
-                    conformance: "M", quality: "X", type: "RoutingRole"
+                    tag: "attribute", name: "RoutingRole", id: 0x1, type: "RoutingRole", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "NetworkName",
-                    conformance: "M", default: "", quality: "X", type: "string"
+                    tag: "attribute", name: "NetworkName", id: 0x2, type: "string", conformance: "M", default: "",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "DiagPanId",
-                    conformance: "M", default: 0, quality: "X", type: "uint16"
+                    tag: "attribute", name: "DiagPanId", id: 0x3, type: "uint16", conformance: "M", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "DiagExtendedPanId",
-                    conformance: "M", default: 0, quality: "X", type: "uint64"
+                    tag: "attribute", name: "DiagExtendedPanId", id: 0x4, type: "uint64", conformance: "M", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "MeshLocalPrefix",
-                    conformance: "M", quality: "X", type: "octstr"
+                    tag: "attribute", name: "MeshLocalPrefix", id: 0x5, type: "octstr", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "DiagOverrunCount",
-                    conformance: "O", default: 0, type: "uint64"
+                    tag: "attribute", name: "DiagOverrunCount", id: 0x6, type: "uint64", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "NeighborTable",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "NeighborTable", id: 0x7, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "NeighborTable"
+                            tag: "datatype", name: "entry", type: "NeighborTable"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "RouteTable",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "RouteTable", id: 0x8, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "RouteTable"
+                            tag: "datatype", name: "entry", type: "RouteTable"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "PartitionId",
-                    conformance: "M", quality: "X", type: "uint32"
+                    tag: "attribute", name: "PartitionId", id: 0x9, type: "uint32", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000a, name: "Weighting",
-                    conformance: "M", quality: "X", type: "uint8"
+                    tag: "attribute", name: "Weighting", id: 0xa, type: "uint8", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000b, name: "DataVersion",
-                    conformance: "M", quality: "X", type: "uint8"
+                    tag: "attribute", name: "DataVersion", id: 0xb, type: "uint8", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000c, name: "StableDataVersion",
-                    conformance: "M", quality: "X", type: "uint8"
+                    tag: "attribute", name: "StableDataVersion", id: 0xc, type: "uint8", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000d, name: "LeaderRouterId",
-                    conformance: "M", quality: "X", type: "uint8"
+                    tag: "attribute", name: "LeaderRouterId", id: 0xd, type: "uint8", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000e, name: "DetachedRoleCount",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "DetachedRoleCount", id: 0xe, type: "uint16", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x000f, name: "ChildRoleCount",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "ChildRoleCount", id: 0xf, type: "uint16", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0010, name: "RouterRoleCount",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "RouterRoleCount", id: 0x10, type: "uint16", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "LeaderRoleCount",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "LeaderRoleCount", id: 0x11, type: "uint16", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "AttachAttemptCount",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "AttachAttemptCount", id: 0x12, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0013, name: "PartitionIdChangeCount",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "PartitionIdChangeCount", id: 0x13, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0014, name: "BetterPartitionAttachAttemptCount",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "BetterPartitionAttachAttemptCount", id: 0x14, type: "uint16",
+                    conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0015, name: "ParentChangeCount",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "ParentChangeCount", id: 0x15, type: "uint16", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0016, name: "TxTotalCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxTotalCount", id: 0x16, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0017, name: "TxUnicastCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxUnicastCount", id: 0x17, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0018, name: "TxBroadcastCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxBroadcastCount", id: 0x18, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0019, name: "TxAckRequestedCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxAckRequestedCount", id: 0x19, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x001a, name: "TxAckedCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxAckedCount", id: 0x1a, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x001b, name: "TxNoAckRequestedCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxNoAckRequestedCount", id: 0x1b, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x001c, name: "TxDataCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxDataCount", id: 0x1c, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x001d, name: "TxDataPollCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxDataPollCount", id: 0x1d, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x001e, name: "TxBeaconCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxBeaconCount", id: 0x1e, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x001f, name: "TxBeaconRequestCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxBeaconRequestCount", id: 0x1f, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0020, name: "TxOtherCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxOtherCount", id: 0x20, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0021, name: "TxRetryCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxRetryCount", id: 0x21, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0022, name: "TxDirectMaxRetryExpiryCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxDirectMaxRetryExpiryCount", id: 0x22, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0023, name: "TxIndirectMaxRetryExpiryCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxIndirectMaxRetryExpiryCount", id: 0x23, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0024, name: "TxErrCcaCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxErrCcaCount", id: 0x24, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0025, name: "TxErrAbortCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxErrAbortCount", id: 0x25, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0026, name: "TxErrBusyChannelCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "TxErrBusyChannelCount", id: 0x26, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0027, name: "RxTotalCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxTotalCount", id: 0x27, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0028, name: "RxUnicastCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxUnicastCount", id: 0x28, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0029, name: "RxBroadcastCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxBroadcastCount", id: 0x29, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x002a, name: "RxDataCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxDataCount", id: 0x2a, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x002b, name: "RxDataPollCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxDataPollCount", id: 0x2b, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x002c, name: "RxBeaconCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxBeaconCount", id: 0x2c, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x002d, name: "RxBeaconRequestCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxBeaconRequestCount", id: 0x2d, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x002e, name: "RxOtherCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxOtherCount", id: 0x2e, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x002f, name: "RxAddressFilteredCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxAddressFilteredCount", id: 0x2f, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0030, name: "RxDestaddrFilteredCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxDestaddrFilteredCount", id: 0x30, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0031, name: "RxDuplicatedCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxDuplicatedCount", id: 0x31, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0032, name: "RxErrNoFrameCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxErrNoFrameCount", id: 0x32, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0033, name: "RxErrUnknownNeighborCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxErrUnknownNeighborCount", id: 0x33, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0034, name: "RxErrInvalidSrcAddrCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxErrInvalidSrcAddrCount", id: 0x34, type: "uint32", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0035, name: "RxErrSecCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxErrSecCount", id: 0x35, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0036, name: "RxErrFcsCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxErrFcsCount", id: 0x36, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0037, name: "RxErrOtherCount",
-                    conformance: "O", default: 0, type: "uint32"
+                    tag: "attribute", name: "RxErrOtherCount", id: 0x37, type: "uint32", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0038, name: "ActiveTimestamp",
-                    conformance: "O", default: 0, quality: "X", type: "uint64"
+                    tag: "attribute", name: "ActiveTimestamp", id: 0x38, type: "uint64", conformance: "O", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0039, name: "PendingTimestamp",
-                    conformance: "O", default: 0, quality: "X", type: "uint64"
+                    tag: "attribute", name: "PendingTimestamp", id: 0x39, type: "uint64", conformance: "O", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x003a, name: "Delay",
-                    conformance: "O", default: 0, quality: "X", type: "uint32"
+                    tag: "attribute", name: "Delay", id: 0x3a, type: "uint32", conformance: "O", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x003b, name: "SecurityPolicy",
-                    conformance: "M", quality: "X", type: "SecurityPolicy"
+                    tag: "attribute", name: "SecurityPolicy", id: 0x3b, type: "SecurityPolicy", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x003c, name: "DiagChannelMask",
-                    conformance: "M", quality: "X", type: "octstr"
+                    tag: "attribute", name: "DiagChannelMask", id: 0x3c, type: "octstr", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x003d, name: "OperationalDatasetComponents",
-                    conformance: "M", quality: "X", type: "OperationalDatasetComponents"
+                    tag: "attribute", name: "OperationalDatasetComponents", id: 0x3d,
+                    type: "OperationalDatasetComponents", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x003e, name: "ActiveThreadNetworkFaults",
-                    conformance: "M", type: "list",
+                    tag: "attribute", name: "ActiveThreadNetworkFaults", id: 0x3e, type: "list", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "NetworkFault"
+                            tag: "datatype", name: "entry", type: "NetworkFault"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "ResetCounts",
-                    conformance: "O", direction: "request"
+                    tag: "command", name: "ResetCounts", id: 0x0, conformance: "O", direction: "request"
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "ConnectionStatus",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "ConnectionStatus", id: 0x0, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "ConnectionStatus",
-                            conformance: "M", type: "ConnectionStatusEnum"
+                            tag: "datatype", name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "NetworkFaultChange",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "NetworkFaultChange", id: 0x1, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "Current",
-                            conformance: "M", type: "NetworkFault"
+                            tag: "datatype", name: "Current", type: "NetworkFault", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Previous",
-                            conformance: "M", type: "NetworkFault"
+                            tag: "datatype", name: "Previous", type: "NetworkFault", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "NetworkFault",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "RoutingRole", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "LinkDown",
-                            conformance: "M"
+                            tag: "datatype", name: "Unassigned", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "HardwareFailure",
-                            conformance: "M"
+                            tag: "datatype", name: "SleepyEndDevice", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "NetworkJammed",
-                            conformance: "M"
+                            tag: "datatype", name: "EndDevice", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Reed", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Router", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Leader", id: 0x6, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "RoutingRole",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "NeighborTable", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "ExtAddress", type: "uint64", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Unassigned",
-                            conformance: "M"
+                            tag: "datatype", name: "Age", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "SleepyEndDevice",
-                            conformance: "M"
+                            tag: "datatype", name: "Rloc16", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "EndDevice",
-                            conformance: "M"
+                            tag: "datatype", name: "LinkFrameCounter", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Reed",
-                            conformance: "M"
+                            tag: "datatype", name: "MleFrameCounter", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Router",
-                            conformance: "M"
+                            tag: "datatype", name: "Lqi", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "Leader",
-                            conformance: "M"
+                            tag: "datatype", name: "AverageRssi", type: "int8", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "LastRssi", type: "int8", conformance: "M", quality: "X"
+                        },
+
+                        {
+                            tag: "datatype", name: "FrameErrorRate", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "MessageErrorRate", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RxOnWhenIdle", type: "bool", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "FullThreadDevice", type: "bool", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "FullNetworkData", type: "bool", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "IsChild", type: "bool", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ConnectionStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "RouteTable", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Connected",
-                            conformance: "M"
+                            tag: "datatype", name: "ExtAddress", type: "uint64", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "NotConnected",
-                            conformance: "M"
+                            tag: "datatype", name: "Rloc16", type: "uint16", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RouterId", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NextHop", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PathCost", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LqiIn", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LqiOut", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Age", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Allocated", type: "bool", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LinkEstablished", type: "bool", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "NeighborTable",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "SecurityPolicy", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ExtAddress",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "RotationTime", type: "uint16", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Age",
-                            conformance: "M", type: "uint32"
-                        },
-
-                        {
-                            tag: "datatype", name: "Rloc16",
-                            conformance: "M", type: "uint16"
-                        },
-
-                        {
-                            tag: "datatype", name: "LinkFrameCounter",
-                            conformance: "M", type: "uint32"
-                        },
-
-                        {
-                            tag: "datatype", name: "MleFrameCounter",
-                            conformance: "M", type: "uint32"
-                        },
-
-                        {
-                            tag: "datatype", name: "Lqi",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "AverageRssi",
-                            conformance: "M", quality: "X", type: "int8"
-                        },
-
-                        {
-                            tag: "datatype", name: "LastRssi",
-                            conformance: "M", quality: "X", type: "int8"
-                        },
-
-                        {
-                            tag: "datatype", name: "FrameErrorRate",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "MessageErrorRate",
-                            conformance: "M", type: "uint8"
-                        },
-
-                        {
-                            tag: "datatype", name: "RxOnWhenIdle",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "FullThreadDevice",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "FullNetworkData",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "IsChild",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "Flags", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "RouteTable",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "OperationalDatasetComponents", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ExtAddress",
-                            conformance: "M", type: "uint64"
+                            tag: "datatype", name: "ActiveTimestampPresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Rloc16",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "PendingTimestampPresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "RouterId",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "MasterKeyPresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "NextHop",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "NetworkNamePresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "PathCost",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "ExtendedPanIdPresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LqiIn",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "MeshLocalPrefixPresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LqiOut",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "DelayPresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Age",
-                            conformance: "M", type: "uint8"
+                            tag: "datatype", name: "PanIdPresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Allocated",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "ChannelPresent", type: "bool", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "LinkEstablished",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "PskcPresent", type: "bool", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SecurityPolicyPresent", type: "bool", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ChannelMaskPresent", type: "bool", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "SecurityPolicy",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "NetworkFault", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "RotationTime",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Flags",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "LinkDown", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "HardwareFailure", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NetworkJammed", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OperationalDatasetComponents",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "ConnectionStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "ActiveTimestampPresent",
-                            conformance: "M", type: "bool"
+                            tag: "datatype", name: "Connected", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "PendingTimestampPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "MasterKeyPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "NetworkNamePresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "ExtendedPanIdPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "MeshLocalPrefixPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "DelayPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "PanIdPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "ChannelPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "PskcPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "SecurityPolicyPresent",
-                            conformance: "M", type: "bool"
-                        },
-
-                        {
-                            tag: "datatype", name: "ChannelMaskPresent",
-                            conformance: "M", type: "bool"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "ThreadNetworkDiagnosticsFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "PacketCounts",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "ErrorCounts",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0004, name: "MleCounts",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "MacCounts",
-                            conformance: "M"
+                            tag: "datatype", name: "NotConnected", id: 0x1, conformance: "M"
                         }
                     ]
                 }
@@ -14188,108 +10901,93 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x002c, name: "TimeFormatLocalization",
-            description: "Time Format Localization",
+            tag: "cluster", name: "TimeFormatLocalization", id: 0x2c, description: "Time Format Localization",
+            details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
+                     "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually or" +
+                     " audibly convey time information need a mechanism by which they can be configured to use a user’s " +
+                     "preferred format",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "HourFormat",
-                    access: "RW", conformance: "M", type: "HourFormatEnum"
+                    tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW",
+                    conformance: "M"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "ActiveCalendarType",
-                    access: "RW", conformance: "O", type: "CalendarTypeEnum"
+                    tag: "attribute", name: "ActiveCalendarType", id: 0x1, type: "CalendarTypeEnum", access: "RW",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "SupportedCalendarTypes",
-                    conformance: "O", type: "list",
+                    tag: "attribute", name: "SupportedCalendarTypes", id: 0x2, type: "list", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "CalendarTypeEnum"
+                            tag: "datatype", name: "entry", type: "CalendarTypeEnum"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "HourFormatEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "HourFormatEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "12Hr",
-                            conformance: "M"
+                            tag: "datatype", name: "12Hr", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "24Hr",
-                            conformance: "M"
+                            tag: "datatype", name: "24Hr", id: 0x1, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "CalendarTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "CalendarTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Buddhist",
-                            conformance: "M"
+                            tag: "datatype", name: "Buddhist", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Chinese",
-                            conformance: "M"
+                            tag: "datatype", name: "Chinese", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Coptic",
-                            conformance: "M"
+                            tag: "datatype", name: "Coptic", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Ethiopian",
-                            conformance: "M"
+                            tag: "datatype", name: "Ethiopian", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Gregorian",
-                            conformance: "M"
+                            tag: "datatype", name: "Gregorian", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Hebrew",
-                            conformance: "M"
+                            tag: "datatype", name: "Hebrew", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "Indian",
-                            conformance: "M"
+                            tag: "datatype", name: "Indian", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "Islamic",
-                            conformance: "M"
+                            tag: "datatype", name: "Islamic", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "Japanese",
-                            conformance: "M"
+                            tag: "datatype", name: "Japanese", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "Korean",
-                            conformance: "M"
+                            tag: "datatype", name: "Korean", id: 0x9, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000a, name: "Persian",
-                            conformance: "M"
+                            tag: "datatype", name: "Persian", id: 0xa, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000b, name: "Taiwanese",
-                            conformance: "M"
+                            tag: "datatype", name: "Taiwanese", id: 0xb, conformance: "M"
                         }
                     ]
                 }
@@ -14297,252 +10995,209 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0038, name: "TimeSynchronization",
-            description: "Time Synchronization",
+            tag: "cluster", name: "TimeSynchronization", id: 0x38, description: "Time Synchronization",
+            details: "Accurate time is required for a number of reasons, including scheduling, display and validating " +
+                     "security materials",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "UtcTime",
-                    conformance: "M", quality: "X", type: "epoch-us"
+                    tag: "attribute", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "Granularity",
-                    conformance: "M", default: 0, type: "GranularityEnum"
+                    tag: "attribute", name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "TimeSource",
-                    conformance: "O", default: 0, type: "TimeSourceEnum"
+                    tag: "attribute", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "TrustedTimeNodeId",
-                    access: "RW VA", conformance: "M", quality: "X", type: "node-id"
+                    tag: "attribute", name: "TrustedTimeNodeId", id: 0x3, type: "node-id", access: "RW VA",
+                    conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "DefaultNtp",
-                    access: "RW VA", conformance: "O", quality: "X", type: "string"
+                    tag: "attribute", name: "DefaultNtp", id: 0x4, type: "string", access: "RW VA", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "TimeZone",
-                    access: "RW VM", conformance: "O", type: "list",
+                    tag: "attribute", name: "TimeZone", id: 0x5, type: "list", access: "RW VM", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "TimeZoneStruct"
+                            tag: "datatype", name: "entry", type: "TimeZoneStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "DstOffset",
-                    access: "RW VM", conformance: "O", type: "list",
+                    tag: "attribute", name: "DstOffset", id: 0x6, type: "list", access: "RW VM", conformance: "O",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "DstOffsetStruct"
+                            tag: "datatype", name: "entry", type: "DstOffsetStruct"
                         }
                     ]
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "LocalTime",
-                    conformance: "O", default: 0, quality: "X", type: "epoch-us"
+                    tag: "attribute", name: "LocalTime", id: 0x7, type: "epoch-us", conformance: "O", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "TimeZoneDatabase",
-                    conformance: "O", default: true, type: "bool"
+                    tag: "attribute", name: "TimeZoneDatabase", id: 0x8, type: "bool", conformance: "O", default: true
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "NtpServerPort",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "NtpServerPort", id: 0x9, type: "uint16", conformance: "O", quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "SetUtcTime",
-                    conformance: "M", direction: "request",
+                    tag: "command", name: "SetUtcTime", id: 0x0, conformance: "M", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "UtcTime",
-                            conformance: "M", type: "epoch-us"
+                            tag: "datatype", name: "UtcTime", type: "epoch-us", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Granularity",
-                            conformance: "M", type: "GranularityEnum"
+                            tag: "datatype", name: "Granularity", type: "GranularityEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "TimeSource",
-                            conformance: "O", type: "TimeSourceEnum"
+                            tag: "datatype", name: "TimeSource", type: "TimeSourceEnum", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "GranularityEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "GranularityEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "NoTimeGranularity",
-                            conformance: "M"
+                            tag: "datatype", name: "NoTimeGranularity", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "MinutesGranularity",
-                            conformance: "M"
+                            tag: "datatype", name: "MinutesGranularity", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "SecondsGranularity",
-                            conformance: "M"
+                            tag: "datatype", name: "SecondsGranularity", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "MillisecondsGranularity",
-                            conformance: "M"
+                            tag: "datatype", name: "MillisecondsGranularity", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "MicrosecondsGranularity",
-                            conformance: "M"
+                            tag: "datatype", name: "MicrosecondsGranularity", id: 0x4, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "TimeSourceEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "TimeSourceEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "None",
-                            conformance: "M"
+                            tag: "datatype", name: "None", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "Unknown", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Admin",
-                            conformance: "M"
+                            tag: "datatype", name: "Admin", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "NodeTimeCluster",
-                            conformance: "M"
+                            tag: "datatype", name: "NodeTimeCluster", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "NonFabricSntp",
-                            conformance: "M"
+                            tag: "datatype", name: "NonFabricSntp", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "NonFabricNtp",
-                            conformance: "M"
+                            tag: "datatype", name: "NonFabricNtp", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "FabricSntp",
-                            conformance: "M"
+                            tag: "datatype", name: "FabricSntp", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "FabricNtp",
-                            conformance: "M"
+                            tag: "datatype", name: "FabricNtp", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "MixedNtp",
-                            conformance: "M"
+                            tag: "datatype", name: "MixedNtp", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "NonFabricSntpNts",
-                            conformance: "M"
+                            tag: "datatype", name: "NonFabricSntpNts", id: 0x9, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000a, name: "NonFabricNtpNts",
-                            conformance: "M"
+                            tag: "datatype", name: "NonFabricNtpNts", id: 0xa, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000b, name: "FabricSntpNts",
-                            conformance: "M"
+                            tag: "datatype", name: "FabricSntpNts", id: 0xb, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000c, name: "FabricNtpNts",
-                            conformance: "M"
+                            tag: "datatype", name: "FabricNtpNts", id: 0xc, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000d, name: "MixedNtpNts",
-                            conformance: "M"
+                            tag: "datatype", name: "MixedNtpNts", id: 0xd, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000e, name: "CloudSource",
-                            conformance: "M"
+                            tag: "datatype", name: "CloudSource", id: 0xe, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000f, name: "Ptp",
-                            conformance: "M"
+                            tag: "datatype", name: "Ptp", id: 0xf, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "Gnss",
-                            conformance: "M"
+                            tag: "datatype", name: "Gnss", id: 0x10, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "TimeZoneStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "TimeZoneStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Offset",
-                            conformance: "M", type: "int32"
+                            tag: "datatype", name: "Offset", type: "int32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ValidAt",
-                            conformance: "M", type: "epoch-us"
+                            tag: "datatype", name: "ValidAt", type: "epoch-us", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Name",
-                            conformance: "O", type: "string"
+                            tag: "datatype", name: "Name", type: "string", conformance: "O"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "DstOffsetStruct",
-                    conformance: "M", type: "struct",
+                    tag: "datatype", name: "DstOffsetStruct", type: "struct", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "Offset",
-                            conformance: "M", type: "int32"
+                            tag: "datatype", name: "Offset", type: "int32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ValidStarting",
-                            conformance: "M", type: "epoch-us"
+                            tag: "datatype", name: "ValidStarting", type: "epoch-us", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "ValidUntil",
-                            conformance: "M", type: "epoch-us"
+                            tag: "datatype", name: "ValidUntil", type: "epoch-us", conformance: "M"
                         }
                     ]
                 }
@@ -14550,42 +11205,30 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x002d, name: "UnitLocalization",
-            description: "Unit Localization",
+            tag: "cluster", name: "UnitLocalization", id: 0x2d, description: "Unit Localization",
+            details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
+                     "may have differing preferences for the units in which values are conveyed in communication to a user" +
+                     ". As such, Nodes that visually or audibly convey measurable values to the user need a mechanism by " +
+                     "which they can be configured to use a user’s preferred unit",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "TemperatureUnit",
-                    access: "RW", conformance: "O", type: "TempUnitEnum"
+                    tag: "attribute", name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", access: "RW",
+                    conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "TempUnitEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "TempUnitEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Fahrenheit",
-                            conformance: "M"
+                            tag: "datatype", name: "Fahrenheit", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "Celsius",
-                            conformance: "M"
+                            tag: "datatype", name: "Celsius", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Kelvin",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "UnitLocalizationFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "TemperatureUnit",
-                            conformance: "M"
+                            tag: "datatype", name: "Kelvin", id: 0x2, conformance: "M"
                         }
                     ]
                 }
@@ -14593,16 +11236,27 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0041, name: "UserLabel",
-            description: "User Label",
+            tag: "cluster", name: "UserLabel", id: 0x41, description: "User Label",
+            details: "The User Label Cluster provides a feature to tag an endpoint with zero or more labels",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "LabelList",
-                    access: "RW VM", conformance: "M", type: "list",
+                    tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "RW VM", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "LabelStruct"
+                            tag: "datatype", name: "entry", type: "LabelStruct"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "LabelStruct", type: "struct", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "Label", type: "string", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Value", type: "string", conformance: "M"
                         }
                     ]
                 }
@@ -14610,254 +11264,207 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0503, name: "WakeOnLan",
-            description: "Wake on LAN",
+            tag: "cluster", name: "WakeOnLan", id: 0x503, description: "Wake on LAN",
+            details: "This cluster provides an interface for managing low power mode on a device that supports the Wake On" +
+                     " LAN protocol",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "WakeOnLanMacAddress",
-                    conformance: "O", type: "string"
+                    tag: "attribute", name: "WakeOnLanMacAddress", id: 0x0, type: "string", conformance: "O"
                 }
             ]
         },
 
         {
-            tag: "cluster", id: 0x0036, name: "WiFiNetworkDiagnostics",
-            description: "WiFi Network Diagnostics",
+            tag: "cluster", name: "WiFiNetworkDiagnostics", id: 0x36, description: "WiFi Network Diagnostics",
+            details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
+                     "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "Bssid",
-                    conformance: "M", quality: "X", type: "octstr"
+                    tag: "attribute", name: "Bssid", id: 0x0, type: "octstr", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "SecurityType",
-                    conformance: "M", quality: "X", type: "SecurityTypeEnum"
+                    tag: "attribute", name: "SecurityType", id: 0x1, type: "SecurityTypeEnum", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "WifiVersion",
-                    conformance: "M", quality: "X", type: "WiFiVersionEnum"
+                    tag: "attribute", name: "WifiVersion", id: 0x2, type: "WiFiVersionEnum", conformance: "M",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "ChannelNumber",
-                    conformance: "M", default: 0, quality: "X", type: "uint16"
+                    tag: "attribute", name: "ChannelNumber", id: 0x3, type: "uint16", conformance: "M", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "Rssi",
-                    conformance: "M", quality: "X", type: "int8"
+                    tag: "attribute", name: "Rssi", id: 0x4, type: "int8", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "BeaconLostCount",
-                    conformance: "O", default: 0, quality: "X", type: "uint32"
+                    tag: "attribute", name: "BeaconLostCount", id: 0x5, type: "uint32", conformance: "O", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "BeaconRxCount",
-                    conformance: "O", default: 0, quality: "X", type: "uint32"
+                    tag: "attribute", name: "BeaconRxCount", id: 0x6, type: "uint32", conformance: "O", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "PacketMulticastRxCount",
-                    conformance: "O", default: 0, quality: "X", type: "uint32"
+                    tag: "attribute", name: "PacketMulticastRxCount", id: 0x7, type: "uint32", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "PacketMulticastTxCount",
-                    conformance: "O", default: 0, quality: "X", type: "uint32"
+                    tag: "attribute", name: "PacketMulticastTxCount", id: 0x8, type: "uint32", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "PacketUnicastRxCount",
-                    conformance: "O", default: 0, quality: "X", type: "uint32"
+                    tag: "attribute", name: "PacketUnicastRxCount", id: 0x9, type: "uint32", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000a, name: "PacketUnicastTxCount",
-                    conformance: "O", default: 0, quality: "X", type: "uint32"
+                    tag: "attribute", name: "PacketUnicastTxCount", id: 0xa, type: "uint32", conformance: "O",
+                    default: 0, quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000b, name: "CurrentMaxRate",
-                    conformance: "O", default: 0, quality: "X", type: "uint64"
+                    tag: "attribute", name: "CurrentMaxRate", id: 0xb, type: "uint64", conformance: "O", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x000c, name: "OverrunCount",
-                    conformance: "O", default: 0, quality: "X", type: "uint64"
+                    tag: "attribute", name: "OverrunCount", id: 0xc, type: "uint64", conformance: "O", default: 0,
+                    quality: "X"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "ResetCounts",
-                    conformance: "O", direction: "request"
+                    tag: "command", name: "ResetCounts", id: 0x0, conformance: "O", direction: "request"
                 },
 
                 {
-                    tag: "event", id: 0x0000, name: "Disconnection",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "Disconnection", id: 0x0, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "ReasonCode",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "ReasonCode", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0001, name: "AssociationFailure",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "AssociationFailure", id: 0x1, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "AssociationFailure",
-                            conformance: "M", type: "AssociationFailureCauseEnum"
+                            tag: "datatype", name: "AssociationFailure", type: "AssociationFailureCauseEnum", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", name: "Status",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "Status", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "event", id: 0x0002, name: "ConnectionStatus",
-                    conformance: "O", priority: "info",
+                    tag: "event", name: "ConnectionStatus", id: 0x2, conformance: "O", priority: "info",
                     children: [
                         {
-                            tag: "datatype", name: "ConnectionStatus",
-                            conformance: "M", type: "ConnectionStatusEnum"
+                            tag: "datatype", name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "SecurityTypeEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "SecurityTypeEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unspecified",
-                            conformance: "M"
+                            tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "None",
-                            conformance: "M"
+                            tag: "datatype", name: "None", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Wep",
-                            conformance: "M"
+                            tag: "datatype", name: "Wep", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "Wpa",
-                            conformance: "M"
+                            tag: "datatype", name: "Wpa", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Wpa2",
-                            conformance: "M"
+                            tag: "datatype", name: "Wpa2", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Wpa3",
-                            conformance: "M"
+                            tag: "datatype", name: "Wpa3", id: 0x5, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "WiFiVersionEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "WiFiVersionEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "A",
-                            conformance: "M"
+                            tag: "datatype", name: "A", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "B",
-                            conformance: "M"
+                            tag: "datatype", name: "B", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "G",
-                            conformance: "M"
+                            tag: "datatype", name: "G", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "N",
-                            conformance: "M"
+                            tag: "datatype", name: "N", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Ac",
-                            conformance: "M"
+                            tag: "datatype", name: "Ac", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Ax",
-                            conformance: "M"
+                            tag: "datatype", name: "Ax", id: 0x5, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "AssociationFailureCauseEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "AssociationFailureCauseEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "Unknown", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "AssociationFailed",
-                            conformance: "M"
+                            tag: "datatype", name: "AssociationFailed", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "AuthenticationFailed",
-                            conformance: "M"
+                            tag: "datatype", name: "AuthenticationFailed", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "SsidNotFound",
-                            conformance: "M"
+                            tag: "datatype", name: "SsidNotFound", id: 0x3, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ConnectionStatusEnum",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ConnectionStatusEnum", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "Connected",
-                            conformance: "M"
+                            tag: "datatype", name: "Connected", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "NotConnected",
-                            conformance: "M"
-                        }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "WiFiNetworkDiagnosticsFeature",
-                    conformance: "M", type: "map32",
-                    children: [
-                        {
-                            tag: "datatype", id: 0x0001, name: "PacketCounts",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0002, name: "ErrorCounts",
-                            conformance: "M"
+                            tag: "datatype", name: "NotConnected", id: 0x1, conformance: "M"
                         }
                     ]
                 }
@@ -14865,551 +11472,1290 @@ export const ChipMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", id: 0x0102, name: "WindowCovering",
-            description: "Window Covering",
+            tag: "cluster", name: "WindowCovering", id: 0x102, description: "Window Covering",
+            details: "Provides an interface for controlling and adjusting automatic window coverings",
             children: [
                 {
-                    tag: "attribute", id: 0x0000, name: "WcType",
-                    conformance: "M", default: 0, type: "Type"
+                    tag: "attribute", name: "WcType", id: 0x0, type: "Type", conformance: "M", default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0001, name: "WcPhysicalClosedLimitLift",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "WcPhysicalClosedLimitLift", id: 0x1, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0002, name: "WcPhysicalClosedLimitTilt",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "WcPhysicalClosedLimitTilt", id: 0x2, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0003, name: "WcCurrentPositionLift",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "WcCurrentPositionLift", id: 0x3, type: "uint16", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0004, name: "WcCurrentPositionTilt",
-                    conformance: "O", quality: "X", type: "uint16"
+                    tag: "attribute", name: "WcCurrentPositionTilt", id: 0x4, type: "uint16", conformance: "O",
+                    quality: "X"
                 },
 
                 {
-                    tag: "attribute", id: 0x0005, name: "WcNumberOfActuationsLift",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "WcNumberOfActuationsLift", id: 0x5, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0006, name: "WcNumberOfActuationsTilt",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "WcNumberOfActuationsTilt", id: 0x6, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0007, name: "WcConfigStatus",
-                    conformance: "M", default: 3, type: "ConfigStatus"
+                    tag: "attribute", name: "WcConfigStatus", id: 0x7, type: "ConfigStatus", conformance: "M",
+                    default: 3
                 },
 
                 {
-                    tag: "attribute", id: 0x0008, name: "WcCurrentPositionLiftPercentage",
-                    conformance: "O", quality: "X P", type: "percent"
+                    tag: "attribute", name: "WcCurrentPositionLiftPercentage", id: 0x8, type: "percent",
+                    conformance: "O", quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0009, name: "WcCurrentPositionTiltPercentage",
-                    conformance: "O", quality: "X P", type: "percent"
+                    tag: "attribute", name: "WcCurrentPositionTiltPercentage", id: 0x9, type: "percent",
+                    conformance: "O", quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x000a, name: "WcOperationalStatus",
-                    conformance: "M", default: 0, quality: "P", type: "OperationalStatus"
+                    tag: "attribute", name: "WcOperationalStatus", id: 0xa, type: "OperationalStatus", conformance: "M",
+                    default: 0, quality: "P"
                 },
 
                 {
-                    tag: "attribute", id: 0x000b, name: "WcTargetPositionLiftPercent100Ths",
-                    conformance: "O", quality: "X P", type: "percent100ths"
+                    tag: "attribute", name: "WcTargetPositionLiftPercent100Ths", id: 0xb, type: "percent100ths",
+                    conformance: "O", quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x000c, name: "WcTargetPositionTiltPercent100Ths",
-                    conformance: "O", quality: "X P", type: "percent100ths"
+                    tag: "attribute", name: "WcTargetPositionTiltPercent100Ths", id: 0xc, type: "percent100ths",
+                    conformance: "O", quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x000d, name: "WcEndProductType",
-                    conformance: "M", default: 0, type: "EndProductType"
+                    tag: "attribute", name: "WcEndProductType", id: 0xd, type: "EndProductType", conformance: "M",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x000e, name: "WcCurrentPositionLiftPercent100Ths",
-                    conformance: "O", quality: "X P", type: "percent100ths"
+                    tag: "attribute", name: "WcCurrentPositionLiftPercent100Ths", id: 0xe, type: "percent100ths",
+                    conformance: "O", quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x000f, name: "WcCurrentPositionTiltPercent100Ths",
-                    conformance: "O", quality: "X P", type: "percent100ths"
+                    tag: "attribute", name: "WcCurrentPositionTiltPercent100Ths", id: 0xf, type: "percent100ths",
+                    conformance: "O", quality: "X P"
                 },
 
                 {
-                    tag: "attribute", id: 0x0010, name: "WcInstalledOpenLimitLift",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "WcInstalledOpenLimitLift", id: 0x10, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0011, name: "WcInstalledClosedLimitLift",
-                    conformance: "O", default: 65535, type: "uint16"
+                    tag: "attribute", name: "WcInstalledClosedLimitLift", id: 0x11, type: "uint16", conformance: "O",
+                    default: 65535
                 },
 
                 {
-                    tag: "attribute", id: 0x0012, name: "WcInstalledOpenLimitTilt",
-                    conformance: "O", default: 0, type: "uint16"
+                    tag: "attribute", name: "WcInstalledOpenLimitTilt", id: 0x12, type: "uint16", conformance: "O",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x0013, name: "WcInstalledClosedLimitTilt",
-                    conformance: "O", default: 65535, type: "uint16"
+                    tag: "attribute", name: "WcInstalledClosedLimitTilt", id: 0x13, type: "uint16", conformance: "O",
+                    default: 65535
                 },
 
                 {
-                    tag: "attribute", id: 0x0017, name: "WcMode",
-                    access: "RW VM", conformance: "M", default: 0, type: "Mode"
+                    tag: "attribute", name: "WcMode", id: 0x17, type: "Mode", access: "RW VM", conformance: "M",
+                    default: 0
                 },
 
                 {
-                    tag: "attribute", id: 0x001a, name: "WcSafetyStatus",
-                    conformance: "O", default: 0, quality: "P", type: "SafetyStatus"
+                    tag: "attribute", name: "WcSafetyStatus", id: 0x1a, type: "SafetyStatus", conformance: "O",
+                    default: 0, quality: "P"
                 },
 
                 {
-                    tag: "command", id: 0x0000, name: "UpOrOpen",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "UpOrOpen", id: 0x0, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0001, name: "DownOrClose",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "DownOrClose", id: 0x1, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0002, name: "StopMotion",
-                    conformance: "M", direction: "request"
+                    tag: "command", name: "StopMotion", id: 0x2, conformance: "M", direction: "request"
                 },
 
                 {
-                    tag: "command", id: 0x0004, name: "GoToLiftValue",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "GoToLiftValue", id: 0x4, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "LiftValue",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "LiftValue", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0005, name: "GoToLiftPercentage",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "GoToLiftPercentage", id: 0x5, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "LiftPercent100ThsValue",
-                            conformance: "M", type: "percent100ths"
+                            tag: "datatype", name: "LiftPercent100ThsValue", type: "percent100ths", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0007, name: "GoToTiltValue",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "GoToTiltValue", id: 0x7, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "TiltValue",
-                            conformance: "M", type: "uint16"
+                            tag: "datatype", name: "TiltValue", type: "uint16", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "command", id: 0x0008, name: "GoToTiltPercentage",
-                    conformance: "O", direction: "request",
+                    tag: "command", name: "GoToTiltPercentage", id: 0x8, conformance: "O", direction: "request",
                     children: [
                         {
-                            tag: "datatype", name: "TiltPercent100ThsValue",
-                            conformance: "M", type: "percent100ths"
+                            tag: "datatype", name: "TiltPercent100ThsValue", type: "percent100ths", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "Type",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "Type", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "RollerShade",
-                            conformance: "M"
+                            tag: "datatype", name: "RollerShade", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "RollerShade2Motor",
-                            conformance: "M"
+                            tag: "datatype", name: "RollerShade2Motor", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "RollerShadeExterior",
-                            conformance: "M"
+                            tag: "datatype", name: "RollerShadeExterior", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "RollerShadeExterior2Motor",
-                            conformance: "M"
+                            tag: "datatype", name: "RollerShadeExterior2Motor", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "Drapery",
-                            conformance: "M"
+                            tag: "datatype", name: "Drapery", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "Awning",
-                            conformance: "M"
+                            tag: "datatype", name: "Awning", id: 0x5, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "Shutter",
-                            conformance: "M"
+                            tag: "datatype", name: "Shutter", id: 0x6, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0007, name: "TiltBlindTiltOnly",
-                            conformance: "M"
+                            tag: "datatype", name: "TiltBlindTiltOnly", id: 0x7, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "TiltBlindLiftAndTilt",
-                            conformance: "M"
+                            tag: "datatype", name: "TiltBlindLiftAndTilt", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0009, name: "ProjectorScreen",
-                            conformance: "M"
+                            tag: "datatype", name: "ProjectorScreen", id: 0x9, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x00ff, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "Unknown", id: 0xff, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "EndProductType",
-                    conformance: "M", type: "enum8",
+                    tag: "datatype", name: "ConfigStatus", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0000, name: "RollerShade",
-                            conformance: "M"
+                            tag: "datatype", name: "Operational", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0001, name: "RomanShade",
-                            conformance: "M"
+                            tag: "datatype", name: "OnlineReserved", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "BalloonShade",
-                            conformance: "M"
+                            tag: "datatype", name: "LiftMovementReversed", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0003, name: "WovenWood",
-                            conformance: "M"
+                            tag: "datatype", name: "LiftPositionAware", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "PleatedShade",
-                            conformance: "M"
+                            tag: "datatype", name: "TiltPositionAware", id: 0x10, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0005, name: "CellularShade",
-                            conformance: "M"
+                            tag: "datatype", name: "LiftEncoderControlled", id: 0x20, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0006, name: "LayeredShade",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0007, name: "LayeredShade2D",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "SheerShade",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0009, name: "TiltOnlyInteriorBlind",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000a, name: "InteriorBlind",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000b, name: "VerticalBlindStripCurtain",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000c, name: "InteriorVenetianBlind",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000d, name: "ExteriorVenetianBlind",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000e, name: "LateralLeftCurtain",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x000f, name: "LateralRightCurtain",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "CentralCurtain",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0011, name: "RollerShutter",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0012, name: "ExteriorVerticalScreen",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0013, name: "AwningTerracePatio",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0014, name: "AwningVerticalScreen",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0015, name: "TiltOnlyPergola",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0016, name: "SwingingShutter",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0017, name: "SlidingShutter",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x00ff, name: "Unknown",
-                            conformance: "M"
+                            tag: "datatype", name: "TiltEncoderControlled", id: 0x40, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "Mode",
-                    conformance: "M", type: "map8",
+                    tag: "datatype", name: "OperationalStatus", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "MotorDirectionReversed",
-                            conformance: "M"
+                            tag: "datatype", name: "Global", id: 0x3, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "CalibrationMode",
-                            conformance: "M"
+                            tag: "datatype", name: "Lift", id: 0xc, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "MaintenanceMode",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0008, name: "LedFeedback",
-                            conformance: "M"
+                            tag: "datatype", name: "Tilt", id: 0x30, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "OperationalStatus",
-                    conformance: "M", type: "map8",
+                    tag: "datatype", name: "EndProductType", type: "enum8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0003, name: "Global",
-                            conformance: "M"
+                            tag: "datatype", name: "RollerShade", id: 0x0, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x000c, name: "Lift",
-                            conformance: "M"
+                            tag: "datatype", name: "RomanShade", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0030, name: "Tilt",
-                            conformance: "M"
+                            tag: "datatype", name: "BalloonShade", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "WovenWood", id: 0x3, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "PleatedShade", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "CellularShade", id: 0x5, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LayeredShade", id: 0x6, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LayeredShade2D", id: 0x7, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SheerShade", id: 0x8, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TiltOnlyInteriorBlind", id: 0x9, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InteriorBlind", id: 0xa, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "VerticalBlindStripCurtain", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "InteriorVenetianBlind", id: 0xc, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ExteriorVenetianBlind", id: 0xd, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LateralLeftCurtain", id: 0xe, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LateralRightCurtain", id: 0xf, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "CentralCurtain", id: 0x10, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "RollerShutter", id: 0x11, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ExteriorVerticalScreen", id: 0x12, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "AwningTerracePatio", id: 0x13, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "AwningVerticalScreen", id: 0x14, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "TiltOnlyPergola", id: 0x15, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SwingingShutter", id: 0x16, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "SlidingShutter", id: 0x17, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Unknown", id: 0xff, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "ConfigStatus",
-                    conformance: "M", type: "map8",
+                    tag: "datatype", name: "Mode", type: "map8", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Operational",
-                            conformance: "M"
+                            tag: "datatype", name: "MotorDirectionReversed", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "OnlineReserved",
-                            conformance: "M"
+                            tag: "datatype", name: "CalibrationMode", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "LiftMovementReversed",
-                            conformance: "M"
+                            tag: "datatype", name: "MaintenanceMode", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "LiftPositionAware",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0010, name: "TiltPositionAware",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0020, name: "LiftEncoderControlled",
-                            conformance: "M"
-                        },
-
-                        {
-                            tag: "datatype", id: 0x0040, name: "TiltEncoderControlled",
-                            conformance: "M"
+                            tag: "datatype", name: "LedFeedback", id: 0x8, conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "SafetyStatus",
-                    conformance: "M", type: "map16",
+                    tag: "datatype", name: "SafetyStatus", type: "map16", conformance: "M",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "RemoteLockout",
-                            conformance: "M"
+                            tag: "datatype", name: "RemoteLockout", id: 0x1, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "TamperDetection",
-                            conformance: "M"
+                            tag: "datatype", name: "TamperDetection", id: 0x2, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "FailedCommunication",
-                            conformance: "M"
+                            tag: "datatype", name: "FailedCommunication", id: 0x4, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "PositionFailure",
-                            conformance: "M"
+                            tag: "datatype", name: "PositionFailure", id: 0x8, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "ThermalProtection",
-                            conformance: "M"
+                            tag: "datatype", name: "ThermalProtection", id: 0x10, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0020, name: "ObstacleDetected",
-                            conformance: "M"
+                            tag: "datatype", name: "ObstacleDetected", id: 0x20, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0040, name: "Power",
-                            conformance: "M"
+                            tag: "datatype", name: "Power", id: 0x40, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0080, name: "StopInput",
-                            conformance: "M"
+                            tag: "datatype", name: "StopInput", id: 0x80, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0100, name: "MotorJammed",
-                            conformance: "M"
+                            tag: "datatype", name: "MotorJammed", id: 0x100, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0200, name: "HardwareFailure",
-                            conformance: "M"
+                            tag: "datatype", name: "HardwareFailure", id: 0x200, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0400, name: "ManualOperation",
-                            conformance: "M"
+                            tag: "datatype", name: "ManualOperation", id: 0x400, conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0800, name: "Protection",
-                            conformance: "M"
+                            tag: "datatype", name: "Protection", id: 0x800, conformance: "M"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            tag: "cluster", name: "BarrierControl", id: 0x103, description: "Barrier Control",
+            details: "This cluster provides control of a barrier (garage door",
+            children: [
+                {
+                    tag: "attribute", name: "BarrierMovingState", id: 0x1, type: "enum8", conformance: "M"
+                },
+
+                {
+                    tag: "attribute", name: "BarrierSafetyStatus", id: 0x2, type: "map16", conformance: "M"
+                },
+
+                {
+                    tag: "attribute", name: "BarrierCapabilities", id: 0x3, type: "map8", conformance: "M"
+                },
+
+                {
+                    tag: "attribute", name: "BarrierOpenEvents", id: 0x4, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "BarrierCloseEvents", id: 0x5, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "BarrierCommandOpenEvents", id: 0x6, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "BarrierCommandCloseEvents", id: 0x7, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "BarrierOpenPeriod", id: 0x8, type: "uint16", access: "RW",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "BarrierClosePeriod", id: 0x9, type: "uint16", access: "RW",
+                    conformance: "O"
+                },
+
+                {
+                    tag: "attribute", name: "BarrierPosition", id: 0xa, type: "uint8", conformance: "M"
+                },
+
+                {
+                    tag: "command", name: "BarrierControlGoToPercent", id: 0x0, conformance: "M", direction: "request",
+                    children: [
+                        {
+                            tag: "datatype", name: "PercentOpen", type: "uint8", conformance: "M"
                         }
                     ]
                 },
 
                 {
-                    tag: "datatype", name: "WindowCoveringFeature",
-                    conformance: "M", type: "map32",
+                    tag: "command", name: "BarrierControlStop", id: 0x1, conformance: "M", direction: "request"
+                }
+            ]
+        },
+
+        {
+            tag: "cluster", name: "ElectricalMeasurement", id: 0xb04, description: "Electrical Measurement",
+            details: "Attributes related to the electrical properties of a device. This cluster is used by power outlets " +
+                     "and other devices that need to provide instantaneous data as opposed to metrology data which should " +
+                     "be retrieved from the metering cluster",
+            children: [
+                {
+                    tag: "attribute", name: "MeasurementType", id: 0x0, type: "map32", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "DcVoltage", id: 0x100, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcVoltageMin", id: 0x101, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcVoltageMax", id: 0x102, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcCurrent", id: 0x103, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcCurrentMin", id: 0x104, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcCurrentMax", id: 0x105, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcPower", id: 0x106, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcPowerMin", id: 0x107, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcPowerMax", id: 0x108, type: "int16", conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "DcVoltageMultiplier", id: 0x200, type: "uint16", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "DcVoltageDivisor", id: 0x201, type: "uint16", conformance: "O", default: 1
+                },
+
+                {
+                    tag: "attribute", name: "DcCurrentMultiplier", id: 0x202, type: "uint16", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "DcCurrentDivisor", id: 0x203, type: "uint16", conformance: "O", default: 1
+                },
+
+                {
+                    tag: "attribute", name: "DcPowerMultiplier", id: 0x204, type: "uint16", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "DcPowerDivisor", id: 0x205, type: "uint16", conformance: "O", default: 1
+                },
+
+                {
+                    tag: "attribute", name: "AcFrequency", id: 0x300, type: "uint16", conformance: "O", default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AcFrequencyMin", id: 0x301, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AcFrequencyMax", id: 0x302, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "NeutralCurrent", id: 0x303, type: "uint16", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "TotalActivePower", id: 0x304, type: "int32", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "TotalReactivePower", id: 0x305, type: "int32", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "TotalApparentPower", id: 0x306, type: "uint32", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "Measured1StHarmonicCurrent", id: 0x307, type: "int16", conformance: "O",
+                    default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "Measured3RdHarmonicCurrent", id: 0x308, type: "int16", conformance: "O",
+                    default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "Measured5ThHarmonicCurrent", id: 0x309, type: "int16", conformance: "O",
+                    default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "Measured7ThHarmonicCurrent", id: 0x30a, type: "int16", conformance: "O",
+                    default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "Measured9ThHarmonicCurrent", id: 0x30b, type: "int16", conformance: "O",
+                    default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "Measured11ThHarmonicCurrent", id: 0x30c, type: "int16", conformance: "O",
+                    default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "MeasuredPhase1StHarmonicCurrent", id: 0x30d, type: "int16",
+                    conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "MeasuredPhase3RdHarmonicCurrent", id: 0x30e, type: "int16",
+                    conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "MeasuredPhase5ThHarmonicCurrent", id: 0x30f, type: "int16",
+                    conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "MeasuredPhase7ThHarmonicCurrent", id: 0x310, type: "int16",
+                    conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "MeasuredPhase9ThHarmonicCurrent", id: 0x311, type: "int16",
+                    conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "MeasuredPhase11ThHarmonicCurrent", id: 0x312, type: "int16",
+                    conformance: "O", default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "AcFrequencyMultiplier", id: 0x400, type: "uint16", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "AcFrequencyDivisor", id: 0x401, type: "uint16", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "PowerMultiplier", id: 0x402, type: "uint32", conformance: "O", default: 1
+                },
+
+                {
+                    tag: "attribute", name: "PowerDivisor", id: 0x403, type: "uint32", conformance: "O", default: 1
+                },
+
+                {
+                    tag: "attribute", name: "HarmonicCurrentMultiplier", id: 0x404, type: "int8", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "PhaseHarmonicCurrentMultiplier", id: 0x405, type: "int8", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "InstantaneousVoltage", id: 0x500, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "InstantaneousLineCurrent", id: 0x501, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "InstantaneousActiveCurrent", id: 0x502, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "InstantaneousReactiveCurrent", id: 0x503, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "InstantaneousPower", id: 0x504, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltage", id: 0x505, type: "uint16", conformance: "O", default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageMin", id: 0x506, type: "uint16", conformance: "O",
+                    default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageMax", id: 0x507, type: "uint16", conformance: "O",
+                    default: 32768
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrent", id: 0x508, type: "uint16", conformance: "O", default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrentMin", id: 0x509, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrentMax", id: 0x50a, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePower", id: 0x50b, type: "int16", conformance: "O", default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePowerMin", id: 0x50c, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePowerMax", id: 0x50d, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ReactivePower", id: 0x50e, type: "int16", conformance: "O", default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ApparentPower", id: 0x50f, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AcPowerFactor", id: 0x510, type: "int8", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsVoltageMeasurementPeriod", id: 0x511, type: "uint16",
+                    access: "RW", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsUnderVoltageCounter", id: 0x513, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsExtremeOverVoltagePeriod", id: 0x514, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsExtremeUnderVoltagePeriod", id: 0x515, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageSagPeriod", id: 0x516, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageSwellPeriod", id: 0x517, type: "uint16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AcVoltageMultiplier", id: 0x600, type: "uint16", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "AcVoltageDivisor", id: 0x601, type: "uint16", conformance: "O", default: 1
+                },
+
+                {
+                    tag: "attribute", name: "AcCurrentMultiplier", id: 0x602, type: "uint16", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "AcCurrentDivisor", id: 0x603, type: "uint16", conformance: "O", default: 1
+                },
+
+                {
+                    tag: "attribute", name: "AcPowerMultiplier", id: 0x604, type: "uint16", conformance: "O",
+                    default: 1
+                },
+
+                {
+                    tag: "attribute", name: "AcPowerDivisor", id: 0x605, type: "uint16", conformance: "O", default: 1
+                },
+
+                {
+                    tag: "attribute", name: "DcOverloadAlarmsMask", id: 0x700, type: "map8", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "DcVoltageOverload", id: 0x701, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "DcCurrentOverload", id: 0x702, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AcOverloadAlarmsMask", id: 0x800, type: "map16", access: "RW",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AcVoltageOverload", id: 0x801, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AcCurrentOverload", id: 0x802, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AcPowerOverload", id: 0x803, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AcReactivePowerOverload", id: 0x804, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsOverVoltage", id: 0x805, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsUnderVoltage", id: 0x806, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsExtremeOverVoltage", id: 0x807, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsExtremeUnderVoltage", id: 0x808, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageSag", id: 0x809, type: "int16", conformance: "O", default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageSwell", id: 0x80a, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "LineCurrentPhaseB", id: 0x901, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActiveCurrentPhaseB", id: 0x902, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ReactiveCurrentPhaseB", id: 0x903, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltagePhaseB", id: 0x905, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageMinPhaseB", id: 0x906, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageMaxPhaseB", id: 0x907, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrentPhaseB", id: 0x908, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrentMinPhaseB", id: 0x909, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrentMaxPhaseB", id: 0x90a, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePowerPhaseB", id: 0x90b, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePowerMinPhaseB", id: 0x90c, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePowerMaxPhaseB", id: 0x90d, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ReactivePowerPhaseB", id: 0x90e, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ApparentPowerPhaseB", id: 0x90f, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "PowerFactorPhaseB", id: 0x910, type: "int8", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsVoltageMeasurementPeriodPhaseB", id: 0x911, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsOverVoltageCounterPhaseB", id: 0x912, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsUnderVoltageCounterPhaseB", id: 0x913, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsExtremeOverVoltagePeriodPhaseB", id: 0x914, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsExtremeUnderVoltagePeriodPhaseB", id: 0x915, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageSagPeriodPhaseB", id: 0x916, type: "uint16", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageSwellPeriodPhaseB", id: 0x917, type: "uint16", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "LineCurrentPhaseC", id: 0xa01, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActiveCurrentPhaseC", id: 0xa02, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ReactiveCurrentPhaseC", id: 0xa03, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltagePhaseC", id: 0xa05, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageMinPhaseC", id: 0xa06, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageMaxPhaseC", id: 0xa07, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrentPhaseC", id: 0xa08, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrentMinPhaseC", id: 0xa09, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "RmsCurrentMaxPhaseC", id: 0xa0a, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePowerPhaseC", id: 0xa0b, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePowerMinPhaseC", id: 0xa0c, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ActivePowerMaxPhaseC", id: 0xa0d, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ReactivePowerPhaseC", id: 0xa0e, type: "int16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "ApparentPowerPhaseC", id: 0xa0f, type: "uint16", conformance: "O",
+                    default: 65535
+                },
+
+                {
+                    tag: "attribute", name: "PowerFactorPhaseC", id: 0xa10, type: "int8", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsVoltageMeasurementPeriodPhaseC", id: 0xa11, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsOverVoltageCounterPhaseC", id: 0xa12, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "AverageRmsUnderVoltageCounterPhaseC", id: 0xa13, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsExtremeOverVoltagePeriodPhaseC", id: 0xa14, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsExtremeUnderVoltagePeriodPhaseC", id: 0xa15, type: "uint16",
+                    conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageSagPeriodPhaseC", id: 0xa16, type: "uint16", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "RmsVoltageSwellPeriodPhaseC", id: 0xa17, type: "uint16", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "command", name: "GetProfileInfoResponseCommand", id: 0x0, conformance: "O",
+                    direction: "response",
                     children: [
                         {
-                            tag: "datatype", id: 0x0001, name: "Lift",
-                            conformance: "M"
+                            tag: "datatype", name: "ProfileCount", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0002, name: "Tilt",
-                            conformance: "M"
+                            tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0004, name: "PositionAwareLift",
-                            conformance: "M"
+                            tag: "datatype", name: "MaxNumberOfIntervals", type: "uint8", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0008, name: "AbsolutePosition",
-                            conformance: "M"
+                            tag: "datatype", name: "ListOfAttributes", type: "uint16", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "command", name: "GetMeasurementProfileResponseCommand", id: 0x1, conformance: "O",
+                    direction: "response",
+                    children: [
+                        {
+                            tag: "datatype", name: "StartTime", type: "uint32", conformance: "M"
                         },
 
                         {
-                            tag: "datatype", id: 0x0010, name: "PositionAwareTilt",
-                            conformance: "M"
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NumberOfIntervalsDelivered", type: "uint8", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Intervals", type: "uint8", conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "command", name: "GetProfileInfoCommand", id: 0x0, conformance: "O", direction: "request"
+                },
+
+                {
+                    tag: "command", name: "GetMeasurementProfileCommand", id: 0x1, conformance: "O",
+                    direction: "request",
+                    children: [
+                        {
+                            tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "StartTime", type: "uint32", conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "NumberOfIntervals", type: "enum8", conformance: "M"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            tag: "cluster", name: "BinaryInputBasic", id: 0xf, description: "Binary Input (Basic)",
+            details: "An interface for reading the value of a binary measurement and accessing various characteristics of " +
+                     "that measurement",
+            children: [
+                {
+                    tag: "attribute", name: "ActiveText", id: 0x4, type: "string", access: "RW", conformance: "O",
+                    default: ""
+                },
+
+                {
+                    tag: "attribute", name: "Description", id: 0x1c, type: "string", access: "RW", conformance: "O",
+                    default: ""
+                },
+
+                {
+                    tag: "attribute", name: "InactiveText", id: 0x2e, type: "string", access: "RW", conformance: "O",
+                    default: ""
+                },
+
+                {
+                    tag: "attribute", name: "OutOfService", id: 0x51, type: "bool", access: "RW", conformance: "M",
+                    default: true
+                },
+
+                {
+                    tag: "attribute", name: "Polarity", id: 0x54, type: "enum8", conformance: "O", default: 0
+                },
+
+                {
+                    tag: "attribute", name: "PresentValue", id: 0x55, type: "bool", access: "RW", conformance: "M",
+                    quality: "P"
+                },
+
+                {
+                    tag: "attribute", name: "Reliability", id: 0x67, type: "enum8", access: "RW", conformance: "O",
+                    default: 0
+                },
+
+                {
+                    tag: "attribute", name: "StatusFlags", id: 0x6f, type: "map8", conformance: "M", default: 0,
+                    quality: "P"
+                },
+
+                {
+                    tag: "attribute", name: "ApplicationType", id: 0x100, type: "uint32", conformance: "O"
+                }
+            ]
+        },
+
+        {
+            tag: "cluster", name: "OnOffSwitchConfiguration", id: 0x7,
+            description: "On/off Switch Configuration",
+            details: "Attributes and commands for configuring On/Off switching devices",
+            children: [
+                {
+                    tag: "attribute", name: "SwitchType", id: 0x0, type: "enum8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "Toggle", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Momentary", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "MultiFunction", id: 0x2, conformance: "M"
+                        }
+                    ]
+                },
+
+                {
+                    tag: "attribute", name: "SwitchActions", id: 0x10, type: "enum8", access: "RW", conformance: "M",
+                    default: 0,
+                    children: [
+                        {
+                            tag: "datatype", name: "On", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Off", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Toggle", id: 0x2, conformance: "M"
                         }
                     ]
                 }

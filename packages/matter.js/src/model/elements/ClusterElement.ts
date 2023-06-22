@@ -15,7 +15,8 @@ import { EventElement } from "./EventElement.js";
  * A cluster describes a set of related functionality.
  */
 export type ClusterElement = BaseElement & {
-    id: Mei,
+    id?: Mei,
+
     tag: `${ClusterElement.Tag}`,
 
     /**

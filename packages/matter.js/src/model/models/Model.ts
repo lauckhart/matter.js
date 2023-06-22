@@ -36,7 +36,7 @@ export abstract class Model {
     /**
      * Flag set on elements loaded from Globals.
      */
-    isGlobal?: boolean;
+    global?: boolean;
 
     /**
      * Indicates that an element may have type definitions as children.
@@ -196,9 +196,11 @@ export abstract class Model {
     /**
      * Check identity of element by name or ID.
      */
-    is(key: string | number | undefined) {
+    is(key: ModelTraversal.ElementSelector | undefined) {
         if (typeof key == "number") {
             return this.id == key;
+        } else if (typeof key == "function") {
+            return key(this);
         }
         return this.name == key;
     }
@@ -252,6 +254,13 @@ export abstract class Model {
      */
     visit(visitor: (model: Model) => boolean | void) {
         return new ModelTraversal().visit(this, visitor);
+    }
+
+    /**
+     * Search the inheritance chain for a child property.
+     */
+    member(key: ModelTraversal.ElementSelector): Model | undefined {
+        return new ModelTraversal().findMember(this, key, [ ElementTag.Datatype, ElementTag.Attribute ]);
     }
 
     constructor(definition: BaseElement) {

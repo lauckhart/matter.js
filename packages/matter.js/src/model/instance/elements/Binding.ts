@@ -9,60 +9,54 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x001e, name: "Binding",
-    classification: "endpoint", description: "Binding",
+    tag: "cluster", name: "Binding", id: 0x1e, classification: "endpoint", description: "Binding",
+    details: "The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
+             "supporting the binding table",
+    xref: { document: "core", section: "9.6" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "Binding",
-            access: "RW F VM", conformance: "M", constraint: "desc", default: [], quality: "N", type: "list",
+            tag: "attribute", name: "Binding", id: 0x0, type: "list", access: "RW F VM", conformance: "M",
+            constraint: "desc", quality: "N",
             details: "Each entry SHALL represent a binding. Here are some examples",
             xref: { document: "core", section: "9.6.6.1" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "TargetStruct"
+                    tag: "datatype", name: "entry", type: "TargetStruct"
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0000, name: "BindingList",
-            access: "RW", conformance: "M", type: "list",
+            tag: "attribute", name: "BindingList", id: 0x0, type: "list", access: "RW", conformance: "M",
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "TargetStruct"
+                    tag: "datatype", name: "entry", type: "TargetStruct"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "TargetStruct",
-            access: "R F", conformance: "M", type: "struct",
+            tag: "datatype", name: "TargetStruct", type: "struct", access: "R F", conformance: "M",
             details: "Node Field",
             xref: { document: "core", section: "9.6.5.1" },
             children: [
                 {
-                    tag: "datatype", id: 0x0001, name: "Node",
-                    access: "F", conformance: "Endpoint", default: undefined, type: "node-id",
+                    tag: "datatype", name: "Node", id: 0x1, type: "node-id", access: "F", conformance: "Endpoint",
                     xref: { document: "core", section: "9.6.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Group",
-                    access: "F", conformance: "!Endpoint", default: undefined, type: "group-id",
+                    tag: "datatype", name: "Group", id: 0x2, type: "group-id", access: "F", conformance: "!Endpoint",
                     xref: { document: "core", section: "9.6.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0003, name: "Endpoint",
-                    access: "F", conformance: "!Group", default: undefined, type: "endpoint-no",
+                    tag: "datatype", name: "Endpoint", id: 0x3, type: "endpoint-no", access: "F", conformance: "!Group",
                     xref: { document: "core", section: "9.6.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0004, name: "Cluster",
-                    access: "F", conformance: "O", default: undefined, type: "cluster-id",
+                    tag: "datatype", name: "Cluster", id: 0x4, type: "cluster-id", access: "F", conformance: "O",
                     xref: { document: "core", section: "9.6.5.1" }
                 }
             ]

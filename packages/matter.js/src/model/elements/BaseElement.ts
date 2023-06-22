@@ -55,9 +55,10 @@ export type BaseElement = {
     children?: AnyElement[],
 
     /**
-     * Is this a global element?
+     * Is this a global element?  Global elements are defined in Globals.ts
+     * and are available in-scope for every cluster.
      */
-    isGlobal?: boolean,
+    global?: boolean,
 }
 
 export function BaseElement(tag: ElementTag, definition: BaseElement) {

@@ -14,7 +14,7 @@ import { Model } from "./Model.js";
 
 export class ClusterModel extends Model implements ClusterElement {
     override tag: ClusterElement.Tag = ClusterElement.Tag;
-    override id!: Mei;
+    override id?: Mei;
     override isTypeScope = true;
     singleton?: boolean;
     classification?: ClusterElement.Classification;

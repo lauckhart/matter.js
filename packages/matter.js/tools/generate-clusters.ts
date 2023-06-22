@@ -375,7 +375,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     ) {
         const elements = Array<ClusterModel[N][number]>();
         for (const e of cluster[name]) {
-            if (!e.isGlobal && (!(e instanceof CommandModel) || e.isRequest)) {
+            if (!e.global && (!(e instanceof CommandModel) || e.isRequest)) {
                 elements.push(e);
             }
         }

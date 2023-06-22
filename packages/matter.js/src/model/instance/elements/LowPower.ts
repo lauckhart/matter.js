@@ -9,12 +9,14 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0508, name: "LowPower",
-    classification: "application", description: "Low Power",
+    tag: "cluster", name: "LowPower", id: 0x508, classification: "application",
+    description: "Low Power",
+    details: "This cluster provides an interface for managing low power mode on a device",
+    xref: { document: "cluster", section: "1.9" },
     children: [
         {
-            tag: "command", id: 0x0000, name: "Sleep",
-            access: "O", conformance: "M", direction: "request", response: "status",
+            tag: "command", name: "Sleep", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "status",
             details: "This command shall put the device into low power mode",
             xref: { document: "cluster", section: "1.9.3.1" }
         }

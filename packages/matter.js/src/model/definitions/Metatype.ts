@@ -10,6 +10,7 @@ import { ByteArray } from "../../util/ByteArray.js";
  * General groupings of Matter types.
  */
 export enum Metatype {
+    any = "any",
     boolean = "boolean",
     bitmap = "bitmap",
     enum = "enum",
@@ -66,7 +67,7 @@ export namespace Metatype {
      * @returns the cast value or Metatype.Invalid if cast is not possible
      */
     export function cast(type: Metatype, value: any) {
-        if (value == undefined) {
+        if (value == undefined || type == Metatype.any) {
             return value;
         }
 
@@ -146,6 +147,9 @@ export namespace Metatype {
                 return value;
 
             case Metatype.bytes:
+                if (value == "empty") {
+                    return undefined;
+                }
                 if (!(value instanceof Uint8Array)) {
                     return Invalid;
                 }

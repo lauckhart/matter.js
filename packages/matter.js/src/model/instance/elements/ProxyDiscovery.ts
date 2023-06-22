@@ -9,6 +9,6 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0043, name: "ProxyDiscovery",
-    description: "Proxy Discovery"
+    tag: "cluster", name: "ProxyDiscovery", id: 0x43, description: "Proxy Discovery",
+    details: "Cluster to control Proxy Discovery"
 });

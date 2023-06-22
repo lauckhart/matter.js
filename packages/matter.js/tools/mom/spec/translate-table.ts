@@ -42,14 +42,20 @@ export const Bit = (el: HTMLElement) => {
 // CamelCase identifier.  Note we replace "Fo o" with "Foo" because space
 // errors are very common in the PDFs, especially in narrow columns and we
 // don't want to end up with FoO
-export const Identifier = (el: HTMLElement) => camelize(Str(el)
-    .replace(/[^\sA-Za-z0-9\-_]/g, "")
-    .replace(/ +([a-z])/g, "$1"),
-    true);
+export const Identifier = (el: HTMLElement) => {
+    let str = Str(el).replace(/[^\sA-Za-z0-9\-_]/g, "");
 
-// CamelCase identifier but only consider first paragraph
+    // Skip this heuristic if there are words known to be properly lowercased
+    if (!str.match(/ (on|and) /)) {
+        str = str.replace(/ +([a-z])/g, "$1");
+    }
+
+    return camelize(str, true);
+};
+
+// CamelCase identifier but only consider first sentence of first paragraph
 export const LimitedIdentifier = (el: HTMLElement) => {
-    return el.firstChild ? Identifier(el.firstChild as HTMLElement) : "";
+    return el.firstChild ? Identifier(el.firstChild as HTMLElement)?.replace(/^(.*)\.?.*/, "$1") : "";
 }
 
 // Identifier, all lowercase
@@ -122,7 +128,7 @@ export function translateTable<T extends TableSchema>(
     const translators = Array<[string, Translator<any>]>();
     let childTranslator: ChildTranslator | undefined;
 
-    nextValue: for (let [ k, v ] of Object.entries(schema)) {
+    nextField: for (let [ k, v ] of Object.entries(schema)) {
         while (typeof v == "object") {
             switch (v.option) {
                 case "optional":
@@ -143,7 +149,7 @@ export function translateTable<T extends TableSchema>(
 
                 case "children":
                     childTranslator = v.translator;
-                    continue nextValue;
+                    continue nextField;
             }
         }
 

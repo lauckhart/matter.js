@@ -25,7 +25,7 @@ export function writeMatterFile(path: string, body: any) {
     writeFileSync(path, body);
 }
 
-export function clean(target: string, suffix: string) {
+export function clean(target: string, suffix: string = "") {
     const path = resolveFromPackage(target);
     readdirSync(resolveFromPackage(target)).forEach((f) => {
         if (f.endsWith(`${suffix}.ts`)) {

@@ -9,814 +9,1139 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0201, name: "Thermostat",
-    classification: "application", description: "Thermostat",
+    tag: "cluster", name: "Thermostat", id: 0x201, classification: "application",
+    description: "Thermostat",
+    details: "An interface for configuring and controlling the functionality of a thermostat",
+    xref: { document: "cluster", section: "4.3" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "LocalTemperature",
-            access: "R V", conformance: "M", default: "null", quality: "X P", type: "temperature",
-            details: "This attribute indicates the current LocalTemperature value, when " +
-                     "available. The value may be local, or remote, depending on the value " +
-                     "of the RemoteSensing attribute when supported",
+            tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            children: [
+                {
+                    tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a1+",
+                    description: "Thermostat is capable of managing a heating device",
+                    xref: { document: "cluster", section: "4.3.3.1" }
+                },
+
+                {
+                    tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a1+",
+                    description: "Thermostat is capable of managing a cooling device",
+                    xref: { document: "cluster", section: "4.3.3.1" }
+                },
+
+                {
+                    tag: "datatype", name: "OCC", id: 0x2, conformance: "O",
+                    description: "Supports Occupied and Unoccupied setpoints",
+                    xref: { document: "cluster", section: "4.3.3.1" }
+                },
+
+                {
+                    tag: "datatype", name: "SCH", id: 0x3, conformance: "O",
+                    description: "Supports remote configuration of a weekly schedule of setpoint transitions",
+                    xref: { document: "cluster", section: "4.3.3.1" }
+                },
+
+                {
+                    tag: "datatype", name: "SB", id: 0x4, conformance: "O",
+                    description: "Supports configurable setback (or span)",
+                    xref: { document: "cluster", section: "4.3.3.1" }
+                },
+
+                {
+                    tag: "datatype", name: "AUTO", id: 0x5, conformance: "O",
+                    description: "Supports a System Mode of Auto",
+                    xref: { document: "cluster", section: "4.3.3.1" }
+                },
+
+                {
+                    tag: "datatype", name: "LTNE", id: 0x6, conformance: "O",
+                    description: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
+                    xref: { document: "cluster", section: "4.3.3.1" }
+                }
+            ]
+        },
+
+        {
+            tag: "attribute", name: "LocalTemperature", id: 0x0, type: "temperature", access: "R V",
+            conformance: "M", default: null, quality: "X P",
+            details: "This attribute indicates the current LocalTemperature value, when available. The value may be local" +
+                     ", or remote, depending on the value of the RemoteSensing attribute when supported",
             xref: { document: "cluster", section: "4.3.7.2" }
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "OutdoorTemperature",
-            access: "R V", conformance: "O", default: "null", quality: "X", type: "temperature",
-            details: "This attribute represents the outdoor temperature, as measured locally" +
-                     " or remotely (over the network",
+            tag: "attribute", name: "OutdoorTemperature", id: 0x1, type: "temperature", access: "R V",
+            conformance: "O", default: null, quality: "X",
+            details: "This attribute represents the outdoor temperature, as measured locally or remotely (over the network",
             xref: { document: "cluster", section: "4.3.7.3" }
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "Occupancy",
-            access: "R V", conformance: "O, CC", constraint: "desc", default: 1, type: "map8",
-            details: "This attribute specifies whether the heated/cooled space is occupied " +
-                     "or not, as measured locally or remotely (over the network). If bit 0" +
-                     " = 1, the space is occupied, else it is unoccupied. All other bits are" +
-                     " reserved",
-            xref: { document: "cluster", section: "4.3.7.4" }
+            tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "O, CC",
+            constraint: "desc", default: 1,
+            details: "This attribute specifies whether the heated/cooled space is occupied or not, as measured locally or " +
+                     "remotely (over the network). If bit 0 = 1, the space is occupied, else it is unoccupied. All other " +
+                     "bits are reserved",
+            xref: { document: "cluster", section: "4.3.7.4" },
+            children: [
+                {
+                    tag: "datatype", name: "Occupied", id: 0x1, conformance: "M"
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "AbsMinHeatSetpointLimit",
-            access: "R V", conformance: "[HEAT]", constraint: "desc", default: 700, quality: "F", type: "temperature",
-            details: "This attribute specifies the absolute minimum level that the heating " +
-                     "setpoint MAY be set to. This is a limitation imposed by the " +
-                     "manufacturer",
+            tag: "attribute", name: "AbsMinHeatSetpointLimit", id: 0x3, type: "temperature", access: "R V",
+            conformance: "[HEAT]", constraint: "desc", default: 700, quality: "F",
+            details: "This attribute specifies the absolute minimum level that the heating setpoint MAY be set to. This is" +
+                     " a limitation imposed by the manufacturer",
             xref: { document: "cluster", section: "4.3.7.5" }
         },
 
         {
-            tag: "attribute", id: 0x0004, name: "AbsMaxHeatSetpointLimit",
-            access: "R V", conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "F", type: "temperature",
-            details: "This attribute specifies the absolute maximum level that the heating " +
-                     "setpoint MAY be set to. This is a limitation imposed by the " +
-                     "manufacturer",
+            tag: "attribute", name: "AbsMaxHeatSetpointLimit", id: 0x4, type: "temperature", access: "R V",
+            conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "F",
+            details: "This attribute specifies the absolute maximum level that the heating setpoint MAY be set to. This is" +
+                     " a limitation imposed by the manufacturer",
             xref: { document: "cluster", section: "4.3.7.6" }
         },
 
         {
-            tag: "attribute", id: 0x0005, name: "AbsMinCoolSetpointLimit",
-            access: "R V", conformance: "[COOL]", constraint: "desc", default: 1600, quality: "F", type: "temperature",
-            details: "This attribute specifies the absolute minimum level that the cooling " +
-                     "setpoint MAY be set to. This is a limitation imposed by the " +
-                     "manufacturer",
+            tag: "attribute", name: "AbsMinCoolSetpointLimit", id: 0x5, type: "temperature", access: "R V",
+            conformance: "[COOL]", constraint: "desc", default: 1600, quality: "F",
+            details: "This attribute specifies the absolute minimum level that the cooling setpoint MAY be set to. This is" +
+                     " a limitation imposed by the manufacturer",
             xref: { document: "cluster", section: "4.3.7.7" }
         },
 
         {
-            tag: "attribute", id: 0x0006, name: "AbsMaxCoolSetpointLimit",
-            access: "R V", conformance: "[COOL]", constraint: "desc", default: 3200, quality: "F", type: "temperature",
-            details: "This attribute specifies the absolute maximum level that the cooling " +
-                     "setpoint MAY be set to. This is a limitation imposed by the " +
-                     "manufacturer",
+            tag: "attribute", name: "AbsMaxCoolSetpointLimit", id: 0x6, type: "temperature", access: "R V",
+            conformance: "[COOL]", constraint: "desc", default: 3200, quality: "F",
+            details: "This attribute specifies the absolute maximum level that the cooling setpoint MAY be set to. This is" +
+                     " a limitation imposed by the manufacturer",
             xref: { document: "cluster", section: "4.3.7.8" }
         },
 
         {
-            tag: "attribute", id: 0x0007, name: "PiCoolingDemand",
-            access: "R V", conformance: "[COOL]", default: "-", quality: "P", type: "uint8",
-            details: "This attribute specifies the level of cooling demanded by the PI (" +
-                     "proportional integral) control loop in use by the thermostat (if any" +
-                     "), in percent. This value is 0 when the thermostat is in “off” or “" +
-                     "heating” mode",
+            tag: "attribute", name: "PiCoolingDemand", id: 0x7, type: "uint8", access: "R V",
+            conformance: "[COOL]", quality: "P",
+            details: "This attribute specifies the level of cooling demanded by the PI (proportional integral) control " +
+                     "loop in use by the thermostat (if any), in percent. This value is 0 when the thermostat is in “off” " +
+                     "or “heating” mode",
             xref: { document: "cluster", section: "4.3.7.9" }
         },
 
         {
-            tag: "attribute", id: 0x0008, name: "PiHeatingDemand",
-            access: "R V", conformance: "[HEAT]", default: "-", quality: "P", type: "uint8",
-            details: "This attribute specifies the level of heating demanded by the PI loop " +
-                     "in percent. This value is 0 when the thermostat is in “off” or “" +
-                     "cooling” mode",
+            tag: "attribute", name: "PiHeatingDemand", id: 0x8, type: "uint8", access: "R V",
+            conformance: "[HEAT]", quality: "P",
+            details: "This attribute specifies the level of heating demanded by the PI loop in percent. This value is 0 " +
+                     "when the thermostat is in “off” or “cooling” mode",
             xref: { document: "cluster", section: "4.3.7.10" }
         },
 
         {
-            tag: "attribute", id: 0x0009, name: "HvacSystemTypeConfiguration",
-            access: "RW VM", conformance: "D", constraint: "desc", default: undefined, quality: "N", type: "map8",
-            details: "This attribute specifies the HVAC system type controlled by the " +
-                     "thermostat. If the thermostat uses physical DIP switches to set these " +
-                     "parameters, this information SHALL be available read-only from the DIP" +
-                     " switches. If these parameters are set via software, there SHALL be " +
-                     "read/write access in order to provide remote programming capability. " +
-                     "The meanings of individual bits are detailed below. Each bit " +
-                     "represents a type of system configuration",
-            xref: { document: "cluster", section: "4.3.7.11" }
+            tag: "attribute", name: "HvacSystemTypeConfiguration", id: 0x9, type: "map8", access: "RW VM",
+            conformance: "D", constraint: "desc", quality: "N",
+            details: "This attribute specifies the HVAC system type controlled by the thermostat. If the thermostat uses " +
+                     "physical DIP switches to set these parameters, this information SHALL be available read-only from " +
+                     "the DIP switches. If these parameters are set via software, there SHALL be read/write access in " +
+                     "order to provide remote programming capability. The meanings of individual bits are detailed below. " +
+                     "Each bit represents a type of system configuration",
+            xref: { document: "cluster", section: "4.3.7.11" },
+            children: [
+                {
+                    tag: "datatype", name: "CoolingStage", id: 0x0,
+                    description: "00 – Cool Stage 101 – Cool Stage 210 – Cool Stage 311 – Reserved",
+                    xref: { document: "cluster", section: "4.3.7.11" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatingStage", id: 0x2,
+                    description: "00 – Heat Stage 101 – Heat Stage 210 – Heat Stage 311 – Reserved",
+                    xref: { document: "cluster", section: "4.3.7.11" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatingType", id: 0x4, description: "0 – Conventional1 – Heat Pump",
+                    xref: { document: "cluster", section: "4.3.7.11" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatingFuel", id: 0x5, description: "0 – Electric / B1 – Gas / O",
+                    xref: { document: "cluster", section: "4.3.7.11" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0010, name: "LocalTemperatureCalibration",
-            access: "RW VM", conformance: "[!LTNE]", constraint: "-2.5 to 2.5", default: 0, quality: "N", type: "temp-s8",
-            details: "This attribute specifies the offset the Thermostat server SHALL make " +
-                     "to the measured temperature (locally or remotely) to adjust the " +
-                     "LocalTemperature Value prior to using, displaying or reporting it",
+            tag: "attribute", name: "LocalTemperatureCalibration", id: 0x10, type: "temp-s8", access: "RW VM",
+            conformance: "[!LTNE]", constraint: "-2.5 to 2.5", quality: "N",
+            details: "This attribute specifies the offset the Thermostat server SHALL make to the measured temperature (" +
+                     "locally or remotely) to adjust the LocalTemperature Value prior to using, displaying or reporting it",
             xref: { document: "cluster", section: "4.3.7.12" }
         },
 
         {
-            tag: "attribute", id: 0x0011, name: "OccupiedCoolingSetpoint",
-            access: "RW", conformance: "COOL", constraint: "desc", default: 2600, quality: "N S", type: "temperature",
-            details: "This attribute specifies the cooling mode setpoint when the room is " +
-                     "occupied",
+            tag: "attribute", name: "OccupiedCoolingSetpoint", id: 0x11, type: "temperature", access: "RW",
+            conformance: "COOL", constraint: "desc", default: 2600, quality: "N S",
+            details: "This attribute specifies the cooling mode setpoint when the room is occupied",
             xref: { document: "cluster", section: "4.3.7.13" }
         },
 
         {
-            tag: "attribute", id: 0x0012, name: "OccupiedHeatingSetpoint",
-            access: "RW", conformance: "HEAT", constraint: "desc", default: 2000, quality: "N S", type: "temperature",
-            details: "This attribute specifies the heating mode setpoint when the room is " +
-                     "occupied",
+            tag: "attribute", name: "OccupiedHeatingSetpoint", id: 0x12, type: "temperature", access: "RW",
+            conformance: "HEAT", constraint: "desc", default: 2000, quality: "N S",
+            details: "This attribute specifies the heating mode setpoint when the room is occupied",
             xref: { document: "cluster", section: "4.3.7.14" }
         },
 
         {
-            tag: "attribute", id: 0x0013, name: "UnoccupiedCoolingSetpoint",
-            access: "RW", conformance: "COOL & O, CC", constraint: "desc", default: 2600, quality: "N", type: "temperature",
-            details: "This attribute specifies the cooling mode setpoint when the room is " +
-                     "unoccupied",
+            tag: "attribute", name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature", access: "RW",
+            conformance: "COOL & O, CC", constraint: "desc", default: 2600, quality: "N",
+            details: "This attribute specifies the cooling mode setpoint when the room is unoccupied",
             xref: { document: "cluster", section: "4.3.7.15" }
         },
 
         {
-            tag: "attribute", id: 0x0014, name: "UnoccupiedHeatingSetpoint",
-            access: "RW", conformance: "HEAT & O, CC", constraint: "desc", default: 2000, quality: "N", type: "temperature",
-            details: "This attribute specifies the heating mode setpoint when the room is " +
-                     "unoccupied",
+            tag: "attribute", name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature", access: "RW",
+            conformance: "HEAT & O, CC", constraint: "desc", default: 2000, quality: "N",
+            details: "This attribute specifies the heating mode setpoint when the room is unoccupied",
             xref: { document: "cluster", section: "4.3.7.16" }
         },
 
         {
-            tag: "attribute", id: 0x0015, name: "MinHeatSetpointLimit",
-            access: "RW VM", conformance: "[HEAT]", constraint: "desc", default: 700, quality: "N", type: "temperature",
-            details: "This attribute specifies the minimum level that the heating setpoint " +
-                     "MAY be set to",
+            tag: "attribute", name: "MinHeatSetpointLimit", id: 0x15, type: "temperature", access: "RW VM",
+            conformance: "[HEAT]", constraint: "desc", default: 700, quality: "N",
+            details: "This attribute specifies the minimum level that the heating setpoint MAY be set to",
             xref: { document: "cluster", section: "4.3.7.17" }
         },
 
         {
-            tag: "attribute", id: 0x0016, name: "MaxHeatSetpointLimit",
-            access: "RW VM", conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "N", type: "temperature",
-            details: "This attribute specifies the maximum level that the heating setpoint " +
-                     "MAY be set to",
+            tag: "attribute", name: "MaxHeatSetpointLimit", id: 0x16, type: "temperature", access: "RW VM",
+            conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "N",
+            details: "This attribute specifies the maximum level that the heating setpoint MAY be set to",
             xref: { document: "cluster", section: "4.3.7.18" }
         },
 
         {
-            tag: "attribute", id: 0x0017, name: "MinCoolSetpointLimit",
-            access: "RW VM", conformance: "[COOL]", constraint: "desc", default: 1600, quality: "N", type: "temperature",
-            details: "This attribute specifies the minimum level that the cooling setpoint " +
-                     "MAY be set to",
+            tag: "attribute", name: "MinCoolSetpointLimit", id: 0x17, type: "temperature", access: "RW VM",
+            conformance: "[COOL]", constraint: "desc", default: 1600, quality: "N",
+            details: "This attribute specifies the minimum level that the cooling setpoint MAY be set to",
             xref: { document: "cluster", section: "4.3.7.19" }
         },
 
         {
-            tag: "attribute", id: 0x0018, name: "MaxCoolSetpointLimit",
-            access: "RW VM", conformance: "[COOL]", constraint: "desc", default: 3200, quality: "N", type: "temperature",
-            details: "This attribute specifies the maximum level that the cooling setpoint " +
-                     "MAY be set to",
+            tag: "attribute", name: "MaxCoolSetpointLimit", id: 0x18, type: "temperature", access: "RW VM",
+            conformance: "[COOL]", constraint: "desc", default: 3200, quality: "N",
+            details: "This attribute specifies the maximum level that the cooling setpoint MAY be set to",
             xref: { document: "cluster", section: "4.3.7.20" }
         },
 
         {
-            tag: "attribute", id: 0x0019, name: "MinSetpointDeadBand",
-            access: "RW VM", conformance: "AUTO", constraint: "0 to 2.5", default: 25, quality: "N", type: "temp-s8",
-            details: "On devices which support the AUTO feature, this attribute specifies " +
-                     "the minimum difference between the Heat Setpoint and the Cool Setpoint",
+            tag: "attribute", name: "MinSetpointDeadBand", id: 0x19, type: "temp-s8", access: "RW VM",
+            conformance: "AUTO", constraint: "0 to 2.5", default: 25, quality: "N",
+            details: "On devices which support the AUTO feature, this attribute specifies the minimum difference between " +
+                     "the Heat Setpoint and the Cool Setpoint",
             xref: { document: "cluster", section: "4.3.7.21" }
         },
 
         {
-            tag: "attribute", id: 0x001a, name: "RemoteSensing",
-            access: "RW VM", conformance: "O", constraint: "0", default: undefined, quality: "N", type: "map8",
-            details: "This attribute indicates when the local temperature, outdoor " +
-                     "temperature and occupancy are being sensed by remote networked sensors" +
-                     ", rather than internal sensors",
-            xref: { document: "cluster", section: "4.3.7.22" }
+            tag: "attribute", name: "RemoteSensing", id: 0x1a, type: "map8", access: "RW VM", conformance: "O",
+            constraint: "0", quality: "N",
+            details: "This attribute indicates when the local temperature, outdoor temperature and occupancy are being " +
+                     "sensed by remote networked sensors, rather than internal sensors",
+            xref: { document: "cluster", section: "4.3.7.22" },
+            children: [
+                {
+                    tag: "datatype", name: "LocalTemperature", id: 0x0,
+                    description: "When set, LocalTemperature Value is derived from a remote node",
+                    xref: { document: "cluster", section: "4.3.7.22" }
+                },
+
+                {
+                    tag: "datatype", name: "OutdoorTemperature", id: 0x1,
+                    description: "When set, OutdoorTemperature is derived from a remote node",
+                    xref: { document: "cluster", section: "4.3.7.22" }
+                },
+
+                {
+                    tag: "datatype", name: "Occupancy", id: 0x2,
+                    description: "When set, Occupancy is derived from a remote node",
+                    xref: { document: "cluster", section: "4.3.7.22" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x001b, name: "ControlSequenceOfOperation",
-            access: "RW VM", conformance: "M", constraint: "desc", default: 4, quality: "N", type: "enum8",
-            details: "This attribute specifies the overall operating environment of the " +
-                     "thermostat, and thus the possible system modes that the thermostat can" +
-                     " operate in. It SHALL be set to one of the following values",
-            xref: { document: "cluster", section: "4.3.7.23" }
+            tag: "attribute", name: "ControlSequenceOfOperation", id: 0x1b, type: "enum8", access: "RW VM",
+            conformance: "M", constraint: "desc", default: 4, quality: "N",
+            details: "This attribute specifies the overall operating environment of the thermostat, and thus the possible " +
+                     "system modes that the thermostat can operate in. It SHALL be set to one of the following values",
+            xref: { document: "cluster", section: "4.3.7.23" },
+            children: [
+                {
+                    tag: "datatype", name: "CoolingOnly", id: 0x0, conformance: "[COOL]",
+                    description: "Heat and Emergency are not possible",
+                    xref: { document: "cluster", section: "4.3.7.23" }
+                },
+
+                {
+                    tag: "datatype", name: "CoolingWithReheat", id: 0x1, conformance: "[COOL]",
+                    description: "Heat and Emergency are not possible",
+                    xref: { document: "cluster", section: "4.3.7.23" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatingOnly", id: 0x2, conformance: "[HEAT]",
+                    description: "Cool and precooling (see Terms) are not possible",
+                    xref: { document: "cluster", section: "4.3.7.23" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatingWithReheat", id: 0x3, conformance: "[HEAT]",
+                    description: "Cool and precooling are not possible",
+                    xref: { document: "cluster", section: "4.3.7.23" }
+                },
+
+                {
+                    tag: "datatype", name: "CoolingAndHeating", id: 0x4, conformance: "[HEAT & COOL]",
+                    description: "All modes are possible",
+                    xref: { document: "cluster", section: "4.3.7.23" }
+                },
+
+                {
+                    tag: "datatype", name: "CoolingAndHeatingWithReheat", id: 0x5, conformance: "[HEAT & COOL]",
+                    description: "All modes are possible",
+                    xref: { document: "cluster", section: "4.3.7.23" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x001c, name: "SystemMode",
-            access: "RW VM", conformance: "M", constraint: "desc", default: 1, quality: "N S", type: "enum8",
-            details: "This attribute specifies the current operating mode of the thermostat" +
-                     ", It SHALL be set to one of the following values, as limited by the " +
-                     "ControlSequenceOfOperation Attribute",
-            xref: { document: "cluster", section: "4.3.7.24" }
+            tag: "attribute", name: "SystemMode", id: 0x1c, type: "enum8", access: "RW VM", conformance: "M",
+            constraint: "desc", default: 1, quality: "N S",
+            details: "This attribute specifies the current operating mode of the thermostat, It SHALL be set to one of the" +
+                     " following values, as limited by the ControlSequenceOfOperation Attribute",
+            xref: { document: "cluster", section: "4.3.7.24" },
+            children: [
+                {
+                    tag: "datatype", name: "Off", id: 0x0, conformance: "O",
+                    description: "The Thermostat does not generate demand for Cooling or Heating",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                },
+
+                {
+                    tag: "datatype", name: "Auto", id: 0x1, conformance: "AUTO",
+                    description: "Demand is generated for either Cooling or Heating, as required",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                },
+
+                {
+                    tag: "datatype", name: "Cool", id: 0x3, conformance: "[COOL]",
+                    description: "Demand is only generated for Cooling",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                },
+
+                {
+                    tag: "datatype", name: "Heat", id: 0x4, conformance: "[HEAT]",
+                    description: "Demand is only generated for Heating",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                },
+
+                {
+                    tag: "datatype", name: "EmergencyHeat", id: 0x5, conformance: "[HEAT]",
+                    description: "2nd stage heating is in use to achieve desired temperature",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                },
+
+                {
+                    tag: "datatype", name: "Precooling", id: 0x6, conformance: "[COOL]", description: "(see Terms)",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                },
+
+                {
+                    tag: "datatype", name: "Fanonly", id: 0x7, conformance: "O",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                },
+
+                {
+                    tag: "datatype", name: "Dry", id: 0x8, conformance: "O",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                },
+
+                {
+                    tag: "datatype", name: "Sleep", id: 0x9, conformance: "O",
+                    xref: { document: "cluster", section: "4.3.7.24" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x001d, name: "AlarmMask",
-            access: "R V", conformance: "O", constraint: "desc", default: undefined, type: "map8",
-            details: "This attribute specifies whether each of the alarms listed below is " +
-                     "enabled. When the bit number corresponding to the alarm code is set to" +
-                     " 1, the alarm is enabled, else it is disabled. Bits not corresponding " +
-                     "to a code in the table are reserved",
-            xref: { document: "cluster", section: "4.3.7.25" }
+            tag: "attribute", name: "AlarmMask", id: 0x1d, type: "map8", access: "R V", conformance: "O",
+            constraint: "desc",
+            details: "This attribute specifies whether each of the alarms listed below is enabled. When the bit number " +
+                     "corresponding to the alarm code is set to 1, the alarm is enabled, else it is disabled. Bits not " +
+                     "corresponding to a code in the table are reserved",
+            xref: { document: "cluster", section: "4.3.7.25" },
+            children: [
+                {
+                    tag: "datatype", name: "InitializationfailureThedevicefailedtocompleteinitializationatpowerUp",
+                    id: 0x0,
+                    xref: { document: "cluster", section: "4.3.7.25" }
+                },
+
+                {
+                    tag: "datatype", name: "Hardwarefailure", id: 0x1,
+                    xref: { document: "cluster", section: "4.3.7.25" }
+                },
+
+                {
+                    tag: "datatype", name: "SelfCalibrationfailure", id: 0x2,
+                    xref: { document: "cluster", section: "4.3.7.25" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x001e, name: "ThermostatRunningMode",
-            access: "R V", conformance: "[AUTO]", constraint: "desc", default: undefined, type: "enum8",
-            xref: { document: "cluster", section: "4.3.7" }
+            tag: "attribute", name: "ThermostatRunningMode", id: 0x1e, type: "enum8", access: "R V",
+            conformance: "[AUTO]", constraint: "desc",
+            xref: { document: "cluster", section: "4.3.7" },
+            children: [
+                {
+                    tag: "datatype", name: "Off", id: 0x0, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Cool", id: 0x3, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Heat", id: 0x4, conformance: "M"
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0020, name: "StartOfWeek",
-            access: "R V", conformance: "SCH", constraint: "desc", default: "–", quality: "F", type: "enum8",
-            details: "This attribute represents the day of the week that this thermostat " +
-                     "considers to be the start of week for weekly set point scheduling",
-            xref: { document: "cluster", section: "4.3.7.27" }
+            tag: "attribute", name: "StartOfWeek", id: 0x20, type: "enum8", access: "R V", conformance: "SCH",
+            constraint: "desc", quality: "F",
+            details: "This attribute represents the day of the week that this thermostat considers to be the start of week" +
+                     " for weekly set point scheduling",
+            xref: { document: "cluster", section: "4.3.7.27" },
+            children: [
+                {
+                    tag: "datatype", name: "Sunday", id: 0x0, conformance: "M",
+                    xref: { document: "cluster", section: "4.3.7.27" }
+                },
+
+                {
+                    tag: "datatype", name: "Monday", id: 0x1, conformance: "M",
+                    xref: { document: "cluster", section: "4.3.7.27" }
+                },
+
+                {
+                    tag: "datatype", name: "Tuesday", id: 0x2, conformance: "M",
+                    xref: { document: "cluster", section: "4.3.7.27" }
+                },
+
+                {
+                    tag: "datatype", name: "Wednesday", id: 0x3, conformance: "M",
+                    xref: { document: "cluster", section: "4.3.7.27" }
+                },
+
+                {
+                    tag: "datatype", name: "Thursday", id: 0x4, conformance: "M",
+                    xref: { document: "cluster", section: "4.3.7.27" }
+                },
+
+                {
+                    tag: "datatype", name: "Friday", id: 0x5, conformance: "M",
+                    xref: { document: "cluster", section: "4.3.7.27" }
+                },
+
+                {
+                    tag: "datatype", name: "Saturday", id: 0x6, conformance: "M",
+                    xref: { document: "cluster", section: "4.3.7.27" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0021, name: "NumberOfWeeklyTransitions",
-            access: "R V", conformance: "SCH", default: undefined, quality: "F", type: "uint8",
-            details: "This attribute determines how many weekly schedule transitions the " +
-                     "thermostat is capable of handling",
+            tag: "attribute", name: "NumberOfWeeklyTransitions", id: 0x21, type: "uint8", access: "R V",
+            conformance: "SCH", quality: "F",
+            details: "This attribute determines how many weekly schedule transitions the thermostat is capable of handling",
             xref: { document: "cluster", section: "4.3.7.28" }
         },
 
         {
-            tag: "attribute", id: 0x0022, name: "NumberOfDailyTransitions",
-            access: "R V", conformance: "SCH", default: undefined, quality: "F", type: "uint8",
-            details: "This attribute determines how many daily schedule transitions the " +
-                     "thermostat is capable of handling",
+            tag: "attribute", name: "NumberOfDailyTransitions", id: 0x22, type: "uint8", access: "R V",
+            conformance: "SCH", quality: "F",
+            details: "This attribute determines how many daily schedule transitions the thermostat is capable of handling",
             xref: { document: "cluster", section: "4.3.7.29" }
         },
 
         {
-            tag: "attribute", id: 0x0023, name: "TemperatureSetpointHold",
-            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "N", type: "enum8",
-            details: "This attribute specifies the temperature hold status on the thermostat" +
-                     ". If hold status is on, the thermostat SHOULD maintain the temperature" +
-                     " set point for the current mode until a system mode change. If hold " +
-                     "status is off, the thermostat SHOULD follow the setpoint transitions " +
-                     "specified by its internal scheduling program. If the thermostat " +
-                     "supports setpoint hold for a specific duration, it SHOULD also " +
-                     "implement the TemperatureSetpointHoldDuration attribute",
-            xref: { document: "cluster", section: "4.3.7.30" }
+            tag: "attribute", name: "TemperatureSetpointHold", id: 0x23, type: "enum8", access: "RW VM",
+            conformance: "O", constraint: "desc", quality: "N",
+            details: "This attribute specifies the temperature hold status on the thermostat. If hold status is on, the " +
+                     "thermostat SHOULD maintain the temperature set point for the current mode until a system mode change" +
+                     ". If hold status is off, the thermostat SHOULD follow the setpoint transitions specified by its " +
+                     "internal scheduling program. If the thermostat supports setpoint hold for a specific duration, it " +
+                     "SHOULD also implement the TemperatureSetpointHoldDuration attribute",
+            xref: { document: "cluster", section: "4.3.7.30" },
+            children: [
+                {
+                    tag: "datatype", name: "SetpointHoldOff", id: 0x0, conformance: "M",
+                    description: "Follow scheduling program",
+                    xref: { document: "cluster", section: "4.3.7.30" }
+                },
+
+                {
+                    tag: "datatype", name: "SetpointHoldOn", id: 0x1, conformance: "M",
+                    description: "Maintain current setpoint, regardless of schedule transitions",
+                    xref: { document: "cluster", section: "4.3.7.30" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0024, name: "TemperatureSetpointHoldDuration",
-            access: "RW VM", conformance: "O", constraint: "0 to 1440", default: 65535, quality: "X N", type: "uint16",
-            details: "This attribute sets the period in minutes for which a setpoint hold is" +
-                     " active. Thermostats that support hold for a specified duration SHOULD" +
-                     " implement this attribute. The null value indicates the field is " +
-                     "unused. All other values are reserved",
+            tag: "attribute", name: "TemperatureSetpointHoldDuration", id: 0x24, type: "uint16",
+            access: "RW VM", conformance: "O", constraint: "0 to 1440", default: 65535, quality: "X N",
+            details: "This attribute sets the period in minutes for which a setpoint hold is active. Thermostats that " +
+                     "support hold for a specified duration SHOULD implement this attribute. The null value indicates the " +
+                     "field is unused. All other values are reserved",
             xref: { document: "cluster", section: "4.3.7.31" }
         },
 
         {
-            tag: "attribute", id: 0x0025, name: "ThermostatProgrammingOperationMode",
-            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "P", type: "map8",
-            details: "This attribute determines the operational state of the thermostat’s " +
-                     "programming. The thermostat SHALL modify its programming operation " +
-                     "when this attribute is modified by a client and update this attribute " +
-                     "when its programming operation is modified locally by a user. The " +
-                     "thermostat MAY support more than one active " +
-                     "ThermostatProgrammingOperationMode. For example, the thermostat MAY " +
-                     "operate simultaneously in Schedule Programming Mode and Recovery Mode",
-            xref: { document: "cluster", section: "4.3.7.32" }
+            tag: "attribute", name: "ThermostatProgrammingOperationMode", id: 0x25, type: "map8",
+            access: "RW VM", conformance: "O", constraint: "desc", quality: "P",
+            details: "This attribute determines the operational state of the thermostat’s programming. The thermostat " +
+                     "SHALL modify its programming operation when this attribute is modified by a client and update this " +
+                     "attribute when its programming operation is modified locally by a user. The thermostat MAY support " +
+                     "more than one active ThermostatProgrammingOperationMode. For example, the thermostat MAY operate " +
+                     "simultaneously in Schedule Programming Mode and Recovery Mode",
+            xref: { document: "cluster", section: "4.3.7.32" },
+            children: [
+                {
+                    tag: "datatype", name: "ScheduleActive", id: 0x0,
+                    description: "Schedule programming mode. This enables any programmed weekly schedule configurations.",
+                    xref: { document: "cluster", section: "4.3.7.32" }
+                },
+
+                {
+                    tag: "datatype", name: "AutoRecovery", id: 0x1, description: "Auto/recovery mode",
+                    xref: { document: "cluster", section: "4.3.7.32" }
+                },
+
+                {
+                    tag: "datatype", name: "Economy", id: 0x2, description: "Economy/EnergyStar mode",
+                    xref: { document: "cluster", section: "4.3.7.32" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0029, name: "ThermostatRunningState",
-            access: "R V", conformance: "O", constraint: "desc", default: "-", type: "map16",
-            details: "This attribute represents the current relay state of the heat, cool, " +
-                     "and fan relays",
-            xref: { document: "cluster", section: "4.3.7.33" }
+            tag: "attribute", name: "ThermostatRunningState", id: 0x29, type: "map16", access: "R V",
+            conformance: "O", constraint: "desc",
+            details: "This attribute represents the current relay state of the heat, cool, and fan relays",
+            xref: { document: "cluster", section: "4.3.7.33" },
+            children: [
+                {
+                    tag: "datatype", name: "Heat", id: 0x0, description: "Heat State On",
+                    xref: { document: "cluster", section: "4.3.7.33" }
+                },
+
+                {
+                    tag: "datatype", name: "Cool", id: 0x1, conformance: "M", description: "Cool State On",
+                    xref: { document: "cluster", section: "4.3.7.33" }
+                },
+
+                {
+                    tag: "datatype", name: "Fan", id: 0x2, conformance: "M", description: "Fan State On",
+                    xref: { document: "cluster", section: "4.3.7.33" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatStage2", id: 0x3, description: "Heat 2nd Stage State On",
+                    xref: { document: "cluster", section: "4.3.7.33" }
+                },
+
+                {
+                    tag: "datatype", name: "CoolStage2", id: 0x4, conformance: "M",
+                    description: "Cool 2nd Stage State On",
+                    xref: { document: "cluster", section: "4.3.7.33" }
+                },
+
+                {
+                    tag: "datatype", name: "FanStage2", id: 0x5, description: "Fan 2nd Stage State On",
+                    xref: { document: "cluster", section: "4.3.7.33" }
+                },
+
+                {
+                    tag: "datatype", name: "FanStage3", id: 0x6, description: "Fan 3rd Stage Stage On",
+                    xref: { document: "cluster", section: "4.3.7.33" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatSecondStageStateOn", id: 0x8, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "CoolSecondStageStateOn", id: 0x10, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "FanSecondStageStateOn", id: 0x20, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "FanThirdStageStateOn", id: 0x40, conformance: "M"
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0030, name: "SetpointChangeSource",
-            access: "R V", conformance: "O", constraint: "desc", default: undefined, type: "enum8",
-            details: "This attribute specifies the source of the current active " +
-                     "OccupiedCoolingSetpoint or OccupiedHeatingSetpoint (i.e., who or what " +
-                     "determined the current setpoint",
-            xref: { document: "cluster", section: "4.3.7.34" }
+            tag: "attribute", name: "SetpointChangeSource", id: 0x30, type: "enum8", access: "R V",
+            conformance: "O", constraint: "desc",
+            details: "This attribute specifies the source of the current active OccupiedCoolingSetpoint or " +
+                     "OccupiedHeatingSetpoint (i.e., who or what determined the current setpoint",
+            xref: { document: "cluster", section: "4.3.7.34" },
+            children: [
+                {
+                    tag: "datatype", name: "Manual", id: 0x0, conformance: "O",
+                    description: "Manual, user-initiated setpoint change via the thermostat",
+                    xref: { document: "cluster", section: "4.3.7.34" }
+                },
+
+                {
+                    tag: "datatype", name: "Schedule", id: 0x1, conformance: "[SCH]",
+                    description: "Schedule/internal programming-initiated setpoint change",
+                    xref: { document: "cluster", section: "4.3.7.34" }
+                },
+
+                {
+                    tag: "datatype", name: "External", id: 0x2, conformance: "O",
+                    description: "Externally-initiated setpoint change (e.g., DRLC cluster command, attribute write)",
+                    xref: { document: "cluster", section: "4.3.7.34" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0031, name: "SetpointChangeAmount",
-            access: "R V", conformance: "O", default: 32768, quality: "X", type: "temp-diff",
-            details: "This attribute specifies the delta between the current active " +
-                     "OccupiedCoolingSetpoint or OccupiedHeatingSetpoint and the previous " +
-                     "active setpoint. This attribute is meant to accompany the " +
-                     "SetpointChangeSource attribute; devices implementing " +
-                     "SetpointChangeAmount SHOULD also implement SetpointChangeSource",
+            tag: "attribute", name: "SetpointChangeAmount", id: 0x31, type: "temp-diff", access: "R V",
+            conformance: "O", default: 32768, quality: "X",
+            details: "This attribute specifies the delta between the current active OccupiedCoolingSetpoint or " +
+                     "OccupiedHeatingSetpoint and the previous active setpoint. This attribute is meant to accompany the " +
+                     "SetpointChangeSource attribute; devices implementing SetpointChangeAmount SHOULD also implement " +
+                     "SetpointChangeSource",
             xref: { document: "cluster", section: "4.3.7.35" }
         },
 
         {
-            tag: "attribute", id: 0x0032, name: "SetpointChangeSourceTimestamp",
-            access: "R V", conformance: "O", default: undefined, type: "utc",
-            details: "This attribute specifies the time in UTC at which the " +
-                     "SetpointChangeSourceAmount attribute change was recorded",
+            tag: "attribute", name: "SetpointChangeSourceTimestamp", id: 0x32, type: "utc", access: "R V",
+            conformance: "O",
+            details: "This attribute specifies the time in UTC at which the SetpointChangeSourceAmount attribute change " +
+                     "was recorded",
             xref: { document: "cluster", section: "4.3.7.36" }
         },
 
         {
-            tag: "attribute", id: 0x0034, name: "OccupiedSetback",
-            access: "RW VM", conformance: "SB", constraint: "OccupiedSetbackMin to OccupiedSetbackMax", default: "null", quality: "X N", type: "temp-u8",
-            details: "This attribute specifies the amount that the Thermostat server will " +
-                     "allow the LocalTemperature Value to float above the OccupiedCooling " +
-                     "setpoint (i.e., OccupiedCooling + OccupiedSetback) or below the " +
-                     "OccupiedHeating setpoint (i.e., OccupiedHeating – OccupiedSetback) " +
-                     "before initiating a state change to bring the temperature back to the " +
-                     "user’s desired setpoint. This attribute is sometimes also referred to " +
-                     "as the “span",
+            tag: "attribute", name: "OccupiedSetback", id: 0x34, type: "temp-u8", access: "RW VM",
+            conformance: "SB", constraint: "OccupiedSetbackMin to OccupiedSetbackMax", default: null,
+            quality: "X N",
+            details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature Value" +
+                     " to float above the OccupiedCooling setpoint (i.e., OccupiedCooling + OccupiedSetback) or below the " +
+                     "OccupiedHeating setpoint (i.e., OccupiedHeating – OccupiedSetback) before initiating a state change " +
+                     "to bring the temperature back to the user’s desired setpoint. This attribute is sometimes also " +
+                     "referred to as the “span",
             xref: { document: "cluster", section: "4.3.7.37" }
         },
 
         {
-            tag: "attribute", id: 0x0035, name: "OccupiedSetbackMin",
-            access: "R V", conformance: "SB", constraint: "0 to OccupiedSetbackMax", default: "null", quality: "X F", type: "temp-u8",
-            details: "This attribute specifies the minimum value that the Thermostat server " +
-                     "will allow the OccupiedSetback attribute to be configured by a user",
+            tag: "attribute", name: "OccupiedSetbackMin", id: 0x35, type: "temp-u8", access: "R V",
+            conformance: "SB", constraint: "0 to OccupiedSetbackMax", default: null, quality: "X F",
+            details: "This attribute specifies the minimum value that the Thermostat server will allow the OccupiedSetback" +
+                     " attribute to be configured by a user",
             xref: { document: "cluster", section: "4.3.7.38" }
         },
 
         {
-            tag: "attribute", id: 0x0036, name: "OccupiedSetbackMax",
-            access: "R V", conformance: "SB", constraint: "OccupiedSetbackMin to 25.4", default: "null", quality: "X F", type: "temp-u8",
-            details: "This attribute specifies the maximum value that the Thermostat server " +
-                     "will allow the OccupiedSetback attribute to be configured by a user",
+            tag: "attribute", name: "OccupiedSetbackMax", id: 0x36, type: "temp-u8", access: "R V",
+            conformance: "SB", constraint: "OccupiedSetbackMin to 25.4", default: null, quality: "X F",
+            details: "This attribute specifies the maximum value that the Thermostat server will allow the OccupiedSetback" +
+                     " attribute to be configured by a user",
             xref: { document: "cluster", section: "4.3.7.39" }
         },
 
         {
-            tag: "attribute", id: 0x0037, name: "UnoccupiedSetback",
-            access: "RW VM", conformance: "SB & O, CC", constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax", default: "null", quality: "X N", type: "temp-u8",
-            details: "This attribute specifies the amount that the Thermostat server will " +
-                     "allow the LocalTemperature Value to float above the UnoccupiedCooling " +
-                     "setpoint (i.e., UnoccupiedCooling + UnoccupiedSetback) or below the " +
-                     "UnoccupiedHeating setpoint (i.e., UnoccupiedHeating - " +
-                     "UnoccupiedSetback) before initiating a state change to bring the " +
-                     "temperature back to the user’s desired setpoint. This attribute is " +
+            tag: "attribute", name: "UnoccupiedSetback", id: 0x37, type: "temp-u8", access: "RW VM",
+            conformance: "SB & O, CC", constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax",
+            default: null, quality: "X N",
+            details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature Value" +
+                     " to float above the UnoccupiedCooling setpoint (i.e., UnoccupiedCooling + UnoccupiedSetback) or " +
+                     "below the UnoccupiedHeating setpoint (i.e., UnoccupiedHeating - UnoccupiedSetback) before initiating" +
+                     " a state change to bring the temperature back to the user’s desired setpoint. This attribute is " +
                      "sometimes also referred to as the “span",
             xref: { document: "cluster", section: "4.3.7.40" }
         },
 
         {
-            tag: "attribute", id: 0x0038, name: "UnoccupiedSetbackMin",
-            access: "R V", conformance: "SB & O, CC", constraint: "0 to UnoccupiedSetbackMax", default: "null", quality: "X F", type: "temp-u8",
-            details: "This attribute specifies the minimum value that the Thermostat server " +
-                     "will allow the UnoccupiedSetback attribute to be configured by a user",
+            tag: "attribute", name: "UnoccupiedSetbackMin", id: 0x38, type: "temp-u8", access: "R V",
+            conformance: "SB & O, CC", constraint: "0 to UnoccupiedSetbackMax", default: null, quality: "X F",
+            details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
+                     "UnoccupiedSetback attribute to be configured by a user",
             xref: { document: "cluster", section: "4.3.7.41" }
         },
 
         {
-            tag: "attribute", id: 0x0039, name: "UnoccupiedSetbackMax",
-            access: "R V", conformance: "SB & O, CC", constraint: "UnoccupiedSetbackMin to 25.4", default: "null", quality: "X F", type: "temp-u8",
-            details: "This attribute specifies the maximum value that the Thermostat server " +
-                     "will allow the UnoccupiedSetback attribute to be configured by a user",
+            tag: "attribute", name: "UnoccupiedSetbackMax", id: 0x39, type: "temp-u8", access: "R V",
+            conformance: "SB & O, CC", constraint: "UnoccupiedSetbackMin to 25.4", default: null,
+            quality: "X F",
+            details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
+                     "UnoccupiedSetback attribute to be configured by a user",
             xref: { document: "cluster", section: "4.3.7.42" }
         },
 
         {
-            tag: "attribute", id: 0x003a, name: "EmergencyHeatDelta",
-            access: "RW VM", conformance: "O", default: "25.5°C", quality: "N", type: "temp-u8",
-            details: "This attribute specifies the delta between the LocalTemperature Value " +
-                     "and the OccupiedHeatingSetpoint or UnoccupiedHeatingSetpoint " +
-                     "attributes at which the Thermostat server will operate in emergency " +
-                     "heat mode",
+            tag: "attribute", name: "EmergencyHeatDelta", id: 0x3a, type: "temp-u8", access: "RW VM",
+            conformance: "O", default: 2550, quality: "N",
+            details: "This attribute specifies the delta between the LocalTemperature Value and the " +
+                     "OccupiedHeatingSetpoint or UnoccupiedHeatingSetpoint attributes at which the Thermostat server will " +
+                     "operate in emergency heat mode",
             xref: { document: "cluster", section: "4.3.7.43" }
         },
 
         {
-            tag: "attribute", id: 0x0040, name: "AcType",
-            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "N", type: "enum8",
-            details: "This attribute indicates the type of Mini Split ACType of Mini Split " +
-                     "AC is defined depending on how Cooling and Heating condition is " +
-                     "achieved by Mini Split AC",
-            xref: { document: "cluster", section: "4.3.7.44" }
+            tag: "attribute", name: "AcType", id: 0x40, type: "enum8", access: "RW VM", conformance: "O",
+            constraint: "desc", quality: "N",
+            details: "This attribute indicates the type of Mini Split ACType of Mini Split AC is defined depending on how " +
+                     "Cooling and Heating condition is achieved by Mini Split AC",
+            xref: { document: "cluster", section: "4.3.7.44" },
+            children: [
+                {
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "O", description: "Unknown AC Type",
+                    xref: { document: "cluster", section: "4.3.7.44" }
+                },
+
+                {
+                    tag: "datatype", name: "CoolingFixed", id: 0x1, conformance: "O",
+                    description: "Cooling and Fixed Speed",
+                    xref: { document: "cluster", section: "4.3.7.44" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatPumpFixed", id: 0x2, conformance: "O",
+                    description: "Heat Pump and Fixed Speed",
+                    xref: { document: "cluster", section: "4.3.7.44" }
+                },
+
+                {
+                    tag: "datatype", name: "CoolingInverter", id: 0x3, conformance: "O",
+                    description: "Cooling and Inverter",
+                    xref: { document: "cluster", section: "4.3.7.44" }
+                },
+
+                {
+                    tag: "datatype", name: "HeatPumpInverter", id: 0x4, conformance: "O",
+                    description: "Heat Pump and Inverter",
+                    xref: { document: "cluster", section: "4.3.7.44" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0041, name: "AcCapacity",
-            access: "RW VM", conformance: "O", default: undefined, quality: "N", type: "uint16",
-            details: "This attribute indicates capacity of Mini Split AC in terms of the " +
-                     "format defined by the ACCapacityFormat attribute",
+            tag: "attribute", name: "AcCapacity", id: 0x41, type: "uint16", access: "RW VM", conformance: "O",
+            quality: "N",
+            details: "This attribute indicates capacity of Mini Split AC in terms of the format defined by the " +
+                     "ACCapacityFormat attribute",
             xref: { document: "cluster", section: "4.3.7.45" }
         },
 
         {
-            tag: "attribute", id: 0x0042, name: "AcRefrigerantType",
-            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "N", type: "enum8",
-            details: "This attribute indicates type of refrigerant used within the Mini " +
-                     "Split AC",
-            xref: { document: "cluster", section: "4.3.7.46" }
+            tag: "attribute", name: "AcRefrigerantType", id: 0x42, type: "enum8", access: "RW VM",
+            conformance: "O", constraint: "desc", quality: "N",
+            details: "This attribute indicates type of refrigerant used within the Mini Split AC",
+            xref: { document: "cluster", section: "4.3.7.46" },
+            children: [
+                {
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "O",
+                    description: "Unknown Refrigerant Type",
+                    xref: { document: "cluster", section: "4.3.7.46" }
+                },
+
+                {
+                    tag: "datatype", name: "R22", id: 0x1, conformance: "O", description: "R22 Refrigerant",
+                    xref: { document: "cluster", section: "4.3.7.46" }
+                },
+
+                {
+                    tag: "datatype", name: "R410A", id: 0x2, conformance: "O", description: "R410a Refrigerant",
+                    xref: { document: "cluster", section: "4.3.7.46" }
+                },
+
+                {
+                    tag: "datatype", name: "R407C", id: 0x3, conformance: "O", description: "R407c Refrigerant",
+                    xref: { document: "cluster", section: "4.3.7.46" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0043, name: "AcCompressorType",
-            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "N", type: "enum8",
-            details: "This attribute indicates type of Compressor used within the Mini Split" +
-                     " AC",
-            xref: { document: "cluster", section: "4.3.7.47" }
+            tag: "attribute", name: "AcCompressorType", id: 0x43, type: "enum8", access: "RW VM",
+            conformance: "O", constraint: "desc", quality: "N",
+            details: "This attribute indicates type of Compressor used within the Mini Split AC",
+            xref: { document: "cluster", section: "4.3.7.47" },
+            children: [
+                {
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "O", description: "Unknown compressor type",
+                    xref: { document: "cluster", section: "4.3.7.47" }
+                },
+
+                {
+                    tag: "datatype", name: "T1", id: 0x1, conformance: "O", description: "Max working ambient 43 °C",
+                    xref: { document: "cluster", section: "4.3.7.47" }
+                },
+
+                {
+                    tag: "datatype", name: "T2", id: 0x2, conformance: "O", description: "Max working ambient 35 °C",
+                    xref: { document: "cluster", section: "4.3.7.47" }
+                },
+
+                {
+                    tag: "datatype", name: "T3", id: 0x3, conformance: "O", description: "Max working ambient 52 °C",
+                    xref: { document: "cluster", section: "4.3.7.47" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0044, name: "AcErrorCode",
-            access: "RW VM", conformance: "O", default: undefined, type: "map32",
-            details: "This attribute indicates the type of errors encountered within the " +
-                     "Mini Split AC. Error values are reported with four bytes values. Each " +
-                     "bit within the four bytes indicates the unique error",
-            xref: { document: "cluster", section: "4.3.7.48" }
+            tag: "attribute", name: "AcErrorCode", id: 0x44, type: "map32", access: "RW VM", conformance: "O",
+            details: "This attribute indicates the type of errors encountered within the Mini Split AC. Error values are " +
+                     "reported with four bytes values. Each bit within the four bytes indicates the unique error",
+            xref: { document: "cluster", section: "4.3.7.48" },
+            children: [
+                {
+                    tag: "datatype", name: "CompressorFail", id: 0x0,
+                    description: "Compressor Failure or Refrigerant Leakage",
+                    xref: { document: "cluster", section: "4.3.7.48" }
+                },
+
+                {
+                    tag: "datatype", name: "RoomSensorFail", id: 0x1, description: "Room Temperature Sensor Failure",
+                    xref: { document: "cluster", section: "4.3.7.48" }
+                },
+
+                {
+                    tag: "datatype", name: "OutdoorSensorFail", id: 0x2,
+                    description: "Outdoor Temperature Sensor Failure",
+                    xref: { document: "cluster", section: "4.3.7.48" }
+                },
+
+                {
+                    tag: "datatype", name: "CoilSensorFail", id: 0x3,
+                    description: "Indoor Coil Temperature Sensor Failure",
+                    xref: { document: "cluster", section: "4.3.7.48" }
+                },
+
+                {
+                    tag: "datatype", name: "FanFail", id: 0x4, description: "Fan Failure",
+                    xref: { document: "cluster", section: "4.3.7.48" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0045, name: "AcLouverPosition",
-            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "N", type: "enum8",
+            tag: "attribute", name: "AcLouverPosition", id: 0x45, type: "enum8", access: "RW VM",
+            conformance: "O", constraint: "desc", quality: "N",
             details: "This attribute indicates the position of Louver on the AC",
-            xref: { document: "cluster", section: "4.3.7.49" }
+            xref: { document: "cluster", section: "4.3.7.49" },
+            children: [
+                {
+                    tag: "datatype", name: "Closed", id: 0x1, conformance: "O", description: "Fully Closed",
+                    xref: { document: "cluster", section: "4.3.7.49" }
+                },
+
+                {
+                    tag: "datatype", name: "Open", id: 0x2, conformance: "O", description: "Fully Open",
+                    xref: { document: "cluster", section: "4.3.7.49" }
+                },
+
+                {
+                    tag: "datatype", name: "Quarter", id: 0x3, conformance: "O", description: "Quarter Open",
+                    xref: { document: "cluster", section: "4.3.7.49" }
+                },
+
+                {
+                    tag: "datatype", name: "Half", id: 0x4, conformance: "O", description: "Half Open",
+                    xref: { document: "cluster", section: "4.3.7.49" }
+                },
+
+                {
+                    tag: "datatype", name: "ThreeQuarters", id: 0x5, conformance: "O",
+                    description: "Three Quarters Open",
+                    xref: { document: "cluster", section: "4.3.7.49" }
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0046, name: "AcCoilTemperature",
-            access: "R V", conformance: "O", default: 32768, quality: "X", type: "temperature",
-            details: "This attribute represents the temperature of the AC coil, as measured " +
-                     "locally or remotely (over the network",
+            tag: "attribute", name: "AcCoilTemperature", id: 0x46, type: "temperature", access: "R V",
+            conformance: "O", default: 32768, quality: "X",
+            details: "This attribute represents the temperature of the AC coil, as measured locally or remotely (over the " +
+                     "network",
             xref: { document: "cluster", section: "4.3.7.50" }
         },
 
         {
-            tag: "attribute", id: 0x0047, name: "AcCapacityFormat",
-            access: "RW VM", conformance: "O", constraint: "desc", default: undefined, quality: "N", type: "enum8",
+            tag: "attribute", name: "AcCapacityFormat", id: 0x47, type: "enum8", access: "RW VM",
+            conformance: "O", constraint: "desc", quality: "N",
             details: "This attribute specifies the format for the ACCapacity attribute",
-            xref: { document: "cluster", section: "4.3.7.51" }
-        },
-
-        {
-            tag: "command", id: 0x0000, name: "SetpointRaiseLower",
-            access: "O", conformance: "M", direction: "request", response: "status",
-            xref: { document: "cluster", section: "4.3.8" },
+            xref: { document: "cluster", section: "4.3.7.51" },
             children: [
                 {
-                    tag: "datatype", name: "Mode",
-                    conformance: "M", type: "SetpointAdjustMode"
-                },
-
-                {
-                    tag: "datatype", name: "Amount",
-                    conformance: "M", type: "int8"
+                    tag: "datatype", name: "BtUh", id: 0x0, conformance: "O",
+                    description: "British Thermal Unit per Hour",
+                    xref: { document: "cluster", section: "4.3.7.51" }
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0001, name: "GetRelayStatusLogResponse",
-            access: "R M", conformance: "O", direction: "request",
+            tag: "command", name: "SetpointRaiseLower", id: 0x0, access: "O", conformance: "M",
+            direction: "request", response: "status",
             xref: { document: "cluster", section: "4.3.8" },
             children: [
                 {
-                    tag: "datatype", name: "NumberOfTransitionsForSequence",
-                    conformance: "M", type: "uint8"
+                    tag: "datatype", name: "Mode", type: "SetpointAdjustMode", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "DayOfWeekForSequence",
-                    conformance: "M", type: "DayOfWeek"
-                },
-
-                {
-                    tag: "datatype", name: "ModeForSequence",
-                    conformance: "M", type: "ModeForSequence"
-                },
-
-                {
-                    tag: "datatype", name: "Transitions",
-                    conformance: "M", type: "ThermostatScheduleTransition"
+                    tag: "datatype", name: "Amount", type: "int8", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0002, name: "GetWeeklySchedule",
-            access: "O", conformance: "SCH", direction: "request", response: "GetWeeklyScheduleResponse",
+            tag: "command", name: "GetRelayStatusLogResponse", id: 0x1, access: "R M", conformance: "O",
+            direction: "request",
             xref: { document: "cluster", section: "4.3.8" },
             children: [
                 {
-                    tag: "datatype", name: "DaysToReturn",
-                    conformance: "M", type: "DayOfWeek"
+                    tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ModeToReturn",
-                    conformance: "M", type: "ModeForSequence"
+                    tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0003, name: "ClearWeeklySchedule",
-            access: "R M", conformance: "SCH", direction: "request",
+            tag: "command", name: "GetWeeklySchedule", id: 0x2, access: "O", conformance: "SCH",
+            direction: "request", response: "GetWeeklyScheduleResponse",
+            xref: { document: "cluster", section: "4.3.8" },
+            children: [
+                {
+                    tag: "datatype", name: "DaysToReturn", type: "DayOfWeek", conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ModeToReturn", type: "ModeForSequence", conformance: "M"
+                }
+            ]
+        },
+
+        {
+            tag: "command", name: "ClearWeeklySchedule", id: 0x3, access: "R M", conformance: "SCH",
+            direction: "request",
             xref: { document: "cluster", section: "4.3.8" }
         },
 
         {
-            tag: "command", id: 0x0004, name: "GetRelayStatusLog",
-            access: "O", conformance: "O", direction: "request", response: "GetRelayStatusLogResponse",
+            tag: "command", name: "GetRelayStatusLog", id: 0x4, access: "O", conformance: "O",
+            direction: "request", response: "GetRelayStatusLogResponse",
             xref: { document: "cluster", section: "4.3.8" }
         },
 
         {
-            tag: "command", id: 0x0000, name: "GetWeeklyScheduleResponse",
-            conformance: "SCH", direction: "response",
+            tag: "command", name: "GetWeeklyScheduleResponse", id: 0x0, conformance: "SCH",
+            direction: "response",
             xref: { document: "cluster", section: "4.3.8" },
             children: [
                 {
-                    tag: "datatype", name: "NumberOfTransitionsForSequence",
-                    conformance: "M", type: "uint8"
+                    tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "DayOfWeekForSequence",
-                    conformance: "M", type: "DayOfWeek"
+                    tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ModeForSequence",
-                    conformance: "M", type: "ModeForSequence"
+                    tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Transitions",
-                    conformance: "M", type: "ThermostatScheduleTransition"
+                    tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ThermostatScheduleTransition",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "temperature", type: "int16", description: "Temperature",
+            details: "This type, derived from int16, represents a temperature on the Celsius scale with a resolution of 0." +
+                     "01°C",
+            xref: { document: "cluster", section: "4.3.9.1" }
+        },
+
+        {
+            tag: "datatype", name: "temp-diff", type: "int16", description: "Temperature Difference",
+            details: "This type, derived from int16, represents a temperature difference with a resolution of 0.01°C",
+            xref: { document: "cluster", section: "4.3.9.2" }
+        },
+
+        {
+            tag: "datatype", name: "temp-s8", type: "int8", description: "Signed Temperature (°C x 10)",
+            details: "This type, derived from int8, represents a temperature from -12.7°C to 12.7°C with a resolution of 0" +
+                     ".1°C",
+            xref: { document: "cluster", section: "4.3.9.3" }
+        },
+
+        {
+            tag: "datatype", name: "temp-u8", type: "uint8", description: "Unsigned Temperature (°C x 10)",
+            details: "This type, derived from uint8, represents a temperature from 0°C to 25.5°C with a resolution of 0.1°" +
+                     "C",
+            xref: { document: "cluster", section: "4.3.9.4" }
+        },
+
+        {
+            tag: "datatype", name: "ThermostatScheduleTransition", type: "struct", conformance: "M",
             details: "This represents a single transition in a Thermostat schedule",
             xref: { document: "cluster", section: "4.3.9.5" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "TransitionTime",
-                    access: "RW", conformance: "M", constraint: "0 to 1439", default: undefined, type: "uint16",
-                    details: "This field represents the start time of the schedule transition during" +
-                             " the associated day. The time will be represented by a 16 bits " +
-                             "unsigned integer to designate the minutes since midnight. For example" +
-                             ", 6am will be represented by 360 minutes since midnight and 11:30pm " +
-                             "will be represented by 1410 minutes since midnight",
+                    tag: "datatype", name: "TransitionTime", id: 0x0, type: "uint16", access: "RW", conformance: "M",
+                    constraint: "0 to 1439",
+                    details: "This field represents the start time of the schedule transition during the associated day. The time " +
+                             "will be represented by a 16 bits unsigned integer to designate the minutes since midnight. For " +
+                             "example, 6am will be represented by 360 minutes since midnight and 11:30pm will be represented by " +
+                             "1410 minutes since midnight",
                     xref: { document: "cluster", section: "4.3.9.5.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "HeatSetpoint",
-                    access: "RW", conformance: "M", default: "", quality: "X", type: "temperature",
-                    details: "This field represents the heat setpoint to be applied at this " +
-                             "associated transition start time",
-                    xref: { document: "cluster", section: "4.3.9.6" }
+                    tag: "datatype", name: "HeatSetpoint", id: 0x1, type: "temperature", access: "RW", conformance: "M",
+                    quality: "X",
+                    xref: { document: "cluster", section: "4.3.9.5" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "CoolSetpoint",
-                    access: "RW", conformance: "M", default: "", quality: "X", type: "temperature",
-                    details: "This field represents the cool setpoint to be applied at this " +
-                             "associated transition start time",
-                    xref: { document: "cluster", section: "4.3.9.7" }
+                    tag: "datatype", name: "CoolSetpoint", id: 0x2, type: "temperature", access: "RW", conformance: "M",
+                    quality: "X",
+                    xref: { document: "cluster", section: "4.3.9.5" }
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ThermostatFeature",
-            conformance: "M", type: "map32",
+            tag: "datatype", name: "ThermostatControlSequence", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0001, name: "Heating",
-                    conformance: "M"
+                    tag: "datatype", name: "CoolingOnly", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Cooling",
-                    conformance: "M"
+                    tag: "datatype", name: "CoolingWithReheat", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0004, name: "Occupancy",
-                    conformance: "M"
+                    tag: "datatype", name: "HeatingOnly", id: 0x2, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0008, name: "ScheduleConfiguration",
-                    conformance: "M"
+                    tag: "datatype", name: "HeatingWithReheat", id: 0x3, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0010, name: "Setback",
-                    conformance: "M"
+                    tag: "datatype", name: "CoolingAndHeating", id: 0x4, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0020, name: "AutoMode",
-                    conformance: "M"
+                    tag: "datatype", name: "CoolingAndHeatingWithReheat", id: 0x5, conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "DayOfWeek",
-            conformance: "M", type: "map8",
+            tag: "datatype", name: "SetpointAdjustMode", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0001, name: "Sunday",
-                    conformance: "M"
+                    tag: "datatype", name: "Heat", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Monday",
-                    conformance: "M"
+                    tag: "datatype", name: "Cool", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0004, name: "Tuesday",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0008, name: "Wednesday",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0010, name: "Thursday",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0020, name: "Friday",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0040, name: "Saturday",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0080, name: "Away",
-                    conformance: "M"
+                    tag: "datatype", name: "Both", id: 0x2, conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ModeForSequence",
-            conformance: "M", type: "map8",
+            tag: "datatype", name: "DayOfWeek", type: "map8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0001, name: "HeatSetpointPresent",
-                    conformance: "M"
+                    tag: "datatype", name: "Sunday", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "CoolSetpointPresent",
-                    conformance: "M"
+                    tag: "datatype", name: "Monday", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Tuesday", id: 0x4, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Wednesday", id: 0x8, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Thursday", id: 0x10, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Friday", id: 0x20, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Saturday", id: 0x40, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Away", id: 0x80, conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ThermostatSystemMode",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "ModeForSequence", type: "map8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Off",
-                    conformance: "M"
+                    tag: "datatype", name: "HeatSetpointPresent", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Auto",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0003, name: "Cool",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "Heat",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0005, name: "EmergencyHeat",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0006, name: "Precooling",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0007, name: "FanOnly",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0008, name: "Dry",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0009, name: "Sleep",
-                    conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ThermostatRunningMode",
-            conformance: "M", type: "enum8",
-            children: [
-                {
-                    tag: "datatype", id: 0x0000, name: "Off",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0003, name: "Cool",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "Heat",
-                    conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ThermostatControlSequence",
-            conformance: "M", type: "enum8",
-            children: [
-                {
-                    tag: "datatype", id: 0x0000, name: "CoolingOnly",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0001, name: "CoolingWithReheat",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0002, name: "HeatingOnly",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0003, name: "HeatingWithReheat",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "CoolingAndHeating",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0005, name: "CoolingAndHeatingWithReheat",
-                    conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "SetpointAdjustMode",
-            conformance: "M", type: "enum8",
-            children: [
-                {
-                    tag: "datatype", id: 0x0000, name: "Heat",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0001, name: "Cool",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0002, name: "Both",
-                    conformance: "M"
+                    tag: "datatype", name: "CoolSetpointPresent", id: 0x2, conformance: "M"
                 }
             ]
         }

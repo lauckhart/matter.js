@@ -20,10 +20,6 @@ export const CLUSTER_SUFFIX = "Element";
 
 const logger = Logger.get("generate-model");
 
-export function cleanCluster(source: string) {
-    clean(`${MODEL_PATH}/${source}`, CLUSTER_SUFFIX);
-}
-
 function generateElementFile(element: AnyElement) {
     logger.debug(element.name);
 
@@ -44,7 +40,7 @@ function generateElementFile(element: AnyElement) {
 function generateIndex(elements: AnyElement[]) {
     const file = new TsFile(`${MODEL_PATH}/index`);
     elements.forEach(element => {
-        if (!element.isGlobal) {
+        if (!element.global) {
             file.add(`import "./${element.name}.js";`);
         }
     });
@@ -54,15 +50,19 @@ function generateIndex(elements: AnyElement[]) {
 
 const matter = new MatterModel(MergeElements({ spec: SpecMatter, chip: ChipMatter, local: LocalMatter }) as MatterElement);
 
-logger.info(`validate matter model`);
+logger.info("validate matter model");
+let validationResult: ValidateModel.Result | undefined;
 Logger.nest(() => {
-    ValidateModel(matter);
+    validationResult = ValidateModel(matter);
 });
 
-logger.info(`generate matter model`);
+logger.info("remove matter model elements")
+clean(`${MODEL_PATH}`);
+
+logger.info("generate matter model");
 Logger.nest(() => {
     for (const child of matter.children) {
-        if (child.isGlobal) {
+        if (child.global) {
             continue;
         }
         Logger.nest(() => generateElementFile(child as AnyElement));
@@ -72,4 +72,4 @@ Logger.nest(() => {
     generateIndex(matter.children);
 });
 
-ValidateModel.report(matter);
+validationResult?.report();

@@ -22,6 +22,8 @@ const logger = Logger.get("ValidateModel");
  * logic we rely on for validation.
  */
 export function ValidateModel(model: Model) {
+    const result = new ValidateModel.Result(model);
+
     function validate(model: Model) {
         const Validator = ModelValidator.validators[model.tag];
         if (!Validator) {
@@ -34,6 +36,19 @@ export function ValidateModel(model: Model) {
         } catch (e) {
             console.error(`Error validating ${model.path}`)
             throw e;
+        }
+
+        result.elementCount++;
+        if (!model.valid) {
+            result.invalidElementCount++;
+            for (const error of model.errors!) {
+                if (result.errorCounts[error.code]) {
+                    result.errorCounts[error.code]++;
+                } else {
+                    result.errorCounts[error.code] = 1;
+                }
+                result.errors.push(error);
+            }
         }
 
         logger.debug(
@@ -53,44 +68,46 @@ export function ValidateModel(model: Model) {
 
     logger.info("Validating matter model");
     validate(model);
+
+    return result;
 }
 
 export namespace ValidateModel {
-    export function report(model: Model) {
-        const counts: { [name: string]: number } = {};
-        const errors = Array<DefinitionError>();
-        model.visit((m) => {
-            if (!m.valid) {
-                for (const error of m.errors!) {
-                    if (counts[error.code]) {
-                        counts[error.code]++;
-                    } else {
-                        counts[error.code] = 1;
+    export class Result {
+        elementCount = 0;
+        invalidElementCount = 0;
+        errorCounts: { [name: string]: number } = {};
+        errors = Array<DefinitionError>();
+
+        get invalidElementPercent() {
+            return (this.invalidElementCount / this.elementCount * 100).toPrecision(2);
+        }
+
+        constructor(public model: Model) {}
+
+        report() {
+            if (this.errors.length) {
+                logger.error("*** Validation error summary ***");
+                this.errors.forEach(error => logger.error(
+                    error.message,
+                    Logger.dict({ code: error.code, xref: error.xref, src: error.source })
+                ));
+
+                logger.error("Error counts by code:");
+                Logger.nest(() => {
+                    const codes = Object.keys(this.errorCounts)
+                        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+                    for (const code of codes) {
+                        logger.error(`${code}: ${this.errorCounts[code]}`);
                     }
-                    errors.push(error);
-                }
+                });
+        
+                logger.error(`*** Total ${this.errors.length} validation error${this.errors.length == 1 ? "" : "s"} ***`);
+                logger.error(`*** Total ${this.invalidElementCount} invalid element${this.invalidElementCount == 1 ? "" : "s"} (${this.invalidElementPercent}%) ***`);
+            } else {
+                logger.info(`*** Validation successful ***`)
             }
-        });
-
-        if (errors.length) {
-            logger.error("*** Validation error summary ***");
-            errors.forEach(error => logger.error(
-                error.message,
-                Logger.dict({ code: error.code, xref: error.xref, src: error.source })
-            ));
-
-            logger.error("Error counts by code:");
-            Logger.nest(() => {
-                const codes = Object.keys(counts)
-                    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
-                for (const code of codes) {
-                    logger.error(`${code}: ${counts[code]}`);
-                }
-            });
-    
-            logger.error(`*** Total ${errors.length} validation error${errors.length != 1 ? "s" : ""} ***`);
-        } else {
-            logger.info(`*** Validation successful ***`)
+            logger.debug(`*** Total ${this.elementCount} element${this.elementCount == 1 ? "" : "s"} ***`)
         }
     }
 }
