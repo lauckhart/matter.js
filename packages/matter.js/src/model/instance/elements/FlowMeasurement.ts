@@ -9,45 +9,44 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0404, name: "FlowMeasurement",
-    classification: "application", description: "Flow Measurement",
+    tag: "cluster", name: "FlowMeasurement", id: 0x404, classification: "application",
+    description: "Flow Measurement",
+    details: "Attributes and commands for configuring the measurement of flow, and reporting flow measurements",
+    xref: { document: "cluster", section: "2.5" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "MeasuredValue",
-            access: "R V", conformance: "M", constraint: "MinMeasuredValue to MaxMeasuredValue", default: undefined, quality: "X P", type: "uint16",
-            details: "MeasuredValue represents the flow in m3/h as follows: MeasuredValue = " +
-                     "10 x Flow",
+            tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
+            constraint: "MinMeasuredValue to MaxMeasuredValue", default: null, quality: "X P",
+            details: "MeasuredValue represents the flow in m3/h as follows: MeasuredValue = 10 x Flow",
             xref: { document: "cluster", section: "2.5.4.1" }
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "MinMeasuredValue",
-            access: "R V", conformance: "M", constraint: "0 to MaxMeasuredValue1", default: undefined, quality: "X", type: "uint16",
-            details: "The MinMeasuredValue attribute indicates the minimum value of " +
-                     "MeasuredValue that can be measured. See Measured Value for more " +
-                     "details",
+            tag: "attribute", name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V",
+            conformance: "M", constraint: "0 to MaxMeasuredValue1", quality: "X",
+            details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
+                     "See Measured Value for more details",
             xref: { document: "cluster", section: "2.5.4.2" }
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "MaxMeasuredValue",
-            access: "R V", conformance: "M", constraint: "MinMeasuredValue1 to 65534", default: undefined, quality: "X", type: "uint16",
-            details: "The MaxMeasuredValue attribute indicates the maximum value of " +
-                     "MeasuredValue that can be measured. See Measured Value for more " +
-                     "details",
+            tag: "attribute", name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V",
+            conformance: "M", constraint: "MinMeasuredValue1 to 65534", quality: "X",
+            details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
+                     "See Measured Value for more details",
             xref: { document: "cluster", section: "2.5.4.3" }
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "Tolerance",
-            access: "R V", conformance: "O", constraint: "0 to 2048", default: undefined, type: "uint16",
+            tag: "attribute", name: "Tolerance", id: 0x3, type: "uint16", access: "R V", conformance: "O",
+            constraint: "0 to 2048",
             details: "See Measured Value",
             xref: { document: "cluster", section: "2.5.4.4" }
         },
 
         {
-            tag: "attribute", id: 0x0000, name: "FlowMeasuredValue",
-            conformance: "M", quality: "X", type: "uint16"
+            tag: "attribute", name: "FlowMeasuredValue", id: 0x0, type: "uint16", conformance: "M",
+            quality: "X"
         }
     ]
 });

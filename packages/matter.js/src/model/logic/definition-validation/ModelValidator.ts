@@ -27,6 +27,8 @@ export class ModelValidator<T extends Model> {
                 this.error("UNRESOLVED_BASE", `Type ${this.model.type} does not resolve`);
             }
         }
+
+        this.validateChildUniqueness();
     }
 
     error(code: string, message: string) {
@@ -89,6 +91,26 @@ export class ModelValidator<T extends Model> {
         }
         if (Object.values(type).indexOf(value) == -1) {
             this.error("INVALID_ENUM_KEY", `Property ${name} value ${value} is not in enum`);
+        }
+    }
+
+    private validateChildUniqueness() {
+        const identities = {} as { [identity: string]: number };
+
+        for (const child of this.model.children) {
+            const identity = `${child.tag}:${child.name}:${(child as any).conformance}`;
+            if (identities[identity]) {
+                identities[identity]++;
+            } else {
+                identities[identity] = 1;
+            }
+        }
+
+        for (const identity in identities) {
+            if (identities[identity] > 1) {
+                const parts = identity.split(":");
+                this.error("DUPLICATE_CHILD", `Duplicate ${parts[0]} ${parts[1]}`);
+            }
         }
     }
 }

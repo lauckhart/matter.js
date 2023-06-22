@@ -48,6 +48,12 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                 return;
             }
 
+            // Spec does not always provide type information for deprecated
+            // fields
+            if (this.model.conformance.type == Conformance.Flag.Deprecated) {
+                return;
+            }
+
             // Non-global types must specify a base type
             this.error("NO_TYPE", "No type information");
             return;
@@ -65,21 +71,27 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             return;
         }
 
-        // Require an ID for enum and bitmap values.  These are any children
-        // of enums or bitmaps
         if (this.model.default == undefined) {
-            if (this.model.parent instanceof ValueModel) {
-                if (this.model.id === undefined) {
-                    switch (this.model.parent.metabase?.metatype) {
-                        case Metatype.enum:
-                        case Metatype.bitmap:
-                            this.error("MISSING_ITEM_ID", `No ID for ${this.model.parent.type} child`)
-                    }
-                }
-            }
-
-            // If not an enum or bitmap, undefined and null are both OK
             return;
+        }
+
+        // Special "reference" object referencing another field by name
+        if (typeof this.model.default == "object" && this.model.default.reference) {
+            const other = this.model.parent?.member(this.model.default);
+            if (!other) {
+                this.error("MEMBER_UNKNOWN", "Default value references unknown property");
+            }
+            return;
+        }
+
+        // If the default value is a string referencing another field, convert
+        // to a reference object
+        if (typeof this.model.default == "string") {
+            const other = this.model.parent?.member(this.model.default);
+            if (other) {
+                this.model.default = { reference: other.name };
+                return;
+            }
         }
 
         // Convert value to proper type if possible
@@ -93,9 +105,15 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         // For bitmaps and enums, convert string name to numeric ID
         if (metatype == Metatype.bitmap || metatype == Metatype.enum) {
             if (typeof value == "string") {
-                const member = this.model.member(value);
-                if (member) {
-                    this.model.default = member.id;
+                let member = this.model.member(value);
+
+                // If the name didn't match, try case-insensitive search
+                if (!member) {
+                    member = this.model.member(model => model.name.toLowerCase() == value.toLowerCase());
+                }
+
+                if (member && member.effectiveId != undefined) {
+                    this.model.default = member.effectiveId;
                 } else {
                     this.error("INVALID_ENTRY", `"${value}" is not in ${metatype} ${this.model.type}`);
                 }
@@ -119,7 +137,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             case Datatype.map16:
             case Datatype.map32:
             case Datatype.map64:
-                if (!this.model.children.length) {
+                if (!this.model.children.length && !this.model.global) {
                     if (
                         this.model.parent?.tag == CommandElement.Tag
                         || this.model.parent?.tag == DatatypeElement.Tag

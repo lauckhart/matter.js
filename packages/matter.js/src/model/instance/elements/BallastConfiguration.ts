@@ -9,77 +9,87 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0301, name: "BallastConfiguration",
-    classification: "application", description: "Ballast Configuration",
+    tag: "cluster", name: "BallastConfiguration", id: 0x301, classification: "application",
+    description: "Ballast Configuration",
+    details: "Attributes and commands for configuring a lighting ballast",
+    xref: { document: "cluster", section: "3.3" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "PhysicalMinLevel",
-            conformance: "M", default: 1, type: "uint8"
+            tag: "attribute", name: "PhysicalMinLevel", id: 0x0, type: "uint8", conformance: "M", default: 1
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "PhysicalMaxLevel",
-            conformance: "M", default: 254, type: "uint8"
+            tag: "attribute", name: "PhysicalMaxLevel", id: 0x1, type: "uint8", conformance: "M", default: 254
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "BallastStatus",
-            conformance: "O", default: undefined, type: "map8"
+            tag: "attribute", name: "BallastStatus", id: 0x2, type: "map8", conformance: "O",
+            children: [
+                {
+                    tag: "datatype", name: "NonOperational", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "LampNotInSocket", id: 0x2, conformance: "M"
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0010, name: "MinLevel",
-            access: "RW", conformance: "M", default: 1, type: "uint8"
+            tag: "attribute", name: "MinLevel", id: 0x10, type: "uint8", access: "RW", conformance: "M",
+            default: 1
         },
 
         {
-            tag: "attribute", id: 0x0011, name: "MaxLevel",
-            access: "RW", conformance: "M", default: 254, type: "uint8"
+            tag: "attribute", name: "MaxLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M",
+            default: 254
         },
 
         {
-            tag: "attribute", id: 0x0014, name: "IntrinsicBallastFactor",
-            access: "RW", conformance: "O", quality: "X", type: "uint8"
+            tag: "attribute", name: "IntrinsicBallastFactor", id: 0x14, type: "uint8", access: "RW",
+            conformance: "O", quality: "X"
         },
 
         {
-            tag: "attribute", id: 0x0015, name: "BallastFactorAdjustment",
-            access: "RW", conformance: "O", default: 255, quality: "X", type: "uint8"
+            tag: "attribute", name: "BallastFactorAdjustment", id: 0x15, type: "uint8", access: "RW",
+            conformance: "O", default: 255, quality: "X"
         },
 
         {
-            tag: "attribute", id: 0x0020, name: "LampQuantity",
-            conformance: "M", type: "uint8"
+            tag: "attribute", name: "LampQuantity", id: 0x20, type: "uint8", conformance: "M"
         },
 
         {
-            tag: "attribute", id: 0x0030, name: "LampType",
-            access: "RW", conformance: "O", type: "string"
+            tag: "attribute", name: "LampType", id: 0x30, type: "string", access: "RW", conformance: "O"
         },
 
         {
-            tag: "attribute", id: 0x0031, name: "LampManufacturer",
-            access: "RW", conformance: "O", type: "string"
+            tag: "attribute", name: "LampManufacturer", id: 0x31, type: "string", access: "RW",
+            conformance: "O"
         },
 
         {
-            tag: "attribute", id: 0x0032, name: "LampRatedHours",
-            access: "RW", conformance: "O", default: 16777215, quality: "X", type: "uint24"
+            tag: "attribute", name: "LampRatedHours", id: 0x32, type: "uint24", access: "RW", conformance: "O",
+            default: 16777215, quality: "X"
         },
 
         {
-            tag: "attribute", id: 0x0033, name: "LampBurnHours",
-            access: "RW", conformance: "O", default: undefined, quality: "X", type: "uint24"
+            tag: "attribute", name: "LampBurnHours", id: 0x33, type: "uint24", access: "RW", conformance: "O",
+            quality: "X"
         },
 
         {
-            tag: "attribute", id: 0x0034, name: "LampAlarmMode",
-            access: "RW", conformance: "O", default: undefined, type: "map8"
+            tag: "attribute", name: "LampAlarmMode", id: 0x34, type: "map8", access: "RW", conformance: "O",
+            children: [
+                {
+                    tag: "datatype", name: "LampBurnHours", id: 0x1, conformance: "M"
+                }
+            ]
         },
 
         {
-            tag: "attribute", id: 0x0035, name: "LampBurnHoursTripPoint",
-            access: "RW", conformance: "O", default: 16777215, quality: "X", type: "uint24"
+            tag: "attribute", name: "LampBurnHoursTripPoint", id: 0x35, type: "uint24", access: "RW",
+            conformance: "O", default: 16777215, quality: "X"
         }
     ]
 });

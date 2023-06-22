@@ -9,141 +9,132 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0032, name: "DiagnosticLogs",
-    classification: "node", description: "Diagnostic Logs",
+    tag: "cluster", name: "DiagnosticLogs", id: 0x32, classification: "node",
+    description: "Diagnostic Logs",
+    details: "The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be " +
+             "used to aid in diagnostics",
+    xref: { document: "core", section: "11.10" },
     children: [
         {
-            tag: "command", id: 0x0000, name: "RetrieveLogsRequest",
-            access: "O", conformance: "M", direction: "request", response: "RetrieveLogsResponse",
-            details: "Reception of this command starts the process of retrieving diagnostic " +
-                     "logs from a Node. The data for this command is as follows",
+            tag: "command", name: "RetrieveLogsRequest", id: 0x0, access: "O", conformance: "M",
+            direction: "request", response: "RetrieveLogsResponse",
+            details: "Reception of this command starts the process of retrieving diagnostic logs from a Node. The data for" +
+                     " this command is as follows",
             xref: { document: "core", section: "11.10.5.1" },
             children: [
                 {
-                    tag: "datatype", name: "Intent",
-                    conformance: "M", type: "IntentEnum"
+                    tag: "datatype", name: "Intent", id: 0x0, type: "IntentEnum", conformance: "M",
+                    xref: { document: "core", section: "11.10.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "RequestedProtocol",
-                    conformance: "M", type: "TransferProtocolEnum"
+                    tag: "datatype", name: "RequestedProtocol", id: 0x1, type: "TransferProtocolEnum", conformance: "M",
+                    xref: { document: "core", section: "11.10.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "TransferFileDesignator",
-                    conformance: "O", type: "string"
+                    tag: "datatype", name: "TransferFileDesignator", id: 0x2, type: "string", conformance: "O",
+                    constraint: "max 32",
+                    xref: { document: "core", section: "11.10.5.1" }
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0001, name: "RetrieveLogsResponse",
-            conformance: "M", direction: "response",
-            details: "This SHALL be generated as a response to the RetrieveLogsRequest. The " +
-                     "data for this command is shown in the following",
+            tag: "command", name: "RetrieveLogsResponse", id: 0x1, conformance: "M", direction: "response",
+            details: "This SHALL be generated as a response to the RetrieveLogsRequest. The data for this command is shown" +
+                     " in the following",
             xref: { document: "core", section: "11.10.5.2" },
             children: [
                 {
-                    tag: "datatype", name: "Status",
-                    conformance: "M", type: "StatusEnum"
+                    tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
+                    xref: { document: "core", section: "11.10.5.2" }
                 },
 
                 {
-                    tag: "datatype", name: "LogContent",
-                    conformance: "M", type: "octstr"
+                    tag: "datatype", name: "LogContent", id: 0x1, type: "octstr", conformance: "M",
+                    xref: { document: "core", section: "11.10.5.2" }
                 },
 
                 {
-                    tag: "datatype", name: "UtcTimeStamp",
-                    conformance: "O", type: "epoch-us"
+                    tag: "datatype", name: "UtcTimeStamp", id: 0x2, type: "epoch-us", conformance: "O",
+                    xref: { document: "core", section: "11.10.5.2" }
                 },
 
                 {
-                    tag: "datatype", name: "TimeSinceBoot",
-                    conformance: "O", type: "systime-us"
+                    tag: "datatype", name: "TimeSinceBoot", id: 0x3, type: "systime-us", conformance: "O",
+                    xref: { document: "core", section: "11.10.5.2" }
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "IntentEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "IntentEnum", type: "enum8", conformance: "M",
             details: "This data type is derived from enum8",
             xref: { document: "core", section: "11.10.4.1" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "EndUserSupport",
-                    conformance: "M",
+                    tag: "datatype", name: "EndUserSupport", id: 0x0, conformance: "M",
                     xref: { document: "core", section: "11.10.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "NetworkDiag",
-                    conformance: "M",
+                    tag: "datatype", name: "NetworkDiag", id: 0x1, conformance: "M",
                     xref: { document: "core", section: "11.10.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "CrashLogs",
-                    conformance: "M",
+                    tag: "datatype", name: "CrashLogs", id: 0x2, conformance: "M",
                     xref: { document: "core", section: "11.10.4.1" }
-                },
-
-                {
-                    tag: "datatype", id: 0x0000, name: "ResponsePayload",
-                    conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "IntentEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
+            details: "This data type is derived from enum8",
+            xref: { document: "core", section: "11.10.4.2" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "EndUserSupport",
-                    conformance: "M"
+                    tag: "datatype", name: "Success", id: 0x0, conformance: "M",
+                    xref: { document: "core", section: "11.10.4.2" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "NetworkDiag",
-                    conformance: "M"
+                    tag: "datatype", name: "Exhausted", id: 0x1, conformance: "M",
+                    xref: { document: "core", section: "11.10.4.2" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "CrashLogs",
-                    conformance: "M"
+                    tag: "datatype", name: "NoLogs", id: 0x2, conformance: "M",
+                    xref: { document: "core", section: "11.10.4.2" }
+                },
+
+                {
+                    tag: "datatype", name: "Busy", id: 0x3, conformance: "M",
+                    xref: { document: "core", section: "11.10.4.2" }
+                },
+
+                {
+                    tag: "datatype", name: "Denied", id: 0x4, conformance: "M",
+                    xref: { document: "core", section: "11.10.4.2" }
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "StatusEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "TransferProtocolEnum", type: "enum8", conformance: "M",
+            details: "This data type is derived from enum8",
+            xref: { document: "core", section: "11.10.4.3" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Success",
-                    conformance: "M"
+                    tag: "datatype", name: "ResponsePayload", id: 0x0, conformance: "M",
+                    xref: { document: "core", section: "11.10.4.3" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Exhausted",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0002, name: "NoLogs",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0003, name: "Busy",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "Denied",
-                    conformance: "M"
+                    tag: "datatype", name: "Bdx", id: 0x1, conformance: "M",
+                    xref: { document: "core", section: "11.10.4.3" }
                 }
             ]
         }

@@ -9,96 +9,83 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x001d, name: "Descriptor",
-    classification: "endpoint", description: "Descriptor",
+    tag: "cluster", name: "Descriptor", id: 0x1d, classification: "endpoint", description: "Descriptor",
+    details: "The Descriptor Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
+             "describing a node, its endpoints and clusters",
+    xref: { document: "core", section: "9.5" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "DeviceTypeList",
-            access: "R V", conformance: "M", constraint: "min 1", default: "desc", quality: "F", type: "list",
-            details: "This is a list of device types and corresponding revisions declaring " +
-                     "endpoint conformance (see DeviceTypeStruct). At least one device type " +
-                     "entry SHALL be present",
+            tag: "attribute", name: "DeviceTypeList", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "min 1", quality: "F",
+            details: "This is a list of device types and corresponding revisions declaring endpoint conformance (see " +
+                     "DeviceTypeStruct). At least one device type entry SHALL be present",
             xref: { document: "core", section: "9.5.5.1" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "DeviceTypeStruct"
+                    tag: "datatype", name: "entry", type: "DeviceTypeStruct"
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "ServerList",
-            access: "R V", conformance: "M", default: [], quality: "F", type: "list",
-            details: "This attribute SHALL list each cluster ID for the server clusters " +
-                     "present on the endpoint instance",
+            tag: "attribute", name: "ServerList", id: 0x1, type: "list", access: "R V", conformance: "M",
+            quality: "F",
+            details: "This attribute SHALL list each cluster ID for the server clusters present on the endpoint instance",
             xref: { document: "core", section: "9.5.5.2" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "cluster-id"
+                    tag: "datatype", name: "entry", type: "cluster-id"
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "ClientList",
-            access: "R V", conformance: "M", default: [], quality: "F", type: "list",
-            details: "This attribute SHALL list each cluster ID for the client clusters " +
-                     "present on the endpoint instance",
+            tag: "attribute", name: "ClientList", id: 0x2, type: "list", access: "R V", conformance: "M",
+            quality: "F",
+            details: "This attribute SHALL list each cluster ID for the client clusters present on the endpoint instance",
             xref: { document: "core", section: "9.5.5.3" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "cluster-id"
+                    tag: "datatype", name: "entry", type: "cluster-id"
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "PartsList",
-            access: "R V", conformance: "M", default: [], type: "list",
-            details: "This attribute indicates composition of the device type instance. " +
-                     "Device type instance composition SHALL include the endpoints in this " +
-                     "list. See Endpoint Composition for more information which endpoints to" +
-                     " include in this list",
+            tag: "attribute", name: "PartsList", id: 0x3, type: "list", access: "R V", conformance: "M",
+            details: "This attribute indicates composition of the device type instance. Device type instance composition " +
+                     "SHALL include the endpoints in this list. See Endpoint Composition for more information which " +
+                     "endpoints to include in this list",
             xref: { document: "core", section: "9.5.5.4" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "endpoint-no"
+                    tag: "datatype", name: "entry", type: "endpoint-no"
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0000, name: "DeviceList",
-            conformance: "M", type: "list",
+            tag: "attribute", name: "DeviceList", id: 0x0, type: "list", conformance: "M",
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "DeviceTypeStruct"
+                    tag: "datatype", name: "entry", type: "DeviceTypeStruct"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "DeviceTypeStruct",
-            conformance: "M", type: "struct",
-            details: "The device type and revision define endpoint conformance to a release " +
-                     "of a device type definition. See the Data Model specification for more" +
-                     " information",
+            tag: "datatype", name: "DeviceTypeStruct", type: "struct", conformance: "M",
+            details: "The device type and revision define endpoint conformance to a release of a device type definition. " +
+                     "See the Data Model specification for more information",
             xref: { document: "core", section: "9.5.4.1" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "DeviceType",
-                    conformance: "M", default: undefined, type: "devtype-id",
+                    tag: "datatype", name: "DeviceType", id: 0x0, type: "devtype-id", conformance: "M",
                     xref: { document: "core", section: "9.5.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Revision",
-                    conformance: "M", constraint: "min 1", default: undefined, type: "uint16",
+                    tag: "datatype", name: "Revision", id: 0x1, type: "uint16", conformance: "M", constraint: "min 1",
                     xref: { document: "core", section: "9.5.4.1" }
                 }
             ]

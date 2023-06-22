@@ -12,6 +12,23 @@ import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, Up
 
 const logger = Logger.get("translate-cluster");
 
+const TYPE_ERRORS: { [badType: string]: string} = {
+    "attribute-id": "attrib-id",
+    "bitmap8": "map8",
+    "node-idx": "node-id",
+    "SystemTimeMicroseconds": "systime-us",
+    "HardwareAddress": "hwadr",
+    "String": "string",
+    "variable": "any"
+}
+
+function fixTypeError(type: string | undefined) {
+    if (type != undefined && TYPE_ERRORS[type]) {
+        return TYPE_ERRORS[type];
+    }
+    return type;
+}
+
 // Translate from DOM -> MOM
 export function* translateCluster(definition: ClusterReference) {
     const children = Array<ClusterElement.Child>();
@@ -24,9 +41,9 @@ export function* translateCluster(definition: ClusterReference) {
     translateInvokable(definition, children);
     translateDatatypes(definition, children);
 
-    for (const [idStr, name] of Object.entries(metadata.ids)) {
-        const id = Number(idStr);
-        logger.debug(`0x${id.toString(16).padStart(4, "0")} ${name}`, Logger.dict({ rev: metadata.revision, cls: metadata.classification }));
+    for (const [id, name] of metadata.ids.entries()) {
+        const idStr = id == undefined ? "(no ID)" : `0x${id.toString(16)}`;
+        logger.debug(`0x${idStr} ${name}`, Logger.dict({ rev: metadata.revision, cls: metadata.classification }));
         const cluster = ClusterElement({
             id: id,
             name: name,
@@ -65,21 +82,33 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         const ids = translateTable("id", definition.ids, {
             // Core spec uses "identifier", cluster spec uses "id".
             // Because why would you to conform to a standard when you're
-            // defining a standard?  Normalize to "ID".
-            id: Alias(Integer, "identifier"),
+            // defining a standard?  Normalize to "id"
+            //
+            // Note that ID is optional because base clusters may have no ID
+            id: Alias(Str, "identifier"),
             name: Identifier
         });
     
         // Some tables list the primary ID twice; only accept the secondary
         // instance
-        const uniqueIds: { [id: number]: string } = {};
+        const uniqueIds = new Map<number | undefined, string>();
         for (const record of ids) {
-            if (record.id !== undefined) {
-                uniqueIds[record.id] = camelize(record.name || definition.name);
+            let idStr = record.id.trim().toLowerCase();
+            let id;
+            if (idStr == "n/a") {
+                // Base cluster
+                id = undefined;
+            } else {
+                id = Number.parseInt(idStr);
+                if (Number.isNaN(id)) {
+                    logger.error(`Skipping cluster with non-numeric ID ${idStr}`);
+                    continue;
+                }
             }
+            uniqueIds.set(id, camelize(record.name || definition.name));
         }
     
-        if (!Object.keys(uniqueIds).length) {
+        if (!uniqueIds.size) {
             return false;
         }
     
@@ -208,7 +237,7 @@ function applyAccessNotes(fields?: HtmlReference, records?: { access?: string }[
 function translateFields(desc: string, fields?: HtmlReference) {
     const records = translateTable(desc, fields, {
         id: Integer,
-        name: Identifier,
+        name: Alias(Identifier, "field"),
 
         // Not really optional but we want to process rows even if missing
         type: Optional(NoSpace),
@@ -222,17 +251,36 @@ function translateFields(desc: string, fields?: HtmlReference) {
     });
 
     records.forEach(r => {
+        r.type = fixTypeError(r.type);
         if (typeof r.default == "string") {
             switch (r.default.toLowerCase()) {
                 case "desc": // See description
                 case "n/a": // Not available
                 case "ms": // Manufacturer specific
                 case "-": // Sometimes used for "none"
+                case "–": // This is perhaps the dash used for "none"
                     delete r.default;
                     break;
 
                 case "varied":
                     r.default = "any";
+                    break;
+
+                case "!lt:0lt:1":
+                    // Pump control conditional defaults; just ignore
+                    delete r.default;
+                    break;
+
+                default:
+                    // Sometimes enum values are suffixed with enum name in parenthesis
+                    if (r.default.match(/^\d+\(.*\)$/)) {
+                        r.default = r.default.replace(/^(\d+).*/, "$1");
+                    }
+
+                    // Sometimes default value strings have "" around them
+                    if (r.default.startsWith('"') && r.default.endsWith('"')) {
+                        r.default = r.default.slice(1, r.default.length - 1);
+                    }
                     break;
             }
         }
@@ -241,6 +289,15 @@ function translateFields(desc: string, fields?: HtmlReference) {
     applyAccessNotes(fields, records);
 
     return records;
+}
+
+function hasColumn(definition: HtmlReference, ...names: string[]) {
+    for (const name of names) {
+        if (definition.table?.rows[0]?.[name] != undefined) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Translate children of enums, bitmaps, structs, commands, attributes and
@@ -264,7 +321,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
         case Metatype.enum: {
             const records = translateTable("value", definition, {
                 id: Alias(Integer, "value", "enum"),
-                name: Alias(Identifier, "type", "description"),
+                name: Alias(Identifier, "type", "description", "statuscode", "presentation", "endproducttype"),
                 conformance: Optional(Str),
                 description: Optional(Str),
                 meaning: Optional(Str)
@@ -273,18 +330,24 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
         }
 
         case Metatype.bitmap: {
-            let records;
-            if (definition.table?.rows[0]?.attributebitmask) {
-                // Lock cluster does not adhere to standard
+            let records: { id?: number, name: string }[];
+            if (hasColumn(definition, "attributebitmask", "alarmcode")) {
+                // Lock cluster's column names are all over the place
                 records = translateTable("bit", definition, {
-                    id: Alias(Bit, "attributebitmask"),
-                    name: Alias(LimitedIdentifier, "eventdescription")
-                })
+                    id: Alias(Bit, "attributebitmask", "alarmcode"),
+                    name: Alias(LimitedIdentifier, "eventdescription", "alarmcondition")
+                });
+            } else if (hasColumn(definition, "meaning")) {
+                // Window covering cluster just plain made up their own format.
+                // Implemented a parser but maintaining is more work than just
+                // defining manually
+                logger.warn("Ignoring weird window covering bitmasks");
+                return [];
             } else {
                 // Standard bitmap table
                 records = translateTable("bit", definition, {
                     id: Alias(Integer, "bit"),
-                    name: Identifier,
+                    name: Alias(Identifier, "mappedprotocol", "statebit"),
                     description: Optional(Alias(Str, "summary"))
                 });
             }
@@ -303,6 +366,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
     translateAttributes();
     translateEvents();
     translateCommands();
+    translateStatusCodes();
 
     function translateAttributes() {
         const records = translateFields("attribute", definition.attributes);
@@ -394,6 +458,16 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
         });
         events && children.push(...events);
     }
+
+    function translateStatusCodes() {
+        const records = translateTable("statusCodes", definition.statusCodes, {
+            id: Alias(Integer, "statuscode"),
+            name: Alias(Identifier, "value"),
+            details: Alias(Str, "summary")
+        });
+        const statusCodes = translateRecordsToMatter("statusCodes", records, DatatypeElement);
+        statusCodes && children.push(DatatypeElement({ name: "StatusCode", type: "status", children: statusCodes }));
+    }
 }
 
 // Load datatypes
@@ -423,20 +497,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
     
         let description: string | undefined;
 
-        // Fix type errors
-        switch (type) {
-            case "attribute-id":
-                type = "attr-id";
-                break;
-
-            case "bitmap8":
-                type = "map8";
-                break;
-
-            case "node-idx":
-                type = "node-id";
-                break;
-        }
+        type = fixTypeError(type);
     
         if (name.match(/enum$/i) || type?.match(/^enum/i)) {
             if (!type) {
@@ -457,9 +518,18 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             if (!type) {
                 type = "struct";
             }
+        } else if (name.match(/status$/i)) {
+            if (!type) {
+                type = "status";
+            }
         } else if (match = name.match(/(.+) \((\S+) type\)/i)) {
             description = match[1];
             name = match[2];
+        }
+
+        if (!type && name.match(/\s/)) {
+            // This isn't actually a datatype
+            return;
         }
 
         const datatype = DatatypeElement({ type: type, name, description, xref: definition.xref });

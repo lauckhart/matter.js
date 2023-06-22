@@ -12,13 +12,13 @@ type Entry = {
 
 type Cache = (name: string, generator: (name: string) => Promise<string>) => Promise<string>;
 
-class Directory {
+export class Directory {
     private contents = {} as {
         [ key: string ]: Entry
     };
 
     constructor(
-        private readonly url: string,
+        public readonly url: string,
         private readonly cache: Cache,
         private readonly auth?: string,
     ) {}

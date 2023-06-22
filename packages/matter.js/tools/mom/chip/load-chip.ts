@@ -3,14 +3,14 @@
  * Copyright 2022-2023 Project CHIP Authors
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Repo } from "../../util/github.js";
+import { Directory, Repo } from "../../util/github.js";
 import { readFileWithCache } from "../../util/file.js";
 import { readFileSync } from "fs";
 import { homedir } from "os";
 import { resolve } from "path";
 import { Logger } from "../../../src/log/Logger.js";
 import { JSDOM } from "jsdom";
-import { AnyElement, Globals, MatterElement } from "../../../src/model/index.js";
+import { AnyElement, ClusterElement, DatatypeElement, Globals, Metatype, ValueElement } from "../../../src/model/index.js";
 import { translateChip } from "./translate-chip.js";
 
 const AUTH_FILE = resolve(homedir(), ".gh-auth");
@@ -22,76 +22,109 @@ const repo = new Repo("project-chip", "connectedhomeip", "v1.1-branch", readFile
 
 const parser = new(new JSDOM("").window.DOMParser)();
 
-export async function loadChip() {
-    const elements = Array<MatterElement.Child>();
+export async function loadChip(): Promise<ClusterElement[]> {
+    const elements = Array<AnyElement>();
 
     logger.info("load chip");
-    await Logger.nestAsync(async () => {
-        logger.info("index");
-        const path = await repo.cd("src/app/zap-templates/zcl/data-model/chip");
+    return await Logger.nestAsync(async () => {
+        const dm = await repo.cd("src/app/zap-templates/zcl/data-model");
+        await loadDirectory("chip", await dm.cd("chip"), elements);
 
-        for (const filename of await path.ls()) {
-            if (!filename.endsWith(".xml")) continue;
-            if (filename == "test-cluster.xml") continue;
+        const draft = await dm.cd("draft");
+        await loadDirectory("draft", draft, elements);
+        await loadDirectory("draft types", await draft.cd("types"), elements);
 
-            logger.info(`file ${filename}`);
-            await Logger.nestAsync(async () => {
-                logger.debug("load");
-                const xml = await path.get(filename);
-                logger.debug("parse");
-                const document = parser.parseFromString(xml, "text/xml");
-                translateChip(document.documentElement, elements);
-            });
+        return installDatatypes(elements);
+    });
+}
+
+// CHIP tool has a single global datatype namespace.  This doesn't match Matter
+// semantics but there are few enough duplicate type names in Matter that it
+// works.  This routine installs datatypes into proper cluster scope.
+function installDatatypes(elements: AnyElement[]) {
+    const globals = {} as { [name: string]: AnyElement };
+    Object.values(Globals).forEach(g => globals[g.name] = g);
+
+    const datatypes = {} as { [ name: string ]: DatatypeElement }
+    elements.forEach(e => {
+        if (e.tag == DatatypeElement.Tag) {
+            datatypes[e.name] = e;
         }
     });
 
-    installCrossClusterDependencies(elements);
-
-    return elements;
-}
-
-// Grr, chip tool doesn't support conflicting names across clusters so
-// sometimes they just leave an element out and the element with the same name
-// from a different cluster is then picked up by chip tool.  So look for
-// references to named elements in each cluster that are present in a different
-// cluster to simulate this broken behavior.  If/when they fix the behavior
-// this kludge can be removed but it won't hurt anything in the meantime.
-function installCrossClusterDependencies(elements: MatterElement.Child[]) {
-    const globalNamespace = new Map<string, AnyElement>();
-    const elementNamespaces = new Map<string, Map<string, AnyElement>>();
-
-    // One pass to build indices.  Only index direct children of top-level
-    // children
-    for (const e of elements) {
-        const elementNamespace = new Map<string, AnyElement>();
-        for (const c of (e.children || [])) {
-            if (c.tag == "datatype") {
-                globalNamespace.set(c.name, c);
-                elementNamespace.set(c.name, c);
-            }
+    // CHIP tool sometimes defines enums and bitmaps without values, instead
+    // defining them somewhere else.  If we can find them, copy them over
+    function installChildren(type: string, element: AnyElement) {
+        if (!globals[type] || element.children?.length) {
+            return;
         }
-        elementNamespaces.set(e.name, elementNamespace);
+        let source: AnyElement | undefined;
+        switch ((globals[type] as DatatypeElement).metatype) {
+            case Metatype.enum:
+                source = datatypes[element.name];
+                break;
+
+            case Metatype.bitmap:
+                source = datatypes[element.name];
+                if (!source) {
+                    source = globals[`${element.name}Mask`];
+                }
+                break;
+        }
+        if (source) {
+            element.children = source.children;
+        }
     }
 
-    // Second pass to bring over missing elements from global index.  For this
-    // we need to traverse the full tree
-    for (const e of elements) {
-        const elementNamespace = elementNamespaces.get(e.name)!;
+    // Perform actual datatype installation.  Recurses into clusters looking
+    // for references.  When a datatype is added, recurses into the datatype
+    // as well
+    function install(into: ClusterElement, referencer: AnyElement, alreadyInstalled: Set<string>) {
+        referencer.children?.forEach(c => {
+            let type = (c as ValueElement).type;
 
-        function visit(d: AnyElement) {
-            const base = (d as any).base as string;
-            if (base && !(Globals as any)[base] && !elementNamespace.has(base)) {
-                const childToBringOver = globalNamespace.get(base);
-                if (childToBringOver) {
-                    logger.warn(`kludge addition of ${base} into ${d.name}`);
-                    elementNamespace.set(base, childToBringOver);
-                    e.children!.push(childToBringOver);
+            if (type) {
+                installChildren(type, c);
+    
+                if (type && !globals[type] && !alreadyInstalled.has(type)) {
+                    alreadyInstalled.add(type);
+    
+                    const datatype = datatypes[type];
+                    if (datatype) {
+                        if (!into.children) {
+                            into.children = [];
+                        }
+                        into.children.push(datatype);
+                        install(into, datatype, alreadyInstalled);
+                    }
                 }
             }
-            d.children?.forEach(visit);
-        }
 
-        visit(e);
+            install(into, c, alreadyInstalled);
+        });
+    }
+
+    const clusters = elements.filter(e => e.tag == ClusterElement.Tag) as ClusterElement[];
+    clusters.forEach(c => install(c, c, new Set<string>()));
+
+    return clusters;
+}
+
+async function loadDirectory(from: string, path: Directory, elements: AnyElement[]) {
+    logger.info(`index ${from}`);    
+
+    for (const filename of await path.ls()) {
+        if (!filename.endsWith(".xml")) continue;
+        if (filename == "test-cluster.xml") continue;
+
+        logger.info(`file ${filename}`);
+        await Logger.nestAsync(async () => {
+            logger.debug("load");
+            const xml = await path.get(filename);
+            logger.debug("parse");
+            const document = parser.parseFromString(xml, "text/xml");
+            elements.push(...translateChip(document.documentElement));
+        });
     }
 }
 

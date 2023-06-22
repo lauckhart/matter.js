@@ -9,33 +9,32 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0040, name: "FixedLabel",
-    classification: "endpoint", description: "Fixed Label",
+    tag: "cluster", name: "FixedLabel", id: 0x40, type: "Label", classification: "endpoint",
+    description: "Fixed Label",
+    details: "The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read " +
+             "only labels",
+    xref: { document: "core", section: "9.8" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "LabelList",
-            access: "R V", conformance: "M", default: [], quality: "N", type: "list",
+            tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "R V", conformance: "M",
+            quality: "N",
             xref: { document: "core", section: "9.8.4" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "LabelStruct"
+                    tag: "datatype", name: "entry", type: "LabelStruct"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "LabelStruct",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "LabelStruct", type: "struct", conformance: "M",
             children: [
                 {
-                    tag: "datatype", name: "Label",
-                    conformance: "M", type: "string"
+                    tag: "datatype", name: "Label", type: "string", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Value",
-                    conformance: "M", type: "string"
+                    tag: "datatype", name: "Value", type: "string", conformance: "M"
                 }
             ]
         }

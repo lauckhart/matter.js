@@ -263,7 +263,7 @@ export class Logger {
     static async nestAsync(context: () => Promise<any>) {
         this.nestingLevel++;
         try {
-            await context();
+            return await context();
         } finally {
             this.nestingLevel--;
         }

@@ -17,16 +17,27 @@ type SubsectionCollector = {
     collector: ((ref: HtmlReference) => void)
 }
 
+function isCluster(ref: HtmlReference, document: Specification, name: string) {
+    return ref.xref.document == document && ref.name == name;
+}
+
+function isSection(ref: HtmlReference, ...sections: string[]) {
+    return !!sections.find(section => ref.xref.section == section);
+}
+
 // Modify incoming stream to workaround specific spec issues
 function applyPatches(subref: HtmlReference, clusterRef: HtmlReference) {
-    if (clusterRef.xref.document == Specification.Core && clusterRef.name == "General Commissioning") {
-        if (subref.xref.section == "11.9.6" && subref.name == "Commands" && !subref.table) {
+    if (isCluster(clusterRef, Specification.Core, "General Commissioning")) {
+        if (isSection(subref, "11.9.6") && subref.name == "Commands" && !subref.table) {
             // In 1.1 spec, command table is not here...
             subref.name = "Ignored";
-        } if (subref.xref.section == "11.9.6.1" && subref.name == "Common fields in General Commissioning cluster responses" && subref.table) {
+        } else if (isSection(subref, "11.9.6.1") && subref.name == "Common fields in General Commissioning cluster responses" && subref.table) {
             // ...but here
             subref.name = "Commands";
+            subref.detailSection = "11.9.6";
         }
+    } else if (isCluster(clusterRef, Specification.Cluster, "Thermostat") && isSection(subref, "4.3.9.6", "4.3.9.7")) {
+        subref.ignore = true;
     }
 }
 
@@ -41,14 +52,14 @@ export function loadCluster(clusterRef: HtmlReference) {
 
     function collectDetails(ref: HtmlReference, target: DetailedReference) {
         collectors.push({
-            subsection: ref.xref.section,
+            subsection: ref.detailSection ?? ref.xref.section,
             collector: (subref: HtmlReference) => {
                 target.details.push(subref);
             }
         });
     }
 
-    function defineElement(name: "ids" | "features" | "attributes" | "commands" | "events" | "revisions" | "classifications", ref: HtmlReference) {
+    function defineElement(name: "ids" | "features" | "attributes" | "commands" | "events" | "revisions" | "classifications" | "statusCodes", ref: HtmlReference) {
         if (!ref.table) {
             // Sometimes there's a section with no table to indicate no
             // elements
@@ -76,6 +87,9 @@ export function loadCluster(clusterRef: HtmlReference) {
 
     for (const subref of scanSection(clusterRef)) {
         applyPatches(subref, clusterRef);
+        if (subref.ignore) {
+            continue;
+        }
 
         while (collectors.length && !subref.xref.section.startsWith(collectors[collectors.length - 1].subsection)) {
             collectors.pop();
@@ -114,6 +128,10 @@ export function loadCluster(clusterRef: HtmlReference) {
 
             case "events":
                 defineElement("events", subref);
+                break;
+
+            case "statuscodes":
+                defineElement("statusCodes", subref);
                 break;
 
             case "datatypes":

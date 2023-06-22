@@ -42,6 +42,47 @@ function convertTable(el: HTMLTableElement) {
         
         table.rows.push(row);
     }
+
+    // If a table only has a single row but cells in that row wrap to multiple
+    // lines, Acrobat can get confused and decide it is a multi-row table
+    // without line separators.
+    //
+    // Detect this case and correct by concatenating the contents of rows onto
+    // the first row
+    const col1 = columns?.[0];
+    if (columns && col1 != undefined) {
+        // Scan the table.  We treat as broken if there are multiple rows but
+        // the first column is empty except on the first row
+        const looksBorked = table.rows.length > 1 && table.rows.every((row, i) => {
+            let text = row[col1]?.textContent?.trim();
+            if (text == "") {
+                text = undefined;
+            }
+            return (!i && text != undefined) || (i && text == undefined);
+        });
+
+        // If above test succeeds, concatenate all cells in column into first
+        // row and remove rows except the first
+        if (looksBorked) {
+            for (const colName of columns) {
+                let target;
+                for (let i = 0; i < table.rows.length; i++) {
+                    const el = table.rows[i]?.[colName];
+                    if (i) {
+                        if (target && el) {
+                            while (el.firstChild) {
+                                target.appendChild(el.firstChild);
+                            }
+                        }
+                    } else {
+                        target = el;
+                    }
+                }
+            }
+            table.rows = table.rows.slice(0, 1);
+        }
+    }
+
     return table;
 }
 
@@ -138,6 +179,9 @@ function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlRef
                 }
 
                 const table = convertTable(element as HTMLTableElement);
+                if (!table.rows.length) {
+                    continue;
+                }
 
                 // If tables split across pages (in the original PDF) then each
                 // section is a separate table (in the HTML page).  Headings

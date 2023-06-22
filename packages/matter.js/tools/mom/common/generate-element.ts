@@ -83,7 +83,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
     }
 
     // Children
-    const children = element.children?.filter(c => !c.isGlobal);
+    const children = element.children?.filter(c => !c.global);
     if (children?.length) {
         const childBlock = block.expressions(`children: [`, "]");
         for (const child of children) {

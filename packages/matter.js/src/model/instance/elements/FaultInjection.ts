@@ -9,88 +9,74 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0xfff1fc06, name: "FaultInjection",
-    description: "Fault Injection",
+    tag: "cluster", name: "FaultInjection", id: 0xfff1fc06, description: "Fault Injection",
+    details: "The Fault Injection Cluster provide a means for a test harness to configure faults(for example " +
+             "triggering a fault in the system",
     children: [
         {
-            tag: "command", id: 0x0000, name: "FailAtFault",
-            access: "R M", conformance: "M", direction: "request",
+            tag: "command", name: "FailAtFault", id: 0x0, access: "R M", conformance: "M", direction: "request",
             children: [
                 {
-                    tag: "datatype", name: "Type",
-                    conformance: "M", type: "FaultType"
+                    tag: "datatype", name: "Type", type: "FaultType", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Id",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "Id", type: "uint32", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "NumCallsToSkip",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "NumCallsToSkip", type: "uint32", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "NumCallsToFail",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "NumCallsToFail", type: "uint32", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "TakeMutex",
-                    conformance: "M", type: "bool"
+                    tag: "datatype", name: "TakeMutex", type: "bool", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0001, name: "FailRandomlyAtFault",
-            access: "R M", conformance: "M", direction: "request",
+            tag: "command", name: "FailRandomlyAtFault", id: 0x1, access: "R M", conformance: "M",
+            direction: "request",
             children: [
                 {
-                    tag: "datatype", name: "Type",
-                    conformance: "M", type: "FaultType"
+                    tag: "datatype", name: "Type", type: "FaultType", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Id",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "Id", type: "uint32", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Percentage",
-                    conformance: "M", type: "uint8"
+                    tag: "datatype", name: "Percentage", type: "uint8", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "FaultType",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "FaultType", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Unspecified",
-                    conformance: "M"
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "SystemFault",
-                    conformance: "M"
+                    tag: "datatype", name: "SystemFault", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "InetFault",
-                    conformance: "M"
+                    tag: "datatype", name: "InetFault", id: 0x2, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0003, name: "ChipFault",
-                    conformance: "M"
+                    tag: "datatype", name: "ChipFault", id: 0x3, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0004, name: "CertFault",
-                    conformance: "M"
+                    tag: "datatype", name: "CertFault", id: 0x4, conformance: "M"
                 }
             ]
         }

@@ -9,257 +9,217 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x002a, name: "OtaSoftwareUpdateRequestor",
-    classification: "node", description: "OTA Software Update Requestor",
+    tag: "cluster", name: "OtaSoftwareUpdateRequestor", id: 0x2a, classification: "node",
+    description: "OTA Software Update Requestor",
+    details: "Provides an interface for downloading and applying OTA software updates",
+    xref: { document: "core", section: "11.19.7" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "DefaultOtaProviders",
-            access: "RW", conformance: "M", constraint: "desc", default: [], type: "list",
+            tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW",
+            conformance: "M", constraint: "desc",
             xref: { document: "core", section: "11.19.7.5" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "ProviderLocationStruct"
+                    tag: "datatype", name: "entry", type: "ProviderLocationStruct"
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "UpdatePossible",
-            access: "R V", conformance: "M", default: true, type: "bool",
+            tag: "attribute", name: "UpdatePossible", id: 0x1, type: "bool", access: "R V", conformance: "M",
+            default: true,
             xref: { document: "core", section: "11.19.7.5" }
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "UpdateState",
-            access: "R V", conformance: "M", default: 0, type: "UpdateStateEnum",
+            tag: "attribute", name: "UpdateState", id: 0x2, type: "UpdateStateEnum", access: "R V",
+            conformance: "M", default: "Unknown",
             xref: { document: "core", section: "11.19.7.5" }
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "UpdateStateProgress",
-            access: "R V", conformance: "M", constraint: "0 to 100", default: undefined, quality: "X", type: "uint8",
+            tag: "attribute", name: "UpdateStateProgress", id: 0x3, type: "uint8", access: "R V",
+            conformance: "M", constraint: "0 to 100", default: null, quality: "X",
             xref: { document: "core", section: "11.19.7.5" }
         },
 
         {
-            tag: "event", id: 0x0000, name: "StateTransition",
-            access: "V", conformance: "M", priority: "info",
+            tag: "event", name: "StateTransition", id: 0x0, access: "V", conformance: "M", priority: "info",
             xref: { document: "core", section: "11.19.7.7" },
             children: [
                 {
-                    tag: "datatype", name: "PreviousState",
-                    conformance: "M", type: "OtaUpdateStateEnum"
+                    tag: "datatype", name: "PreviousState", type: "OtaUpdateStateEnum", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "NewState",
-                    conformance: "M", type: "OtaUpdateStateEnum"
+                    tag: "datatype", name: "NewState", type: "OtaUpdateStateEnum", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Reason",
-                    conformance: "M", type: "OtaChangeReasonEnum"
+                    tag: "datatype", name: "Reason", type: "OtaChangeReasonEnum", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "TargetSoftwareVersion",
-                    conformance: "M", quality: "X", type: "uint32"
+                    tag: "datatype", name: "TargetSoftwareVersion", type: "uint32", conformance: "M", quality: "X"
                 }
             ]
         },
 
         {
-            tag: "event", id: 0x0001, name: "VersionApplied",
-            access: "V", conformance: "M", priority: "critical",
+            tag: "event", name: "VersionApplied", id: 0x1, access: "V", conformance: "M", priority: "critical",
             xref: { document: "core", section: "11.19.7.7" },
             children: [
                 {
-                    tag: "datatype", name: "SoftwareVersion",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ProductId",
-                    conformance: "M", type: "uint16"
+                    tag: "datatype", name: "ProductId", type: "uint16", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "event", id: 0x0002, name: "DownloadError",
-            access: "V", conformance: "M", priority: "info",
+            tag: "event", name: "DownloadError", id: 0x2, access: "V", conformance: "M", priority: "info",
             xref: { document: "core", section: "11.19.7.7" },
             children: [
                 {
-                    tag: "datatype", name: "SoftwareVersion",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "BytesDownloaded",
-                    conformance: "M", type: "uint64"
+                    tag: "datatype", name: "BytesDownloaded", type: "uint64", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ProgressPercent",
-                    conformance: "M", quality: "X", type: "uint8"
+                    tag: "datatype", name: "ProgressPercent", type: "uint8", conformance: "M", quality: "X"
                 },
 
                 {
-                    tag: "datatype", name: "PlatformCode",
-                    conformance: "M", quality: "X", type: "int64"
+                    tag: "datatype", name: "PlatformCode", type: "int64", conformance: "M", quality: "X"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0000, name: "AnnounceOtaProvider",
-            access: "A", conformance: "O", direction: "request", response: "status",
+            tag: "command", name: "AnnounceOtaProvider", id: 0x0, access: "A", conformance: "O",
+            direction: "request", response: "status",
             xref: { document: "core", section: "11.19.7.6" },
             children: [
                 {
-                    tag: "datatype", name: "ProviderNodeId",
-                    conformance: "M", type: "node-id"
+                    tag: "datatype", name: "ProviderNodeId", type: "node-id", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "VendorId",
-                    conformance: "M", type: "vendor-id"
+                    tag: "datatype", name: "VendorId", type: "vendor-id", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "AnnouncementReason",
-                    conformance: "M", type: "OtaAnnouncementReason"
+                    tag: "datatype", name: "AnnouncementReason", type: "OtaAnnouncementReason", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "MetadataForNode",
-                    conformance: "O", type: "octstr"
+                    tag: "datatype", name: "MetadataForNode", type: "octstr", conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "Endpoint",
-                    conformance: "M", type: "endpoint-no"
+                    tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OtaAnnouncementReason",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "ProviderLocation", type: "struct", access: "R F", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "SimpleAnnouncement",
-                    conformance: "M"
+                    tag: "datatype", name: "ProviderNodeId", type: "node-id", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "UpdateAvailable",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0002, name: "UrgentUpdateAvailable",
-                    conformance: "M"
+                    tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OtaUpdateStateEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "OtaUpdateStateEnum", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Unknown",
-                    conformance: "M"
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Idle",
-                    conformance: "M"
+                    tag: "datatype", name: "Idle", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Querying",
-                    conformance: "M"
+                    tag: "datatype", name: "Querying", id: 0x2, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0003, name: "DelayedOnQuery",
-                    conformance: "M"
+                    tag: "datatype", name: "DelayedOnQuery", id: 0x3, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0004, name: "Downloading",
-                    conformance: "M"
+                    tag: "datatype", name: "Downloading", id: 0x4, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0005, name: "Applying",
-                    conformance: "M"
+                    tag: "datatype", name: "Applying", id: 0x5, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0006, name: "DelayedOnApply",
-                    conformance: "M"
+                    tag: "datatype", name: "DelayedOnApply", id: 0x6, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0007, name: "RollingBack",
-                    conformance: "M"
+                    tag: "datatype", name: "RollingBack", id: 0x7, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0008, name: "DelayedOnUserConsent",
-                    conformance: "M"
+                    tag: "datatype", name: "DelayedOnUserConsent", id: 0x8, conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OtaChangeReasonEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "OtaAnnouncementReason", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Unknown",
-                    conformance: "M"
+                    tag: "datatype", name: "SimpleAnnouncement", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Success",
-                    conformance: "M"
+                    tag: "datatype", name: "UpdateAvailable", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Failure",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0003, name: "TimeOut",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "DelayByProvider",
-                    conformance: "M"
+                    tag: "datatype", name: "UrgentUpdateAvailable", id: 0x2, conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ProviderLocation",
-            access: "R F", conformance: "M", type: "struct",
+            tag: "datatype", name: "OtaChangeReasonEnum", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", name: "ProviderNodeId",
-                    conformance: "M", type: "node-id"
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Endpoint",
-                    conformance: "M", type: "endpoint-no"
+                    tag: "datatype", name: "Success", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Failure", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "TimeOut", id: 0x3, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "DelayByProvider", id: 0x4, conformance: "M"
                 }
             ]
         }

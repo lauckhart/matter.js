@@ -9,129 +9,125 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0050, name: "ModeSelect",
-    classification: "application", description: "Mode Select",
+    tag: "cluster", name: "ModeSelect", id: 0x50, classification: "application",
+    description: "Mode Select",
+    details: "Attributes and commands for selecting a mode from a list of supported options",
+    xref: { document: "cluster", section: "1.8" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "Description",
-            access: "R V", conformance: "M", constraint: "max 64", default: "MS", quality: "F", type: "string",
+            tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            children: [
+                {
+                    tag: "datatype", name: "ONOFF", id: 0x0, description: "Dependency with the On/Off cluster",
+                    xref: { document: "cluster", section: "1.8.4" }
+                }
+            ]
+        },
+
+        {
+            tag: "attribute", name: "Description", id: 0x0, type: "string", access: "R V", conformance: "M",
+            constraint: "max 64", quality: "F",
             details: "This attribute describes the purpose of the server, in readable text",
             xref: { document: "cluster", section: "1.8.5.1" }
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "StandardNamespace",
-            access: "R V", conformance: "M", constraint: "desc", default: undefined, quality: "X F", type: "enum16",
-            details: "This attribute, when not null, SHALL indicate a single standard " +
-                     "namespace for any standard semantic tag value supported in this or any" +
-                     " other cluster instance with the same value of this attribute. A null " +
-                     "value indicates no standard namespace, and therefore, no standard " +
-                     "semantic tags are provided in this cluster instance. Each standard " +
-                     "namespace and corresponding values and value meanings SHALL be defined" +
-                     " in another document",
+            tag: "attribute", name: "StandardNamespace", id: 0x1, type: "enum16", access: "R V",
+            conformance: "M", constraint: "desc", default: null, quality: "X F",
+            details: "This attribute, when not null, SHALL indicate a single standard namespace for any standard semantic " +
+                     "tag value supported in this or any other cluster instance with the same value of this attribute. A " +
+                     "null value indicates no standard namespace, and therefore, no standard semantic tags are provided in" +
+                     " this cluster instance. Each standard namespace and corresponding values and value meanings SHALL be" +
+                     " defined in another document",
             xref: { document: "cluster", section: "1.8.5.2" }
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "SupportedModes",
-            access: "R V", conformance: "M", constraint: "max 255", default: "MS", quality: "F", type: "list",
-            details: "This attribute is the list of supported modes that may be selected for" +
-                     " the CurrentMode attribute. Each item in this list represents a unique" +
-                     " mode as indicated by the Mode field of the ModeOptionStruct. Each " +
-                     "entry in this list SHALL have a unique value for the Mode field",
+            tag: "attribute", name: "SupportedModes", id: 0x2, type: "list", access: "R V", conformance: "M",
+            constraint: "max 255", quality: "F",
+            details: "This attribute is the list of supported modes that may be selected for the CurrentMode attribute. " +
+                     "Each item in this list represents a unique mode as indicated by the Mode field of the " +
+                     "ModeOptionStruct. Each entry in this list SHALL have a unique value for the Mode field",
             xref: { document: "cluster", section: "1.8.5.3" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "ModeOptionStruct"
+                    tag: "datatype", name: "entry", type: "ModeOptionStruct"
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0003, name: "CurrentMode",
-            access: "R V", conformance: "M", constraint: "desc", default: "MS", quality: "N S", type: "uint8",
+            tag: "attribute", name: "CurrentMode", id: 0x3, type: "uint8", access: "R V", conformance: "M",
+            constraint: "desc", quality: "N S",
             details: "This attribute represents the current mode of the server",
             xref: { document: "cluster", section: "1.8.5.4" }
         },
 
         {
-            tag: "attribute", id: 0x0004, name: "StartUpMode",
-            access: "RW", conformance: "O", constraint: "desc", default: "MS", quality: "X N", type: "uint8",
-            details: "The StartUpMode attribute value indicates the desired startup mode for" +
-                     " the server when it is supplied with power",
+            tag: "attribute", name: "StartUpMode", id: 0x4, type: "uint8", access: "RW", conformance: "O",
+            constraint: "desc", quality: "X N",
+            details: "The StartUpMode attribute value indicates the desired startup mode for the server when it is " +
+                     "supplied with power",
             xref: { document: "cluster", section: "1.8.5.5" }
         },
 
         {
-            tag: "attribute", id: 0x0005, name: "OnMode",
-            access: "RW", conformance: "D, EPONOFF", constraint: "desc", default: undefined, quality: "X N", type: "uint8",
-            details: "This attribute SHALL indicate the value of CurrentMode that depends on" +
-                     " the state of the On/Off cluster on the same endpoint. If this " +
-                     "attribute is not present or is set to null, it SHALL NOT have an " +
-                     "effect, otherwise the CurrentMode attribute SHALL depend on the OnOff " +
-                     "attribute of the On/Off cluster as described in the table below",
+            tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW", conformance: "D, EPONOFF",
+            constraint: "desc", default: null, quality: "X N",
+            details: "This attribute SHALL indicate the value of CurrentMode that depends on the state of the On/Off " +
+                     "cluster on the same endpoint. If this attribute is not present or is set to null, it SHALL NOT have " +
+                     "an effect, otherwise the CurrentMode attribute SHALL depend on the OnOff attribute of the On/Off " +
+                     "cluster as described in the table below",
             xref: { document: "cluster", section: "1.8.5.6" }
         },
 
         {
-            tag: "attribute", id: 0x0000, name: "ModeDescription",
-            conformance: "M", type: "string"
-        },
-
-        {
-            tag: "command", id: 0x0000, name: "ChangeToMode",
-            access: "O", conformance: "M", direction: "request", response: "status",
-            details: "On receipt of this command, if the NewMode field indicates a valid " +
-                     "mode transition within the supported list, the server SHALL set the " +
-                     "CurrentMode attribute to the NewMode value, otherwise, the",
+            tag: "command", name: "ChangeToMode", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "status",
+            details: "On receipt of this command, if the NewMode field indicates a valid mode transition within the " +
+                     "supported list, the server SHALL set the CurrentMode attribute to the NewMode value, otherwise, the",
             xref: { document: "cluster", section: "1.8.6.1" },
             children: [
                 {
-                    tag: "datatype", name: "NewMode",
-                    conformance: "M", type: "uint8"
+                    tag: "datatype", name: "NewMode", id: 0x0, type: "uint8", conformance: "M", constraint: "desc",
+                    xref: { document: "cluster", section: "1.8.6.1" }
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ModeOptionStruct",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "ModeOptionStruct", type: "struct", conformance: "M",
             details: "This is a struct representing a possible mode of the server",
             xref: { document: "cluster", section: "1.8.8.1" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Label",
-                    conformance: "M", constraint: "max 64", default: "MS", quality: "F", type: "string",
-                    details: "This field is readable text that describes the mode option that can be" +
-                             " used by a client to indicate to the user what this option means. This" +
-                             " field is meant to be readable and understandable by the user",
+                    tag: "datatype", name: "Label", id: 0x0, type: "string", conformance: "M", constraint: "max 64",
+                    quality: "F",
+                    details: "This field is readable text that describes the mode option that can be used by a client to indicate " +
+                             "to the user what this option means. This field is meant to be readable and understandable by the " +
+                             "user",
                     xref: { document: "cluster", section: "1.8.8.1.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Mode",
-                    conformance: "M", default: "MS", quality: "F", type: "uint8",
-                    details: "The Mode field is used to identify the mode option. The value SHALL be" +
-                             " unique for every item in the SupportedModes attribute",
+                    tag: "datatype", name: "Mode", id: 0x1, type: "uint8", conformance: "M", quality: "F",
+                    details: "The Mode field is used to identify the mode option. The value SHALL be unique for every item in the " +
+                             "SupportedModes attribute",
                     xref: { document: "cluster", section: "1.8.8.1.2" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "SemanticTags",
-                    conformance: "M", constraint: "max 64", default: "MS", quality: "F", type: "list",
-                    details: "This field is a list of semantic tags that map to the mode option. " +
-                             "This MAY be used by clients to determine the meaning of the mode " +
-                             "option as defined in a standard or manufacturer specific namespace. " +
-                             "Semantic tags can help clients look for options that meet certain " +
-                             "criteria. A semantic tag SHALL be either a standard tag or " +
-                             "manufacturer specific tag as defined in each SemanticTagStruct list " +
+                    tag: "datatype", name: "SemanticTags", id: 0x2, type: "list", conformance: "M",
+                    constraint: "max 64", quality: "F",
+                    details: "This field is a list of semantic tags that map to the mode option. This MAY be used by clients to " +
+                             "determine the meaning of the mode option as defined in a standard or manufacturer specific namespace" +
+                             ". Semantic tags can help clients look for options that meet certain criteria. A semantic tag SHALL " +
+                             "be either a standard tag or manufacturer specific tag as defined in each SemanticTagStruct list " +
                              "entry",
                     xref: { document: "cluster", section: "1.8.8.1.3" },
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "SemanticTagStruct"
+                            tag: "datatype", name: "entry", type: "SemanticTagStruct"
                         }
                     ]
                 }
@@ -139,38 +135,28 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "SemanticTagStruct",
-            conformance: "M", type: "struct",
+            tag: "datatype", name: "SemanticTagStruct", type: "struct", conformance: "M",
+            details: "A Semantic Tag is meant to be interpreted by the client for the purpose the cluster serves",
+            xref: { document: "cluster", section: "1.8.8.2" },
             children: [
                 {
-                    tag: "datatype", name: "MfgCode",
-                    conformance: "M", type: "vendor-id"
+                    tag: "datatype", name: "MfgCode", id: 0x0, type: "vendor-id", conformance: "M", constraint: "desc",
+                    quality: "X F",
+                    details: "If this field is null, the Value field SHALL be defined in a standard namespace as indicated by the " +
+                             "StandardNamespace attribute. If this field is not null, it SHALL indicate a manufacturer code (" +
+                             "Vendor ID), and the Value field SHALL indicate a semantic tag defined by the manufacturer. Each " +
+                             "manufacturer code supports a single namespace of values. The same manufacturer code and semantic tag" +
+                             " value in separate cluster instances are part of the same namespace and have the same meaning. For " +
+                             "example: a manufacturer tag meaning \"pinch\", has the same meaning in a cluster whose purpose is to " +
+                             "choose the amount of sugar, or amount of salt",
+                    xref: { document: "cluster", section: "1.8.8.2.2" }
                 },
 
                 {
-                    tag: "datatype", name: "Value",
-                    conformance: "M", type: "enum16"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ModeOptionStruct",
-            conformance: "M", type: "struct",
-            children: [
-                {
-                    tag: "datatype", name: "Label",
-                    conformance: "M", type: "string"
-                },
-
-                {
-                    tag: "datatype", name: "Mode",
-                    conformance: "M", type: "uint8"
-                },
-
-                {
-                    tag: "datatype", name: "SemanticTags",
-                    conformance: "M", type: "SemanticTagStruct"
+                    tag: "datatype", name: "Value", id: 0x1, type: "enum16", conformance: "M", quality: "F",
+                    details: "This field SHALL indicate the semantic tag within a semantic tag namespace which is either " +
+                             "manufacturer specific or standard. For semantic tags in a standard namespace, see Standard Namespace",
+                    xref: { document: "cluster", section: "1.8.8.2.1" }
                 }
             ]
         }

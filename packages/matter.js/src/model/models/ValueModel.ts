@@ -141,13 +141,6 @@ export abstract class ValueModel extends Model implements ValueElement {
     }
 
     /**
-     * Search the inheritance chain for a child.
-     */
-    member(key: string | number): Model | undefined {
-        return new ModelTraversal().findMember(this, key, [ ElementTag.Datatype ]);
-    }
-
-    /**
      * Datatype fields (datatypes parented by other datatypes) can omit their
      * ID.  In this case we use their index within the parent as the ID.
      * 
@@ -173,6 +166,9 @@ export abstract class ValueModel extends Model implements ValueElement {
             if (v && !v.empty) {
                 result[k] = v.valueOf();
             }
+        }
+        if (result.default === undefined) {
+            delete result.default;
         }
         return result as AnyElement;
     }

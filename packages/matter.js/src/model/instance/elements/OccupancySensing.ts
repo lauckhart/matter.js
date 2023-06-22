@@ -9,133 +9,133 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0406, name: "OccupancySensing",
-    classification: "application", description: "Occupancy Sensing",
+    tag: "cluster", name: "OccupancySensing", id: 0x406, classification: "application",
+    description: "Occupancy Sensing",
+    details: "Attributes and commands for configuring occupancy sensing, and reporting occupancy status",
+    xref: { document: "cluster", section: "2.7" },
     children: [
         {
-            tag: "datatype", name: "OccupancyBitmap",
-            conformance: "M", type: "map8",
+            tag: "datatype", name: "OccupancyBitmap", type: "map8", conformance: "M",
             details: "This data type is derived from bitmap8",
             xref: { document: "cluster", section: "2.7.5.1" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Occupied",
+                    tag: "datatype", name: "Occupied", id: 0x1, conformance: "M",
                     description: "Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.",
                     xref: { document: "cluster", section: "2.7.5.1" }
-                },
-
-                {
-                    tag: "datatype", id: 0x0001, name: "Pir",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0002, name: "Ultrasonic",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0004, name: "PhysicalContact",
-                    conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OccupancyBitmap",
-            conformance: "M", type: "map8",
+            tag: "datatype", name: "OccupancySensorTypeEnum", type: "enum8", conformance: "M",
+            details: "This data type is derived from enum8",
+            xref: { document: "cluster", section: "2.7.5.2" },
             children: [
                 {
-                    tag: "datatype", id: 0x0001, name: "Occupied",
-                    conformance: "M"
+                    tag: "datatype", name: "Pir", id: 0x0, conformance: "M",
+                    xref: { document: "cluster", section: "2.7.5.2" }
+                },
+
+                {
+                    tag: "datatype", name: "Ultrasonic", id: 0x1, conformance: "M",
+                    xref: { document: "cluster", section: "2.7.5.2" }
+                },
+
+                {
+                    tag: "datatype", name: "PirAndUltrasonic", id: 0x2, conformance: "M",
+                    xref: { document: "cluster", section: "2.7.5.2" }
+                },
+
+                {
+                    tag: "datatype", name: "PhysicalContact", id: 0x3, conformance: "M",
+                    xref: { document: "cluster", section: "2.7.5.2" }
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OccupancySensorTypeEnum",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "OccupancySensorTypeBitmap", type: "map8", conformance: "M",
+            details: "This data type is derived from bitmap8",
+            xref: { document: "cluster", section: "2.7.5.3" },
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Pir",
-                    conformance: "M"
+                    tag: "datatype", name: "Pir", id: 0x0, description: "Indicates a passive infrared sensor.",
+                    xref: { document: "cluster", section: "2.7.5.3" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Ultrasonic",
-                    conformance: "M"
+                    tag: "datatype", name: "Ultrasonic", id: 0x1, conformance: "M",
+                    description: "Indicates a ultrasonic sensor.",
+                    xref: { document: "cluster", section: "2.7.5.3" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "PirAndUltrasonic",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0003, name: "PhysicalContact",
-                    conformance: "M"
+                    tag: "datatype", name: "PhysicalContact", id: 0x4, conformance: "M",
+                    description: "Indicates a physical contact sensor.",
+                    xref: { document: "cluster", section: "2.7.5.3" }
                 }
             ]
         },
 
         {
-            tag: "attribute", id: 0x0000, name: "Occupancy",
-            conformance: "M", quality: "P", type: "OccupancyBitmap"
+            tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", conformance: "M",
+            quality: "P"
         },
 
         {
-            tag: "attribute", id: 0x0001, name: "OccupancySensorType",
-            conformance: "M", type: "OccupancySensorTypeEnum"
+            tag: "attribute", name: "OccupancySensorType", id: 0x1, type: "OccupancySensorTypeEnum",
+            conformance: "M"
         },
 
         {
-            tag: "attribute", id: 0x0002, name: "OccupancySensorTypeBitmap",
-            conformance: "M", type: "OccupancySensorTypeBitmap"
+            tag: "attribute", name: "OccupancySensorTypeBitmap", id: 0x2, type: "OccupancySensorTypeBitmap",
+            conformance: "M"
         },
 
         {
-            tag: "attribute", id: 0x0010, name: "PirOccupiedToUnoccupiedDelay",
-            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
+            tag: "attribute", name: "PirOccupiedToUnoccupiedDelay", id: 0x10, type: "uint16", access: "RW VM",
+            conformance: "O"
         },
 
         {
-            tag: "attribute", id: 0x0011, name: "PirUnoccupiedToOccupiedDelay",
-            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
+            tag: "attribute", name: "PirUnoccupiedToOccupiedDelay", id: 0x11, type: "uint16", access: "RW VM",
+            conformance: "O"
         },
 
         {
-            tag: "attribute", id: 0x0012, name: "PirUnoccupiedToOccupiedThreshold",
-            access: "RW VM", conformance: "O", default: 1, type: "uint8"
+            tag: "attribute", name: "PirUnoccupiedToOccupiedThreshold", id: 0x12, type: "uint8",
+            access: "RW VM", conformance: "O", default: 1
         },
 
         {
-            tag: "attribute", id: 0x0020, name: "UltrasonicOccupiedToUnoccupiedDelay",
-            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
+            tag: "attribute", name: "UltrasonicOccupiedToUnoccupiedDelay", id: 0x20, type: "uint16",
+            access: "RW VM", conformance: "O"
         },
 
         {
-            tag: "attribute", id: 0x0021, name: "UltrasonicUnoccupiedToOccupiedDelay",
-            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
+            tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedDelay", id: 0x21, type: "uint16",
+            access: "RW VM", conformance: "O"
         },
 
         {
-            tag: "attribute", id: 0x0022, name: "UltrasonicUnoccupiedToOccupiedThreshold",
-            access: "RW VM", conformance: "O", default: 1, type: "uint8"
+            tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedThreshold", id: 0x22, type: "uint8",
+            access: "RW VM", conformance: "O", default: 1
         },
 
         {
-            tag: "attribute", id: 0x0030, name: "PhysicalContactOccupiedToUnoccupiedDelay",
-            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
+            tag: "attribute", name: "PhysicalContactOccupiedToUnoccupiedDelay", id: 0x30, type: "uint16",
+            access: "RW VM", conformance: "O"
         },
 
         {
-            tag: "attribute", id: 0x0031, name: "PhysicalContactUnoccupiedToOccupiedDelay",
-            access: "RW VM", conformance: "O", default: undefined, type: "uint16"
+            tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedDelay", id: 0x31, type: "uint16",
+            access: "RW VM", conformance: "O"
         },
 
         {
-            tag: "attribute", id: 0x0032, name: "PhysicalContactUnoccupiedToOccupiedThreshold",
-            access: "RW VM", conformance: "O", default: 1, type: "uint8"
+            tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedThreshold", id: 0x32, type: "uint8",
+            access: "RW VM", conformance: "O", default: 1
         }
     ]
 });

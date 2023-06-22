@@ -11,42 +11,17 @@ import { TypeMap } from "./type-map.js";
 
 const logger = Logger.get("translate-chip");
 
-export function translateChip(rootEl: Element, target: Array<AnyElement>) {
-    rootEl.querySelectorAll("configurator > cluster").forEach((clusterEl) => {
-        const id = int(child(clusterEl, "code"));
-        const name = need("cluster name", str(child(clusterEl, "name"))).replace(/Cluster$/, "");
-        const cluster = ClusterElement({
-            id: need("cluster id", id),
-            name: camelize(name),
-            description: name,
-            details: str(child(clusterEl, "description"))
-        });
-
-        if (bool(clusterEl.getAttribute("singleton"))) {
-            cluster.singleton = true;
-        }
-
-        for (const n of clusterEl.childNodes) {
-            if (n.nodeType != clusterEl.ownerDocument.ELEMENT_NODE) {
-                continue;
-            }
-            const childEl = n as Element;
-            if (childEl.tagName != "name" && childEl.tagName != "description") {
-                translate(childEl, cluster);
+export function translateChip(rootEl: Element) {
+    const result = Array<AnyElement>();
+    for (const node of rootEl.childNodes) {
+        if (node.nodeType == 1 /* element */) {
+            const translated = translate(node as Element);
+            if (translated) {
+                result.push(translated);
             }
         }
-
-        for (const node of rootEl.childNodes) {
-            if (node.nodeType == 1 /* element */) {
-                const clusterRefEl = child(node as Element, "cluster");
-                if (clusterRefEl && int(clusterRefEl.getAttribute("code")) == id) {
-                    translate(node as Element, cluster);
-                }
-            }
-        }
-
-        target.push(cluster);
-    })
+    }
+    return result;
 }
 
 // A string as extracted from XML; either element body or attribute value
@@ -208,7 +183,6 @@ function mapType(chipType: string | undefined) {
 function createValueElement<T extends AnyValueElement>({
     factory,
     source,
-    target,
     isClass,
     type,
     propertyTag,
@@ -216,7 +190,6 @@ function createValueElement<T extends AnyValueElement>({
 }: {
     factory: ((properties: T) => T) & { Tag: ElementTag },
     source: Element,
-    target: ValueElement,
     isClass?: boolean,
     type?: string,
     propertyTag?: string,
@@ -252,20 +225,14 @@ function createValueElement<T extends AnyValueElement>({
 
             const childType = str(propertyEl.getAttribute("type"));
 
-            createValueElement({
+            element.children.push(createValueElement({
                 factory: DatatypeElement,
                 source: propertyEl,
-                target: element,
                 isClass: propertyIsClass,
                 type: childType
-            });
+            }));
         })
     }
-
-    if (!target.children) {
-        target.children = [];
-    }
-    target.children.push(element);
 
     if (!element.children?.length) {
         const entryType = source.getAttribute("entryType");
@@ -277,23 +244,21 @@ function createValueElement<T extends AnyValueElement>({
     return element;
 }
 
-type Translator = (source: Element, target: ClusterElement) => void;
+type Translator = (source: Element) => AnyElement;
 
 const translators: { [name: string]: Translator } = {
-    attribute: (source, target) => {
+    attribute: (source) => {
         return createValueElement({
             factory: AttributeElement,
             source,
-            target,
             type: need("attribute type", str(source.getAttribute("type")))
         });
     },
 
-    event: (source, target) => {
+    event: (source) => {
         const event = createValueElement({
             factory: EventElement,
             source,
-            target,
             isClass: true,
             propertyTag: "field"
         });
@@ -301,11 +266,10 @@ const translators: { [name: string]: Translator } = {
         return event;
     },
 
-    command: (source, target) => {
+    command: (source) => {
         const command = createValueElement({
             factory: CommandElement,
             source,
-            target,
             isClass: true,
             propertyTag: "arg"
         });
@@ -325,22 +289,20 @@ const translators: { [name: string]: Translator } = {
         return command;
     },
 
-    struct: (source, target) => {
+    struct: (source) => {
         return createValueElement({
             factory: DatatypeElement,
             source,
-            target,
             isClass: true,
             type: str(source.getAttribute("type")) ?? "STRUCT",
             propertyTag: "item"
         });
     },
 
-    enum: (source, target) => {
+    enum: (source) => {
         return createValueElement({
             factory: DatatypeElement,
             source,
-            target,
             isClass: true,
             type: need("enum type", str(source.getAttribute("type"))),
             propertyTag: "item",
@@ -348,23 +310,55 @@ const translators: { [name: string]: Translator } = {
         })
     },
 
-    bitmap: (source, target) => {
+    bitmap: (source) => {
         return createValueElement({
             factory: DatatypeElement,
             source,
-            target,
             isClass: true,
             type: need("bitmap type", str(source.getAttribute("type"))),
             propertyTag: "field",
             propertyIsClass: true
         })
+    },
+
+    cluster: (source) => {
+        const id = int(child(source, "code"));
+        const name = need("cluster name", str(child(source, "name"))).replace(/Cluster$/, "");
+        const cluster = ClusterElement({
+            id: need("cluster id", id),
+            name: camelize(name),
+            description: name,
+            details: str(child(source, "description"))
+        });
+
+        if (bool(source.getAttribute("singleton"))) {
+            cluster.singleton = true;
+        }
+
+        for (const n of source.childNodes) {
+            if (n.nodeType != source.ownerDocument.ELEMENT_NODE) {
+                continue;
+            }
+            const childEl = n as Element;
+            if (childEl.tagName != "name" && childEl.tagName != "description") {
+                const element = translate(childEl);
+                if (element) {
+                    if (!cluster.children) {
+                        cluster.children = [];
+                    }
+                    cluster.children.push(element);
+                }
+            }
+        }
+
+        return cluster;
     }
 }
 
-function translate(from: Element, to: ClusterElement) {
+function translate(from: Element) {
     const translator = translators[from.tagName];
     if (!translator) {
         return;
     }
-    translator(from, to);
+    return translator(from);
 }

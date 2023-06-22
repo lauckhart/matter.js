@@ -19,105 +19,200 @@ describe("MergeElements", () => {
         MergeElements({ spec: SpecMatter, chip: ChipMatter, local: LocalMatter });
     })
 
-    const mergeOccupancySensing = () => MergeElements({ spec: Fixtures.SpecOccupancySensing, chip: Fixtures.ChipOccupancySensing });
-    const mergeModeSelect = () => MergeElements({ spec: Fixtures.SpecModeSelect, chip: Fixtures.ChipModeSelect });
-
     it("merges children by ID", () => {
-        expect(mergeOccupancySensing().children?.length).toBe(1);
+        expect(MergeElements(Fixtures.OccupancySensing).children?.length).toBe(1);
     })
 
     it("prefers spec name", () => {
-        expect(mergeOccupancySensing().name).toBe("OccupancySensing");
+        expect(MergeElements(Fixtures.OccupancySensing).name).toBe("OccupancySensing");
     })
 
     it("adds mismatched children", () => {
-        expect(mergeOccupancySensing().children?.[0].children?.length).toBe(1);
+        expect(MergeElements(Fixtures.OccupancySensing).children?.[0].children?.length).toBe(1);
     })
 
     it("merges with missing datatype", () => {
-        expect(mergeModeSelect().children?.length).toBe(2);
+        expect(MergeElements(Fixtures.ModeSelect).children?.length).toBe(2);
+    })
+
+    it("merges datatypes", () => {
+        expect(MergeElements(Fixtures.BasicInformation).children?.length).toBe(2);
+    })
+
+    it("merges referenced enum into direct enum", () => {
+        const merged = MergeElements(Fixtures.WindowCovering);
+        expect(merged.children?.length).toBe(1);
+        expect(merged.children?.[0].type).toBe("enum8");
+        expect(merged.children?.[0].children?.length).toBe(4);
     })
 })
 
-const Fixtures = {
-    SpecOccupancySensing: ClusterElement({
-        id: 0x0406, name: "OccupancySensing",
-        children: [
-            {
-                tag: "datatype", name: "OccupancyBitmap", type: "bitmap8",
-            }
-        ]
-    }),
+namespace Fixtures {
+    export const OccupancySensing = {
+        spec: ClusterElement({
+            id: 0x0406, name: "OccupancySensing",
+            children: [
+                {
+                    tag: "datatype", name: "OccupancyBitmap", type: "bitmap8",
+                }
+            ]
+        }),
 
-    ChipOccupancySensing: ClusterElement({
-        id: 0x0406, name: "OccupancyShmensing",
-        children: [
-            {
-                tag: "datatype", name: "OccupancyBitmap",
-                children: [
-                    { tag: "datatype", id: 0x0001, name: "Occupied" }
-                ]
-            },
-        ]
-    }),
+        chip: ClusterElement({
+            id: 0x0406, name: "OccupancyShmensing",
+            children: [
+                {
+                    tag: "datatype", name: "OccupancyBitmap",
+                    children: [
+                        { tag: "datatype", id: 0x0001, name: "Occupied" }
+                    ]
+                },
+            ]
+        }),
+    };
 
-    SpecModeSelect: ClusterElement({
-        tag: "cluster", id: 0x0050, name: "ModeSelect",
-        classification: "application", description: "Mode Select",
-        children: [
-            {
-                tag: "attribute", id: 0x0002, name: "SupportedModes",
-                access: "R V", conformance: "M", constraint: "max 255", default: "MS", quality: "F", type: "list",
-                details: "This attribute is the list of supported modes that may be selected for" +
-                         " the CurrentMode attribute. Each item in this list represents a unique" +
-                         " mode as indicated by the Mode field of the ModeOptionStruct. Each " +
-                         "entry in this list SHALL have a unique value for the Mode field",
-                xref: { document: "cluster", section: "1.8.5.3" },
-                children: [
-                    {
-                        tag: "datatype", name: "entry",
-                        type: "ModeOptionStruct"
-                    }
-                ]
-            },
-        ]
-    }),
+    export const ModeSelect = {
+        spec: ClusterElement({
+            tag: "cluster", id: 0x0050, name: "ModeSelect",
+            classification: "application", description: "Mode Select",
+            children: [
+                {
+                    tag: "attribute", id: 0x0002, name: "SupportedModes",
+                    access: "R V", conformance: "M", constraint: "max 255", default: "MS", quality: "F", type: "list",
+                    children: [
+                        {
+                            tag: "datatype", name: "entry",
+                            type: "ModeOptionStruct"
+                        }
+                    ]
+                },
+            ]
+        }),
 
-    ChipModeSelect: ClusterElement({
-        tag: "cluster", id: 0x0050, name: "ModeSelect",
-        classification: "application", description: "Mode Select",
-        children: [
-            {
-                tag: "attribute", id: 0x0002, name: "SupportedModes",
-                conformance: "M", type: "list",
-                children: [
-                    {
-                        tag: "datatype", name: "entry",
-                        type: "ModeOptionStruct"
-                    }
-                ]
-            },
+        chip: ClusterElement({
+            tag: "cluster", id: 0x0050, name: "ModeSelect",
+            classification: "application", description: "Mode Select",
+            children: [
+                {
+                    tag: "attribute", id: 0x0002, name: "SupportedModes",
+                    conformance: "M", type: "list",
+                    children: [
+                        {
+                            tag: "datatype", name: "entry",
+                            type: "ModeOptionStruct"
+                        }
+                    ]
+                },
 
-            {
-                tag: "datatype", name: "ModeOptionStruct",
-                conformance: "M", type: "struct",
-                children: [
-                    {
-                        tag: "datatype", name: "Label",
-                        conformance: "M", type: "string"
-                    },
+                {
+                    tag: "datatype", name: "ModeOptionStruct",
+                    conformance: "M", type: "struct",
+                    children: [
+                        {
+                            tag: "datatype", name: "Label",
+                            conformance: "M", type: "string"
+                        },
 
-                    {
-                        tag: "datatype", name: "Mode",
-                        conformance: "M", type: "uint8"
-                    },
+                        {
+                            tag: "datatype", name: "Mode",
+                            conformance: "M", type: "uint8"
+                        },
 
-                    {
-                        tag: "datatype", name: "SemanticTags",
-                        conformance: "M", type: "SemanticTagStruct"
-                    }
-                ]
-            },
-        ]
-    })
+                        {
+                            tag: "datatype", name: "SemanticTags",
+                            conformance: "M", type: "SemanticTagStruct"
+                        }
+                    ]
+                },
+            ]
+        })
+    };
+
+    export const BasicInformation = {
+        spec: ClusterElement({
+            name: "BasicInformation", id: 0x39,
+            classification: "endpoint",
+            children: [
+                {
+                    tag: "attribute", name: "CapabilityMinima", id: 0x13, type: "CapabilityMinimaStruct", access: "R V",
+                    conformance: "M", quality: "F"
+                }, {
+                    tag: "datatype", name: "CapabilityMinimaStruct", type: "struct",
+                    children: [
+                        {
+                            tag: "datatype", name: "CaseSessionsPerFabric", id: 0x0, type: "uint16", conformance: "M",
+                            constraint: "min 3", default: 3,
+                        }, {
+                            tag: "datatype", name: "SubscriptionsPerFabric", id: 0x1, type: "uint16", conformance: "M",
+                            constraint: "min 3", default: 3,
+                        }
+                    ]
+                }
+
+            ]
+        }),
+
+        chip: ClusterElement({
+            name: "BasicInformation", id: 0x28, description: "Basic Information",
+            singleton: true,
+            children: [
+                {
+                    tag: "attribute", name: "CapabilityMinima", id: 0x13, type: "CapabilityMinimaStruct",
+                    conformance: "M"
+                }, {
+                    tag: "datatype", name: "CapabilityMinimaStruct", type: "struct", conformance: "M",
+                    children: [
+                        { tag: "datatype", name: "CaseSessionsPerFabric", type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "SubscriptionsPerFabric", type: "uint16", conformance: "M" }
+                    ]
+                }
+            ]
+        })
+    };
+
+    export const WindowCovering = {
+        spec: ClusterElement({
+            tag: "cluster", name: "WindowCovering", id: 0x102,
+
+            children: [
+                {
+                    tag: "attribute", name: "Mode", id: 0x17, type: "map8", access: "RW VM", conformance: "M",
+                    default: 0, quality: "N",
+                    xref: { document: "cluster", section: "5.3.5.21" }
+                },
+            ]
+        }),
+
+        chip: ClusterElement({
+            tag: "cluster", name: "WindowCovering", id: 0x102, description: "Window Covering",
+
+            children: [
+                {
+                    tag: "attribute", name: "WcMode", id: 0x17, type: "Mode", access: "RW VM", conformance: "M",
+                    default: 0
+                },
+
+                {
+                    tag: "datatype", name: "Mode", type: "map8", conformance: "M",
+                    children: [
+                        {
+                            tag: "datatype", name: "MotorDirectionReversed", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "CalibrationMode", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "MaintenanceMode", id: 0x4, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LedFeedback", id: 0x8, conformance: "M"
+                        }
+                    ]
+                },
+            ]
+        })
+    }
 }

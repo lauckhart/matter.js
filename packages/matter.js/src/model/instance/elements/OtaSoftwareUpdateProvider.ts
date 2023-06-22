@@ -9,223 +9,187 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0029, name: "OtaSoftwareUpdateProvider",
-    classification: "node", description: "OTA Software Update Provider",
+    tag: "cluster", name: "OtaSoftwareUpdateProvider", id: 0x29, classification: "node",
+    description: "OTA Software Update Provider",
+    details: "Provides an interface for providing OTA software updates",
+    xref: { document: "core", section: "11.19.6" },
     children: [
         {
-            tag: "command", id: 0x0000, name: "QueryImage",
-            conformance: "M", direction: "request", response: "QueryImageResponse",
+            tag: "command", name: "QueryImage", id: 0x0, conformance: "M", direction: "request",
+            response: "QueryImageResponse",
             xref: { document: "core", section: "11.19.6.5" },
             children: [
                 {
-                    tag: "datatype", name: "VendorId",
-                    conformance: "M", type: "vendor-id"
+                    tag: "datatype", name: "VendorId", type: "vendor-id", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ProductId",
-                    conformance: "M", type: "uint16"
+                    tag: "datatype", name: "ProductId", type: "uint16", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "SoftwareVersion",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "ProtocolsSupported",
-                    conformance: "M", type: "OtaDownloadProtocol"
+                    tag: "datatype", name: "ProtocolsSupported", type: "OtaDownloadProtocol", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "HardwareVersion",
-                    conformance: "O", type: "uint16"
+                    tag: "datatype", name: "HardwareVersion", type: "uint16", conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "Location",
-                    conformance: "O", type: "string"
+                    tag: "datatype", name: "Location", type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "RequestorCanConsent",
-                    conformance: "O", default: true, type: "bool"
+                    tag: "datatype", name: "RequestorCanConsent", type: "bool", conformance: "O", default: true
                 },
 
                 {
-                    tag: "datatype", name: "MetadataForProvider",
-                    conformance: "O", type: "octstr"
+                    tag: "datatype", name: "MetadataForProvider", type: "octstr", conformance: "O"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0001, name: "QueryImageResponse",
-            conformance: "M", direction: "response",
+            tag: "command", name: "QueryImageResponse", id: 0x1, conformance: "M", direction: "response",
             xref: { document: "core", section: "11.19.6.5" },
             children: [
                 {
-                    tag: "datatype", name: "Status",
-                    conformance: "M", type: "OtaQueryStatus"
+                    tag: "datatype", name: "Status", type: "OtaQueryStatus", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "DelayedActionTime",
-                    conformance: "O", type: "uint32"
+                    tag: "datatype", name: "DelayedActionTime", type: "uint32", conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "ImageUri",
-                    conformance: "O", type: "string"
+                    tag: "datatype", name: "ImageUri", type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "SoftwareVersion",
-                    conformance: "O", type: "uint32"
+                    tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "SoftwareVersionString",
-                    conformance: "O", type: "string"
+                    tag: "datatype", name: "SoftwareVersionString", type: "string", conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "UpdateToken",
-                    conformance: "O", type: "octstr"
+                    tag: "datatype", name: "UpdateToken", type: "octstr", conformance: "O"
                 },
 
                 {
-                    tag: "datatype", name: "UserConsentNeeded",
-                    conformance: "O", default: true, type: "bool"
+                    tag: "datatype", name: "UserConsentNeeded", type: "bool", conformance: "O", default: true
                 },
 
                 {
-                    tag: "datatype", name: "MetadataForRequestor",
-                    conformance: "O", type: "octstr"
+                    tag: "datatype", name: "MetadataForRequestor", type: "octstr", conformance: "O"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0002, name: "ApplyUpdateRequest",
-            conformance: "M", direction: "request", response: "ApplyUpdateResponse",
+            tag: "command", name: "ApplyUpdateRequest", id: 0x2, conformance: "M", direction: "request",
+            response: "ApplyUpdateResponse",
             xref: { document: "core", section: "11.19.6.5" },
             children: [
                 {
-                    tag: "datatype", name: "UpdateToken",
-                    conformance: "M", type: "octstr"
+                    tag: "datatype", name: "UpdateToken", type: "octstr", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "NewVersion",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "NewVersion", type: "uint32", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0003, name: "ApplyUpdateResponse",
-            conformance: "M", direction: "response",
+            tag: "command", name: "ApplyUpdateResponse", id: 0x3, conformance: "M", direction: "response",
             xref: { document: "core", section: "11.19.6.5" },
             children: [
                 {
-                    tag: "datatype", name: "Action",
-                    conformance: "M", type: "OtaApplyUpdateAction"
+                    tag: "datatype", name: "Action", type: "OtaApplyUpdateAction", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "DelayedActionTime",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "DelayedActionTime", type: "uint32", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "command", id: 0x0004, name: "NotifyUpdateApplied",
-            conformance: "M", direction: "request", response: "status",
+            tag: "command", name: "NotifyUpdateApplied", id: 0x4, conformance: "M", direction: "request",
+            response: "status",
             xref: { document: "core", section: "11.19.6.5" },
             children: [
                 {
-                    tag: "datatype", name: "UpdateToken",
-                    conformance: "M", type: "octstr"
+                    tag: "datatype", name: "UpdateToken", type: "octstr", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "SoftwareVersion",
-                    conformance: "M", type: "uint32"
+                    tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OtaQueryStatus",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "OtaDownloadProtocol", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "UpdateAvailable",
-                    conformance: "M"
+                    tag: "datatype", name: "BdxSynchronous", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "Busy",
-                    conformance: "M"
+                    tag: "datatype", name: "BdxAsynchronous", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "NotAvailable",
-                    conformance: "M"
+                    tag: "datatype", name: "Https", id: 0x2, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0003, name: "DownloadProtocolNotSupported",
-                    conformance: "M"
+                    tag: "datatype", name: "VendorSpecific", id: 0x3, conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OtaApplyUpdateAction",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "OtaQueryStatus", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "Proceed",
-                    conformance: "M"
+                    tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "AwaitNextAction",
-                    conformance: "M"
+                    tag: "datatype", name: "Busy", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Discontinue",
-                    conformance: "M"
+                    tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "OtaDownloadProtocol",
-            conformance: "M", type: "enum8",
+            tag: "datatype", name: "OtaApplyUpdateAction", type: "enum8", conformance: "M",
             children: [
                 {
-                    tag: "datatype", id: 0x0000, name: "BdxSynchronous",
-                    conformance: "M"
+                    tag: "datatype", name: "Proceed", id: 0x0, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0001, name: "BdxAsynchronous",
-                    conformance: "M"
+                    tag: "datatype", name: "AwaitNextAction", id: 0x1, conformance: "M"
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "Https",
-                    conformance: "M"
-                },
-
-                {
-                    tag: "datatype", id: 0x0003, name: "VendorSpecific",
-                    conformance: "M"
+                    tag: "datatype", name: "Discontinue", id: 0x2, conformance: "M"
                 }
             ]
         }

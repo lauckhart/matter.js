@@ -9,42 +9,41 @@
 import { Matter } from "../Matter.js";
 
 Matter.children.push({
-    tag: "cluster", id: 0x0042, name: "ProxyConfiguration",
-    classification: "node", description: "Proxy Configuration",
+    tag: "cluster", name: "ProxyConfiguration", id: 0x42, classification: "node",
+    description: "Proxy Configuration",
+    details: "Cluster to control Proxy Configuration",
+    xref: { document: "core", section: "9.15.14" },
     children: [
         {
-            tag: "attribute", id: 0x0000, name: "ConfigurationList",
-            access: "RW", conformance: "M", default: [], quality: "N", type: "list",
-            details: "List of proxy configurations. There SHALL NOT be multiple entries in " +
-                     "this list for the same fabric",
+            tag: "attribute", name: "ConfigurationList", id: 0x0, type: "list", access: "RW", conformance: "M",
+            quality: "N",
+            details: "List of proxy configurations. There SHALL NOT be multiple entries in this list for the same fabric",
             xref: { document: "core", section: "9.15.14.5.1" },
             children: [
                 {
-                    tag: "datatype", name: "entry",
-                    type: "ConfigurationStruct"
+                    tag: "datatype", name: "entry", type: "ConfigurationStruct"
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ConfigurationStruct",
-            type: "struct",
+            tag: "datatype", name: "ConfigurationStruct", type: "struct",
+            details: "< Previous | Contents | Next",
             xref: { document: "core", section: "9.15.14.4.1" },
             children: [
                 {
-                    tag: "datatype", id: 0x0001, name: "ProxyAllNodes",
-                    access: "RW", conformance: "M", constraint: "desc", default: true, type: "bool",
+                    tag: "datatype", name: "ProxyAllNodes", id: 0x1, type: "bool", access: "RW", conformance: "M",
+                    constraint: "desc", default: true,
                     xref: { document: "core", section: "9.15.14.4.1" }
                 },
 
                 {
-                    tag: "datatype", id: 0x0002, name: "SourceList",
-                    access: "RW", conformance: "M", constraint: "desc", default: [], type: "list",
+                    tag: "datatype", name: "SourceList", id: 0x2, type: "list", access: "RW", conformance: "M",
+                    constraint: "desc",
                     xref: { document: "core", section: "9.15.14.4.1" },
                     children: [
                         {
-                            tag: "datatype", name: "entry",
-                            type: "node-id"
+                            tag: "datatype", name: "entry", type: "node-id"
                         }
                     ]
                 }
