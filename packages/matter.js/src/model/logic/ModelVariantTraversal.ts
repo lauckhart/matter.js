@@ -9,6 +9,7 @@ import { Logger } from "../../log/index.js";
 import { ElementTag } from "../definitions/index.js";
 import { AnyElement } from "../elements/index.js";
 import { CommandModel, Model } from "../models/index.js";
+import { ModelTraversal } from "./ModelTraversal.js";
 
 const logger = Logger.get("ModelVariantTraversal");
 
@@ -56,6 +57,7 @@ export interface VariantDetail {
 export abstract class ModelVariantTraversal<S = void> {
     private clusterState: ClusterState | undefined;
     private visiting = false;
+    private modelTraversal = new ModelTraversal();
 
     /**
      * Create a new visitor.  Must list the valid names of sources.  The order
@@ -132,103 +134,115 @@ export abstract class ModelVariantTraversal<S = void> {
      * This is the function that actually recurses during the visit.
      */
     private visitVariants(variants: VariantDetail): S {
-        const state = this.visit(variants, () => {
-            const enteredCluster = this.enterCluster(variants);
+        // Note that the only role ModelTraversal plays here is to protect
+        // against loops.  We do the actual traversal ourselves
+        const state = this.modelTraversal.operation(() => {
+            return this.visit(variants, () => {
+                const enteredCluster = this.enterCluster(variants);
 
-            type ChildMapping = {
-                // List of children associated by ID or name (ID gets priority)
-                slots: VariantMap[],
-    
-                // Map of IDs to first slot the ID appeared
-                idToSlot: { [id: string]: number },
-    
-                // Map of names to first slot the name appeared
-                nameToSlot: { [name: string]: number }
-            }
-            const mappings = {} as { [tag: string]: ChildMapping };
-    
-            // Iterate over each model variant
-            for (const [ sourceName, variant ] of Object.entries(variants.map)) {
-                // For each child of this variant, associated it with a slot
-                for (let i = 0; i < variant.children.length; i++) {
-                    const child = variant.children[i];
-                    if (child.global) {
-                        // Ignore globals, they're managed by the MatterModel
-                        continue;
+                // Group children across variants
+                const mappings = this.mapChildren(variants, enteredCluster);            
+        
+                // Visit children
+                const result = Array<S>();
+                for (const mapping of Object.values(mappings)) {
+                    for (const variants of mapping.slots) {
+                        const detail = this.createVariantDetail(variants);
+                        result.push(this.visitVariants(detail));
                     }
-
-                    const mapping = mappings[child.tag] ||
-                        (mappings[child.tag] = { slots: [], idToSlot: {}, nameToSlot: {} });
-    
-                    const childId = child.effectiveId;
-                    let childName = child.name;
-
-                    // If we are directly under cluster and the child is a
-                    // datatype, its name may have been mapped
-                    if (enteredCluster && child.tag == ElementTag.Datatype) {
-                        childName = this.getCanonicalName(sourceName, childName);
-                    }
-    
-                    let slot;
-                    let idStr: string | undefined;
-                    if (childId != undefined) {
-                        idStr = childId.toString();
-
-                        // Commands may re-use the ID for request and response
-                        // So append the direction to the ID
-                        if (variant instanceof CommandModel) {
-                            idStr = `${idStr}:${(variant as CommandModel).direction}`
-                        }
-
-                        // Find existing slot by ID
-                        slot = mapping.idToSlot[idStr];
-                    }
-    
-                    // Find existing slot by name
-                    if (slot == undefined) {
-                        slot = mapping.nameToSlot[childName];
-                    }
-    
-                    // Create a new slot if necessary
-                    if (slot == undefined) {
-                        slot = mapping.slots.length;
-                        mapping.slots.push({});
-                    }
-    
-                    // Map the child's ID to the slot
-                    if (idStr != undefined) {
-                        if (mapping.idToSlot[idStr] === undefined) {
-                            mapping.idToSlot[idStr] = slot;
-                        }
-                    }
-    
-                    // Map the child's name to the slot
-                    if (mapping.nameToSlot[childName] === undefined) {
-                        mapping.nameToSlot[childName] = slot;
-                    }
-    
-                    // Update the slot
-                    mapping.slots[slot][sourceName] = child;
                 }
-            }
-    
-            // Visit children
-            const result = Array<S>();
-            for (const mapping of Object.values(mappings)) {
-                for (const variants of mapping.slots) {
-                    const detail = this.createVariantDetail(variants);
-                    result.push(this.visitVariants(detail));
+
+                // Remove cluster state
+                if (enteredCluster) {
+                    delete this.clusterState;
                 }
-            }
 
-            if (enteredCluster) {
-                delete this.clusterState;
-            }
-
-            return result;
+                return result;
+            })
         });
 
         return state;
+    }
+
+    private mapChildren(variants: VariantDetail, enteredCluster: boolean) {
+        type ChildMapping = {
+            // List of children associated by ID or name (ID gets priority)
+            slots: VariantMap[],
+
+            // Map of IDs to first slot the ID appeared
+            idToSlot: { [id: string]: number },
+
+            // Map of names to first slot the name appeared
+            nameToSlot: { [name: string]: number }
+        }
+        const mappings = {} as { [tag: string]: ChildMapping };
+
+        // Iterate over each model variant
+        for (const [ sourceName, variant ] of Object.entries(variants.map)) {
+            // For each child of this variant, associated it with a slot
+            for (let i = 0; i < variant.children.length; i++) {
+                const child = variant.children[i];
+                if (child.global) {
+                    // Ignore globals, they're managed by the MatterModel
+                    continue;
+                }
+
+                const mapping = mappings[child.tag] ||
+                    (mappings[child.tag] = { slots: [], idToSlot: {}, nameToSlot: {} });
+
+                const childId = child.effectiveId;
+                let childName = child.name;
+
+                // If we are directly under cluster and the child is a
+                // datatype, its name may have been mapped
+                if (enteredCluster && child.tag == ElementTag.Datatype) {
+                    childName = this.getCanonicalName(sourceName, childName);
+                }
+
+                let slot;
+                let idStr: string | undefined;
+                if (childId != undefined) {
+                    idStr = childId.toString();
+
+                    // Commands may re-use the ID for request and response
+                    // So append the direction to the ID
+                    if (variant instanceof CommandModel) {
+                        idStr = `${idStr}:${(variant as CommandModel).direction}`
+                    }
+
+                    // Find existing slot by ID
+                    slot = mapping.idToSlot[idStr];
+                }
+
+                // Find existing slot by name
+                if (slot == undefined) {
+                    slot = mapping.nameToSlot[childName];
+                }
+
+                // Create a new slot if necessary
+                if (slot == undefined) {
+                    slot = mapping.slots.length;
+                    mapping.slots.push({});
+                }
+
+                // Map the child's ID to the slot
+                if (idStr != undefined) {
+                    if (mapping.idToSlot[idStr] === undefined) {
+                        mapping.idToSlot[idStr] = slot;
+                    }
+                }
+
+                // Map the child's name to the slot
+                if (mapping.nameToSlot[childName] === undefined) {
+                    mapping.nameToSlot[childName] = slot;
+                }
+
+                // Update the slot
+                mapping.slots[slot][sourceName] = child;
+            }
+        }
+
+        return mappings;
     }
 
     /**

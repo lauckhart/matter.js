@@ -1026,7 +1026,7 @@ export const SpecMatter: MatterElement = {
         },
 
         {
-            tag: "cluster", name: "LevelControlforLighting", id: 0x8, classification: "application",
+            tag: "cluster", name: "LevelControl", id: 0x8, classification: "application",
             xref: { document: "cluster", section: "1.6" },
             children: [
                 {
@@ -2100,7 +2100,7 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "Reservedformanufacturerspecificlightsensortypes", id: 0x40,
+                            tag: "datatype", name: "ReservedForManufacturerSpecificLightSensorTypes", id: 0x40,
                             xref: { document: "cluster", section: "2.2.5.5" }
                         }
                     ]
@@ -8158,7 +8158,7 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "6.7.5.2" },
                     children: [
                         {
-                            tag: "datatype", name: "ParameterList", id: 0x0, type: "list", conformance: "M", default: "0",
+                            tag: "datatype", name: "ParameterList", id: 0x0, type: "list", conformance: "M", default: [],
                             details: "This SHALL indicate the list of parameters comprising the search. If multiple parameters are " +
                                      "provided, the search parameters SHALL be joined with 'AND' logic. e.g. action movies with Tom Cruise" +
                                      " will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action",
@@ -10294,6 +10294,23 @@ export const SpecMatter: MatterElement = {
                             ]
                         }
                     ]
+                }
+            ]
+        },
+
+        {
+            tag: "cluster", name: "ProxyDiscovery", id: 0x43, classification: "node",
+            xref: { document: "core", section: "9.15.13" },
+            children: [
+                {
+                    tag: "command", name: "ProxyDiscoverRequest", id: 0x0, access: "O", conformance: "M",
+                    direction: "request",
+                    xref: { document: "core", section: "9.15.13.5" }
+                },
+
+                {
+                    tag: "command", name: "ProxyDiscoverResponse", id: 0x1, conformance: "M", direction: "response",
+                    xref: { document: "core", section: "9.15.13.5" }
                 }
             ]
         },
@@ -15470,7 +15487,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TimeZone", id: 0x5, type: "list", access: "RW VM", conformance: "TZ",
-                    constraint: "1 to 2", default: "{0,0}",
+                    constraint: "1 to 2", default: [],
                     details: "A list of time zone offsets from UTC and when they SHALL take effect. This attribute uses a list of " +
                              "time offset configurations to allow Nodes to handle scheduled regulatory time zone changes. This " +
                              "attribute SHALL NOT be used to indicate daylight savings time changes (see Section 11.16.8.7, “" +

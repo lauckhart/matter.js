@@ -83,11 +83,17 @@ export function serialize(value: any) {
     }
     
     function serializeOne(value: any): string | undefined {
-        if (value === undefined || typeof value == "function") {
-            return undefined;
+        if (value === undefined) {
+            return;
         }
         if (value == null) {
             return "null";
+        }
+        if (value[serialize.SERIALIZE]) {
+            return value[serialize.SERIALIZE]();
+        }
+        if (typeof value == "function") {
+            return;
         }
         if (typeof value == "bigint" || value instanceof BigInt) {
             return value.toString();
@@ -104,7 +110,7 @@ export function serialize(value: any) {
 
         // Composite objects after this
         if (visited.has(value)) {
-            return undefined;
+            return;
         }
         if (value.toJSON) {
             value = JSON.parse(JSON.stringify(value));
@@ -136,4 +142,24 @@ export function serialize(value: any) {
     }
 
     return serializeOne(value);
+}
+
+export namespace serialize {
+    /**
+     * Custom serialization function key.
+     */
+    export const SERIALIZE = Symbol("SERIALIZE");
+
+    /**
+     * Mark a value as serialized so the serializer just uses its string
+     * representation.
+     */
+    export function asIs(value: any) {
+        if (typeof value == "string") {
+            value = new String(value);
+        }
+        if (value != undefined) {
+            value[SERIALIZE] = function() { return this.toString(); };
+        }
+    }
 }

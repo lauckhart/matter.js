@@ -63,7 +63,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "Reservedformanufacturerspecificlightsensortypes", id: 0x40,
+                    tag: "datatype", name: "ReservedForManufacturerSpecificLightSensorTypes", id: 0x40,
                     xref: { document: "cluster", section: "2.2.5.5" }
                 }
             ]

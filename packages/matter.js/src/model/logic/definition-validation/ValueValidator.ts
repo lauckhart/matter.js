@@ -50,7 +50,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
             // Spec does not always provide type information for deprecated
             // fields
-            if (this.model.conformance.type == Conformance.Flag.Deprecated) {
+            if (this.model.deprecated) {
                 return;
             }
 
@@ -61,7 +61,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
         const base = this.model.base;
         if (base == undefined) {
-            this.error("TYPE_UNKNOWN", `Unknown type ${this.model.type}`);
+            // Error is reported as ModelValidator TYPE_UNKNOWN
             return;
         }
 
@@ -77,9 +77,10 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
         // Special "reference" object referencing another field by name
         if (typeof this.model.default == "object" && this.model.default.reference) {
-            const other = this.model.parent?.member(this.model.default);
+            const reference = this.model.default.reference;
+            const other = this.model.parent?.member(reference);
             if (!other) {
-                this.error("MEMBER_UNKNOWN", "Default value references unknown property");
+                this.error("MEMBER_UNKNOWN", `Default value references unknown property ${reference}`);
             }
             return;
         }

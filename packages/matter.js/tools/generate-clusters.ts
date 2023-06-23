@@ -16,6 +16,7 @@ import {
     MatterModel,
     Metatype,
     Model,
+    ModelChildArray,
     ValueModel
 } from "../src/model/index.js";
 import { InternalError } from "../src/common/index.js";
@@ -35,18 +36,20 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     const mandatory = new Set(variance.mandatory);
     const definedDatatypes = new Set<Model>();
 
-    const ns = file.statements(`export namespace ${cluster}Cluster {`, "}");
+    const ns = file.statements(`export namespace ${cluster.name}Cluster {`, "}");
     
     addImport("Cluster", "cluster/Cluster");
     document(ns, cluster, `This cluster definition includes all elements an implementation may support.  For type safety, use \`${cluster.name}.with()\` and a list of supported features.`);
     const complete = ns.expressions("export const Complete: Cluster = {", "};");
-    complete.atom("id", `0x${cluster.id.toString(16)}`);
+    if (cluster.id != undefined) {
+        complete.atom("id", `0x${cluster.id.toString(16)}`);
+    }
     complete.atom("name", JSON.stringify(cluster.name));
     complete.atom("revision", JSON.stringify(cluster.revision));
 
     const features = cluster.features;
     if (features?.children.length) {
-        addImport("BitFlag", "tlv/BitmapSchema");
+        addImport("BitFlag", "schema/BitmapSchema");
         const featureBlock = complete.expressions("features: {", "}");
         features.children.forEach(feature => {
             document(featureBlock, feature);
@@ -68,7 +71,6 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         if (!mandatory.has(model)) {
             factoryParts.unshift("Optional");
         }
-        factoryParts.push("Attribute");
 
         const factory = factoryParts.join("");
         addImport(factory, "cluster/Cluster");
@@ -84,13 +86,13 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
             options.omitChanges = true;
         }
         if (model.default !== undefined) {
-            options.default = model.default;
+            options.default = serialize(model.default);
         }
         if (model.access.readPriv) {
-            options.readAcl = mapPrivilege(model.access.readPriv);
+            options.readAcl = serialize.asIs(mapPrivilege(model.access.readPriv));
         }
         if (model.access.writePriv) {
-            options.writeAcl = mapPrivilege(model.access.writePriv);
+            options.writeAcl = serialize.asIs(mapPrivilege(model.access.writePriv));
         }
 
         const args = [ model.id, tlvTypeRef(model) ];
@@ -108,6 +110,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         } else {
             factory = "OptionalCommand";
         }
+        addImport(factory, "cluster/Cluster");
 
         let responseType;
         let responseId;
@@ -137,6 +140,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         } else {
             factory = "OptionalEvent";
         }
+        addImport(factory, "cluster/Cluster");
 
         const priority = camelize(model.priority ?? EventElement.Priority.Debug);
 
@@ -150,15 +154,27 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
 
     function addImport(symbol: string, filename: string) {
-        file.addImport(symbol, `../${filename}`);
+        file.addImport(`../${filename}`, symbol);
     }
 
     function mapPrivilege(privilege: Access.Privilege) {
-        file.addImport("AccessLevel", "cluster/Cluster");
+        addImport("AccessLevel", "cluster/Cluster");
         return `AccessLevel.${Access.PrivilegeName[privilege]}`
     }
 
     function defineDatatype(model: ValueModel) {
+        let defining = model.definingModel;
+        if (defining) {
+            model = defining;
+        } else {
+            // If there's no defining model, the datatype is empty.  Use either
+            // the base or the model directly for naming
+            const base = model.base;
+            if (base?.parent instanceof ClusterModel) {
+                model = base;
+            }
+        }
+
         let name = model.name;
         if (model instanceof CommandModel && model.isRequest) {
             name += "Request";
@@ -194,54 +210,28 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     }
 
     function tlvTypeRef(model: ValueModel): string {
-        const base = model.metabase;
-        if (!base) {
-            throw new InternalError(`${model.path}: No base type ${model.type}`);
+        const metabase = model.metabase;
+        if (!metabase) {
+            debugger;
+            throw new InternalError(`${model.path}: No root type for ${model.type}`);
         }
 
-        if (model.type) {
-            const definition = cluster.childOfType(ValueModel, model.type);
-            if (definition) {
-                return tlvTypeRef(definition);
-            }
-        }
-    
         let tlv: string;
-        switch (base.name) {
-            case Datatype.bool:
+        switch (metabase.metatype) {
+            case Metatype.boolean:
                 tlv = "TlvBoolean";
-                addImport(tlv, "tlv/TlvNumber");
-    
-            case Datatype.uint8:
-            case Datatype.uint16:
-            case Datatype.uint32:
-            case Datatype.uint64:
-            case Datatype.int8:
-            case Datatype.int16:
-            case Datatype.int32:
-            case Datatype.int64:
-            case Datatype.single:
-            case Datatype.double:
-                tlv = camelize(`tlv ${base.name}`);
+                addImport(tlv, "tlv/TlvBoolean");
+                break;
+
+            case Metatype.integer:
+            case Metatype.float:
+                tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
                 addImport(tlv, "tlv/TlvNumber");
                 break;
 
-            case Datatype.map8:
-            case Datatype.map16:
-            case Datatype.map32:
-            case Datatype.map64:
-                tlv = defineDatatype(model);
-                break;
-
-            case "enum8":
-            case "enum16":
-                tlv = `TlvEnum<${defineDatatype(model)}>()`;
-                addImport("TlvEnum", "tlv/TlvNumber");
-                break;
-
-            case Datatype.octstr:
-            case "string":
-                tlv = base.name == Datatype.octstr ? "TlvByteString" : "TlvString";
+            case Metatype.bytes:
+            case Metatype.string:
+                tlv = metabase.name == Datatype.octstr ? "TlvByteString" : "TlvString";
                 addImport(tlv, "tlv/TlvString");
                 if (model.constraint.min != undefined || model.constraint.max != undefined) {
                     const bounds = {} as any;
@@ -254,18 +244,31 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                     tlv = `${tlv}.bound(${serialize(bounds)})`;
                 }
                 break;
-
-            case Datatype.list:
+    
+            case Metatype.array:
                 addImport("TlvArray", "tlv/TlvArray");
-                tlv = `TlvArray(${tlvTypeRef(model.children[0])})`;
+                const entry = model.listEntry;
+                if (!entry) {
+                    throw new InternalError(`${model.path}: No list entry type`);
+                }
+                tlv = `TlvArray(${tlvTypeRef(entry)})`;
+                break;
+    
+            case Metatype.bitmap:
+                tlv = defineDatatype(model);
+                break;
+    
+            case Metatype.enum:
+                tlv = `TlvEnum<${defineDatatype(model)}>()`;
+                addImport("TlvEnum", "tlv/TlvNumber");
                 break;
 
-            case Datatype.struct:
+            case Metatype.object:
                 tlv = defineDatatype(model);
                 break;
 
             default:
-                throw new InternalError(`${model.path}: No tlv mapping for base type ${base.name}`);
+                throw new InternalError(`${model.path}: No tlv mapping for base type ${metabase.name}`);
         }
         if (model.quality.nullable) {
             addImport("TlvNullable", "tlv/TlvNullable");
@@ -303,7 +306,8 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
             }
         }
         if (lines.length) {
-            target.add(...wordWrap(lines.join("\n")));
+            const wrapped = wordWrap(lines.join("\n")).map(l => `\n * ${l}`);
+            target.add(`/**${wrapped}\n */`);
         }
     }
     
@@ -340,19 +344,19 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         let tlvNum;
         switch (model.metabase?.name) {
             case "map8":
-                tlvNum = "TlvUint8";
+                tlvNum = "TlvUInt8";
                 break;
 
             case "map16":
-                tlvNum = "TlvUint16";
+                tlvNum = "TlvUInt16";
                 break;
 
             case "map32":
-                tlvNum = "TlvUint32";
+                tlvNum = "TlvUInt32";
                 break;
 
             case "map64":
-                tlvNum = "TlvUint64";
+                tlvNum = "TlvUInt64";
                 break;
 
             default:
@@ -360,7 +364,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         }
         addImport(tlvNum, "tlv/TlvNumber");
 
-        addImport("BitFlag", "tlv/TlvBitmap");
+        addImport("BitFlag", "schema/BitmapSchema");
         const block = file.expressions(`export const ${name} = TlvBitmap(${tlvNum}, {`, "})");
         model.children.forEach(child => {
             document(block, child);
@@ -371,12 +375,12 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     function defineElements<N extends "attributes" | "commands" | "events">(
         target: Block,
         name: N,
-        define: (model: ClusterModel[N][number]) => string
+        define: (model: ModelChildArray.Type<ClusterModel[N]>) => string
     ) {
-        const elements = Array<ClusterModel[N][number]>();
+        const elements = Array<ModelChildArray.Type<ClusterModel[N]>>();
         for (const e of cluster[name]) {
             if (!e.global && (!(e instanceof CommandModel) || e.isRequest)) {
-                elements.push(e);
+                elements.push(e as any);
             }
         }
         if (!elements.length) {
@@ -385,6 +389,9 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
         const elementBlock = target.expressions(`${name}: {`, "}");
         elements.forEach(model => {
+            if (model.deprecated) {
+                return;
+            }
             document(elementBlock, model);
             elementBlock.atom(model.name, define(model));
         })

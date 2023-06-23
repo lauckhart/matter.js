@@ -23,7 +23,6 @@ function instantiate() {
 
 function validate() {
     if (!validationResult) {
-        debugger;
         validationResult = ValidateModel(instantiate());
         validationResult.report();
     }
@@ -40,10 +39,10 @@ describe("Matter", () => {
     })
 
     it("has not increased in errors", () => {
-        expect(validate().errors.length).toBeLessThanOrEqual(34);
+        expect(validate().errors.length).toBeLessThanOrEqual(16);
     })
 
     it("has not decreased in scope", () => {
-        expect(validate().elementCount).toBeGreaterThanOrEqual(3683);
+        expect(validate().elementCount).toBeGreaterThanOrEqual(3547);
     })
 })

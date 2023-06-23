@@ -213,7 +213,7 @@ function reparentToCanonicalParent(priority: PriorityHandler, variants: VariantD
         // rewritten
         if (type.base?.global && Metatype.hasChildren(type.effectiveMetatype)) {
             for (const variantName in variants.map) {
-                // Skip if type canonical type is this variant or this variant
+                // Skip if this is the canonical variant or this variant
                 // already has children
                 const variant = variants.map[variantName];
                 if (variant == type || variant.children.length) {
@@ -224,6 +224,11 @@ function reparentToCanonicalParent(priority: PriorityHandler, variants: VariantD
                 // have children
                 const base = variant.base;
                 if (!(base instanceof ValueModel) || base.parent?.tag != ElementTag.Cluster || !base.children.length) {
+                    continue;
+                }
+
+                // Skip if multiple models reference the type
+                if (base.parent?.references(base).length > 1) {
                     continue;
                 }
 

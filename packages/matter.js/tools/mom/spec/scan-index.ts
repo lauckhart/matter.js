@@ -86,6 +86,19 @@ export function scanIndex(path: string) {
             document: spec
         };
 
+        // Proxy discovery heading got a little bit lost so fake it up
+        if (spec == "core" && heading.section == "9.15.12" && heading.name == "Clusters") {
+            result.clusters.push({
+                name: "Proxy Discovery",
+                path: a.href,
+                xref: {
+                    document: spec,
+                    section: "9.15.13"
+                }
+            });
+            return;
+        }
+
         // Core spec convention for clusters is heading suffixed with "Cluster"
         if (heading.name.endsWith(" Cluster")) {
             if (Number.parseInt(heading.section) < 3) {
@@ -101,7 +114,7 @@ export function scanIndex(path: string) {
             result.clusters.push({
                 name: heading.name.slice(0, heading.name.length - 8),
                 path: a.href,
-                xref: xref
+                xref
             });
             return;
         }
@@ -114,7 +127,7 @@ export function scanIndex(path: string) {
                 const cluster = {
                     name: heading.name,
                     path: a.href,
-                    xref: xref
+                    xref
                 };
                 result.clusters.push(cluster);
             }
