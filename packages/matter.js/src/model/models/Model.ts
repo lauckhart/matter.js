@@ -8,6 +8,7 @@ import { MatterError } from "../../common/index.js";
 import { DefinitionError, ElementTag, Specification } from "../definitions/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
+import { ModelChildArray } from "./ModelChildArray.js";
 
 const CHILDREN = Symbol("children");
 const PARENT = Symbol("parent");
@@ -196,7 +197,7 @@ export abstract class Model {
     /**
      * Get a Model for my base type, if any.
      */
-    get base(): Model | undefined {
+    get base() {
         return new ModelTraversal().findBase(this);
     }
 
@@ -235,14 +236,14 @@ export abstract class Model {
      * 
      * @param test model class or a predicate object
      */
-    childrenOfType<T>(constructor: abstract new(...args: any[]) => T) {
-        return this.children.filter(c => c instanceof constructor) as T[];
+    childrenOfType<T extends Model>(constructor: abstract new(...args: any[]) => T) {
+        return new ModelChildArray(this, constructor);
     }
 
     /**
      * Retrieve a specific model by ID or name.
      */
-    childOfType<T>(constructor: abstract new(...args: any[]) => T, key: number | string) {
+    childOfType<T extends Model>(constructor: abstract new(...args: any[]) => T, key: number | string) {
         return this.children.find(
             c => c instanceof constructor
             && typeof key == "number" ? c.effectiveId == key : c.name == key
@@ -310,6 +311,13 @@ export abstract class Model {
      */
     visit(visitor: (model: Model) => boolean | void) {
         return new ModelTraversal().visit(this, visitor);
+    }
+
+    /**
+     * Find all children that reference a specific type.
+     */
+    references(type: Model) {
+        return new ModelTraversal().findReferences(this, type);
     }
 
     /**

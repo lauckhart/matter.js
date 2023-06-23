@@ -6,7 +6,7 @@
 
 import { InternalError } from "../../common/index.js";
 import { Datatype, ElementTag } from "../definitions/index.js";
-import type { Model } from "../models/index.js";
+import type { Model, ValueModel, DatatypeModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
 
@@ -145,6 +145,34 @@ export class ModelTraversal {
     }
 
     /**
+     * Find the model this model derives from that has children, if any.
+     */
+    findDefiningModel(model: ValueModel | undefined): ValueModel | undefined {
+        return this.operation(() => {
+            while (model) {
+                if (model.children.length) {
+                    return model;
+                }
+                model = model.base;
+            }
+        })
+    }
+
+    /**
+     * Find the model defining array entry type, if any.
+     */
+    findListEntry(model: ValueModel | undefined): DatatypeModel | undefined {
+        return this.operation(() => {
+            while (model) {
+                const entry = this.findMember(model, "entry", [ ElementTag.Datatype ]);
+                if (entry) {
+                    return entry as DatatypeModel;
+                }
+            }
+        })
+    }
+
+    /**
      * Search inherited scope for a named member.
      */
     findMember(scope: Model | undefined, key: ModelTraversal.ElementSelector, allowedTags: ElementTag[]): Model | undefined {
@@ -188,6 +216,37 @@ export class ModelTraversal {
                 }
             }
         });
+    }
+
+    /**
+     * Find all children of a node that reference a specific type.
+     */
+    findReferences(scope: Model | undefined, type: Model | undefined): Model[] {
+        if (!scope || !type) {
+            return [];
+        }
+
+        const references = Array<Model>();
+        this.visit(scope, model => {
+            // This is the most common method for referencing
+            if (this.findBase(model) == type) {
+                references.push(model);
+                return;
+            }
+
+            // This is not common but the default value can reference another
+            // field
+            if (model.isType) {
+                const defaultValue = (model as ValueModel).default;
+                if (typeof defaultValue == "object" && defaultValue.reference) {
+                    if (defaultValue.reference == type.name) {
+                        references.push(model);
+                    }
+                }
+            }
+        });
+
+        return references;
     }
 
     /**

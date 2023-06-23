@@ -84,7 +84,9 @@ describe("Model", () => {
             // 68 standard datatypes + 3 defined in our fake model
             expect(Fixtures.matter.childrenOfType(DatatypeModel).length).toBe(71);
         })
+    });
 
+    describe("childOfType", () => {
         it("finds by ID", () => {
             expect(Fixtures.matter.childOfType(ClusterModel, 1)).toBe(Fixtures.cluster1);
             expect(Fixtures.matter.childOfType(AttributeModel, 1)).toBe(Fixtures.globalAttr);

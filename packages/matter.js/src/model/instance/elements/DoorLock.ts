@@ -201,32 +201,7 @@ Matter.children.push({
             tag: "attribute", name: "DoorState", id: 0x3, type: "enum8", access: "R V", conformance: "D, P, S",
             constraint: "desc", quality: "X P",
             details: "The current door state as defined in DoorStateEnum",
-            xref: { document: "cluster", section: "5.2.3.4" },
-            children: [
-                {
-                    tag: "datatype", name: "DoorOpen", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "DoorForcedOpen", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "DoorUnspecifiedError", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "DoorAjar", id: 0x5, conformance: "M"
-                }
-            ]
+            xref: { document: "cluster", section: "5.2.3.4" }
         },
 
         {
@@ -406,28 +381,7 @@ Matter.children.push({
             tag: "attribute", name: "OperatingMode", id: 0x25, type: "enum8", access: "RW VM", conformance: "M",
             constraint: "desc", quality: "P",
             details: "The current operating mode of the lock (see OperatingModeEnum",
-            xref: { document: "cluster", section: "5.2.3.23" },
-            children: [
-                {
-                    tag: "datatype", name: "Normal", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Vacation", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Privacy", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "NoRemoteLockUnlock", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Passage", id: 0x4, conformance: "M"
-                }
-            ]
+            xref: { document: "cluster", section: "5.2.3.23" }
         },
 
         {
@@ -1875,7 +1829,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "DoorStateEnum", type: "enum8",
+            tag: "datatype", name: "DoorStateEnum", type: "enum8", conformance: "M",
             details: "The DoorState enumeration SHALL indicate the current door state. The data type of the DoorState",
             xref: { document: "cluster", section: "5.2.6.7" },
             children: [
@@ -2059,7 +2013,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "OperatingModeEnum", type: "enum8",
+            tag: "datatype", name: "OperatingModeEnum", type: "enum8", conformance: "M",
             details: "The OperatingMode enumeration SHALL indicate the lock operating mode. The data type of the " +
                      "OperatingMode enum field is derived from enum8",
             xref: { document: "cluster", section: "5.2.6.12" },

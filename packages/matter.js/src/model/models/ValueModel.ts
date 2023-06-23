@@ -97,6 +97,20 @@ export abstract class ValueModel extends Model implements ValueElement {
     }
 
     /**
+     * Get the first derived ancestor with children, if any.
+     */
+    get definingModel() {
+        return new ModelTraversal().findDefiningModel(this);
+    }
+
+    /**
+     * Get the entry type for lists, if any.
+     */
+    get listEntry() {
+        return new ModelTraversal().findListEntry(this);
+    }
+
+    /**
      * ValueModels may only derive from ValueModels.
      */
     override get base() {
@@ -138,6 +152,13 @@ export abstract class ValueModel extends Model implements ValueElement {
         });
 
         return aspects;
+    }
+
+    /**
+     * Is this model deprecated?
+     */
+    get deprecated() {
+        return this.conformance.type == Conformance.Flag.Deprecated;
     }
 
     override valueOf() {

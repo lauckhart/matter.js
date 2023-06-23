@@ -46,7 +46,7 @@ export const Identifier = (el: HTMLElement) => {
     let str = Str(el).replace(/[^\sA-Za-z0-9\-_]/g, "");
 
     // Skip this heuristic if there are words known to be properly lowercased
-    if (!str.match(/ (on|and) /)) {
+    if (!str.match(/ (on|and|for) /)) {
         str = str.replace(/ +([a-z])/g, "$1");
     }
 

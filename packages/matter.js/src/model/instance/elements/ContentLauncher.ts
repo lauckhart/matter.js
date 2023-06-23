@@ -148,7 +148,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "6.7.5.2" },
             children: [
                 {
-                    tag: "datatype", name: "ParameterList", id: 0x0, type: "list", conformance: "M", default: "0",
+                    tag: "datatype", name: "ParameterList", id: 0x0, type: "list", conformance: "M",
                     details: "This SHALL indicate the list of parameters comprising the search. If multiple parameters are " +
                              "provided, the search parameters SHALL be joined with 'AND' logic. e.g. action movies with Tom Cruise" +
                              " will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action",

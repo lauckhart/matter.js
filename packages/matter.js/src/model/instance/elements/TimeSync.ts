@@ -85,7 +85,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TimeZone", id: 0x5, type: "list", access: "RW VM", conformance: "TZ",
-            constraint: "1 to 2", default: "{0,0}",
+            constraint: "1 to 2",
             details: "A list of time zone offsets from UTC and when they SHALL take effect. This attribute uses a list of " +
                      "time offset configurations to allow Nodes to handle scheduled regulatory time zone changes. This " +
                      "attribute SHALL NOT be used to indicate daylight savings time changes (see Section 11.16.8.7, “" +

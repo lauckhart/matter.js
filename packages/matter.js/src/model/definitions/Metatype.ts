@@ -171,6 +171,10 @@ export namespace Metatype {
                 return value;
 
             case Metatype.array:
+                // Eject garbage we've seen in the spec
+                if (value == "0" || value == "{0,0}") {
+                    return [];
+                }
                 if (value == "empty" || value == "[]" || value == "{}") {
                     return [];
                 }

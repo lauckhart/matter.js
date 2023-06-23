@@ -90,7 +90,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         });
     
         // Some tables list the primary ID twice; only accept the secondary
-        // instance
+        // instance in core spec; only accept the primary in cluster spec
         const uniqueIds = new Map<number | undefined, string>();
         for (const record of ids) {
             let idStr = record.id.trim().toLowerCase();
@@ -105,7 +105,13 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
                     continue;
                 }
             }
-            uniqueIds.set(id, camelize(record.name || definition.name));
+
+            if (id == 0x8) {
+                // Level control table is just kind of fubar
+                uniqueIds.set(id, "LevelControl");
+            } else {
+                uniqueIds.set(id, camelize(record.name || definition.name));
+            }
         }
     
         if (!uniqueIds.size) {

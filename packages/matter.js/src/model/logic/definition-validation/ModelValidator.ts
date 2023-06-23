@@ -24,7 +24,7 @@ export class ModelValidator<T extends Model> {
         if (this.model.type) {
             const base = this.model.base;
             if (base == undefined) {
-                this.error("UNRESOLVED_BASE", `Type ${this.model.type} does not resolve`);
+                this.error("TYPE_UNKNOWN", `Type ${this.model.type} does not resolve`);
             }
         }
 

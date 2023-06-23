@@ -27,7 +27,7 @@
     "clean": "rm -rf dist && rm -rf out && rm -f *.tsbuildinfo",
     "build-cjs": "tsc -b tsconfig.dist-cjs.json && cp package-cjs.json dist/cjs/package.json",
     "build-es": "tsc -b tsconfig.dist-es.json",
-    "build": "npm run generate-model && npm run generate-clusters && npm run build-cjs && npm run build-es",
+    "build": "npm run build-cjs && npm run build-es",
     "build-clean": "npm run clean && npm run build",
     "build-doc": "typedoc --excludeExternals --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-markdown --gitRemote upstream --tsconfig tsconfig.dist-cjs.json",
     "test-node": "TZ=utc NODE_OPTIONS=--experimental-vm-modules jest",
