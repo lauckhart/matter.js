@@ -44,7 +44,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "6.8.3.1" },
             children: [
                 {
-                    tag: "datatype", name: "KeyCode", id: 0x0, type: "uint8", conformance: "M",
+                    tag: "datatype", name: "KeyCode", id: 0x0, type: "CecKeyCode", conformance: "M",
                     xref: { document: "cluster", section: "6.8.3.1" }
                 }
             ]

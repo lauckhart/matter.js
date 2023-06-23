@@ -65,15 +65,6 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "DeviceList", id: 0x0, type: "list", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "entry", type: "DeviceTypeStruct"
-                }
-            ]
-        },
-
-        {
             tag: "datatype", name: "DeviceTypeStruct", type: "struct", conformance: "M",
             details: "The device type and revision define endpoint conformance to a release of a device type definition. " +
                      "See the Data Model specification for more information",

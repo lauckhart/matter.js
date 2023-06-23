@@ -25,7 +25,7 @@ export class MatterModel extends Model implements MatterElement {
      * Clusters.
      */
     get clusters() {
-        return this.childrenOfType(ClusterModel)
+        return this.childrenOfType(ClusterModel);
     }
 
     /**

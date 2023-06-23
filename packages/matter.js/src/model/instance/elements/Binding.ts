@@ -15,19 +15,10 @@ Matter.children.push({
     xref: { document: "core", section: "9.6" },
     children: [
         {
-            tag: "attribute", name: "Binding", id: 0x0, type: "list", access: "RW F VM", conformance: "M",
+            tag: "attribute", name: "Binding", id: 0x0, type: "list", access: "RW", conformance: "M",
             constraint: "desc", quality: "N",
             details: "Each entry SHALL represent a binding. Here are some examples",
             xref: { document: "core", section: "9.6.6.1" },
-            children: [
-                {
-                    tag: "datatype", name: "entry", type: "TargetStruct"
-                }
-            ]
-        },
-
-        {
-            tag: "attribute", name: "BindingList", id: 0x0, type: "list", access: "RW", conformance: "M",
             children: [
                 {
                     tag: "datatype", name: "entry", type: "TargetStruct"

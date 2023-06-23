@@ -251,68 +251,6 @@ Matter.children.push({
                     xref: { document: "cluster", section: "4.4.6.11" }
                 }
             ]
-        },
-
-        {
-            tag: "datatype", name: "FanModeType", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Off", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Low", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Medium", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "High", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "On", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Auto", id: 0x5, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Smart", id: 0x6, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "FanModeSequenceType", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "OffLowMedHigh", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "OffLowHigh", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "OffLowMedHighAuto", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "OffLowHighAuto", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "OffOnAuto", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "OffOn", id: 0x5, conformance: "M"
-                }
-            ]
         }
     ]
 });

@@ -9,7 +9,7 @@
 import "./util/setup.js";
 import { Logger } from "../src/log/Logger.js";
 import { AnyElement, MatterElement, MatterModel } from "../src/model/index.js";
-import { MergeElements, ValidateModel } from "../src/model/logic/index.js";
+import { MergeModels, ValidateModel } from "../src/model/logic/index.js";
 import { TsFile } from "./util/TsFile.js";
 import { clean } from "./util/file.js";
 import { generateElement } from "./mom/common/generate-element.js";
@@ -48,7 +48,7 @@ function generateIndex(elements: AnyElement[]) {
     file.save();
 }
 
-const matter = new MatterModel(MergeElements({ spec: SpecMatter, chip: ChipMatter, local: LocalMatter }) as MatterElement);
+const matter = new MatterModel(MergeModels({ spec: SpecMatter, chip: ChipMatter, local: LocalMatter }) as MatterElement);
 
 logger.info("validate matter model");
 let validationResult: ValidateModel.Result | undefined;

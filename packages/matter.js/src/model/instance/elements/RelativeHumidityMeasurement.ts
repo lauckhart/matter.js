@@ -43,11 +43,6 @@ Matter.children.push({
             constraint: "0 to 2048",
             details: "See Measured Value",
             xref: { document: "cluster", section: "2.6.4.4" }
-        },
-
-        {
-            tag: "attribute", name: "RelativeHumidityMeasuredValue", id: 0x0, type: "uint16", conformance: "M",
-            quality: "X P"
         }
     ]
 });

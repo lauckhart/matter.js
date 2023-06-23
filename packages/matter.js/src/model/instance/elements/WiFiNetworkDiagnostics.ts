@@ -165,10 +165,6 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Status", id: 0x1, type: "uint16", conformance: "M",
                     xref: { document: "core", section: "11.14.8.2" }
-                },
-
-                {
-                    tag: "datatype", name: "AssociationFailure", type: "AssociationFailureCauseEnum", conformance: "M"
                 }
             ]
         },

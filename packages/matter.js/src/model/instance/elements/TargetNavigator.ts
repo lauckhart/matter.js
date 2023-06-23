@@ -37,15 +37,6 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "TargetNavigatorList", id: 0x0, type: "list", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "entry", type: "TargetInfoStruct"
-                }
-            ]
-        },
-
-        {
             tag: "command", name: "NavigateTarget", id: 0x0, access: "O", conformance: "M",
             direction: "request", response: "NavigateTargetResponse",
             details: "Upon receipt, this SHALL navigation the UX to the target identified",

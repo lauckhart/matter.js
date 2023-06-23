@@ -907,16 +907,24 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetpointRaiseLower", id: 0x0, access: "O", conformance: "M",
-            direction: "request", response: "status",
+            tag: "command", name: "GetWeeklyScheduleResponse", id: 0x0, conformance: "SCH",
+            direction: "response",
             xref: { document: "cluster", section: "4.3.8" },
             children: [
                 {
-                    tag: "datatype", name: "Mode", type: "SetpointAdjustMode", conformance: "M"
+                    tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M"
                 },
 
                 {
-                    tag: "datatype", name: "Amount", type: "int8", conformance: "M"
+                    tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M"
                 }
             ]
         },
@@ -972,29 +980,6 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetWeeklyScheduleResponse", id: 0x0, conformance: "SCH",
-            direction: "response",
-            xref: { document: "cluster", section: "4.3.8" },
-            children: [
-                {
-                    tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M"
-                }
-            ]
-        },
-
-        {
             tag: "datatype", name: "temperature", type: "int16", description: "Temperature",
             details: "This type, derived from int16, represents a temperature on the Celsius scale with a resolution of 0." +
                      "01°C",
@@ -1046,35 +1031,6 @@ Matter.children.push({
                     tag: "datatype", name: "CoolSetpoint", id: 0x2, type: "temperature", access: "RW", conformance: "M",
                     quality: "X",
                     xref: { document: "cluster", section: "4.3.9.5" }
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ThermostatControlSequence", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "CoolingOnly", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "CoolingWithReheat", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "HeatingOnly", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "HeatingWithReheat", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "CoolingAndHeating", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "CoolingAndHeatingWithReheat", id: 0x5, conformance: "M"
                 }
             ]
         },

@@ -41,20 +41,19 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddGroup", id: 0x0, access: "R F M", conformance: "M", direction: "request",
-            response: "AddGroupResponse",
-            details: "The AddGroup command allows a client to add group membership in a particular group for the server " +
-                     "endpoint",
-            xref: { document: "cluster", section: "1.3.7.1" },
+            tag: "command", name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
+            details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command. The " +
+                     "AddGroupResponse command SHALL have the following data fields",
+            xref: { document: "cluster", section: "1.3.7.7" },
             children: [
                 {
-                    tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                    xref: { document: "cluster", section: "1.3.7.1" }
+                    tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    xref: { document: "cluster", section: "1.3.7.7" }
                 },
 
                 {
-                    tag: "datatype", name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
-                    xref: { document: "cluster", section: "1.3.7.1" }
+                    tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
+                    xref: { document: "cluster", section: "1.3.7.7" }
                 }
             ]
         },
@@ -149,24 +148,6 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
                     xref: { document: "cluster", section: "1.3.7.6" }
-                }
-            ]
-        },
-
-        {
-            tag: "command", name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
-            details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command. The " +
-                     "AddGroupResponse command SHALL have the following data fields",
-            xref: { document: "cluster", section: "1.3.7.7" },
-            children: [
-                {
-                    tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.3.7.7" }
-                },
-
-                {
-                    tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
-                    xref: { document: "cluster", section: "1.3.7.7" }
                 }
             ]
         }

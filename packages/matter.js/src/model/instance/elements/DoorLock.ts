@@ -124,59 +124,66 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.3.2" },
             children: [
                 {
-                    tag: "datatype", name: "Deadbolt", id: 0x0, description: "Physical lock type is dead bolt",
+                    tag: "datatype", name: "Deadbolt", id: 0x0, conformance: "M",
+                    description: "Physical lock type is dead bolt",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "Magnetic", id: 0x1, description: "Physical lock type is magnetic",
+                    tag: "datatype", name: "Magnetic", id: 0x1, conformance: "M",
+                    description: "Physical lock type is magnetic",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "Other", id: 0x2, description: "Physical lock type is other",
+                    tag: "datatype", name: "Other", id: 0x2, conformance: "M",
+                    description: "Physical lock type is other",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "Mortise", id: 0x3, description: "Physical lock type is mortise",
+                    tag: "datatype", name: "Mortise", id: 0x3, conformance: "M",
+                    description: "Physical lock type is mortise",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "Rim", id: 0x4, description: "Physical lock type is rim",
+                    tag: "datatype", name: "Rim", id: 0x4, conformance: "M", description: "Physical lock type is rim",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "LatchBolt", id: 0x5, description: "Physical lock type is latch bolt",
+                    tag: "datatype", name: "LatchBolt", id: 0x5, conformance: "M",
+                    description: "Physical lock type is latch bolt",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "CylindricalLock", id: 0x6,
+                    tag: "datatype", name: "CylindricalLock", id: 0x6, conformance: "M",
                     description: "Physical lock type is cylindrical lock",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "TubularLock", id: 0x7, description: "Physical lock type is tubular lock",
+                    tag: "datatype", name: "TubularLock", id: 0x7, conformance: "M",
+                    description: "Physical lock type is tubular lock",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "InterconnectedLock", id: 0x8,
+                    tag: "datatype", name: "InterconnectedLock", id: 0x8, conformance: "M",
                     description: "Physical lock type is interconnected lock",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "DeadLatch", id: 0x9, description: "Physical lock type is dead latch",
+                    tag: "datatype", name: "DeadLatch", id: 0x9, conformance: "M",
+                    description: "Physical lock type is dead latch",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 },
 
                 {
-                    tag: "datatype", name: "DoorFurniture", id: 0xa,
+                    tag: "datatype", name: "DoorFurniture", id: 0xa, conformance: "M",
                     description: "Physical lock type is door furniture",
                     xref: { document: "cluster", section: "5.2.3.2" }
                 }
@@ -194,7 +201,32 @@ Matter.children.push({
             tag: "attribute", name: "DoorState", id: 0x3, type: "enum8", access: "R V", conformance: "D, P, S",
             constraint: "desc", quality: "X P",
             details: "The current door state as defined in DoorStateEnum",
-            xref: { document: "cluster", section: "5.2.3.4" }
+            xref: { document: "cluster", section: "5.2.3.4" },
+            children: [
+                {
+                    tag: "datatype", name: "DoorOpen", id: 0x0, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "DoorForcedOpen", id: 0x3, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "DoorUnspecifiedError", id: 0x4, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "DoorAjar", id: 0x5, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -304,7 +336,20 @@ Matter.children.push({
             tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "map8", access: "R V",
             conformance: "USR", default: 1, quality: "F",
             details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device",
-            xref: { document: "cluster", section: "5.2.3.19" }
+            xref: { document: "cluster", section: "5.2.3.19" },
+            children: [
+                {
+                    tag: "datatype", name: "Single", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Dual", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Tri", id: 0x4, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -361,7 +406,28 @@ Matter.children.push({
             tag: "attribute", name: "OperatingMode", id: 0x25, type: "enum8", access: "RW VM", conformance: "M",
             constraint: "desc", quality: "P",
             details: "The current operating mode of the lock (see OperatingModeEnum",
-            xref: { document: "cluster", section: "5.2.3.23" }
+            xref: { document: "cluster", section: "5.2.3.23" },
+            children: [
+                {
+                    tag: "datatype", name: "Normal", id: 0x0, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Vacation", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Privacy", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "NoRemoteLockUnlock", id: 0x3, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Passage", id: 0x4, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -370,7 +436,28 @@ Matter.children.push({
             details: "This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All " +
                      "operating modes NOT supported by a lock SHALL be set to one. The value of the OperatingMode " +
                      "enumeration defines the related bit to be set, as shown below",
-            xref: { document: "cluster", section: "5.2.3.24" }
+            xref: { document: "cluster", section: "5.2.3.24" },
+            children: [
+                {
+                    tag: "datatype", name: "Normal", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Vacation", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Privacy", id: 0x4, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "NoRemoteLockUnlock", id: 0x8, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Passage", id: 0x10, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -380,7 +467,32 @@ Matter.children.push({
                      "example: hardware dip switch setting, etc…) and represents the default setting for some of the " +
                      "attributes within this cluster (for example: LED, Auto Lock, Sound Volume, and Operating Mode " +
                      "attributes",
-            xref: { document: "cluster", section: "5.2.3.28" }
+            xref: { document: "cluster", section: "5.2.3.28" },
+            children: [
+                {
+                    tag: "datatype", name: "EnableLocalProgrammingEnabled", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "KeypadInterfaceDefaultAccessEnabled", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "RemoteInterfaceDefaultAccessIsEnabled", id: 0x4, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "SoundEnabled", id: 0x20, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "AutoRelockTimeSet", id: 0x40, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "LedSettingsSet", id: 0x80, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -424,7 +536,24 @@ Matter.children.push({
                      "CONSTRAINT_ERROR during a write operation of this attribute. If the EnableLocalProgramming attribute" +
                      " is set to True then all local programming features SHALL be enabled regardless of the bits set to 0" +
                      " in this attribute",
-            xref: { document: "cluster", section: "5.2.3.33" }
+            xref: { document: "cluster", section: "5.2.3.33" },
+            children: [
+                {
+                    tag: "datatype", name: "AddUsersCredentialsSchedulesLocally", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ModifyUsersCredentialsSchedulesLocally", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "ClearUsersCredentialsSchedulesLocally", id: 0x4, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "AdjustLockSettingsLocally", id: 0x8, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -1746,7 +1875,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "DoorStateEnum", type: "enum8", conformance: "M",
+            tag: "datatype", name: "DoorStateEnum", type: "enum8",
             details: "The DoorState enumeration SHALL indicate the current door state. The data type of the DoorState",
             xref: { document: "cluster", section: "5.2.6.7" },
             children: [
@@ -1930,7 +2059,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "OperatingModeEnum", type: "enum8", conformance: "M",
+            tag: "datatype", name: "OperatingModeEnum", type: "enum8",
             details: "The OperatingMode enumeration SHALL indicate the lock operating mode. The data type of the " +
                      "OperatingMode enum field is derived from enum8",
             xref: { document: "cluster", section: "5.2.6.12" },
@@ -2129,164 +2258,6 @@ Matter.children.push({
                              "code credential created for them from being used at the keypad. The PIN code credential would only " +
                              "be provided over-the-air for the lock/unlock commands",
                     xref: { document: "cluster", section: "5.2.6.16.10" }
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "DlLockState", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "NotFullyLocked", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Locked", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Unlocked", id: 0x2, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "DlLockType", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "DeadBolt", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Magnetic", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Other", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Mortise", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Rim", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LatchBolt", id: 0x5, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "CylindricalLock", id: 0x6, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "TubularLock", id: 0x7, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "InterconnectedLock", id: 0x8, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "DeadLatch", id: 0x9, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "DoorFurniture", id: 0xa, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "DlCredentialRuleMask", type: "map8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Single", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Dual", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Tri", id: 0x4, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "DlSupportedOperatingModes", type: "map16", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Normal", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Vacation", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Privacy", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "NoRemoteLockUnlock", id: 0x8, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Passage", id: 0x10, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "DlDefaultConfigurationRegister", type: "map16", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "EnableLocalProgrammingEnabled", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "KeypadInterfaceDefaultAccessEnabled", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "RemoteInterfaceDefaultAccessIsEnabled", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "SoundEnabled", id: 0x20, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "AutoRelockTimeSet", id: 0x40, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LedSettingsSet", id: 0x80, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "DlLocalProgrammingFeatures", type: "map8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "AddUsersCredentialsSchedulesLocally", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ModifyUsersCredentialsSchedulesLocally", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ClearUsersCredentialsSchedulesLocally", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "AdjustLockSettingsLocally", id: 0x8, conformance: "M"
                 }
             ]
         },

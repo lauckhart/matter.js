@@ -16,7 +16,7 @@ Matter.children.push({
     xref: { document: "core", section: "11.17" },
     children: [
         {
-            tag: "attribute", name: "NoCs", id: 0x0, type: "list", access: "R F A", conformance: "M",
+            tag: "attribute", name: "NoCs", id: 0x0, type: "list", access: "R A", conformance: "M",
             constraint: "max SupportedFabrics", quality: "N C",
             details: "This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct",
             xref: { document: "core", section: "11.17.5.1" },
@@ -74,15 +74,6 @@ Matter.children.push({
             conformance: "M",
             details: "This attribute SHALL contain accessing fabric index",
             xref: { document: "core", section: "11.17.5.6" }
-        },
-
-        {
-            tag: "attribute", name: "Nocs", id: 0x0, type: "list", access: "R A", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "entry", type: "NocStruct"
-                }
-            ]
         },
 
         {

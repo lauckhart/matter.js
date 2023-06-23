@@ -43,10 +43,6 @@ Matter.children.push({
             constraint: "0 to 2048",
             details: "See Measured Value",
             xref: { document: "cluster", section: "2.3.4.4" }
-        },
-
-        {
-            tag: "attribute", name: "TempMeasuredValue", id: 0x0, type: "int16", conformance: "M", quality: "X"
         }
     ]
 });

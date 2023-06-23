@@ -258,7 +258,24 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Direction", id: 0x1, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "3.2.11.4" }
+                    xref: { document: "cluster", section: "3.2.11.4" },
+                    children: [
+                        {
+                            tag: "datatype", name: "ShortestDistance", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "LongestDistance", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Up", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
@@ -288,7 +305,20 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "3.2.11.5" }
+                    xref: { document: "cluster", section: "3.2.11.5" },
+                    children: [
+                        {
+                            tag: "datatype", name: "Stop", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
@@ -317,7 +347,16 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "3.2.11.6" }
+                    xref: { document: "cluster", section: "3.2.11.6" },
+                    children: [
+                        {
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
@@ -382,7 +421,20 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "3.2.11.8" }
+                    xref: { document: "cluster", section: "3.2.11.8" },
+                    children: [
+                        {
+                            tag: "datatype", name: "Stop", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
@@ -411,7 +463,16 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "3.2.11.9" }
+                    xref: { document: "cluster", section: "3.2.11.9" },
+                    children: [
+                        {
+                            tag: "datatype", name: "Up", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x3, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
@@ -894,87 +955,6 @@ Matter.children.push({
                     tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M",
                     constraint: "desc",
                     xref: { document: "cluster", section: "3.2.11.22" }
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "HueDirection", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "ShortestDistance", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LongestDistance", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Up", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Down", id: 0x3, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "HueMoveMode", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Stop", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Up", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Down", id: 0x3, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "HueStepMode", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Up", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Down", id: 0x3, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "SaturationMoveMode", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Stop", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Up", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Down", id: 0x3, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "SaturationStepMode", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Up", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Down", id: 0x3, conformance: "M"
                 }
             ]
         }

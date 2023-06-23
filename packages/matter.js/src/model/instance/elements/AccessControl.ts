@@ -80,8 +80,8 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M",
-                    constraint: "desc", quality: "X",
+                    tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "ChangeTypeEnum", access: "S",
+                    conformance: "M", constraint: "desc", quality: "X",
                     xref: { document: "core", section: "9.10.7.1" }
                 },
 
@@ -113,8 +113,8 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M",
-                    constraint: "desc", quality: "X",
+                    tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "ChangeTypeEnum", access: "S",
+                    conformance: "M", constraint: "desc", quality: "X",
                     xref: { document: "core", section: "9.10.7.2" }
                 },
 

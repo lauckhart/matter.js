@@ -5,45 +5,71 @@
  */
 
 import { Logger } from "../../../src/log/index.js";
-import { MergeElements } from "../../../src/model/logic/index.js";
+import { MergeModels } from "../../../src/model/logic/index.js";
 import { Time } from "../../../src/time/Time.js";
-import { SpecMatter, ChipMatter, LocalMatter } from "../../../models/index.js";
+import { SpecMatter, ChipMatter } from "../../../models/index.js";
 import { TimeFake } from "../../../src/time/index.js";
-import { ClusterElement } from "../../../src/model/index.js";
+import { ClusterElement, ClusterModel, CommandModel, MatterElement, MatterModel } from "../../../src/model/index.js";
 
 Time.get = () => new TimeFake(0);
 Logger.format = "ansi";
 
-describe("MergeElements", () => {
-    it("merges known models", () => {
-        MergeElements({ spec: SpecMatter, chip: ChipMatter, local: LocalMatter });
-    })
+// Utility function to perform merge.  Type resolution works differently
+// without the global types in MatterModel so we fake that up even though we're
+// only actuall merge the input models
+function merge({ spec, chip }: { spec: MatterElement.Child, chip: MatterElement.Child }) {
+    const specMatter = new MatterModel({ name: "Spec", children: [ spec ]});
+    const chipMatter = new MatterModel({ name: "Chip", children: [ chip ]});
 
+    return MergeModels({
+        spec: specMatter.children[specMatter.children.length - 1],
+        chip: chipMatter.children[chipMatter.children.length - 1]
+    });
+}
+
+describe("MergeModels", () => {
     it("merges children by ID", () => {
-        expect(MergeElements(Fixtures.OccupancySensing).children?.length).toBe(1);
+        expect(merge(Fixtures.OccupancySensing).children.length).toBe(1);
     })
 
     it("prefers spec name", () => {
-        expect(MergeElements(Fixtures.OccupancySensing).name).toBe("OccupancySensing");
+        expect(merge(Fixtures.OccupancySensing).name).toBe("OccupancySensing");
     })
 
     it("adds mismatched children", () => {
-        expect(MergeElements(Fixtures.OccupancySensing).children?.[0].children?.length).toBe(1);
+        expect(merge(Fixtures.OccupancySensing).children[0].children.length).toBe(1);
     })
 
     it("merges with missing datatype", () => {
-        expect(MergeElements(Fixtures.ModeSelect).children?.length).toBe(2);
+        expect(merge(Fixtures.ModeSelect).children.length).toBe(2);
     })
 
     it("merges datatypes", () => {
-        expect(MergeElements(Fixtures.BasicInformation).children?.length).toBe(2);
+        expect(merge(Fixtures.BasicInformation).children.length).toBe(2);
     })
 
-    it("merges referenced enum into direct enum", () => {
-        const merged = MergeElements(Fixtures.WindowCovering);
-        expect(merged.children?.length).toBe(1);
-        expect(merged.children?.[0].type).toBe("enum8");
-        expect(merged.children?.[0].children?.length).toBe(4);
+    it("merges datatypes with different names", () => {
+        const variants = {
+            spec: Fixtures.BasicInformation.spec,
+            chip: new ClusterModel(Fixtures.BasicInformation.chip)
+        }
+        variants.chip.datatypes[0].name = "CapabilityMaximaStruct";
+        const merged = merge(variants) as ClusterModel;
+        expect(merged.children.length).toBe(2);
+        expect(merged.datatypes[0].name).toBe("CapabilityMinimaStruct");
+    })
+
+    it("merges referenced bitmap into direct bitmap", () => {
+        const merged = merge(Fixtures.WindowCovering);
+        expect(merged.children.length).toBe(1);
+        expect(merged.children[0].type).toBe("map8");
+        expect(merged.children[0].children.length).toBe(4);
+    })
+
+    it("merges commands with children correclty", () => {
+        const merged = merge(Fixtures.OnOff);
+        const offWithEffect = merged.childOfType(CommandModel, "OffWithEffect");
+        expect(offWithEffect.children.map(c => c.name)).toEqual([ "EffectIdentifier", "EffectVariant" ]);
     })
 })
 
@@ -214,5 +240,10 @@ namespace Fixtures {
                 },
             ]
         })
+    }
+
+    export const OnOff = {
+        spec: SpecMatter.children.find(e => e.name == "OnOff") as ClusterElement,
+        chip: ChipMatter.children.find(e => e.name == "OnOff") as ClusterElement
     }
 }
