@@ -140,25 +140,6 @@ export abstract class ValueModel extends Model implements ValueElement {
         return aspects;
     }
 
-    /**
-     * Datatype fields (datatypes parented by other datatypes) can omit their
-     * ID.  In this case we use their index within the parent as the ID.
-     * 
-     * Note that this is only true for fields.  For named datatypes that appear
-     * directly under the cluster the name is the canonical key.
-     */
-    override get effectiveId() {
-        if (this.id != undefined) {
-            return this.id;
-        }
-        if (this.parent) {
-            const index = this.parent.children.indexOf(this);
-            if (index != -1) {
-                return index;
-            }
-        }
-    }
-
     override valueOf() {
         const result = super.valueOf() as any;
         for (const k of [ "conformance", "access", "quality", "constraint" ]) {

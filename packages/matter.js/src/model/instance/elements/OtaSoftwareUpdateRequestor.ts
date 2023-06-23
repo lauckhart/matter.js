@@ -20,7 +20,7 @@ Matter.children.push({
             xref: { document: "core", section: "11.19.7.5" },
             children: [
                 {
-                    tag: "datatype", name: "entry", type: "ProviderLocationStruct"
+                    tag: "datatype", name: "entry", type: "ProviderLocation"
                 }
             ]
         },
@@ -32,8 +32,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "UpdateState", id: 0x2, type: "UpdateStateEnum", access: "R V",
-            conformance: "M", default: "Unknown",
+            tag: "attribute", name: "UpdateState", id: 0x2, type: "OtaUpdateStateEnum", access: "R V",
+            conformance: "M", default: 0,
             xref: { document: "core", section: "11.19.7.5" }
         },
 

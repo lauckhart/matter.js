@@ -73,15 +73,19 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "Identify", id: 0x0, access: "R M", conformance: "M", direction: "request",
-            response: "status",
-            details: "This command starts or stops the receiving device identifying itself. This command SHALL have the " +
-                     "following data fields",
-            xref: { document: "cluster", section: "1.2.6.1" },
+            tag: "command", name: "IdentifyQueryResponse", id: 0x0, access: "R M", conformance: "QRY",
+            direction: "request",
+            details: "This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery " +
+                     "Command, in the case that the device is currently identifying itself",
+            xref: { document: "cluster", section: "1.2.6.4" },
             children: [
                 {
-                    tag: "datatype", name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "cluster", section: "1.2.6.1" }
+                    tag: "datatype", name: "Timeout", id: 0x0, type: "uint16", conformance: "M",
+                    xref: { document: "cluster", section: "1.2.6.4" }
+                },
+
+                {
+                    tag: "datatype", name: "IdentifyTime", type: "uint16", conformance: "M"
                 }
             ]
         },
@@ -108,64 +112,43 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "EffectIdentifier", id: 0x0, type: "enum8", conformance: "M",
                     constraint: "desc",
-                    xref: { document: "cluster", section: "1.2.6.3" }
+                    xref: { document: "cluster", section: "1.2.6.3" },
+                    children: [
+                        {
+                            tag: "datatype", name: "Blink", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Breathe", id: 0x1, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Okay", id: 0x2, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "ChannelChange", id: 0xb, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "FinishEffect", id: 0xfe, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "StopEffect", id: 0xff, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
                     tag: "datatype", name: "EffectVariant", id: 0x1, type: "enum8", conformance: "M",
                     constraint: "desc",
-                    xref: { document: "cluster", section: "1.2.6.3" }
-                }
-            ]
-        },
-
-        {
-            tag: "command", name: "IdentifyQueryResponse", id: 0x0, conformance: "QRY", direction: "response",
-            details: "This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery " +
-                     "Command, in the case that the device is currently identifying itself",
-            xref: { document: "cluster", section: "1.2.6.4" },
-            children: [
-                {
-                    tag: "datatype", name: "Timeout", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "cluster", section: "1.2.6.4" }
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "IdentifyEffectIdentifier", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Blink", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Breathe", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Okay", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ChannelChange", id: 0xb, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "FinishEffect", id: 0xfe, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "StopEffect", id: 0xff, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "IdentifyEffectVariant", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Default", id: 0x0, conformance: "M"
+                    xref: { document: "cluster", section: "1.2.6.3" },
+                    children: [
+                        {
+                            tag: "datatype", name: "Default", id: 0x0, conformance: "M"
+                        }
+                    ]
                 }
             ]
         }

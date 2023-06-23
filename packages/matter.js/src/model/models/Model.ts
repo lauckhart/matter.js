@@ -10,6 +10,7 @@ import { AnyElement, BaseElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 
 const CHILDREN = Symbol("children");
+const PARENT = Symbol("parent");
 
 /**
  * A "model" is a class that implements runtime functionality associated with
@@ -28,12 +29,6 @@ export abstract class Model {
     errors?: DefinitionError[];
 
     /**
-     * The structural parent.  This is the model for the element that contains
-     * this element's definition.
-     */
-    parent?: Model;
-
-    /**
      * Flag set on elements loaded from Globals.
      */
     global?: boolean;
@@ -49,6 +44,7 @@ export abstract class Model {
     isType?: boolean;
 
     private [CHILDREN]!: Array<any>;
+    private [PARENT]?: Model;
 
     /**
      * Did validation find errors?
@@ -69,13 +65,34 @@ export abstract class Model {
     }
 
     /**
-     * Children of models are always models.
+     * The structural parent.  This is the model for the element that contains
+     * this element's definition.
      */
-    get children(): Model[] {
-        if (!this[CHILDREN]) {
-            this.children = [];
+    get parent(): Model | undefined {
+        return this[PARENT];
+    };
+
+    set parent(parent: Model | undefined) {
+        if (this.parent == parent) {
+            return;
         }
-        return this[CHILDREN];
+        
+        if (this.parent) {
+            const index = this.parent.children.indexOf(this);
+            if (index != -1) {
+                this.parent.children.splice(index, 1);
+            }
+        }
+        
+        if (parent == undefined) {
+            delete this[PARENT];
+        } else {
+            this[PARENT] = parent;
+        }
+
+        if (parent) {
+            parent.children.push(this);
+        }
     }
 
     /**
@@ -97,15 +114,25 @@ export abstract class Model {
     }
 
     /**
+     * Children of models are always models.
+     */
+    get children(): Model[] {
+        if (!this[CHILDREN]) {
+            this.children = [];
+        }
+        return this[CHILDREN];
+    }
+
+    /**
      * Children can be added as models or elements.
      */
     set children(children: (Model | AnyElement)[]) {
-        this[CHILDREN] = new Proxy([], {
+        this[CHILDREN] = new Proxy(Array<Model>(), {
             get: (target, p, receiver) => {
                 let result = Reflect.get(target, p, receiver);
                 if (!(result instanceof Model) && typeof p == "string" && p.match(/^[0-9]+$/)) {
                     result = Model.create(result);
-                    result.parent = this;
+                    result[PARENT] = this;
                     Reflect.set(target, p, result, receiver);
                 }
                 return result;
@@ -113,20 +140,41 @@ export abstract class Model {
 
             set: (target, p, newValue, receiver) => {
                 if (typeof p == "string" && p.match(/^[0-9]+$/)) {
-                    if (newValue instanceof Model) {
-                        if (newValue.parent) {
-                            newValue = { ...newValue };
-                            delete newValue.parent;
-                        } else {
-                            newValue.parent = this;
-                        }
-                    } else if (typeof newValue != "object" || newValue === null || !newValue.tag) {
-                        throw new MatterError("Node child must be Model or AnyElement");
+                    if (typeof newValue != "object" || newValue === null || !newValue.tag) {
+                        throw new MatterError("Child must be Model or AnyElement");
                     }
                 }
-                return Reflect.set(target, p, newValue, receiver);
+                const result = Reflect.set(target, p, newValue, receiver);
+                if (newValue instanceof Model) {
+                    if (newValue[PARENT] != this) {
+                        if (newValue[PARENT]) {
+                            newValue.parent = undefined;
+                        }
+                        newValue[PARENT] = this;
+                    }
+                }
+                return result;
+            },
+
+            deleteProperty: (target, p) => {
+                let child;
+                if (typeof p == "string" && p.match(/^[0-9]+$/)) {
+                    child = target[Number.parseInt(p)];
+                }
+                if (Reflect.deleteProperty(target, p) && child) {
+                    if (child[PARENT] == this && this.children.indexOf(child) == -1) {
+                        child[PARENT] = undefined;
+                    }
+                    return true;
+                }
+                return false;
             }
         });
+
+        // Clone child array because if it references a former parent they'll
+        // disappear as we add
+        children = [ ...children ];
+        
         this[CHILDREN].push(...children);
     }
 
@@ -160,6 +208,13 @@ export abstract class Model {
     }
 
     /**
+     * Add a child.  children.push works too but only accepts models.
+     */
+    add(...children: (Model | AnyElement)[]) {
+        this.children.push(...children as any[]);
+    }
+
+    /**
      * Create a model for an element.
      */
     static create(definition: AnyElement) {
@@ -169,6 +224,7 @@ export abstract class Model {
         const t = definition["tag"];
         const constructor = Model.constructors[t];
         if (!constructor) {
+            debugger;
             throw new MatterError(`Unknown element tag "${t}"`);
         }
         return new constructor(definition);

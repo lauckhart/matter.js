@@ -7,12 +7,82 @@
 import { AttributeModel, ClusterModel, Datatype, DatatypeModel, MatterModel, Metatype } from "../../../src/model/index.js";
 
 describe("Model", () => {
-    describe("local", () => {
+    describe("children", () => {
+        it("can be added", () => {
+            const parent = new ClusterModel({ name: "Foo" });
+            parent.add({ tag: "datatype", name: "Bar" });
+            expect(parent.children.length).toBe(1);
+            expect(parent.children[0]).toBeInstanceOf(DatatypeModel);
+        })
+
+        it("can be added as model", () => {
+            const parent = new ClusterModel({ name: "Foo" });
+            parent.add(new DatatypeModel({ name: "Bar" }));
+            expect(parent.children.length).toBe(1);
+            expect(parent.children[0]).toBeInstanceOf(DatatypeModel);
+        })
+
+        it("can be removed", () => {
+            const parent = new ClusterModel({ name: "Foo" });
+            parent.add({ tag: "datatype", name: "Bar" });
+            const child = parent.children[0];
+            child.parent = undefined;
+            expect(child.parent).toBe(undefined);
+            expect(parent.children.length).toBe(0);
+        })
+
+        it("can be moved", () => {
+            const parent = new ClusterModel({ name: "Foo" });
+            parent.add({ tag: "datatype", name: "Bar" });
+            const child = parent.children[0];
+            const parent2 = new ClusterModel({ name: "Foo2", children: [ child ] });
+            expect(parent.children.length).toBe(0);
+            expect(parent2.children.length).toBe(1);
+            expect(child.parent).toBe(parent2);
+        })
+
+        it("can be bulk added", () => {
+            const parent = new ClusterModel({ name: "Foo" });
+            parent.children = [
+                { tag: "datatype", name: "Bar1" },
+                { tag: "datatype", name: "Bar2" }
+            ]
+            expect(parent.children.length).toBe(2);
+            expect(parent.children[0].name).toBe("Bar1");
+            expect(parent.children[1].name).toBe("Bar2");
+        })
+
+        it("can be bulk added with model", () => {
+            const parent = new ClusterModel({ name: "Foo" });
+            parent.children = [
+                new DatatypeModel({ name: "Bar1" }),
+                { tag: "datatype", name: "Bar2" }
+            ]
+            expect(parent.children.length).toBe(2);
+            expect(parent.children[0].name).toBe("Bar1");
+            expect(parent.children[1].name).toBe("Bar2");
+        })
+
+        it("can be bulk moved", () => {
+            const parent = new ClusterModel({ name: "Foo" });
+            parent.children = [
+                { tag: "datatype", name: "Bar1" },
+                { tag: "datatype", name: "Bar2" }
+            ]
+            const parent2 = new ClusterModel({ name: "Foo2", children: parent.children });
+            expect(parent.children.length).toBe(0);
+            expect(parent2.children.length).toBe(2);
+            expect(parent2.children[0].name).toBe("Bar1");
+            expect(parent2.children[1].name).toBe("Bar2");
+        })
+    })
+
+    describe("childrenOfType", () => {
         it("finds all models by type", () => {
             expect(Fixtures.matter.childrenOfType(ClusterModel).length).toBe(3);
 
-            // 66 standard datatypes + 3 defined in our fake model
-            expect(Fixtures.matter.childrenOfType(DatatypeModel).length).toBe(69);
+            // 68 standard datatypes + 3 defined in our fake model
+            expect(Fixtures.matter.childrenOfType(DatatypeModel).length).toBe(71);
         })
 
         it("finds by ID", () => {
@@ -51,7 +121,7 @@ describe("Model", () => {
         })
     })
 
-    describe("metatype", () => {
+    describe("effectiveMetatype", () => {
         it("represents global base type", () => {
             expect(Fixtures.cluster1StructType.effectiveMetatype).toBe(Metatype.object);
         })
@@ -79,7 +149,7 @@ describe("Model", () => {
         })
     });
 
-    describe("type", () => {
+    describe("effectiveType", () => {
         it("is inherited on datatype override", () => {
             expect(Fixtures.cluster1StructFieldOverride.effectiveType).toBe(Datatype.string);
         })

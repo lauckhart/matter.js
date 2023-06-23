@@ -67,11 +67,6 @@ Matter.children.push({
                     xref: { document: "cluster", section: "2.2.5.5" }
                 }
             ]
-        },
-
-        {
-            tag: "attribute", name: "IllumMeasuredValue", id: 0x0, type: "uint16", conformance: "M",
-            quality: "X P"
         }
     ]
 });

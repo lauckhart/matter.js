@@ -619,25 +619,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetProfileInfoResponseCommand", id: 0x0, conformance: "O",
-            direction: "response",
-            children: [
-                {
-                    tag: "datatype", name: "ProfileCount", type: "uint8", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "MaxNumberOfIntervals", type: "uint8", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ListOfAttributes", type: "uint16", conformance: "M"
-                }
-            ]
+            tag: "command", name: "GetProfileInfoCommand", id: 0x0, conformance: "O", direction: "request"
         },
 
         {
@@ -656,10 +638,6 @@ Matter.children.push({
                     tag: "datatype", name: "NumberOfIntervals", type: "enum8", conformance: "M"
                 }
             ]
-        },
-
-        {
-            tag: "command", name: "GetProfileInfoCommand", id: 0x0, conformance: "O", direction: "request"
         }
     ]
 });

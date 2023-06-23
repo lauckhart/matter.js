@@ -57,57 +57,57 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.3.5.1" },
             children: [
                 {
-                    tag: "datatype", name: "Rollershade", id: 0x0,
+                    tag: "datatype", name: "Rollershade", id: 0x0, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "Rollershade2Motor", id: 0x1,
+                    tag: "datatype", name: "Rollershade2Motor", id: 0x1, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "RollershadeExterior", id: 0x2,
+                    tag: "datatype", name: "RollershadeExterior", id: 0x2, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "RollershadeExterior2Motor", id: 0x3,
+                    tag: "datatype", name: "RollershadeExterior2Motor", id: 0x3, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "Draperycurtain", id: 0x4,
+                    tag: "datatype", name: "Draperycurtain", id: 0x4, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "Awning", id: 0x5,
+                    tag: "datatype", name: "Awning", id: 0x5, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "Shutter", id: 0x6,
+                    tag: "datatype", name: "Shutter", id: 0x6, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "TiltBlindTiltOnly", id: 0x7,
+                    tag: "datatype", name: "TiltBlindTiltOnly", id: 0x7, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "TiltBlindLiftTilt", id: 0x8,
+                    tag: "datatype", name: "TiltBlindLiftTilt", id: 0x8, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "ProjectorScreen", id: 0x9,
+                    tag: "datatype", name: "ProjectorScreen", id: 0x9, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 },
 
                 {
-                    tag: "datatype", name: "Unknown", id: 0xff,
+                    tag: "datatype", name: "Unknown", id: 0xff, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.1" }
                 }
             ]
@@ -166,7 +166,36 @@ Matter.children.push({
                      ", devices SHALL write to the Mode attribute of the Window Covering Settings Attribute Set. The " +
                      "behavior causing the setting or clearing of each bit is vendor specific. See table below for details" +
                      " on each bit",
-            xref: { document: "cluster", section: "5.3.5.8" }
+            xref: { document: "cluster", section: "5.3.5.8" },
+            children: [
+                {
+                    tag: "datatype", name: "Operational", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "OnlineReserved", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "LiftMovementReversed", id: 0x4, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "LiftPositionAware", id: 0x8, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "TiltPositionAware", id: 0x10, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "LiftEncoderControlled", id: 0x20, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "TiltEncoderControlled", id: 0x40, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -186,7 +215,20 @@ Matter.children.push({
             quality: "P",
             details: "The OperationalStatus attribute keeps track of currently ongoing operations and applies to all type " +
                      "of devices. See below for details about the meaning of individual bits",
-            xref: { document: "cluster", section: "5.3.5.15" }
+            xref: { document: "cluster", section: "5.3.5.15" },
+            children: [
+                {
+                    tag: "datatype", name: "Global", id: 0x3, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Lift", id: 0xc, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "Tilt", id: 0x30, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -212,127 +254,127 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.3.5.16" },
             children: [
                 {
-                    tag: "datatype", name: "RollerShade", id: 0x0,
+                    tag: "datatype", name: "RollerShade", id: 0x0, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "RomanShade", id: 0x1,
+                    tag: "datatype", name: "RomanShade", id: 0x1, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "BalloonShade", id: 0x2,
+                    tag: "datatype", name: "BalloonShade", id: 0x2, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "WovenWood", id: 0x3,
+                    tag: "datatype", name: "WovenWood", id: 0x3, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "PleatedShade", id: 0x4,
+                    tag: "datatype", name: "PleatedShade", id: 0x4, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "CellularShade", id: 0x5,
+                    tag: "datatype", name: "CellularShade", id: 0x5, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "LayeredShade", id: 0x6,
+                    tag: "datatype", name: "LayeredShade", id: 0x6, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "LayeredShade2D", id: 0x7,
+                    tag: "datatype", name: "LayeredShade2D", id: 0x7, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "SheerShade", id: 0x8,
+                    tag: "datatype", name: "SheerShade", id: 0x8, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "TiltOnlyInteriorBlind", id: 0x9,
+                    tag: "datatype", name: "TiltOnlyInteriorBlind", id: 0x9, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "InteriorBlind", id: 0xa,
+                    tag: "datatype", name: "InteriorBlind", id: 0xa, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "VerticalBlindStripCurtain", id: 0xb,
+                    tag: "datatype", name: "VerticalBlindStripCurtain", id: 0xb, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "InteriorVenetianBlind", id: 0xc,
+                    tag: "datatype", name: "InteriorVenetianBlind", id: 0xc, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "ExteriorVenetianBlind", id: 0xd,
+                    tag: "datatype", name: "ExteriorVenetianBlind", id: 0xd, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "LateralLeftCurtain", id: 0xe,
+                    tag: "datatype", name: "LateralLeftCurtain", id: 0xe, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "LateralRightCurtain", id: 0xf,
+                    tag: "datatype", name: "LateralRightCurtain", id: 0xf, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "CentralCurtain", id: 0x10,
+                    tag: "datatype", name: "CentralCurtain", id: 0x10, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "RollerShutter", id: 0x11,
+                    tag: "datatype", name: "RollerShutter", id: 0x11, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "ExteriorVerticalScreen", id: 0x12,
+                    tag: "datatype", name: "ExteriorVerticalScreen", id: 0x12, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "AwningTerracePatio", id: 0x13,
+                    tag: "datatype", name: "AwningTerracePatio", id: 0x13, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "AwningVerticalScreen", id: 0x14,
+                    tag: "datatype", name: "AwningVerticalScreen", id: 0x14, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "TiltOnlyPergola", id: 0x15,
+                    tag: "datatype", name: "TiltOnlyPergola", id: 0x15, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "SwingingShutter", id: 0x16,
+                    tag: "datatype", name: "SwingingShutter", id: 0x16, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "SlidingShutter", id: 0x17,
+                    tag: "datatype", name: "SlidingShutter", id: 0x17, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 },
 
                 {
-                    tag: "datatype", name: "Unknown", id: 0xff,
+                    tag: "datatype", name: "Unknown", id: 0xff, conformance: "M",
                     xref: { document: "cluster", section: "5.3.5.16" }
                 }
             ]
@@ -405,7 +447,24 @@ Matter.children.push({
             details: "The Mode attribute allows configuration of the Window Covering, such as: reversing the motor " +
                      "direction, placing the Window Covering into calibration mode, placing the motor into maintenance " +
                      "mode, disabling the network, and disabling status LEDs. See below for details",
-            xref: { document: "cluster", section: "5.3.5.21" }
+            xref: { document: "cluster", section: "5.3.5.21" },
+            children: [
+                {
+                    tag: "datatype", name: "MotorDirectionReversed", id: 0x1, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "CalibrationMode", id: 0x2, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "MaintenanceMode", id: 0x4, conformance: "M"
+                },
+
+                {
+                    tag: "datatype", name: "LedFeedback", id: 0x8, conformance: "M"
+                }
+            ]
         },
 
         {
@@ -434,13 +493,13 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "TamperDetection", id: 0x1,
+                    tag: "datatype", name: "TamperDetection", id: 0x1, conformance: "M",
                     description: "Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its actuator(s).",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
 
                 {
-                    tag: "datatype", name: "FailedCommunication", id: 0x2,
+                    tag: "datatype", name: "FailedCommunication", id: 0x2, conformance: "M",
                     description: "Communication failure to sensors or other safety equipment.",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
@@ -452,49 +511,50 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "ThermalProtection", id: 0x4,
+                    tag: "datatype", name: "ThermalProtection", id: 0x10, conformance: "M",
                     description: "Motor(s) and/or electric circuit thermal protection activated.",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
 
                 {
-                    tag: "datatype", name: "ObstacleDetected", id: 0x5,
+                    tag: "datatype", name: "ObstacleDetected", id: 0x20, conformance: "M",
                     description: "An obstacle is preventing actuator movement.",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
 
                 {
-                    tag: "datatype", name: "Power", id: 0x6,
+                    tag: "datatype", name: "Power", id: 0x40, conformance: "M",
                     description: "Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power might not be fully available at the moment.",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
 
                 {
-                    tag: "datatype", name: "StopInput", id: 0x7,
+                    tag: "datatype", name: "StopInput", id: 0x80, conformance: "M",
                     description: "Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335).",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
 
                 {
-                    tag: "datatype", name: "MotorJammed", id: 0x8,
+                    tag: "datatype", name: "MotorJammed", id: 0x100, conformance: "M",
                     description: "Mechanical problem related to the motor(s) detected.",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
 
                 {
-                    tag: "datatype", name: "HardwareFailure", id: 0x9,
+                    tag: "datatype", name: "HardwareFailure", id: 0x200, conformance: "M",
                     description: "PCB, fuse and other electrics problems.",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
 
                 {
-                    tag: "datatype", name: "ManualOperation", id: 0xa,
+                    tag: "datatype", name: "ManualOperation", id: 0x400, conformance: "M",
                     description: "Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled).",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 },
 
                 {
-                    tag: "datatype", name: "Protection", id: 0xb, description: "Protection is activated.",
+                    tag: "datatype", name: "Protection", id: 0x800, conformance: "M",
+                    description: "Protection is activated.",
                     xref: { document: "cluster", section: "5.3.5.22" }
                 }
             ]
@@ -588,284 +648,6 @@ Matter.children.push({
                     tag: "datatype", name: "TiltPercent100ThsValue", id: 0x1, type: "percent100ths",
                     conformance: "O.a1", constraint: "desc",
                     xref: { document: "cluster", section: "5.3.6.7" }
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "Type", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "RollerShade", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "RollerShade2Motor", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "RollerShadeExterior", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "RollerShadeExterior2Motor", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Drapery", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Awning", id: 0x5, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Shutter", id: 0x6, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "TiltBlindTiltOnly", id: 0x7, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "TiltBlindLiftAndTilt", id: 0x8, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ProjectorScreen", id: 0x9, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Unknown", id: 0xff, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ConfigStatus", type: "map8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Operational", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "OnlineReserved", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LiftMovementReversed", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LiftPositionAware", id: 0x8, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "TiltPositionAware", id: 0x10, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LiftEncoderControlled", id: 0x20, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "TiltEncoderControlled", id: 0x40, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "OperationalStatus", type: "map8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Global", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Lift", id: 0xc, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Tilt", id: 0x30, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "EndProductType", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "RollerShade", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "RomanShade", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "BalloonShade", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "WovenWood", id: 0x3, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "PleatedShade", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "CellularShade", id: 0x5, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LayeredShade", id: 0x6, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LayeredShade2D", id: 0x7, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "SheerShade", id: 0x8, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "TiltOnlyInteriorBlind", id: 0x9, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "InteriorBlind", id: 0xa, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "VerticalBlindStripCurtain", id: 0xb, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "InteriorVenetianBlind", id: 0xc, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ExteriorVenetianBlind", id: 0xd, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LateralLeftCurtain", id: 0xe, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LateralRightCurtain", id: 0xf, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "CentralCurtain", id: 0x10, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "RollerShutter", id: 0x11, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ExteriorVerticalScreen", id: 0x12, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "AwningTerracePatio", id: 0x13, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "AwningVerticalScreen", id: 0x14, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "TiltOnlyPergola", id: 0x15, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "SwingingShutter", id: 0x16, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "SlidingShutter", id: 0x17, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Unknown", id: 0xff, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "Mode", type: "map8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "MotorDirectionReversed", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "CalibrationMode", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "MaintenanceMode", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "LedFeedback", id: 0x8, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "SafetyStatus", type: "map16", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "RemoteLockout", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "TamperDetection", id: 0x2, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "FailedCommunication", id: 0x4, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "PositionFailure", id: 0x8, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ThermalProtection", id: 0x10, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ObstacleDetected", id: 0x20, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Power", id: 0x40, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "StopInput", id: 0x80, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "MotorJammed", id: 0x100, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "HardwareFailure", id: 0x200, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ManualOperation", id: 0x400, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Protection", id: 0x800, conformance: "M"
                 }
             ]
         }

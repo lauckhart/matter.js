@@ -102,7 +102,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "1.5.7.4" },
             children: [
                 {
-                    tag: "datatype", name: "EffectIdentifier", id: 0x0, type: "uint8", conformance: "M",
+                    tag: "datatype", name: "EffectIdentifier", id: 0x0, type: "OnOffEffectIdentifier", conformance: "M",
                     constraint: "desc",
                     xref: { document: "cluster", section: "1.5.7.4" }
                 },
@@ -132,7 +132,12 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "OnOffControl", id: 0x0, type: "map8", conformance: "M",
-                    xref: { document: "cluster", section: "1.5.7.6" }
+                    xref: { document: "cluster", section: "1.5.7.6" },
+                    children: [
+                        {
+                            tag: "datatype", name: "AcceptOnlyWhenOn", id: 0x1, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
@@ -199,15 +204,6 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "DyingLight", id: 0x1, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "OnOffControl", type: "map8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "AcceptOnlyWhenOn", id: 0x1, conformance: "M"
                 }
             ]
         }

@@ -27,6 +27,21 @@ export namespace Metatype {
     export const Invalid = Symbol("invalid");
 
     /**
+     * Does the specific type have children?
+     */
+    export function hasChildren(type: Metatype | undefined) {
+        switch (type) {
+            case Metatype.enum:
+            case Metatype.bitmap:
+            case Metatype.object:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Determine the JS type for a metatype.
      */
     export function native(type: Metatype | undefined) {

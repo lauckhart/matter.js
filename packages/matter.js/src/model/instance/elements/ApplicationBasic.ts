@@ -17,7 +17,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "VendorName", id: 0x0, type: "string", access: "R V", conformance: "O",
-            constraint: "max 32", default: "empty", quality: "F",
+            constraint: "max 32", default: "", quality: "F",
             details: "This attribute SHALL specify a human readable (displayable) name of the vendor for the Content App",
             xref: { document: "cluster", section: "6.3.3.1" }
         },
@@ -81,11 +81,6 @@ Matter.children.push({
                     tag: "datatype", name: "entry", type: "vendor-id"
                 }
             ]
-        },
-
-        {
-            tag: "attribute", name: "ApplicationVendorName", id: 0x0, type: "string", conformance: "O",
-            default: ""
         },
 
         {

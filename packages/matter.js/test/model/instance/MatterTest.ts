@@ -23,6 +23,7 @@ function instantiate() {
 
 function validate() {
     if (!validationResult) {
+        debugger;
         validationResult = ValidateModel(instantiate());
         validationResult.report();
     }

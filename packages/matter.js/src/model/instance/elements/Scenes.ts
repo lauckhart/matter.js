@@ -77,39 +77,23 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddScene", id: 0x0, access: "R F M", conformance: "M", direction: "request",
-            response: "AddSceneResponse",
-            details: "The AddScene command SHALL have the following data fields",
-            xref: { document: "cluster", section: "1.4.9.2" },
+            tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
+            details: "The AddSceneResponse command SHALL have the following data fields",
+            xref: { document: "cluster", section: "1.4.9.12" },
             children: [
                 {
-                    tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.2" }
+                    tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    xref: { document: "cluster", section: "1.4.9.12" }
                 },
 
                 {
-                    tag: "datatype", name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.2" }
+                    tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
+                    xref: { document: "cluster", section: "1.4.9.12" }
                 },
 
                 {
-                    tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.2" }
-                },
-
-                {
-                    tag: "datatype", name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 16",
-                    xref: { document: "cluster", section: "1.4.9.2" }
-                },
-
-                {
-                    tag: "datatype", name: "ExtensionFieldSets", id: 0x4, type: "list", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.2" },
-                    children: [
-                        {
-                            tag: "datatype", name: "entry", type: "ExtensionFieldSet"
-                        }
-                    ]
+                    tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
+                    xref: { document: "cluster", section: "1.4.9.12" }
                 }
             ]
         },
@@ -351,28 +335,6 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
-            details: "The AddSceneResponse command SHALL have the following data fields",
-            xref: { document: "cluster", section: "1.4.9.12" },
-            children: [
-                {
-                    tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.4.9.12" }
-                },
-
-                {
-                    tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.12" }
-                },
-
-                {
-                    tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.12" }
-                }
-            ]
-        },
-
-        {
             tag: "datatype", name: "AttributeValuePair", type: "struct", conformance: "M",
             details: "This data type indicates a combination of an identifier and the value of an attribute",
             xref: { document: "cluster", section: "1.4.6.1" },
@@ -388,7 +350,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "AttributeValue", id: 0x1, type: "any", access: "RW", conformance: "M",
+                    tag: "datatype", name: "AttributeValue", id: 0x1, type: "uint8", access: "RW", conformance: "M",
                     details: "This is the attribute value as part of an extension field set. See AttributeID to determine the data" +
                              " type for this field",
                     xref: { document: "cluster", section: "1.4.6.1.2" }

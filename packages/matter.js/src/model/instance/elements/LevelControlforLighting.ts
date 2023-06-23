@@ -157,7 +157,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "CoupleColorTempToLevel", id: 0x1,
+                    tag: "datatype", name: "CoupleColorTempToLevel", id: 0x2, conformance: "M",
                     xref: { document: "cluster", section: "1.6.5.8" }
                 }
             ]
@@ -209,7 +209,16 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.6.6.2" }
+                    xref: { document: "cluster", section: "1.6.6.2" },
+                    children: [
+                        {
+                            tag: "datatype", name: "Up", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x1, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
@@ -238,7 +247,16 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.6.6.3" }
+                    xref: { document: "cluster", section: "1.6.6.3" },
+                    children: [
+                        {
+                            tag: "datatype", name: "Up", id: 0x0, conformance: "M"
+                        },
+
+                        {
+                            tag: "datatype", name: "Down", id: 0x1, conformance: "M"
+                        }
+                    ]
                 },
 
                 {
@@ -380,45 +398,6 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Frequency", id: 0x0, type: "uint16", conformance: "M",
                     xref: { document: "cluster", section: "1.6.6.5" }
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "LevelControlOptions", type: "map8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "ExecuteIfOff", id: 0x1, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "CoupleColorTempToLevel", id: 0x2, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "MoveMode", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Up", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Down", id: 0x1, conformance: "M"
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "StepMode", type: "enum8", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "Up", id: 0x0, conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "Down", id: 0x1, conformance: "M"
                 }
             ]
         }

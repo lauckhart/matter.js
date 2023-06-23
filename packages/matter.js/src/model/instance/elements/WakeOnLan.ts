@@ -29,10 +29,6 @@ Matter.children.push({
             details: "This SHALL indicate the current link-local address of the device. Only 128-bit IPv6 link-local " +
                      "addresses SHALL be used for this attribute",
             xref: { document: "cluster", section: "1.10.2.2" }
-        },
-
-        {
-            tag: "attribute", name: "WakeOnLanMacAddress", id: 0x0, type: "string", conformance: "O"
         }
     ]
 });
