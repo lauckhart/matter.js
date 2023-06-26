@@ -22,7 +22,6 @@ import {
 import { InternalError } from "../src/common/index.js";
 import { camelize, serialize } from "../src/util/index.js";
 import { Block, TsFile } from "./util/TsFile.js";
-import { wordWrap } from "./util/string.js";
 
 const mom = new MatterModel();
 for (const cluster of mom.clusters) {
@@ -32,6 +31,7 @@ for (const cluster of mom.clusters) {
 }
 
 function generateCluster(file: TsFile, cluster: ClusterModel) {
+    const definitions = file.section();
     const variance = ClusterVariance(cluster);
     const mandatory = new Set(variance.mandatory);
     const definedDatatypes = new Set<Model>();
@@ -39,8 +39,8 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     const ns = file.statements(`export namespace ${cluster.name}Cluster {`, "}");
     
     addImport("Cluster", "cluster/Cluster");
-    document(ns, cluster, `This cluster definition includes all elements an implementation may support.  For type safety, use \`${cluster.name}.with()\` and a list of supported features.`);
-    const complete = ns.expressions("export const Complete: Cluster = {", "};");
+    ns.document(cluster, `This cluster definition includes all elements an implementation may support.  For type safety, use \`${cluster.name}.with()\` and a list of supported features.`);
+    const complete = ns.expressions("export const Complete = Cluster({", "})");
     if (cluster.id != undefined) {
         complete.atom("id", `0x${cluster.id.toString(16)}`);
     }
@@ -52,7 +52,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         addImport("BitFlag", "schema/BitmapSchema");
         const featureBlock = complete.expressions("features: {", "}");
         features.children.forEach(feature => {
-            document(featureBlock, feature);
+            featureBlock.document(feature);
             featureBlock.atom(feature.name, `BitFlag(${feature.effectiveId})`);
         })
     }
@@ -86,7 +86,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
             options.omitChanges = true;
         }
         if (model.default !== undefined) {
-            options.default = serialize(model.default);
+            options.default = model.default;
         }
         if (model.access.readPriv) {
             options.readAcl = serialize.asIs(mapPrivilege(model.access.readPriv));
@@ -114,9 +114,11 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
         let responseType;
         let responseId;
+
         // Note - we end up mapping "status" response type to TlvNoResponse.
-        // This doesn't seem technically correct but is the way we've
-        // historically done it so sticking with that for now
+        // Technically "no response" and "status response" are different things
+        // but there's currently only a single place in the specification where
+        // it makes a difference and neither we nor CHIP implement it yet.
         if (model.response && model.response != "status") {
             const responseModel = cluster.childOfType(CommandModel, model.response);
             if (responseModel) {
@@ -264,6 +266,11 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 break;
 
             case Metatype.object:
+                if (!model.children.length && (model instanceof CommandModel || model instanceof EventModel)) {
+                    addImport("TlvNoArguments", "tlv/TlvNoArguments");
+                    tlv = "TlvNoArguments";
+                    break;
+                }
                 tlv = defineDatatype(model);
                 break;
 
@@ -277,53 +284,19 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         return tlv;
     }
     
-    function document(target: Block, model: Model, extra?: string) {
-        const lines = [];
-        if (model.details) {
-            lines.push(model.details);
-        }
-        if (extra) {
-            lines.push(extra);
-        }
-        if (model.xref) {
-            let spec;
-            switch (model.xref.document) {
-                case "core":
-                    spec = "MatterCoreSpecificationV1_1";
-                    break;
-
-                case "cluster":
-                    spec = "MatterApplicationClusterSpecificationV1_1";
-                    break;
-
-                case "device":
-                    spec = "MatterDeviceLibrarySpecificationV1_1";
-                    break;
-            }
-            if (spec) {
-                addImport(spec, "spec/Specifications");
-                lines.push(`@see {@link ${spec}} § ${model.xref.section}`);
-            }
-        }
-        if (lines.length) {
-            const wrapped = wordWrap(lines.join("\n")).map(l => `\n * ${l}`);
-            target.add(`/**${wrapped}\n */`);
-        }
-    }
-    
     function defineEnum(name: string, model: ValueModel) {
-        document(file, model);
-        const block = file.expressions(`export const enum ${name} = {`, "};");
+        definitions.document(model);
+        const block = definitions.expressions(`export const enum ${name} {`, "}");
         model.children.forEach(child => {
-            document(block, child);
-            block.atom(child.name, child.id);
+            block.document(child);
+            block.atom(`${child.name} = ${child.id}`);
         });
     }
 
     function defineStruct(name: string, model: ValueModel) {
         addImport("TlvObject", "tlv/TlvObject");
-        document(file, model);
-        const block = file.expressions(`export const ${name} = TlvObject({`, "})");
+        definitions.document(model);
+        const block = definitions.expressions(`export const ${name} = TlvObject({`, "})");
         model.children.forEach(field => {
             let tlv: string;
             if (field.conformance.type == Conformance.Flag.Mandatory) {
@@ -332,14 +305,14 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 tlv = "TlvOptionalField"
             }
             addImport(tlv, "tlv/TlvObject");
-            document(block, field);
+            block.document(field);
             block.atom(field.name, `${tlv}(${field.effectiveId}, ${tlvTypeRef(field)})`);
         });
     }
 
     function defineBitmap(name: string, model: ValueModel) {
         addImport("TlvBitmap", "tlv/TlvNumber");
-        document(file, model);
+        definitions.document(model);
 
         let tlvNum;
         switch (model.metabase?.name) {
@@ -365,9 +338,9 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         addImport(tlvNum, "tlv/TlvNumber");
 
         addImport("BitFlag", "schema/BitmapSchema");
-        const block = file.expressions(`export const ${name} = TlvBitmap(${tlvNum}, {`, "})");
+        const block = definitions.expressions(`export const ${name} = TlvBitmap(${tlvNum}, {`, "})");
         model.children.forEach(child => {
-            document(block, child);
+            block.document(child);
             block.atom(child.name, `BitFlag(${child.id})`);
         });
     }
@@ -392,7 +365,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
             if (model.deprecated) {
                 return;
             }
-            document(elementBlock, model);
+            elementBlock.document(model);
             elementBlock.atom(model.name, define(model));
         })
     }
