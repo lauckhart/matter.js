@@ -9,9 +9,21 @@ export function wordWrap(text: string, width = 120) {
     
     const inputLines = text.split(/\n+/);
     for (let i = 0; i < inputLines.length; i++) {
-        const segments = inputLines[i].match(new RegExp(`(.{1,${width}}\\b)`, "g"));
-        if (segments) {
-            lines.push(...segments);
+        const segments = inputLines[i].match(/\S+(?:\s+|$)/g);
+        if (segments?.length) {
+            const line = Array<string>();
+            let length = 0;
+            for (const s of segments) {
+                if (length && length + s.length > width) {
+                    lines.push(line.join(""));
+                    line.length = length = 0;
+                }
+                line.push(s);
+                length += s.length;
+            }
+            if (line.length) {
+                lines.push(line.join(""));
+            }
             if (i < inputLines.length - 1) {
                 lines.push("");
             }
