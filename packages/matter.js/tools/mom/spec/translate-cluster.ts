@@ -354,13 +354,16 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
                 }
             }
 
-            const records = translateTable("value", definition, {
+            let records = translateTable("value", definition, {
                 id: Alias(Integer, "value", "enum"),
                 name: Alias(Identifier, ...nameAliases),
                 conformance: Optional(Str),
                 description: Optional(Alias(Str, "notes")),
                 meaning: Optional(Str)
             });
+
+            records = records.filter(r => r.name != "Reserved");
+
             return translateRecordsToMatter("value", records, DatatypeElement);
         }
 

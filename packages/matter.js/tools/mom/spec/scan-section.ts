@@ -92,6 +92,19 @@ export function* scanSection(ref: HtmlReference) {
     // continue the last known section
     let currentRef: HtmlReference | undefined = undefined;
 
+    // State for scanSectionPage.  We need to fake section numbers sometimes.
+    // This contains fakery related state
+    const fakeSection = {
+        faking: false,
+        fakingField: false,
+        actual: "",
+        section: 1,
+        subsection: 1
+    }
+
+    // State for scanSectionPage
+    const namesIdentified = new Set<string>();
+
     // Scan the cluster index page
     let path = ref.path;
     let html = loadHtml(path);
@@ -126,13 +139,6 @@ export function* scanSection(ref: HtmlReference) {
     function* scanSectionPage(ref: HtmlReference, html: Document): Generator<HtmlReference> {
         const elements = html.querySelectorAll("h1, h2, h3, h4, h5, h6, body > p, table");
 
-        const fakeSection = {
-            faking: false,
-            actual: "",
-            section: 1,
-            subsection: 1
-        }
-
         for (let i = 1; i < elements.length; i++) {
             const element = elements[i] as HTMLElement;
             switch (element.tagName) {
@@ -146,6 +152,7 @@ export function* scanSection(ref: HtmlReference) {
                     yield* emit();
                     const heading = parseHeading(element);
                     if (heading) {
+                        namesIdentified.add(heading.name);
                         currentRef = { ...ref, name: heading.name, xref: { ...ref.xref, section: heading.section } };
                         fakeSection.faking = false;
                     }
@@ -163,14 +170,28 @@ export function* scanSection(ref: HtmlReference) {
                             yield* emit();
                             currentRef = { ...ref, name: possibleHeading.name, xref: { ...ref.xref, section: possibleHeading.section } };
                             fakeSection.faking = false;
+                            namesIdentified.add(possibleHeading.name);
                             break;
                         }
                     }
 
+                    // If there's just a bare name hanging out that we've already seen (which happens),
+                    // don't let it confuse us
+                    if (text && namesIdentified.has(text)) {
+                        continue;
+                    }
+
                     // Sometimes there isn't even a section marker.  In this case
                     // we generate the missing section number
-                    if (text?.match(/^[a-z0-9]+(?:Enum| Attribute| Command| Event| Field)$/i)) {
-                        // Treat like a heading
+                    if (text?.match(/^[a-z0-9]+(?: Field| Value)$/) && fakeSection.faking && !fakeSection.fakingField) {
+                        // Already faking; treat these like a sub-headings to our fake heading
+                        yield* emit();
+                        fakeSection.subsection++;
+                        currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}.${fakeSection.subsection}`}};
+                        namesIdentified.add(text);
+                        break;
+                    } else if (text?.match(/^[a-z0-9]+(?:Enum|Struct| Attribute| Command| Event| Field| Value)$/i)) {
+                        // Looks like a section
                         const realSection = currentRef ? currentRef.xref.section : ref.xref.section;
                         yield* emit();
                         if (fakeSection.faking) {
@@ -183,14 +204,13 @@ export function* scanSection(ref: HtmlReference) {
                             fakeSection.subsection = 0;
                         }
                         currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}` } };
-                    }
 
-                    // If we're faking the section we need to fake fields too
-                    if (text?.match(/^[a-z0-9]+(?: Field| Value)$/) && fakeSection.faking) {
-                        // Treat like a sub-heading to our fake heading
-                        yield* emit();
-                        fakeSection.subsection++;
-                        currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}.${fakeSection.subsection}`}};
+                        // Note if we're faking a field or a value so we know
+                        // not to treat them like subsections when we see them
+                        // next
+                        fakeSection.fakingField = !!text.match(/(?: Field| Value)$/);
+                        namesIdentified.add(text);
+                        break;
                     }
 
                     // Save the first paragraph of the section
