@@ -32,3 +32,11 @@ export function wordWrap(text: string, width = 120) {
 
     return lines;
 }
+
+export function asObjectKey(label: {}) {
+    label = label.toString();
+    if (!(label as string).match(/^[\$_a-z][\$_a-z0-9]*$/i)) {
+        label = JSON.stringify(label);
+    }
+    return label;
+}
