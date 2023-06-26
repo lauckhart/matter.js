@@ -9,7 +9,7 @@ import { HtmlReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, DatatypeElement, Specification } from "../../../src/model/index.js";
 
-const logger = Logger.get("table-translate");
+const logger = Logger.get("translate-table");
 
 // Generic type of table cell "translators" such as those that follow
 type Translator<T> = (el: HTMLElement) => T;

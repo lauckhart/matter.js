@@ -13,10 +13,10 @@ import { parseHeading } from "./scan-index.js";
 // Convert HTMLTableELement -> Table
 function convertTable(el: HTMLTableElement) {
     const table = {
+        fields: [],
         rows: [],
         notes: []
     } as Table;
-    let columns: string[] | undefined;
     for (const tr of el.querySelectorAll("tr")) {
         const cells = tr.querySelectorAll("td, th");
 
@@ -25,19 +25,18 @@ function convertTable(el: HTMLTableElement) {
             continue;
         }
 
-        if (!columns) {
-            columns = [];
+        if (!table.fields.length) {
             cells.forEach(cell => {
                 let key = cell.textContent || "";
                 key = key.replace(/[\W]/g, "").toLowerCase();
-                columns!.push(key);
+                table.fields.push(key);
             });
             continue;
         }
 
         const row = {} as Table["rows"][number];
-        for (let i = 0; i < columns.length; i++) {
-            row[columns[i]] = cells.item(i) as HTMLElement;
+        for (let i = 0; i < table.fields.length; i++) {
+            row[table.fields[i]] = cells.item(i) as HTMLElement;
         }
         
         table.rows.push(row);
@@ -49,8 +48,8 @@ function convertTable(el: HTMLTableElement) {
     //
     // Detect this case and correct by concatenating the contents of rows onto
     // the first row
-    const col1 = columns?.[0];
-    if (columns && col1 != undefined) {
+    const col1 = table.fields[0];
+    if (col1 != undefined) {
         // Scan the table.  We treat as broken if there are multiple rows but
         // the first column is empty except on the first row
         const looksBorked = table.rows.length > 1 && table.rows.every((row, i) => {
@@ -64,7 +63,7 @@ function convertTable(el: HTMLTableElement) {
         // If above test succeeds, concatenate all cells in column into first
         // row and remove rows except the first
         if (looksBorked) {
-            for (const colName of columns) {
+            for (const colName of table.fields) {
                 let target;
                 for (let i = 0; i < table.rows.length; i++) {
                     const el = table.rows[i]?.[colName];

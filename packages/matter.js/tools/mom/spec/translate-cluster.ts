@@ -325,11 +325,40 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
     const dt = (Globals as any)[type];
     switch (dt?.metatype) {
         case Metatype.enum: {
+            // Column names are all over the place so examine the table to find
+            // a "name" column.
+            //
+            // Originally mapped manually and had identified the following:
+            //     "type", "description", "statuscode", "presentation", "endproducttype", "effect"
+            //
+            // Turns out after this conversion we already had them all but
+            // leaving this logic in for future spec changes
+            let nameAliases = [ "name", "type", "description", "statuscode" ];
+            const fields = definition.table?.fields;
+            if (fields) {
+                let haveStandardAlias = false;
+
+                // Prefer standard aliases
+                nameAliases.forEach(n => {
+                    if (fields.indexOf(n) != -1) {
+                        haveStandardAlias = true;
+                    }
+                })
+
+                // If we didn't find a standard alias, assume the second column
+                // is the name
+                if (!haveStandardAlias) {
+                    if (fields[1]) {
+                        nameAliases = [ fields[1] ];
+                    }
+                }
+            }
+
             const records = translateTable("value", definition, {
                 id: Alias(Integer, "value", "enum"),
-                name: Alias(Identifier, "type", "description", "statuscode", "presentation", "endproducttype"),
+                name: Alias(Identifier, ...nameAliases),
                 conformance: Optional(Str),
-                description: Optional(Str),
+                description: Optional(Alias(Str, "notes")),
                 meaning: Optional(Str)
             });
             return translateRecordsToMatter("value", records, DatatypeElement);

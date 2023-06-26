@@ -10,43 +10,30 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "cluster", name: "ClientMonitoring", id: 0x1046, description: "Client Monitoring",
-    details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on" +
-             " the server",
-    children: [
-        {
-            tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 300
-        },
+    details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions " +
+             "on the server.",
 
+    children: [
+        { tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 300 },
         {
             tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M",
             default: 300
         },
-
         {
             tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M",
             default: 4000
         },
-
         {
             tag: "attribute", name: "ExpectedClients", id: 0x3, type: "list", conformance: "M",
-            children: [
-                {
-                    tag: "datatype", name: "entry", type: "MonitoringRegistration"
-                }
-            ]
+            children: [ { tag: "datatype", name: "entry", type: "MonitoringRegistration" } ]
         },
 
         {
             tag: "command", name: "RegisterClientMonitoring", id: 0x0, access: "R M", conformance: "M",
             direction: "request",
             children: [
-                {
-                    tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
-                }
+                { tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M" },
+                { tag: "datatype", name: "ICid", type: "uint64", conformance: "M" }
             ]
         },
 
@@ -54,13 +41,8 @@ Matter.children.push({
             tag: "command", name: "UnregisterClientMonitoring", id: 0x1, access: "R M", conformance: "M",
             direction: "request",
             children: [
-                {
-                    tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
-                }
+                { tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M" },
+                { tag: "datatype", name: "ICid", type: "uint64", conformance: "M" }
             ]
         },
 
@@ -72,13 +54,8 @@ Matter.children.push({
         {
             tag: "datatype", name: "MonitoringRegistration", type: "struct", access: "R F", conformance: "M",
             children: [
-                {
-                    tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M"
-                },
-
-                {
-                    tag: "datatype", name: "ICid", type: "uint64", conformance: "M"
-                }
+                { tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M" },
+                { tag: "datatype", name: "ICid", type: "uint64", conformance: "M" }
             ]
         }
     ]

@@ -12,13 +12,15 @@ Matter.children.push({
     tag: "cluster", name: "TimeFormatLocalization", id: 0x2c, classification: "node",
     description: "Time Format Localization",
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
-             "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually or" +
-             " audibly convey time information need a mechanism by which they can be configured to use a user’s " +
-             "preferred format",
+             "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually " +
+             "or audibly convey time information need a mechanism by which they can be configured to use a user’s " +
+             "preferred format.",
     xref: { document: "core", section: "11.4" },
+
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+
             children: [
                 {
                     tag: "datatype", name: "CALFMT", id: 0x0,
@@ -41,7 +43,7 @@ Matter.children.push({
             conformance: "CALFMT", default: null, quality: "X N",
             details: "The ActiveCalendarType attribute SHALL represent the calendar format that the Node is currently " +
                      "configured to use when conveying dates. If provided, this value SHALL take priority over any unit " +
-                     "implied through the ActiveLocale Attribute",
+                     "implied through the ActiveLocale Attribute.",
             xref: { document: "core", section: "11.4.6.2" }
         },
 
@@ -51,25 +53,21 @@ Matter.children.push({
             details: "The SupportedCalendarTypes attribute SHALL represent a list of CalendarTypeEnum values that are " +
                      "supported by the Node. The list SHALL NOT contain any duplicate entries. The ordering of items " +
                      "within the list SHOULD NOT express any meaning. The maximum length of the SupportedCalendarTypes " +
-                     "list SHALL be equivalent to the number of enumerations within CalendarTypeEnum",
+                     "list SHALL be equivalent to the number of enumerations within CalendarTypeEnum.",
             xref: { document: "core", section: "11.4.6.3" },
-            children: [
-                {
-                    tag: "datatype", name: "entry", type: "CalendarTypeEnum"
-                }
-            ]
+            children: [ { tag: "datatype", name: "entry", type: "CalendarTypeEnum" } ]
         },
 
         {
             tag: "datatype", name: "HourFormatEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8",
+            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.4.5.1" },
+
             children: [
                 {
                     tag: "datatype", name: "12Hr", id: 0x0, conformance: "M",
                     xref: { document: "core", section: "11.4.5.1" }
                 },
-
                 {
                     tag: "datatype", name: "24Hr", id: 0x1, conformance: "M",
                     xref: { document: "core", section: "11.4.5.1" }
@@ -79,64 +77,54 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CalendarTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8",
+            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.4.5.2" },
+
             children: [
                 {
                     tag: "datatype", name: "Buddhist", id: 0x0, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Chinese", id: 0x1, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Coptic", id: 0x2, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Ethiopian", id: 0x3, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Gregorian", id: 0x4, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Hebrew", id: 0x5, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Indian", id: 0x6, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Islamic", id: 0x7, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Japanese", id: 0x8, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Korean", id: 0x9, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Persian", id: 0xa, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
                 },
-
                 {
                     tag: "datatype", name: "Taiwanese", id: 0xb, conformance: "M",
                     xref: { document: "core", section: "11.4.5.2" }
