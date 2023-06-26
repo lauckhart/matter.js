@@ -26,6 +26,7 @@ import { camelize, serialize } from "../src/util/index.js";
 import { Block, TsFile } from "./util/TsFile.js";
 import { Logger } from "../src/log/index.js";
 import { clean } from "./util/file.js";
+import { asObjectKey } from "./util/string.js";
 
 const DEFINITION_PATH = "src/cluster/definitions"
 
@@ -34,11 +35,18 @@ const logger = Logger.get("generate-clusters");
 const mom = new MatterModel();
 
 clean(DEFINITION_PATH);
+
+const index = new TsFile(`${DEFINITION_PATH}/index.ts`);
+
 for (const cluster of mom.clusters) {
     const file = new TsFile(`${DEFINITION_PATH}/${cluster.name}Cluster`);
     generateCluster(file, cluster);
     file.save();
+
+    index.atom(`export * from "./${cluster.name}Cluster.js"`);
 }
+
+index.save();
 
 function generateCluster(file: TsFile, cluster: ClusterModel) {
     logger.info(`${cluster.name} → ${file.name}.ts`);
@@ -176,7 +184,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
 
     function addImport(symbol: string, filename: string) {
-        file.addImport(`../${filename}`, symbol);
+        file.addImport(`../../${filename}`, symbol);
     }
 
     function mapPrivilege(privilege: Access.Privilege) {
@@ -308,7 +316,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
             .document(model);
         definitions.insertingBefore(block, () => {
             model.children.forEach(child => {
-                block.atom(`${child.name} = ${child.id}`)
+                block.atom(`${asObjectKey(child.name)} = ${child.id}`)
                     .document(child);
             });
         });

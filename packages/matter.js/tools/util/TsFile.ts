@@ -6,7 +6,7 @@
 
 import { Specification } from "../../src/model/index.js";
 import { writeMatterFile } from "./file.js";
-import { wordWrap } from "./string.js";
+import { asObjectKey, wordWrap } from "./string.js";
 
 const HEADER = `/**
  * @license
@@ -124,11 +124,7 @@ class Atom extends Raw {
         if (text == undefined) {
             text = labelOrText.toString();
         } else {
-            let label = labelOrText.toString();
-            if (!label.match(/^[\$_a-z][\$_a-z0-9]*$/i)) {
-                label = JSON.stringify(label);
-            }
-            text = `${label}: ${text}`;
+            text = `${asObjectKey(labelOrText)}: ${text}`;
         }
 
         super(parentBlock, text);

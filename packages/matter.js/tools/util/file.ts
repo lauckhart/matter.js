@@ -27,11 +27,18 @@ export function writeMatterFile(path: string, body: any) {
 
 export function clean(target: string, suffix: string = "") {
     const path = resolveFromPackage(target);
-    readdirSync(resolveFromPackage(target)).forEach((f) => {
-        if (f.endsWith(`${suffix}.ts`)) {
-            unlinkSync(resolve(path, f));
+    try {
+        readdirSync(path).forEach((f) => {
+            if (f.endsWith(`${suffix}.ts`)) {
+                unlinkSync(resolve(path, f));
+            }
+        });
+    } catch (e) {
+        if ((e as any).code == "ENOENT") {
+            return;
         }
-    });
+        throw e;
+    }
 }
 
 export async function readFileWithCache(name: string, generator: (name: string) => Promise<string>) {
