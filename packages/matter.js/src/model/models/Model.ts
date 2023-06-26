@@ -232,7 +232,6 @@ export abstract class Model {
         const t = definition["tag"];
         const constructor = Model.constructors[t];
         if (!constructor) {
-            debugger;
             throw new MatterError(`Unknown element tag "${t}"`);
         }
         return new constructor(definition);

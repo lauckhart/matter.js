@@ -186,7 +186,7 @@ export const Globals = {
     SubjectId: DatatypeElement({ name: "SubjectID", type: "uint64" }),
 
     // Not formal part of specification, indicates field's type may vary
-    any: DatatypeElement({ name: "Any", description: "Any value", metatype: "any" })
+    any: DatatypeElement({ name: "any", description: "Any value", metatype: "any" })
 }
 
 Object.values(Globals).forEach(g => g.global = true);

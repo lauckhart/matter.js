@@ -2291,11 +2291,9 @@ export const SpecMatter: MatterElement = {
                             details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the " +
                                      "MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.",
                             xref: { document: "cluster", section: "3.2.11.5.1" },
-
                             children: [
                                 { tag: "datatype", name: "Stop", id: 0x0 },
                                 { tag: "datatype", name: "Up", id: 0x1 },
-                                { tag: "datatype", name: "Reserved", id: 0x2 },
                                 { tag: "datatype", name: "Down", id: 0x3 }
                             ]
                         },
@@ -2332,11 +2330,8 @@ export const SpecMatter: MatterElement = {
                             tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
                             details: "The StepMode field SHALL be one of the non-reserved values in Values of the StepMode Field.",
                             xref: { document: "cluster", section: "3.2.11.6.1" },
-
                             children: [
-                                { tag: "datatype", name: "Reserved", id: 0x0 },
                                 { tag: "datatype", name: "Up", id: 0x1 },
-                                { tag: "datatype", name: "Reserved", id: 0x2 },
                                 { tag: "datatype", name: "Down", id: 0x3 }
                             ]
                         },
@@ -2403,11 +2398,9 @@ export const SpecMatter: MatterElement = {
                             details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the " +
                                      "MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.",
                             xref: { document: "cluster", section: "3.2.11.8.1" },
-
                             children: [
                                 { tag: "datatype", name: "Stop", id: 0x0 },
                                 { tag: "datatype", name: "Up", id: 0x1 },
-                                { tag: "datatype", name: "Reserved", id: 0x2 },
                                 { tag: "datatype", name: "Down", id: 0x3 }
                             ]
                         },
@@ -2443,7 +2436,6 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "3.2.11.9.1" },
                             children: [
                                 { tag: "datatype", name: "Up", id: 0x1 },
-                                { tag: "datatype", name: "Reserved", id: 0x2 },
                                 { tag: "datatype", name: "Down", id: 0x3 }
                             ]
                         },
@@ -6674,13 +6666,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OutputTypeEnum", type: "enum8",
-                    xref: { document: "cluster", section: "6.5.5.2" }
-                },
-
-                {
-                    tag: "datatype", name: "OutputTypeEnum", type: "enum8",
-                    details: "OutputTypeEnum",
-                    xref: { document: "cluster", section: "6.5.5.2.1" },
+                    details: "OutputType Data Type is derived from enum8.",
+                    xref: { document: "cluster", section: "6.5.5.2" },
 
                     children: [
                         { tag: "datatype", name: "Hdmi", id: 0x0, conformance: "M", description: "HDMI" },
@@ -7988,12 +7975,15 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "DeviceType", id: 0x0, type: "devtype-id", conformance: "M",
-                            details: "DeviceType Field",
+                            details: "This SHALL indicate the device type definition. The endpoint SHALL conform to the device type " +
+                                     "definition and cluster specifications required by the device type.",
                             xref: { document: "core", section: "9.5.4.1.1" }
                         },
+
                         {
                             tag: "datatype", name: "Revision", id: 0x1, type: "uint16", conformance: "M", constraint: "min 1",
-                            details: "Revision Field",
+                            details: "This is the implemented revision of the device type definition. The endpoint SHALL conform to this " +
+                                     "revision of the device type.",
                             xref: { document: "core", section: "9.5.4.1.2" }
                         }
                     ]
@@ -8021,22 +8011,30 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Node", id: 0x1, type: "node-id", access: "F", conformance: "Endpoint",
-                            details: "Node Field",
+                            details: "This field is the remote target node ID. If the Endpoint field is present, this field SHALL be " +
+                                     "present.",
                             xref: { document: "core", section: "9.6.5.1.1" }
                         },
+
                         {
                             tag: "datatype", name: "Group", id: 0x2, type: "group-id", access: "F", conformance: "!Endpoint",
-                            details: "Group Field",
+                            details: "This field is the target group ID that represents remote endpoints. If the Endpoint field is " +
+                                     "present, this field SHALL NOT be present.",
                             xref: { document: "core", section: "9.6.5.1.2" }
                         },
+
                         {
                             tag: "datatype", name: "Endpoint", id: 0x3, type: "endpoint-no", access: "F", conformance: "!Group",
-                            details: "Endpoint Field",
+                            details: "This field is the remote endpoint that the local endpoint is bound to. If the Group field is " +
+                                     "present, this field SHALL NOT be present.",
                             xref: { document: "core", section: "9.6.5.1.3" }
                         },
+
                         {
                             tag: "datatype", name: "Cluster", id: 0x4, type: "cluster-id", access: "F", conformance: "O",
-                            details: "Cluster Field",
+                            details: "This field is the cluster ID (client & server) on the local and target endpoint(s). If this field " +
+                                     "is present, the client cluster SHALL also exist on this endpoint (with this Binding cluster). If " +
+                                     "this field is present, the target SHALL be this cluster on the target endpoint(s).",
                             xref: { document: "core", section: "9.6.5.1.4" }
                         }
                     ]
@@ -8066,14 +8064,17 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Label", id: 0x0, type: "string", conformance: "M", constraint: "max 16",
                             default: "empty",
-                            details: "Label Field",
+                            details: "The Label or Value semantic is not defined here. Label examples: \"room\", \"zone\", \"group\", " +
+                                     "\"direction\".",
                             xref: { document: "core", section: "9.7.4.1.1" }
                         },
 
                         {
                             tag: "datatype", name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
                             default: "empty",
-                            details: "Value Field",
+                            details: "The Label or Value semantic is not defined here. The Value is a discriminator for a Label that may " +
+                                     "have multiple instances. Label:Value examples: \"room\":\"bedroom 2\", \"orientation\":\"North\", " +
+                                     "\"floor\":\"2\", \"direction\":\"up\"",
                             xref: { document: "core", section: "9.7.4.1.2" }
                         }
                     ]
@@ -8169,27 +8170,29 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "AdminNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M",
                             constraint: "desc", quality: "X",
-                            details: "AdminNodeID Field",
+                            details: "The Node ID of the Administrator that made the change, if the change occurred via a CASE session.",
                             xref: { document: "core", section: "9.10.7.1.1" }
                         },
 
                         {
                             tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M",
                             constraint: "desc", quality: "X",
-                            details: "AdminPasscodeID Field",
+                            details: "The Passcode ID of the Administrator that made the change, if the change occurred via a PASE " +
+                                     "session. Non-zero values are reserved for future use (see PasscodeId generation in " +
+                                     "PBKDFParamRequest).",
                             xref: { document: "core", section: "9.10.7.1.2" }
                         },
 
                         {
                             tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                            details: "ChangeType Field",
+                            details: "The type of change as appropriate.",
                             xref: { document: "core", section: "9.10.7.1.3" }
                         },
 
                         {
                             tag: "datatype", name: "LatestValue", id: 0x4, type: "AccessControlEntryStruct", access: "S",
                             conformance: "M", quality: "X",
-                            details: "LatestValue Field",
+                            details: "The latest value of the changed entry.",
                             xref: { document: "core", section: "9.10.7.1.4" }
                         }
                     ]
@@ -8205,29 +8208,16 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "AdminNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M",
-                            constraint: "desc", quality: "X",
-                            details: "AdminNodeID Field",
-                            xref: { document: "core", section: "9.10.7.2.1" }
+                            constraint: "desc", quality: "X"
                         },
-
                         {
                             tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M",
-                            constraint: "desc", quality: "X",
-                            details: "AdminPasscodeID Field",
-                            xref: { document: "core", section: "9.10.7.2.2" }
+                            constraint: "desc", quality: "X"
                         },
-
-                        {
-                            tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                            details: "ChangeType Field",
-                            xref: { document: "core", section: "9.10.7.2.3" }
-                        },
-
+                        { tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M" },
                         {
                             tag: "datatype", name: "LatestValue", id: 0x4, type: "AccessControlExtensionStruct", access: "S",
-                            conformance: "M", quality: "X",
-                            details: "LatestValue Field",
-                            xref: { document: "core", section: "9.10.7.2.4" }
+                            conformance: "M", quality: "X"
                         }
                     ]
                 },
@@ -8251,9 +8241,21 @@ export const SpecMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "View", id: 0x1, conformance: "M" },
                         { tag: "datatype", name: "ProxyView", id: 0x2, conformance: "P, M" },
-                        { tag: "datatype", name: "Operate", id: 0x3, conformance: "M" },
-                        { tag: "datatype", name: "Manage", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "Administer", id: 0x5, conformance: "M" }
+                        {
+                            tag: "datatype", name: "Operate", id: 0x3, conformance: "M",
+                            details: "This value implicitly grants View privileges",
+                            xref: { document: "core", section: "9.10.4.2.1" }
+                        },
+                        {
+                            tag: "datatype", name: "Manage", id: 0x4, conformance: "M",
+                            details: "This value implicitly grants Operate & View privileges",
+                            xref: { document: "core", section: "9.10.4.2.2" }
+                        },
+                        {
+                            tag: "datatype", name: "Administer", id: 0x5, conformance: "M",
+                            details: "This value implicitly grants Manage, Operate, Proxy View & View privileges",
+                            xref: { document: "core", section: "9.10.4.2.3" }
+                        }
                     ]
                 },
 
@@ -8286,21 +8288,22 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Privilege", id: 0x1, type: "AccessControlEntryPrivilegeEnum", access: "S",
                             conformance: "M",
-                            details: "Privilege Field",
+                            details: "The privilege field SHALL specify the level of privilege granted by this Access Control Entry.",
                             xref: { document: "core", section: "9.10.4.5.1" }
                         },
 
                         {
                             tag: "datatype", name: "AuthMode", id: 0x2, type: "AccessControlEntryAuthModeEnum", access: "S",
                             conformance: "M",
-                            details: "AuthMode Field",
+                            details: "The AuthMode field SHALL specify the authentication mode required by this Access Control Entry.",
                             xref: { document: "core", section: "9.10.4.5.2" }
                         },
 
                         {
                             tag: "datatype", name: "Subjects", id: 0x3, type: "list", access: "S", conformance: "M",
                             constraint: "max SubjectsPerAccessControlEntry", quality: "X",
-                            details: "Subjects Field",
+                            details: "The subjects field SHALL specify a list of Subject IDs, to which this Access Control Entry grants " +
+                                     "access.",
                             xref: { document: "core", section: "9.10.4.5.3" },
                             children: [ { tag: "datatype", name: "entry", type: "SubjectID" } ]
                         },
@@ -8308,6 +8311,9 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Targets", id: 0x4, type: "list", access: "S", conformance: "M",
                             constraint: "max TargetsPerAccessControlEntry", quality: "X",
+                            details: "The targets field SHALL specify a list of AccessControlTargetStruct, which define the clusters on " +
+                                     "this Node to which this Access Control Entry grants access.",
+                            xref: { document: "core", section: "9.10.4.5.4" },
                             children: [ { tag: "datatype", name: "entry", type: "AccessControlTargetStruct" } ]
                         }
                     ]
@@ -8321,7 +8327,7 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Data", id: 0x1, type: "octstr", access: "S", conformance: "M",
                             constraint: "max 128",
-                            details: "Data Field",
+                            details: "This field MAY be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s",
                             xref: { document: "core", section: "9.10.4.6.1" }
                         }
                     ]
@@ -8477,20 +8483,19 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "core", section: "9.14.7.1" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            details: "ActionID Field",
-                            xref: { document: "core", section: "9.14.7.1.1" }
-                        },
+                        { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
+
                         {
                             tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
-                            details: "InvokeID Field",
-                            xref: { document: "core", section: "9.14.7.1.2" }
+                            details: "This field SHALL be set to the InvokeID which was provided to the most recent command referencing " +
+                                     "this ActionID.",
+                            xref: { document: "core", section: "9.14.7.1.1" }
                         },
+
                         {
                             tag: "datatype", name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M",
-                            details: "NewState Field",
-                            xref: { document: "core", section: "9.14.7.1.3" }
+                            details: "This field SHALL be set to state that the action has changed to.",
+                            xref: { document: "core", section: "9.14.7.1.2" }
                         }
                     ]
                 },
@@ -8502,25 +8507,13 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "core", section: "9.14.7.2" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            details: "ActionID Field",
-                            xref: { document: "core", section: "9.14.7.2.1" }
-                        },
-                        {
-                            tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
-                            details: "InvokeID Field",
-                            xref: { document: "core", section: "9.14.7.2.2" }
-                        },
-                        {
-                            tag: "datatype", name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M",
-                            details: "NewState Field",
-                            xref: { document: "core", section: "9.14.7.2.3" }
-                        },
+                        { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "M" },
+                        { tag: "datatype", name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M" },
                         {
                             tag: "datatype", name: "Error", id: 0x3, type: "ActionErrorEnum", conformance: "M",
-                            details: "Error Field",
-                            xref: { document: "core", section: "9.14.7.2.4" }
+                            details: "This field SHALL be set to indicate the reason for non-successful progress of the action.",
+                            xref: { document: "core", section: "9.14.7.2.1" }
                         }
                     ]
                 },
@@ -8547,7 +8540,7 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" },
                         {
                             tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
-                            details: "TransitionTime Field",
+                            details: "This field SHALL indicate the transition time in 1/10th of seconds.",
                             xref: { document: "core", section: "9.14.6.2.1" }
                         }
                     ]
@@ -8575,7 +8568,7 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" },
                         {
                             tag: "datatype", name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                            details: "Duration Field",
+                            details: "This field SHALL indicate the requested duration in seconds.",
                             xref: { document: "core", section: "9.14.6.4.1" }
                         }
                     ]
@@ -8608,15 +8601,10 @@ export const SpecMatter: MatterElement = {
                     direction: "request", response: "status",
                     details: "This command SHALL have the following data fields:",
                     xref: { document: "core", section: "9.14.6.7" },
-
                     children: [
                         { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
                         { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" },
-                        {
-                            tag: "datatype", name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                            details: "Duration Field",
-                            xref: { document: "core", section: "9.14.6.7.1" }
-                        }
+                        { tag: "datatype", name: "Duration", id: 0x2, type: "uint32", conformance: "M" }
                     ]
                 },
 
@@ -8647,15 +8635,10 @@ export const SpecMatter: MatterElement = {
                     direction: "request", response: "status",
                     details: "This command SHALL have the following data fields:",
                     xref: { document: "core", section: "9.14.6.10" },
-
                     children: [
                         { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
                         { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" },
-                        {
-                            tag: "datatype", name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                            details: "Duration Field",
-                            xref: { document: "core", section: "9.14.6.10.1" }
-                        }
+                        { tag: "datatype", name: "Duration", id: 0x2, type: "uint32", conformance: "M" }
                     ]
                 },
 
@@ -8675,15 +8658,10 @@ export const SpecMatter: MatterElement = {
                     direction: "request", response: "status",
                     details: "This command SHALL have the following data fields:",
                     xref: { document: "core", section: "9.14.6.12" },
-
                     children: [
                         { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
                         { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" },
-                        {
-                            tag: "datatype", name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                            details: "Duration Field",
-                            xref: { document: "core", section: "9.14.6.12.1" }
-                        }
+                        { tag: "datatype", name: "Duration", id: 0x2, type: "uint32", conformance: "M" }
                     ]
                 },
 
@@ -8751,12 +8729,49 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         { tag: "datatype", name: "Other", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Scene", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Sequence", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "Automation", id: 0x3, conformance: "M" },
-                        { tag: "datatype", name: "Exception", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "Notification", id: 0x5, conformance: "M" },
-                        { tag: "datatype", name: "Alarm", id: 0x6, conformance: "M" }
+
+                        {
+                            tag: "datatype", name: "Scene", id: 0x1, conformance: "M",
+                            details: "Can be used to set a static state of the associated endpoints (typically using InstantAction or " +
+                                     "InstantActionWithTransition), or to bring these endpoints into a more dynamic state (typically " +
+                                     "using StartAction), where the endpoints would e.g. gradually cycle through certain colors for a " +
+                                     "pleasing effect. A voice controller could use \"set\" (to map to InstantAction) or \"play\" (to map to " +
+                                     "StartAction) to trig",
+                            xref: { document: "core", section: "9.14.4.2.1" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Sequence", id: 0x2, conformance: "M",
+                            details: "Indicates an action which involves a sequence of events/states of the associated endpoints, such as " +
+                                     "a wake-up experience.",
+                            xref: { document: "core", section: "9.14.4.2.2" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Automation", id: 0x3, conformance: "M",
+                            details: "Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can be",
+                            xref: { document: "core", section: "9.14.4.2.3" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Exception", id: 0x4, conformance: "M",
+                            details: "Indicates some action which the server will execute when a certain condition (which normally does " +
+                                     "not happen) is not met.",
+                            xref: { document: "core", section: "9.14.4.2.4" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Notification", id: 0x5, conformance: "M",
+                            details: "Indicates an action that can be triggered (e.g. by InstantAction) to notify the user.",
+                            xref: { document: "core", section: "9.14.4.2.5" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Alarm", id: 0x6, conformance: "M",
+                            details: "Similar to Notification but with a higher priority (and might override other endpoint states which " +
+                                     "Type=Notification would not override).",
+                            xref: { document: "core", section: "9.14.4.2.6" }
+                        }
                     ]
                 },
 
@@ -8787,10 +8802,33 @@ export const SpecMatter: MatterElement = {
                     tag: "datatype", name: "EndpointListTypeEnum", type: "enum8",
                     details: "This data type is derived from enum8 and has its values listed below.",
                     xref: { document: "core", section: "9.14.4.5" },
+
                     children: [
-                        { tag: "datatype", name: "Other", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Room", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Zone", id: 0x2, conformance: "M" }
+                        {
+                            tag: "datatype", name: "Other", id: 0x0, conformance: "M",
+                            details: "This value is provided for the case of an endpoint list which is tied specifically to this action " +
+                                     "i.e. not independently created by the user. For Type=Other the Name MAY be empty. A Matter " +
+                                     "controller would typically not use this for anything else than just to know which endpoints would " +
+                                     "be affected by the action.",
+                            xref: { document: "core", section: "9.14.4.5.1" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Room", id: 0x1, conformance: "M",
+                            details: "Is used for the situation where an endpoint can only be part of one such rooms (e.g. physical " +
+                                     "mapping). Using these exposed logical groups, a Matter controller who has a similar grouping " +
+                                     "concept can use it to place each endpoint (bridged device) in the right room automatically, without " +
+                                     "user having to redo that setup for each device in each system - both at first contact and upon " +
+                                     "later updates to the endpoints (e.g. user adds a bridged device or creates a new room).",
+                            xref: { document: "core", section: "9.14.4.5.2" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Zone", id: 0x2, conformance: "M",
+                            details: "Is a more general concept where an endpoint can be part of multiple zones, e.g. a light in the " +
+                                     "living",
+                            xref: { document: "core", section: "9.14.4.5.3" }
+                        }
                     ]
                 },
 
@@ -8802,35 +8840,43 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            details: "ActionID Field",
+                            details: "This field SHALL provide an unique identifier used to identify an action.",
                             xref: { document: "core", section: "9.14.4.6.1" }
                         },
+
                         {
                             tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]",
-                            details: "Name Field",
+                            details: "This field SHALL indicate the name (as assigned by the user or automatically by the server) " +
+                                     "associated with this action. This can be used for identifying the action to the user by the client. " +
+                                     "Example: \"my colorful scene\".",
                             xref: { document: "core", section: "9.14.4.6.2" }
                         },
+
                         {
                             tag: "datatype", name: "Type", id: 0x2, type: "ActionTypeEnum", conformance: "M",
-                            details: "Type Field",
+                            details: "This field SHALL indicate the type of action. The value of Type of an action, along with its " +
+                                     "SupportedCommands can be used by the client in its UX or logic to determine how to present or use " +
+                                     "such action. See ActionTypeEnum for details and examples.",
                             xref: { document: "core", section: "9.14.4.6.3" }
                         },
+
                         {
                             tag: "datatype", name: "EndpointListId", id: 0x3, type: "uint16", conformance: "M",
-                            details: "EndPointListID Field",
+                            details: "This field SHALL provide a reference to the associated endpoint list, which specifies the endpoints " +
+                                     "on this Node which will be impacted by this ActionID.",
                             xref: { document: "core", section: "9.14.4.6.4" }
                         },
 
                         {
                             tag: "datatype", name: "SupportedCommands", id: 0x4, type: "CommandBits", conformance: "M",
                             constraint: "0",
-                            details: "SupportedCommands Field",
+                            details: "This field is a bitmap which SHALL be used to indicate which of the cluster’s commands are sup",
                             xref: { document: "core", section: "9.14.4.6.5" }
                         },
 
                         {
                             tag: "datatype", name: "State", id: 0x5, type: "ActionStateEnum", conformance: "M",
-                            details: "State Field",
+                            details: "This field SHALL indicate the current state of this action.",
                             xref: { document: "core", section: "9.14.4.6.6" }
                         }
                     ]
@@ -8843,26 +8889,14 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "core", section: "9.14.4.7" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "EndpointListId", id: 0x0, type: "uint16", conformance: "M",
-                            details: "EndPointListID Field",
-                            xref: { document: "core", section: "9.14.4.7.1" }
-                        },
-                        {
-                            tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]",
-                            details: "Name Field",
-                            xref: { document: "core", section: "9.14.4.7.2" }
-                        },
-                        {
-                            tag: "datatype", name: "Type", id: 0x2, type: "EndpointListTypeEnum", conformance: "M",
-                            details: "Type Field",
-                            xref: { document: "core", section: "9.14.4.7.3" }
-                        },
+                        { tag: "datatype", name: "EndpointListId", id: 0x0, type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]" },
+                        { tag: "datatype", name: "Type", id: 0x2, type: "EndpointListTypeEnum", conformance: "M" },
 
                         {
                             tag: "datatype", name: "Endpoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256",
-                            details: "EndPoints Field",
-                            xref: { document: "core", section: "9.14.4.7.4" },
+                            details: "This field SHALL provide a list of endpoint numbers.",
+                            xref: { document: "core", section: "9.14.4.7.1" },
                             children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
                         }
                     ]
@@ -9151,7 +9185,8 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
-                            details: "SoftwareVersion Field",
+                            details: "This field SHALL be set to the same value as the one available in the Software Version attribute of " +
+                                     "the Basic Information Cluster.",
                             xref: { document: "core", section: "11.1.6.1.1" }
                         }
                     ]
@@ -9180,7 +9215,7 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M",
                             constraint: "1 to 254",
-                            details: "FabricIndex Field",
+                            details: "This field SHALL contain the local Fabric Index of the fabric which the node is about to leave.",
                             xref: { document: "core", section: "11.1.6.3.1" }
                         }
                     ]
@@ -9194,7 +9229,7 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M",
-                            details: "ReachableNewValue Field",
+                            details: "This field SHALL indicate the value of the Reachable attribute after it was changed.",
                             xref: { document: "core", section: "11.1.6.4.1" }
                         }
                     ]
@@ -9210,14 +9245,16 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "CaseSessionsPerFabric", id: 0x0, type: "uint16", conformance: "M",
                             constraint: "min 3", default: 3,
-                            details: "CaseSessionsPerFabric Field",
+                            details: "This field SHALL indicate the actual minimum number of concurrent CASE sessions that are supported " +
+                                     "per fabric.",
                             xref: { document: "core", section: "11.1.4.1.1" }
                         },
 
                         {
                             tag: "datatype", name: "SubscriptionsPerFabric", id: 0x1, type: "uint16", conformance: "M",
                             constraint: "min 3", default: 3,
-                            details: "SubscriptionsPerFabric Field",
+                            details: "This field SHALL indicate the actual minimum number of concurrent subscriptions supported per " +
+                                     "fabric.",
                             xref: { document: "core", section: "11.1.4.1.2" }
                         }
                     ]
@@ -9351,9 +9388,18 @@ export const SpecMatter: MatterElement = {
                     tag: "datatype", name: "GroupKeyMulticastPolicyEnum", type: "enum8",
                     details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.2.6.2" },
+
                     children: [
-                        { tag: "datatype", name: "PerGroupId", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "AllNodes", id: 0x1, conformance: "M" }
+                        {
+                            tag: "datatype", name: "PerGroupId", id: 0x0, conformance: "M",
+                            details: "The 16-bit Group Identifier of the Multicast Address SHALL be the Group ID of the group.",
+                            xref: { document: "core", section: "11.2.6.2.1" }
+                        },
+                        {
+                            tag: "datatype", name: "AllNodes", id: 0x1, conformance: "M",
+                            details: "The 16-bit Group Identifier of the Multicast Address SHALL be 0xFFFF.",
+                            xref: { document: "core", section: "11.2.6.2.2" }
+                        }
                     ]
                 },
 
@@ -9364,14 +9410,14 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", access: "F", conformance: "M",
-                            details: "GroupId Field",
+                            details: "This field uniquely identifies the group within the scope of the given Fabric.",
                             xref: { document: "core", section: "11.2.6.3.1" }
                         },
 
                         {
                             tag: "datatype", name: "GroupKeySetId", id: 0x2, type: "uint16", access: "F", conformance: "M",
                             constraint: "1 to 65535",
-                            details: "GroupKeySetID Field",
+                            details: "This field references the set of group keys that generate operational group keys for use with this",
                             xref: { document: "core", section: "11.2.6.3.2" }
                         }
                     ]
@@ -9379,97 +9425,104 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "GroupKeySetStruct", type: "struct",
+                    details: "This field SHALL provide the fabric-unique index for the associated group key set, as specified in " +
+                             "Section 4.15.3.5.1, “Group Key Set ID”.",
                     xref: { document: "core", section: "11.2.6.4" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M",
-                            details: "GroupKeySetID Field",
-                            xref: { document: "core", section: "11.2.6.4.1" }
-                        },
+                        { tag: "datatype", name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" },
 
                         {
                             tag: "datatype", name: "GroupKeySecurityPolicy", id: 0x1, type: "GroupKeySecurityPolicyEnum",
                             access: "S", conformance: "M",
-                            details: "GroupKeySecurityPolicy Field",
-                            xref: { document: "core", section: "11.2.6.4.2" }
+                            details: "This field SHALL provide the security policy for an operational group key set.",
+                            xref: { document: "core", section: "11.2.6.4.1" }
                         },
 
                         {
                             tag: "datatype", name: "EpochKey0", id: 0x2, type: "octstr", access: "S", conformance: "M",
                             constraint: "16", quality: "X",
-                            details: "EpochKey0 Field",
-                            xref: { document: "core", section: "11.2.6.4.3" }
+                            details: "This field, if not null, SHALL be the root credential used in the derivation of an operational " +
+                                     "group key for epoch slot 0 of the given group key set. If EpochKey0 is not null, EpochStartTime0 " +
+                                     "SHALL NOT be null.",
+                            xref: { document: "core", section: "11.2.6.4.2" }
                         },
 
                         {
                             tag: "datatype", name: "EpochStartTime0", id: 0x3, type: "epoch-us", access: "S", conformance: "M",
                             quality: "X",
-                            details: "EpochStartTime0 Field",
-                            xref: { document: "core", section: "11.2.6.4.4" }
+                            details: "This field, if not null, SHALL define when EpochKey0 becomes valid as specified by Section 4.15.3, " +
+                                     "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
+                            xref: { document: "core", section: "11.2.6.4.3" }
                         },
 
                         {
                             tag: "datatype", name: "EpochKey1", id: 0x4, type: "octstr", access: "S", conformance: "M",
                             constraint: "16", quality: "X",
-                            details: "EpochKey1 Field",
-                            xref: { document: "core", section: "11.2.6.4.5" }
+                            details: "This field, if not null, SHALL be the root credential used in the derivation of an operational " +
+                                     "group key for epoch slot 1 of the given group key set. If EpochKey1 is not null, EpochStartTime1 " +
+                                     "SHALL NOT be null.",
+                            xref: { document: "core", section: "11.2.6.4.4" }
                         },
 
                         {
                             tag: "datatype", name: "EpochStartTime1", id: 0x5, type: "epoch-us", access: "S", conformance: "M",
                             quality: "X",
-                            details: "EpochStartTime1 Field",
-                            xref: { document: "core", section: "11.2.6.4.6" }
+                            details: "This field, if not null, SHALL define when EpochKey1 becomes valid as specified by Section 4.15.3, " +
+                                     "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
+                            xref: { document: "core", section: "11.2.6.4.5" }
                         },
 
                         {
                             tag: "datatype", name: "EpochKey2", id: 0x6, type: "octstr", access: "S", conformance: "M",
                             constraint: "16", quality: "X",
-                            details: "EpochKey2 Field",
-                            xref: { document: "core", section: "11.2.6.4.7" }
+                            details: "This field, if not null, SHALL be the root credential used in the derivation of an operational " +
+                                     "group key for epoch slot 2 of the given group key set. If EpochKey2 is not null, EpochStartTime2 " +
+                                     "SHALL NOT be null.",
+                            xref: { document: "core", section: "11.2.6.4.6" }
                         },
 
                         {
                             tag: "datatype", name: "EpochStartTime2", id: 0x7, type: "epoch-us", access: "S", conformance: "M",
                             quality: "X",
-                            details: "EpochStartTime2 Field",
-                            xref: { document: "core", section: "11.2.6.4.8" }
+                            details: "This field, if not null, SHALL define when EpochKey2 becomes valid as specified by Section 4.15.3, " +
+                                     "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
+                            xref: { document: "core", section: "11.2.6.4.7" }
                         },
 
                         {
                             tag: "datatype", name: "GroupKeyMulticastPolicy", id: 0x8, type: "GroupKeyMulticastPolicyEnum",
                             access: "S", conformance: "P, M",
-                            details: "GroupKeyMulticastPolicy Field",
-                            xref: { document: "core", section: "11.2.6.4.9" }
+                            details: "This field specifies how the IPv6 Multicast Address SHALL be formed for groups using this " +
+                                     "operational group key set.",
+                            xref: { document: "core", section: "11.2.6.4.8" }
                         }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "GroupInfoMapStruct", type: "struct",
+                    details: "This field uniquely identifies the group within the scope of the given Fabric.",
                     xref: { document: "core", section: "11.2.6.5" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", access: "R F", conformance: "M",
-                            details: "GroupId Field",
-                            xref: { document: "core", section: "11.2.6.5.1" }
-                        },
+                        { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", access: "R F", conformance: "M" },
 
                         {
                             tag: "datatype", name: "Endpoints", id: 0x2, type: "list", access: "R F", conformance: "M",
                             constraint: "min 1",
-                            details: "Endpoints Field",
-                            xref: { document: "core", section: "11.2.6.5.2" },
+                            details: "This field provides the list of Endpoint IDs on the Node to which messages to this group SHALL be " +
+                                     "forwarded.",
+                            xref: { document: "core", section: "11.2.6.5.1" },
                             children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
                         },
 
                         {
                             tag: "datatype", name: "GroupName", id: 0x3, type: "string", access: "R F", conformance: "O",
                             constraint: "max 16",
-                            details: "GroupName Field",
-                            xref: { document: "core", section: "11.2.6.5.3" }
+                            details: "This field provides a name for the group. This field SHALL contain the last GroupName written for a " +
+                                     "given GroupId on any Endpoint via the Groups cluster.",
+                            xref: { document: "core", section: "11.2.6.5.2" }
                         }
                     ]
                 }
@@ -9969,7 +10022,8 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8",
                             default: [],
-                            details: "Current Field",
+                            details: "This field SHALL represent the set of faults currently detected, as per Section 11.7.6.11, " +
+                                     "“ActiveWiredFaults Attribute”.",
                             xref: { document: "core", section: "11.7.7.1.1" },
                             children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
                         },
@@ -9977,7 +10031,8 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8",
                             default: [],
-                            details: "Previous Field",
+                            details: "This field SHALL represent the set of faults detected prior to this change event, as per Section " +
+                                     "11.7.6.11, “ActiveWiredFaults Attribute”.",
                             xref: { document: "core", section: "11.7.7.1.2" },
                             children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
                         }
@@ -9995,16 +10050,11 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8",
                             default: [],
-                            details: "Current Field",
-                            xref: { document: "core", section: "11.7.7.2.1" },
                             children: [ { tag: "datatype", name: "entry", type: "BatFaultEnum" } ]
                         },
-
                         {
                             tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8",
                             default: [],
-                            details: "Previous Field",
-                            xref: { document: "core", section: "11.7.7.2.2" },
                             children: [ { tag: "datatype", name: "entry", type: "BatFaultEnum" } ]
                         }
                     ]
@@ -10020,16 +10070,11 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 16",
                             default: [],
-                            details: "Current Field",
-                            xref: { document: "core", section: "11.7.7.3.1" },
                             children: [ { tag: "datatype", name: "entry", type: "BatChargeFaultEnum" } ]
                         },
-
                         {
                             tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 16",
                             default: [],
-                            details: "Previous Field",
-                            xref: { document: "core", section: "11.7.7.3.2" },
                             children: [ { tag: "datatype", name: "entry", type: "BatChargeFaultEnum" } ]
                         }
                     ]
@@ -10384,13 +10429,17 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Ssid", id: 0x0, type: "octstr", conformance: "[WI]", constraint: "1 to 32",
                             default: null, quality: "X",
-                            details: "SSID Field",
+                            details: "This field, if present, SHALL contain the SSID for a directed scan of that particular Wi-Fi SSID. " +
+                                     "Otherwise, if the field is absent, or it is null, this SHALL indicate scanning of all BSSID in " +
+                                     "range. This field SHALL be ignored for ScanNetworks invocations on non-Wi-Fi server instances.",
                             xref: { document: "core", section: "11.8.7.1.1" }
                         },
 
                         {
                             tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                            details: "Breadcrumb Field",
+                            details: "The Breadcrumb field, if present, SHALL be used to atomically set the Breadcrumb attribute in the " +
+                                     "General Commissioning cluster on success of the associated command. If the command fails, the " +
+                                     "Breadcrumb attribute in the General Commissioning cluster SHALL be left unchanged.",
                             xref: { document: "core", section: "11.8.7.1.2" }
                         }
                     ]
@@ -10407,21 +10456,26 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum",
                             conformance: "M", constraint: "desc",
-                            details: "NetworkingStatus Field",
+                            details: "The NetworkingStatus field SHALL indicate the status of the last scan operation, taking one of " +
+                                     "these values:",
                             xref: { document: "core", section: "11.8.7.2.1" }
                         },
 
                         {
                             tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "O",
                             constraint: "max 512",
-                            details: "DebugText Field",
+                            details: "This field, if present and non-empty, MAY contain error information which MAY be communicated to " +
+                                     "the user in case the NetworkingStatus was not Success. Its purpose is to help developers in " +
+                                     "troubleshooting errors and MAY go into logs or crash reports.",
                             xref: { document: "core", section: "11.8.7.2.2" }
                         },
 
                         {
                             tag: "datatype", name: "WiFiScanResults", id: 0x2, type: "list", conformance: "WI",
                             constraint: "desc",
-                            details: "WiFiScanResults Field",
+                            details: "If NetworkingStatus was Success, this field SHALL contain the Wi-Fi network scan results. The list " +
+                                     "MAY be empty if none were found in range on the bands supported by the interface, or if directed " +
+                                     "scanning had been used and the desired SSID was not found in range.",
                             xref: { document: "core", section: "11.8.7.2.3" },
                             children: [ { tag: "datatype", name: "entry", type: "WiFiInterfaceScanResultStruct" } ]
                         },
@@ -10429,7 +10483,8 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "ThreadScanResults", id: 0x3, type: "list", conformance: "TH",
                             constraint: "desc",
-                            details: "ThreadScanResults Field",
+                            details: "If NetworkingStatus was Success, this field SHALL contain the Thread network scan results. The list " +
+                                     "MAY be empty if none were found in range on the bands supported by the interface.",
                             xref: { document: "core", section: "11.8.7.2.4" },
                             children: [ { tag: "datatype", name: "entry", type: "ThreadInterfaceScanResultStruct" } ]
                         }
@@ -10443,24 +10498,16 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "core", section: "11.8.7.3" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32",
-                            details: "SSID Field",
-                            xref: { document: "core", section: "11.8.7.3.1" }
-                        },
+                        { tag: "datatype", name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32" },
 
                         {
                             tag: "datatype", name: "Credentials", id: 0x1, type: "octstr", conformance: "M",
                             constraint: "max 64",
-                            details: "Credentials Field",
-                            xref: { document: "core", section: "11.8.7.3.2" }
+                            details: "Credentials is the passphrase or PSK for the network (if any is needed).",
+                            xref: { document: "core", section: "11.8.7.3.1" }
                         },
 
-                        {
-                            tag: "datatype", name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O",
-                            details: "Breadcrumb Field",
-                            xref: { document: "core", section: "11.8.7.3.3" }
-                        }
+                        { tag: "datatype", name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" }
                     ]
                 },
 
@@ -10474,15 +10521,12 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "OperationalDataset", id: 0x0, type: "octstr", conformance: "M",
                             constraint: "max 254",
-                            details: "OperationalDataset Field",
+                            details: "The OperationalDataset field SHALL contain the Thread Network Parameters, including channel, PAN " +
+                                     "ID, and Extended PAN ID.",
                             xref: { document: "core", section: "11.8.7.4.1" }
                         },
 
-                        {
-                            tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                            details: "Breadcrumb Field",
-                            xref: { document: "core", section: "11.8.7.4.2" }
-                        }
+                        { tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" }
                     ]
                 },
 
@@ -10497,16 +10541,9 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "NetworkId", id: 0x0, type: "octstr", conformance: "M",
-                            constraint: "1 to 32",
-                            details: "NetworkID Field",
-                            xref: { document: "core", section: "11.8.7.7.1" }
+                            constraint: "1 to 32"
                         },
-
-                        {
-                            tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                            details: "Breadcrumb Field",
-                            xref: { document: "core", section: "11.8.7.7.2" }
-                        }
+                        { tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" }
                     ]
                 },
 
@@ -10521,22 +10558,19 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum",
-                            conformance: "M", constraint: "desc",
-                            details: "NetworkingStatus Field",
-                            xref: { document: "core", section: "11.8.7.8.1" }
+                            conformance: "M", constraint: "desc"
                         },
-
                         {
                             tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "O",
-                            constraint: "max 512",
-                            details: "DebugText Field",
-                            xref: { document: "core", section: "11.8.7.8.2" }
+                            constraint: "max 512"
                         },
 
                         {
                             tag: "datatype", name: "NetworkIndex", id: 0x2, type: "uint8", conformance: "O",
-                            details: "NetworkIndex Field",
-                            xref: { document: "core", section: "11.8.7.8.3" }
+                            details: "When the NetworkingStatus is Success, this field SHALL be present. It SHALL contain the 0-based " +
+                                     "index of the entry in the Networks attribute that was last added, updated or removed successfully " +
+                                     "by the associated request command.",
+                            xref: { document: "core", section: "11.8.7.8.1" }
                         }
                     ]
                 },
@@ -10552,16 +10586,9 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "NetworkId", id: 0x0, type: "octstr", conformance: "M",
-                            constraint: "1 to 32",
-                            details: "NetworkID Field",
-                            xref: { document: "core", section: "11.8.7.9.1" }
+                            constraint: "1 to 32"
                         },
-
-                        {
-                            tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                            details: "Breadcrumb Field",
-                            xref: { document: "core", section: "11.8.7.9.2" }
-                        }
+                        { tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" }
                     ]
                 },
 
@@ -10574,20 +10601,13 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum",
-                            conformance: "M",
-                            details: "NetworkingStatus Field",
-                            xref: { document: "core", section: "11.8.7.10.1" }
+                            conformance: "M"
                         },
-
-                        {
-                            tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "O",
-                            details: "DebugText Field",
-                            xref: { document: "core", section: "11.8.7.10.2" }
-                        },
+                        { tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "O" },
                         {
                             tag: "datatype", name: "ErrorValue", id: 0x2, type: "int32", conformance: "M", quality: "X",
-                            details: "ErrorValue Field",
-                            xref: { document: "core", section: "11.8.7.10.3" }
+                            details: "• ErrorValue interpretation for Wi-Fi association errors:",
+                            xref: { document: "core", section: "11.8.7.10.1" }
                         }
                     ]
                 },
@@ -10602,21 +10622,10 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "NetworkId", id: 0x0, type: "octstr", conformance: "M",
-                            constraint: "1 to 32",
-                            details: "NetworkID Field",
-                            xref: { document: "core", section: "11.8.7.11.1" }
+                            constraint: "1 to 32"
                         },
-
-                        {
-                            tag: "datatype", name: "NetworkIndex", id: 0x1, type: "uint8", conformance: "M", constraint: "desc",
-                            details: "NetworkIndex Field",
-                            xref: { document: "core", section: "11.8.7.11.2" }
-                        },
-                        {
-                            tag: "datatype", name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O",
-                            details: "Breadcrumb Field",
-                            xref: { document: "core", section: "11.8.7.11.3" }
-                        }
+                        { tag: "datatype", name: "NetworkIndex", id: 0x1, type: "uint8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" }
                     ]
                 },
 
@@ -10689,11 +10698,18 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "NetworkId", id: 0x0, type: "octstr", conformance: "M",
                             constraint: "1 to 32",
-                            details: "NetworkID Field",
+                            details: "Every network is uniquely identified (for purposes of commissioning) by a NetworkID mapping to the " +
+                                     "following technology-specific properties:",
                             xref: { document: "core", section: "11.8.5.4.1" }
                         },
 
-                        { tag: "datatype", name: "Connected", id: 0x1, type: "bool", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Connected", id: 0x1, type: "bool", conformance: "M",
+                            details: "This field SHALL indicate the connected status of the associated network, where \"connected\" means " +
+                                     "currently linked to the network technology (e.g. Associated for a Wi-Fi network, media connected " +
+                                     "for an Ethernet network).",
+                            xref: { document: "core", section: "11.8.5.4.2" }
+                        }
                     ]
                 },
 
@@ -10707,14 +10723,17 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "Ssid", id: 0x1, type: "octstr", conformance: "WI", constraint: "max 32" },
                         { tag: "datatype", name: "Bssid", id: 0x2, type: "octstr", conformance: "WI", constraint: "6" },
                         { tag: "datatype", name: "Channel", id: 0x3, type: "uint16", conformance: "WI" },
+
                         {
                             tag: "datatype", name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]",
-                            details: "WiFiBand Field",
+                            details: "This field, if present, MAY be used to differentiate overlapping channel number values across " +
+                                     "different Wi-Fi frequency bands.",
                             xref: { document: "core", section: "11.8.5.5.1" }
                         },
+
                         {
                             tag: "datatype", name: "Rssi", id: 0x5, type: "int8", conformance: "[WI]",
-                            details: "RSSI Field",
+                            details: "This field, if present, SHALL denote the signal strength in dBm of the associated scan result.",
                             xref: { document: "core", section: "11.8.5.5.2" }
                         }
                     ]
@@ -10739,7 +10758,7 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "Version", id: 0x4, type: "uint8", conformance: "TH" },
                         {
                             tag: "datatype", name: "ExtendedAddress", id: 0x5, type: "hwadr", conformance: "TH",
-                            details: "ExtendedAddress Field",
+                            details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
                             xref: { document: "core", section: "11.8.5.6.1" }
                         },
                         { tag: "datatype", name: "Rssi", id: 0x6, type: "int8", conformance: "TH" },
@@ -10822,14 +10841,15 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M",
                             default: 0,
-                            details: "ErrorCode Field",
+                            details: "This field SHALL contain the result of the operation, based on the behavior specified in the " +
+                                     "functional description of the ArmFailSafe command.",
                             xref: { document: "core", section: "11.9.6.3.1" }
                         },
 
                         {
                             tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "M",
                             constraint: "max 128", default: "",
-                            details: "DebugText Field",
+                            details: "See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.",
                             xref: { document: "core", section: "11.9.6.3.2" }
                         }
                     ]
@@ -10861,16 +10881,9 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M",
-                            default: 0,
-                            details: "ErrorCode Field",
-                            xref: { document: "core", section: "11.9.6.5.1" }
+                            default: 0
                         },
-
-                        {
-                            tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "",
-                            details: "DebugText Field",
-                            xref: { document: "core", section: "11.9.6.5.2" }
-                        }
+                        { tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "" }
                     ]
                 },
 
@@ -10890,16 +10903,9 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M",
-                            default: 0,
-                            details: "ErrorCode Field",
-                            xref: { document: "core", section: "11.9.6.7.1" }
+                            default: 0
                         },
-
-                        {
-                            tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "",
-                            details: "DebugText Field",
-                            xref: { document: "core", section: "11.9.6.7.2" }
-                        }
+                        { tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "" }
                     ]
                 },
 
@@ -10936,14 +10942,19 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "FailSafeExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M",
-                            details: "FailSafeExpiryLengthSeconds Field",
+                            details: "This field SHALL contain a conservative initial duration (in seconds) to set in the FailSafe for " +
+                                     "the commissioning flow to complete successfully. This may vary depending on the speed or sleepiness " +
+                                     "of the Commissionee. This value, if used in the ArmFailSafe command’s ExpiryLengthSeconds field " +
+                                     "SHOULD allow a Commissioner to proceed with a nominal commissioning without having to-rearm the " +
+                                     "fail-safe, with some margin.",
                             xref: { document: "core", section: "11.9.4.3.1" }
                         },
 
                         {
                             tag: "datatype", name: "MaxCumulativeFailsafeSeconds", id: 0x1, type: "uint16", conformance: "M",
                             constraint: "desc",
-                            details: "MaxCumulativeFailsafeSeconds Field",
+                            details: "This field SHALL contain a conservative value in seconds denoting the maximum total duration for " +
+                                     "which a fail safe timer can be re-armed. See Section 11.9.6.2.1, “Fail Safe Context”.",
                             xref: { document: "core", section: "11.9.4.3.2" }
                         }
                     ]
@@ -10966,19 +10977,29 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Intent", id: 0x0, type: "IntentEnum", conformance: "M",
-                            details: "Intent Field",
+                            details: "This field SHALL indicate why the diagnostic logs are being retrieved from the Node. A Node MAY " +
+                                     "utilize this field to selectively determine the logs to transfer.",
                             xref: { document: "core", section: "11.10.5.1.1" }
                         },
+
                         {
                             tag: "datatype", name: "RequestedProtocol", id: 0x1, type: "TransferProtocolEnum", conformance: "M",
-                            details: "RequestedProtocol Field",
+
+                            details: "This field SHALL be used to indicate how the log transfer is to be realized. If the field is set to " +
+                                     "BDX, then if the receiving Node supports BDX it SHALL attempt to use BDX to transfer any potential " +
+                                     "diagnostic logs; if the receiving Node does not support BDX then the Node SHALL follow the " +
+                                     "requirements defined for a TransferProtocolEnum of ResponsePayload. If this field is set to " +
+                                     "ResponsePayload the receiving Node SHALL only utilize the LogContent field of the " +
+                                     "RetreiveLogsResponse command to transfer diagnostic log information.",
+
                             xref: { document: "core", section: "11.10.5.1.2" }
                         },
 
                         {
                             tag: "datatype", name: "TransferFileDesignator", id: 0x2, type: "string", conformance: "O",
                             constraint: "max 32",
-                            details: "TransferFileDesignator Field",
+                            details: "This field SHALL be present if the RequestedProtocol is BDX. The TransferFileDesignator SHALL be " +
+                                     "set as the File Designator of the BDX transfer if initiated.",
                             xref: { document: "core", section: "11.10.5.1.3" }
                         }
                     ]
@@ -10993,22 +11014,32 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
-                            details: "Status Field",
+                            details: "This field SHALL indicate the result of an attempt to retrieve diagnostic logs.",
                             xref: { document: "core", section: "11.10.5.2.1" }
                         },
+
                         {
                             tag: "datatype", name: "LogContent", id: 0x1, type: "octstr", conformance: "M",
-                            details: "LogContent Field",
+                            details: "This field SHALL be included in the command if the Status field has a value of Success or " +
+                                     "Exhausted. A Node SHOULD utilize this field to transfer the newest diagnostic log entries. This " +
+                                     "field SHALL be empty if BDX is requested and the Status field has a value of Success.",
                             xref: { document: "core", section: "11.10.5.2.2" }
                         },
+
                         {
                             tag: "datatype", name: "UtcTimeStamp", id: 0x2, type: "epoch-us", conformance: "O",
-                            details: "UTCTimeStamp Field",
+                            details: "This field SHOULD be included in the command if the Status field has a value of Success and the " +
+                                     "Node maintains a wall clock. When included, the UTCTimeStamp field SHALL contain the value of the " +
+                                     "oldest log entry in the diagnostic logs that are being transferred.",
                             xref: { document: "core", section: "11.10.5.2.3" }
                         },
+
                         {
                             tag: "datatype", name: "TimeSinceBoot", id: 0x3, type: "systime-us", conformance: "O",
-                            details: "TimeSinceBoot Field",
+                            details: "This field SHOULD be included in the command if the Status field has a value of Success. When " +
+                                     "included, the TimeSinceBoot field SHALL contain the time of the oldest log entry in the diagnostic " +
+                                     "logs that are being transferred represented by the number of microseconds since the last time the " +
+                                     "Node went through a reboot.",
                             xref: { document: "core", section: "11.10.5.2.4" }
                         }
                     ]
@@ -11018,10 +11049,28 @@ export const SpecMatter: MatterElement = {
                     tag: "datatype", name: "IntentEnum", type: "enum8",
                     details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.10.4.1" },
+
                     children: [
-                        { tag: "datatype", name: "EndUserSupport", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "NetworkDiag", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "CrashLogs", id: 0x2, conformance: "M" }
+                        {
+                            tag: "datatype", name: "EndUserSupport", id: 0x0, conformance: "M",
+                            details: "SHALL indicate that the purpose of the log request is to retrieve logs for the intention of " +
+                                     "providing support to an end-user.",
+                            xref: { document: "core", section: "11.10.4.1.1" }
+                        },
+
+                        {
+                            tag: "datatype", name: "NetworkDiag", id: 0x1, conformance: "M",
+                            details: "SHALL indicate that the purpose of the log request is to diagnose the network(s) for which the Node " +
+                                     "is currently commissioned (and/or connected) or has previously been commissioned (and/or connected).",
+                            xref: { document: "core", section: "11.10.4.1.2" }
+                        },
+
+                        {
+                            tag: "datatype", name: "CrashLogs", id: 0x2, conformance: "M",
+                            details: "SHALL indicate that the purpose of the log request is to retrieve any crash logs that may be " +
+                                     "present on a Node.",
+                            xref: { document: "core", section: "11.10.4.1.3" }
+                        }
                     ]
                 },
 
@@ -11031,11 +11080,36 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "core", section: "11.10.4.2" },
 
                     children: [
-                        { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Exhausted", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "NoLogs", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "Busy", id: 0x3, conformance: "M" },
-                        { tag: "datatype", name: "Denied", id: 0x4, conformance: "M" }
+                        {
+                            tag: "datatype", name: "Success", id: 0x0, conformance: "M",
+                            details: "SHALL be used if diagnostic logs will be or are being transferred.",
+                            xref: { document: "core", section: "11.10.4.2.1" }
+                        },
+                        {
+                            tag: "datatype", name: "Exhausted", id: 0x1, conformance: "M",
+                            details: "SHALL be used when a BDX session is requested, however, all available logs were provided in a",
+                            xref: { document: "core", section: "11.10.4.2.2" }
+                        },
+
+                        {
+                            tag: "datatype", name: "NoLogs", id: 0x2, conformance: "M",
+                            details: "SHALL be used if the Node does not currently have any diagnostic logs of the requested type " +
+                                     "(Intent) to transfer.",
+                            xref: { document: "core", section: "11.10.4.2.3" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Busy", id: 0x3, conformance: "M",
+                            details: "SHALL be used if the Node is unable to handle the request (e.g. in the process of another transfer) " +
+                                     "and the Client SHOULD re-attempt the request later.",
+                            xref: { document: "core", section: "11.10.4.2.4" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Denied", id: 0x4, conformance: "M",
+                            details: "SHALL be used if the Node is denying the current transfer of diagnostic logs for any reason.",
+                            xref: { document: "core", section: "11.10.4.2.5" }
+                        }
                     ]
                 },
 
@@ -11043,9 +11117,20 @@ export const SpecMatter: MatterElement = {
                     tag: "datatype", name: "TransferProtocolEnum", type: "enum8",
                     details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.10.4.3" },
+
                     children: [
-                        { tag: "datatype", name: "ResponsePayload", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Bdx", id: 0x1, conformance: "M" }
+                        {
+                            tag: "datatype", name: "ResponsePayload", id: 0x0, conformance: "M",
+                            details: "SHALL be used by a Client to request that logs are transferred using the LogContent attribute of " +
+                                     "the response",
+                            xref: { document: "core", section: "11.10.4.3.1" }
+                        },
+
+                        {
+                            tag: "datatype", name: "Bdx", id: 0x1, conformance: "M",
+                            details: "SHALL be used by a Client to request that logs are transferred using BDX as defined in BDX Protocol",
+                            xref: { document: "core", section: "11.10.4.3.2" }
+                        }
                     ]
                 }
             ]
@@ -11177,14 +11262,15 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 11",
-                            details: "Current Field",
+                            details: "This field SHALL represent the set of faults currently detected, as per Section 11.11.4.1, " +
+                                     "“HardwareFaultEnum”.",
                             xref: { document: "core", section: "11.11.8.1.1" },
                             children: [ { tag: "datatype", name: "entry", type: "HardwareFaultEnum" } ]
                         },
 
                         {
                             tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 11",
-                            details: "Previous Field",
+                            details: "This field SHALL represent the set of faults detected prior to this change event, as per Section",
                             xref: { document: "core", section: "11.11.8.1.2" },
                             children: [ { tag: "datatype", name: "entry", type: "HardwareFaultEnum" } ]
                         }
@@ -11201,15 +11287,10 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 7",
-                            details: "Current Field",
-                            xref: { document: "core", section: "11.11.8.2.1" },
                             children: [ { tag: "datatype", name: "entry", type: "RadioFaultEnum" } ]
                         },
-
                         {
                             tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 7",
-                            details: "Previous Field",
-                            xref: { document: "core", section: "11.11.8.2.2" },
                             children: [ { tag: "datatype", name: "entry", type: "RadioFaultEnum" } ]
                         }
                     ]
@@ -11225,15 +11306,10 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
-                            details: "Current Field",
-                            xref: { document: "core", section: "11.11.8.3.1" },
                             children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
                         },
-
                         {
                             tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
-                            details: "Previous Field",
-                            xref: { document: "core", section: "11.11.8.3.2" },
                             children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
                         }
                     ]
@@ -11248,7 +11324,7 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M",
-                            details: "BootReason Field",
+                            details: "This field SHALL contain the reason for this BootReason event.",
                             xref: { document: "core", section: "11.11.8.4.1" }
                         }
                     ]
@@ -11266,12 +11342,17 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "EnableKey", id: 0x0, type: "octstr", conformance: "M", constraint: "16",
-                            details: "EnableKey Field",
+                            details: "The EnableKey is a 128 bit value provided by the client in this command, which needs to match a " +
+                                     "value chosen by the manufacturer and configured on the server using manufacturer-specific means, " +
+                                     "such as pre-provisioning. The value of all zeroes is reserved to indicate that no EnableKey is set. " +
+                                     "Therefore, if the EnableKey field is received with all zeroes, this command SHALL FAIL with a " +
+                                     "response status of CONSTRAINT_ERROR.",
                             xref: { document: "core", section: "11.11.7.1.1" }
                         },
+
                         {
                             tag: "datatype", name: "EventTrigger", id: 0x1, type: "uint64", conformance: "M",
-                            details: "EventTrigger Field",
+                            details: "This field SHALL indicate the test or test mode which the client wants to trigger.",
                             xref: { document: "core", section: "11.11.7.1.2" }
                         }
                     ]
@@ -11378,40 +11459,50 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Name", id: 0x0, type: "string", access: "R V", conformance: "M",
                             constraint: "max 32",
-                            details: "Name Field",
+                            details: "This field SHALL indicate a human-readable (displayable) name for the network interface, that is " +
+                                     "different from all other interfaces.",
                             xref: { document: "core", section: "11.11.4.6.1" }
                         },
 
                         {
                             tag: "datatype", name: "IsOperational", id: 0x1, type: "bool", access: "R V", conformance: "M",
-                            details: "IsOperational Field",
+                            details: "This field SHALL indicate if the Node is currently advertising itself operationally on this network " +
+                                     "interface and is capable of successfully receiving incoming traffic from other Nodes.",
                             xref: { document: "core", section: "11.11.4.6.2" }
                         },
 
                         {
                             tag: "datatype", name: "OffPremiseServicesReachableIPv4", id: 0x2, type: "bool", access: "R V",
                             conformance: "M", default: null, quality: "X",
-                            details: "OffPremiseServicesReachableIPv4 Field",
+                            details: "This field SHALL indicate whether the Node is currently able to reach off-premise services it uses " +
+                                     "by utilizing IPv4. The value SHALL be null if the Node does not use such services or does not know " +
+                                     "whether it can reach them.",
                             xref: { document: "core", section: "11.11.4.6.3" }
                         },
 
                         {
                             tag: "datatype", name: "OffPremiseServicesReachableIPv6", id: 0x3, type: "bool", access: "R V",
                             conformance: "M", default: null, quality: "X",
-                            details: "OffPremiseServicesReachableIPv6 Field",
+                            details: "This field SHALL indicate whether the Node is currently able to reach off-premise services it uses " +
+                                     "by utilizing IPv6. The value SHALL be null if the Node does not use such services or does not know " +
+                                     "whether it can reach them.",
                             xref: { document: "core", section: "11.11.4.6.4" }
                         },
 
                         {
                             tag: "datatype", name: "HardwareAddress", id: 0x4, type: "hwadr", access: "R V", conformance: "M",
-                            details: "HardwareAddress Field",
+                            details: "This field SHALL contain the current link-layer address for a 802.3 or IEEE 802.11-2020 network " +
+                                     "interface and contain the current extended MAC address for a 802.15.4 interface. The byte order of " +
+                                     "the octstr SHALL be in wire byte order. For addresses values less than 64 bits, the first two bytes " +
+                                     "SHALL be zero.",
                             xref: { document: "core", section: "11.11.4.6.5" }
                         },
 
                         {
                             tag: "datatype", name: "IPv4Addresses", id: 0x5, type: "list", access: "R V", conformance: "M",
                             constraint: "max 4",
-                            details: "IPv4Addresses Field",
+                            details: "This field SHALL provide a list of the IPv4 addresses that are currently assigned to the network " +
+                                     "interface.",
                             xref: { document: "core", section: "11.11.4.6.6" },
                             children: [ { tag: "datatype", name: "entry", type: "ipv4adr" } ]
                         },
@@ -11419,14 +11510,17 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "IPv6Addresses", id: 0x6, type: "list", access: "R V", conformance: "M",
                             constraint: "max 8",
-                            details: "IPv6Addresses Field",
+                            details: "This field SHALL provide a list of the unicast IPv6 addresses that are currently assigned to the " +
+                                     "network interface. This list SHALL include the Node’s link-local address and SHOULD include any " +
+                                     "assigned GUA and ULA addresses. This list SHALL NOT include any multicast group addresses to which " +
+                                     "the Node is subscribed.",
                             xref: { document: "core", section: "11.11.4.6.7" },
                             children: [ { tag: "datatype", name: "entry", type: "ipv6adr" } ]
                         },
 
                         {
                             tag: "datatype", name: "Type", id: 0x7, type: "InterfaceTypeEnum", access: "R V", conformance: "M",
-                            details: "Type Field",
+                            details: "This field SHALL indicate the type of the interface using the InterfaceTypeEnum.",
                             xref: { document: "core", section: "11.11.4.6.8" }
                         }
                     ]
@@ -11490,24 +11584,19 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "core", section: "11.12.8.1" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M", default: 0,
-                            details: "ID Field",
-                            xref: { document: "core", section: "11.12.8.1.1" }
-                        },
-
+                        { tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M", default: 0 },
                         {
                             tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
-                            default: "empty",
-                            details: "Name Field",
-                            xref: { document: "core", section: "11.12.8.1.2" }
+                            default: "empty"
                         },
 
                         {
                             tag: "datatype", name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O",
                             constraint: "max 1024",
-                            details: "FaultRecording Field",
-                            xref: { document: "core", section: "11.12.8.1.3" }
+                            details: "The FaultRecording field SHALL be a manufacturer-specified payload intended to convey information " +
+                                     "to assist in further diagnosing or debugging a software fault. The FaultRecording field MAY be used " +
+                                     "to convey information such as, but not limited to, thread backtraces or register contents.",
+                            xref: { document: "core", section: "11.12.8.1.1" }
                         }
                     ]
                 },
@@ -11526,30 +11615,38 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M",
-                            details: "ID Field",
+                            details: "The Id field SHALL be a server-assigned per-thread unique ID that is constant for the duration of " +
+                                     "the thread. Efforts SHOULD be made to avoid reusing ID values when possible.",
                             xref: { document: "core", section: "11.12.5.1.1" }
                         },
 
                         {
                             tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
                             default: "empty",
-                            details: "Name Field",
+                            details: "The Name field SHALL be set to a vendor defined name or prefix of the software thread that is " +
+                                     "static for the duration of the thread.",
                             xref: { document: "core", section: "11.12.5.1.2" }
                         },
 
                         {
                             tag: "datatype", name: "StackFreeCurrent", id: 0x2, type: "uint32", conformance: "O",
-                            details: "StackFreeCurrent Field",
+                            details: "The StackFreeCurrent field SHALL indicate the current amount of stack memory, in bytes, that are " +
+                                     "not being utilized on the respective thread.",
                             xref: { document: "core", section: "11.12.5.1.3" }
                         },
+
                         {
                             tag: "datatype", name: "StackFreeMinimum", id: 0x3, type: "uint32", conformance: "O",
-                            details: "StackFreeMinimum Field",
+                            details: "The StackFreeMinimum field SHALL indicate the minimum amount of stack memory, in bytes, that has " +
+                                     "been available at any point between the current time and this attribute being reset or initialized " +
+                                     "on the respective thread. This value SHALL only be reset upon a Node reboot or upon receiving of " +
+                                     "the ResetWatermarks command.",
                             xref: { document: "core", section: "11.12.5.1.4" }
                         },
+
                         {
                             tag: "datatype", name: "StackSize", id: 0x4, type: "uint32", conformance: "O",
-                            details: "StackSize Field",
+                            details: "The StackSize field SHALL indicate the amount of stack memory, in bytes, that has been allocated",
                             xref: { document: "core", section: "11.12.5.1.5" }
                         }
                     ]
@@ -12169,14 +12266,16 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
-                            details: "Current Field",
+                            details: "This field SHALL represent the set of faults currently detected, as per Section 11.13.5.1, " +
+                                     "“NetworkFaultEnum”.",
                             xref: { document: "core", section: "11.13.8.1.1" },
                             children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
                         },
 
                         {
                             tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
-                            details: "Previous Field",
+                            details: "This field SHALL represent the set of faults detected prior to this change event, as per Section " +
+                                     "11.13.5.1, “NetworkFaultEnum”.",
                             xref: { document: "core", section: "11.13.8.1.2" },
                             children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
                         }
@@ -12236,81 +12335,101 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M",
-                            details: "ExtAddress Field",
+                            details: "This field SHALL specify the IEEE 802.15.4 extended address for the neighboring Node.",
                             xref: { document: "core", section: "11.13.5.4.1" }
                         },
+
                         {
                             tag: "datatype", name: "Age", id: 0x1, type: "uint32", conformance: "M",
-                            details: "Age Field",
+                            details: "This field SHALL specify the duration of time, in seconds, since a frame has been received from the " +
+                                     "neighboring Node.",
                             xref: { document: "core", section: "11.13.5.4.2" }
                         },
+
                         {
                             tag: "datatype", name: "Rloc16", id: 0x2, type: "uint16", conformance: "M",
-                            details: "Rloc16 Field",
+                            details: "This field SHALL specify the RLOC16 of the neighboring Node.",
                             xref: { document: "core", section: "11.13.5.4.3" }
                         },
+
                         {
                             tag: "datatype", name: "LinkFrameCounter", id: 0x3, type: "uint32", conformance: "M",
-                            details: "LinkFrameCounter Field",
+                            details: "This field SHALL specify the number of link layer frames that have been received from the " +
+                                     "neighboring node. This field SHALL be reset to 0 upon a reboot of the Node.",
                             xref: { document: "core", section: "11.13.5.4.4" }
                         },
+
                         {
                             tag: "datatype", name: "MleFrameCounter", id: 0x4, type: "uint32", conformance: "M",
-                            details: "MleFrameCounter Field",
+                            details: "This field SHALL specify the number of Mesh Link Establishment frames that have been received from " +
+                                     "the neighboring node. This field SHALL be reset to 0 upon a reboot of the Node.",
                             xref: { document: "core", section: "11.13.5.4.5" }
                         },
+
                         {
                             tag: "datatype", name: "Lqi", id: 0x5, type: "uint8", conformance: "M", constraint: "0 to 255",
-                            details: "LQI Field",
+                            details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
+                                     "indicators, scaled from 0 to 255.",
                             xref: { document: "core", section: "11.13.5.4.6" }
                         },
 
                         {
                             tag: "datatype", name: "AverageRssi", id: 0x6, type: "int8", conformance: "M",
                             constraint: "-128 to 0", default: null, quality: "X",
-                            details: "AverageRssi Field",
+                            details: "This field SHOULD specify the average RSSI across all received frames from the neighboring Node " +
+                                     "since the receiving Node’s last reboot. If there is no known received frames this field SHOULD have",
                             xref: { document: "core", section: "11.13.5.4.7" }
                         },
 
                         {
                             tag: "datatype", name: "LastRssi", id: 0x7, type: "int8", conformance: "M", constraint: "-128 to 0",
                             default: null, quality: "X",
-                            details: "LastRssi Field",
+                            details: "This field SHALL specify the RSSI of the most recently received frame from the neighboring Node. If " +
+                                     "there is no known last received frame the LastRssi field SHOULD have the value of null. This field " +
+                                     "SHALL have the units of dBm, having the range -128 dBm to 0 dBm.",
                             xref: { document: "core", section: "11.13.5.4.8" }
                         },
 
                         {
                             tag: "datatype", name: "FrameErrorRate", id: 0x8, type: "uint8", conformance: "O",
                             constraint: "0 to 100", default: 0,
-                            details: "FrameErrorRate Field",
+                            details: "This field SHALL specify the percentage of received frames from the neighboring Node that have " +
+                                     "resulted in errors.",
                             xref: { document: "core", section: "11.13.5.4.9" }
                         },
 
                         {
                             tag: "datatype", name: "MessageErrorRate", id: 0x9, type: "uint8", conformance: "O",
                             constraint: "0 to 100", default: 0,
-                            details: "MessageErrorRate Field",
+                            details: "This field SHALL specify the percentage of received messages from the neighboring Node that have " +
+                                     "resulted in errors.",
                             xref: { document: "core", section: "11.13.5.4.10" }
                         },
 
                         {
                             tag: "datatype", name: "RxOnWhenIdle", id: 0xa, type: "bool", conformance: "M",
-                            details: "RxOnWhenIdle Field",
+                            details: "This field SHALL specify if the neighboring Node is capable of receiving frames while the Node is " +
+                                     "in an idle state.",
                             xref: { document: "core", section: "11.13.5.4.11" }
                         },
+
                         {
                             tag: "datatype", name: "FullThreadDevice", id: 0xb, type: "bool", conformance: "M",
-                            details: "FullThreadDevice Field",
+                            details: "This field SHALL specify if the neighboring Node is a full Thread device.",
                             xref: { document: "core", section: "11.13.5.4.12" }
                         },
+
                         {
                             tag: "datatype", name: "FullNetworkData", id: 0xc, type: "bool", conformance: "M",
-                            details: "FullNetworkData Field",
+                            details: "This field SHALL specify if the neighboring Node requires the full Network Data. If set to False, " +
+                                     "the neighboring Node only requires the stable Network Data.",
                             xref: { document: "core", section: "11.13.5.4.13" }
                         },
+
                         {
                             tag: "datatype", name: "IsChild", id: 0xd, type: "bool", conformance: "M",
-                            details: "IsChild Field",
+                            details: "This field SHALL specify if the neighboring Node is a direct child of the Node reporting the " +
+                                     "NeighborTable attribute.",
                             xref: { document: "core", section: "11.13.5.4.14" }
                         }
                     ]
@@ -12318,58 +12437,60 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "RouteTableStruct", type: "struct",
+                    details: "This field SHALL specify the IEEE 802.15.4 extended address for the Node for which this route table " +
+                             "entry corresponds.",
                     xref: { document: "core", section: "11.13.5.5" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M",
-                            details: "ExtAddress Field",
-                            xref: { document: "core", section: "11.13.5.5.1" }
-                        },
-                        {
-                            tag: "datatype", name: "Rloc16", id: 0x1, type: "uint16", conformance: "M",
-                            details: "Rloc16 Field",
-                            xref: { document: "core", section: "11.13.5.5.2" }
-                        },
+                        { tag: "datatype", name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M" },
+                        { tag: "datatype", name: "Rloc16", id: 0x1, type: "uint16", conformance: "M" },
                         {
                             tag: "datatype", name: "RouterId", id: 0x2, type: "uint8", conformance: "M",
-                            details: "RouterId Field",
-                            xref: { document: "core", section: "11.13.5.5.3" }
+                            details: "This field SHALL specify the Router ID for the Node for which this route table entry corresponds.",
+                            xref: { document: "core", section: "11.13.5.5.1" }
                         },
+
                         {
                             tag: "datatype", name: "NextHop", id: 0x3, type: "uint8", conformance: "M",
-                            details: "NextHop Field",
-                            xref: { document: "core", section: "11.13.5.5.4" }
+                            details: "This field SHALL specify the Router ID for the next hop in the route to the Node for which this " +
+                                     "route table entry corresponds.",
+                            xref: { document: "core", section: "11.13.5.5.2" }
                         },
+
                         {
                             tag: "datatype", name: "PathCost", id: 0x4, type: "uint8", conformance: "M",
-                            details: "PathCost Field",
-                            xref: { document: "core", section: "11.13.5.5.5" }
+                            details: "This Field SHALL specify the cost of the route to the Node for which this route table entry " +
+                                     "corresponds.",
+                            xref: { document: "core", section: "11.13.5.5.3" }
                         },
+
                         {
                             tag: "datatype", name: "LqiIn", id: 0x5, type: "uint8", conformance: "M",
-                            details: "LQIIn Field",
-                            xref: { document: "core", section: "11.13.5.5.6" }
+                            details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
+                                     "indicators, scaled from 0 to 255, from the perspective of the Node reporting the neighbor table.",
+                            xref: { document: "core", section: "11.13.5.5.4" }
                         },
+
                         {
                             tag: "datatype", name: "LqiOut", id: 0x6, type: "uint8", conformance: "M",
-                            details: "LQIOut Field",
-                            xref: { document: "core", section: "11.13.5.5.7" }
+                            details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
+                                     "indicators, scaled from 0 to 255, from the perspective of the Node specified within the NextHop " +
+                                     "field.",
+                            xref: { document: "core", section: "11.13.5.5.5" }
                         },
-                        {
-                            tag: "datatype", name: "Age", id: 0x7, type: "uint8", conformance: "M",
-                            details: "Age Field",
-                            xref: { document: "core", section: "11.13.5.5.8" }
-                        },
+
+                        { tag: "datatype", name: "Age", id: 0x7, type: "uint8", conformance: "M" },
                         {
                             tag: "datatype", name: "Allocated", id: 0x8, type: "bool", conformance: "M",
-                            details: "Allocated Field",
-                            xref: { document: "core", section: "11.13.5.5.9" }
+                            details: "This field SHALL specify if the router ID as defined within the RouterId field has been allocated.",
+                            xref: { document: "core", section: "11.13.5.5.6" }
                         },
+
                         {
                             tag: "datatype", name: "LinkEstablished", id: 0x9, type: "bool", conformance: "M",
-                            details: "LinkEstablished Field",
-                            xref: { document: "core", section: "11.13.5.5.10" }
+                            details: "This field SHALL specify if a link has been established to the Node for which this route table " +
+                                     "entry corresponds.",
+                            xref: { document: "core", section: "11.13.5.5.7" }
                         }
                     ]
                 },
@@ -12381,12 +12502,15 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "RotationTime", id: 0x0, type: "uint16", conformance: "M",
-                            details: "RotationTime Field",
+                            details: "This field SHALL specify the interval of time, in hours, that Thread security keys are rotated. " +
+                                     "This attribute SHALL be null when there is no dataset configured.",
                             xref: { document: "core", section: "11.13.5.6.1" }
                         },
+
                         {
                             tag: "datatype", name: "Flags", id: 0x1, type: "uint16", conformance: "M",
-                            details: "Flags Field",
+                            details: "This field SHALL specify the flags as specified in Thread 1.3.0 section 8.10.1.15. This attribute " +
+                                     "SHALL be null when there is no dataset configured.",
                             xref: { document: "core", section: "11.13.5.6.2" }
                         }
                     ]
@@ -12399,62 +12523,68 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "ActiveTimestampPresent", id: 0x0, type: "bool", conformance: "M",
-                            details: "ActiveTimestampPresent Field",
+                            details: "This field SHALL be True if the Node has an active timestamp present, else False.",
                             xref: { document: "core", section: "11.13.5.7.1" }
                         },
                         {
                             tag: "datatype", name: "PendingTimestampPresent", id: 0x1, type: "bool", conformance: "M",
-                            details: "PendingTimestampPresent Field",
+                            details: "This field SHALL be True if the Node has a pending timestamp is present, else False.",
                             xref: { document: "core", section: "11.13.5.7.2" }
                         },
                         {
                             tag: "datatype", name: "MasterKeyPresent", id: 0x2, type: "bool", conformance: "M",
-                            details: "MasterKeyPresent Field",
+                            details: "This field SHALL be True if the Node has the Thread master key, else False.",
                             xref: { document: "core", section: "11.13.5.7.3" }
                         },
                         {
                             tag: "datatype", name: "NetworkNamePresent", id: 0x3, type: "bool", conformance: "M",
-                            details: "NetworkNamePresent Field",
+                            details: "This field SHALL be True if the Node has the Thread network’s name, else False.",
                             xref: { document: "core", section: "11.13.5.7.4" }
                         },
                         {
                             tag: "datatype", name: "ExtendedPanIdPresent", id: 0x4, type: "bool", conformance: "M",
-                            details: "ExtendedPanIdPresent Field",
+                            details: "This field SHALL be True if the Node has an extended Pan ID, else False.",
                             xref: { document: "core", section: "11.13.5.7.5" }
                         },
                         {
                             tag: "datatype", name: "MeshLocalPrefixPresent", id: 0x5, type: "bool", conformance: "M",
-                            details: "MeshLocalPrefixPresent Field",
+                            details: "This field SHALL be True if the Node has the mesh local prefix, else False.",
                             xref: { document: "core", section: "11.13.5.7.6" }
                         },
                         {
                             tag: "datatype", name: "DelayPresent", id: 0x6, type: "bool", conformance: "M",
-                            details: "DelayPresent Field",
+                            details: "This field SHALL be True if the Node has the Thread network delay set, else False.",
                             xref: { document: "core", section: "11.13.5.7.7" }
                         },
                         {
                             tag: "datatype", name: "PanIdPresent", id: 0x7, type: "bool", conformance: "M",
-                            details: "PanIdPresent Field",
+                            details: "This field SHALL be True if the Node has a Pan ID, else False.",
                             xref: { document: "core", section: "11.13.5.7.8" }
                         },
+
                         {
                             tag: "datatype", name: "ChannelPresent", id: 0x8, type: "bool", conformance: "M",
-                            details: "ChannelPresent Field",
+                            details: "This field SHALL be True if the Node has configured an operational channel for the Thread network, " +
+                                     "else False.",
                             xref: { document: "core", section: "11.13.5.7.9" }
                         },
+
                         {
                             tag: "datatype", name: "PskcPresent", id: 0x9, type: "bool", conformance: "M",
-                            details: "PskcPresent Field",
+                            details: "This field SHALL be True if the Node has been configured with the Thread network Pskc, else False.",
                             xref: { document: "core", section: "11.13.5.7.10" }
                         },
+
                         {
                             tag: "datatype", name: "SecurityPolicyPresent", id: 0xa, type: "bool", conformance: "M",
-                            details: "SecurityPolicyPresent Field",
+                            details: "This field SHALL be True if the Node has been configured with the Thread network security policies, " +
+                                     "else False.",
                             xref: { document: "core", section: "11.13.5.7.11" }
                         },
+
                         {
                             tag: "datatype", name: "ChannelMaskPresent", id: 0xb, type: "bool", conformance: "M",
-                            details: "ChannelMaskPresent Field",
+                            details: "This field SHALL be True if the Node has available a mask of available channels, else False.",
                             xref: { document: "core", section: "11.13.5.7.12" }
                         }
                     ]
@@ -12598,7 +12728,9 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M",
-                            details: "ReasonCode Field",
+                            details: "This field SHALL contain the Reason Code field value for the Disassociation or Deauthentication " +
+                                     "event that caused the disconnection and the value SHALL align with Table 9-49 \"Reason codes\" of " +
+                                     "IEEE 802.11-2020.",
                             xref: { document: "core", section: "11.14.8.1.1" }
                         }
                     ]
@@ -12615,13 +12747,15 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "AssociationFailureCause", id: 0x0, type: "AssociationFailureCauseEnum",
                             conformance: "M",
-                            details: "AssociationFailureCause Field",
+                            details: "The Status field SHALL be set to a value from the AssociationFailureCauseEnum.",
                             xref: { document: "core", section: "11.14.8.2.1" }
                         },
 
                         {
                             tag: "datatype", name: "Status", id: 0x1, type: "uint16", conformance: "M",
-                            details: "Status Field",
+                            details: "The Status field SHALL be set to the Status Code value that was present in the last frame related " +
+                                     "to association where Status Code was not equal to zero and which caused the failure of a last trial " +
+                                     "attempt, if this last failure was due to one of the following Management frames:",
                             xref: { document: "core", section: "11.14.8.2.2" }
                         }
                     ]
@@ -12963,18 +13097,9 @@ export const SpecMatter: MatterElement = {
                     details: "This event SHALL be generated when the server changes its time zone offset or name. It SHALL NOT be " +
                              "sent for DST changes that are not accompanied by a time zone change.",
                     xref: { document: "core", section: "11.16.10.3" },
-
                     children: [
-                        {
-                            tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M",
-                            details: "Offset Field",
-                            xref: { document: "core", section: "11.16.10.3.1" }
-                        },
-                        {
-                            tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O",
-                            details: "Name Field",
-                            xref: { document: "core", section: "11.16.10.3.2" }
-                        }
+                        { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M" },
+                        { tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O" }
                     ]
                 },
 
@@ -12987,20 +13112,21 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", default: 0,
-                            details: "UtcTime Field",
+                            details: "This SHALL give the Client’s UTC Time.",
                             xref: { document: "core", section: "11.16.9.1.1" }
                         },
 
                         {
                             tag: "datatype", name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M",
                             default: 0,
-                            details: "Granularity Field",
+                            details: "This SHALL give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity " +
+                                     "Attribute”.",
                             xref: { document: "core", section: "11.16.9.1.2" }
                         },
 
                         {
                             tag: "datatype", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: 0,
-                            details: "TimeSource Field",
+                            details: "This SHALL give the Client’s TimeSource, as described in Section 11.16.8.3, “TimeSource Attribute”.",
                             xref: { document: "core", section: "11.16.9.1.3" }
                         }
                     ]
@@ -13116,17 +13242,19 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M",
-                            details: "Offset Field",
+                            details: "The time zone offset from UTC in seconds.",
                             xref: { document: "core", section: "11.16.6.3.1" }
                         },
                         {
                             tag: "datatype", name: "ValidAt", id: 0x1, type: "epoch-us", conformance: "M",
-                            details: "ValidAt Field",
+                            details: "The UTC time when the offset SHALL be applied.",
                             xref: { document: "core", section: "11.16.6.3.2" }
                         },
+
                         {
                             tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "O", constraint: "0 to 64",
-                            details: "Name Field",
+                            details: "The time zone name SHOULD provide a human-readable time zone name and it SHOULD use the " +
+                                     "country/city format specified by the IANA time zone database [https://www.iana.org/time-zones].",
                             xref: { document: "core", section: "11.16.6.3.3" }
                         }
                     ]
@@ -13134,23 +13262,24 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "DSTOffsetStruct", type: "struct",
+                    details: "The DST offset in seconds. Normally this is in the range of 0 to 3600 seconds (1 hour), but this " +
+                             "field will accept any values in the int32 range to accommodate potential future legislation that " +
+                             "does not fit with these assumptions.",
                     xref: { document: "core", section: "11.16.6.4" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc",
-                            details: "Offset Field",
-                            xref: { document: "core", section: "11.16.6.4.1" }
-                        },
+                        { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc" },
                         {
                             tag: "datatype", name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M",
-                            details: "ValidStarting Field",
-                            xref: { document: "core", section: "11.16.6.4.2" }
+                            details: "The UTC time when the offset SHALL be applied.",
+                            xref: { document: "core", section: "11.16.6.4.1" }
                         },
+
                         {
                             tag: "datatype", name: "ValidUntil", id: 0x2, type: "epoch-us", conformance: "M",
-                            details: "ValidUntil Field",
-                            xref: { document: "core", section: "11.16.6.4.3" }
+                            details: "The UTC time when the offset SHALL stop being applied. This value SHALL be larger than the " +
+                                     "ValidStarting time.",
+                            xref: { document: "core", section: "11.16.6.4.2" }
                         }
                     ]
                 }
@@ -13235,14 +13364,15 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "AttestationElements", id: 0x0, type: "octstr", conformance: "M",
                             constraint: "max RespMax",
-                            details: "AttestationElements Field",
+                            details: "This field SHALL contain the octet string of the serialized attestation_elements_message.",
                             xref: { document: "core", section: "11.17.6.2.1" }
                         },
 
                         {
                             tag: "datatype", name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M",
                             constraint: "64",
-                            details: "AttestationSignature Field",
+                            details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
+                                     "Section 11.17.4.7, “Attestation Information”.",
                             xref: { document: "core", section: "11.17.6.2.2" }
                         }
                     ]
@@ -13272,7 +13402,8 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Certificate", id: 0x0, type: "octstr", conformance: "M",
                             constraint: "max 600",
-                            details: "Certificate Field",
+                            details: "This field SHALL be the DER encoded certificate corresponding to the CertificateType field in the " +
+                                     "CertificateChainRequest command.",
                             xref: { document: "core", section: "11.17.6.4.1" }
                         }
                     ]
@@ -13299,15 +13430,13 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "NocsrElements", id: 0x0, type: "octstr", conformance: "M",
                             constraint: "max RespMax",
-                            details: "NOCSRElements Field",
+                            details: "This field SHALL contain the octet string of the serialized nocsr_elements_message.",
                             xref: { document: "core", section: "11.17.6.6.1" }
                         },
 
                         {
                             tag: "datatype", name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M",
-                            constraint: "64",
-                            details: "AttestationSignature Field",
-                            xref: { document: "core", section: "11.17.6.6.2" }
+                            constraint: "64"
                         }
                     ]
                 },
@@ -13325,17 +13454,27 @@ export const SpecMatter: MatterElement = {
                             tag: "datatype", name: "IcacValue", id: 0x1, type: "octstr", conformance: "O",
                             constraint: "max 400"
                         },
+
                         {
                             tag: "datatype", name: "IpkValue", id: 0x2, type: "octstr", conformance: "M", constraint: "16",
-                            details: "IPKValue Field",
+                            details: "This field SHALL contain the value of the Epoch Key for the Identity Protection Key (IPK) to set " +
+                                     "for the Fabric which is to be added. This is needed to bootstrap a necessary configuration value " +
+                                     "for subsequent CASE to succeed. See Section 4.13.2.6.1, “Identity Protection Key (IPK)” for details.",
                             xref: { document: "core", section: "11.17.6.8.1" }
                         },
+
                         {
                             tag: "datatype", name: "CaseAdminSubject", id: 0x3, type: "SubjectID", conformance: "M",
-                            details: "CaseAdminSubject Field",
+                            details: "If the AddNOC command succeeds according to the semantics of the following subsections, then the",
                             xref: { document: "core", section: "11.17.6.8.2" }
                         },
-                        { tag: "datatype", name: "AdminVendorId", id: 0x4, type: "vendor-id", conformance: "M" }
+
+                        {
+                            tag: "datatype", name: "AdminVendorId", id: 0x4, type: "vendor-id", conformance: "M",
+                            details: "This field SHALL be set to the Vendor ID of the entity issuing the AddNOC command. This value SHALL " +
+                                     "NOT be one of the reserved Vendor ID values defined in Table 1, “Vendor ID Allocations”.",
+                            xref: { document: "core", section: "11.17.6.8.3" }
+                        }
                     ]
                 },
 
@@ -13368,21 +13507,24 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "StatusCode", id: 0x0, type: "NodeOperationalCertStatusEnum",
                             conformance: "M",
-                            details: "StatusCode Field",
+                            details: "This field SHALL contain an NOCStatus value representing the status of an operation involving a NOC.",
                             xref: { document: "core", section: "11.17.6.10.1" }
                         },
 
                         {
                             tag: "datatype", name: "FabricIndex", id: 0x1, type: "fabric-idx", conformance: "O",
                             constraint: "1 to 254",
-                            details: "FabricIndex Field",
+                            details: "This field SHALL be present whenever StatusCode has a value of OK. If present, it SHALL contain the " +
+                                     "Fabric Index of the Fabric last added, removed or updated.",
                             xref: { document: "core", section: "11.17.6.10.2" }
                         },
 
                         {
                             tag: "datatype", name: "DebugText", id: 0x2, type: "string", conformance: "O",
                             constraint: "max 128",
-                            details: "DebugText Field",
+                            details: "This field MAY contain debugging textual information from the cluster implementation, which SHOULD " +
+                                     "NOT be presented to user interfaces in any way. Its purpose is to help developers in " +
+                                     "troubleshooting errors and the contents MAY go into logs or crash reports.",
                             xref: { document: "core", section: "11.17.6.10.3" }
                         }
                     ]
@@ -13398,9 +13540,7 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "Label", id: 0x0, type: "string", access: "F", conformance: "M",
-                            constraint: "max 32",
-                            details: "Label Field",
-                            xref: { document: "core", section: "11.17.6.11.1" }
+                            constraint: "max 32"
                         }
                     ]
                 },
@@ -13415,9 +13555,7 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M",
-                            constraint: "1 to 254",
-                            details: "FabricIndex Field",
-                            xref: { document: "core", section: "11.17.6.12.1" }
+                            constraint: "1 to 254"
                         }
                     ]
                 },
@@ -13477,14 +13615,16 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "Noc", id: 0x1, type: "octstr", access: "S", conformance: "M",
                             constraint: "max 400",
-                            details: "NOC Field",
+                            details: "This field SHALL contain the NOC for the struct’s associated fabric, encoded using Matter " +
+                                     "Certificate Encoding.",
                             xref: { document: "core", section: "11.17.4.4.1" }
                         },
 
                         {
                             tag: "datatype", name: "Icac", id: 0x2, type: "octstr", access: "S", conformance: "M",
                             constraint: "max 400", quality: "X",
-                            details: "ICAC Field",
+                            details: "This field SHALL contain the ICAC or the struct’s associated fabric, encoded using Matter " +
+                                     "Certificate Encoding. If no ICAC is present in the chain, this field SHALL be set to null.",
                             xref: { document: "core", section: "11.17.4.4.2" }
                         }
                     ]
@@ -13500,32 +13640,42 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "RootPublicKey", id: 0x1, type: "octstr", access: "F", conformance: "M",
                             constraint: "65",
-                            details: "RootPublicKey Field",
+                            details: "This field SHALL contain the public key for the trusted root that scopes the fabric referenced by " +
+                                     "FabricIndex and its associated operational credential (see Section 6.4.5.3, “Trusted Root CA " +
+                                     "Certificates”). The format for the key shall be the same as that used in the ec-pub-key field of " +
+                                     "the Matter Certificate Encoding for the root in the operational certificate chain.",
                             xref: { document: "core", section: "11.17.4.5.1" }
                         },
 
                         {
                             tag: "datatype", name: "VendorId", id: 0x2, type: "vendor-id", access: "F", conformance: "M",
                             constraint: "desc",
-                            details: "VendorID Field",
+                            details: "This field SHALL contain the value of AdminVendorID provided in the AddNOC command that led to the " +
+                                     "creation of this FabricDescriptorStruct. The set of allowed values is defined in Section " +
+                                     "11.17.6.8.3, “AdminVendorID Field”.",
                             xref: { document: "core", section: "11.17.4.5.2" }
                         },
 
                         {
                             tag: "datatype", name: "FabricId", id: 0x3, type: "fabric-id", access: "F", conformance: "M",
-                            details: "FabricID Field",
+                            details: "This field SHALL contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
+                                     "SHALL match the value found in the matter-fabric-id field from the operational certificate provid",
                             xref: { document: "core", section: "11.17.4.5.3" }
                         },
+
                         {
                             tag: "datatype", name: "NodeId", id: 0x4, type: "node-id", access: "F", conformance: "M",
-                            details: "NodeID Field",
+                            details: "This field SHALL contain the NodeID in use within the fabric referenced by FabricIndex. This field " +
+                                     "SHALL match the value found in the matter-node-id field from the operational certificate providing " +
+                                     "this operational identity.",
                             xref: { document: "core", section: "11.17.4.5.4" }
                         },
 
                         {
                             tag: "datatype", name: "Label", id: 0x5, type: "string", access: "F", conformance: "M",
                             constraint: "max 32", default: "",
-                            details: "Label Field",
+                            details: "This field SHALL contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
+                                     "label is set by the UpdateFabricLabel command.",
                             xref: { document: "core", section: "11.17.4.5.5" }
                         }
                     ]
@@ -13645,15 +13795,12 @@ export const SpecMatter: MatterElement = {
                 {
                     tag: "command", name: "QueryImage", id: 0x0, conformance: "M", direction: "request",
                     response: "QueryImageResponse",
-                    details: "QueryImage Command",
+                    details: "Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA " +
+                             "Provider to match the OTA Requestor’s constraints provided in the payload fields.",
                     xref: { document: "core", section: "11.19.6.5.1" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M",
-                            details: "VendorID Field",
-                            xref: { document: "core", section: "11.19.6.5.1.1" }
-                        },
+                        { tag: "datatype", name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M" },
                         { tag: "datatype", name: "ProductId", id: 0x1, type: "uint16", conformance: "M" },
                         { tag: "datatype", name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M" },
                         {
@@ -13676,26 +13823,73 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "command", name: "QueryImageResponse", id: 0x1, conformance: "M", direction: "response",
-                    xref: { document: "core", section: "11.19.6.5" }
+                    details: "< Previous | Contents | Next >",
+                    xref: { document: "core", section: "11.19.6.5.10" },
+
+                    children: [
+                        { tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" },
+                        { tag: "datatype", name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O" },
+                        { tag: "datatype", name: "ImageUri", id: 0x2, type: "string", conformance: "O", constraint: "max 256" },
+                        { tag: "datatype", name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O" },
+                        {
+                            tag: "datatype", name: "SoftwareVersionString", id: 0x4, type: "string", conformance: "O",
+                            constraint: "1 to 64"
+                        },
+                        {
+                            tag: "datatype", name: "UpdateToken", id: 0x5, type: "octstr", conformance: "O",
+                            constraint: "8 to 32"
+                        },
+                        { tag: "datatype", name: "UserConsentNeeded", id: 0x6, type: "bool", conformance: "O", default: true },
+                        {
+                            tag: "datatype", name: "MetadataForRequestor", id: 0x7, type: "octstr", conformance: "O",
+                            constraint: "max 512"
+                        }
+                    ]
                 },
+
                 {
                     tag: "command", name: "ApplyUpdateRequest", id: 0x2, conformance: "M", direction: "request",
                     response: "ApplyUpdateResponse",
-                    xref: { document: "core", section: "11.19.6.5" }
+                    details: "< Previous | Contents | Next >",
+                    xref: { document: "core", section: "11.19.6.5.18" },
+
+                    children: [
+                        {
+                            tag: "datatype", name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M",
+                            constraint: "8 to 32"
+                        },
+                        { tag: "datatype", name: "NewVersion", id: 0x1, type: "uint32", conformance: "M" }
+                    ]
                 },
+
                 {
                     tag: "command", name: "ApplyUpdateResponse", id: 0x3, conformance: "M", direction: "response",
-                    xref: { document: "core", section: "11.19.6.5" }
+                    details: "< Previous | Contents | Next >",
+                    xref: { document: "core", section: "11.19.6.5.20" },
+                    children: [
+                        { tag: "datatype", name: "Action", id: 0x0, type: "ApplyUpdateActionEnum", conformance: "M" },
+                        { tag: "datatype", name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "M" }
+                    ]
                 },
+
                 {
                     tag: "command", name: "NotifyUpdateApplied", id: 0x4, conformance: "M", direction: "request",
                     response: "status",
-                    xref: { document: "core", section: "11.19.6.5" }
+                    details: "< Previous | Contents | Next >",
+                    xref: { document: "core", section: "11.19.6.5.22" },
+
+                    children: [
+                        {
+                            tag: "datatype", name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M",
+                            constraint: "8 to 32"
+                        },
+                        { tag: "datatype", name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M" }
+                    ]
                 },
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "StatusEnum",
+                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.19.6.4.1" },
 
                     children: [
@@ -13708,7 +13902,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ApplyUpdateActionEnum", type: "enum8",
-                    details: "ApplyUpdateActionEnum",
+                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.19.6.4.2" },
                     children: [
                         { tag: "datatype", name: "Proceed", id: 0x0, conformance: "M" },
@@ -13719,7 +13913,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "DownloadProtocolEnum", type: "enum8",
-                    details: "DownloadProtocolEnum",
+                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.19.6.4.3" },
 
                     children: [
@@ -13740,7 +13934,9 @@ export const SpecMatter: MatterElement = {
                 {
                     tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW F VA",
                     conformance: "M", constraint: "desc", default: [],
-                    details: "DefaultOTAProviders Attribute",
+                    details: "This field is a list of ProviderLocationStruct whose entries SHALL be set by Administrators, either " +
+                             "during Commissioning or at a later time, to set the Provider Location for the default OTA Provider " +
+                             "Node to use for software updates on a given Fabric.",
                     xref: { document: "core", section: "11.19.7.5.1" },
                     children: [ { tag: "datatype", name: "entry", type: "ProviderLocationStruct" } ]
                 },
@@ -13748,37 +13944,40 @@ export const SpecMatter: MatterElement = {
                 {
                     tag: "attribute", name: "UpdatePossible", id: 0x1, type: "bool", access: "R V", conformance: "M",
                     default: true,
-                    details: "UpdatePossible Attribute",
+                    details: "This field SHALL be set to True if the OTA Requestor is currently able to be updated. Otherwise, it " +
+                             "SHALL be set to False in case of any condition preventing update being possible, such as " +
+                             "insufficient capacity of an internal battery. This field is merely informational for diagnostics " +
+                             "purposes and SHALL NOT affect the responses provided by an OTA Provider to an OTA Requestor.",
                     xref: { document: "core", section: "11.19.7.5.2" }
                 },
 
                 {
                     tag: "attribute", name: "UpdateState", id: 0x2, type: "UpdateStateEnum", access: "R V",
-                    conformance: "M", default: "Unknown",
-                    details: "UpdateState Attribute",
+                    conformance: "M", default: 0,
+                    details: "This field SHALL reflect the current state of the OTA Requestor with regards to obtaining software " +
+                             "updates. See Section 11.19.7.4.2, “UpdateStateEnum” for possible values.",
                     xref: { document: "core", section: "11.19.7.5.3" }
                 },
 
                 {
                     tag: "attribute", name: "UpdateStateProgress", id: 0x3, type: "uint8", access: "R V",
                     conformance: "M", constraint: "0 to 100", default: null, quality: "X",
-                    details: "UpdateStateProgress Attribute",
+                    details: "This field SHALL reflect the percentage value of progress, relative to the current UpdateState, if " +
+                             "applicable to the state.",
                     xref: { document: "core", section: "11.19.7.5.4" }
                 },
 
                 {
                     tag: "event", name: "StateTransition", id: 0x0, access: "V", conformance: "M", priority: "info",
-                    details: "StateTransition Event",
+                    details: "This event SHALL be generated when a change of the UpdateState attribute occurs due to an OTA " +
+                             "Requestor moving through the states necessary to query for updates.",
                     xref: { document: "core", section: "11.19.7.7.1" },
 
                     children: [
                         {
                             tag: "datatype", name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M",
-                            default: "Unknown",
-                            details: "PreviousState Field",
-                            xref: { document: "core", section: "11.19.7.7.1.1" }
+                            default: 0
                         },
-
                         { tag: "datatype", name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M" },
                         { tag: "datatype", name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M" },
                         {
@@ -13790,25 +13989,43 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "event", name: "VersionApplied", id: 0x1, access: "V", conformance: "M", priority: "critical",
-                    xref: { document: "core", section: "11.19.7.7" }
+                    details: "This event SHALL be generated whenever a new version starts executing after being applied due to a " +
+                             "software update. This event SHOULD be generated even if a software update was done using means " +
+                             "outside of this cluster.",
+                    xref: { document: "core", section: "11.19.7.7.6" },
+                    children: [
+                        { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" },
+                        { tag: "datatype", name: "ProductId", id: 0x1, type: "uint16", conformance: "M" }
+                    ]
                 },
+
                 {
                     tag: "event", name: "DownloadError", id: 0x2, access: "V", conformance: "M", priority: "info",
-                    xref: { document: "core", section: "11.19.7.7" }
+                    details: "This event SHALL be generated whenever an error occurs during OTA Requestor download operation.",
+                    xref: { document: "core", section: "11.19.7.7.9" },
+
+                    children: [
+                        { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" },
+                        { tag: "datatype", name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M" },
+                        {
+                            tag: "datatype", name: "ProgressPercent", id: 0x2, type: "uint8", conformance: "M",
+                            constraint: "0 to 100", default: null, quality: "X"
+                        },
+                        {
+                            tag: "datatype", name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", default: null,
+                            quality: "X"
+                        }
+                    ]
                 },
 
                 {
                     tag: "command", name: "AnnounceOtaProvider", id: 0x0, access: "A", conformance: "O",
                     direction: "request", response: "status",
-                    details: "AnnounceOTAProvider Command",
+                    details: "This command MAY be invoked by Administrators to announce the presence of a particular OTA Provider.",
                     xref: { document: "core", section: "11.19.7.6.1" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M",
-                            details: "ProviderNodeID Field",
-                            xref: { document: "core", section: "11.19.7.6.1.1" }
-                        },
+                        { tag: "datatype", name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M" },
                         { tag: "datatype", name: "VendorId", id: 0x1, type: "vendor-id", access: "F", conformance: "M" },
                         {
                             tag: "datatype", name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", access: "F",
@@ -13824,12 +14041,54 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "AnnouncementReasonEnum", type: "enum8",
-                    details: "AnnouncementReasonEnum",
+                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.19.7.4.1" },
                     children: [
                         { tag: "datatype", name: "SimpleAnnouncement", id: 0x0, conformance: "M" },
                         { tag: "datatype", name: "UpdateAvailable", id: 0x1, conformance: "M" },
                         { tag: "datatype", name: "UrgentUpdateAvailable", id: 0x2, conformance: "M" }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "UpdateStateEnum", type: "enum8",
+                    details: "This data type is derived from enum8.",
+                    xref: { document: "core", section: "11.19.7.4.5" },
+
+                    children: [
+                        { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
+                        { tag: "datatype", name: "Idle", id: 0x1, conformance: "M" },
+                        { tag: "datatype", name: "Querying", id: 0x2, conformance: "M" },
+                        { tag: "datatype", name: "DelayedOnQuery", id: 0x3, conformance: "M" },
+                        { tag: "datatype", name: "Downloading", id: 0x4, conformance: "M" },
+                        { tag: "datatype", name: "Applying", id: 0x5, conformance: "M" },
+                        { tag: "datatype", name: "DelayedOnApply", id: 0x6, conformance: "M" },
+                        { tag: "datatype", name: "RollingBack", id: 0x7, conformance: "M" },
+                        { tag: "datatype", name: "DelayedOnUserConsent", id: 0x8, conformance: "M" }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "ChangeReasonEnum", type: "enum8",
+                    details: "The ChangeReasonEnum Data Type is derived from enum8.",
+                    xref: { document: "core", section: "11.19.7.4.15" },
+
+                    children: [
+                        { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
+                        { tag: "datatype", name: "Success", id: 0x1, conformance: "M" },
+                        { tag: "datatype", name: "Failure", id: 0x2, conformance: "M" },
+                        { tag: "datatype", name: "TimeOut", id: 0x3, conformance: "M" },
+                        { tag: "datatype", name: "DelayByProvider", id: 0x4, conformance: "O" }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "ProviderLocationStruct", type: "struct",
+                    details: "This structure encodes a fabric-scoped location of an OTA provider on a given fabric.",
+                    xref: { document: "core", section: "11.19.7.4.20" },
+                    children: [
+                        { tag: "datatype", name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M" },
+                        { tag: "datatype", name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M" }
                     ]
                 }
             ]
