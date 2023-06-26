@@ -15,7 +15,7 @@ import { clean } from "./util/file.js";
 import { generateElement } from "./mom/common/generate-element.js";
 import { SpecMatter, ChipMatter, LocalMatter } from "../models/index.js";
 
-export const MODEL_PATH = "src/model/instance/elements";
+export const MODEL_PATH = "src/model/standard/elements";
 export const CLUSTER_SUFFIX = "Element";
 
 const logger = Logger.get("generate-model");

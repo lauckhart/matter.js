@@ -250,6 +250,12 @@ function installPreciseDetails(
         if (detail) {
             r.xref = detail.xref;
             detail.firstParagraph && (r.details = Str(detail.firstParagraph));
+
+            if (r.details?.indexOf("SHALL indicate the of the") != -1) {
+                // Goofballs copy & pasted this typo a couple times
+                r.details = r.details!.replace("the of the", "the status of the");
+            }
+
             if (childTranslator) {
                 r.children = childTranslator(tag, r, detail);
             }

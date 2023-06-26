@@ -6,7 +6,7 @@
 
 import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
 import { ElementTag, Metatype } from "../definitions/index.js";
-import { AnyElement, ValueElement, DatatypeElement } from "../elements/index.js";
+import { AnyElement, ValueElement, DatatypeElement, Globals } from "../elements/index.js";
 import { Model } from "./Model.js";
 
 // These are circular dependencies so just to be safe we only import the
@@ -93,6 +93,15 @@ export abstract class ValueModel extends Model implements ValueElement {
         const metaBase = this.metabase;
         if (metaBase) {
             return metaBase.metatype;
+        }
+    }
+
+    /**
+     * The metatype for this model's type, ignoring inheritance.
+     */
+    get directMetatype() {
+        if (this.type) {
+            return (Globals as any)[this.type]?.metatype as Metatype;
         }
     }
 
