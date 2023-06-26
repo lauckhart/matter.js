@@ -7,7 +7,7 @@
 import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
-import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
+import { ClusterReference, HtmlReference } from "./spec-types.js";
 import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children, Bit, LimitedIdentifier } from "./translate-table.js";
 
 const logger = Logger.get("translate-cluster");
@@ -521,7 +521,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         });
     }
     
-    function translateDatatype(definition: DetailedReference) {
+    function translateDatatype(definition: HtmlReference) {
         let name = definition.name;
         const text = definition.firstParagraph?.textContent;
         if (!text) {

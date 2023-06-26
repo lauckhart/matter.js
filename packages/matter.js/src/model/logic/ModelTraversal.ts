@@ -18,8 +18,9 @@ const OPERATION_DEPTH_LIMIT = 20;
  * Any logic that requires traversal of a multi-model ownership or inheritance
  * should use this class.
  * 
- * Note that we don't currently utilize any kind of index.  Not currently a
- * problem but may need to address if it becomes too inefficient.
+ * Note that we don't currently utilize any kind of index when we perform
+ * search.  Not currently a problem but may need to address if it becomes too
+ * inefficient.
  */
 export class ModelTraversal {
     private operationDepth = 0;
@@ -142,6 +143,21 @@ export class ModelTraversal {
                 return this.findType(model.parent, type, model.allowedBaseTags);
             }
         });
+    }
+
+    /**
+     * Find an xref from this model or a parent.
+     */
+    findXref(model: Model | undefined): Model.CrossReference | undefined {
+        return this.operationWithDismissal(model, () => {
+            if (!model) {
+                return;
+            }
+            if (model.xref) {
+                return model.xref;
+            }
+            return this.findXref(model.parent);
+        })
     }
 
     /**

@@ -20,11 +20,19 @@ export class ModelValidator<T extends Model> {
         this.validateProperty({ name: "details", type: "string" });
         this.validateProperty({ name: "children", type: Array });
         this.validateProperty({ name: "type", type: "string" });
+        this.validateProperty({ name: "xref", type: Model.CrossReference });
 
         if (this.model.type) {
             const base = this.model.base;
             if (base == undefined) {
                 this.error("TYPE_UNKNOWN", `Type ${this.model.type} does not resolve`);
+            }
+        }
+
+        if (this.model.xref) {
+            const parentXref = this.model.parent?.effectiveXref;
+            if (parentXref && this.model.xref == parentXref) {
+                delete this.model.xref;
             }
         }
 

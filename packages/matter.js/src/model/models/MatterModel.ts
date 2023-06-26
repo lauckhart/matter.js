@@ -5,7 +5,7 @@
  */
 
 import { Globals, MatterElement } from "../elements/index.js";
-import { Matter } from "../instance/index.js";
+import { Matter } from "../standard/index.js";
 import { AttributeModel } from "./AttributeModel.js";
 import { ClusterModel } from "./ClusterModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";

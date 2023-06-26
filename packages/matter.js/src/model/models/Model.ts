@@ -202,6 +202,13 @@ export abstract class Model {
     }
 
     /**
+     * A local or parent xref.
+     */
+    get effectiveXref() {
+        return new ModelTraversal().findXref(this);
+    }
+
+    /**
      * The set of tags from which this model may derive.
      */
     get allowedBaseTags() {
@@ -274,7 +281,7 @@ export abstract class Model {
             code,
             source: this.path,
             message,
-            xref: this.xref?.toString()
+            xref: this.effectiveXref?.toString()
         })
     }
 
@@ -338,7 +345,7 @@ export abstract class Model {
             }
         }
         if (this.xref) {
-            this.xref = new Model.CrossReference(this.xref);
+            this.xref = Model.CrossReference.get(this.xref);
         }
     }
 }
@@ -359,14 +366,24 @@ export namespace Model {
     export class CrossReference implements Specification.CrossReference {
         document: Specification;
         section: string;
+        private static instances = {} as { [key: string]: CrossReference };
 
-        constructor({ document, section }: Specification.CrossReference) {
+        private constructor({ document, section }: Specification.CrossReference) {
             this.document = document as Specification;
             this.section = section;
         }
 
         toString() {
             return `${this.document}§${this.section}`
+        }
+
+        static get(xref: Specification.CrossReference) {
+            const key = `${xref.document}:${xref.section}`;
+            const canonical = this.instances[key];
+            if (canonical) {
+                return canonical;
+            }
+            return this.instances[key] = new CrossReference(xref);
         }
     }
 }

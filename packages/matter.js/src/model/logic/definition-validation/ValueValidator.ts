@@ -5,7 +5,7 @@
  */
 
 import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
-import { Datatype, Metatype } from "../../definitions/index.js";
+import { Metatype } from "../../definitions/index.js";
 import { CommandElement, DatatypeElement } from "../../elements/index.js";
 import { ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
@@ -123,21 +123,18 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
     }
 
     private validateEntries() {
-        // Note - these checks only apply for first-order derived types so
-        // only apply for specific bases
-        switch (this.model.type) {
-            case Datatype.struct:
+        // Note - these checks only apply for first-order derived types, so use
+        // direct metatype
+        const metatype = this.model.directMetatype;
+        switch (metatype) {
+            case Metatype.object:
                 if (this.model.metatype || !this.model.children.length) {
                     this.error("CHILDLESS_STRUCT", `struct element with no children`);
                 }
                 break;
 
-            case "enum8":
-            case "enum16":
-            case Datatype.map8:
-            case Datatype.map16:
-            case Datatype.map32:
-            case Datatype.map64:
+            case Metatype.enum:
+            case Metatype.bitmap:
                 if (!this.model.children.length && !this.model.global) {
                     if (
                         this.model.parent?.tag == CommandElement.Tag
@@ -149,7 +146,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                     }
 
                     this.error(
-                        `CHILDLESS_${this.model.type.toUpperCase()}`,
+                        `CHILDLESS_${metatype.toUpperCase()}`,
                         `${this.model.type} with no children`);
                 }
                 const ids = new Set<number>();
@@ -158,7 +155,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                     if (c.id) {
                         if (ids.has(c.id)) {
                             this.error(
-                                `DUPLICATE_${this.model.type.toUpperCase()}_ID`,
+                                `DUPLICATE_${metatype.toUpperCase()}_ID`,
                                 `${this.model.type} ID 0x${c.id.toString(16)} appears more than once`);
                         } else {
                             ids.add(c.id);
@@ -166,13 +163,13 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                     }
                     if (names.has(c.name)) {
                         this.error(
-                            `DUPLICATE_${this.model.type.toUpperCase()}_NAME`,
+                            `DUPLICATE_${metatype.toUpperCase()}_NAME`,
                             `${this.model.type} name "${c.name}" appears more than once`)
                     }
                 }
                 break;
 
-            case Datatype.list:
+            case Metatype.array:
                 if (!this.model.children.length) {
                     this.error("UNTYPED_ARRAY", `array element with no entry type`);
                 } else if (this.model.children.length > 1) {

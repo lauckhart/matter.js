@@ -43,6 +43,6 @@ describe("Matter", () => {
     })
 
     it("has not decreased in scope", () => {
-        expect(validate().elementCount).toBeGreaterThanOrEqual(3547);
+        expect(validate().elementCount).toBeGreaterThanOrEqual(3556);
     })
 })

@@ -25,12 +25,17 @@ import { InternalError } from "../src/common/index.js";
 import { camelize, serialize } from "../src/util/index.js";
 import { Block, TsFile } from "./util/TsFile.js";
 import { Logger } from "../src/log/index.js";
+import { clean } from "./util/file.js";
+
+const DEFINITION_PATH = "src/cluster/definitions"
 
 const logger = Logger.get("generate-clusters");
 
 const mom = new MatterModel();
+
+clean(DEFINITION_PATH);
 for (const cluster of mom.clusters) {
-    const file = new TsFile(`src/cluster2/${cluster.name}Cluster`);
+    const file = new TsFile(`${DEFINITION_PATH}/${cluster.name}Cluster`);
     generateCluster(file, cluster);
     file.save();
 }

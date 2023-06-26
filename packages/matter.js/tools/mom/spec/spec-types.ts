@@ -33,23 +33,18 @@ export type HtmlReference = {
     details?: HtmlReference[]
 }
 
-/** A reference with details on sub-elements */
-export type DetailedReference = HtmlReference & {
-    details: HtmlReference[]
-}
-
 /**
  * Intermediate representation of a cluster.  Has all the bits we think we'll
  * need but still encoded as ugly HTML
  */
 export type ClusterReference = HtmlReference & {
-    ids?: DetailedReference,
-    revisions?: DetailedReference,
-    classifications?: DetailedReference,
-    features?: DetailedReference,
-    attributes?: DetailedReference,
-    commands?: DetailedReference,
-    events?: DetailedReference,
-    statusCodes?: DetailedReference,
-    datatypes?: DetailedReference[]
+    ids?: HtmlReference,
+    revisions?: HtmlReference,
+    classifications?: HtmlReference,
+    features?: HtmlReference,
+    attributes?: HtmlReference,
+    commands?: HtmlReference,
+    events?: HtmlReference,
+    statusCodes?: HtmlReference,
+    datatypes?: HtmlReference[]
 }

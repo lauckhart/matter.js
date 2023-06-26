@@ -6,7 +6,7 @@
 
 import { Logger } from "../../../src/log/Logger.js";
 import { camelize } from "../../../src/util/String.js";
-import { ClusterReference, DetailedReference, HtmlReference } from "./spec-types.js";
+import { ClusterReference, HtmlReference } from "./spec-types.js";
 import { scanSection } from "./scan-section.js";
 import { Specification } from "../../../src/model/index.js";
 
@@ -50,11 +50,20 @@ export function loadCluster(clusterRef: HtmlReference) {
     // A stack of functions that ingest subsections
     const collectors = Array<SubsectionCollector>();
 
-    function collectDetails(ref: HtmlReference, target: DetailedReference) {
+    function collectDetails(ref: HtmlReference) {
         collectors.push({
             subsection: ref.detailSection ?? ref.xref.section,
             collector: (subref: HtmlReference) => {
-                target.details.push(subref);
+                if (!ref.details) {
+                    ref.details = [];
+                }
+                ref.details.push(subref);
+
+                // Attempt to collect sub-details if the new section is more
+                // specific than the current section
+                if (subref.xref.section > ref.xref.section) {
+                    collectDetails(subref);
+                }
             }
         });
     }
@@ -82,7 +91,7 @@ export function loadCluster(clusterRef: HtmlReference) {
 
         logger.debug(`${name} § ${ref.xref.section}`);
 
-        collectDetails(ref, definition[name] = { ...ref, details: [] });
+        collectDetails(definition[name] = ref);
     }
 
     for (const subref of scanSection(clusterRef)) {
@@ -140,18 +149,17 @@ export function loadCluster(clusterRef: HtmlReference) {
                 // collectors are a stack
                 collectors.push({
                     subsection: subref.xref.section,
-                    collector: (dtRef) => {
+                    collector: (datatypeRef) => {
                         if (!definition.datatypes) {
                             definition.datatypes = [];
                         }
-                        const datatypeDef = { ...dtRef, details: [] };
-                        logger.debug(`datatype ${dtRef.name} § ${dtRef.xref.section}`);
-                        definition.datatypes.push(datatypeDef);
-                        if (dtRef.table) {
+                        logger.debug(`datatype ${datatypeRef.name} § ${datatypeRef.xref.section}`);
+                        definition.datatypes.push(datatypeRef);
+                        if (datatypeRef.table) {
                             // Probably a struct, enum or bitmap.  These are
                             // sometimes followed with sections that detail
                             // individual items
-                            collectDetails(dtRef, datatypeDef);
+                            collectDetails(datatypeRef);
                         }
                     }
                 })

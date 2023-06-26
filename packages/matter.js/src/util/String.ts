@@ -161,5 +161,6 @@ export namespace serialize {
         if (value != undefined) {
             value[SERIALIZE] = function() { return this.toString(); };
         }
+        return value;
     }
 }
