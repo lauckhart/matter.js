@@ -17,7 +17,7 @@ const HEADER = `/**
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/`;
 
 const INDENT = "    ";
-const WRAP_WIDTH = 120;
+const WRAP_WIDTH = 80;
 
 type Documentation = {
     description?: string,
@@ -32,7 +32,7 @@ abstract class Entry {
     constructor(protected parentBlock: Block | undefined) {}
 
     get isDocumented() {
-        return !!this.documentation || !!this.docText;
+        return !!(this.documentation?.description || this.documentation?.details || this.documentation?.xref || this.docText);
     }
 
     /** Add a TsDoc style comment */
@@ -43,21 +43,23 @@ abstract class Entry {
             this.documentation = content;
         }
         this.docText = extra;
+        return this;
     }
 
     toString(linePrefix = "") {
-        return `${this.serializeComment(linePrefix)}${this.serialize(linePrefix)}`;
+        return `${this.createComment(linePrefix)}${this.serialize(linePrefix)}`;
     }
 
     protected abstract serialize(linePrefix: string): string;
 
-    private serializeComment(linePrefix: string) {
+    private createComment(linePrefix: string) {
         let paragraphs = Array<string>();
         
+        if (this.documentation?.description) {
+            paragraphs.push(this.documentation.description);
+        }
         if (this.documentation?.details) {
             paragraphs.push(this.documentation.details);
-        } else if (this.documentation?.description) {
-            paragraphs.push(this.documentation.description);
         }
 
         if (this.docText) {
@@ -135,6 +137,7 @@ class Atom extends Raw {
 
 export class Block extends Entry {
     entries = Array<Entry>();
+    private addBefore?: Entry;
 
     constructor(parentBlock: Block | undefined) {
         super(parentBlock);
@@ -198,6 +201,13 @@ export class Block extends Entry {
 
     /** Add entries.  Each entry will be serialized using toString() */
     add(...entries: Entry[]) {
+        if (this.addBefore) {
+            const index = this.entries.indexOf(this.addBefore);
+            if (index != -1) {
+                this.entries.splice(index, 0, ...entries);
+                return this;
+            }
+        }
         this.entries.push(...entries);
         return this;
     }
@@ -235,8 +245,20 @@ export class Block extends Entry {
 
     /** Add a statement or expression that will be automatically delimited */
     atom(labelOrText: {}, text?: any) {
-        this.add(new Atom(this, labelOrText, text));
-        return this;
+        const atom = new Atom(this, labelOrText, text);
+        this.add(atom);
+        return atom;
+    }
+
+    /** Execute logic with block configured for specific insertion point */
+    insertingBefore<T>(before: Entry, fn: () => T) {
+        const oldAddBefore = this.addBefore;
+        try {
+            this.addBefore = before;
+            return fn();
+        } finally {
+            this.addBefore = oldAddBefore;
+        }
     }
 
     protected delimiterAfter(index: number): string {
@@ -271,9 +293,25 @@ abstract class NestedBlock extends Block {
             parts.push(`${linePrefix}${this.prefix}`);
         }
         
+        let needSpace = false;
         for (let i = 0; i < serializedEntries.length; i++) {
             // Add delimiter to entry if necessary
             const entry = `${serializedEntries[i]}${this.delimiterAfter(i)}`;
+
+            // Separate documented and large elements from their siblings
+            if (this.entries[i].isDocumented || entry.split("\n").length > 5) {
+                if (i) {
+                    parts.push("");
+                }
+                needSpace = true;
+            } else if (needSpace) {
+                parts.push("");
+                needSpace = false;
+            }
+
+            if (this.entries[i].isDocumented) {
+                needSpace = true;
+            }
 
             // Add the entry
             parts.push(entry);
@@ -388,13 +426,15 @@ export class TsFile extends Block {
         this.header.raw(HEADER);
     }
 
-    addImport(file: string, name: string) {
+    addImport(file: string, name?: string) {
         let list = this.imports.get(file);
         if (!list) {
             list = new Array<string>();
             this.imports.set(file, list);
         }
-        if (list.indexOf(name) == -1) list.push(name);
+        if (name) {
+            if (list.indexOf(name) == -1) list.push(name);
+        }
         return this;
     }
 
@@ -403,7 +443,11 @@ export class TsFile extends Block {
             const importBlock = this.header.section();
             importBlock.blank();
             this.imports.forEach((symbols, name) => {
-                importBlock.atom(`import { ${symbols.join(", ")} } from "${name}.js"`);
+                if (symbols.length) {
+                    importBlock.atom(`import { ${symbols.join(", ")} } from "${name}.js"`);
+                } else {
+                    importBlock.atom(`import "${name}.js"`);
+                }
             });
         }
 

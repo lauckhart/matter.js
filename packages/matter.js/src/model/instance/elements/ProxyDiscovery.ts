@@ -13,13 +13,13 @@ Matter.children.push({
     description: "Proxy Discovery",
     details: "Cluster to control Proxy Discovery",
     xref: { document: "core", section: "9.15.13" },
+
     children: [
         {
             tag: "command", name: "ProxyDiscoverRequest", id: 0x0, access: "O", conformance: "M",
             direction: "request",
             xref: { document: "core", section: "9.15.13.5" }
         },
-
         {
             tag: "command", name: "ProxyDiscoverResponse", id: 0x1, conformance: "M", direction: "response",
             xref: { document: "core", section: "9.15.13.5" }

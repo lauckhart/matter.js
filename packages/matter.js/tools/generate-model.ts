@@ -31,7 +31,7 @@ function generateElementFile(element: AnyElement) {
         file,
         element,
         `Matter.children.push(`,
-        ");\n"
+        ")"
     )
 
     file.save();
@@ -41,7 +41,7 @@ function generateIndex(elements: AnyElement[]) {
     const file = new TsFile(`${MODEL_PATH}/index`);
     elements.forEach(element => {
         if (!element.global) {
-            file.add(`import "./${element.name}.js";`);
+            file.addImport(`./${element.name}`);
         }
     });
 
