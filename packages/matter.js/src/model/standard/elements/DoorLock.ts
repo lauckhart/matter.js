@@ -871,12 +871,22 @@ Matter.children.push({
         },
 
         {
+            tag: "command", name: "GetLogRecord", id: 0x4, access: "M", conformance: "LOG",
+            direction: "request", response: "GetLogRecordResponse",
+            xref: { document: "cluster", section: "5.2.4" }
+        },
+        {
             tag: "command", name: "GetLogRecordResponse", id: 0x4, conformance: "LOG", direction: "response",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
             tag: "command", name: "SetPinCode", id: 0x5, access: "A T", conformance: "!USR & P, IN",
             direction: "request", response: "status",
+            xref: { document: "cluster", section: "5.2.4" }
+        },
+        {
+            tag: "command", name: "GetPinCode", id: 0x6, access: "A", conformance: "!USR & P, IN",
+            direction: "request", response: "GetPinCodeResponse",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
@@ -900,6 +910,11 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
+            tag: "command", name: "GetUserStatus", id: 0xa, access: "A", conformance: "!USR & (P, IN | RID)",
+            direction: "request", response: "GetUserStatusResponse",
+            xref: { document: "cluster", section: "5.2.4" }
+        },
+        {
             tag: "command", name: "GetUserStatusResponse", id: 0xa, conformance: "!USR", direction: "response",
             xref: { document: "cluster", section: "5.2.4" }
         },
@@ -917,6 +932,16 @@ Matter.children.push({
                 { tag: "datatype", name: "StartMinute", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "EndHour", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "EndMinute", type: "uint8", conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "command", name: "GetWeekDaySchedule", id: 0xc, access: "R A", conformance: "WDSCH",
+            direction: "request", response: "GetWeekDayScheduleResponse",
+            xref: { document: "cluster", section: "5.2.4" },
+            children: [
+                { tag: "datatype", name: "WeekDayIndex", type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M" }
             ]
         },
 
@@ -961,6 +986,16 @@ Matter.children.push({
         },
 
         {
+            tag: "command", name: "GetYearDaySchedule", id: 0xf, access: "R A", conformance: "YDSCH",
+            direction: "request", response: "GetYearDayScheduleResponse",
+            xref: { document: "cluster", section: "5.2.4" },
+            children: [
+                { tag: "datatype", name: "YearDayIndex", type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M" }
+            ]
+        },
+
+        {
             tag: "command", name: "GetYearDayScheduleResponse", id: 0xf, conformance: "YDSCH",
             direction: "response",
             xref: { document: "cluster", section: "5.2.4" },
@@ -998,6 +1033,13 @@ Matter.children.push({
         },
 
         {
+            tag: "command", name: "GetHolidaySchedule", id: 0x12, access: "R A", conformance: "HDSCH",
+            direction: "request", response: "GetHolidayScheduleResponse",
+            xref: { document: "cluster", section: "5.2.4" },
+            children: [ { tag: "datatype", name: "HolidayIndex", type: "uint8", conformance: "M" } ]
+        },
+
+        {
             tag: "command", name: "GetHolidayScheduleResponse", id: 0x12, conformance: "HDSCH",
             direction: "response",
             xref: { document: "cluster", section: "5.2.4" },
@@ -1024,12 +1066,22 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
+            tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (P, IN | RID)",
+            direction: "request", response: "GetUserTypeResponse",
+            xref: { document: "cluster", section: "5.2.4" }
+        },
+        {
             tag: "command", name: "GetUserTypeResponse", id: 0x15, conformance: "!USR", direction: "response",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
             tag: "command", name: "SetRfidCode", id: 0x16, access: "A T", conformance: "!USR & RID",
             direction: "request", response: "status",
+            xref: { document: "cluster", section: "5.2.4" }
+        },
+        {
+            tag: "command", name: "GetRfidCode", id: 0x17, access: "A", conformance: "!USR & RID",
+            direction: "request", response: "GetRfidCodeResponse",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {

@@ -698,21 +698,18 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetWeeklyScheduleResponse", id: 0x0, conformance: "SCH",
-            direction: "response",
+            tag: "command", name: "SetpointRaiseLower", id: 0x0, access: "O", conformance: "M",
+            direction: "request", response: "status",
             xref: { document: "cluster", section: "4.3.8" },
-
             children: [
-                { tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M" },
-                { tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M" },
-                { tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M" }
+                { tag: "datatype", name: "Mode", type: "SetpointAdjustMode", conformance: "M" },
+                { tag: "datatype", name: "Amount", type: "int8", conformance: "M" }
             ]
         },
 
         {
-            tag: "command", name: "GetRelayStatusLogResponse", id: 0x1, access: "R M", conformance: "O",
-            direction: "request",
+            tag: "command", name: "SetWeeklySchedule", id: 0x1, access: "R M", conformance: "SCH",
+            direction: "request", response: "status",
             xref: { document: "cluster", section: "4.3.8" },
 
             children: [
@@ -741,6 +738,24 @@ Matter.children.push({
         {
             tag: "command", name: "GetRelayStatusLog", id: 0x4, access: "O", conformance: "O",
             direction: "request", response: "GetRelayStatusLogResponse",
+            xref: { document: "cluster", section: "4.3.8" }
+        },
+
+        {
+            tag: "command", name: "GetWeeklyScheduleResponse", id: 0x0, conformance: "SCH",
+            direction: "response",
+            xref: { document: "cluster", section: "4.3.8" },
+
+            children: [
+                { tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M" },
+                { tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M" },
+                { tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "command", name: "GetRelayStatusLogResponse", id: 0x1, conformance: "O", direction: "response",
             xref: { document: "cluster", section: "4.3.8" }
         },
 

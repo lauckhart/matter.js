@@ -340,10 +340,17 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8",
+                    details: "This field SHALL represent the set of faults currently detected, as per Section 11.7.6.11, " +
+                             "“ActiveWiredFaults Attribute”.",
+                    xref: { document: "core", section: "11.7.7.1.1" },
                     children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
                 },
+
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8",
+                    details: "This field SHALL represent the set of faults detected prior to this change event, as per Section " +
+                             "11.7.6.11, “ActiveWiredFaults Attribute”.",
+                    xref: { document: "core", section: "11.7.7.1.2" },
                     children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
                 }
             ]

@@ -130,7 +130,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "StatusEnum", type: "enum8",
+            tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
             details: "StatusEnum Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.7.5.1" },
 
@@ -400,15 +400,6 @@ Matter.children.push({
                              "(\"floored\") towards 0 if the measurement requires an integer final value.",
                     xref: { document: "cluster", section: "6.7.5.9.2" }
                 }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ContentLaunchStatusEnum", type: "enum8", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "UrlNotAvailable", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "AuthFailed", id: 0x2, conformance: "M" }
             ]
         }
     ]

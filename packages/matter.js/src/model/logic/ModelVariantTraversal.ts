@@ -55,7 +55,7 @@ export interface VariantDetail {
  * Visits multiple model hierarchies simultaneously and builds state.
  */
 export abstract class ModelVariantTraversal<S = void> {
-    private clusterState: ClusterState | undefined;
+    protected clusterState: ClusterState | undefined;
     private visiting = false;
     private modelTraversal = new ModelTraversal();
 
@@ -76,7 +76,9 @@ export abstract class ModelVariantTraversal<S = void> {
             throw new InternalError("ModelVariantVisitor.visit called with active visit; reentrancy not supported");
         }
 
+        // Ensure prior crash doesn't muddy the waters
         delete this.clusterState;
+
         this.visiting = true;
         try {
             return this.visitVariants(this.createVariantDetail(
@@ -103,18 +105,17 @@ export abstract class ModelVariantTraversal<S = void> {
     protected abstract visit(variants: VariantDetail, recurse: () => S[]): S;
 
     /**
-     * Get the canonical name for a set of variants.  Within a cluster we use
-     * inferred type names if there is one.  Otherwise just returns the Model's
-     * name.
+     * Get the canonical name for a model.  Within cluster scope alternate
+     * names may be selected, otherwise the name of the model is returned.
      */
-    protected getCanonicalName(sourceName: string, variantName: string) {
+    protected getCanonicalName(model: Model) {
         if (this.clusterState) {
-            const name = this.clusterState.canonicalNames[sourceName][variantName];
+            const name = this.clusterState.canonicalNames.get(model);
             if (name != undefined) {
                 return name;
             }
         }
-        return variantName;
+        return model.name;
     }
 
     /**
@@ -123,7 +124,7 @@ export abstract class ModelVariantTraversal<S = void> {
     protected enterCluster(variants: VariantDetail) {
         if (variants.tag == ElementTag.Cluster) {
             this.clusterState = {
-                canonicalNames: inferCanonicalNames(this.sourceNames, variants)
+                canonicalNames: computeCanonicalNames(this.sourceNames, variants)
             };
             return true;
         }
@@ -141,7 +142,7 @@ export abstract class ModelVariantTraversal<S = void> {
                 const enteredCluster = this.enterCluster(variants);
 
                 // Group children across variants
-                const mappings = this.mapChildren(variants, enteredCluster);            
+                const mappings = this.mapChildren(variants);
         
                 // Visit children
                 const result = Array<S>();
@@ -164,7 +165,7 @@ export abstract class ModelVariantTraversal<S = void> {
         return state;
     }
 
-    private mapChildren(variants: VariantDetail, enteredCluster: boolean) {
+    private mapChildren(variants: VariantDetail) {
         type ChildMapping = {
             // List of children associated by ID or name (ID gets priority)
             slots: VariantMap[],
@@ -191,13 +192,7 @@ export abstract class ModelVariantTraversal<S = void> {
                     (mappings[child.tag] = { slots: [], idToSlot: {}, nameToSlot: {} });
 
                 const childId = child.effectiveId;
-                let childName = child.name;
-
-                // If we are directly under cluster and the child is a
-                // datatype, its name may have been mapped
-                if (enteredCluster && child.tag == ElementTag.Datatype) {
-                    childName = this.getCanonicalName(sourceName, childName);
-                }
+                let childName = this.getCanonicalName(child);
 
                 let slot;
                 let idStr: string | undefined;
@@ -206,8 +201,8 @@ export abstract class ModelVariantTraversal<S = void> {
 
                     // Commands may re-use the ID for request and response
                     // So append the direction to the ID
-                    if (variant instanceof CommandModel) {
-                        idStr = `${idStr}:${(variant as CommandModel).direction}`
+                    if (child instanceof CommandModel) {
+                        idStr = `${idStr}:${(child as CommandModel).direction}`
                     }
 
                     // Find existing slot by ID
@@ -268,7 +263,7 @@ export abstract class ModelVariantTraversal<S = void> {
                     id = variant.id;
                 }
                 if (!name) {
-                    name = this.getCanonicalName(sourceName, variant.name);
+                    name = this.getCanonicalName(variant);
                 }
             }
         })
@@ -287,14 +282,37 @@ export abstract class ModelVariantTraversal<S = void> {
 }
 
 /**
+ * Map of source name -> datatype name -> actual name
+ */
+type NameMapping = Map<Model, string>;
+
+/**
  * This type manages state that changes when we enter a cluster. 
  */
 type ClusterState = {
-    canonicalNames: {
-        [sourceName: string]: {
-            [key: string]: any
-        }
-    }
+    canonicalNames: NameMapping
+}
+
+/**
+ * We go to a whole lot of work to choose proper datatype names.  This is to
+ * reduce the number of manual overrides we need to correct dirty data.
+ * 
+ * This may seem like an unreasonable amount of logic but with evolving
+ * specifications and 3k+ named elements (and counting) it seems worthwhile.
+ * 
+ * ModelVariantTraversal calls this function each time it enters a cluster.
+ * Thus we are only dealing with names scoped to a single cluster
+ */
+function computeCanonicalNames(sourceNames: string[], variants: VariantDetail) {
+    // First, infer name equivalence of datatypes based on usage.  There is no
+    // ID on datatypes.  This is a reliable alternative
+    let datatypeNameMap = inferEquivalentDatatypes(sourceNames, variants);
+
+    // Now that we generally what what equals what, go through the names and
+    // choose the name for the final model
+    const canonicalNames = chooseCanonicalNames(sourceNames, variants, datatypeNameMap);
+
+    return canonicalNames;
 }
 
 /**
@@ -305,23 +323,20 @@ type ClusterState = {
  *     find the name referenced by the variant of highest priority
  *     add a mapping from the referenced name to the name we found
  */
-function inferCanonicalNames(
+function inferEquivalentDatatypes(
     sourceNames: string[],
     variants: VariantDetail
-): ClusterState["canonicalNames"] {
-    const nameVariants: {
-        [variantName: string]: {
-            [datatypeName: string]: {
-                mapTo: string | undefined,
-                priority: number
-            }
-        }
-    } = Object.fromEntries(sourceNames.map(sourceName => [ sourceName, {} ]));
+): NameMapping {
+    type ModelNameMapping = {
+        mapTo: string | undefined,
+        priority: number
+    };
+    const nameVariants = new Map<Model, ModelNameMapping>();
 
     // Create a new traversal to visit each element
     const traversal = new class extends ModelVariantTraversal {
         override visit(variants: VariantDetail, recurse: () => void[]) {
-            let mapEntry: typeof nameVariants[""][""] | undefined;
+            let mapEntry: ModelNameMapping | undefined;
             
             for (let priority = 0; priority < sourceNames.length; priority++) {
                 const sourceName = sourceNames[priority];
@@ -339,13 +354,13 @@ function inferCanonicalNames(
                 // position
                 if (!mapEntry) {
                     mapEntry = {
-                        mapTo: variant.name,
+                        mapTo: base.name,
                         priority
                     }
                 }
 
                 // Find existing entry
-                const existingEntry = nameVariants[sourceName][variant.name];
+                const existingEntry = nameVariants.get(base);
 
                 // Replace existing entry if this is a higher priority.
                 // Otherwise the types should in theory be equivalent.  If
@@ -353,12 +368,12 @@ function inferCanonicalNames(
                 // corrected manually
                 if (existingEntry) {
                     if (existingEntry.priority > mapEntry.priority) {
-                        nameVariants[sourceName][variant.name] = mapEntry;
+                        nameVariants.set(base, mapEntry);
                     } else if (existingEntry.priority == mapEntry.priority && existingEntry.mapTo != mapEntry.mapTo) {
-                        logger.warn(`Mapping ${sourceName} ${variant.tag} ${variant.name} to ${existingEntry.mapTo} but it also maps to ${mapEntry.mapTo}`);
+                        logger.warn(`Mapping ${sourceName} ${base.tag} ${base.name} to ${existingEntry.mapTo} but it also maps to ${mapEntry.mapTo}`);
                     }
                 } else {
-                    nameVariants[sourceName][variant.name] = mapEntry;
+                    nameVariants.set(base, mapEntry);
                 }
             }
 
@@ -372,13 +387,100 @@ function inferCanonicalNames(
     }(sourceNames);
     traversal.traverse(variants.map);
 
-    // Convert the internal structure CanonicalNames
-    for (const variantName in nameVariants) {
-        const variantMappings = nameVariants[variantName];
-        for (const datatypeName in variantMappings) {
-            variantMappings[datatypeName] = variantMappings[datatypeName].mapTo as any;
+    // Convert the internal structure to NameMappings
+    const result = new Map<Model, string>();
+    for (const [model, mapEntry] of nameVariants) {
+        if (mapEntry.mapTo && mapEntry.mapTo != model.name) {
+            result.set(model, mapEntry.mapTo);
         }
     }
+    return result;
+}
 
-    return nameVariants;
+// Heuristically select the best name for each element.  Priority does affect
+// this selection but it's not absolute
+function chooseCanonicalNames(
+    sourceNames: string[],
+    variants: VariantDetail,
+    datatypeMapping: NameMapping
+) {
+    const canonicalNames = new Map<Model, string>();
+
+    const traversal = new class extends ModelVariantTraversal {
+        visit(variants: VariantDetail, recurse: () => void) {
+            let canonicalName: string | undefined;
+
+            // First, choose the canonical name
+            for (let i = 0; i < sourceNames.length; i++) {
+                const name = variants.map[sourceNames[i]]?.name;
+
+                // We give absolute priority to the highest priority element.
+                // This is presumably an editorial decision made by a human
+                if (!i && name != undefined) {
+                    break;
+                }
+
+                // If this is the first item, use its name
+                if (!canonicalName) {
+                    canonicalName = name;
+                    continue;
+                }
+
+                // Prefer the shortest available name.  CHIP tends to add
+                // non-standard prefixes because they have a global namespace.
+                // When we scrape the spec we sometimes pick up extraneous
+                // garbage
+                if (name?.length < canonicalName?.length) {
+                    canonicalName = name;
+                    continue;
+                }
+
+                // If two names are equivalent except for case, prefer the one
+                // with more capital letters.  This corrects for case issues
+                // that can arise from automatic camelization in our spec
+                // scraper
+                if (canonicalName?.toLowerCase() == name?.toLowerCase()) {
+                    if (canonicalName == name) {
+                        continue;
+                    }
+
+                    if (canonicalName.replace(/[^A-Z]/g, "").length < name.replace(/[^A-Z]/g, "").length) {
+                        canonicalName = name;
+                        continue;
+                    }
+                }
+            }
+
+            // We should have found a name but if not, fall back to the name
+            // chosen previously
+            if (!canonicalName) {
+                canonicalName = variants.name;
+            }
+
+            // Now install a mapping for any losing variants to the preferred
+            // name
+            for (const sourceName in variants.map) {
+                const variant = variants.map[sourceName];
+                if (variant.name != canonicalName) {
+                    canonicalNames.set(variant, canonicalName);
+                }
+            }
+
+            recurse();
+        }
+
+        override enterCluster(variants: VariantDetail) {
+            // Disable default logic, just ensure our datatype names are always
+            // installed so datatypes match up correctly
+            if (variants.tag == ElementTag.Cluster) {
+                this.clusterState = { canonicalNames: datatypeMapping };
+                return true;
+            }
+            return false;
+        }
+    }(sourceNames);
+
+    traversal.traverse(variants.map);
+
+    return canonicalNames;
 }

@@ -21,9 +21,7 @@ export class CommandModel extends ValueModel implements CommandElement {
     }
 
     get responseModel() {
-        if (this.response && this.response != "status") {
-            return new ModelTraversal().findType(this, this.response, [ CommandElement.Tag ])
-        }
+        return new ModelTraversal().findResponse(this);
     }
 
     constructor(definition: CommandElement.Properties) {

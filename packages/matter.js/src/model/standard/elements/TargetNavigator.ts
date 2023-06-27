@@ -96,7 +96,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "StatusEnum", type: "enum8",
+            tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
             details: "Status Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.11.5.2" },
 
@@ -110,15 +110,6 @@ Matter.children.push({
                     tag: "datatype", name: "NotAllowed", id: 0x2, conformance: "M",
                     description: "Target request is not allowed in current state."
                 }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "TargetNavigatorStatusEnum", type: "enum8", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "TargetNotFound", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "NotAllowed", id: 0x2, conformance: "M" }
             ]
         }
     ]

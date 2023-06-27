@@ -159,10 +159,26 @@ Matter.children.push({
             response: "status",
             details: "The data for this command are as follows:",
             xref: { document: "core", section: "11.16.9.1" },
+
             children: [
-                { tag: "datatype", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M" },
-                { tag: "datatype", name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M" },
-                { tag: "datatype", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O" }
+                {
+                    tag: "datatype", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M",
+                    details: "This SHALL give the Client’s UTC Time.",
+                    xref: { document: "core", section: "11.16.9.1.1" }
+                },
+
+                {
+                    tag: "datatype", name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M",
+                    details: "This SHALL give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity " +
+                             "Attribute”.",
+                    xref: { document: "core", section: "11.16.9.1.2" }
+                },
+
+                {
+                    tag: "datatype", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O",
+                    details: "This SHALL give the Client’s TimeSource, as described in Section 11.16.8.3, “TimeSource Attribute”.",
+                    xref: { document: "core", section: "11.16.9.1.3" }
+                }
             ]
         },
 
@@ -271,32 +287,50 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "TimeZoneStruct", type: "struct", conformance: "M",
-            details: "Offset Field",
             xref: { document: "core", section: "11.16.6.3" },
+
             children: [
-                { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M" },
-                { tag: "datatype", name: "ValidAt", id: 0x1, type: "epoch-us", conformance: "M" },
-                { tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "O", constraint: "0 to 64" }
+                {
+                    tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M",
+                    details: "The time zone offset from UTC in seconds.",
+                    xref: { document: "core", section: "11.16.6.3.1" }
+                },
+                {
+                    tag: "datatype", name: "ValidAt", id: 0x1, type: "epoch-us", conformance: "M",
+                    details: "The UTC time when the offset SHALL be applied.",
+                    xref: { document: "core", section: "11.16.6.3.2" }
+                },
+
+                {
+                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "O", constraint: "0 to 64",
+                    details: "The time zone name SHOULD provide a human-readable time zone name and it SHOULD use the " +
+                             "country/city format specified by the IANA time zone database [https://www.iana.org/time-zones].",
+                    xref: { document: "core", section: "11.16.6.3.3" }
+                }
             ]
         },
 
         {
-            tag: "datatype", name: "DSTOffsetStruct", type: "struct",
-            details: "Offset Field",
+            tag: "datatype", name: "DSTOffsetStruct", type: "struct", conformance: "M",
+            details: "The DST offset in seconds. Normally this is in the range of 0 to 3600 seconds (1 hour), but this " +
+                     "field will accept any values in the int32 range to accommodate potential future legislation that " +
+                     "does not fit with these assumptions.",
             xref: { document: "core", section: "11.16.6.4" },
+
             children: [
                 { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc" },
-                { tag: "datatype", name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M" },
-                { tag: "datatype", name: "ValidUntil", id: 0x2, type: "epoch-us", conformance: "M" }
-            ]
-        },
+                {
+                    tag: "datatype", name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M",
+                    details: "The UTC time when the offset SHALL be applied.",
+                    xref: { document: "core", section: "11.16.6.4.1" }
+                },
 
-        {
-            tag: "datatype", name: "DstOffsetStruct", type: "struct", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Offset", type: "int32", conformance: "M" },
-                { tag: "datatype", name: "ValidStarting", type: "epoch-us", conformance: "M" },
-                { tag: "datatype", name: "ValidUntil", type: "epoch-us", conformance: "M" }
+                {
+                    tag: "datatype", name: "ValidUntil", id: 0x2, type: "epoch-us", conformance: "M",
+                    details: "The UTC time when the offset SHALL stop being applied. This value SHALL be larger than the " +
+                             "ValidStarting time.",
+                    xref: { document: "core", section: "11.16.6.4.2" }
+                }
             ]
         }
     ]

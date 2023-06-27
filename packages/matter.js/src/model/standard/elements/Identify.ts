@@ -59,22 +59,12 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "IdentifyQueryResponse", id: 0x0, access: "R M", conformance: "QRY",
-            direction: "request",
-            details: "This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery " +
-                     "Command, in the case that the device is currently identifying itself.",
-            xref: { document: "cluster", section: "1.2.6.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "Timeout", id: 0x0, type: "uint16", conformance: "M",
-                    details: "This field contains the current value of the IdentifyTime attribute, and specifies the length of " +
-                             "time, in seconds, that the device will continue to identify itself.",
-                    xref: { document: "cluster", section: "1.2.6.4.1" }
-                },
-
-                { tag: "datatype", name: "IdentifyTime", type: "uint16", conformance: "M" }
-            ]
+            tag: "command", name: "Identify", id: 0x0, access: "R M", conformance: "M", direction: "request",
+            response: "status",
+            details: "This command starts or stops the receiving device identifying itself. This command SHALL have the " +
+                     "following data fields:",
+            xref: { document: "cluster", section: "1.2.6.1" },
+            children: [ { tag: "datatype", name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" } ]
         },
 
         {
@@ -143,6 +133,22 @@ Matter.children.push({
                              "default variant. This field SHALL contain one of the values listed below:",
                     xref: { document: "cluster", section: "1.2.6.3.2" },
                     children: [ { tag: "datatype", name: "Default", id: 0x0, conformance: "M" } ]
+                }
+            ]
+        },
+
+        {
+            tag: "command", name: "IdentifyQueryResponse", id: 0x0, conformance: "QRY", direction: "response",
+            details: "This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery " +
+                     "Command, in the case that the device is currently identifying itself.",
+            xref: { document: "cluster", section: "1.2.6.4" },
+
+            children: [
+                {
+                    tag: "datatype", name: "Timeout", id: 0x0, type: "uint16", conformance: "M",
+                    details: "This field contains the current value of the IdentifyTime attribute, and specifies the length of " +
+                             "time, in seconds, that the device will continue to identify itself.",
+                    xref: { document: "cluster", section: "1.2.6.4.1" }
                 }
             ]
         }

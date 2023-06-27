@@ -120,26 +120,9 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "PHYRateEnum", type: "enum8",
+            tag: "datatype", name: "PHYRateEnum", type: "enum8", conformance: "M",
             details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.15.5.1" },
-
-            children: [
-                { tag: "datatype", name: "Rate10M", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Rate100M", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Rate1G", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Rate25G", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Rate5G", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Rate10G", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "Rate40G", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "Rate100G", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "Rate200G", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "Rate400G", id: 0x9, conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "PhyRateEnum", type: "enum8", conformance: "M",
 
             children: [
                 { tag: "datatype", name: "Rate10M", id: 0x0, conformance: "M" },

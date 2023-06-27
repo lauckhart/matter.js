@@ -143,7 +143,16 @@ Matter.children.push({
             details: "The Disconnection Event SHALL indicate that a Node’s Wi-Fi connection has been disconnected as a " +
                      "result of de-authenticated or dis-association and indicates the reason.",
             xref: { document: "core", section: "11.14.8.1" },
-            children: [ { tag: "datatype", name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M" } ]
+
+            children: [
+                {
+                    tag: "datatype", name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M",
+                    details: "This field SHALL contain the Reason Code field value for the Disassociation or Deauthentication " +
+                             "event that caused the disconnection and the value SHALL align with Table 9-49 \"Reason codes\" of " +
+                             "IEEE 802.11-2020.",
+                    xref: { document: "core", section: "11.14.8.1.1" }
+                }
+            ]
         },
 
         {
@@ -156,9 +165,18 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "AssociationFailureCause", id: 0x0, type: "AssociationFailureCauseEnum",
-                    conformance: "M"
+                    conformance: "M",
+                    details: "The Status field SHALL be set to a value from the AssociationFailureCauseEnum.",
+                    xref: { document: "core", section: "11.14.8.2.1" }
                 },
-                { tag: "datatype", name: "Status", id: 0x1, type: "uint16", conformance: "M" }
+
+                {
+                    tag: "datatype", name: "Status", id: 0x1, type: "uint16", conformance: "M",
+                    details: "The Status field SHALL be set to the Status Code value that was present in the last frame related " +
+                             "to association where Status Code was not equal to zero and which caused the failure of a last trial " +
+                             "attempt, if this last failure was due to one of the following Management frames:",
+                    xref: { document: "core", section: "11.14.8.2.2" }
+                }
             ]
         },
 

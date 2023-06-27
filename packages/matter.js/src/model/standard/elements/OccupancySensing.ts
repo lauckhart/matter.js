@@ -47,7 +47,6 @@ Matter.children.push({
             xref: { document: "cluster", section: "2.7.5.3" },
 
             children: [
-                { tag: "datatype", name: "Pir", id: 0x0, description: "Indicates a passive infrared sensor." },
                 {
                     tag: "datatype", name: "Ultrasonic", id: 0x1, conformance: "M",
                     description: "Indicates a ultrasonic sensor."
