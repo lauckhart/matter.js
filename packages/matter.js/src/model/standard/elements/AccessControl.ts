@@ -69,19 +69,23 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "AdminNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M",
-                    constraint: "desc", quality: "X"
+                    constraint: "desc", quality: "X",
+                    details: "The Node ID of the Administrator that made the change, if the change occurred via a CASE session.",
+                    xref: { document: "core", section: "9.10.7.1.1" }
                 },
-                {
-                    tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "ChangeTypeEnum", access: "S",
-                    conformance: "M", constraint: "desc", quality: "X"
-                },
+
                 {
                     tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                    quality: "X"
+                    quality: "X",
+                    details: "The type of change as appropriate.",
+                    xref: { document: "core", section: "9.10.7.1.3" }
                 },
+
                 {
                     tag: "datatype", name: "LatestValue", id: 0x4, type: "AccessControlEntryStruct", access: "S",
-                    conformance: "M", quality: "X"
+                    conformance: "M", quality: "X",
+                    details: "The latest value of the changed entry.",
+                    xref: { document: "core", section: "9.10.7.1.4" }
                 }
             ]
         },
@@ -97,10 +101,6 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "AdminNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M",
                     constraint: "desc", quality: "X"
-                },
-                {
-                    tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "ChangeTypeEnum", access: "S",
-                    conformance: "M", constraint: "desc", quality: "X"
                 },
                 {
                     tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
@@ -121,20 +121,6 @@ Matter.children.push({
                 { tag: "datatype", name: "Changed", id: 0x0, conformance: "M" },
                 { tag: "datatype", name: "Added", id: 0x1, conformance: "M" },
                 { tag: "datatype", name: "Removed", id: 0x2, conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "AccessControlEntryPrivilegeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
-            xref: { document: "core", section: "9.10.4.2" },
-
-            children: [
-                { tag: "datatype", name: "View", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "ProxyView", id: 0x2, conformance: "P, M" },
-                { tag: "datatype", name: "Operate", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Manage", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Administer", id: 0x5, conformance: "M" }
             ]
         },
 
@@ -161,27 +147,28 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "AccessControlEntryStruct", type: "struct", access: "R F", conformance: "M",
-            details: "Privilege Field",
             xref: { document: "core", section: "9.10.4.5" },
 
             children: [
                 {
-                    tag: "datatype", name: "Privilege", id: 0x1, type: "AccessControlEntryPrivilegeEnum", access: "R S",
-                    conformance: "M"
-                },
-                {
                     tag: "datatype", name: "AuthMode", id: 0x2, type: "AccessControlEntryAuthModeEnum", access: "R S",
-                    conformance: "M", quality: "X"
+                    conformance: "M", quality: "X",
+                    details: "The AuthMode field SHALL specify the authentication mode required by this Access Control Entry.",
+                    xref: { document: "core", section: "9.10.4.5.2" }
                 },
+
                 {
-                    tag: "datatype", name: "Subjects", id: 0x3, type: "list", access: "R S", conformance: "M",
-                    constraint: "max SubjectsPerAccessControlEntry", quality: "X",
-                    children: [ { tag: "datatype", name: "entry", type: "SubjectID" } ]
-                },
-                {
-                    tag: "datatype", name: "Targets", id: 0x4, type: "list", access: "S", conformance: "M",
+                    tag: "datatype", name: "Targets", id: 0x4, type: "list", access: "R S", conformance: "M",
                     constraint: "max TargetsPerAccessControlEntry", quality: "X",
+                    details: "The targets field SHALL specify a list of AccessControlTargetStruct, which define the clusters on " +
+                             "this Node to which this Access Control Entry grants access.",
+                    xref: { document: "core", section: "9.10.4.5.4" },
                     children: [ { tag: "datatype", name: "entry", type: "AccessControlTargetStruct" } ]
+                },
+
+                {
+                    tag: "datatype", name: "Privilege", type: "AccessControlEntryPrivilegeEnum", access: "R S",
+                    conformance: "M"
                 }
             ]
         },
@@ -189,14 +176,27 @@ Matter.children.push({
         {
             tag: "datatype", name: "AccessControlExtensionStruct", type: "struct", access: "R F",
             conformance: "M",
-            details: "Data Field",
             xref: { document: "core", section: "9.10.4.6" },
 
             children: [
                 {
                     tag: "datatype", name: "Data", id: 0x1, type: "octstr", access: "R S", conformance: "M",
-                    constraint: "max 128"
+                    constraint: "max 128",
+                    details: "This field MAY be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s",
+                    xref: { document: "core", section: "9.10.4.6.1" }
                 }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "AccessControlEntryPrivilegeEnum", type: "enum8", conformance: "M",
+
+            children: [
+                { tag: "datatype", name: "View", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "ProxyView", id: 0x2, conformance: "M" },
+                { tag: "datatype", name: "Operate", id: 0x3, conformance: "M" },
+                { tag: "datatype", name: "Manage", id: 0x4, conformance: "M" },
+                { tag: "datatype", name: "Administer", id: 0x5, conformance: "M" }
             ]
         },
 

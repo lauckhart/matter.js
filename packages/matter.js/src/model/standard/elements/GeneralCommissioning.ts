@@ -76,14 +76,21 @@ Matter.children.push({
 
         {
             tag: "command", name: "ArmFailSafeResponse", id: 0x1, conformance: "M", direction: "response",
-            details: "ErrorCode Field",
             xref: { document: "core", section: "11.9.6.3" },
 
             children: [
-                { tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M" },
+                {
+                    tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M",
+                    details: "This field SHALL contain the result of the operation, based on the behavior specified in the " +
+                             "functional description of the ArmFailSafe command.",
+                    xref: { document: "core", section: "11.9.6.3.1" }
+                },
+
                 {
                     tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "M",
-                    constraint: "max 128", default: ""
+                    constraint: "max 128", default: "",
+                    details: "See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.",
+                    xref: { document: "core", section: "11.9.6.3.2" }
                 }
             ]
         },
@@ -135,7 +142,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "CommissioningErrorEnum", type: "enum8",
+            tag: "datatype", name: "CommissioningErrorEnum", type: "enum8", conformance: "M",
             details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.9.4.1" },
 
@@ -149,7 +156,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "RegulatoryLocationTypeEnum", type: "enum8",
+            tag: "datatype", name: "RegulatoryLocationTypeEnum", type: "enum8", conformance: "M",
             details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.9.4.2" },
             children: [
@@ -165,32 +172,23 @@ Matter.children.push({
             xref: { document: "core", section: "11.9.4.3" },
 
             children: [
-                { tag: "datatype", name: "FailSafeExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M" },
+                {
+                    tag: "datatype", name: "FailSafeExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M",
+                    details: "This field SHALL contain a conservative initial duration (in seconds) to set in the FailSafe for " +
+                             "the commissioning flow to complete successfully. This may vary depending on the speed or sleepiness " +
+                             "of the Commissionee. This value, if used in the ArmFailSafe command’s ExpiryLengthSeconds field " +
+                             "SHOULD allow a Commissioner to proceed with a nominal commissioning without having to-rearm the " +
+                             "fail-safe, with some margin.",
+                    xref: { document: "core", section: "11.9.4.3.1" }
+                },
+
                 {
                     tag: "datatype", name: "MaxCumulativeFailsafeSeconds", id: 0x1, type: "uint16", conformance: "M",
-                    constraint: "desc"
+                    constraint: "desc",
+                    details: "This field SHALL contain a conservative value in seconds denoting the maximum total duration for " +
+                             "which a fail safe timer can be re-armed. See Section 11.9.6.2.1, “Fail Safe Context”.",
+                    xref: { document: "core", section: "11.9.4.3.2" }
                 }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "RegulatoryLocationType", type: "enum8", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Indoor", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Outdoor", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "IndoorOutdoor", id: 0x2, conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "CommissioningError", type: "enum8", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "Ok", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "ValueOutsideRange", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "InvalidAuthentication", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "NoFailSafe", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "BusyWithOtherAdmin", id: 0x4, conformance: "M" }
             ]
         }
     ]

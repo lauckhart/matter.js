@@ -88,10 +88,11 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OutputTypeEnum", type: "enum8", conformance: "M",
+            details: "OutputType Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.5.5.2" },
 
             children: [
-                { tag: "datatype", name: "Hdmi", id: 0x0, conformance: "M" },
+                { tag: "datatype", name: "Hdmi", id: 0x0, conformance: "M", description: "HDMI" },
                 { tag: "datatype", name: "Bt", id: 0x1, conformance: "M" },
                 { tag: "datatype", name: "Optical", id: 0x2, conformance: "M" },
                 { tag: "datatype", name: "Headphone", id: 0x3, conformance: "M" },

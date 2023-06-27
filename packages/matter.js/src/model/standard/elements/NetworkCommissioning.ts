@@ -122,9 +122,20 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Ssid", id: 0x0, type: "octstr", conformance: "[WI]", constraint: "1 to 32",
-                    default: null, quality: "X"
+                    default: null, quality: "X",
+                    details: "This field, if present, SHALL contain the SSID for a directed scan of that particular Wi-Fi SSID. " +
+                             "Otherwise, if the field is absent, or it is null, this SHALL indicate scanning of all BSSID in " +
+                             "range. This field SHALL be ignored for ScanNetworks invocations on non-Wi-Fi server instances.",
+                    xref: { document: "core", section: "11.8.7.1.1" }
                 },
-                { tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" }
+
+                {
+                    tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
+                    details: "The Breadcrumb field, if present, SHALL be used to atomically set the Breadcrumb attribute in the " +
+                             "General Commissioning cluster on success of the associated command. If the command fails, the " +
+                             "Breadcrumb attribute in the General Commissioning cluster SHALL be left unchanged.",
+                    xref: { document: "core", section: "11.8.7.1.2" }
+                }
             ]
         },
 
@@ -138,20 +149,37 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum",
-                    conformance: "M", constraint: "desc"
+                    conformance: "M", constraint: "desc",
+                    details: "The NetworkingStatus field SHALL indicate the status of the last scan operation, taking one of " +
+                             "these values:",
+                    xref: { document: "core", section: "11.8.7.2.1" }
                 },
+
                 {
                     tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "O",
-                    constraint: "max 512"
+                    constraint: "max 512",
+                    details: "This field, if present and non-empty, MAY contain error information which MAY be communicated to " +
+                             "the user in case the NetworkingStatus was not Success. Its purpose is to help developers in " +
+                             "troubleshooting errors and MAY go into logs or crash reports.",
+                    xref: { document: "core", section: "11.8.7.2.2" }
                 },
+
                 {
                     tag: "datatype", name: "WiFiScanResults", id: 0x2, type: "list", conformance: "WI",
                     constraint: "desc",
+                    details: "If NetworkingStatus was Success, this field SHALL contain the Wi-Fi network scan results. The list " +
+                             "MAY be empty if none were found in range on the bands supported by the interface, or if directed " +
+                             "scanning had been used and the desired SSID was not found in range.",
+                    xref: { document: "core", section: "11.8.7.2.3" },
                     children: [ { tag: "datatype", name: "entry", type: "WiFiInterfaceScanResultStruct" } ]
                 },
+
                 {
                     tag: "datatype", name: "ThreadScanResults", id: 0x3, type: "list", conformance: "TH",
                     constraint: "desc",
+                    details: "If NetworkingStatus was Success, this field SHALL contain the Thread network scan results. The list " +
+                             "MAY be empty if none were found in range on the bands supported by the interface.",
+                    xref: { document: "core", section: "11.8.7.2.4" },
                     children: [ { tag: "datatype", name: "entry", type: "ThreadInterfaceScanResultStruct" } ]
                 }
             ]
@@ -165,10 +193,14 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32" },
+
                 {
                     tag: "datatype", name: "Credentials", id: 0x1, type: "octstr", conformance: "M",
-                    constraint: "max 64"
+                    constraint: "max 64",
+                    details: "Credentials is the passphrase or PSK for the network (if any is needed).",
+                    xref: { document: "core", section: "11.8.7.3.1" }
                 },
+
                 { tag: "datatype", name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" }
             ]
         },
@@ -182,8 +214,12 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "OperationalDataset", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "max 254"
+                    constraint: "max 254",
+                    details: "The OperationalDataset field SHALL contain the Thread Network Parameters, including channel, PAN " +
+                             "ID, and Extended PAN ID.",
+                    xref: { document: "core", section: "11.8.7.4.1" }
                 },
+
                 { tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" }
             ]
         },
@@ -222,7 +258,14 @@ Matter.children.push({
                     tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "O",
                     constraint: "max 512"
                 },
-                { tag: "datatype", name: "NetworkIndex", id: 0x2, type: "uint8", conformance: "O" }
+
+                {
+                    tag: "datatype", name: "NetworkIndex", id: 0x2, type: "uint8", conformance: "O",
+                    details: "When the NetworkingStatus is Success, this field SHALL be present. It SHALL contain the 0-based " +
+                             "index of the entry in the Networks attribute that was last added, updated or removed successfully " +
+                             "by the associated request command.",
+                    xref: { document: "core", section: "11.8.7.8.1" }
+                }
             ]
         },
 
@@ -255,7 +298,11 @@ Matter.children.push({
                     conformance: "M"
                 },
                 { tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "O" },
-                { tag: "datatype", name: "ErrorValue", id: 0x2, type: "int32", conformance: "M", quality: "X" }
+                {
+                    tag: "datatype", name: "ErrorValue", id: 0x2, type: "int32", conformance: "M", quality: "X",
+                    details: "• ErrorValue interpretation for Wi-Fi association errors:",
+                    xref: { document: "core", section: "11.8.7.10.1" }
+                }
             ]
         },
 
@@ -314,29 +361,29 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "NetworkCommissioningStatusEnum", type: "enum8",
+            tag: "datatype", name: "NetworkCommissioningStatusEnum", type: "enum8", conformance: "M",
             details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.8.5.3" },
 
             children: [
-                { tag: "datatype", name: "Success", id: 0x0 },
-                { tag: "datatype", name: "OutOfRange", id: 0x1 },
-                { tag: "datatype", name: "BoundsExceeded", id: 0x2 },
-                { tag: "datatype", name: "NetworkIdNotFound", id: 0x3 },
-                { tag: "datatype", name: "DuplicateNetworkId", id: 0x4 },
-                { tag: "datatype", name: "NetworkNotFound", id: 0x5 },
-                { tag: "datatype", name: "RegulatoryError", id: 0x6 },
-                { tag: "datatype", name: "AuthFailure", id: 0x7 },
-                { tag: "datatype", name: "UnsupportedSecurity", id: 0x8 },
-                { tag: "datatype", name: "OtherConnectionFailure", id: 0x9 },
-                { tag: "datatype", name: "Ipv6Failed", id: 0xa },
-                { tag: "datatype", name: "IpBindFailed", id: 0xb },
-                { tag: "datatype", name: "UnknownError", id: 0xc }
+                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
+                { tag: "datatype", name: "OutOfRange", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "BoundsExceeded", id: 0x2, conformance: "M" },
+                { tag: "datatype", name: "NetworkIdNotFound", id: 0x3, conformance: "M" },
+                { tag: "datatype", name: "DuplicateNetworkId", id: 0x4, conformance: "M" },
+                { tag: "datatype", name: "NetworkNotFound", id: 0x5, conformance: "M" },
+                { tag: "datatype", name: "RegulatoryError", id: 0x6, conformance: "M" },
+                { tag: "datatype", name: "AuthFailure", id: 0x7, conformance: "M" },
+                { tag: "datatype", name: "UnsupportedSecurity", id: 0x8, conformance: "M" },
+                { tag: "datatype", name: "OtherConnectionFailure", id: 0x9, conformance: "M" },
+                { tag: "datatype", name: "Ipv6Failed", id: 0xa, conformance: "M" },
+                { tag: "datatype", name: "IpBindFailed", id: 0xb, conformance: "M" },
+                { tag: "datatype", name: "UnknownError", id: 0xc, conformance: "M" }
             ]
         },
 
         {
-            tag: "datatype", name: "NetworkInfoStruct", type: "struct",
+            tag: "datatype", name: "NetworkInfoStruct", type: "struct", conformance: "M",
             details: "NetworkInfoStruct struct describes an existing network configuration, as provided in the Networks " +
                      "attribute.",
             xref: { document: "core", section: "11.8.5.4" },
@@ -344,9 +391,19 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "NetworkId", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "1 to 32"
+                    constraint: "1 to 32",
+                    details: "Every network is uniquely identified (for purposes of commissioning) by a NetworkID mapping to the " +
+                             "following technology-specific properties:",
+                    xref: { document: "core", section: "11.8.5.4.1" }
                 },
-                { tag: "datatype", name: "Connected", id: 0x1, type: "bool", conformance: "M" }
+
+                {
+                    tag: "datatype", name: "Connected", id: 0x1, type: "bool", conformance: "M",
+                    details: "This field SHALL indicate the connected status of the associated network, where \"connected\" means " +
+                             "currently linked to the network technology (e.g. Associated for a Wi-Fi network, media connected " +
+                             "for an Ethernet network).",
+                    xref: { document: "core", section: "11.8.5.4.2" }
+                }
             ]
         },
 
@@ -360,8 +417,19 @@ Matter.children.push({
                 { tag: "datatype", name: "Ssid", id: 0x1, type: "octstr", conformance: "WI", constraint: "max 32" },
                 { tag: "datatype", name: "Bssid", id: 0x2, type: "octstr", conformance: "WI", constraint: "6" },
                 { tag: "datatype", name: "Channel", id: 0x3, type: "uint16", conformance: "WI" },
-                { tag: "datatype", name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]" },
-                { tag: "datatype", name: "Rssi", id: 0x5, type: "int8", conformance: "[WI]" }
+
+                {
+                    tag: "datatype", name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]",
+                    details: "This field, if present, MAY be used to differentiate overlapping channel number values across " +
+                             "different Wi-Fi frequency bands.",
+                    xref: { document: "core", section: "11.8.5.5.1" }
+                },
+
+                {
+                    tag: "datatype", name: "Rssi", id: 0x5, type: "int8", conformance: "[WI]",
+                    details: "This field, if present, SHALL denote the signal strength in dBm of the associated scan result.",
+                    xref: { document: "core", section: "11.8.5.5.2" }
+                }
             ]
         },
 
@@ -382,37 +450,13 @@ Matter.children.push({
                 },
                 { tag: "datatype", name: "Channel", id: 0x3, type: "uint16", conformance: "TH" },
                 { tag: "datatype", name: "Version", id: 0x4, type: "uint8", conformance: "TH" },
-                { tag: "datatype", name: "ExtendedAddress", id: 0x5, type: "hwadr", conformance: "TH" },
+                {
+                    tag: "datatype", name: "ExtendedAddress", id: 0x5, type: "hwadr", conformance: "TH",
+                    details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
+                    xref: { document: "core", section: "11.8.5.6.1" }
+                },
                 { tag: "datatype", name: "Rssi", id: 0x6, type: "int8", conformance: "TH" },
                 { tag: "datatype", name: "Lqi", id: 0x7, type: "uint8", conformance: "TH" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "NetworkInfo", type: "struct", conformance: "M",
-            children: [
-                { tag: "datatype", name: "NetworkId", type: "octstr", conformance: "M" },
-                { tag: "datatype", name: "Connected", type: "bool", conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "NetworkCommissioningStatus", type: "enum8", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "OutOfRange", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "BoundsExceeded", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "NetworkIdNotFound", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "DuplicateNetworkId", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "NetworkNotFound", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "RegulatoryError", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "AuthFailure", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "UnsupportedSecurity", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "OtherConnectionFailure", id: 0x9, conformance: "M" },
-                { tag: "datatype", name: "Ipv6Failed", id: 0xa, conformance: "M" },
-                { tag: "datatype", name: "IpBindFailed", id: 0xb, conformance: "M" },
-                { tag: "datatype", name: "UnknownError", id: 0xc, conformance: "M" }
             ]
         },
 

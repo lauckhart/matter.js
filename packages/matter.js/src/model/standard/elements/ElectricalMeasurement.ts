@@ -419,6 +419,33 @@ Matter.children.push({
         },
         { tag: "attribute", name: "RmsVoltageSagPeriodPhaseC", id: 0xa16, type: "uint16", conformance: "O" },
         { tag: "attribute", name: "RmsVoltageSwellPeriodPhaseC", id: 0xa17, type: "uint16", conformance: "O" },
+
+        {
+            tag: "command", name: "GetProfileInfoResponseCommand", id: 0x0, conformance: "O",
+            direction: "response",
+
+            children: [
+                { tag: "datatype", name: "ProfileCount", type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
+                { tag: "datatype", name: "MaxNumberOfIntervals", type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "ListOfAttributes", type: "uint16", conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "command", name: "GetMeasurementProfileResponseCommand", id: 0x1, conformance: "O",
+            direction: "response",
+
+            children: [
+                { tag: "datatype", name: "StartTime", type: "uint32", conformance: "M" },
+                { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
+                { tag: "datatype", name: "NumberOfIntervalsDelivered", type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M" },
+                { tag: "datatype", name: "Intervals", type: "uint8", conformance: "M" }
+            ]
+        },
+
         { tag: "command", name: "GetProfileInfoCommand", id: 0x0, conformance: "O", direction: "request" },
 
         {

@@ -78,6 +78,165 @@ Matter.children.push({
         },
 
         {
+            tag: "command", name: "AddScene", id: 0x0, access: "R F M", conformance: "M", direction: "request",
+            response: "AddSceneResponse",
+            details: "The AddScene command SHALL have the following data fields:",
+            xref: { document: "cluster", section: "1.4.9.2" },
+
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
+                { tag: "datatype", name: "SceneId", id: 0x1, type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M" },
+                { tag: "datatype", name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 16" },
+                {
+                    tag: "datatype", name: "ExtensionFieldSets", id: 0x4, type: "list", conformance: "M",
+                    children: [ { tag: "datatype", name: "entry", type: "ExtensionFieldSet" } ]
+                }
+            ]
+        },
+
+        {
+            tag: "command", name: "ViewScene", id: 0x1, access: "R F", conformance: "M", direction: "request",
+            response: "ViewSceneResponse",
+            details: "The ViewScene command SHALL have the following data fields:",
+            xref: { document: "cluster", section: "1.4.9.3" },
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
+                { tag: "datatype", name: "SceneId", id: 0x1, type: "uint8", conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "command", name: "RemoveScene", id: 0x2, access: "R F M", conformance: "M",
+            direction: "request", response: "RemoveSceneResponse",
+            details: "The RemoveScene command SHALL have the following data fields:",
+            xref: { document: "cluster", section: "1.4.9.4" },
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
+                { tag: "datatype", name: "SceneId", id: 0x1, type: "uint8", conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "command", name: "RemoveAllScenes", id: 0x3, access: "R F M", conformance: "M",
+            direction: "request", response: "RemoveAllScenesResponse",
+            details: "The RemoveAllScenes command SHALL have the following data fields:",
+            xref: { document: "cluster", section: "1.4.9.5" },
+            children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" } ]
+        },
+
+        {
+            tag: "command", name: "StoreScene", id: 0x4, access: "R F M", conformance: "M",
+            direction: "request", response: "StoreSceneResponse",
+            details: "The StoreScene command SHALL have the following data fields:",
+            xref: { document: "cluster", section: "1.4.9.6" },
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
+                { tag: "datatype", name: "SceneId", id: 0x1, type: "uint8", conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "command", name: "RecallScene", id: 0x5, access: "R F", conformance: "M", direction: "request",
+            response: "status",
+            details: "The RecallScene command SHALL have the following data fields:",
+            xref: { document: "cluster", section: "1.4.9.7" },
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
+                { tag: "datatype", name: "SceneId", id: 0x1, type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "O", quality: "X" }
+            ]
+        },
+
+        {
+            tag: "command", name: "GetSceneMembership", id: 0x6, access: "R F", conformance: "M",
+            direction: "request", response: "GetSceneMembershipResponse",
+            details: "The GetSceneMembership command can be used to find an unused scene identifier within a certain " +
+                     "group when no commissioning tool is in the network, or for a commissioning tool to get the used " +
+                     "scene identifiers within a certain group, for the endpoint that implements this cluster.",
+            xref: { document: "cluster", section: "1.4.9.8" },
+            children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" } ]
+        },
+
+        {
+            tag: "command", name: "EnhancedAddScene", id: 0x40, access: "R F", conformance: "O",
+            direction: "request", response: "EnhancedAddSceneResponse",
+            details: "The EnhancedAddScene command allows a scene to be added using a finer scene transition time than " +
+                     "the AddScene command.",
+            xref: { document: "cluster", section: "1.4.9.9" },
+
+            children: [
+                { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
+                { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
+                { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M" },
+                { tag: "datatype", name: "SceneName", type: "string", conformance: "M" },
+                { tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "command", name: "EnhancedViewScene", id: 0x41, access: "R F", conformance: "O",
+            direction: "request", response: "EnhancedViewSceneResponse",
+            details: "The EnhancedViewScene command allows a scene to be retrieved using a finer scene transition time " +
+                     "than the ViewScene command.",
+            xref: { document: "cluster", section: "1.4.9.10" },
+            children: [
+                { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
+                { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "command", name: "CopyScene", id: 0x42, access: "R F", conformance: "O", direction: "request",
+            response: "CopySceneResponse",
+            details: "The CopyScene command allows a client to efficiently copy scenes from one group/scene identifier " +
+                     "pair to another group/scene identifier pair.",
+            xref: { document: "cluster", section: "1.4.9.11" },
+
+            children: [
+                {
+                    tag: "datatype", name: "Mode", id: 0x0, type: "map8", conformance: "M", constraint: "desc",
+                    details: "The Mode field contains information of how the scene copy is to proceed. This field SHALL be " +
+                             "formatted as illustrated in Format of the Mode Field of the CopyScene Command.",
+                    xref: { document: "cluster", section: "1.4.9.11.1" },
+                    children: [ { tag: "datatype", name: "CopyAllScenes", id: 0x1, conformance: "M" } ]
+                },
+
+                {
+                    tag: "datatype", name: "GroupIdentifierFrom", id: 0x1, type: "group-id", conformance: "M",
+                    details: "The GroupIdentifierFrom field specifies the identifier of the group from which the scene is to be " +
+                             "copied. Together with the SceneIdentifierFrom field, this field uniquely identifies the scene to " +
+                             "copy from the Scene Table.",
+                    xref: { document: "cluster", section: "1.4.9.11.2" }
+                },
+
+                {
+                    tag: "datatype", name: "SceneIdentifierFrom", id: 0x2, type: "uint8", conformance: "M",
+                    details: "The SceneIdentifierFrom field specifies the identifier of the scene from which the scene is to be " +
+                             "copied. Together with the GroupIdentifierFrom field, this field uniquely identifies the scene to " +
+                             "copy from the Scene Table.",
+                    xref: { document: "cluster", section: "1.4.9.11.3" }
+                },
+
+                {
+                    tag: "datatype", name: "GroupIdentifierTo", id: 0x3, type: "group-id", conformance: "M",
+                    details: "The GroupIdentifierTo field specifies the identifier of the group to which the scene is to be " +
+                             "copied. Together with the SceneIdentifierTo field, this field uniquely identifies the scene to copy " +
+                             "to the Scene Table.",
+                    xref: { document: "cluster", section: "1.4.9.11.4" }
+                },
+
+                {
+                    tag: "datatype", name: "SceneIdentifierTo", id: 0x4, type: "uint8", conformance: "M",
+                    details: "The SceneIdentifierTo field specifies the identifier of the scene to which the scene is to be " +
+                             "copied. Together with the GroupIdentifierTo field, this field uniquely identifies the scene to copy " +
+                             "to the Scene Table.",
+                    xref: { document: "cluster", section: "1.4.9.11.5" }
+                }
+            ]
+        },
+
+        {
             tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
             details: "The AddSceneResponse command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.12" },
@@ -138,18 +297,6 @@ Matter.children.push({
                 { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                 { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "command", name: "RecallScene", id: 0x5, access: "R F", conformance: "M", direction: "request",
-            response: "status",
-            details: "The RecallScene command SHALL have the following data fields:",
-            xref: { document: "cluster", section: "1.4.9.7" },
-            children: [
-                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
-                { tag: "datatype", name: "SceneId", id: 0x1, type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "O", quality: "X" }
             ]
         },
 
@@ -248,7 +395,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "AttributeValue", id: 0x1, type: "uint8", access: "RW", conformance: "M",
+                    tag: "datatype", name: "AttributeValue", id: 0x1, type: "any", access: "RW", conformance: "M",
                     details: "This is the attribute value as part of an extension field set. See AttributeID to determine the " +
                              "data type for this field.",
                     xref: { document: "cluster", section: "1.4.6.1.2" }
@@ -270,11 +417,6 @@ Matter.children.push({
                     children: [ { tag: "datatype", name: "entry", type: "AttributeValuePair" } ]
                 }
             ]
-        },
-
-        {
-            tag: "datatype", name: "ScenesCopyMode", type: "map8", conformance: "M",
-            children: [ { tag: "datatype", name: "CopyAllScenes", id: 0x1, conformance: "M" } ]
         }
     ]
 });

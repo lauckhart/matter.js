@@ -305,10 +305,6 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "RemoteLockout", id: 0x0,
-                    description: "Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range."
-                },
-                {
                     tag: "datatype", name: "TamperDetection", id: 0x1, conformance: "M",
                     description: "Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its actuator(s)."
                 },

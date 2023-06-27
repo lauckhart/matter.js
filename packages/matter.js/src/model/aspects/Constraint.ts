@@ -110,6 +110,7 @@ export namespace Constraint {
                         return { desc: true };
 
                     case "all":
+                    case "any":
                         return {};
                 }
                 const value = parseNum(words[0]);

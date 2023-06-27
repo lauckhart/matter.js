@@ -279,7 +279,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "StatusEnum", type: "enum8",
+            tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
             details: "Status Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.10.5.2" },
 
@@ -329,19 +329,6 @@ Matter.children.push({
                              "start time is specified.",
                     xref: { document: "cluster", section: "6.10.5.3.2" }
                 }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "MediaPlaybackStatusEnum", type: "enum8", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "InvalidStateForCommand", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "NotAllowed", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "NotActive", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "SpeedOutOfRange", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "SeekOutOfRange", id: 0x5, conformance: "M" }
             ]
         }
     ]

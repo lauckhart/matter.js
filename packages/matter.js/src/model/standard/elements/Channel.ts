@@ -205,7 +205,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "StatusEnum", type: "enum8",
+            tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
             details: "StatusEnum Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.6.5.4" },
 
@@ -219,15 +219,6 @@ Matter.children.push({
                     tag: "datatype", name: "NoMatches", id: 0x2, conformance: "M",
                     description: "No matches for the ChannelInfoStruct passed in."
                 }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ChannelStatusEnum", type: "enum8", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "MultipleMatches", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "NoMatches", id: 0x2, conformance: "M" }
             ]
         }
     ]

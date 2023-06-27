@@ -504,9 +504,9 @@ export interface ConditionalEvent<T, F extends BitSchema> extends OptionalEvent<
     isConditional: true,
 }
 
-export const Event = <FT extends TlvFields, F extends BitSchema>(id: number, priority: EventPriority, data: FT = <FT>{}): Event<TypeFromFields<FT>, F> => ({
+export const Event = <T, F extends BitSchema>(id: number, priority: EventPriority, schema: TlvSchema<T>): Event<T, F> => ({
     id,
-    schema: TlvObject(data),
+    schema,
     priority,
     optional: false,
     isConditional: false,
@@ -514,9 +514,9 @@ export const Event = <FT extends TlvFields, F extends BitSchema>(id: number, pri
     mandatoryIf: [],
 });
 
-export const OptionalEvent = <FT extends TlvFields, F extends BitSchema>(id: number, priority: EventPriority, data: FT = <FT>{}): OptionalEvent<TypeFromFields<FT>, F> => ({
+export const OptionalEvent = <T, F extends BitSchema>(id: number, priority: EventPriority, schema: TlvSchema<T>): OptionalEvent<T, F> => ({
     id,
-    schema: TlvObject(data),
+    schema,
     priority,
     optional: true,
     isConditional: false,
@@ -524,17 +524,17 @@ export const OptionalEvent = <FT extends TlvFields, F extends BitSchema>(id: num
     mandatoryIf: [],
 });
 
-export const ConditionalEvent = <FT extends TlvFields, F extends BitSchema>(
+export const ConditionalEvent = <T, F extends BitSchema>(
     id: number,
     priority: EventPriority,
-    data: FT = <FT>{},
+    schema: TlvSchema<T>,
     {
         optionalIf = [],
         mandatoryIf = []
     }: ConditionalEventOptions<F>
-): ConditionalEvent<TypeFromFields<FT>, F> => ({
+): ConditionalEvent<T, F> => ({
     id,
-    schema: TlvObject(data),
+    schema,
     priority,
     optional: true,
     isConditional: true,

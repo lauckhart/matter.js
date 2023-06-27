@@ -621,10 +621,17 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
+                    details: "This field SHALL represent the set of faults currently detected, as per Section 11.13.5.1, " +
+                             "“NetworkFaultEnum”.",
+                    xref: { document: "core", section: "11.13.8.1.1" },
                     children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
                 },
+
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
+                    details: "This field SHALL represent the set of faults detected prior to this change event, as per Section " +
+                             "11.13.5.1, “NetworkFaultEnum”.",
+                    xref: { document: "core", section: "11.13.8.1.2" },
                     children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
                 }
             ]
@@ -638,7 +645,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "NetworkFaultEnum", type: "enum8",
+            tag: "datatype", name: "NetworkFaultEnum", type: "enum8", conformance: "M",
             details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.13.5.1" },
 
@@ -661,7 +668,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "RoutingRoleEnum", type: "enum8",
+            tag: "datatype", name: "RoutingRoleEnum", type: "enum8", conformance: "M",
             details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.13.5.3" },
 
@@ -677,150 +684,264 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "NeighborTableStruct", type: "struct",
-            details: "ExtAddress Field",
+            tag: "datatype", name: "NeighborTableStruct", type: "struct", conformance: "M",
             xref: { document: "core", section: "11.13.5.4" },
 
             children: [
-                { tag: "datatype", name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M" },
-                { tag: "datatype", name: "Age", id: 0x1, type: "uint32", conformance: "M" },
-                { tag: "datatype", name: "Rloc16", id: 0x2, type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "LinkFrameCounter", id: 0x3, type: "uint32", conformance: "M" },
-                { tag: "datatype", name: "MleFrameCounter", id: 0x4, type: "uint32", conformance: "M" },
-                { tag: "datatype", name: "Lqi", id: 0x5, type: "uint8", conformance: "M", constraint: "0 to 255" },
+                {
+                    tag: "datatype", name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M",
+                    details: "This field SHALL specify the IEEE 802.15.4 extended address for the neighboring Node.",
+                    xref: { document: "core", section: "11.13.5.4.1" }
+                },
+
+                {
+                    tag: "datatype", name: "Age", id: 0x1, type: "uint32", conformance: "M",
+                    details: "This field SHALL specify the duration of time, in seconds, since a frame has been received from the " +
+                             "neighboring Node.",
+                    xref: { document: "core", section: "11.13.5.4.2" }
+                },
+
+                {
+                    tag: "datatype", name: "Rloc16", id: 0x2, type: "uint16", conformance: "M",
+                    details: "This field SHALL specify the RLOC16 of the neighboring Node.",
+                    xref: { document: "core", section: "11.13.5.4.3" }
+                },
+
+                {
+                    tag: "datatype", name: "LinkFrameCounter", id: 0x3, type: "uint32", conformance: "M",
+                    details: "This field SHALL specify the number of link layer frames that have been received from the " +
+                             "neighboring node. This field SHALL be reset to 0 upon a reboot of the Node.",
+                    xref: { document: "core", section: "11.13.5.4.4" }
+                },
+
+                {
+                    tag: "datatype", name: "MleFrameCounter", id: 0x4, type: "uint32", conformance: "M",
+                    details: "This field SHALL specify the number of Mesh Link Establishment frames that have been received from " +
+                             "the neighboring node. This field SHALL be reset to 0 upon a reboot of the Node.",
+                    xref: { document: "core", section: "11.13.5.4.5" }
+                },
+
+                {
+                    tag: "datatype", name: "Lqi", id: 0x5, type: "uint8", conformance: "M", constraint: "0 to 255",
+                    details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
+                             "indicators, scaled from 0 to 255.",
+                    xref: { document: "core", section: "11.13.5.4.6" }
+                },
+
                 {
                     tag: "datatype", name: "AverageRssi", id: 0x6, type: "int8", conformance: "M",
-                    constraint: "-128 to 0", default: null, quality: "X"
+                    constraint: "-128 to 0", default: null, quality: "X",
+                    details: "This field SHOULD specify the average RSSI across all received frames from the neighboring Node " +
+                             "since the receiving Node’s last reboot. If there is no known received frames this field SHOULD have",
+                    xref: { document: "core", section: "11.13.5.4.7" }
                 },
+
                 {
                     tag: "datatype", name: "LastRssi", id: 0x7, type: "int8", conformance: "M", constraint: "-128 to 0",
-                    default: null, quality: "X"
+                    default: null, quality: "X",
+                    details: "This field SHALL specify the RSSI of the most recently received frame from the neighboring Node. If " +
+                             "there is no known last received frame the LastRssi field SHOULD have the value of null. This field " +
+                             "SHALL have the units of dBm, having the range -128 dBm to 0 dBm.",
+                    xref: { document: "core", section: "11.13.5.4.8" }
                 },
+
                 {
                     tag: "datatype", name: "FrameErrorRate", id: 0x8, type: "uint8", conformance: "O",
-                    constraint: "0 to 100"
+                    constraint: "0 to 100",
+                    details: "This field SHALL specify the percentage of received frames from the neighboring Node that have " +
+                             "resulted in errors.",
+                    xref: { document: "core", section: "11.13.5.4.9" }
                 },
+
                 {
                     tag: "datatype", name: "MessageErrorRate", id: 0x9, type: "uint8", conformance: "O",
-                    constraint: "0 to 100"
+                    constraint: "0 to 100",
+                    details: "This field SHALL specify the percentage of received messages from the neighboring Node that have " +
+                             "resulted in errors.",
+                    xref: { document: "core", section: "11.13.5.4.10" }
                 },
-                { tag: "datatype", name: "RxOnWhenIdle", id: 0xa, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "FullThreadDevice", id: 0xb, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "FullNetworkData", id: 0xc, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "IsChild", id: 0xd, type: "bool", conformance: "M" }
+
+                {
+                    tag: "datatype", name: "RxOnWhenIdle", id: 0xa, type: "bool", conformance: "M",
+                    details: "This field SHALL specify if the neighboring Node is capable of receiving frames while the Node is " +
+                             "in an idle state.",
+                    xref: { document: "core", section: "11.13.5.4.11" }
+                },
+
+                {
+                    tag: "datatype", name: "FullThreadDevice", id: 0xb, type: "bool", conformance: "M",
+                    details: "This field SHALL specify if the neighboring Node is a full Thread device.",
+                    xref: { document: "core", section: "11.13.5.4.12" }
+                },
+
+                {
+                    tag: "datatype", name: "FullNetworkData", id: 0xc, type: "bool", conformance: "M",
+                    details: "This field SHALL specify if the neighboring Node requires the full Network Data. If set to False, " +
+                             "the neighboring Node only requires the stable Network Data.",
+                    xref: { document: "core", section: "11.13.5.4.13" }
+                },
+
+                {
+                    tag: "datatype", name: "IsChild", id: 0xd, type: "bool", conformance: "M",
+                    details: "This field SHALL specify if the neighboring Node is a direct child of the Node reporting the " +
+                             "NeighborTable attribute.",
+                    xref: { document: "core", section: "11.13.5.4.14" }
+                }
             ]
         },
 
         {
-            tag: "datatype", name: "RouteTableStruct", type: "struct",
-            details: "ExtAddress Field",
+            tag: "datatype", name: "RouteTableStruct", type: "struct", conformance: "M",
+            details: "This field SHALL specify the IEEE 802.15.4 extended address for the Node for which this route table " +
+                     "entry corresponds.",
             xref: { document: "core", section: "11.13.5.5" },
 
             children: [
                 { tag: "datatype", name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M" },
                 { tag: "datatype", name: "Rloc16", id: 0x1, type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "RouterId", id: 0x2, type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "NextHop", id: 0x3, type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "PathCost", id: 0x4, type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "LqiIn", id: 0x5, type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "LqiOut", id: 0x6, type: "uint8", conformance: "M" },
+                {
+                    tag: "datatype", name: "RouterId", id: 0x2, type: "uint8", conformance: "M",
+                    details: "This field SHALL specify the Router ID for the Node for which this route table entry corresponds.",
+                    xref: { document: "core", section: "11.13.5.5.1" }
+                },
+
+                {
+                    tag: "datatype", name: "NextHop", id: 0x3, type: "uint8", conformance: "M",
+                    details: "This field SHALL specify the Router ID for the next hop in the route to the Node for which this " +
+                             "route table entry corresponds.",
+                    xref: { document: "core", section: "11.13.5.5.2" }
+                },
+
+                {
+                    tag: "datatype", name: "PathCost", id: 0x4, type: "uint8", conformance: "M",
+                    details: "This Field SHALL specify the cost of the route to the Node for which this route table entry " +
+                             "corresponds.",
+                    xref: { document: "core", section: "11.13.5.5.3" }
+                },
+
+                {
+                    tag: "datatype", name: "LqiIn", id: 0x5, type: "uint8", conformance: "M",
+                    details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
+                             "indicators, scaled from 0 to 255, from the perspective of the Node reporting the neighbor table.",
+                    xref: { document: "core", section: "11.13.5.5.4" }
+                },
+
+                {
+                    tag: "datatype", name: "LqiOut", id: 0x6, type: "uint8", conformance: "M",
+                    details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
+                             "indicators, scaled from 0 to 255, from the perspective of the Node specified within the NextHop " +
+                             "field.",
+                    xref: { document: "core", section: "11.13.5.5.5" }
+                },
+
                 { tag: "datatype", name: "Age", id: 0x7, type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "Allocated", id: 0x8, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "LinkEstablished", id: 0x9, type: "bool", conformance: "M" }
+                {
+                    tag: "datatype", name: "Allocated", id: 0x8, type: "bool", conformance: "M",
+                    details: "This field SHALL specify if the router ID as defined within the RouterId field has been allocated.",
+                    xref: { document: "core", section: "11.13.5.5.6" }
+                },
+
+                {
+                    tag: "datatype", name: "LinkEstablished", id: 0x9, type: "bool", conformance: "M",
+                    details: "This field SHALL specify if a link has been established to the Node for which this route table " +
+                             "entry corresponds.",
+                    xref: { document: "core", section: "11.13.5.5.7" }
+                }
             ]
         },
 
         {
             tag: "datatype", name: "SecurityPolicy", type: "struct", conformance: "M",
-            details: "RotationTime Field",
             xref: { document: "core", section: "11.13.5.6" },
+
             children: [
-                { tag: "datatype", name: "RotationTime", id: 0x0, type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "Flags", id: 0x1, type: "uint16", conformance: "M" }
+                {
+                    tag: "datatype", name: "RotationTime", id: 0x0, type: "uint16", conformance: "M",
+                    details: "This field SHALL specify the interval of time, in hours, that Thread security keys are rotated. " +
+                             "This attribute SHALL be null when there is no dataset configured.",
+                    xref: { document: "core", section: "11.13.5.6.1" }
+                },
+
+                {
+                    tag: "datatype", name: "Flags", id: 0x1, type: "uint16", conformance: "M",
+                    details: "This field SHALL specify the flags as specified in Thread 1.3.0 section 8.10.1.15. This attribute " +
+                             "SHALL be null when there is no dataset configured.",
+                    xref: { document: "core", section: "11.13.5.6.2" }
+                }
             ]
         },
 
         {
             tag: "datatype", name: "OperationalDatasetComponents", type: "struct", conformance: "M",
-            details: "ActiveTimestampPresent Field",
             xref: { document: "core", section: "11.13.5.7" },
 
             children: [
-                { tag: "datatype", name: "ActiveTimestampPresent", id: 0x0, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "PendingTimestampPresent", id: 0x1, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "MasterKeyPresent", id: 0x2, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "NetworkNamePresent", id: 0x3, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "ExtendedPanIdPresent", id: 0x4, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "MeshLocalPrefixPresent", id: 0x5, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "DelayPresent", id: 0x6, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "PanIdPresent", id: 0x7, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "ChannelPresent", id: 0x8, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "PskcPresent", id: 0x9, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "SecurityPolicyPresent", id: 0xa, type: "bool", conformance: "M" },
-                { tag: "datatype", name: "ChannelMaskPresent", id: 0xb, type: "bool", conformance: "M" }
-            ]
-        },
+                {
+                    tag: "datatype", name: "ActiveTimestampPresent", id: 0x0, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has an active timestamp present, else False.",
+                    xref: { document: "core", section: "11.13.5.7.1" }
+                },
+                {
+                    tag: "datatype", name: "PendingTimestampPresent", id: 0x1, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has a pending timestamp is present, else False.",
+                    xref: { document: "core", section: "11.13.5.7.2" }
+                },
+                {
+                    tag: "datatype", name: "MasterKeyPresent", id: 0x2, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has the Thread master key, else False.",
+                    xref: { document: "core", section: "11.13.5.7.3" }
+                },
+                {
+                    tag: "datatype", name: "NetworkNamePresent", id: 0x3, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has the Thread network’s name, else False.",
+                    xref: { document: "core", section: "11.13.5.7.4" }
+                },
+                {
+                    tag: "datatype", name: "ExtendedPanIdPresent", id: 0x4, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has an extended Pan ID, else False.",
+                    xref: { document: "core", section: "11.13.5.7.5" }
+                },
+                {
+                    tag: "datatype", name: "MeshLocalPrefixPresent", id: 0x5, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has the mesh local prefix, else False.",
+                    xref: { document: "core", section: "11.13.5.7.6" }
+                },
+                {
+                    tag: "datatype", name: "DelayPresent", id: 0x6, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has the Thread network delay set, else False.",
+                    xref: { document: "core", section: "11.13.5.7.7" }
+                },
+                {
+                    tag: "datatype", name: "PanIdPresent", id: 0x7, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has a Pan ID, else False.",
+                    xref: { document: "core", section: "11.13.5.7.8" }
+                },
 
-        {
-            tag: "datatype", name: "RoutingRole", type: "enum8", conformance: "M",
+                {
+                    tag: "datatype", name: "ChannelPresent", id: 0x8, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has configured an operational channel for the Thread network, " +
+                             "else False.",
+                    xref: { document: "core", section: "11.13.5.7.9" }
+                },
 
-            children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Unassigned", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "SleepyEndDevice", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "EndDevice", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Reed", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Router", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "Leader", id: 0x6, conformance: "M" }
-            ]
-        },
+                {
+                    tag: "datatype", name: "PskcPresent", id: 0x9, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has been configured with the Thread network Pskc, else False.",
+                    xref: { document: "core", section: "11.13.5.7.10" }
+                },
 
-        {
-            tag: "datatype", name: "NeighborTable", type: "struct", conformance: "M",
+                {
+                    tag: "datatype", name: "SecurityPolicyPresent", id: 0xa, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has been configured with the Thread network security policies, " +
+                             "else False.",
+                    xref: { document: "core", section: "11.13.5.7.11" }
+                },
 
-            children: [
-                { tag: "datatype", name: "ExtAddress", type: "uint64", conformance: "M" },
-                { tag: "datatype", name: "Age", type: "uint32", conformance: "M" },
-                { tag: "datatype", name: "Rloc16", type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "LinkFrameCounter", type: "uint32", conformance: "M" },
-                { tag: "datatype", name: "MleFrameCounter", type: "uint32", conformance: "M" },
-                { tag: "datatype", name: "Lqi", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "AverageRssi", type: "int8", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "LastRssi", type: "int8", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "FrameErrorRate", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "MessageErrorRate", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "RxOnWhenIdle", type: "bool", conformance: "M" },
-                { tag: "datatype", name: "FullThreadDevice", type: "bool", conformance: "M" },
-                { tag: "datatype", name: "FullNetworkData", type: "bool", conformance: "M" },
-                { tag: "datatype", name: "IsChild", type: "bool", conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "RouteTable", type: "struct", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "ExtAddress", type: "uint64", conformance: "M" },
-                { tag: "datatype", name: "Rloc16", type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "RouterId", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "NextHop", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "PathCost", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "LqiIn", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "LqiOut", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "Age", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "Allocated", type: "bool", conformance: "M" },
-                { tag: "datatype", name: "LinkEstablished", type: "bool", conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "NetworkFault", type: "enum8", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "LinkDown", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "HardwareFailure", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "NetworkJammed", id: 0x3, conformance: "M" }
+                {
+                    tag: "datatype", name: "ChannelMaskPresent", id: 0xb, type: "bool", conformance: "M",
+                    details: "This field SHALL be True if the Node has available a mask of available channels, else False.",
+                    xref: { document: "core", section: "11.13.5.7.12" }
+                }
             ]
         }
     ]

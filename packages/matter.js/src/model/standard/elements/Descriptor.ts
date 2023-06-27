@@ -54,9 +54,21 @@ Matter.children.push({
             details: "The device type and revision define endpoint conformance to a release of a device type definition. " +
                      "See the Data Model specification for more information.",
             xref: { document: "core", section: "9.5.4.1" },
+
             children: [
-                { tag: "datatype", name: "DeviceType", id: 0x0, type: "devtype-id", conformance: "M" },
-                { tag: "datatype", name: "Revision", id: 0x1, type: "uint16", conformance: "M", constraint: "min 1" }
+                {
+                    tag: "datatype", name: "DeviceType", id: 0x0, type: "devtype-id", conformance: "M",
+                    details: "This SHALL indicate the device type definition. The endpoint SHALL conform to the device type " +
+                             "definition and cluster specifications required by the device type.",
+                    xref: { document: "core", section: "9.5.4.1.1" }
+                },
+
+                {
+                    tag: "datatype", name: "Revision", id: 0x1, type: "uint16", conformance: "M", constraint: "min 1",
+                    details: "This is the implemented revision of the device type definition. The endpoint SHALL conform to this " +
+                             "revision of the device type.",
+                    xref: { document: "core", section: "9.5.4.1.2" }
+                }
             ]
         }
     ]

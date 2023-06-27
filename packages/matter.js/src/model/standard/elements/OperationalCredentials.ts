@@ -88,11 +88,17 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "AttestationElements", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "max RespMax"
+                    constraint: "max RespMax",
+                    details: "This field SHALL contain the octet string of the serialized attestation_elements_message.",
+                    xref: { document: "core", section: "11.17.6.2.1" }
                 },
+
                 {
                     tag: "datatype", name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M",
-                    constraint: "64"
+                    constraint: "64",
+                    details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
+                             "Section 11.17.4.7, “Attestation Information”.",
+                    xref: { document: "core", section: "11.17.6.2.2" }
                 }
             ]
         },
@@ -120,7 +126,10 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Certificate", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "max 600"
+                    constraint: "max 600",
+                    details: "This field SHALL be the DER encoded certificate corresponding to the CertificateType field in the " +
+                             "CertificateChainRequest command.",
+                    xref: { document: "core", section: "11.17.6.4.1" }
                 }
             ]
         },
@@ -145,8 +154,11 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "NocsrElements", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "max RespMax"
+                    constraint: "max RespMax",
+                    details: "This field SHALL contain the octet string of the serialized nocsr_elements_message.",
+                    xref: { document: "core", section: "11.17.6.6.1" }
                 },
+
                 {
                     tag: "datatype", name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M",
                     constraint: "64"
@@ -167,9 +179,27 @@ Matter.children.push({
                     tag: "datatype", name: "IcacValue", id: 0x1, type: "octstr", conformance: "O",
                     constraint: "max 400"
                 },
-                { tag: "datatype", name: "IpkValue", id: 0x2, type: "octstr", conformance: "M", constraint: "16" },
-                { tag: "datatype", name: "CaseAdminSubject", id: 0x3, type: "SubjectID", conformance: "M" },
-                { tag: "datatype", name: "AdminVendorId", id: 0x4, type: "vendor-id", conformance: "M" }
+
+                {
+                    tag: "datatype", name: "IpkValue", id: 0x2, type: "octstr", conformance: "M", constraint: "16",
+                    details: "This field SHALL contain the value of the Epoch Key for the Identity Protection Key (IPK) to set " +
+                             "for the Fabric which is to be added. This is needed to bootstrap a necessary configuration value " +
+                             "for subsequent CASE to succeed. See Section 4.13.2.6.1, “Identity Protection Key (IPK)” for details.",
+                    xref: { document: "core", section: "11.17.6.8.1" }
+                },
+
+                {
+                    tag: "datatype", name: "CaseAdminSubject", id: 0x3, type: "SubjectID", conformance: "M",
+                    details: "If the AddNOC command succeeds according to the semantics of the following subsections, then the",
+                    xref: { document: "core", section: "11.17.6.8.2" }
+                },
+
+                {
+                    tag: "datatype", name: "AdminVendorId", id: 0x4, type: "vendor-id", conformance: "M",
+                    details: "This field SHALL be set to the Vendor ID of the entity issuing the AddNOC command. This value SHALL " +
+                             "NOT be one of the reserved Vendor ID values defined in Table 1, “Vendor ID Allocations”.",
+                    xref: { document: "core", section: "11.17.6.8.3" }
+                }
             ]
         },
 
@@ -201,15 +231,26 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "StatusCode", id: 0x0, type: "NodeOperationalCertStatusEnum",
-                    conformance: "M"
+                    conformance: "M",
+                    details: "This field SHALL contain an NOCStatus value representing the status of an operation involving a NOC.",
+                    xref: { document: "core", section: "11.17.6.10.1" }
                 },
+
                 {
                     tag: "datatype", name: "FabricIndex", id: 0x1, type: "fabric-idx", conformance: "O",
-                    constraint: "1 to 254"
+                    constraint: "1 to 254",
+                    details: "This field SHALL be present whenever StatusCode has a value of OK. If present, it SHALL contain the " +
+                             "Fabric Index of the Fabric last added, removed or updated.",
+                    xref: { document: "core", section: "11.17.6.10.2" }
                 },
+
                 {
                     tag: "datatype", name: "DebugText", id: 0x2, type: "string", conformance: "O",
-                    constraint: "max 128"
+                    constraint: "max 128",
+                    details: "This field MAY contain debugging textual information from the cluster implementation, which SHOULD " +
+                             "NOT be presented to user interfaces in any way. Its purpose is to help developers in " +
+                             "troubleshooting errors and the contents MAY go into logs or crash reports.",
+                    xref: { document: "core", section: "11.17.6.10.3" }
                 }
             ]
         },
@@ -235,7 +276,13 @@ Matter.children.push({
             details: "This command is used by Administrators to remove a given Fabric and delete all associated " +
                      "fabric-scoped data.",
             xref: { document: "core", section: "11.17.6.12" },
-            children: [ { tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M" } ]
+
+            children: [
+                {
+                    tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M",
+                    constraint: "1 to 254"
+                }
+            ]
         },
 
         {
@@ -284,19 +331,26 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "NOCStruct", type: "struct",
+            tag: "datatype", name: "NOCStruct", type: "struct", access: "R F", conformance: "M",
             details: "This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a " +
                      "given Node.",
             xref: { document: "core", section: "11.17.4.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "Noc", id: 0x1, type: "octstr", access: "S", conformance: "M",
-                    constraint: "max 400"
+                    tag: "datatype", name: "Noc", id: 0x1, type: "octstr", access: "R S", conformance: "M",
+                    constraint: "max 400", quality: "X",
+                    details: "This field SHALL contain the NOC for the struct’s associated fabric, encoded using Matter " +
+                             "Certificate Encoding.",
+                    xref: { document: "core", section: "11.17.4.4.1" }
                 },
+
                 {
                     tag: "datatype", name: "Icac", id: 0x2, type: "octstr", access: "S", conformance: "M",
-                    constraint: "max 400", quality: "X"
+                    constraint: "max 400", quality: "X",
+                    details: "This field SHALL contain the ICAC or the struct’s associated fabric, encoded using Matter " +
+                             "Certificate Encoding. If no ICAC is present in the chain, this field SHALL be set to null.",
+                    xref: { document: "core", section: "11.17.4.4.2" }
                 }
             ]
         },
@@ -309,27 +363,30 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "RootPublicKey", id: 0x1, type: "octstr", access: "F", conformance: "M",
-                    constraint: "65"
-                },
-                {
                     tag: "datatype", name: "VendorId", id: 0x2, type: "vendor-id", access: "F", conformance: "M",
-                    constraint: "desc"
+                    constraint: "desc",
+                    details: "This field SHALL contain the value of AdminVendorID provided in the AddNOC command that led to the " +
+                             "creation of this FabricDescriptorStruct. The set of allowed values is defined in Section " +
+                             "11.17.6.8.3, “AdminVendorID Field”.",
+                    xref: { document: "core", section: "11.17.4.5.2" }
                 },
-                { tag: "datatype", name: "FabricId", id: 0x3, type: "fabric-id", access: "F", conformance: "M" },
-                { tag: "datatype", name: "NodeId", id: 0x4, type: "node-id", access: "F", conformance: "M" },
+
+                {
+                    tag: "datatype", name: "FabricId", id: 0x3, type: "fabric-id", access: "F", conformance: "M",
+                    details: "This field SHALL contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
+                             "SHALL match the value found in the matter-fabric-id field from the operational certificate provid",
+                    xref: { document: "core", section: "11.17.4.5.3" }
+                },
+
                 {
                     tag: "datatype", name: "Label", id: 0x5, type: "string", access: "F", conformance: "M",
-                    constraint: "max 32", default: ""
-                }
-            ]
-        },
+                    constraint: "max 32", default: "",
+                    details: "This field SHALL contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
+                             "label is set by the UpdateFabricLabel command.",
+                    xref: { document: "core", section: "11.17.4.5.5" }
+                },
 
-        {
-            tag: "datatype", name: "NocStruct", type: "struct", access: "R F", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Noc", type: "octstr", access: "R S", conformance: "M" },
-                { tag: "datatype", name: "Icac", type: "octstr", access: "R S", conformance: "M", quality: "X" }
+                { tag: "datatype", name: "RootPublicKey", type: "octstr", conformance: "M" }
             ]
         }
     ]

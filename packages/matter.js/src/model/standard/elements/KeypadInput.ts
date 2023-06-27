@@ -68,7 +68,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "StatusEnum", type: "enum8",
+            tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
             details: "Status Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.8.4.1" },
 
@@ -175,15 +175,6 @@ Matter.children.push({
                 { tag: "datatype", name: "F4Yellow", id: 0x74, conformance: "M" },
                 { tag: "datatype", name: "F5", id: 0x75, conformance: "M" },
                 { tag: "datatype", name: "Data", id: 0x76, conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "KeypadInputStatusEnum", type: "enum8", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "UnsupportedKey", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "InvalidKeyInCurrentState", id: 0x2, conformance: "M" }
             ]
         }
     ]

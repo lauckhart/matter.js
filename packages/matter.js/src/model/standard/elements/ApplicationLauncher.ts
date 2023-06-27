@@ -123,7 +123,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "StatusEnum", type: "enum8",
+            tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
             details: "StatusEnum Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.4.5.1" },
 
@@ -163,29 +163,12 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ApplicationEPStruct", type: "struct",
+            tag: "datatype", name: "ApplicationEPStruct", type: "struct", conformance: "M",
             details: "This specifies an app along with its corresponding endpoint.",
             xref: { document: "cluster", section: "6.4.5.3" },
             children: [
                 { tag: "datatype", name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "M" },
                 { tag: "datatype", name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "O" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ApplicationEpStruct", type: "struct", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Application", type: "ApplicationStruct", conformance: "M" },
-                { tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "O" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ApplicationLauncherStatusEnum", type: "enum8", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "AppNotAvailable", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "SystemBusy", id: 0x2, conformance: "M" }
             ]
         }
     ]

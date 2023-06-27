@@ -167,7 +167,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "StartUpOnOffEnum", type: "enum8",
+            tag: "datatype", name: "StartUpOnOffEnum", type: "enum8", conformance: "M",
             details: "The data type StartUpOnOffEnum is derived from enum8. The values of the StartUpOnOffEnum data type " +
                      "are listed below.",
             xref: { document: "cluster", section: "1.5.5.1" },
@@ -185,15 +185,6 @@ Matter.children.push({
                     tag: "datatype", name: "Toggle", id: 0x2, conformance: "M",
                     description: "If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle)."
                 }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "OnOffStartUpOnOff", type: "enum8", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Off", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "On", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "TogglePreviousOnOff", id: 0x2, conformance: "M" }
             ]
         },
 

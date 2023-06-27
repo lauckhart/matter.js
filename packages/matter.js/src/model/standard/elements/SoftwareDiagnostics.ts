@@ -72,9 +72,14 @@ Matter.children.push({
                     tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
                     default: "empty"
                 },
+
                 {
                     tag: "datatype", name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O",
-                    constraint: "max 1024"
+                    constraint: "max 1024",
+                    details: "The FaultRecording field SHALL be a manufacturer-specified payload intended to convey information " +
+                             "to assist in further diagnosing or debugging a software fault. The FaultRecording field MAY be used " +
+                             "to convey information such as, but not limited to, thread backtraces or register contents.",
+                    xref: { document: "core", section: "11.12.8.1.1" }
                 }
             ]
         },
@@ -88,18 +93,45 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ThreadMetricsStruct", type: "struct", conformance: "M",
-            details: "ID Field",
             xref: { document: "core", section: "11.12.5.1" },
 
             children: [
-                { tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M" },
+                {
+                    tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M",
+                    details: "The Id field SHALL be a server-assigned per-thread unique ID that is constant for the duration of " +
+                             "the thread. Efforts SHOULD be made to avoid reusing ID values when possible.",
+                    xref: { document: "core", section: "11.12.5.1.1" }
+                },
+
                 {
                     tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
-                    default: "empty"
+                    default: "empty",
+                    details: "The Name field SHALL be set to a vendor defined name or prefix of the software thread that is " +
+                             "static for the duration of the thread.",
+                    xref: { document: "core", section: "11.12.5.1.2" }
                 },
-                { tag: "datatype", name: "StackFreeCurrent", id: 0x2, type: "uint32", conformance: "O" },
-                { tag: "datatype", name: "StackFreeMinimum", id: 0x3, type: "uint32", conformance: "O" },
-                { tag: "datatype", name: "StackSize", id: 0x4, type: "uint32", conformance: "O" }
+
+                {
+                    tag: "datatype", name: "StackFreeCurrent", id: 0x2, type: "uint32", conformance: "O",
+                    details: "The StackFreeCurrent field SHALL indicate the current amount of stack memory, in bytes, that are " +
+                             "not being utilized on the respective thread.",
+                    xref: { document: "core", section: "11.12.5.1.3" }
+                },
+
+                {
+                    tag: "datatype", name: "StackFreeMinimum", id: 0x3, type: "uint32", conformance: "O",
+                    details: "The StackFreeMinimum field SHALL indicate the minimum amount of stack memory, in bytes, that has " +
+                             "been available at any point between the current time and this attribute being reset or initialized " +
+                             "on the respective thread. This value SHALL only be reset upon a Node reboot or upon receiving of " +
+                             "the ResetWatermarks command.",
+                    xref: { document: "core", section: "11.12.5.1.4" }
+                },
+
+                {
+                    tag: "datatype", name: "StackSize", id: 0x4, type: "uint32", conformance: "O",
+                    details: "The StackSize field SHALL indicate the amount of stack memory, in bytes, that has been allocated",
+                    xref: { document: "core", section: "11.12.5.1.5" }
+                }
             ]
         }
     ]

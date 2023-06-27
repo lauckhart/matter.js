@@ -43,6 +43,73 @@ Matter.children.push({
         },
 
         {
+            tag: "command", name: "AddGroup", id: 0x0, access: "R F M", conformance: "M", direction: "request",
+            response: "AddGroupResponse",
+            details: "The AddGroup command allows a client to add group membership in a particular group for the server " +
+                     "endpoint.",
+            xref: { document: "cluster", section: "1.3.7.1" },
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" },
+                { tag: "datatype", name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16" }
+            ]
+        },
+
+        {
+            tag: "command", name: "ViewGroup", id: 0x1, access: "R F", conformance: "M", direction: "request",
+            response: "ViewGroupResponse",
+            details: "The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse " +
+                     "command containing the name string for a particular group.",
+            xref: { document: "cluster", section: "1.3.7.2" },
+            children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" } ]
+        },
+
+        {
+            tag: "command", name: "GetGroupMembership", id: 0x2, access: "R F", conformance: "M",
+            direction: "request", response: "GetGroupMembershipResponse",
+            details: "The GetGroupMembership command allows a client to inquire about the group membership of the server " +
+                     "endpoint, in a number of ways.",
+            xref: { document: "cluster", section: "1.3.7.3" },
+
+            children: [
+                {
+                    tag: "datatype", name: "GroupList", id: 0x0, type: "list", conformance: "M",
+                    constraint: "all[min 1]",
+                    children: [ { tag: "datatype", name: "entry", type: "group-id" } ]
+                }
+            ]
+        },
+
+        {
+            tag: "command", name: "RemoveGroup", id: 0x3, access: "R F M", conformance: "M",
+            direction: "request", response: "RemoveGroupResponse",
+            details: "The RemoveGroup command allows a client to request that the server removes the membership for the " +
+                     "server endpoint, if any, in a particular group.",
+            xref: { document: "cluster", section: "1.3.7.4" },
+            children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" } ]
+        },
+
+        {
+            tag: "command", name: "RemoveAllGroups", id: 0x4, access: "R F M", conformance: "M",
+            direction: "request", response: "status",
+            details: "The RemoveAllGroups command allows a client to direct the server to remove all group associations " +
+                     "for the server endpoint.",
+            xref: { document: "cluster", section: "1.3.7.5" }
+        },
+
+        {
+            tag: "command", name: "AddGroupIfIdentifying", id: 0x5, access: "R F M", conformance: "M",
+            direction: "request", response: "status",
+            details: "The AddGroupIfIdentifying command allows a client to add group membership in a particular group for " +
+                     "the server endpoint, on condition that the endpoint is identifying itself. Identifying " +
+                     "functionality is controlled using the Identify cluster, (see Identify).",
+            xref: { document: "cluster", section: "1.3.7.6" },
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" },
+                { tag: "datatype", name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16" }
+            ]
+        },
+
+        {
             tag: "command", name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
             details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command. The " +
                      "AddGroupResponse command SHALL have the following data fields:",
@@ -90,27 +157,6 @@ Matter.children.push({
             children: [
                 { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" }
-            ]
-        },
-
-        {
-            tag: "command", name: "RemoveAllGroups", id: 0x4, access: "R F M", conformance: "M",
-            direction: "request", response: "status",
-            details: "The RemoveAllGroups command allows a client to direct the server to remove all group associations " +
-                     "for the server endpoint.",
-            xref: { document: "cluster", section: "1.3.7.5" }
-        },
-
-        {
-            tag: "command", name: "AddGroupIfIdentifying", id: 0x5, access: "R F M", conformance: "M",
-            direction: "request", response: "status",
-            details: "The AddGroupIfIdentifying command allows a client to add group membership in a particular group for " +
-                     "the server endpoint, on condition that the endpoint is identifying itself. Identifying " +
-                     "functionality is controlled using the Identify cluster, (see Identify).",
-            xref: { document: "cluster", section: "1.3.7.6" },
-            children: [
-                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" },
-                { tag: "datatype", name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16" }
             ]
         }
     ]

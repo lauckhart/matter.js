@@ -54,6 +54,7 @@ describe("MergeModels", () => {
             chip: new ClusterModel(Fixtures.BasicInformation.chip)
         }
         variants.chip.datatypes[0].name = "CapabilityMaximaStruct";
+        variants.chip.attributes[0].type = "CapabilityMaximaStruct";
         const merged = merge(variants) as ClusterModel;
         expect(merged.children.length).toBe(2);
         expect(merged.datatypes[0].name).toBe("CapabilityMinimaStruct");
@@ -66,7 +67,7 @@ describe("MergeModels", () => {
         expect(merged.children[0].children.length).toBe(4);
     })
 
-    it("merges commands with children correclty", () => {
+    it("merges commands with children correctly", () => {
         const merged = merge(Fixtures.OnOff);
         const offWithEffect = merged.childOfType(CommandModel, "OffWithEffect");
         expect(offWithEffect.children.map(c => c.name)).toEqual([ "EffectIdentifier", "EffectVariant" ]);

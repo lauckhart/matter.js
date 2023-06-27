@@ -222,11 +222,9 @@ Matter.children.push({
                     details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the " +
                              "MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.",
                     xref: { document: "cluster", section: "3.2.11.5.1" },
-
                     children: [
                         { tag: "datatype", name: "Stop", id: 0x0, conformance: "M" },
                         { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Reserved", id: 0x2 },
                         { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
                     ]
                 },
@@ -261,7 +259,6 @@ Matter.children.push({
                     details: "The StepMode field SHALL be one of the non-reserved values in Values of the StepMode Field.",
                     xref: { document: "cluster", section: "3.2.11.6.1" },
                     children: [
-                        { tag: "datatype", name: "Reserved", id: 0x2 },
                         { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
                         { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
                     ]
@@ -323,11 +320,9 @@ Matter.children.push({
                     details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the " +
                              "MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.",
                     xref: { document: "cluster", section: "3.2.11.8.1" },
-
                     children: [
                         { tag: "datatype", name: "Stop", id: 0x0, conformance: "M" },
                         { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Reserved", id: 0x2 },
                         { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
                     ]
                 },
@@ -360,7 +355,6 @@ Matter.children.push({
                     xref: { document: "cluster", section: "3.2.11.9.1" },
                     children: [
                         { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Reserved", id: 0x2 },
                         { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
                     ]
                 },

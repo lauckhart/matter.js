@@ -6,7 +6,7 @@
 
 import { InternalError } from "../../common/index.js";
 import { Datatype, ElementTag } from "../definitions/index.js";
-import type { Model, ValueModel, DatatypeModel } from "../models/index.js";
+import { type Model, type ValueModel, type DatatypeModel, CommandModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
 
@@ -235,6 +235,15 @@ export class ModelTraversal {
     }
 
     /**
+     * Find the response model for a command.
+     */
+    findResponse(command: CommandModel) {
+        if (command.response && command.response != "status") {
+            return new ModelTraversal().findType(command, command.response, [ ElementTag.Command ]);
+        }
+    }
+
+    /**
      * Find all children of a node that reference a specific type.
      */
     findReferences(scope: Model | undefined, type: Model | undefined): Model[] {
@@ -246,6 +255,12 @@ export class ModelTraversal {
         this.visit(scope, model => {
             // This is the most common method for referencing
             if (this.findBase(model) == type) {
+                references.push(model);
+                return;
+            }
+
+            // A command can reference its response
+            if (model instanceof CommandModel && this.findResponse(model) == type) {
                 references.push(model);
                 return;
             }

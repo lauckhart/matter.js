@@ -138,10 +138,16 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 11",
+                    details: "This field SHALL represent the set of faults currently detected, as per Section 11.11.4.1, " +
+                             "“HardwareFaultEnum”.",
+                    xref: { document: "core", section: "11.11.8.1.1" },
                     children: [ { tag: "datatype", name: "entry", type: "HardwareFaultEnum" } ]
                 },
+
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 11",
+                    details: "This field SHALL represent the set of faults detected prior to this change event, as per Section",
+                    xref: { document: "core", section: "11.11.8.1.2" },
                     children: [ { tag: "datatype", name: "entry", type: "HardwareFaultEnum" } ]
                 }
             ]
@@ -190,7 +196,14 @@ Matter.children.push({
             details: "The BootReason Event SHALL indicate the reason that caused the device to start-up. The data of this " +
                      "event SHALL contain the following information:",
             xref: { document: "core", section: "11.11.8.4" },
-            children: [ { tag: "datatype", name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M" } ]
+
+            children: [
+                {
+                    tag: "datatype", name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M",
+                    details: "This field SHALL contain the reason for this BootReason event.",
+                    xref: { document: "core", section: "11.11.8.4.1" }
+                }
+            ]
         },
 
         {
@@ -201,9 +214,23 @@ Matter.children.push({
                      "certification test cases. This command SHALL NOT cause any changes to the state of the device that " +
                      "persist after the last fabric is removed.",
             xref: { document: "core", section: "11.11.7.1" },
+
             children: [
-                { tag: "datatype", name: "EnableKey", id: 0x0, type: "octstr", conformance: "M", constraint: "16" },
-                { tag: "datatype", name: "EventTrigger", id: 0x1, type: "uint64", conformance: "M" }
+                {
+                    tag: "datatype", name: "EnableKey", id: 0x0, type: "octstr", conformance: "M", constraint: "16",
+                    details: "The EnableKey is a 128 bit value provided by the client in this command, which needs to match a " +
+                             "value chosen by the manufacturer and configured on the server using manufacturer-specific means, " +
+                             "such as pre-provisioning. The value of all zeroes is reserved to indicate that no EnableKey is set. " +
+                             "Therefore, if the EnableKey field is received with all zeroes, this command SHALL FAIL with a " +
+                             "response status of CONSTRAINT_ERROR.",
+                    xref: { document: "core", section: "11.11.7.1.1" }
+                },
+
+                {
+                    tag: "datatype", name: "EventTrigger", id: 0x1, type: "uint64", conformance: "M",
+                    details: "This field SHALL indicate the test or test mode which the client wants to trigger.",
+                    xref: { document: "core", section: "11.11.7.1.2" }
+                }
             ]
         },
 
@@ -307,29 +334,71 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Name", id: 0x0, type: "string", access: "R V", conformance: "M",
-                    constraint: "max 32"
+                    constraint: "max 32",
+                    details: "This field SHALL indicate a human-readable (displayable) name for the network interface, that is " +
+                             "different from all other interfaces.",
+                    xref: { document: "core", section: "11.11.4.6.1" }
                 },
-                { tag: "datatype", name: "IsOperational", id: 0x1, type: "bool", access: "R V", conformance: "M" },
+
+                {
+                    tag: "datatype", name: "IsOperational", id: 0x1, type: "bool", access: "R V", conformance: "M",
+                    details: "This field SHALL indicate if the Node is currently advertising itself operationally on this network " +
+                             "interface and is capable of successfully receiving incoming traffic from other Nodes.",
+                    xref: { document: "core", section: "11.11.4.6.2" }
+                },
+
                 {
                     tag: "datatype", name: "OffPremiseServicesReachableIPv4", id: 0x2, type: "bool", access: "R V",
-                    conformance: "M", default: null, quality: "X"
+                    conformance: "M", default: null, quality: "X",
+                    details: "This field SHALL indicate whether the Node is currently able to reach off-premise services it uses " +
+                             "by utilizing IPv4. The value SHALL be null if the Node does not use such services or does not know " +
+                             "whether it can reach them.",
+                    xref: { document: "core", section: "11.11.4.6.3" }
                 },
+
                 {
                     tag: "datatype", name: "OffPremiseServicesReachableIPv6", id: 0x3, type: "bool", access: "R V",
-                    conformance: "M", default: null, quality: "X"
+                    conformance: "M", default: null, quality: "X",
+                    details: "This field SHALL indicate whether the Node is currently able to reach off-premise services it uses " +
+                             "by utilizing IPv6. The value SHALL be null if the Node does not use such services or does not know " +
+                             "whether it can reach them.",
+                    xref: { document: "core", section: "11.11.4.6.4" }
                 },
-                { tag: "datatype", name: "HardwareAddress", id: 0x4, type: "hwadr", access: "R V", conformance: "M" },
+
+                {
+                    tag: "datatype", name: "HardwareAddress", id: 0x4, type: "hwadr", access: "R V", conformance: "M",
+                    details: "This field SHALL contain the current link-layer address for a 802.3 or IEEE 802.11-2020 network " +
+                             "interface and contain the current extended MAC address for a 802.15.4 interface. The byte order of " +
+                             "the octstr SHALL be in wire byte order. For addresses values less than 64 bits, the first two bytes " +
+                             "SHALL be zero.",
+                    xref: { document: "core", section: "11.11.4.6.5" }
+                },
+
                 {
                     tag: "datatype", name: "IPv4Addresses", id: 0x5, type: "list", access: "R V", conformance: "M",
                     constraint: "max 4",
+                    details: "This field SHALL provide a list of the IPv4 addresses that are currently assigned to the network " +
+                             "interface.",
+                    xref: { document: "core", section: "11.11.4.6.6" },
                     children: [ { tag: "datatype", name: "entry", type: "ipv4adr" } ]
                 },
+
                 {
                     tag: "datatype", name: "IPv6Addresses", id: 0x6, type: "list", access: "R V", conformance: "M",
                     constraint: "max 8",
+                    details: "This field SHALL provide a list of the unicast IPv6 addresses that are currently assigned to the " +
+                             "network interface. This list SHALL include the Node’s link-local address and SHOULD include any " +
+                             "assigned GUA and ULA addresses. This list SHALL NOT include any multicast group addresses to which " +
+                             "the Node is subscribed.",
+                    xref: { document: "core", section: "11.11.4.6.7" },
                     children: [ { tag: "datatype", name: "entry", type: "ipv6adr" } ]
                 },
-                { tag: "datatype", name: "Type", id: 0x7, type: "InterfaceTypeEnum", access: "R V", conformance: "M" }
+
+                {
+                    tag: "datatype", name: "Type", id: 0x7, type: "InterfaceTypeEnum", access: "R V", conformance: "M",
+                    details: "This field SHALL indicate the type of the interface using the InterfaceTypeEnum.",
+                    xref: { document: "core", section: "11.11.4.6.8" }
+                }
             ]
         }
     ]

@@ -36,7 +36,7 @@ const mom = new MatterModel();
 
 clean(DEFINITION_PATH);
 
-const index = new TsFile(`${DEFINITION_PATH}/index.ts`);
+const index = new TsFile(`${DEFINITION_PATH}/index`);
 
 for (const cluster of mom.clusters) {
     const file = new TsFile(`${DEFINITION_PATH}/${cluster.name}Cluster`);
@@ -60,8 +60,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     
     addImport("Cluster", "cluster/Cluster");
     const complete = ns.expressions("export const Complete = Cluster({", "})")
-        .document(cluster, `This cluster definition includes all elements an implementation may support.  For type " +
-            "safety, use \`${cluster.name}.with()\` and a list of supported features.`);
+        .document(cluster, `This cluster definition includes all elements an implementation may support.  For type safety, use \`${cluster.name}.with()\` and a list of supported features.`);
     if (cluster.id != undefined) {
         complete.atom("id", `0x${cluster.id.toString(16)}`);
     }
@@ -171,10 +170,11 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
             factory = "OptionalEvent";
         }
         addImport(factory, "cluster/Cluster");
+        addImport("EventPriority", "cluster/Cluster");
 
         const priority = camelize(model.priority ?? EventElement.Priority.Debug);
 
-        return `${factory}(${model.id}, ${priority}, ${tlvTypeRef(model)})`;
+        return `${factory}(${model.id}, EventPriority.${priority}, ${tlvTypeRef(model)})`;
     });
 
     return;
@@ -258,6 +258,11 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 addImport(tlv, "tlv/TlvNumber");
                 break;
 
+            case Metatype.any:
+                tlv = "TlvAny";
+                addImport(tlv, "tlv/TlvAny");
+                break;
+    
             case Metatype.bytes:
             case Metatype.string:
                 tlv = metabase.name == Datatype.octstr ? "TlvByteString" : "TlvString";
@@ -400,7 +405,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
 
         const elementBlock = target.expressions(`${name}: {`, "}");
         for (const { model, body } of definitions) {
-            elementBlock.atom(model.name, body)
+            elementBlock.atom(camelize(model.name, false), body)
                 .document(model);
         }
     }
