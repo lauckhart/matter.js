@@ -2159,6 +2159,112 @@ export const SpecMatter: MatterElement = {
 
             children: [
                 {
+                    tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", access: "R V",
+                    conformance: "M", constraint: "0", quality: "P",
+                    details: "The Occupancy attribute indicates the status of occupancy.",
+                    xref: { document: "cluster", section: "2.7.6.1" }
+                },
+
+                {
+                    tag: "attribute", name: "OccupancySensorType", id: 0x1, type: "OccupancySensorTypeEnum",
+                    access: "R V", conformance: "M", constraint: "desc",
+                    details: "The OccupancySensorType attribute specifies the type of the occupancy sensor.",
+                    xref: { document: "cluster", section: "2.7.6.2" }
+                },
+
+                {
+                    tag: "attribute", name: "OccupancySensorTypeBitmap", id: 0x2, type: "OccupancySensorTypeBitmap",
+                    access: "R V", conformance: "M", constraint: "0",
+                    details: "The OccupancySensorTypeBitmap attribute specifies the types of the occupancy sensor. A ‘1’ in each " +
+                             "bit position indicates the capability is implemented.",
+                    xref: { document: "cluster", section: "2.7.6.3" }
+                },
+
+                {
+                    tag: "attribute", name: "PirOccupiedToUnoccupiedDelay", id: 0x10, type: "uint16", access: "RW VM",
+                    conformance: "O", default: 0,
+                    details: "The PIROccupiedToUnoccupiedDelay attribute specifies the time delay, in seconds, before the PIR " +
+                             "sensor changes to its unoccupied state after the last detection of movement in the sensed area.",
+                    xref: { document: "cluster", section: "2.7.7.1" }
+                },
+
+                {
+                    tag: "attribute", name: "PirUnoccupiedToOccupiedDelay", id: 0x11, type: "uint16", access: "RW VM",
+                    conformance: "O", default: 0,
+                    details: "The PIRUnoccupiedToOccupiedDelay attribute specifies the time delay, in seconds, before the PIR " +
+                             "sensor changes to its occupied state after the detection of movement in the sensed area. This " +
+                             "attribute is mandatory if the PIRUnoccupiedToOccupiedThreshold attribute is implemented.",
+                    xref: { document: "cluster", section: "2.7.7.2" }
+                },
+
+                {
+                    tag: "attribute", name: "PirUnoccupiedToOccupiedThreshold", id: 0x12, type: "uint8",
+                    access: "RW VM", conformance: "O", constraint: "1 to 254", default: 1,
+                    details: "The PIRUnoccupiedToOccupiedThreshold attribute specifies the number of movement detection events " +
+                             "that must occur in the period PIRUnoccupiedToOccupiedDelay, before the PIR sensor changes to its " +
+                             "occupied state. This attribute is mandatory if the PIRUnoccupiedToOccupiedDelay attribute is " +
+                             "implemented.",
+                    xref: { document: "cluster", section: "2.7.7.3" }
+                },
+
+                {
+                    tag: "attribute", name: "UltrasonicOccupiedToUnoccupiedDelay", id: 0x20, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 0,
+                    details: "The UltrasonicOccupiedToUnoccupiedDelay attribute and specifies the time delay, in seconds, before " +
+                             "the Ultrasonic sensor changes to its unoccupied state after the last detection of movement in the " +
+                             "sensed area.",
+                    xref: { document: "cluster", section: "2.7.8.1" }
+                },
+
+                {
+                    tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedDelay", id: 0x21, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 0,
+                    details: "The UltrasonicUnoccupiedToOccupiedDelay attribute and specifies the time delay, in seconds, before " +
+                             "the Ultrasonic sensor changes to its occupied state after the detection of movement in the sensed " +
+                             "area. This attribute is mandatory if the UltrasonicUnoccupiedToOccupiedThreshold attribute is " +
+                             "implemented.",
+                    xref: { document: "cluster", section: "2.7.8.2" }
+                },
+
+                {
+                    tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedThreshold", id: 0x22, type: "uint8",
+                    access: "RW VM", conformance: "O", constraint: "1 to 254", default: 1,
+                    details: "The UltrasonicUnoccupiedToOccupiedThreshold attribute specifies the number of movement detection " +
+                             "events that must occur in the period UltrasonicUnoccupiedToOccupiedDelay, before the Ultrasonic " +
+                             "sensor changes to its occupied state. This attribute is mandatory if the " +
+                             "UltrasonicUnoccupiedToOccupiedDelay attribute is implemented.",
+                    xref: { document: "cluster", section: "2.7.8.3" }
+                },
+
+                {
+                    tag: "attribute", name: "PhysicalContactOccupiedToUnoccupiedDelay", id: 0x30, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 0, quality: "X",
+                    details: "The PhysicalContactOccupiedToUnoccupiedDelay attribute specifies the time delay, in seconds, before " +
+                             "the physical contact occupancy sensor changes to its unoccupied state after detecting the " +
+                             "unoccupied event. The null value indicates that the sensor does not report occupied to unoccupied " +
+                             "transition.",
+                    xref: { document: "cluster", section: "2.7.9.1" }
+                },
+
+                {
+                    tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedDelay", id: 0x31, type: "uint16",
+                    access: "RW VM", conformance: "O", default: 0, quality: "X",
+                    details: "The PhysicalContactUnoccupiedToOccupiedDelay attribute specifies the time delay, in seconds, before " +
+                             "the physical contact sensor changes to its occupied state after the detection of the occupied event.",
+                    xref: { document: "cluster", section: "2.7.9.2" }
+                },
+
+                {
+                    tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedThreshold", id: 0x32, type: "uint8",
+                    access: "RW VM", conformance: "O", constraint: "1 to 254", default: 1,
+                    details: "The PhysicalContactUnoccupiedToOccupiedThreshold attribute specifies the number of movement " +
+                             "detection events that must occur in the period PhysicalContactUnoccupiedToOccupiedDelay, before the " +
+                             "PIR sensor changes to its occupied state. This attribute is mandatory if the " +
+                             "PhysicalContactUnoccupiedToOccupiedDelay attribute is implemented.",
+                    xref: { document: "cluster", section: "2.7.9.3" }
+                },
+
+                {
                     tag: "datatype", name: "OccupancyBitmap", type: "map8",
                     details: "This data type is derived from bitmap8.",
                     xref: { document: "cluster", section: "2.7.5.1" },
@@ -2232,6 +2338,404 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "3.2.5" }
                         }
                     ]
+                },
+
+                {
+                    tag: "attribute", name: "CurrentHue", id: 0x0, type: "uint8", access: "R V", conformance: "HS",
+                    constraint: "0 to 254", default: 0, quality: "N P",
+                    details: "The CurrentHue attribute contains the current hue value of the light. It is updated as fast as " +
+                             "practical during commands that change the hue.",
+                    xref: { document: "cluster", section: "3.2.7.1" }
+                },
+
+                {
+                    tag: "attribute", name: "CurrentSaturation", id: 0x1, type: "uint8", access: "R V",
+                    conformance: "HS", constraint: "0 to 254", default: 0, quality: "N S P",
+                    details: "The CurrentSaturation attribute holds the current saturation value of the light. It is updated as " +
+                             "fast as practical during commands that change the saturation.",
+                    xref: { document: "cluster", section: "3.2.7.2" }
+                },
+
+                {
+                    tag: "attribute", name: "RemainingTime", id: 0x2, type: "uint16", access: "R V", conformance: "O",
+                    constraint: "0 to 65534", default: 0,
+                    details: "The RemainingTime attribute holds the time remaining, in 1/10ths of a second, until the currently " +
+                             "active command will be complete.",
+                    xref: { document: "cluster", section: "3.2.7.3" }
+                },
+
+                {
+                    tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "X, Y",
+                    constraint: "0", default: 24939, quality: "N S P",
+                    details: "The CurrentX attribute contains the current value of the normalized chromaticity value x, as " +
+                             "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
+                             "the color.",
+                    xref: { document: "cluster", section: "3.2.7.4" }
+                },
+
+                {
+                    tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "X, Y",
+                    constraint: "0", default: 24701, quality: "N S P",
+                    details: "The CurrentY attribute contains the current value of the normalized chromaticity value y, as " +
+                             "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
+                             "the color.",
+                    xref: { document: "cluster", section: "3.2.7.5" }
+                },
+
+                {
+                    tag: "attribute", name: "DriftCompensation", id: 0x5, type: "enum8", access: "R V",
+                    conformance: "O", constraint: "0 to 4",
+                    details: "The DriftCompensation attribute indicates what mechanism, if any, is in use for compensation for " +
+                             "color/intensity drift over time. It SHALL be one of the non-reserved values in Values of the " +
+                             "DriftCompensation Attribute.",
+                    xref: { document: "cluster", section: "3.2.7.6" },
+
+                    children: [
+                        { tag: "datatype", name: "None", id: 0x0 },
+                        { tag: "datatype", name: "OtherUnknown", id: 0x1 },
+                        { tag: "datatype", name: "Temperaturemonitoring", id: 0x2 },
+                        { tag: "datatype", name: "OpticalLuminanceMonitoringAndFeedback", id: 0x3 },
+                        { tag: "datatype", name: "OpticalColorMonitoringAndFeedback", id: 0x4 }
+                    ]
+                },
+
+                {
+                    tag: "attribute", name: "CompensationText", id: 0x6, type: "string", access: "R V",
+                    conformance: "O", constraint: "max 254",
+                    details: "The CompensationText attribute holds a textual indication of what mechanism, if any, is in use to",
+                    xref: { document: "cluster", section: "3.2.7.7" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorTemperatureMireds", id: 0x7, type: "uint16", access: "R V",
+                    conformance: "CT", constraint: "0", default: 250, quality: "N S P",
+                    details: "The ColorTemperatureMireds attribute contains a scaled inverse of the current value of the color " +
+                             "temperature. The unit of ColorTemperatureMireds is the mired (micro reciprocal degree), AKA mirek " +
+                             "(micro reciprocal kelvin). It is updated as fast as practical during commands that change the color.",
+                    xref: { document: "cluster", section: "3.2.7.8" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorMode", id: 0x8, type: "enum8", access: "R V", conformance: "M",
+                    constraint: "0 to 2", default: 1, quality: "N",
+                    details: "The ColorMode attribute indicates which attributes are currently determining the color of the " +
+                             "device.",
+                    xref: { document: "cluster", section: "3.2.7.9" },
+                    children: [
+                        { tag: "datatype", name: "CurrentHueAndCurrentSaturation", id: 0x0 },
+                        { tag: "datatype", name: "CurrentXAndCurrentY", id: 0x1 },
+                        { tag: "datatype", name: "ColorTemperatureMireds", id: 0x2 }
+                    ]
+                },
+
+                {
+                    tag: "attribute", name: "Options", id: 0xf, type: "map8", access: "RW VO", conformance: "M",
+                    constraint: "desc", default: 0,
+                    details: "The Options attribute is meant to be changed only during commissioning. The Options attribute is a " +
+                             "bitmap that determines the default behavior of some cluster commands. Each command that is " +
+                             "dependent on the Options attribute SHALL first construct a temporary Options bitmap that is in " +
+                             "effect during the command processing. The temporary Options bitmap has the same format and meaning " +
+                             "as the Options attribute, but includes any bits that may be overridden by command fields.",
+                    xref: { document: "cluster", section: "3.2.7.10" },
+                    children: [ { tag: "datatype", name: "ExecuteIfOff", id: 0x0 } ]
+                },
+
+                {
+                    tag: "attribute", name: "EnhancedCurrentHue", id: 0x4000, type: "uint16", access: "R V",
+                    conformance: "EHUE", default: 0, quality: "N S",
+                    details: "The EnhancedCurrentHue attribute represents non-equidistant steps along the CIE 1931 color " +
+                             "triangle, and it provides 16-bits precision.",
+                    xref: { document: "cluster", section: "3.2.7.11" }
+                },
+
+                {
+                    tag: "attribute", name: "EnhancedColorMode", id: 0x4001, type: "enum8", access: "R V",
+                    conformance: "M", constraint: "0 to 3", default: 1, quality: "N",
+                    details: "The EnhancedColorMode attribute specifies which attributes are currently determining the color of " +
+                             "the device, as detailed in Values of the EnhancedColorMode Attribute.",
+                    xref: { document: "cluster", section: "3.2.7.12" },
+
+                    children: [
+                        { tag: "datatype", name: "CurrentHueAndCurrentSaturation", id: 0x0 },
+                        { tag: "datatype", name: "CurrentXAndCurrentY", id: 0x1 },
+                        { tag: "datatype", name: "ColorTemperatureMireds", id: 0x2 },
+                        { tag: "datatype", name: "EnhancedCurrentHueAndCurrentSaturation", id: 0x3 }
+                    ]
+                },
+
+                {
+                    tag: "attribute", name: "ColorLoopActive", id: 0x4002, type: "uint8", access: "R V",
+                    conformance: "CL", default: 0, quality: "N S",
+                    details: "The ColorLoopActive attribute specifies the current active status of the color loop. If this " +
+                             "attribute",
+                    xref: { document: "cluster", section: "3.2.7.13" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorLoopDirection", id: 0x4003, type: "uint8", access: "R V",
+                    conformance: "CL", default: 0, quality: "N S",
+                    details: "The ColorLoopDirection attribute specifies the current direction of the color loop. If this " +
+                             "attribute has the value 0, the EnhancedCurrentHue attribute SHALL be decremented. If this attribute " +
+                             "has the value 1, the EnhancedCurrentHue attribute SHALL be incremented. All other values (2 to 254) " +
+                             "are reserved.",
+                    xref: { document: "cluster", section: "3.2.7.14" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorLoopTime", id: 0x4004, type: "uint16", access: "R V",
+                    conformance: "CL", default: 25, quality: "N S",
+                    details: "The ColorLoopTime attribute specifies the number of seconds it SHALL take to perform a full color " +
+                             "loop, i.e., to cycle all values of the EnhancedCurrentHue attribute (between 0 and 0xfffe).",
+                    xref: { document: "cluster", section: "3.2.7.15" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorLoopStartEnhancedHue", id: 0x4005, type: "uint16", access: "R V",
+                    conformance: "CL", default: 8960,
+                    details: "The ColorLoopStartEnhancedHue attribute specifies the value of the EnhancedCurrentHue attribute " +
+                             "from which the color loop SHALL be started.",
+                    xref: { document: "cluster", section: "3.2.7.16" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorLoopStoredEnhancedHue", id: 0x4006, type: "uint16", access: "R V",
+                    conformance: "CL", default: 0,
+                    details: "The ColorLoopStoredEnhancedHue attribute specifies the value of the EnhancedCurrentHue attribute " +
+                             "before the color loop was started. Once the color loop is complete, the EnhancedCurrentHue " +
+                             "attribute SHALL be restored to this value.",
+                    xref: { document: "cluster", section: "3.2.7.17" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorCapabilities", id: 0x400a, type: "map16", access: "R V",
+                    conformance: "M", constraint: "0", default: 0,
+                    details: "Bits 0-4 of the ColorCapabilities attribute SHALL have the same values as the corresponding bits of " +
+                             "the FeatureMap attribute. All other bits in ColorCapabilities SHALL be 0.",
+                    xref: { document: "cluster", section: "3.2.7.18" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorTempPhysicalMinMireds", id: 0x400b, type: "uint16", access: "R V",
+                    conformance: "CT", constraint: "0", default: 0,
+                    details: "The ColorTempPhysicalMinMireds attribute indicates the minimum mired value supported by the " +
+                             "hardware. ColorTempPhysicalMinMireds corresponds to the maximum color temperature in kelvins " +
+                             "supported by the hardware. ColorTempPhysicalMinMireds ≤ ColorTemperatureMireds.",
+                    xref: { document: "cluster", section: "3.2.7.19" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorTempPhysicalMaxMireds", id: 0x400c, type: "uint16", access: "R V",
+                    conformance: "CT", constraint: "0", default: 65279,
+                    details: "The ColorTempPhysicalMaxMireds attribute indicates the maximum mired value supported by the " +
+                             "hardware. ColorTempPhysicalMaxMireds corresponds to the minimum color temperature in kelvins " +
+                             "supported by the hardware. ColorTemperatureMireds ≤ ColorTempPhysicalMaxMireds.",
+                    xref: { document: "cluster", section: "3.2.7.20" }
+                },
+
+                {
+                    tag: "attribute", name: "CoupleColorTempToLevelMinMireds", id: 0x400d, type: "uint16",
+                    access: "R V", conformance: "CT | ColorTemperatureMi",
+                    constraint: "ColorTempPhysicalMinMireds to ColorTemperatureMireds",
+                    details: "The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the " +
+                             "ColorTemperatureMireds attribute for the purposes of coupling the ColorTemperatureMireds attribute " +
+                             "to the CurrentLevel attribute when the CoupleColorTempToLevel bit of the Options attribute of the " +
+                             "Level Control cluster is equal to 1. When coupling the ColorTemperatureMireds attribute to the " +
+                             "CurrentLevel attribute, this value SHALL correspond to a CurrentLevel value of 0xfe (100%).",
+                    xref: { document: "cluster", section: "3.2.7.21" }
+                },
+
+                {
+                    tag: "attribute", name: "StartUpColorTemperatureMireds", id: 0x4010, type: "uint16",
+                    access: "RW VM", conformance: "CT | ColorTemperatureMi", constraint: "0", quality: "X",
+                    details: "The StartUpColorTemperatureMireds attribute SHALL define the desired startup color temperature " +
+                             "value a lamp SHALL use when it is supplied with power and this value SHALL be reflected in the " +
+                             "ColorTemperatureMireds attribute. In addition, the ColorMode and EnhancedColorMode attributes SHALL " +
+                             "be set to 0x02 (color temperature). The values of the StartUpColorTemperatureMireds attribute are " +
+                             "listed in the table below,",
+                    xref: { document: "cluster", section: "3.2.7.22" }
+                },
+
+                {
+                    tag: "attribute", name: "NumberOfPrimaries", id: 0x10, type: "uint8", access: "R V",
+                    conformance: "M", constraint: "0 to 6", quality: "X F",
+                    details: "The NumberOfPrimaries attribute contains the number of color primaries implemented on this device. " +
+                             "A value of null SHALL indicate that the number of primaries is unknown.",
+                    xref: { document: "cluster", section: "3.2.8.1" }
+                },
+
+                {
+                    tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M, 0",
+                    constraint: "0", quality: "F",
+                    details: "The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined " +
+                             "in the CIE xyY Color Space.",
+                    xref: { document: "cluster", section: "3.2.8.2" }
+                },
+
+                {
+                    tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M, 0",
+                    constraint: "0", quality: "F",
+                    details: "The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined " +
+                             "in the CIE xyY Color Space.",
+                    xref: { document: "cluster", section: "3.2.8.3" }
+                },
+
+                {
+                    tag: "attribute", name: "Primary1Intensity", id: 0x13, type: "uint8", access: "R V",
+                    conformance: "M, 0", quality: "X F",
+                    details: "The Primary1intensity attribute contains a representation of the maximum intensity of this primary " +
+                             "as defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast " +
+                             "Configuration Cluster), normalized such that the primary with the highest maximum intensity " +
+                             "contains the value 0xfe.",
+                    xref: { document: "cluster", section: "3.2.8.4" }
+                },
+
+                {
+                    tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M, 1",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.8" }
+                },
+                {
+                    tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M, 1",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.8" }
+                },
+                {
+                    tag: "attribute", name: "Primary2Intensity", id: 0x17, type: "uint8", access: "R V",
+                    conformance: "M, 1", quality: "X F",
+                    xref: { document: "cluster", section: "3.2.8" }
+                },
+                {
+                    tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M, 2",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.8" }
+                },
+                {
+                    tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M, 2",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.8" }
+                },
+                {
+                    tag: "attribute", name: "Primary3Intensity", id: 0x1b, type: "uint8", access: "R V",
+                    conformance: "M, 2", quality: "X F",
+                    xref: { document: "cluster", section: "3.2.8" }
+                },
+                {
+                    tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M, 3",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+                {
+                    tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M, 3",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+                {
+                    tag: "attribute", name: "Primary4Intensity", id: 0x22, type: "uint8", access: "R V",
+                    conformance: "M, 3", quality: "X F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+                {
+                    tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M, 4",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+                {
+                    tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M, 4",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+                {
+                    tag: "attribute", name: "Primary5Intensity", id: 0x26, type: "uint8", access: "R V",
+                    conformance: "M, 4", quality: "X F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+                {
+                    tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M, 5",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+                {
+                    tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M, 5",
+                    constraint: "0", quality: "F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+                {
+                    tag: "attribute", name: "Primary6Intensity", id: 0x2a, type: "uint8", access: "R V",
+                    conformance: "M, 5", quality: "X F",
+                    xref: { document: "cluster", section: "3.2.9" }
+                },
+
+                {
+                    tag: "attribute", name: "WhitePointX", id: 0x30, type: "uint16", access: "RW VM", conformance: "O",
+                    constraint: "0",
+                    details: "The WhitePointX attribute contains the normalized chromaticity value x, as defined in the CIE xyY " +
+                             "Color Space, of the current white point of the device.",
+                    xref: { document: "cluster", section: "3.2.10.1" }
+                },
+
+                {
+                    tag: "attribute", name: "WhitePointY", id: 0x31, type: "uint16", access: "RW VM", conformance: "O",
+                    constraint: "0",
+                    details: "The WhitePointY attribute contains the normalized chromaticity value y, as defined in the CIE xyY " +
+                             "Color Space, of the current white point of the device.",
+                    xref: { document: "cluster", section: "3.2.10.2" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorPointRx", id: 0x32, type: "uint16", access: "RW VM", conformance: "O",
+                    constraint: "0",
+                    details: "The ColorPointRX attribute contains the normalized chromaticity value x, as defined in the CIE xyY " +
+                             "Color Space, of the red color point of the device.",
+                    xref: { document: "cluster", section: "3.2.10.3" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorPointRy", id: 0x33, type: "uint16", access: "RW VM", conformance: "O",
+                    constraint: "0",
+                    details: "The ColorPointRY attribute contains the normalized chromaticity value y, as defined in the CIE xyY " +
+                             "Color Space, of the red color point of the device.",
+                    xref: { document: "cluster", section: "3.2.10.4" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorPointRIntensity", id: 0x34, type: "uint8", access: "RW VM",
+                    conformance: "O", quality: "X",
+                    details: "The ColorPointRIntensity attribute contains a representation of the relative intensity of the red " +
+                             "color point as defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast " +
+                             "Configuration Cluster), normalized such that the color point with the highest relative intensity " +
+                             "contains the value 0xfe.",
+                    xref: { document: "cluster", section: "3.2.10.5" }
+                },
+
+                {
+                    tag: "attribute", name: "ColorPointGx", id: 0x36, type: "uint16", access: "RW VM", conformance: "O",
+                    constraint: "0",
+                    xref: { document: "cluster", section: "3.2.10" }
+                },
+                {
+                    tag: "attribute", name: "ColorPointGy", id: 0x37, type: "uint16", access: "RW VM", conformance: "O",
+                    constraint: "0",
+                    xref: { document: "cluster", section: "3.2.10" }
+                },
+                {
+                    tag: "attribute", name: "ColorPointGIntensity", id: 0x38, type: "uint8", access: "RW VM",
+                    conformance: "O", quality: "X",
+                    xref: { document: "cluster", section: "3.2.10" }
+                },
+                {
+                    tag: "attribute", name: "ColorPointBx", id: 0x3a, type: "uint16", access: "RW VM", conformance: "O",
+                    constraint: "0",
+                    xref: { document: "cluster", section: "3.2.10" }
+                },
+                {
+                    tag: "attribute", name: "ColorPointBy", id: 0x3b, type: "uint16", access: "RW VM", conformance: "O",
+                    constraint: "0",
+                    xref: { document: "cluster", section: "3.2.10" }
+                },
+                {
+                    tag: "attribute", name: "ColorPointBIntensity", id: 0x3c, type: "uint8", access: "RW VM",
+                    conformance: "O", quality: "X",
+                    xref: { document: "cluster", section: "3.2.10" }
                 },
 
                 {
@@ -2963,7 +3467,138 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "BallastConfiguration", id: 0x301, classification: "application",
-            xref: { document: "cluster", section: "3.3" }
+            xref: { document: "cluster", section: "3.3" },
+
+            children: [
+                {
+                    tag: "attribute", name: "PhysicalMinLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
+                    constraint: "1 to 254", default: 1,
+                    details: "The PhysicalMinLevel attribute specifies the minimum light output the ballast can achieve according " +
+                             "to the dimming light curve (see The Dimming Light Curve).",
+                    xref: { document: "cluster", section: "3.3.6.1" }
+                },
+
+                {
+                    tag: "attribute", name: "PhysicalMaxLevel", id: 0x1, type: "uint8", access: "R V", conformance: "M",
+                    constraint: "1 to 254", default: 254,
+                    details: "The PhysicalMaxLevel attribute specifies the maximum light output the ballast can achieve according " +
+                             "to the dimming light curve (see The Dimming Light Curve).",
+                    xref: { document: "cluster", section: "3.3.6.2" }
+                },
+
+                {
+                    tag: "attribute", name: "BallastStatus", id: 0x2, type: "map8", access: "R V", conformance: "O",
+                    default: 0,
+                    details: "The BallastStatus attribute specifies the activity status of the ballast functions. The usage of " +
+                             "the bits is specified in Bit Usage of the BallastStatus Attribute. Where a function is active, the " +
+                             "corresponding bit SHALL be set to 1. Where a function is not active, the corresponding bit SHALL be " +
+                             "set to 0.",
+                    xref: { document: "cluster", section: "3.3.6.3" }
+                },
+
+                {
+                    tag: "attribute", name: "MinLevel", id: 0x10, type: "uint8", access: "RW VM", conformance: "M",
+                    constraint: "1 to 254", default: { reference: "PhysicalMinLevel" },
+                    details: "The MinLevel attribute specifies the light output of the ballast according to the dimming light " +
+                             "curve (see The Dimming Light Curve) when the Level Control Cluster’s CurrentLevel attribute equals " +
+                             "to 1 (and the On/Off Cluster’s OnOff attribute equals to TRUE).",
+                    xref: { document: "cluster", section: "3.3.7.1" }
+                },
+
+                {
+                    tag: "attribute", name: "MaxLevel", id: 0x11, type: "uint8", access: "RW VM", conformance: "M",
+                    constraint: "1 to 254", default: { reference: "PhysicalMaxLevel" },
+                    details: "The MaxLevel attribute specifies the light output of the ballast according to the dimming light " +
+                             "curve (see The Dimming Light Curve) when the Level Control Cluster’s CurrentLevel attribute equals " +
+                             "to 254 (and the On/Off Cluster’s OnOff attribute equals to TRUE).",
+                    xref: { document: "cluster", section: "3.3.7.2" }
+                },
+
+                {
+                    tag: "attribute", name: "PowerOnLevel", id: 0x12, type: "uint8", access: "RW VM", conformance: "D",
+                    constraint: "1 to 254", default: { reference: "PhysicalMaxLevel" },
+                    xref: { document: "cluster", section: "3.3.7" }
+                },
+                {
+                    tag: "attribute", name: "PowerOnFadeTime", id: 0x13, type: "uint16", access: "RW VM",
+                    conformance: "D", default: 0,
+                    xref: { document: "cluster", section: "3.3.7" }
+                },
+
+                {
+                    tag: "attribute", name: "IntrinsicBallastFactor", id: 0x14, type: "uint8", access: "RW VM",
+                    conformance: "O", quality: "X",
+                    details: "The IntrinsicBallastFactor attribute specifies as a percentage the ballast factor of the " +
+                             "ballast/lamp combination, prior to any adjustment.",
+                    xref: { document: "cluster", section: "3.3.7.3" }
+                },
+
+                {
+                    tag: "attribute", name: "BallastFactorAdjustment", id: 0x15, type: "uint8", access: "RW VM",
+                    conformance: "O", constraint: "100 to Ms", default: null, quality: "X",
+                    details: "The BallastFactorAdjustment attribute specifies the multiplication factor, as a percentage, to be " +
+                             "applied to the configured light output of the lamps. A typical usage of this mechanism is to " +
+                             "compensate for reduction in efficiency over the lifetime of a lamp.",
+                    xref: { document: "cluster", section: "3.3.7.4" }
+                },
+
+                {
+                    tag: "attribute", name: "LampQuantity", id: 0x20, type: "uint8", access: "R V", conformance: "M",
+                    details: "The LampQuantity attribute and specifies the number of lamps connected to this ballast. (Note 1:",
+                    xref: { document: "cluster", section: "3.3.8.1" }
+                },
+
+                {
+                    tag: "attribute", name: "LampType", id: 0x30, type: "string", access: "RW VM", conformance: "O",
+                    constraint: "max 16", default: "emptystring",
+                    details: "The LampType attribute specifies the type of lamps (including their wattage) connected to the " +
+                             "ballast.",
+                    xref: { document: "cluster", section: "3.3.9.1" }
+                },
+
+                {
+                    tag: "attribute", name: "LampManufacturer", id: 0x31, type: "string", access: "RW VM",
+                    conformance: "O", constraint: "max 16", default: "emptystring",
+                    details: "The LampManufacturer attribute specifies the name of the manufacturer of the currently connected " +
+                             "lamps.",
+                    xref: { document: "cluster", section: "3.3.9.2" }
+                },
+
+                {
+                    tag: "attribute", name: "LampRatedHours", id: 0x32, type: "uint24", access: "RW VM",
+                    conformance: "O", default: null, quality: "X",
+                    details: "The LampRatedHours attribute specifies the number of hours of use the lamps are rated for by the " +
+                             "manufacturer.",
+                    xref: { document: "cluster", section: "3.3.9.3" }
+                },
+
+                {
+                    tag: "attribute", name: "LampBurnHours", id: 0x33, type: "uint24", access: "RW VM",
+                    conformance: "O", default: 0, quality: "X",
+                    details: "The LampBurnHours attribute specifies the length of time, in hours, the currently connected lamps " +
+                             "have been operated, cumulative since the last re-lamping. Burn hours SHALL not be accumulated if " +
+                             "the lamps are off.",
+                    xref: { document: "cluster", section: "3.3.9.4" }
+                },
+
+                {
+                    tag: "attribute", name: "LampAlarmMode", id: 0x34, type: "map8", access: "RW VM", conformance: "O",
+                    default: 0,
+                    details: "The LampAlarmMode attribute specifies which attributes MAY cause an alarm notification to be " +
+                             "generated, as listed in Values of the LampAlarmMode Attribute. A ‘1’ in each bit position causes " +
+                             "its associated attribute to be able to generate an alarm. (Note: All alarms are also logged in the " +
+                             "alarm table – see Alarms cluster).",
+                    xref: { document: "cluster", section: "3.3.9.5" }
+                },
+
+                {
+                    tag: "attribute", name: "LampBurnHoursTripPoint", id: 0x35, type: "uint24", access: "RW VM",
+                    conformance: "O", default: null, quality: "X",
+                    details: "The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute MAY " +
+                             "reach before an alarm is generated.",
+                    xref: { document: "cluster", section: "3.3.9.6" }
+                }
+            ]
         },
 
         {
@@ -6479,7 +7114,7 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O", constraint: "Any",
+                            tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O",
                             details: "This field SHALL specify optional app-specific data to be sent to the app.",
                             xref: { document: "cluster", section: "6.4.4.1.2" }
                         }
@@ -6531,7 +7166,7 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "6.4.4.4.1" }
                         },
                         {
-                            tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O", constraint: "Any",
+                            tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O",
                             details: "This SHALL specify Optional app-specific data.",
                             xref: { document: "cluster", section: "6.4.4.4.2" }
                         }
@@ -6754,7 +7389,7 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "6.6.4.2.1" }
                         },
                         {
-                            tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O", constraint: "Any",
+                            tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O",
                             details: "This SHALL indicate Optional app-specific data.",
                             xref: { document: "cluster", section: "6.6.4.2.2" }
                         }
@@ -6972,14 +7607,13 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "ContentUrl", id: 0x0, type: "string", conformance: "M", constraint: "Any",
+                            tag: "datatype", name: "ContentUrl", id: 0x0, type: "string", conformance: "M",
                             details: "This SHALL indicate the URL of content to launch.",
                             xref: { document: "cluster", section: "6.7.4.2.1" }
                         },
 
                         {
                             tag: "datatype", name: "DisplayString", id: 0x1, type: "string", conformance: "O",
-                            constraint: "Any",
                             details: "This field, if present, SHALL provide a string that MAY be used to describe the content being " +
                                      "accessed at the given URL.",
                             xref: { document: "cluster", section: "6.7.4.2.2" }
@@ -6987,7 +7621,7 @@ export const SpecMatter: MatterElement = {
 
                         {
                             tag: "datatype", name: "BrandingInformation", id: 0x2, type: "BrandingInformationStruct",
-                            conformance: "O", constraint: "Any",
+                            conformance: "O",
                             details: "This field, if present, SHALL indicate the branding information that MAY be displayed when playing " +
                                      "back the given content.",
                             xref: { document: "cluster", section: "6.7.4.2.3" }
@@ -7711,7 +8345,7 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "6.10.4.12.1" }
                         },
                         {
-                            tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O", constraint: "Any",
+                            tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O",
                             details: "This SHALL indicate Optional app-specific data.",
                             xref: { document: "cluster", section: "6.10.4.12.2" }
                         }
@@ -7880,7 +8514,7 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "6.11.4.2.1" }
                         },
                         {
-                            tag: "datatype", name: "Data", id: 0x1, type: "string", conformance: "O", constraint: "Any",
+                            tag: "datatype", name: "Data", id: 0x1, type: "string", conformance: "O",
                             details: "This SHALL indicate Optional app-specific data.",
                             xref: { document: "cluster", section: "6.11.4.2.2" }
                         }

@@ -21,7 +21,8 @@ const TEST_DEFINITIONS = [
     "AB.a+",
     "AB.a2",
     "AB.a2+",
-    "AB == 2"
+    "AB == 2",
+    "Mom"
 ]
 
 const TEST_DEFINITIONS2 = {
@@ -45,11 +46,11 @@ describe("Conformance", () => {
     TEST_DEFINITIONS.forEach(d => testOne(d));
     Object.entries(TEST_DEFINITIONS2).forEach(([ d, e ]) => testOne(d, e));
 
-    describe("Matter!Zigbee", () => {
+    describe("invalid conformance", () => {
         it("fails gracefully", () => {
-            const conformance = new Conformance("Matter!Zigbee");
-            expect(conformance.errors?.length).toBe(10);
-            expect(conformance.toString()).toBe("M, !Z");
+            const conformance = new Conformance("%");
+            expect(conformance.errors?.length).toBe(1);
+            expect(conformance.toString()).toBe("");
         })
     })
 })

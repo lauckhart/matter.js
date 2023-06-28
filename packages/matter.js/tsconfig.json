@@ -16,12 +16,12 @@
     "noImplicitOverride": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "strict": true
+    "strict": true,
   },
   "ts-node": {
     "experimentalResolver": true
   },
   /* During dev, src are included, so they are also modified during refactorings. */
-  "include": ["src/**/*.ts", "test/**/*.ts", "tools/**/*.ts", "gen/**/*.ts", "models/**/*.ts" ],
+  "include": ["src/**/*.ts", "test/**/*.ts", "tools/**/*.ts", "models/**/*.ts" ],
   "exclude": []
 }

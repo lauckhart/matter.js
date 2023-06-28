@@ -407,10 +407,16 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
     translateStatusCodes();
 
     function translateAttributes() {
-        const records = translateFields("attribute", definition.attributes);
-        const attributes = translateRecordsToMatter("attribute", records, AttributeElement);
-        if (attributes) {
-            children.push(...attributes);
+        const attributeSets = [ definition.attributes ];
+        if (definition.attributeSets) {
+            attributeSets.push(...definition.attributeSets);
+        }
+        for (const attributeSet of attributeSets) {
+            const records = translateFields("attribute", attributeSet);
+            const attributes = translateRecordsToMatter("attribute", records, AttributeElement);
+            if (attributes) {
+                children.push(...attributes);
+            }
         }
     }
     

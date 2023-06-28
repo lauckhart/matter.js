@@ -71,8 +71,32 @@ export abstract class ValueModel extends Model implements ValueElement {
      * This model is significant because it gives us information about how to
      * manipulate the data.  This accessor retrieves this model.
      */
-    get metabase(): ValueModel {
-        return new ModelTraversal().findMetabase(this) as ValueModel;
+    get metabase(): ValueModel | undefined {
+        return new ModelTraversal().findMetabase(this) as ValueModel | undefined;
+    }
+
+    /**
+     * Get the primitive type for this value model.  This is an integer type
+     * for enums and bitmaps.  Otherwise it's the metabase.
+     */
+    get primitiveBase(): ValueModel | undefined {
+        const metabase = this.metabase;
+        if (!metabase) {
+            return;
+        }
+
+        // Enum is a derived type so we can just return its base
+        if (metabase.metatype == Metatype.enum) {
+            return metabase.base;
+        }
+
+        // Bitmaps are not derived types so we have to map manually
+        if (metabase.metatype == Metatype.bitmap) {
+            const primitiveName = metabase.name.replace("map", "uint");
+            return metabase.parent?.children.find(c => c.name == primitiveName) as ValueModel | undefined;
+        }
+        
+        return metabase;
     }
 
     /**

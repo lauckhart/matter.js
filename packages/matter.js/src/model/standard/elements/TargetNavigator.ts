@@ -69,7 +69,7 @@ Matter.children.push({
                     xref: { document: "cluster", section: "6.11.4.2.1" }
                 },
                 {
-                    tag: "datatype", name: "Data", id: 0x1, type: "string", conformance: "O", constraint: "Any",
+                    tag: "datatype", name: "Data", id: 0x1, type: "string", conformance: "O",
                     details: "This SHALL indicate Optional app-specific data.",
                     xref: { document: "cluster", section: "6.11.4.2.2" }
                 }

@@ -177,7 +177,7 @@ export namespace Conformance {
             case Special.Choice:
                 const c = ast.param as Conformance.Ast.Choice;
                 let result = `${serializeAtomic(c.expr)}.${c.name}`;
-                if (c.num) {
+                if (c.num > 1) {
                     result = `${result}${c.num}`;
                 }
                 if (c.orMore) {
@@ -203,6 +203,13 @@ export namespace Conformance {
                 return ast.type;
         }
     }
+}
+
+function isNameChar(c: string) {
+    return (c >= "A" && c <= "Z")
+        || (c >= "a" && c <= "z")
+        || (c >= "0" && c <= "9")
+        || c == "_";
 }
 
 namespace Tokenizer {
@@ -280,6 +287,15 @@ namespace Tokenizer {
             }
         }
 
+        function tokenizeName(): Token {
+            const name = [ current.value ];
+            while (isNameChar(peeked.value)) {
+                next();
+                name.push(current.value);
+            }
+            return { type: TokenType.Name, value: name.join("") };
+        }
+
         while (!current.done) {
             switch (current.value) {
                 case Conformance.Flag.Mandatory:
@@ -287,7 +303,11 @@ namespace Tokenizer {
                 case Conformance.Flag.Provisional:
                 case Conformance.Flag.Deprecated:
                 case Conformance.Flag.Disallowed:
-                    yield { type: TokenType.Flag, value: current.value };
+                    if (isNameChar(peeked.value)) {
+                        yield tokenizeName();
+                    } else {
+                        yield { type: TokenType.Flag, value: current.value };
+                    }
                     break;
 
                 case Special.Or:
@@ -354,17 +374,7 @@ namespace Tokenizer {
                     if (current.value >= "a" && current.value <= "z") {
                         yield { type: TokenType.Choice, value: current.value as Conformance.ChoiceName };
                     } else if (current.value >= "A" && current.value <= "Z") {
-                        const name = [ current.value ];
-                        while (
-                            (peeked.value >= "A" && peeked.value <= "Z")
-                            || (peeked.value >= "a" && peeked.value <= "z")
-                            || (peeked.value >= "0" && peeked.value <= "9")
-                            || peeked.value == "_"
-                        ) {
-                            next();
-                            name.push(current.value);
-                        }
-                        yield { type: TokenType.Name, value: name.join("") };
+                        yield tokenizeName();
                     } else {
                         conformance.error("GARBAGE_CHARACTER", `Unexpected character "${current.value}"`);
                     }
@@ -546,7 +556,13 @@ class Parser {
             return { type: value };
         }
 
-        if (this.token.type == Tokenizer.TokenType.Name || this.token.type == Tokenizer.TokenType.Number) {
+        if (this.token.type == Tokenizer.TokenType.Name) {
+            const name = this.token.value;
+            this.next();
+            return { type: Conformance.Special.Name, param: name };
+        }
+
+        if (this.token.type == Tokenizer.TokenType.Number) {
             const value = this.token.value;
             this.next();
             return { type: Conformance.Special.Value, param: value };

@@ -69,7 +69,7 @@ describe("MergeModels", () => {
 
     it("merges commands with children correctly", () => {
         const merged = merge(Fixtures.OnOff);
-        const offWithEffect = merged.childOfType(CommandModel, "OffWithEffect");
+        const offWithEffect = merged.get(CommandModel, "OffWithEffect");
         expect(offWithEffect.children.map(c => c.name)).toEqual([ "EffectIdentifier", "EffectVariant" ]);
     })
 })

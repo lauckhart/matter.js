@@ -43,6 +43,7 @@ export type ClusterReference = HtmlReference & {
     classifications?: HtmlReference,
     features?: HtmlReference,
     attributes?: HtmlReference,
+    attributeSets?: HtmlReference[],
     commands?: HtmlReference,
     events?: HtmlReference,
     statusCodes?: HtmlReference,

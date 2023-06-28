@@ -18,7 +18,6 @@ import {
     MatterModel,
     Metatype,
     Model,
-    ModelChildArray,
     ValueModel
 } from "../src/model/index.js";
 import { InternalError } from "../src/common/index.js";
@@ -39,11 +38,13 @@ clean(DEFINITION_PATH);
 const index = new TsFile(`${DEFINITION_PATH}/index`);
 
 for (const cluster of mom.clusters) {
-    const file = new TsFile(`${DEFINITION_PATH}/${cluster.name}Cluster`);
+    const name = `${cluster.name}Cluster`;
+
+    const file = new TsFile(`${DEFINITION_PATH}/${name}`);
     generateCluster(file, cluster);
     file.save();
 
-    index.atom(`export * from "./${cluster.name}Cluster.js"`);
+    index.atom(`export { ${name} } from "./${name}.js"`);
 }
 
 index.save();
@@ -147,7 +148,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         // but there's currently only a single place in the specification where
         // it makes a difference and neither we nor CHIP implement it yet
         if (model.response && model.response != "status") {
-            const responseModel = cluster.childOfType(CommandModel, model.response);
+            const responseModel = cluster.get(CommandModel, model.response);
             if (responseModel) {
                 responseId = responseModel.id;
                 responseType = tlvTypeRef(responseModel);
@@ -198,11 +199,9 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
             model = defining;
         } else {
             // If there's no defining model, the datatype is empty.  Use either
-            // the base or the model directly for naming
-            const base = model.base;
-            if (base?.parent instanceof ClusterModel) {
-                model = base;
-            }
+            // the base or the model directly for naming.  Handling of this is
+            // context specific
+            return;
         }
 
         let name = model.name;
@@ -239,6 +238,20 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
         return name;
     }
 
+    function integerTlv(metabase: ValueModel) {
+        const tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
+        addImport(tlv, "tlv/TlvNumber");
+        return tlv;
+    }
+
+    function primitiveTlv(metabase: ValueModel) {
+        const primitive = metabase.primitiveBase;
+        if (!primitive) {
+            throw new InternalError(`No primitive base for type ${metabase.name}`);
+        }
+        return integerTlv(primitive);
+    }
+
     function tlvTypeRef(model: ValueModel): string {
         const metabase = model.metabase;
         if (!metabase) {
@@ -252,10 +265,17 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 addImport(tlv, "tlv/TlvBoolean");
                 break;
 
-            case Metatype.integer:
             case Metatype.float:
-                tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
+                if (metabase.name == "single") {
+                    tlv = "TlvFloat";
+                } else {
+                    tlv = "TlvDouble";
+                }
                 addImport(tlv, "tlv/TlvNumber");
+                break;
+
+            case Metatype.integer:
+                tlv = integerTlv(metabase);
                 break;
 
             case Metatype.any:
@@ -289,21 +309,45 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
                 break;
     
             case Metatype.bitmap:
-                tlv = defineDatatype(model);
+                {
+                    const dt = defineDatatype(model);
+                    if (dt) {
+                        tlv = dt;
+                    } else {
+                        // No fields; revert to the primitive type the bitmap
+                        // derives from
+                        tlv = primitiveTlv(metabase);
+                    }
+                }
                 break;
     
             case Metatype.enum:
-                tlv = `TlvEnum<${defineDatatype(model)}>()`;
-                addImport("TlvEnum", "tlv/TlvNumber");
+                {
+                    const dt = defineDatatype(model);
+                    if (dt) {
+                        addImport("TlvEnum", "tlv/TlvNumber");
+                        tlv = `TlvEnum<${dt}>()`;
+                    } else {
+                        // No fields; revert to the primitive type the enum
+                        // derives from
+                        tlv = primitiveTlv(metabase);
+                    }
+                }
                 break;
 
             case Metatype.object:
-                if (!model.children.length && (model instanceof CommandModel || model instanceof EventModel)) {
-                    addImport("TlvNoArguments", "tlv/TlvNoArguments");
-                    tlv = "TlvNoArguments";
-                    break;
+                {
+                    const dt = defineDatatype(model);
+                    if (dt) {
+                        tlv = dt;
+                    } else {
+                        // This is only legal for commands but we'll fall back
+                        // to it in the (illegal) case where an object has no
+                        // fields
+                        addImport("TlvNoArguments", "tlv/TlvNoArguments");
+                        return "TlvNoArguments";
+                    }
                 }
-                tlv = defineDatatype(model);
                 break;
 
             default:
@@ -387,7 +431,7 @@ function generateCluster(file: TsFile, cluster: ClusterModel) {
     function defineElements<N extends "attributes" | "commands" | "events">(
         target: Block,
         name: N,
-        define: (model: ModelChildArray.Type<ClusterModel[N]>) => string | undefined
+        define: (model: ClusterModel[N][0]) => string | undefined
     ) {
         const definitions = Array<{ model: Model, body: string }>();
         for (const model of cluster[name]) {

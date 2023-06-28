@@ -166,6 +166,20 @@ export function loadCluster(clusterRef: HtmlReference) {
                 break;
 
             default:
+                // "Attribute Set" is suffixed to sections containing a subset
+                // of attributes
+                if (name.endsWith("attributeset")) {
+                    if (!definition.attributeSets) {
+                        definition.attributeSets = [];
+                    }
+                    logger.debug(`attribute set ${subref.name} § ${subref.xref.section}`);
+                    definition.attributeSets.push(subref)
+                    if (subref.table) {
+                        collectDetails(subref);
+                    }
+                    break;
+                }
+
                 // If we don't recognize the section name explicitly, pass to
                 // collectors so long as we're still in the relevant section
                 if (collectors.length) {

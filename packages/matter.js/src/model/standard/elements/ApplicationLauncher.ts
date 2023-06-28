@@ -63,7 +63,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O", constraint: "Any",
+                    tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O",
                     details: "This field SHALL specify optional app-specific data to be sent to the app.",
                     xref: { document: "cluster", section: "6.4.4.1.2" }
                 }
@@ -115,7 +115,7 @@ Matter.children.push({
                     xref: { document: "cluster", section: "6.4.4.4.1" }
                 },
                 {
-                    tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O", constraint: "Any",
+                    tag: "datatype", name: "Data", id: 0x1, type: "octstr", conformance: "O",
                     details: "This SHALL specify Optional app-specific data.",
                     xref: { document: "cluster", section: "6.4.4.4.2" }
                 }

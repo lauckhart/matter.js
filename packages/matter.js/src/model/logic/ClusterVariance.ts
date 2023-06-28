@@ -6,6 +6,7 @@
 
 import { Conformance } from "../aspects/index.js";
 import { FeatureSet } from "../definitions/index.js";
+import { Globals } from "../elements/index.js";
 import { AttributeModel, ClusterModel, ValueModel, DatatypeModel } from "../models/index.js";
 import { RecordValidator } from "./RecordValidator.js";
 
@@ -56,27 +57,27 @@ export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
         featureSets: []
     }
 
-    const featureMap = getFeatures(cluster);
-    if (!featureMap) {
+    const featureSet = getFeatures(cluster);
+    if (!featureSet) {
         return result;
     }
 
     const complex = Array<ValueModel>();
 
-    addSimple(cluster, result, complex);
-    addFeatureSets(cluster, result, complex);
+    addSimple(cluster, result, complex, featureSet);
+    addFeatureSets(cluster, result, complex, featureSet);
 
     return result;
 }
 
 // Add variance of the form O, M, FEATURE, [FEATURE], ignoring D and P
-function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[]) {
+function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[], featureSet: FeatureSet) {
     for (const child of cluster.children) {
-        if (!(child instanceof ValueModel)) {
+        if (!(child instanceof ValueModel) || child.base?.global) {
             continue;
         }
 
-        const simple = getSimpleVariance(child);
+        const simple = getSimpleVariance(child, featureSet);
         if (simple) {
             let pool: ElementVariance;
             if (simple.feature) {
@@ -101,7 +102,7 @@ function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: Valu
     }
 }
 
-function addFeatureSets(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[]) {
+function addFeatureSets(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[], featureSet: FeatureSet) {
     if (!complex.length) {
         return;
     }
@@ -112,9 +113,10 @@ function addFeatureSets(cluster: ClusterModel, result: ClusterVariance, complex:
     validCombinations;
     cluster;
     result;
+    featureSet;
 }
 
-function getSimpleVariance(element: ValueModel) {
+function getSimpleVariance(element: ValueModel, featureSet: FeatureSet) {
     function fromNode(node: Conformance.Ast): SimpleVariance | undefined {
         switch (node.type) {
             case Conformance.Flag.Mandatory:
@@ -150,6 +152,12 @@ function getSimpleVariance(element: ValueModel) {
                     return simple;
                 }
                 break;
+
+            case Conformance.Special.Name:
+                if (featureSet.has(node.param as string)) {
+                    return { mandatory: true, feature: node.param as string };
+                }
+                break;
         }
         return undefined;
     }
@@ -157,7 +165,7 @@ function getSimpleVariance(element: ValueModel) {
 }
 
 function getValidCombinations(cluster: ClusterModel): FeatureSet[] {
-    const featureMap = cluster.childOfType(AttributeModel, "featureMap");
+    const featureMap = cluster.get(AttributeModel, "featureMap");
     const featureModels = featureMap?.children || [];
     const features = new FeatureSet(featureModels.map(f => f.name));
 
@@ -174,11 +182,13 @@ function getValidCombinations(cluster: ClusterModel): FeatureSet[] {
 }
 
 function getFeatures(cluster: ClusterModel): FeatureSet {
-    const featureMap = cluster.childOfType(AttributeModel, "featureMap");
+    const featureMap = cluster.get(AttributeModel, Globals.FeatureMap.id);
     if (!featureMap) {
         return new FeatureSet();
     }
-    return new FeatureSet(featureMap.childrenOfType(DatatypeModel).map(f => f.name))
+    const features = featureMap.all(DatatypeModel);
+    const featureNames = features.map(f => f.name);
+    return new FeatureSet(featureNames);
 }
 
 function permute<T>(array: T[]): T[][] {
