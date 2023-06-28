@@ -281,6 +281,21 @@ export class ModelTraversal {
     }
 
     /**
+     * Find the root model.
+     */
+    findRoot(model: Model | undefined) {
+        if (!model) {
+            return undefined;
+        }
+        if (!model.parent) {
+            return model;
+        }
+        this.operation(() => {
+            return this.findRoot(model.parent);
+        })
+    }
+
+    /**
      * Visit all nodes in the model tree.
      */
     visit(model: Model, visitor: (model: Model) => boolean | void): boolean | undefined {

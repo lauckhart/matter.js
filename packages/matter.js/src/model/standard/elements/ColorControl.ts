@@ -44,128 +44,401 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "ColorControlCurrentHue", id: 0x0, type: "uint8", conformance: "O",
-            quality: "P"
+            tag: "attribute", name: "CurrentHue", id: 0x0, type: "uint8", access: "R V", conformance: "HS",
+            constraint: "0 to 254", quality: "N P",
+            details: "The CurrentHue attribute contains the current hue value of the light. It is updated as fast as " +
+                     "practical during commands that change the hue.",
+            xref: { document: "cluster", section: "3.2.7.1" }
         },
+
         {
-            tag: "attribute", name: "ColorControlCurrentSaturation", id: 0x1, type: "uint8", conformance: "O",
-            quality: "P"
+            tag: "attribute", name: "CurrentSaturation", id: 0x1, type: "uint8", access: "R V",
+            conformance: "HS", constraint: "0 to 254", quality: "N S P",
+            details: "The CurrentSaturation attribute holds the current saturation value of the light. It is updated as " +
+                     "fast as practical during commands that change the saturation.",
+            xref: { document: "cluster", section: "3.2.7.2" }
         },
-        { tag: "attribute", name: "ColorControlRemainingTime", id: 0x2, type: "uint16", conformance: "O" },
+
         {
-            tag: "attribute", name: "ColorControlCurrentX", id: 0x3, type: "uint16", conformance: "O",
-            default: 24939, quality: "P"
+            tag: "attribute", name: "RemainingTime", id: 0x2, type: "uint16", access: "R V", conformance: "O",
+            constraint: "0 to 65534",
+            details: "The RemainingTime attribute holds the time remaining, in 1/10ths of a second, until the currently " +
+                     "active command will be complete.",
+            xref: { document: "cluster", section: "3.2.7.3" }
         },
+
         {
-            tag: "attribute", name: "ColorControlCurrentY", id: 0x4, type: "uint16", conformance: "O",
-            default: 24701, quality: "P"
+            tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "X, Y",
+            constraint: "0", default: 24939, quality: "N S P",
+            details: "The CurrentX attribute contains the current value of the normalized chromaticity value x, as " +
+                     "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
+                     "the color.",
+            xref: { document: "cluster", section: "3.2.7.4" }
         },
-        { tag: "attribute", name: "ColorControlDriftCompensation", id: 0x5, type: "enum8", conformance: "O" },
-        { tag: "attribute", name: "ColorControlCompensationText", id: 0x6, type: "string", conformance: "O" },
+
         {
-            tag: "attribute", name: "ColorControlColorTemperature", id: 0x7, type: "uint16", conformance: "O",
-            default: 250, quality: "P"
+            tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "X, Y",
+            constraint: "0", default: 24701, quality: "N S P",
+            details: "The CurrentY attribute contains the current value of the normalized chromaticity value y, as " +
+                     "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
+                     "the color.",
+            xref: { document: "cluster", section: "3.2.7.5" }
         },
+
         {
-            tag: "attribute", name: "ColorControlColorMode", id: 0x8, type: "enum8", conformance: "M",
-            default: 1
+            tag: "attribute", name: "DriftCompensation", id: 0x5, type: "enum8", access: "R V",
+            conformance: "O", constraint: "0 to 4",
+            details: "The DriftCompensation attribute indicates what mechanism, if any, is in use for compensation for " +
+                     "color/intensity drift over time. It SHALL be one of the non-reserved values in Values of the " +
+                     "DriftCompensation Attribute.",
+            xref: { document: "cluster", section: "3.2.7.6" },
+
+            children: [
+                { tag: "datatype", name: "None", id: 0x0 },
+                { tag: "datatype", name: "OtherUnknown", id: 0x1 },
+                { tag: "datatype", name: "Temperaturemonitoring", id: 0x2 },
+                { tag: "datatype", name: "OpticalLuminanceMonitoringAndFeedback", id: 0x3 },
+                { tag: "datatype", name: "OpticalColorMonitoringAndFeedback", id: 0x4 }
+            ]
         },
+
         {
-            tag: "attribute", name: "ColorControlOptions", id: 0xf, type: "map8", access: "RW",
-            conformance: "M",
+            tag: "attribute", name: "CompensationText", id: 0x6, type: "string", access: "R V",
+            conformance: "O", constraint: "max 254",
+            details: "The CompensationText attribute holds a textual indication of what mechanism, if any, is in use to",
+            xref: { document: "cluster", section: "3.2.7.7" }
+        },
+
+        {
+            tag: "attribute", name: "ColorTemperatureMireds", id: 0x7, type: "uint16", access: "R V",
+            conformance: "CT", constraint: "0", default: 250, quality: "N S P",
+            details: "The ColorTemperatureMireds attribute contains a scaled inverse of the current value of the color " +
+                     "temperature. The unit of ColorTemperatureMireds is the mired (micro reciprocal degree), AKA mirek " +
+                     "(micro reciprocal kelvin). It is updated as fast as practical during commands that change the color.",
+            xref: { document: "cluster", section: "3.2.7.8" }
+        },
+
+        {
+            tag: "attribute", name: "ColorMode", id: 0x8, type: "enum8", access: "R V", conformance: "M",
+            constraint: "0 to 2", default: 1, quality: "N",
+            details: "The ColorMode attribute indicates which attributes are currently determining the color of the " +
+                     "device.",
+            xref: { document: "cluster", section: "3.2.7.9" },
+            children: [
+                { tag: "datatype", name: "CurrentHueAndCurrentSaturation", id: 0x0 },
+                { tag: "datatype", name: "CurrentXAndCurrentY", id: 0x1 },
+                { tag: "datatype", name: "ColorTemperatureMireds", id: 0x2 }
+            ]
+        },
+
+        {
+            tag: "attribute", name: "Options", id: 0xf, type: "map8", access: "RW", conformance: "M",
+            constraint: "desc",
+            details: "The Options attribute is meant to be changed only during commissioning. The Options attribute is a " +
+                     "bitmap that determines the default behavior of some cluster commands. Each command that is " +
+                     "dependent on the Options attribute SHALL first construct a temporary Options bitmap that is in " +
+                     "effect during the command processing. The temporary Options bitmap has the same format and meaning " +
+                     "as the Options attribute, but includes any bits that may be overridden by command fields.",
+            xref: { document: "cluster", section: "3.2.7.10" },
             children: [ { tag: "datatype", name: "ExecuteIfOff", id: 0x1, conformance: "M" } ]
         },
+
         {
-            tag: "attribute", name: "ColorControlNumberOfPrimaries", id: 0x10, type: "uint8", conformance: "M",
-            quality: "X"
+            tag: "attribute", name: "EnhancedCurrentHue", id: 0x4000, type: "uint16", access: "R V",
+            conformance: "EHUE", quality: "N S",
+            details: "The EnhancedCurrentHue attribute represents non-equidistant steps along the CIE 1931 color " +
+                     "triangle, and it provides 16-bits precision.",
+            xref: { document: "cluster", section: "3.2.7.11" }
         },
-        { tag: "attribute", name: "ColorControlPrimary1X", id: 0x11, type: "uint16", conformance: "O" },
-        { tag: "attribute", name: "ColorControlPrimary1Y", id: 0x12, type: "uint16", conformance: "O" },
+
         {
-            tag: "attribute", name: "ColorControlPrimary1Intensity", id: 0x13, type: "uint8", conformance: "O",
-            quality: "X"
+            tag: "attribute", name: "EnhancedColorMode", id: 0x4001, type: "enum8", access: "R V",
+            conformance: "M", constraint: "0 to 3", default: 1, quality: "N",
+            details: "The EnhancedColorMode attribute specifies which attributes are currently determining the color of " +
+                     "the device, as detailed in Values of the EnhancedColorMode Attribute.",
+            xref: { document: "cluster", section: "3.2.7.12" },
+
+            children: [
+                { tag: "datatype", name: "CurrentHueAndCurrentSaturation", id: 0x0 },
+                { tag: "datatype", name: "CurrentXAndCurrentY", id: 0x1 },
+                { tag: "datatype", name: "ColorTemperatureMireds", id: 0x2 },
+                { tag: "datatype", name: "EnhancedCurrentHueAndCurrentSaturation", id: 0x3 }
+            ]
         },
-        { tag: "attribute", name: "ColorControlPrimary2X", id: 0x15, type: "uint16", conformance: "O" },
-        { tag: "attribute", name: "ColorControlPrimary2Y", id: 0x16, type: "uint16", conformance: "O" },
+
         {
-            tag: "attribute", name: "ColorControlPrimary2Intensity", id: 0x17, type: "uint8", conformance: "O",
-            quality: "X"
+            tag: "attribute", name: "ColorLoopActive", id: 0x4002, type: "uint8", access: "R V",
+            conformance: "CL", quality: "N S",
+            details: "The ColorLoopActive attribute specifies the current active status of the color loop. If this " +
+                     "attribute",
+            xref: { document: "cluster", section: "3.2.7.13" }
         },
-        { tag: "attribute", name: "ColorControlPrimary3X", id: 0x19, type: "uint16", conformance: "O" },
-        { tag: "attribute", name: "ColorControlPrimary3Y", id: 0x1a, type: "uint16", conformance: "O" },
+
         {
-            tag: "attribute", name: "ColorControlPrimary3Intensity", id: 0x1b, type: "uint8", conformance: "O",
-            quality: "X"
+            tag: "attribute", name: "ColorLoopDirection", id: 0x4003, type: "uint8", access: "R V",
+            conformance: "CL", quality: "N S",
+            details: "The ColorLoopDirection attribute specifies the current direction of the color loop. If this " +
+                     "attribute has the value 0, the EnhancedCurrentHue attribute SHALL be decremented. If this attribute " +
+                     "has the value 1, the EnhancedCurrentHue attribute SHALL be incremented. All other values (2 to 254) " +
+                     "are reserved.",
+            xref: { document: "cluster", section: "3.2.7.14" }
         },
-        { tag: "attribute", name: "ColorControlPrimary4X", id: 0x20, type: "uint16", conformance: "O" },
-        { tag: "attribute", name: "ColorControlPrimary4Y", id: 0x21, type: "uint16", conformance: "O" },
+
         {
-            tag: "attribute", name: "ColorControlPrimary4Intensity", id: 0x22, type: "uint8", conformance: "O",
-            quality: "X"
+            tag: "attribute", name: "ColorLoopTime", id: 0x4004, type: "uint16", access: "R V",
+            conformance: "CL", default: 25, quality: "N S",
+            details: "The ColorLoopTime attribute specifies the number of seconds it SHALL take to perform a full color " +
+                     "loop, i.e., to cycle all values of the EnhancedCurrentHue attribute (between 0 and 0xfffe).",
+            xref: { document: "cluster", section: "3.2.7.15" }
         },
-        { tag: "attribute", name: "ColorControlPrimary5X", id: 0x24, type: "uint16", conformance: "O" },
-        { tag: "attribute", name: "ColorControlPrimary5Y", id: 0x25, type: "uint16", conformance: "O" },
+
         {
-            tag: "attribute", name: "ColorControlPrimary5Intensity", id: 0x26, type: "uint8", conformance: "O",
-            quality: "X"
+            tag: "attribute", name: "ColorLoopStartEnhancedHue", id: 0x4005, type: "uint16", access: "R V",
+            conformance: "CL", default: 8960,
+            details: "The ColorLoopStartEnhancedHue attribute specifies the value of the EnhancedCurrentHue attribute " +
+                     "from which the color loop SHALL be started.",
+            xref: { document: "cluster", section: "3.2.7.16" }
         },
-        { tag: "attribute", name: "ColorControlPrimary6X", id: 0x28, type: "uint16", conformance: "O" },
-        { tag: "attribute", name: "ColorControlPrimary6Y", id: 0x29, type: "uint16", conformance: "O" },
+
         {
-            tag: "attribute", name: "ColorControlPrimary6Intensity", id: 0x2a, type: "uint8", conformance: "O",
-            quality: "X"
+            tag: "attribute", name: "ColorLoopStoredEnhancedHue", id: 0x4006, type: "uint16", access: "R V",
+            conformance: "CL",
+            details: "The ColorLoopStoredEnhancedHue attribute specifies the value of the EnhancedCurrentHue attribute " +
+                     "before the color loop was started. Once the color loop is complete, the EnhancedCurrentHue " +
+                     "attribute SHALL be restored to this value.",
+            xref: { document: "cluster", section: "3.2.7.17" }
         },
+
         {
-            tag: "attribute", name: "ColorControlWhitePointX", id: 0x30, type: "uint16", access: "RW VM",
-            conformance: "O"
+            tag: "attribute", name: "ColorCapabilities", id: 0x400a, type: "map16", access: "R V",
+            conformance: "M", constraint: "0",
+            details: "Bits 0-4 of the ColorCapabilities attribute SHALL have the same values as the corresponding bits of " +
+                     "the FeatureMap attribute. All other bits in ColorCapabilities SHALL be 0.",
+            xref: { document: "cluster", section: "3.2.7.18" }
         },
+
         {
-            tag: "attribute", name: "ColorControlWhitePointY", id: 0x31, type: "uint16", access: "RW VM",
-            conformance: "O"
+            tag: "attribute", name: "ColorTempPhysicalMinMireds", id: 0x400b, type: "uint16", access: "R V",
+            conformance: "CT", constraint: "0",
+            details: "The ColorTempPhysicalMinMireds attribute indicates the minimum mired value supported by the " +
+                     "hardware. ColorTempPhysicalMinMireds corresponds to the maximum color temperature in kelvins " +
+                     "supported by the hardware. ColorTempPhysicalMinMireds ≤ ColorTemperatureMireds.",
+            xref: { document: "cluster", section: "3.2.7.19" }
         },
+
         {
-            tag: "attribute", name: "ColorControlColorPointRX", id: 0x32, type: "uint16", access: "RW VM",
-            conformance: "O"
+            tag: "attribute", name: "ColorTempPhysicalMaxMireds", id: 0x400c, type: "uint16", access: "R V",
+            conformance: "CT", constraint: "0", default: 65279,
+            details: "The ColorTempPhysicalMaxMireds attribute indicates the maximum mired value supported by the " +
+                     "hardware. ColorTempPhysicalMaxMireds corresponds to the minimum color temperature in kelvins " +
+                     "supported by the hardware. ColorTemperatureMireds ≤ ColorTempPhysicalMaxMireds.",
+            xref: { document: "cluster", section: "3.2.7.20" }
         },
+
         {
-            tag: "attribute", name: "ColorControlColorPointRY", id: 0x33, type: "uint16", access: "RW VM",
-            conformance: "O"
+            tag: "attribute", name: "CoupleColorTempToLevelMinMireds", id: 0x400d, type: "uint16",
+            access: "R V", conformance: "CT | ColorTemperatureMi",
+            constraint: "ColorTempPhysicalMinMireds to ColorTemperatureMireds",
+            details: "The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the " +
+                     "ColorTemperatureMireds attribute for the purposes of coupling the ColorTemperatureMireds attribute " +
+                     "to the CurrentLevel attribute when the CoupleColorTempToLevel bit of the Options attribute of the " +
+                     "Level Control cluster is equal to 1. When coupling the ColorTemperatureMireds attribute to the " +
+                     "CurrentLevel attribute, this value SHALL correspond to a CurrentLevel value of 0xfe (100%).",
+            xref: { document: "cluster", section: "3.2.7.21" }
         },
-        {
-            tag: "attribute", name: "ColorControlColorPointRIntensity", id: 0x34, type: "uint8",
-            access: "RW VM", conformance: "O", quality: "X"
-        },
-        {
-            tag: "attribute", name: "ColorControlColorPointGX", id: 0x36, type: "uint16", access: "RW VM",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "ColorControlColorPointGY", id: 0x37, type: "uint16", access: "RW VM",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "ColorControlColorPointGIntensity", id: 0x38, type: "uint8",
-            access: "RW VM", conformance: "O", quality: "X"
-        },
-        {
-            tag: "attribute", name: "ColorControlColorPointBX", id: 0x3a, type: "uint16", access: "RW VM",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "ColorControlColorPointBY", id: 0x3b, type: "uint16", access: "RW VM",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "ColorControlColorPointBIntensity", id: 0x3c, type: "uint8",
-            access: "RW VM", conformance: "O", quality: "X"
-        },
-        {
-            tag: "attribute", name: "ColorControlTemperatureLevelMinMireds", id: 0x400d, type: "uint16",
-            conformance: "O"
-        },
+
         {
             tag: "attribute", name: "StartUpColorTemperatureMireds", id: 0x4010, type: "uint16",
-            access: "RW VM", conformance: "O", quality: "X"
+            access: "RW VM", conformance: "CT | ColorTemperatureMi", constraint: "0", quality: "X",
+            details: "The StartUpColorTemperatureMireds attribute SHALL define the desired startup color temperature " +
+                     "value a lamp SHALL use when it is supplied with power and this value SHALL be reflected in the " +
+                     "ColorTemperatureMireds attribute. In addition, the ColorMode and EnhancedColorMode attributes SHALL " +
+                     "be set to 0x02 (color temperature). The values of the StartUpColorTemperatureMireds attribute are " +
+                     "listed in the table below,",
+            xref: { document: "cluster", section: "3.2.7.22" }
+        },
+
+        {
+            tag: "attribute", name: "NumberOfPrimaries", id: 0x10, type: "uint8", access: "R V",
+            conformance: "M", constraint: "0 to 6", quality: "X F",
+            details: "The NumberOfPrimaries attribute contains the number of color primaries implemented on this device. " +
+                     "A value of null SHALL indicate that the number of primaries is unknown.",
+            xref: { document: "cluster", section: "3.2.8.1" }
+        },
+
+        {
+            tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M, 0",
+            constraint: "0", quality: "F",
+            details: "The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined " +
+                     "in the CIE xyY Color Space.",
+            xref: { document: "cluster", section: "3.2.8.2" }
+        },
+
+        {
+            tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M, 0",
+            constraint: "0", quality: "F",
+            details: "The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined " +
+                     "in the CIE xyY Color Space.",
+            xref: { document: "cluster", section: "3.2.8.3" }
+        },
+
+        {
+            tag: "attribute", name: "Primary1Intensity", id: 0x13, type: "uint8", access: "R V",
+            conformance: "M, 0", quality: "X F",
+            details: "The Primary1intensity attribute contains a representation of the maximum intensity of this primary " +
+                     "as defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast " +
+                     "Configuration Cluster), normalized such that the primary with the highest maximum intensity " +
+                     "contains the value 0xfe.",
+            xref: { document: "cluster", section: "3.2.8.4" }
+        },
+
+        {
+            tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M, 1",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.8" }
+        },
+        {
+            tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M, 1",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.8" }
+        },
+        {
+            tag: "attribute", name: "Primary2Intensity", id: 0x17, type: "uint8", access: "R V",
+            conformance: "M, 1", quality: "X F",
+            xref: { document: "cluster", section: "3.2.8" }
+        },
+        {
+            tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M, 2",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.8" }
+        },
+        {
+            tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M, 2",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.8" }
+        },
+        {
+            tag: "attribute", name: "Primary3Intensity", id: 0x1b, type: "uint8", access: "R V",
+            conformance: "M, 2", quality: "X F",
+            xref: { document: "cluster", section: "3.2.8" }
+        },
+        {
+            tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M, 3",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+        {
+            tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M, 3",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+        {
+            tag: "attribute", name: "Primary4Intensity", id: 0x22, type: "uint8", access: "R V",
+            conformance: "M, 3", quality: "X F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+        {
+            tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M, 4",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+        {
+            tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M, 4",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+        {
+            tag: "attribute", name: "Primary5Intensity", id: 0x26, type: "uint8", access: "R V",
+            conformance: "M, 4", quality: "X F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+        {
+            tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M, 5",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+        {
+            tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M, 5",
+            constraint: "0", quality: "F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+        {
+            tag: "attribute", name: "Primary6Intensity", id: 0x2a, type: "uint8", access: "R V",
+            conformance: "M, 5", quality: "X F",
+            xref: { document: "cluster", section: "3.2.9" }
+        },
+
+        {
+            tag: "attribute", name: "WhitePointX", id: 0x30, type: "uint16", access: "RW VM", conformance: "O",
+            constraint: "0",
+            details: "The WhitePointX attribute contains the normalized chromaticity value x, as defined in the CIE xyY " +
+                     "Color Space, of the current white point of the device.",
+            xref: { document: "cluster", section: "3.2.10.1" }
+        },
+
+        {
+            tag: "attribute", name: "WhitePointY", id: 0x31, type: "uint16", access: "RW VM", conformance: "O",
+            constraint: "0",
+            details: "The WhitePointY attribute contains the normalized chromaticity value y, as defined in the CIE xyY " +
+                     "Color Space, of the current white point of the device.",
+            xref: { document: "cluster", section: "3.2.10.2" }
+        },
+
+        {
+            tag: "attribute", name: "ColorPointRx", id: 0x32, type: "uint16", access: "RW VM", conformance: "O",
+            constraint: "0",
+            details: "The ColorPointRX attribute contains the normalized chromaticity value x, as defined in the CIE xyY " +
+                     "Color Space, of the red color point of the device.",
+            xref: { document: "cluster", section: "3.2.10.3" }
+        },
+
+        {
+            tag: "attribute", name: "ColorPointRy", id: 0x33, type: "uint16", access: "RW VM", conformance: "O",
+            constraint: "0",
+            details: "The ColorPointRY attribute contains the normalized chromaticity value y, as defined in the CIE xyY " +
+                     "Color Space, of the red color point of the device.",
+            xref: { document: "cluster", section: "3.2.10.4" }
+        },
+
+        {
+            tag: "attribute", name: "ColorPointRIntensity", id: 0x34, type: "uint8", access: "RW VM",
+            conformance: "O", quality: "X",
+            details: "The ColorPointRIntensity attribute contains a representation of the relative intensity of the red " +
+                     "color point as defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast " +
+                     "Configuration Cluster), normalized such that the color point with the highest relative intensity " +
+                     "contains the value 0xfe.",
+            xref: { document: "cluster", section: "3.2.10.5" }
+        },
+
+        {
+            tag: "attribute", name: "ColorPointGx", id: 0x36, type: "uint16", access: "RW VM", conformance: "O",
+            constraint: "0",
+            xref: { document: "cluster", section: "3.2.10" }
+        },
+        {
+            tag: "attribute", name: "ColorPointGy", id: 0x37, type: "uint16", access: "RW VM", conformance: "O",
+            constraint: "0",
+            xref: { document: "cluster", section: "3.2.10" }
+        },
+        {
+            tag: "attribute", name: "ColorPointGIntensity", id: 0x38, type: "uint8", access: "RW VM",
+            conformance: "O", quality: "X",
+            xref: { document: "cluster", section: "3.2.10" }
+        },
+        {
+            tag: "attribute", name: "ColorPointBx", id: 0x3a, type: "uint16", access: "RW VM", conformance: "O",
+            constraint: "0",
+            xref: { document: "cluster", section: "3.2.10" }
+        },
+        {
+            tag: "attribute", name: "ColorPointBy", id: 0x3b, type: "uint16", access: "RW VM", conformance: "O",
+            constraint: "0",
+            xref: { document: "cluster", section: "3.2.10" }
+        },
+        {
+            tag: "attribute", name: "ColorPointBIntensity", id: 0x3c, type: "uint8", access: "RW VM",
+            conformance: "O", quality: "X",
+            xref: { document: "cluster", section: "3.2.10" }
         },
 
         {

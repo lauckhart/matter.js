@@ -25,35 +25,35 @@ export class MatterModel extends Model implements MatterElement {
      * Clusters.
      */
     get clusters() {
-        return this.childrenOfType(ClusterModel);
+        return this.all(ClusterModel);
     }
 
     /**
      * Device types.
      */
     get deviceTypes() {
-        return this.childrenOfType(DeviceTypeModel);
+        return this.all(DeviceTypeModel);
     }
 
     /**
      * Global datatypes.
      */
     get datatypes() {
-        return this.childrenOfType(DatatypeModel);
+        return this.all(DatatypeModel);
     }
 
     /**
      * Global attributes.
      */
     get attributes() {
-        return this.childrenOfType(AttributeModel);
+        return this.all(AttributeModel);
     }
 
     /**
      * Fabrics.
      */
     get fabrics() {
-        return this.childrenOfType(FabricModel);
+        return this.all(FabricModel);
     }
 
     override get children(): MatterModel.Child[] {

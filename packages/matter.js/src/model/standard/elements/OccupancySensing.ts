@@ -16,6 +16,112 @@ Matter.children.push({
 
     children: [
         {
+            tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", access: "R V",
+            conformance: "M", constraint: "0", quality: "P",
+            details: "The Occupancy attribute indicates the status of occupancy.",
+            xref: { document: "cluster", section: "2.7.6.1" }
+        },
+
+        {
+            tag: "attribute", name: "OccupancySensorType", id: 0x1, type: "OccupancySensorTypeEnum",
+            access: "R V", conformance: "M", constraint: "desc",
+            details: "The OccupancySensorType attribute specifies the type of the occupancy sensor.",
+            xref: { document: "cluster", section: "2.7.6.2" }
+        },
+
+        {
+            tag: "attribute", name: "OccupancySensorTypeBitmap", id: 0x2, type: "OccupancySensorTypeBitmap",
+            access: "R V", conformance: "M", constraint: "0",
+            details: "The OccupancySensorTypeBitmap attribute specifies the types of the occupancy sensor. A ‘1’ in each " +
+                     "bit position indicates the capability is implemented.",
+            xref: { document: "cluster", section: "2.7.6.3" }
+        },
+
+        {
+            tag: "attribute", name: "PirOccupiedToUnoccupiedDelay", id: 0x10, type: "uint16", access: "RW VM",
+            conformance: "O",
+            details: "The PIROccupiedToUnoccupiedDelay attribute specifies the time delay, in seconds, before the PIR " +
+                     "sensor changes to its unoccupied state after the last detection of movement in the sensed area.",
+            xref: { document: "cluster", section: "2.7.7.1" }
+        },
+
+        {
+            tag: "attribute", name: "PirUnoccupiedToOccupiedDelay", id: 0x11, type: "uint16", access: "RW VM",
+            conformance: "O",
+            details: "The PIRUnoccupiedToOccupiedDelay attribute specifies the time delay, in seconds, before the PIR " +
+                     "sensor changes to its occupied state after the detection of movement in the sensed area. This " +
+                     "attribute is mandatory if the PIRUnoccupiedToOccupiedThreshold attribute is implemented.",
+            xref: { document: "cluster", section: "2.7.7.2" }
+        },
+
+        {
+            tag: "attribute", name: "PirUnoccupiedToOccupiedThreshold", id: 0x12, type: "uint8",
+            access: "RW VM", conformance: "O", constraint: "1 to 254", default: 1,
+            details: "The PIRUnoccupiedToOccupiedThreshold attribute specifies the number of movement detection events " +
+                     "that must occur in the period PIRUnoccupiedToOccupiedDelay, before the PIR sensor changes to its " +
+                     "occupied state. This attribute is mandatory if the PIRUnoccupiedToOccupiedDelay attribute is " +
+                     "implemented.",
+            xref: { document: "cluster", section: "2.7.7.3" }
+        },
+
+        {
+            tag: "attribute", name: "UltrasonicOccupiedToUnoccupiedDelay", id: 0x20, type: "uint16",
+            access: "RW VM", conformance: "O",
+            details: "The UltrasonicOccupiedToUnoccupiedDelay attribute and specifies the time delay, in seconds, before " +
+                     "the Ultrasonic sensor changes to its unoccupied state after the last detection of movement in the " +
+                     "sensed area.",
+            xref: { document: "cluster", section: "2.7.8.1" }
+        },
+
+        {
+            tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedDelay", id: 0x21, type: "uint16",
+            access: "RW VM", conformance: "O",
+            details: "The UltrasonicUnoccupiedToOccupiedDelay attribute and specifies the time delay, in seconds, before " +
+                     "the Ultrasonic sensor changes to its occupied state after the detection of movement in the sensed " +
+                     "area. This attribute is mandatory if the UltrasonicUnoccupiedToOccupiedThreshold attribute is " +
+                     "implemented.",
+            xref: { document: "cluster", section: "2.7.8.2" }
+        },
+
+        {
+            tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedThreshold", id: 0x22, type: "uint8",
+            access: "RW VM", conformance: "O", constraint: "1 to 254", default: 1,
+            details: "The UltrasonicUnoccupiedToOccupiedThreshold attribute specifies the number of movement detection " +
+                     "events that must occur in the period UltrasonicUnoccupiedToOccupiedDelay, before the Ultrasonic " +
+                     "sensor changes to its occupied state. This attribute is mandatory if the " +
+                     "UltrasonicUnoccupiedToOccupiedDelay attribute is implemented.",
+            xref: { document: "cluster", section: "2.7.8.3" }
+        },
+
+        {
+            tag: "attribute", name: "PhysicalContactOccupiedToUnoccupiedDelay", id: 0x30, type: "uint16",
+            access: "RW VM", conformance: "O", quality: "X",
+            details: "The PhysicalContactOccupiedToUnoccupiedDelay attribute specifies the time delay, in seconds, before " +
+                     "the physical contact occupancy sensor changes to its unoccupied state after detecting the " +
+                     "unoccupied event. The null value indicates that the sensor does not report occupied to unoccupied " +
+                     "transition.",
+            xref: { document: "cluster", section: "2.7.9.1" }
+        },
+
+        {
+            tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedDelay", id: 0x31, type: "uint16",
+            access: "RW VM", conformance: "O", quality: "X",
+            details: "The PhysicalContactUnoccupiedToOccupiedDelay attribute specifies the time delay, in seconds, before " +
+                     "the physical contact sensor changes to its occupied state after the detection of the occupied event.",
+            xref: { document: "cluster", section: "2.7.9.2" }
+        },
+
+        {
+            tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedThreshold", id: 0x32, type: "uint8",
+            access: "RW VM", conformance: "O", constraint: "1 to 254", default: 1,
+            details: "The PhysicalContactUnoccupiedToOccupiedThreshold attribute specifies the number of movement " +
+                     "detection events that must occur in the period PhysicalContactUnoccupiedToOccupiedDelay, before the " +
+                     "PIR sensor changes to its occupied state. This attribute is mandatory if the " +
+                     "PhysicalContactUnoccupiedToOccupiedDelay attribute is implemented.",
+            xref: { document: "cluster", section: "2.7.9.3" }
+        },
+
+        {
             tag: "datatype", name: "OccupancyBitmap", type: "map8", conformance: "M",
             details: "This data type is derived from bitmap8.",
             xref: { document: "cluster", section: "2.7.5.1" },
@@ -56,55 +162,6 @@ Matter.children.push({
                     description: "Indicates a physical contact sensor."
                 }
             ]
-        },
-
-        {
-            tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", conformance: "M",
-            quality: "P"
-        },
-        {
-            tag: "attribute", name: "OccupancySensorType", id: 0x1, type: "OccupancySensorTypeEnum",
-            conformance: "M"
-        },
-        {
-            tag: "attribute", name: "OccupancySensorTypeBitmap", id: 0x2, type: "OccupancySensorTypeBitmap",
-            conformance: "M"
-        },
-        {
-            tag: "attribute", name: "PirOccupiedToUnoccupiedDelay", id: 0x10, type: "uint16", access: "RW VM",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "PirUnoccupiedToOccupiedDelay", id: 0x11, type: "uint16", access: "RW VM",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "PirUnoccupiedToOccupiedThreshold", id: 0x12, type: "uint8",
-            access: "RW VM", conformance: "O", default: 1
-        },
-        {
-            tag: "attribute", name: "UltrasonicOccupiedToUnoccupiedDelay", id: 0x20, type: "uint16",
-            access: "RW VM", conformance: "O"
-        },
-        {
-            tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedDelay", id: 0x21, type: "uint16",
-            access: "RW VM", conformance: "O"
-        },
-        {
-            tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedThreshold", id: 0x22, type: "uint8",
-            access: "RW VM", conformance: "O", default: 1
-        },
-        {
-            tag: "attribute", name: "PhysicalContactOccupiedToUnoccupiedDelay", id: 0x30, type: "uint16",
-            access: "RW VM", conformance: "O"
-        },
-        {
-            tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedDelay", id: 0x31, type: "uint16",
-            access: "RW VM", conformance: "O"
-        },
-        {
-            tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedThreshold", id: 0x32, type: "uint8",
-            access: "RW VM", conformance: "O", default: 1
         }
     ]
 });

@@ -9,7 +9,7 @@
     "declaration": true,
     "declarationMap": true, // Link from type definition (.d.ts) to source .ts for code navigation
   },
-  "include": ["src/**/*.ts", "gen/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "typedocOptions": {
     "entryPoints": [
       "src/certificate/index.ts",

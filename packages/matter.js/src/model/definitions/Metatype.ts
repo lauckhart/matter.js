@@ -118,10 +118,19 @@ export namespace Metatype {
                 return id;
             
             case Metatype.integer:
-                // Temperature type used by thermostat
-                if (typeof value == "string" && value.endsWith("°C")) {
-                    value = Math.floor(Number.parseFloat(value) * 100);
-                    return Number.isNaN(value) ? Invalid : value;
+                if (typeof value == "string") {
+                    // Temperature type used by thermostat
+                    if (value.endsWith("°C")) {
+                        value = Math.floor(Number.parseFloat(value) * 100);
+                        return Number.isNaN(value) ? Invalid : value;
+                    }
+
+                    // Strip off extra garbage like Number.parseInt would but
+                    // BigInt doesn't
+                    const match = value.match(/^(0x[0-9a-f]+|\d+)/);
+                    if (match) {
+                        value = match[1];
+                    }
                 }
 
                 try {

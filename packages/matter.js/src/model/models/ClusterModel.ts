@@ -20,24 +20,24 @@ export class ClusterModel extends Model implements ClusterElement {
     classification?: ClusterElement.Classification;
 
     get attributes() {
-        return this.childrenOfType(AttributeModel);
+        return this.all(AttributeModel);
     }
 
     get commands() {
-        return this.childrenOfType(CommandModel);
+        return this.all(CommandModel);
     }
 
     get events() {
-        return this.childrenOfType(EventModel);
+        return this.all(EventModel);
     }
 
     get datatypes() {
-        return this.childrenOfType(DatatypeModel);
+        return this.all(DatatypeModel);
     }
 
     get revision() {
         let revision = 1;
-        const revisionAttr = this.childOfType(AttributeModel, Globals.ClusterRevision.id);
+        const revisionAttr = this.get(AttributeModel, Globals.ClusterRevision.id);
         if (revisionAttr?.default != undefined) {
             revision = revisionAttr.default;
         }
@@ -45,7 +45,7 @@ export class ClusterModel extends Model implements ClusterElement {
     }
 
     get features() {
-        return this.childOfType(AttributeModel, Globals.FeatureMap.id);
+        return this.get(AttributeModel, Globals.FeatureMap.id);
     }
 
     override get children(): ClusterModel.Child[] {

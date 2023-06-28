@@ -6,7 +6,6 @@
 
 export * from "./Model.js";
 export * from "./ValueModel.js";
-export * from "./ModelChildArray.js";
 
 export * from "./DatatypeModel.js";
 export * from "./AttributeModel.js";

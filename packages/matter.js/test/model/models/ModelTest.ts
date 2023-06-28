@@ -79,21 +79,21 @@ describe("Model", () => {
 
     describe("childrenOfType", () => {
         it("finds all models by type", () => {
-            expect(Fixtures.matter.childrenOfType(ClusterModel).length).toBe(3);
+            expect(Fixtures.matter.all(ClusterModel).length).toBe(3);
 
             // 68 standard datatypes + 3 defined in our fake model
-            expect(Fixtures.matter.childrenOfType(DatatypeModel).length).toBe(71);
+            expect(Fixtures.matter.all(DatatypeModel).length).toBe(71);
         })
     });
 
     describe("childOfType", () => {
         it("finds by ID", () => {
-            expect(Fixtures.matter.childOfType(ClusterModel, 1)).toBe(Fixtures.cluster1);
-            expect(Fixtures.matter.childOfType(AttributeModel, 1)).toBe(Fixtures.globalAttr);
+            expect(Fixtures.matter.get(ClusterModel, 1)).toBe(Fixtures.cluster1);
+            expect(Fixtures.matter.get(AttributeModel, 1)).toBe(Fixtures.globalAttr);
         })
 
         it("finds by name", () => {
-            expect(Fixtures.matter.childOfType(ClusterModel, "Cluster1")).toBe(Fixtures.cluster1);
+            expect(Fixtures.matter.get(ClusterModel, "Cluster1")).toBe(Fixtures.cluster1);
         })
     })
 

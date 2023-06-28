@@ -8,7 +8,6 @@ import { Merge } from "../util/Type.js";
 import { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
 import { TlvSchema } from "../tlv/TlvSchema.js";
 import { TlvVoid } from "../tlv/TlvVoid.js";
-import { TlvFields, TlvObject, TypeFromFields } from "../tlv/TlvObject.js";
 import { AttributeId, TlvAttributeId } from "../datatype/AttributeId.js";
 import { EventId, TlvEventId } from "../datatype/EventId.js";
 import { CommandId, TlvCommandId } from "../datatype/CommandId.js";
@@ -54,6 +53,10 @@ export interface OptionalWritableAttribute<T, F extends BitSchema> extends Optio
 
 export interface ConditionalWritableAttribute<T, F extends BitSchema> extends OptionalWritableAttribute<T, F> {
     isConditional: true,
+}
+
+export interface FabricScopedAttribute<T, F extends BitSchema> extends Attribute<T, F> {
+    fabricScoped: true
 }
 
 export interface WritableFabricScopedAttribute<T, F extends BitSchema> extends WritableAttribute<T, F> {
@@ -238,6 +241,29 @@ export const ConditionalWritableAttribute = <T, V extends T, F extends BitSchema
     isConditional: true,
     optionalIf,
     mandatoryIf,
+});
+
+export const FabricScopedAttribute = <T, V extends T, F extends BitSchema>(id: number, schema: TlvSchema<T>, {
+    scene = false,
+    persistent = true,
+    omitChanges = false,
+    default: conformanceValue,
+    readAcl = AccessLevel.View
+}: AttributeOptions<V> = {}): FabricScopedAttribute<T, F> => ({
+    id,
+    schema,
+    optional: false,
+    writable: false,
+    fixed: false,
+    scene,
+    persistent,
+    fabricScoped: true,
+    omitChanges,
+    default: conformanceValue,
+    readAcl,
+    isConditional: false,
+    optionalIf: [],
+    mandatoryIf: [],
 });
 
 export const WritableFabricScopedAttribute = <T, V extends T, F extends BitSchema>(id: number, schema: TlvSchema<T>, {

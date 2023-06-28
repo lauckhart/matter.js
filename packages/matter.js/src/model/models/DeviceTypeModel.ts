@@ -15,11 +15,11 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
     classification!: DeviceTypeElement.Classification;
 
     get clusters() {
-        return this.childrenOfType(ClusterModel);
+        return this.all(ClusterModel);
     }
 
     get deviceTypes() {
-        return this.childrenOfType(DeviceTypeModel);
+        return this.all(DeviceTypeModel);
     }
 
     override get children(): (DeviceTypeModel | ClusterModel)[] {

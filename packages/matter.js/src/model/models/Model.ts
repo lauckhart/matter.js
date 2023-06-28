@@ -8,7 +8,6 @@ import { MatterError } from "../../common/index.js";
 import { DefinitionError, ElementTag, Specification } from "../definitions/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
-import { ModelChildArray } from "./ModelChildArray.js";
 
 const CHILDREN = Symbol("children");
 const PARENT = Symbol("parent");
@@ -242,14 +241,14 @@ export abstract class Model {
      * 
      * @param test model class or a predicate object
      */
-    childrenOfType<T extends Model>(constructor: abstract new(...args: any[]) => T) {
-        return new ModelChildArray(this, constructor);
+    all<T extends Model>(constructor: abstract new(...args: any[]) => T) {
+        return this.children.filter(c => c instanceof constructor) as T[];
     }
 
     /**
      * Retrieve a specific model by ID or name.
      */
-    childOfType<T extends Model>(constructor: abstract new(...args: any[]) => T, key: number | string) {
+    get<T extends Model>(constructor: abstract new(...args: any[]) => T, key: number | string) {
         return this.children.find(
             c => c instanceof constructor
             && typeof key == "number" ? c.effectiveId == key : c.name == key

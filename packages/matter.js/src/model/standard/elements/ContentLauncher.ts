@@ -87,14 +87,13 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "ContentUrl", id: 0x0, type: "string", conformance: "M", constraint: "Any",
+                    tag: "datatype", name: "ContentUrl", id: 0x0, type: "string", conformance: "M",
                     details: "This SHALL indicate the URL of content to launch.",
                     xref: { document: "cluster", section: "6.7.4.2.1" }
                 },
 
                 {
                     tag: "datatype", name: "DisplayString", id: 0x1, type: "string", conformance: "O",
-                    constraint: "Any",
                     details: "This field, if present, SHALL provide a string that MAY be used to describe the content being " +
                              "accessed at the given URL.",
                     xref: { document: "cluster", section: "6.7.4.2.2" }
@@ -102,7 +101,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "BrandingInformation", id: 0x2, type: "BrandingInformationStruct",
-                    conformance: "O", constraint: "Any",
+                    conformance: "O",
                     details: "This field, if present, SHALL indicate the branding information that MAY be displayed when playing " +
                              "back the given content.",
                     xref: { document: "cluster", section: "6.7.4.2.3" }
