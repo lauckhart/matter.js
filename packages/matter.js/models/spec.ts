@@ -22,11 +22,9 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "QUERY", id: 0x0, description: "Multicast query for identification state",
-                            details: "This feature supports a unicast, groupcast or multicast query of the cluster state, with a response " +
-                                     "back to query initiator, if the identification state is active. This feature is supported for " +
-                                     "underlying stacks that support a response to a multicast or groupcast command.",
-                            xref: { document: "cluster", section: "1.2.4.1" }
+                            tag: "datatype", name: "QRY", id: 0x0, description: "Query",
+                            details: "Multicast query for identification state",
+                            xref: { document: "cluster", section: "1.2.4" }
                         }
                     ]
                 },
@@ -48,9 +46,9 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         { tag: "datatype", name: "None", id: 0x0, description: "No presentation." },
-                        { tag: "datatype", name: "Lightoutput", id: 0x1, description: "Light output of a lighting product." },
-                        { tag: "datatype", name: "Visibleindicator", id: 0x2, description: "Typically a small LED." },
-                        { tag: "datatype", name: "Audiblebeep", id: 0x3 },
+                        { tag: "datatype", name: "LightOutput", id: 0x1, description: "Light output of a lighting product." },
+                        { tag: "datatype", name: "VisibleIndicator", id: 0x2, description: "Typically a small LED." },
+                        { tag: "datatype", name: "AudibleBeep", id: 0x3 },
                         {
                             tag: "datatype", name: "Display", id: 0x4,
                             description: "Presentation will be visible on display screen."
@@ -112,15 +110,15 @@ export const SpecMatter: MatterElement = {
                                     description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice."
                                 },
                                 {
-                                    tag: "datatype", name: "Channelchange", id: 0xb,
+                                    tag: "datatype", name: "ChannelChange", id: 0xb,
                                     description: "e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s and then minimum brightness for 7.5s."
                                 },
                                 {
-                                    tag: "datatype", name: "Finisheffect", id: 0xfe,
+                                    tag: "datatype", name: "FinishEffect", id: 0xfe,
                                     description: "Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above), first complete the current 1s breathe effect and then terminate the effect."
                                 },
                                 {
-                                    tag: "datatype", name: "Stopeffect", id: 0xff,
+                                    tag: "datatype", name: "StopEffect", id: 0xff,
                                     description: "Terminate the effect as soon as possible."
                                 }
                             ]
@@ -166,8 +164,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "GROUPNAMES", id: 0x0, default: 0,
-                            description: "The ability to store a name for a group.",
+                            tag: "datatype", name: "GN", id: 0x0, default: 0, description: "GroupNames",
+                            details: "The ability to store a name for a group.",
                             xref: { document: "cluster", section: "1.3.4" }
                         }
                     ]
@@ -319,8 +317,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "SCENENAMES", id: 0x0, default: 0,
-                            description: "The ability to store a name for a scene.",
+                            tag: "datatype", name: "SN", id: 0x0, default: 0, description: "SceneNames",
+                            details: "The ability to store a name for a scene.",
                             xref: { document: "cluster", section: "1.4.4" }
                         }
                     ]
@@ -490,7 +488,11 @@ export const SpecMatter: MatterElement = {
                             tag: "datatype", name: "Mode", id: 0x0, type: "map8", conformance: "M", constraint: "desc",
                             details: "The Mode field contains information of how the scene copy is to proceed. This field SHALL be " +
                                      "formatted as illustrated in Format of the Mode Field of the CopyScene Command.",
-                            xref: { document: "cluster", section: "1.4.9.11.1" }
+                            xref: { document: "cluster", section: "1.4.9.11.1" },
+                            children: [
+                                { tag: "datatype", name: "CopyAllScenes", id: 0x0 },
+                                { tag: "datatype", name: "Reserved", id: 0x1 }
+                            ]
                         },
 
                         {
@@ -663,7 +665,7 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "AttributeId", id: 0x0, type: "attrib-id", access: "RW",
-                            conformance: "M, !Zigbee",
+                            conformance: "Matter, !Zigbee",
                             details: "This field SHALL be present or not present, for all instances in the Scenes cluster. If this field " +
                                      "is not present, then the data type of AttributeValue SHALL be determined by the order and data type " +
                                      "defined in the cluster specification. Otherwise the data type of AttributeValue SHALL be the data " +
@@ -708,7 +710,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "LT", id: 0x0, description: "Behavior that supports lighting applications.",
+                            tag: "datatype", name: "LT", id: 0x0, description: "LevelControlForLighting",
+                            details: "Behavior that supports lighting applications.",
                             xref: { document: "cluster", section: "1.5.4" }
                         }
                     ]
@@ -838,7 +841,11 @@ export const SpecMatter: MatterElement = {
                             tag: "datatype", name: "OnOffControl", id: 0x0, type: "map8", conformance: "M",
                             details: "The OnOffControl field contains information on how the server is to be operated. This field SHALL " +
                                      "be formatted as illustrated in Format of the OnOffControl Field of the OnWithTimedOff Command.",
-                            xref: { document: "cluster", section: "1.5.7.6.1" }
+                            xref: { document: "cluster", section: "1.5.7.6.1" },
+                            children: [
+                                { tag: "datatype", name: "AcceptOnlyWhenOn", id: 0x0 },
+                                { tag: "datatype", name: "Reserved", id: 0x1 }
+                            ]
                         },
 
                         {
@@ -888,24 +895,21 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "ONOFF", id: 0x0, default: 1,
-                            description: "Dependency with the On/Off cluster",
+                            tag: "datatype", name: "OO", id: 0x0, default: 1, description: "OnOff",
+                            details: "Dependency with the On/Off cluster",
+                            xref: { document: "cluster", section: "1.6.4" }
+                        },
+                        {
+                            tag: "datatype", name: "LT", id: 0x1, default: 0, description: "Lighting",
+                            details: "Behavior that supports lighting applications",
                             xref: { document: "cluster", section: "1.6.4" }
                         },
 
                         {
-                            tag: "datatype", name: "LIGHTING", id: 0x1, default: 0,
-                            description: "Behavior that supports lighting applications",
-                            details: "This feature supports an interface for controlling the level of a light source. For the " +
-                                     "CurrentLevel attribute:",
-                            xref: { document: "cluster", section: "1.6.4.2" }
-                        },
-
-                        {
-                            tag: "datatype", name: "FREQUENCY", id: 0x2, default: 0,
-                            description: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for frequency control.",
-                            details: "NOTE Frequency feature is provisional.",
-                            xref: { document: "cluster", section: "1.6.4.3" }
+                            tag: "datatype", name: "FQ", id: 0x2, default: 0, description: "Frequency",
+                            details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
+                                     "frequency control.",
+                            xref: { document: "cluster", section: "1.6.4" }
                         }
                     ]
                 },
@@ -1068,7 +1072,11 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
                             details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field.",
-                            xref: { document: "cluster", section: "1.6.6.2.1" }
+                            xref: { document: "cluster", section: "1.6.6.2.1" },
+                            children: [
+                                { tag: "datatype", name: "Up", id: 0x0 },
+                                { tag: "datatype", name: "Down", id: 0x1 }
+                            ]
                         },
 
                         {
@@ -1175,24 +1183,21 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "ONOFF", id: 0x0, default: 1,
-                            description: "Dependency with the On/Off cluster",
+                            tag: "datatype", name: "OO", id: 0x0, default: 1, description: "OnOff",
+                            details: "Dependency with the On/Off cluster",
+                            xref: { document: "cluster", section: "1.6.4" }
+                        },
+                        {
+                            tag: "datatype", name: "LT", id: 0x1, default: 0, description: "Lighting",
+                            details: "Behavior that supports lighting applications",
                             xref: { document: "cluster", section: "1.6.4" }
                         },
 
                         {
-                            tag: "datatype", name: "LIGHTING", id: 0x1, default: 0,
-                            description: "Behavior that supports lighting applications",
-                            details: "This feature supports an interface for controlling the level of a light source. For the " +
-                                     "CurrentLevel attribute:",
-                            xref: { document: "cluster", section: "1.6.4.2" }
-                        },
-
-                        {
-                            tag: "datatype", name: "FREQUENCY", id: 0x2, default: 0,
-                            description: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for frequency control.",
-                            details: "NOTE Frequency feature is provisional.",
-                            xref: { document: "cluster", section: "1.6.4.3" }
+                            tag: "datatype", name: "FQ", id: 0x2, default: 0, description: "Frequency",
+                            details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
+                                     "frequency control.",
+                            xref: { document: "cluster", section: "1.6.4" }
                         }
                     ]
                 },
@@ -1355,7 +1360,11 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
                             details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field.",
-                            xref: { document: "cluster", section: "1.6.6.2.1" }
+                            xref: { document: "cluster", section: "1.6.6.2.1" },
+                            children: [
+                                { tag: "datatype", name: "Up", id: 0x0 },
+                                { tag: "datatype", name: "Down", id: 0x1 }
+                            ]
                         },
 
                         {
@@ -1483,7 +1492,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "ONOFF", id: 0x0, description: "Dependency with the On/Off cluster",
+                            tag: "datatype", name: "DEPONOFF", id: 0x0, description: "OnOff",
+                            details: "Dependency with the On/Off cluster",
                             xref: { document: "cluster", section: "1.8.4" }
                         }
                     ]
@@ -1533,8 +1543,8 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW VO",
-                    conformance: "D, EPONOFF", constraint: "desc", default: null, quality: "X N",
+                    tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW VO", conformance: "DEPONOFF",
+                    constraint: "desc", default: null, quality: "X N",
                     details: "This attribute SHALL indicate the value of CurrentMode that depends on the state of the On/Off " +
                              "cluster on the same endpoint. If this attribute is not present or is set to null, it SHALL NOT have " +
                              "an effect, otherwise the CurrentMode attribute SHALL depend on the OnOff attribute of the On/Off " +
@@ -1667,23 +1677,25 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "LS", id: 0x0, conformance: "O.a1",
+                            tag: "datatype", name: "LS", id: 0x0, conformance: "O.a", description: "LatchingSwitch",
                             xref: { document: "cluster", section: "1.11.4" }
                         },
                         {
-                            tag: "datatype", name: "MS", id: 0x1, conformance: "O.a1",
+                            tag: "datatype", name: "MS", id: 0x1, conformance: "O.a", description: "MomentarySwitch",
                             xref: { document: "cluster", section: "1.11.4" }
                         },
                         {
-                            tag: "datatype", name: "MSR", id: 0x2, conformance: "[M, S]",
+                            tag: "datatype", name: "MSR", id: 0x2, conformance: "[MS]", description: "MomentarySwitchRelease",
                             xref: { document: "cluster", section: "1.11.4" }
                         },
                         {
-                            tag: "datatype", name: "MSL", id: 0x3, conformance: "[M, S & M, SR]",
+                            tag: "datatype", name: "MSL", id: 0x3, conformance: "[MS & MSR]",
+                            description: "MomentarySwitchLongPress",
                             xref: { document: "cluster", section: "1.11.4" }
                         },
                         {
-                            tag: "datatype", name: "MSM", id: 0x4, conformance: "[M, S & M, SR]",
+                            tag: "datatype", name: "MSM", id: 0x4, conformance: "[MS & MSR]",
+                            description: "MomentarySwitchMultiPress",
                             xref: { document: "cluster", section: "1.11.4" }
                         }
                     ]
@@ -1709,7 +1721,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "MultiPressMax", id: 0x2, type: "uint8", conformance: "M, SM",
+                    tag: "attribute", name: "MultiPressMax", id: 0x2, type: "uint8", conformance: "MSM",
                     constraint: "min 2", default: 2, quality: "F",
                     details: "This attribute SHALL indicate how many consecutive presses can be detected and reported by a " +
                              "momentary switch which supports multi-press (e.g. it will report the value 3 if it can detect " +
@@ -1732,7 +1744,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "event", name: "InitialPress", id: 0x1, access: "V", conformance: "M, S", priority: "critical",
+                    tag: "event", name: "InitialPress", id: 0x1, access: "V", conformance: "MS", priority: "critical",
                     details: "This event SHALL be generated, when the momentary switch starts to be pressed (after debouncing).",
                     xref: { document: "cluster", section: "1.11.7.2" },
 
@@ -1745,7 +1757,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "event", name: "LongPress", id: 0x2, access: "V", conformance: "M, SL", priority: "critical",
+                    tag: "event", name: "LongPress", id: 0x2, access: "V", conformance: "MSL", priority: "critical",
                     details: "This event SHALL be generated, when the momentary switch has been pressed for a \"long\" time (this " +
                              "time interval is manufacturer determined (e.g. since it depends on the switch physics)).",
                     xref: { document: "cluster", section: "1.11.7.3" },
@@ -1759,8 +1771,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "event", name: "ShortRelease", id: 0x3, access: "V", conformance: "M, SR",
-                    priority: "critical",
+                    tag: "event", name: "ShortRelease", id: 0x3, access: "V", conformance: "MSR", priority: "critical",
                     details: "This event SHALL be generated, when the momentary switch has been released (after debouncing).",
                     xref: { document: "cluster", section: "1.11.7.4" },
 
@@ -1773,7 +1784,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "event", name: "LongRelease", id: 0x4, access: "V", conformance: "M, SL", priority: "critical",
+                    tag: "event", name: "LongRelease", id: 0x4, access: "V", conformance: "MSL", priority: "critical",
                     details: "This event SHALL be generated, when the momentary switch has been released (after debouncing) and " +
                              "after having been pressed for a long time, i.e. this event SHALL be generated when the switch is " +
                              "released if a LongPress event has been generated since since the previous InitialPress event. Also " +
@@ -1789,7 +1800,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "event", name: "MultiPressOngoing", id: 0x5, access: "V", conformance: "M, SM",
+                    tag: "event", name: "MultiPressOngoing", id: 0x5, access: "V", conformance: "MSM",
                     priority: "critical",
                     details: "This event SHALL be generated to indicate how many times the momentary switch has been pressed in a " +
                              "multi-press sequence, during that sequence. See Section 1.11.9, “Sequence of events for MultiPress” " +
@@ -1809,7 +1820,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "event", name: "MultiPressComplete", id: 0x6, access: "V", conformance: "M, SM",
+                    tag: "event", name: "MultiPressComplete", id: 0x6, access: "V", conformance: "MSM",
                     priority: "critical",
                     details: "This event SHALL be generated to indicate how many times the momentary switch has been pressed in a " +
                              "multi-press sequence, after it has been detected that the sequence has ended. See Section 1.11.9, " +
@@ -1873,8 +1884,7 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "2.2.5.5" },
                     children: [
                         { tag: "datatype", name: "Photodiode", id: 0x0 },
-                        { tag: "datatype", name: "Cmos", id: 0x1 },
-                        { tag: "datatype", name: "ReservedForManufacturerSpecificLightSensorTypes", id: 0x40 }
+                        { tag: "datatype", name: "Cmos", id: 0x1 }
                     ]
                 }
             ]
@@ -1927,8 +1937,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "EXT", id: 0x0, conformance: "O",
-                            description: "The cluster is capable of extended range and resolution",
+                            tag: "datatype", name: "EXT", id: 0x0, conformance: "O", description: "Extended",
+                            details: "The cluster is capable of extended range and resolution",
                             xref: { document: "cluster", section: "2.4.4" }
                         }
                     ]
@@ -2317,24 +2327,28 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "HS", id: 0x0,
-                            description: "Supports color specification via hue/saturation.",
+                            tag: "datatype", name: "HS", id: 0x0, description: "HueSaturation",
+                            details: "Supports color specification via hue/saturation.",
                             xref: { document: "cluster", section: "3.2.5" }
                         },
                         {
-                            tag: "datatype", name: "EHUE", id: 0x1, description: "Enhanced hue is supported.",
+                            tag: "datatype", name: "EHUE", id: 0x1, description: "EnhancedHue",
+                            details: "Enhanced hue is supported.",
                             xref: { document: "cluster", section: "3.2.5" }
                         },
                         {
-                            tag: "datatype", name: "CL", id: 0x2, description: "Color loop is supported.",
+                            tag: "datatype", name: "CL", id: 0x2, description: "ColorLoop",
+                            details: "Color loop is supported.",
                             xref: { document: "cluster", section: "3.2.5" }
                         },
                         {
-                            tag: "datatype", name: "XY", id: 0x3, description: "Supports color specification via XY.",
+                            tag: "datatype", name: "XY", id: 0x3, description: "Xy",
+                            details: "Supports color specification via XY.",
                             xref: { document: "cluster", section: "3.2.5" }
                         },
                         {
-                            tag: "datatype", name: "CT", id: 0x4, description: "Supports specification of color temperature.",
+                            tag: "datatype", name: "CT", id: 0x4, description: "ColorTemperature",
+                            details: "Supports specification of color temperature.",
                             xref: { document: "cluster", section: "3.2.5" }
                         }
                     ]
@@ -2365,7 +2379,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "X, Y",
+                    tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "XY",
                     constraint: "0", default: 24939, quality: "N S P",
                     details: "The CurrentX attribute contains the current value of the normalized chromaticity value x, as " +
                              "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
@@ -2374,7 +2388,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "X, Y",
+                    tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "XY",
                     constraint: "0", default: 24701, quality: "N S P",
                     details: "The CurrentY attribute contains the current value of the normalized chromaticity value y, as " +
                              "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
@@ -2393,7 +2407,7 @@ export const SpecMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "None", id: 0x0 },
                         { tag: "datatype", name: "OtherUnknown", id: 0x1 },
-                        { tag: "datatype", name: "Temperaturemonitoring", id: 0x2 },
+                        { tag: "datatype", name: "TemperatureMonitoring", id: 0x2 },
                         { tag: "datatype", name: "OpticalLuminanceMonitoringAndFeedback", id: 0x3 },
                         { tag: "datatype", name: "OpticalColorMonitoringAndFeedback", id: 0x4 }
                     ]
@@ -2564,7 +2578,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M, 0",
+                    tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M0",
                     constraint: "0", quality: "F",
                     details: "The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined " +
                              "in the CIE xyY Color Space.",
@@ -2572,7 +2586,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M, 0",
+                    tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M0",
                     constraint: "0", quality: "F",
                     details: "The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined " +
                              "in the CIE xyY Color Space.",
@@ -2581,7 +2595,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "Primary1Intensity", id: 0x13, type: "uint8", access: "R V",
-                    conformance: "M, 0", quality: "X F",
+                    conformance: "M0", quality: "X F",
                     details: "The Primary1intensity attribute contains a representation of the maximum intensity of this primary " +
                              "as defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast " +
                              "Configuration Cluster), normalized such that the primary with the highest maximum intensity " +
@@ -2590,78 +2604,78 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M, 1",
+                    tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M1",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
-                    tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M, 1",
+                    tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M1",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
                     tag: "attribute", name: "Primary2Intensity", id: 0x17, type: "uint8", access: "R V",
-                    conformance: "M, 1", quality: "X F",
+                    conformance: "M1", quality: "X F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
-                    tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M, 2",
+                    tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M2",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
-                    tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M, 2",
+                    tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M2",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
                     tag: "attribute", name: "Primary3Intensity", id: 0x1b, type: "uint8", access: "R V",
-                    conformance: "M, 2", quality: "X F",
+                    conformance: "M2", quality: "X F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
-                    tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M, 3",
+                    tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M3",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M, 3",
+                    tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M3",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary4Intensity", id: 0x22, type: "uint8", access: "R V",
-                    conformance: "M, 3", quality: "X F",
+                    conformance: "M3", quality: "X F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M, 4",
+                    tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M4",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M, 4",
+                    tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M4",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary5Intensity", id: 0x26, type: "uint8", access: "R V",
-                    conformance: "M, 4", quality: "X F",
+                    conformance: "M4", quality: "X F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M, 5",
+                    tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M5",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M, 5",
+                    tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M5",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary6Intensity", id: 0x2a, type: "uint8", access: "R V",
-                    conformance: "M, 5", quality: "X F",
+                    conformance: "M5", quality: "X F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
 
@@ -2752,16 +2766,10 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "Direction", id: 0x1, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "Direction", id: 0x1, type: "Direction", conformance: "M",
+                            constraint: "desc",
                             details: "The Direction field SHALL be one of the non-reserved values in Values of the Direction Field.",
-                            xref: { document: "cluster", section: "3.2.11.4.2" },
-
-                            children: [
-                                { tag: "datatype", name: "Shortestdistance", id: 0x0 },
-                                { tag: "datatype", name: "Longestdistance", id: 0x1 },
-                                { tag: "datatype", name: "Up", id: 0x2 },
-                                { tag: "datatype", name: "Down", id: 0x3 }
-                            ]
+                            xref: { document: "cluster", section: "3.2.11.4.2" }
                         },
 
                         {
@@ -2791,15 +2799,10 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "MoveMode", id: 0x0, type: "MoveMode", conformance: "M", constraint: "desc",
                             details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the " +
                                      "MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.",
-                            xref: { document: "cluster", section: "3.2.11.5.1" },
-                            children: [
-                                { tag: "datatype", name: "Stop", id: 0x0 },
-                                { tag: "datatype", name: "Up", id: 0x1 },
-                                { tag: "datatype", name: "Down", id: 0x3 }
-                            ]
+                            xref: { document: "cluster", section: "3.2.11.5.1" }
                         },
 
                         {
@@ -2831,15 +2834,10 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc",
                             details: "The StepMode field SHALL be one of the non-reserved values in Values of the StepMode Field.",
-                            xref: { document: "cluster", section: "3.2.11.6.1" },
-                            children: [
-                                { tag: "datatype", name: "Up", id: 0x1 },
-                                { tag: "datatype", name: "Down", id: 0x3 }
-                            ]
+                            xref: { document: "cluster", section: "3.2.11.6.1" }
                         },
-
                         {
                             tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M",
                             details: "The change to be added to (or subtracted from) the current value of the device’s hue.",
@@ -2898,15 +2896,10 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "MoveMode", id: 0x0, type: "MoveMode", conformance: "M", constraint: "desc",
                             details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the " +
                                      "MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.",
-                            xref: { document: "cluster", section: "3.2.11.8.1" },
-                            children: [
-                                { tag: "datatype", name: "Stop", id: 0x0 },
-                                { tag: "datatype", name: "Up", id: 0x1 },
-                                { tag: "datatype", name: "Down", id: 0x3 }
-                            ]
+                            xref: { document: "cluster", section: "3.2.11.8.1" }
                         },
 
                         {
@@ -2935,15 +2928,10 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc",
                             details: "The StepMode field SHALL be one of the non-reserved values in Values of the StepMode Field.",
-                            xref: { document: "cluster", section: "3.2.11.9.1" },
-                            children: [
-                                { tag: "datatype", name: "Up", id: 0x1 },
-                                { tag: "datatype", name: "Down", id: 0x3 }
-                            ]
+                            xref: { document: "cluster", section: "3.2.11.9.1" }
                         },
-
                         {
                             tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M",
                             details: "The change to be added to (or subtracted from) the current value of the device’s saturation.",
@@ -2996,8 +2984,8 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "MoveToColor", id: 0x7, access: "O", conformance: "X, Y",
-                    direction: "request", response: "status",
+                    tag: "command", name: "MoveToColor", id: 0x7, access: "O", conformance: "XY", direction: "request",
+                    response: "status",
                     details: "The MoveToColor command SHALL have the following data fields:",
                     xref: { document: "cluster", section: "3.2.11.11" },
 
@@ -3020,7 +3008,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "MoveColor", id: 0x8, access: "O", conformance: "X, Y", direction: "request",
+                    tag: "command", name: "MoveColor", id: 0x8, access: "O", conformance: "XY", direction: "request",
                     response: "status",
                     details: "The MoveColor command SHALL have the following data fields:",
                     xref: { document: "cluster", section: "3.2.11.12" },
@@ -3052,7 +3040,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "StepColor", id: 0x9, access: "O", conformance: "X, Y", direction: "request",
+                    tag: "command", name: "StepColor", id: 0x9, access: "O", conformance: "XY", direction: "request",
                     response: "status",
                     details: "The StepColor command SHALL have the following data fields:",
                     xref: { document: "cluster", section: "3.2.11.13" },
@@ -3121,7 +3109,8 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "Direction", id: 0x1, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "Direction", id: 0x1, type: "Direction", conformance: "M",
+                            constraint: "desc",
                             details: "This field is identical to the Direction field of the MoveToHue command of the Color Control " +
                                      "cluster (see sub-clause Use of the OptionsMask and OptionsOverride fields).",
                             xref: { document: "cluster", section: "3.2.11.15.2" }
@@ -3155,7 +3144,7 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "MoveMode", id: 0x0, type: "MoveMode", conformance: "M", constraint: "desc",
                             details: "This field is identical to the MoveMode field of the MoveHue command of the Color Control cluster " +
                                      "(see sub-clause MoveHue Command). If the MoveMode field is equal to 0 (Stop), the Rate field SHALL " +
                                      "be ignored.",
@@ -3192,7 +3181,7 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc",
                             details: "This field is identical to the StepMode field of the StepHue command of the Color Control cluster " +
                                      "(see sub-clause StepHue Command).",
                             xref: { document: "cluster", section: "3.2.11.17.1" }
@@ -3280,7 +3269,15 @@ export const SpecMatter: MatterElement = {
                             details: "The UpdateFlags field specifies which color loop attributes to update before the color loop is " +
                                      "started. This field SHALL be formatted as illustrated in Format of the UpdateFlags Field of the " +
                                      "ColorLoopSet Command.",
-                            xref: { document: "cluster", section: "3.2.11.19.1" }
+                            xref: { document: "cluster", section: "3.2.11.19.1" },
+
+                            children: [
+                                { tag: "datatype", name: "UpdateAction", id: 0x0 },
+                                { tag: "datatype", name: "UpdateDirection", id: 0x1 },
+                                { tag: "datatype", name: "UpdateTime", id: 0x2 },
+                                { tag: "datatype", name: "UpdateStartHue", id: 0x3 },
+                                { tag: "datatype", name: "Reserved", id: 0x4 }
+                            ]
                         },
 
                         {
@@ -3291,12 +3288,12 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "3.2.11.19.2" },
 
                             children: [
-                                { tag: "datatype", name: "DeActivatethecolorloop", id: 0x0 },
+                                { tag: "datatype", name: "DeActivateTheColorLoop", id: 0x0 },
                                 {
-                                    tag: "datatype", name: "ActivatethecolorloopfromthevalueintheColorLoopStartEnhancedHuefield",
+                                    tag: "datatype", name: "ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField",
                                     id: 0x1
                                 },
-                                { tag: "datatype", name: "ActivatethecolorloopfromthevalueoftheEnhancedCurrentHueattribute", id: 0x2 }
+                                { tag: "datatype", name: "ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute", id: 0x2 }
                             ]
                         },
 
@@ -3307,8 +3304,8 @@ export const SpecMatter: MatterElement = {
                                      "Values of the Direction Field of the ColorLoopSet Command.",
                             xref: { document: "cluster", section: "3.2.11.19.3" },
                             children: [
-                                { tag: "datatype", name: "Decrementthehueinthecolorloop", id: 0x0 },
-                                { tag: "datatype", name: "Incrementthehueinthecolorloop", id: 0x1 }
+                                { tag: "datatype", name: "DecrementTheHueInTheColorLoop", id: 0x0 },
+                                { tag: "datatype", name: "IncrementTheHueInTheColorLoop", id: 0x1 }
                             ]
                         },
 
@@ -3332,7 +3329,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | X, Y | CT",
+                    tag: "command", name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | XY",
                     direction: "request", response: "status",
                     details: "The StopMoveStep command is provided to allow MoveTo and Step commands to be stopped. (Note this " +
                              "automatically provides symmetry to the Level Control cluster.)",
@@ -3461,6 +3458,37 @@ export const SpecMatter: MatterElement = {
                             constraint: "desc", default: 0
                         }
                     ]
+                },
+
+                {
+                    tag: "datatype", name: "MoveMode", type: "enum8",
+                    xref: { document: "cluster", section: "3.2.11.5.1" },
+                    children: [
+                        { tag: "datatype", name: "Stop", id: 0x0 },
+                        { tag: "datatype", name: "Up", id: 0x1 },
+                        { tag: "datatype", name: "Down", id: 0x3 }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "StepMode", type: "enum8",
+                    xref: { document: "cluster", section: "3.2.11.6.1" },
+                    children: [
+                        { tag: "datatype", name: "Up", id: 0x1 },
+                        { tag: "datatype", name: "Down", id: 0x3 }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "Direction", type: "enum8",
+                    xref: { document: "cluster", section: "3.2.11.4.2" },
+
+                    children: [
+                        { tag: "datatype", name: "ShortestDistance", id: 0x0 },
+                        { tag: "datatype", name: "LongestDistance", id: 0x1 },
+                        { tag: "datatype", name: "Up", id: 0x2 },
+                        { tag: "datatype", name: "Down", id: 0x3 }
+                    ]
                 }
             ]
         },
@@ -3493,7 +3521,11 @@ export const SpecMatter: MatterElement = {
                              "the bits is specified in Bit Usage of the BallastStatus Attribute. Where a function is active, the " +
                              "corresponding bit SHALL be set to 1. Where a function is not active, the corresponding bit SHALL be " +
                              "set to 0.",
-                    xref: { document: "cluster", section: "3.3.6.3" }
+                    xref: { document: "cluster", section: "3.3.6.3" },
+                    children: [
+                        { tag: "datatype", name: "BallastNonOperational", id: 0x0 },
+                        { tag: "datatype", name: "LampFailure", id: 0x1 }
+                    ]
                 },
 
                 {
@@ -3588,7 +3620,8 @@ export const SpecMatter: MatterElement = {
                              "generated, as listed in Values of the LampAlarmMode Attribute. A ‘1’ in each bit position causes " +
                              "its associated attribute to be able to generate an alarm. (Note: All alarms are also logged in the " +
                              "alarm table – see Alarms cluster).",
-                    xref: { document: "cluster", section: "3.3.9.5" }
+                    xref: { document: "cluster", section: "3.3.9.5" },
+                    children: [ { tag: "datatype", name: "LampBurnHours", id: 0x0 } ]
                 },
 
                 {
@@ -3611,38 +3644,38 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "PRSCONST", id: 0x0, conformance: "O.a1+",
-                            description: "Supports operating in constant pressure mode",
+                            tag: "datatype", name: "PRSCONST", id: 0x0, conformance: "O.a+", description: "ConstantPressure",
+                            details: "Supports operating in constant pressure mode",
                             xref: { document: "cluster", section: "4.2.4" }
                         },
                         {
-                            tag: "datatype", name: "PRSCOMP", id: 0x1, conformance: "O.a1+",
-                            description: "Supports operating in compensated pressure mode",
+                            tag: "datatype", name: "PRSCOMP", id: 0x1, conformance: "O.a+", description: "CompensatedPressure",
+                            details: "Supports operating in compensated pressure mode",
                             xref: { document: "cluster", section: "4.2.4" }
                         },
                         {
-                            tag: "datatype", name: "FLW", id: 0x2, conformance: "O.a1+",
-                            description: "Supports operating in constant flow mode",
+                            tag: "datatype", name: "FLW", id: 0x2, conformance: "O.a+", description: "ConstantFlow",
+                            details: "Supports operating in constant flow mode",
                             xref: { document: "cluster", section: "4.2.4" }
                         },
                         {
-                            tag: "datatype", name: "SPD", id: 0x3, conformance: "O.a1+",
-                            description: "Supports operating in constant speed mode",
+                            tag: "datatype", name: "SPD", id: 0x3, conformance: "O.a+", description: "ConstantSpeed",
+                            details: "Supports operating in constant speed mode",
                             xref: { document: "cluster", section: "4.2.4" }
                         },
                         {
-                            tag: "datatype", name: "TEMP", id: 0x4, conformance: "O.a1+",
-                            description: "Supports operating in constant temperature mode",
+                            tag: "datatype", name: "TEMP", id: 0x4, conformance: "O.a+", description: "ConstantTemperature",
+                            details: "Supports operating in constant temperature mode",
                             xref: { document: "cluster", section: "4.2.4" }
                         },
                         {
-                            tag: "datatype", name: "AUTO", id: 0x5, conformance: "O",
-                            description: "Supports operating in automatic mode",
+                            tag: "datatype", name: "AUTO", id: 0x5, conformance: "O", description: "Automatic",
+                            details: "Supports operating in automatic mode",
                             xref: { document: "cluster", section: "4.2.4" }
                         },
                         {
-                            tag: "datatype", name: "LOCAL", id: 0x6, conformance: "O",
-                            description: "Supports operating using local settings",
+                            tag: "datatype", name: "LOCAL", id: 0x6, conformance: "O", description: "LocalOperation",
+                            details: "Supports operating using local settings",
                             xref: { document: "cluster", section: "4.2.4" }
                         }
                     ]
@@ -3674,7 +3707,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "MinConstPressure", id: 0x3, type: "int16", access: "R V",
-                    conformance: "P, RSCONST, [AUTO]", default: null, quality: "X F",
+                    conformance: "PRSCONST, [AUTO]", default: null, quality: "X F",
                     details: "This attribute specifies the minimum pressure the pump can achieve when it is working with the " +
                              "ControlMode attribute set to ConstantPressure.",
                     xref: { document: "cluster", section: "4.2.7.4" }
@@ -3682,7 +3715,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "MaxConstPressure", id: 0x4, type: "int16", access: "R V",
-                    conformance: "P, RSCONST, [AUTO]", default: null, quality: "X F",
+                    conformance: "PRSCONST, [AUTO]", default: null, quality: "X F",
                     details: "This attribute specifies the maximum pressure the pump can achieve when it is working with the " +
                              "ControlMode attribute set to ConstantPressure.",
                     xref: { document: "cluster", section: "4.2.7.5" }
@@ -3690,7 +3723,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "MinCompPressure", id: 0x5, type: "int16", access: "R V",
-                    conformance: "P, RSCOMP, [AUTO]", default: null, quality: "X F",
+                    conformance: "PRSCOMP, [AUTO]", default: null, quality: "X F",
                     details: "This attribute specifies the minimum compensated pressure the pump can achieve when it is working " +
                              "with the ControlMode attribute set to ProportionalPressure.",
                     xref: { document: "cluster", section: "4.2.7.6" }
@@ -3698,7 +3731,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "MaxCompPressure", id: 0x6, type: "int16", access: "R V",
-                    conformance: "P, RSCOMP, [AUTO]", default: null, quality: "X F",
+                    conformance: "PRSCOMP, [AUTO]", default: null, quality: "X F",
                     details: "This attribute specifies the maximum compensated pressure the pump can achieve when it is working " +
                              "with the ControlMode attribute set to ProportionalPressure.",
                     xref: { document: "cluster", section: "4.2.7.7" }
@@ -4010,7 +4043,7 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "ConstantPressure", id: 0x1, conformance: "P, RSCONST",
+                            tag: "datatype", name: "ConstantPressure", id: 0x1, conformance: "PRSCONST",
                             details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                                      "In case of the internal pressure sensor, this will be the range derived from the [MinConstPressure " +
                                      "– MaxConstPressure] attributes. In case of a remote pressure sensor, this will be the range derived " +
@@ -4019,7 +4052,7 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "ProportionalPressure", id: 0x2, conformance: "P, RSCOMP",
+                            tag: "datatype", name: "ProportionalPressure", id: 0x2, conformance: "PRSCOMP",
                             details: "The setpoint is interpreted as a percentage of the range derived of the [MinCompPressure – " +
                                      "MaxCompPressure] attributes. The internal setpoint will be lowered (compensated) dependent on the " +
                                      "flow in the pump (lower flow ⇒ lower internal setpoint).",
@@ -4066,38 +4099,38 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a1+",
-                            description: "Thermostat is capable of managing a heating device",
+                            tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a+", description: "Heating",
+                            details: "Thermostat is capable of managing a heating device",
                             xref: { document: "cluster", section: "4.3.3.1" }
                         },
                         {
-                            tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a1+",
-                            description: "Thermostat is capable of managing a cooling device",
+                            tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a+", description: "Cooling",
+                            details: "Thermostat is capable of managing a cooling device",
                             xref: { document: "cluster", section: "4.3.3.1" }
                         },
                         {
-                            tag: "datatype", name: "OCC", id: 0x2, conformance: "O",
-                            description: "Supports Occupied and Unoccupied setpoints",
+                            tag: "datatype", name: "OCC", id: 0x2, conformance: "O", description: "Occupancy",
+                            details: "Supports Occupied and Unoccupied setpoints",
                             xref: { document: "cluster", section: "4.3.3.1" }
                         },
                         {
-                            tag: "datatype", name: "SCH", id: 0x3, conformance: "O",
-                            description: "Supports remote configuration of a weekly schedule of setpoint transitions",
+                            tag: "datatype", name: "SCH", id: 0x3, conformance: "O", description: "ScheduleConfiguration",
+                            details: "Supports remote configuration of a weekly schedule of setpoint transitions",
                             xref: { document: "cluster", section: "4.3.3.1" }
                         },
                         {
-                            tag: "datatype", name: "SB", id: 0x4, conformance: "O",
-                            description: "Supports configurable setback (or span)",
+                            tag: "datatype", name: "SB", id: 0x4, conformance: "O", description: "Setback",
+                            details: "Supports configurable setback (or span)",
                             xref: { document: "cluster", section: "4.3.3.1" }
                         },
                         {
-                            tag: "datatype", name: "AUTO", id: 0x5, conformance: "O",
-                            description: "Supports a System Mode of Auto",
+                            tag: "datatype", name: "AUTO", id: 0x5, conformance: "O", description: "AutoMode",
+                            details: "Supports a System Mode of Auto",
                             xref: { document: "cluster", section: "4.3.3.1" }
                         },
                         {
-                            tag: "datatype", name: "LTNE", id: 0x6, conformance: "O",
-                            description: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
+                            tag: "datatype", name: "LTNE", id: 0x6, conformance: "O", description: "LocalTemperatureNotExposed",
+                            details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
                             xref: { document: "cluster", section: "4.3.3.1" }
                         }
                     ]
@@ -4120,7 +4153,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "O, CC",
+                    tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "OCC",
                     constraint: "desc", default: 1,
                     details: "This attribute specifies whether the heated/cooled space is occupied or not, as measured locally or " +
                              "remotely (over the network). If bit 0 = 1, the space is occupied, else it is unoccupied. All other " +
@@ -4226,14 +4259,14 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature", access: "RW VO",
-                    conformance: "COOL & O, CC", constraint: "desc", default: 2600, quality: "N",
+                    conformance: "COOL & OCC", constraint: "desc", default: 2600, quality: "N",
                     details: "This attribute specifies the cooling mode setpoint when the room is unoccupied.",
                     xref: { document: "cluster", section: "4.3.7.15" }
                 },
 
                 {
                     tag: "attribute", name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature", access: "RW VO",
-                    conformance: "HEAT & O, CC", constraint: "desc", default: 2000, quality: "N",
+                    conformance: "HEAT & OCC", constraint: "desc", default: 2000, quality: "N",
                     details: "This attribute specifies the heating mode setpoint when the room is unoccupied.",
                     xref: { document: "cluster", section: "4.3.7.16" }
                 },
@@ -4365,7 +4398,7 @@ export const SpecMatter: MatterElement = {
                             description: "2nd stage heating is in use to achieve desired temperature"
                         },
                         { tag: "datatype", name: "Precooling", id: 0x6, conformance: "[COOL]", description: "(see Terms)" },
-                        { tag: "datatype", name: "Fanonly", id: 0x7, conformance: "O" },
+                        { tag: "datatype", name: "FanOnly", id: 0x7, conformance: "O" },
                         { tag: "datatype", name: "Dry", id: 0x8, conformance: "O" },
                         { tag: "datatype", name: "Sleep", id: 0x9, conformance: "O" }
                     ]
@@ -4378,14 +4411,10 @@ export const SpecMatter: MatterElement = {
                              "corresponding to the alarm code is set to 1, the alarm is enabled, else it is disabled. Bits not " +
                              "corresponding to a code in the table are reserved.",
                     xref: { document: "cluster", section: "4.3.7.25" },
-
                     children: [
-                        {
-                            tag: "datatype", name: "InitializationfailureThedevicefailedtocompleteinitializationatpowerUp",
-                            id: 0x0
-                        },
-                        { tag: "datatype", name: "Hardwarefailure", id: 0x1 },
-                        { tag: "datatype", name: "SelfCalibrationfailure", id: 0x2 }
+                        { tag: "datatype", name: "InitializationFailure", id: 0x0 },
+                        { tag: "datatype", name: "HardwareFailure", id: 0x1 },
+                        { tag: "datatype", name: "SelfCalibrationFailure", id: 0x2 }
                     ]
                 },
 
@@ -4567,8 +4596,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "UnoccupiedSetback", id: 0x37, type: "temp-u8", access: "RW VM",
-                    conformance: "SB & O, CC", constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax",
-                    default: null, quality: "X N",
+                    conformance: "SB & OCC", constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax", default: null,
+                    quality: "X N",
                     details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature " +
                              "Value to float above the UnoccupiedCooling setpoint (i.e., UnoccupiedCooling + UnoccupiedSetback) " +
                              "or below the UnoccupiedHeating setpoint (i.e., UnoccupiedHeating - UnoccupiedSetback) before " +
@@ -4579,7 +4608,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "UnoccupiedSetbackMin", id: 0x38, type: "temp-u8", access: "R V",
-                    conformance: "SB & O, CC", constraint: "0 to UnoccupiedSetbackMax", default: null, quality: "X F",
+                    conformance: "SB & OCC", constraint: "0 to UnoccupiedSetbackMax", default: null, quality: "X F",
                     details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
                              "UnoccupiedSetback attribute to be configured by a user.",
                     xref: { document: "cluster", section: "4.3.7.41" }
@@ -4587,8 +4616,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "UnoccupiedSetbackMax", id: 0x39, type: "temp-u8", access: "R V",
-                    conformance: "SB & O, CC", constraint: "UnoccupiedSetbackMin to 25.4", default: null,
-                    quality: "X F",
+                    conformance: "SB & OCC", constraint: "UnoccupiedSetbackMin to 25.4", default: null, quality: "X F",
                     details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
                              "UnoccupiedSetback attribute to be configured by a user.",
                     xref: { document: "cluster", section: "4.3.7.42" }
@@ -4830,19 +4858,23 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "MULTISPEED", id: 0x0, description: "1-100 speeds",
+                            tag: "datatype", name: "SPD", id: 0x0, description: "MultiSpeed",
+                            details: "1-100 speeds",
                             xref: { document: "cluster", section: "4.4.5" }
                         },
                         {
-                            tag: "datatype", name: "AUTO", id: 0x1, description: "Automatic mode supported for fan speed",
+                            tag: "datatype", name: "AUT", id: 0x1, description: "Auto",
+                            details: "Automatic mode supported for fan speed",
                             xref: { document: "cluster", section: "4.4.5" }
                         },
                         {
-                            tag: "datatype", name: "ROCKING", id: 0x2, description: "Rocking movement supported",
+                            tag: "datatype", name: "RCK", id: 0x2, description: "Rocking",
+                            details: "Rocking movement supported",
                             xref: { document: "cluster", section: "4.4.5" }
                         },
                         {
-                            tag: "datatype", name: "WIND", id: 0x3, description: "Wind emulation supported",
+                            tag: "datatype", name: "WND", id: 0x3, description: "Wind",
+                            details: "Wind emulation supported",
                             xref: { document: "cluster", section: "4.4.5" }
                         }
                     ]
@@ -4882,12 +4914,12 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "4.4.6.2" },
 
                     children: [
-                        { tag: "datatype", name: "OffLowMedHigh", id: 0x0, conformance: "O.a1" },
-                        { tag: "datatype", name: "OffLowHigh", id: 0x1, conformance: "O.a1" },
+                        { tag: "datatype", name: "OffLowMedHigh", id: 0x0, conformance: "O.a" },
+                        { tag: "datatype", name: "OffLowHigh", id: 0x1, conformance: "O.a" },
                         { tag: "datatype", name: "OffLowMedHighAuto", id: 0x2, conformance: "[AUT]" },
                         { tag: "datatype", name: "OffLowHighAuto", id: 0x3, conformance: "[AUT]" },
                         { tag: "datatype", name: "OffOnAuto", id: 0x4, conformance: "[AUT]" },
-                        { tag: "datatype", name: "OffOn", id: 0x5, conformance: "O.a1" }
+                        { tag: "datatype", name: "OffOn", id: 0x5, conformance: "O.a" }
                     ]
                 },
 
@@ -5082,63 +5114,63 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "PIN", id: 0x0, conformance: "O",
-                            description: "Lock supports PIN credentials (via keypad, or over- the-air)",
+                            tag: "datatype", name: "PIN", id: 0x0, conformance: "O", description: "PinCredential",
+                            details: "Lock supports PIN credentials (via keypad, or over- the-air)",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "RID", id: 0x1, conformance: "O",
-                            description: "Lock supports RFID credentials",
+                            tag: "datatype", name: "RID", id: 0x1, conformance: "O", description: "RfidCredential",
+                            details: "Lock supports RFID credentials",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "FGP", id: 0x2, conformance: "P, O",
-                            description: "Lock supports finger related credentials (fingerprint, finger vein)",
+                            tag: "datatype", name: "FGP", id: 0x2, conformance: "P, O", description: "FingerCredentials",
+                            details: "Lock supports finger related credentials (fingerprint, finger vein)",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "LOG", id: 0x3, conformance: "O",
-                            description: "Lock supports local/on-lock logging when Events are not supported",
+                            tag: "datatype", name: "LOG", id: 0x3, conformance: "O", description: "Logging",
+                            details: "Lock supports local/on-lock logging when Events are not supported",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "WDSCH", id: 0x4, conformance: "O",
-                            description: "Lock supports week day user access schedules",
+                            tag: "datatype", name: "WDSCH", id: 0x4, conformance: "O", description: "WeekDayAccessSchedules",
+                            details: "Lock supports week day user access schedules",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "DPS", id: 0x5, conformance: "O",
-                            description: "Lock supports a door position sensor that indicates door’s state",
+                            tag: "datatype", name: "DPS", id: 0x5, conformance: "O", description: "DoorPositionSensor",
+                            details: "Lock supports a door position sensor that indicates door’s state",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "FACE", id: 0x6, conformance: "P, O",
-                            description: "Lock supports face related credentials (face, iris, retina)",
+                            tag: "datatype", name: "FACE", id: 0x6, conformance: "P, O", description: "FaceCredentials",
+                            details: "Lock supports face related credentials (face, iris, retina)",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "COTA", id: 0x7, conformance: "O",
-                            description: "PIN codes over- the-air supported for lock/unlock operations",
+                            tag: "datatype", name: "COTA", id: 0x7, conformance: "O", description: "CredentialOverTheAirAccess",
+                            details: "PIN codes over- the-air supported for lock/unlock operations",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "USR", id: 0x8, conformance: "[P, IN | RID]",
-                            description: "Lock supports the user commands and database",
+                            tag: "datatype", name: "USR", id: 0x8, conformance: "[PIN | RID]", description: "User",
+                            details: "Lock supports the user commands and database",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "NOT", id: 0x9, conformance: "O",
-                            description: "Operation and Programming Notifications",
+                            tag: "datatype", name: "NOT", id: 0x9, conformance: "O", description: "Notification",
+                            details: "Operation and Programming Notifications",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "YDSCH", id: 0xa, conformance: "O",
-                            description: "Lock supports year day user access schedules",
+                            tag: "datatype", name: "YDSCH", id: 0xa, conformance: "O", description: "YearDayAccessSchedules",
+                            details: "Lock supports year day user access schedules",
                             xref: { document: "cluster", section: "5.2.2" }
                         },
                         {
-                            tag: "datatype", name: "HDSCH", id: 0xb, conformance: "O",
-                            description: "Lock supports holiday schedules",
+                            tag: "datatype", name: "HDSCH", id: 0xb, conformance: "O", description: "HolidaySchedules",
+                            details: "Lock supports holiday schedules",
                             xref: { document: "cluster", section: "5.2.2" }
                         }
                     ]
@@ -5204,7 +5236,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "DoorState", id: 0x3, type: "enum8", access: "R V", conformance: "D, P, S",
+                    tag: "attribute", name: "DoorState", id: 0x3, type: "enum8", access: "R V", conformance: "DPS",
                     constraint: "desc", quality: "X P",
                     details: "The current door state as defined in DoorStateEnum.",
                     xref: { document: "cluster", section: "5.2.3.4" }
@@ -5212,21 +5244,21 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "DoorOpenEvents", id: 0x4, type: "uint32", access: "RW VM",
-                    conformance: "[D, P, S]",
+                    conformance: "[DPS]",
                     details: "This attribute holds the number of door open events that have occurred since it was last zeroed.",
                     xref: { document: "cluster", section: "5.2.3.5" }
                 },
 
                 {
                     tag: "attribute", name: "DoorClosedEvents", id: 0x5, type: "uint32", access: "RW VM",
-                    conformance: "[D, P, S]",
+                    conformance: "[DPS]",
                     details: "This attribute holds the number of door closed events that have occurred since it was last zeroed.",
                     xref: { document: "cluster", section: "5.2.3.6" }
                 },
 
                 {
                     tag: "attribute", name: "OpenPeriod", id: 0x6, type: "uint16", access: "RW VM",
-                    conformance: "[D, P, S]",
+                    conformance: "[DPS]",
                     details: "This attribute holds the number of minutes the door has been open since the last time it " +
                              "transitioned from closed to open.",
                     xref: { document: "cluster", section: "5.2.3.7" }
@@ -5248,7 +5280,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "NumberOfPinUsersSupported", id: 0x12, type: "uint16", access: "R V",
-                    conformance: "P, IN", default: 0, quality: "F",
+                    conformance: "PIN", default: 0, quality: "F",
                     details: "The number of PIN users supported.",
                     xref: { document: "cluster", section: "5.2.3.10" }
                 },
@@ -5283,14 +5315,14 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "MaxPinCodeLength", id: 0x17, type: "uint8", access: "R V",
-                    conformance: "P, IN", quality: "F",
+                    conformance: "PIN", quality: "F",
                     details: "An 8 bit value indicates the maximum length in bytes of a PIN Code on this device.",
                     xref: { document: "cluster", section: "5.2.3.15" }
                 },
 
                 {
                     tag: "attribute", name: "MinPinCodeLength", id: 0x18, type: "uint8", access: "R V",
-                    conformance: "P, IN", quality: "F",
+                    conformance: "PIN", quality: "F",
                     details: "An 8 bit value indicates the minimum length in bytes of a PIN Code on this device.",
                     xref: { document: "cluster", section: "5.2.3.16" }
                 },
@@ -5317,7 +5349,12 @@ export const SpecMatter: MatterElement = {
                     tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "map8", access: "R V",
                     conformance: "USR", default: 1, quality: "F",
                     details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.",
-                    xref: { document: "cluster", section: "5.2.3.19" }
+                    xref: { document: "cluster", section: "5.2.3.19" },
+                    children: [
+                        { tag: "datatype", name: "Single", id: 0x0 },
+                        { tag: "datatype", name: "Dual", id: 0x1 },
+                        { tag: "datatype", name: "Tri", id: 0x2 }
+                    ]
                 },
 
                 {
@@ -5383,7 +5420,15 @@ export const SpecMatter: MatterElement = {
                     details: "This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All " +
                              "operating modes NOT supported by a lock SHALL be set to one. The value of the OperatingMode " +
                              "enumeration defines the related bit to be set, as shown below:",
-                    xref: { document: "cluster", section: "5.2.3.24" }
+                    xref: { document: "cluster", section: "5.2.3.24" },
+
+                    children: [
+                        { tag: "datatype", name: "Normal", id: 0x0 },
+                        { tag: "datatype", name: "Vacation", id: 0x1 },
+                        { tag: "datatype", name: "Privacy", id: 0x2 },
+                        { tag: "datatype", name: "NoRemoteLockUnlock", id: 0x3 },
+                        { tag: "datatype", name: "Passage", id: 0x4 }
+                    ]
                 },
 
                 {
@@ -5442,7 +5487,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "WrongCodeEntryLimit", id: 0x30, type: "uint8", access: "R[W] VA",
-                    conformance: "P, IN | RID", constraint: "1 to 255", quality: "P",
+                    conformance: "PIN | RID", constraint: "1 to 255", quality: "P",
 
                     details: "The number of incorrect Pin codes or RFID presentment attempts a user is allowed to enter before " +
                              "the lock will enter a lockout state. The value of this attribute is compared to all failing forms " +
@@ -5456,7 +5501,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "UserCodeTemporaryDisableTime", id: 0x31, type: "uint8", access: "R[W] VA",
-                    conformance: "P, IN | RID", constraint: "1 to 255", quality: "P",
+                    conformance: "PIN | RID", constraint: "1 to 255", quality: "P",
                     details: "The number of seconds that the lock shuts down following wrong code entry. Valid range is 1-255 " +
                              "seconds. Device can shut down to lock user out for specified amount of time. (Makes it difficult to " +
                              "try and guess a PIN for the device.) If the attribute accepts writes and an attempt to write the " +
@@ -5466,7 +5511,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "SendPinOverTheAir", id: 0x32, type: "bool", access: "R[W] VA",
-                    conformance: "[P, IN]", default: true, quality: "P",
+                    conformance: "[PIN]", default: true, quality: "P",
                     details: "Boolean set to True if it is ok for the door lock server to send PINs over the air. This attribute " +
                              "determines the behavior of the server’s TX operation. If it is false, then it is not ok for the " +
                              "device to send PIN in any messages over the air.",
@@ -5475,7 +5520,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RequirePiNforRemoteOperation", id: 0x33, type: "bool", access: "R[W] VA",
-                    conformance: "COTA & P, IN", default: true, quality: "P",
+                    conformance: "COTA & PIN", default: true, quality: "P",
                     details: "Boolean set to True if the door lock server requires that an optional PINs be included in the " +
                              "payload of remote lock operation events like Lock, Unlock, Unlock with Timeout and Toggle in order " +
                              "to function.",
@@ -5507,32 +5552,32 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         { tag: "datatype", name: "LockingMechanismJammed", id: 0x0 },
-                        { tag: "datatype", name: "LockResettoFactoryDefaults", id: 0x1 },
+                        { tag: "datatype", name: "LockResetToFactoryDefaults", id: 0x1 },
                         { tag: "datatype", name: "Reserved", id: 0x2 },
                         { tag: "datatype", name: "RfModulePowerCycled", id: 0x3 },
-                        { tag: "datatype", name: "TamperAlarmWrongcodeentrylimit", id: 0x4 },
-                        { tag: "datatype", name: "TamperAlarmFrontescutcheonremovedfrommain", id: 0x5 },
-                        { tag: "datatype", name: "ForcedDoorOpenunderDoorLockedCondition", id: 0x6 }
+                        { tag: "datatype", name: "TamperAlarmWrongCodeEntryLimit", id: 0x4 },
+                        { tag: "datatype", name: "TamperAlarmFrontEscutcheonRemovedFromMain", id: 0x5 },
+                        { tag: "datatype", name: "ForcedDoorOpenUnderDoorLockedCondition", id: 0x6 }
                     ]
                 },
 
                 {
                     tag: "attribute", name: "KeypadOperationEventMask", id: 0x41, type: "map16", access: "RW VA",
-                    conformance: "[NOT & P, IN]", default: 65535, quality: "P",
+                    conformance: "[NOT & PIN]", default: 65535, quality: "P",
                     details: "Event mask used to turn on and off the transmission of keypad operation events. This mask DOES NOT " +
                              "apply to the storing of events in the event log. This mask only applies to the Operation Event " +
                              "Notification Command.",
                     xref: { document: "cluster", section: "5.2.3.40" },
 
                     children: [
-                        { tag: "datatype", name: "UnknownormanufacturerSpecifickeypadoperationevent", id: 0x0 },
-                        { tag: "datatype", name: "Locksourcekeypad", id: 0x1 },
-                        { tag: "datatype", name: "Unlocksourcekeypad", id: 0x2 },
-                        { tag: "datatype", name: "LocksourcekeypaderrorinvalidPin", id: 0x3 },
-                        { tag: "datatype", name: "Locksourcekeypaderrorinvalidschedule", id: 0x4 },
-                        { tag: "datatype", name: "Unlocksourcekeypaderrorinvalidcode", id: 0x5 },
-                        { tag: "datatype", name: "Unlocksourcekeypaderrorinvalidschedule", id: 0x6 },
-                        { tag: "datatype", name: "NonAccessUseroperationeventsourcekeypad", id: 0x7 }
+                        { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadOperationEvent", id: 0x0 },
+                        { tag: "datatype", name: "LockSourceKeypad", id: 0x1 },
+                        { tag: "datatype", name: "UnlockSourceKeypad", id: 0x2 },
+                        { tag: "datatype", name: "LockSourceKeypadErrorInvalidPin", id: 0x3 },
+                        { tag: "datatype", name: "LockSourceKeypadErrorInvalidSchedule", id: 0x4 },
+                        { tag: "datatype", name: "UnlockSourceKeypadErrorInvalidCode", id: 0x5 },
+                        { tag: "datatype", name: "UnlockSourceKeypadErrorInvalidSchedule", id: 0x6 },
+                        { tag: "datatype", name: "NonAccessUserOperationEventSourceKeypad", id: 0xf }
                     ]
                 },
 
@@ -5544,13 +5589,13 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.3.41" },
 
                     children: [
-                        { tag: "datatype", name: "UnknownormanufacturerSpecificremoteoperationevent", id: 0x0 },
-                        { tag: "datatype", name: "Locksourceremote", id: 0x1 },
-                        { tag: "datatype", name: "Unlocksourceremote", id: 0x2 },
-                        { tag: "datatype", name: "Locksourceremoteerrorinvalidcode", id: 0x3 },
-                        { tag: "datatype", name: "Locksourceremoteerrorinvalidschedule", id: 0x4 },
-                        { tag: "datatype", name: "Unlocksourceremoteerrorinvalidcode", id: 0x5 },
-                        { tag: "datatype", name: "Unlocksourceremoteerrorinvalidschedule", id: 0x6 }
+                        { tag: "datatype", name: "UnknownOrManufacturerSpecificRemoteOperationEvent", id: 0x0 },
+                        { tag: "datatype", name: "LockSourceRemote", id: 0x1 },
+                        { tag: "datatype", name: "UnlockSourceRemote", id: 0x2 },
+                        { tag: "datatype", name: "LockSourceRemoteErrorInvalidCode", id: 0x3 },
+                        { tag: "datatype", name: "LockSourceRemoteErrorInvalidSchedule", id: 0x4 },
+                        { tag: "datatype", name: "UnlockSourceRemoteErrorInvalidCode", id: 0x5 },
+                        { tag: "datatype", name: "UnlockSourceRemoteErrorInvalidSchedule", id: 0x6 }
                     ]
                 },
 
@@ -5562,17 +5607,17 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.3.42" },
 
                     children: [
-                        { tag: "datatype", name: "UnknownormanufacturerSpecificmanualoperationevent", id: 0x0 },
+                        { tag: "datatype", name: "UnknownOrManufacturerSpecificManualOperationEvent", id: 0x0 },
                         { tag: "datatype", name: "ThumbturnLock", id: 0x1 },
                         { tag: "datatype", name: "ThumbturnUnlock", id: 0x2 },
-                        { tag: "datatype", name: "Onetouchlock", id: 0x3 },
-                        { tag: "datatype", name: "KeyLock", id: 0x4 },
-                        { tag: "datatype", name: "KeyUnlock", id: 0x5 },
-                        { tag: "datatype", name: "Autolock", id: 0x6 },
-                        { tag: "datatype", name: "ScheduleLock", id: 0x7 },
-                        { tag: "datatype", name: "ScheduleUnlock", id: 0x8 },
-                        { tag: "datatype", name: "ManualLockKeyorThumbturn", id: 0x9 },
-                        { tag: "datatype", name: "ManualUnlockKeyorThumbturn", id: 0xa }
+                        { tag: "datatype", name: "OneTouchLock", id: 0x7 },
+                        { tag: "datatype", name: "KeyLock", id: 0x8 },
+                        { tag: "datatype", name: "KeyUnlock", id: 0x9 },
+                        { tag: "datatype", name: "AutoLock", id: 0xa },
+                        { tag: "datatype", name: "ScheduleLock", id: 0xb },
+                        { tag: "datatype", name: "ScheduleUnlock", id: 0xc },
+                        { tag: "datatype", name: "ManualLock", id: 0xd },
+                        { tag: "datatype", name: "ManualUnlock", id: 0xe }
                     ]
                 },
 
@@ -5584,30 +5629,30 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.3.43" },
 
                     children: [
-                        { tag: "datatype", name: "UnknownormanufacturerSpecifickeypadoperationevent", id: 0x0 },
-                        { tag: "datatype", name: "LocksourceRfid", id: 0x1 },
-                        { tag: "datatype", name: "UnlocksourceRfid", id: 0x2 },
-                        { tag: "datatype", name: "LocksourceRfiDerrorinvalidRfidId", id: 0x3 },
-                        { tag: "datatype", name: "LocksourceRfiDerrorinvalidschedule", id: 0x4 },
-                        { tag: "datatype", name: "UnlocksourceRfiDerrorinvalidRfidId", id: 0x5 },
-                        { tag: "datatype", name: "UnlocksourceRfiDerrorinvalidschedule", id: 0x6 }
+                        { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadOperationEvent", id: 0x0 },
+                        { tag: "datatype", name: "LockSourceRfid", id: 0x1 },
+                        { tag: "datatype", name: "UnlockSourceRfid", id: 0x2 },
+                        { tag: "datatype", name: "LockSourceRfidErrorInvalidRfidId", id: 0x3 },
+                        { tag: "datatype", name: "LockSourceRfidErrorInvalidSchedule", id: 0x4 },
+                        { tag: "datatype", name: "UnlockSourceRfidErrorInvalidRfidId", id: 0x5 },
+                        { tag: "datatype", name: "UnlockSourceRfidErrorInvalidSchedule", id: 0x6 }
                     ]
                 },
 
                 {
                     tag: "attribute", name: "KeypadProgrammingEventMask", id: 0x45, type: "map16", access: "RW VA",
-                    conformance: "[NOT & P, IN]", default: 65535, quality: "P",
+                    conformance: "[NOT & PIN]", default: 65535, quality: "P",
                     details: "Event mask used to turn on and off keypad programming events. This mask DOES NOT apply to the " +
                              "storing of events in the event log. This mask only applies to the Programming Event Notification " +
                              "Command.",
                     xref: { document: "cluster", section: "5.2.3.44" },
 
                     children: [
-                        { tag: "datatype", name: "UnknownormanufacturerSpecifickeypadprogrammingevent", id: 0x0 },
-                        { tag: "datatype", name: "ProgrammingPiNcodechangedsourcekeypad", id: 0x1 },
-                        { tag: "datatype", name: "PiNaddedsourcekeypad", id: 0x2 },
-                        { tag: "datatype", name: "PiNclearedsourcekeypad", id: 0x3 },
-                        { tag: "datatype", name: "PiNchangedSourcekeypad", id: 0x4 }
+                        { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", id: 0x0 },
+                        { tag: "datatype", name: "ProgrammingPinCodeChangedSourceKeypad", id: 0x1 },
+                        { tag: "datatype", name: "PinAddedSourceKeypad", id: 0x2 },
+                        { tag: "datatype", name: "PinClearedSourceKeypad", id: 0x3 },
+                        { tag: "datatype", name: "PinChangedSourceKeypad", id: 0x4 }
                     ]
                 },
 
@@ -5620,26 +5665,19 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.3.45" },
 
                     children: [
-                        { tag: "datatype", name: "UnknownormanufacturerSpecificremoteprogrammingevent", id: 0x0 },
-                        { tag: "datatype", name: "PiNaddedsourceremote", id: 0x2 },
-                        { tag: "datatype", name: "PiNclearedsourceremote", id: 0x3 },
-                        { tag: "datatype", name: "PiNchangedSourceremote", id: 0x4 },
-                        { tag: "datatype", name: "RfiDcodeaddedSourceremote", id: 0x5 },
-                        { tag: "datatype", name: "RfiDcodeclearedSourceremote", id: 0x6 }
+                        { tag: "datatype", name: "UnknownOrManufacturerSpecificRemoteProgrammingEvent", id: 0x0 },
+                        { tag: "datatype", name: "PinAddedSourceRemote", id: 0x2 },
+                        { tag: "datatype", name: "PinClearedSourceRemote", id: 0x3 },
+                        { tag: "datatype", name: "PinChangedSourceRemote", id: 0x4 },
+                        { tag: "datatype", name: "RfidCodeAddedSourceRemote", id: 0x5 },
+                        { tag: "datatype", name: "RfidCodeClearedSourceRemote", id: 0x6 }
                     ]
                 },
 
                 {
-                    tag: "attribute", name: "RfidProgrammingEventMask", id: 0x47, type: "map16", access: "RW VA",
+                    tag: "attribute", name: "RfidPro", id: 0x47, type: "map16", access: "RW VA",
                     conformance: "[NOT & RID]", default: 65535, quality: "P",
-                    details: "Event mask used to turn on and off RFID programming events. This mask DOES NOT apply to the storing " +
-                             "of events in the event log. This mask only applies to the Programming Event Notification Command.",
-                    xref: { document: "cluster", section: "5.2.3.46" },
-                    children: [
-                        { tag: "datatype", name: "UnknownormanufacturerSpecifickeypadprogrammingevent", id: 0x0 },
-                        { tag: "datatype", name: "IdAddedSourceRfid", id: 0x5 },
-                        { tag: "datatype", name: "IDclearedSourceRfid", id: 0x6 }
-                    ]
+                    xref: { document: "cluster", section: "5.2.3" }
                 },
 
                 {
@@ -5659,7 +5697,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "event", name: "DoorStateChange", id: 0x1, access: "V", conformance: "D, P, S",
+                    tag: "event", name: "DoorStateChange", id: 0x1, access: "V", conformance: "DPS",
                     priority: "critical",
                     details: "The door lock server sends out a DoorStateChange event when the door lock door state changes. The " +
                              "data of this event SHALL contain the following information:",
@@ -5868,7 +5906,7 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "UnlockwithTimeout", id: 0x3, access: "O T", conformance: "O",
+                    tag: "command", name: "UnlockWithTimeout", id: 0x3, access: "O T", conformance: "O",
                     direction: "request", response: "status",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
@@ -5882,37 +5920,37 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "SetPinCode", id: 0x5, access: "A T", conformance: "!USR & P, IN",
+                    tag: "command", name: "SetPinCode", id: 0x5, access: "A T", conformance: "!USR & PIN",
                     direction: "request", response: "status",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "GetPinCode", id: 0x6, access: "A", conformance: "!USR & P, IN",
+                    tag: "command", name: "GetPinCode", id: 0x6, access: "A", conformance: "!USR & PIN",
                     direction: "request", response: "GetPinCodeResponse",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "GetPinCodeResponse", id: 0x6, conformance: "!USR & P, IN",
+                    tag: "command", name: "GetPinCodeResponse", id: 0x6, conformance: "!USR & PIN",
                     direction: "response",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "ClearPinCode", id: 0x7, access: "A T", conformance: "!USR & P, IN",
+                    tag: "command", name: "ClearPinCode", id: 0x7, access: "A T", conformance: "!USR & PIN",
                     direction: "request", response: "status",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "ClearAllPinCodes", id: 0x8, access: "A T", conformance: "!USR & P, IN",
+                    tag: "command", name: "ClearAllPinCodes", id: 0x8, access: "A T", conformance: "!USR & PIN",
                     direction: "request", response: "status",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "SetUserStatus", id: 0x9, access: "A", conformance: "!USR & (P, IN | RID)",
+                    tag: "command", name: "SetUserStatus", id: 0x9, access: "A", conformance: "!USR & (PIN | RID)",
                     direction: "request", response: "status",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "GetUserStatus", id: 0xa, access: "A", conformance: "!USR & (P, IN | RID)",
+                    tag: "command", name: "GetUserStatus", id: 0xa, access: "A", conformance: "!USR & (PIN | RID)",
                     direction: "request", response: "GetUserStatusResponse",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
@@ -5981,12 +6019,12 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (P, IN | RID)",
+                    tag: "command", name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (PIN | RID)",
                     direction: "request", response: "status",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (P, IN | RID)",
+                    tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (PIN | RID)",
                     direction: "request", response: "GetUserTypeResponse",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
@@ -6101,10 +6139,10 @@ export const SpecMatter: MatterElement = {
                             description: "Tamper Alarm - front escutcheon removed from main"
                         },
                         {
-                            tag: "datatype", name: "DoorForcedOpen", id: 0x6, conformance: "[D, P, S]",
+                            tag: "datatype", name: "DoorForcedOpen", id: 0x6, conformance: "[DPS]",
                             description: "Forced Door Open under Door Locked Condition"
                         },
-                        { tag: "datatype", name: "DoorAjar", id: 0x7, conformance: "[D, P, S]", description: "Door ajar" },
+                        { tag: "datatype", name: "DoorAjar", id: 0x7, conformance: "[DPS]", description: "Door ajar" },
                         {
                             tag: "datatype", name: "ForcedUser", id: 0x8, conformance: "[USR]",
                             description: "Force User SOS alarm"
@@ -6155,7 +6193,7 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         { tag: "datatype", name: "ProgrammingPin", id: 0x0, conformance: "O" },
-                        { tag: "datatype", name: "Pin", id: 0x1, conformance: "P, IN" },
+                        { tag: "datatype", name: "Pin", id: 0x1, conformance: "PIN" },
                         { tag: "datatype", name: "Rfid", id: 0x2, conformance: "RID" },
                         { tag: "datatype", name: "Fingerprint", id: 0x3, conformance: "FGP" },
                         { tag: "datatype", name: "FingerVein", id: 0x4, conformance: "FGP" },
@@ -6189,7 +6227,17 @@ export const SpecMatter: MatterElement = {
                     tag: "datatype", name: "DaysMaskMap", type: "map8",
                     details: "The DaysMask field used in various commands and SHALL indicate the days of the week the Week Day " +
                              "schedule applies for. The data type of the DaysMask field is derived from map8.",
-                    xref: { document: "cluster", section: "5.2.6.6" }
+                    xref: { document: "cluster", section: "5.2.6.6" },
+
+                    children: [
+                        { tag: "datatype", name: "Sunday", id: 0x0 },
+                        { tag: "datatype", name: "Monday", id: 0x1 },
+                        { tag: "datatype", name: "Tuesday", id: 0x2 },
+                        { tag: "datatype", name: "Wednesday", id: 0x3 },
+                        { tag: "datatype", name: "Thursday", id: 0x4 },
+                        { tag: "datatype", name: "Friday", id: 0x5 },
+                        { tag: "datatype", name: "Saturday", id: 0x6 }
+                    ]
                 },
 
                 {
@@ -6198,30 +6246,24 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.6.7" },
 
                     children: [
+                        { tag: "datatype", name: "DoorOpen", id: 0x0, conformance: "DPS", description: "Door state is open" },
                         {
-                            tag: "datatype", name: "DoorOpen", id: 0x0, conformance: "D, P, S",
-                            description: "Door state is open"
-                        },
-                        {
-                            tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "D, P, S",
+                            tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "DPS",
                             description: "Door state is closed"
                         },
                         {
-                            tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "[D, P, S]",
+                            tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "[DPS]",
                             description: "Door state is jammed"
                         },
                         {
-                            tag: "datatype", name: "DoorForcedOpen", id: 0x3, conformance: "[D, P, S]",
+                            tag: "datatype", name: "DoorForcedOpen", id: 0x3, conformance: "[DPS]",
                             description: "Door state is currently forced open"
                         },
                         {
-                            tag: "datatype", name: "DoorUnspecifiedError", id: 0x4, conformance: "[D, P, S]",
+                            tag: "datatype", name: "DoorUnspecifiedError", id: 0x4, conformance: "[DPS]",
                             description: "Door state is invalid for unspecified reason"
                         },
-                        {
-                            tag: "datatype", name: "DoorAjar", id: 0x5, conformance: "[D, P, S]",
-                            description: "Door state is ajar"
-                        }
+                        { tag: "datatype", name: "DoorAjar", id: 0x5, conformance: "[DPS]", description: "Door state is ajar" }
                     ]
                 },
 
@@ -6263,7 +6305,7 @@ export const SpecMatter: MatterElement = {
                             description: "Lock holiday schedule was added, cleared, or modified."
                         },
                         {
-                            tag: "datatype", name: "Pin", id: 0x6, conformance: "P, IN",
+                            tag: "datatype", name: "Pin", id: 0x6, conformance: "PIN",
                             description: "Lock user PIN code was added, cleared, or modified."
                         },
                         {
@@ -6460,7 +6502,7 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "USR & COTA, IN",
+                            tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "USR & COTA",
                             details: "User access and PIN code is restricted to remote lock/unlock commands only. This type of user might " +
                                      "be useful for regular delivery services or voice assistant unlocking operations to prevent a PIN " +
                                      "code credential created for them from being used at the keypad. The PIN code credential would only " +
@@ -6482,28 +6524,28 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "LF", id: 0x0, conformance: "O.a1+",
-                            description: "Lift Control and behavior for lifting/sliding window coverings",
+                            tag: "datatype", name: "LF", id: 0x0, conformance: "O.a+", description: "Lift",
+                            details: "Lift Control and behavior for lifting/sliding window coverings",
                             xref: { document: "cluster", section: "5.3.4" }
                         },
                         {
-                            tag: "datatype", name: "TL", id: 0x1, conformance: "O.a1+",
-                            description: "Tilt Control and behavior for tilting window coverings",
+                            tag: "datatype", name: "TL", id: 0x1, conformance: "O.a+", description: "Tilt",
+                            details: "Tilt Control and behavior for tilting window coverings",
                             xref: { document: "cluster", section: "5.3.4" }
                         },
                         {
-                            tag: "datatype", name: "PALF", id: 0x2, conformance: "[LF]",
-                            description: "Position Aware lift control is supported.",
+                            tag: "datatype", name: "PALF", id: 0x2, conformance: "[LF]", description: "PositionAwareLift",
+                            details: "Position Aware lift control is supported.",
                             xref: { document: "cluster", section: "5.3.4" }
                         },
                         {
-                            tag: "datatype", name: "ABS", id: 0x3, conformance: "O",
-                            description: "Absolute positioning is supported.",
+                            tag: "datatype", name: "ABS", id: 0x3, conformance: "O", description: "AbsolutePosition",
+                            details: "Absolute positioning is supported.",
                             xref: { document: "cluster", section: "5.3.4" }
                         },
                         {
-                            tag: "datatype", name: "PATL", id: 0x4, conformance: "[TL]",
-                            description: "Position Aware tilt control is supported.",
+                            tag: "datatype", name: "PATL", id: 0x4, conformance: "[TL]", description: "PositionAwareTilt",
+                            details: "Position Aware tilt control is supported.",
                             xref: { document: "cluster", section: "5.3.4" }
                         }
                     ]
@@ -6521,11 +6563,11 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "Rollershade2Motor", id: 0x1 },
                         { tag: "datatype", name: "RollershadeExterior", id: 0x2 },
                         { tag: "datatype", name: "RollershadeExterior2Motor", id: 0x3 },
-                        { tag: "datatype", name: "Draperycurtain", id: 0x4 },
+                        { tag: "datatype", name: "Drapery", id: 0x4 },
                         { tag: "datatype", name: "Awning", id: 0x5 },
                         { tag: "datatype", name: "Shutter", id: 0x6 },
                         { tag: "datatype", name: "TiltBlindTiltOnly", id: 0x7 },
-                        { tag: "datatype", name: "TiltBlindLiftTilt", id: 0x8 },
+                        { tag: "datatype", name: "TiltBlindLift", id: 0x8 },
                         { tag: "datatype", name: "ProjectorScreen", id: 0x9 },
                         { tag: "datatype", name: "Unknown", id: 0xff }
                     ]
@@ -6533,7 +6575,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PhysicalClosedLimitLift", id: 0x1, type: "uint16", access: "R V",
-                    conformance: "[LF & P, A_LF & ABS]", default: 0, quality: "F",
+                    conformance: "[LF & PA_LF]", default: 0, quality: "F",
                     details: "The PhysicalClosedLimitLift attribute identifies the maximum possible encoder position possible (in " +
                              "centimeters) to position the height of the window covering Lift.",
                     xref: { document: "cluster", section: "5.3.5.2" }
@@ -6541,7 +6583,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PhysicalClosedLimitTilt", id: 0x2, type: "uint16", access: "R V",
-                    conformance: "[TL & P, A_TL & ABS]", default: 0, quality: "F",
+                    conformance: "[TL & PA_TL]", default: 0, quality: "F",
                     details: "The PhysicalClosedLimitTilt attribute identifies the maximum possible encoder position possible " +
                              "(tenth of a degrees) to position the angle of the window covering Tilt.",
                     xref: { document: "cluster", section: "5.3.5.3" }
@@ -6549,15 +6591,15 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CurrentPositionLift1", id: 0x3, type: "uint16", access: "R V",
-                    conformance: "[LF & P, A_LF & ABS]",
-                    constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift", default: null, quality: "X N",
+                    conformance: "[LF & PA_LF]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
+                    default: null, quality: "X N",
                     xref: { document: "cluster", section: "5.3.5" }
                 },
 
                 {
                     tag: "attribute", name: "CurrentPositionTilt1", id: 0x4, type: "uint16", access: "R V",
-                    conformance: "[TL & P, A_TL & ABS]",
-                    constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt", default: null, quality: "X N",
+                    conformance: "[TL & PA_TL]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
+                    default: null, quality: "X N",
                     xref: { document: "cluster", section: "5.3.5" }
                 },
 
@@ -6589,12 +6631,12 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CurrentPositionLiftPercentage1", id: 0x8, type: "percent", access: "R V",
-                    conformance: "[LF & P, A_LF]", constraint: "0 to 100", default: null, quality: "X N S P",
+                    conformance: "[LF & PA_LF]", constraint: "0 to 100", default: null, quality: "X N S P",
                     xref: { document: "cluster", section: "5.3.5" }
                 },
                 {
                     tag: "attribute", name: "CurrentPositionTiltPercentage1", id: 0x9, type: "percent", access: "R V",
-                    conformance: "[TL & P, A_TL]", constraint: "0 to 100", default: null, quality: "X N S P",
+                    conformance: "[TL & PA_TL]", constraint: "0 to 100", default: null, quality: "X N S P",
                     xref: { document: "cluster", section: "5.3.5" }
                 },
 
@@ -6608,15 +6650,12 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TargetPositionLiftPercent100Ths2", id: 0xb, type: "percent100ths",
-                    access: "R V", conformance: "LF & P, A_LF", constraint: "0 to 10000", default: null,
-                    quality: "X S P",
+                    access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X S P",
                     xref: { document: "cluster", section: "5.3.5" }
                 },
-
                 {
                     tag: "attribute", name: "TargetPositionTiltPercent100Ths2", id: 0xc, type: "percent100ths",
-                    access: "R V", conformance: "TL & P, A_TL", constraint: "0 to 10000", default: null,
-                    quality: "X S P",
+                    access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X S P",
                     xref: { document: "cluster", section: "5.3.5" }
                 },
 
@@ -6648,7 +6687,7 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "CentralCurtain", id: 0x10 },
                         { tag: "datatype", name: "RollerShutter", id: 0x11 },
                         { tag: "datatype", name: "ExteriorVerticalScreen", id: 0x12 },
-                        { tag: "datatype", name: "AwningTerracePatio", id: 0x13 },
+                        { tag: "datatype", name: "AwningTerrace", id: 0x13 },
                         { tag: "datatype", name: "AwningVerticalScreen", id: 0x14 },
                         { tag: "datatype", name: "TiltOnlyPergola", id: 0x15 },
                         { tag: "datatype", name: "SwingingShutter", id: 0x16 },
@@ -6659,21 +6698,18 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CurrentPositionLiftPercent100Ths1", id: 0xe, type: "percent100ths",
-                    access: "R V", conformance: "LF & P, A_LF", constraint: "0 to 10000", default: null,
-                    quality: "X N P",
+                    access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X N P",
                     xref: { document: "cluster", section: "5.3.5" }
                 },
-
                 {
                     tag: "attribute", name: "CurrentPositionTiltPercent100Ths1", id: 0xf, type: "percent100ths",
-                    access: "R V", conformance: "TL & P, A_TL", constraint: "0 to 10000", default: null,
-                    quality: "X N P",
+                    access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X N P",
                     xref: { document: "cluster", section: "5.3.5" }
                 },
 
                 {
                     tag: "attribute", name: "InstalledOpenLimitLift", id: 0x10, type: "uint16", access: "R V",
-                    conformance: "LF & P, A_LF & ABS", constraint: "0 to 65534", default: 0, quality: "N",
+                    conformance: "LF & PA_LF", constraint: "0 to 65534", default: 0, quality: "N",
                     details: "The InstalledOpenLimitLift attribute identifies the Open Limit for Lifting the Window Covering " +
                              "whether position (in centimeters) is encoded or timed.",
                     xref: { document: "cluster", section: "5.3.5.17" }
@@ -6681,7 +6717,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "InstalledClosedLimitLift", id: 0x11, type: "uint16", access: "R V",
-                    conformance: "LF & P, A_LF & ABS", constraint: "0 to 65534", default: 65534, quality: "N",
+                    conformance: "LF & PA_LF", constraint: "0 to 65534", default: 65534, quality: "N",
                     details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering " +
                              "whether position (in centimeters) is encoded or timed.",
                     xref: { document: "cluster", section: "5.3.5.18" }
@@ -6689,7 +6725,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "InstalledOpenLimitTilt", id: 0x12, type: "uint16", access: "R V",
-                    conformance: "TL & P, A_TL & ABS", constraint: "0 to 65534", default: 0, quality: "N",
+                    conformance: "TL & PA_TL", constraint: "0 to 65534", default: 0, quality: "N",
                     details: "The InstalledOpenLimitTilt attribute identifies the Open Limit for Tilting the Window Covering " +
                              "whether position (in tenth of a degree) is encoded or timed.",
                     xref: { document: "cluster", section: "5.3.5.19" }
@@ -6697,7 +6733,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16", access: "R V",
-                    conformance: "TL & P, A_TL & ABS", constraint: "0 to 65534", default: 65534, quality: "N",
+                    conformance: "TL & PA_TL", constraint: "0 to 65534", default: 65534, quality: "N",
                     details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering " +
                              "whether position (in tenth of a degree) is encoded or timed.",
                     xref: { document: "cluster", section: "5.3.5.20" }
@@ -6827,19 +6863,19 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "GoToLiftPercentage", id: 0x5, access: "O", conformance: "LF & P, A_LF, [LF]",
+                    tag: "command", name: "GoToLiftPercentage", id: 0x5, access: "O", conformance: "LF & PA_LF, [LF]",
                     direction: "request", response: "status",
                     details: "The GoToLiftPercentage command SHALL have the following data fields:",
                     xref: { document: "cluster", section: "5.3.6.5" },
 
                     children: [
                         {
-                            tag: "datatype", name: "LiftPercentageValue", id: 0x0, type: "percent", conformance: "O.a1",
+                            tag: "datatype", name: "LiftPercentageValue", id: 0x0, type: "percent", conformance: "O.a",
                             constraint: "desc"
                         },
                         {
-                            tag: "datatype", name: "LiftPercent100ThsValue", id: 0x1, type: "percent100ths",
-                            conformance: "O.a1", constraint: "desc"
+                            tag: "datatype", name: "LiftPercent100ThsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
+                            constraint: "desc"
                         }
                     ]
                 },
@@ -6853,19 +6889,19 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "GoToTiltPercentage", id: 0x8, access: "O", conformance: "TL & P, A_TL, [TL]",
+                    tag: "command", name: "GoToTiltPercentage", id: 0x8, access: "O", conformance: "TL & PA_TL, [TL]",
                     direction: "request", response: "status",
                     details: "The GoToTiltPercentage command SHALL have the following data fields:",
                     xref: { document: "cluster", section: "5.3.6.7" },
 
                     children: [
                         {
-                            tag: "datatype", name: "TiltPercentageValue", id: 0x0, type: "percent", conformance: "O.a1",
+                            tag: "datatype", name: "TiltPercentageValue", id: 0x0, type: "percent", conformance: "O.a",
                             constraint: "desc"
                         },
                         {
-                            tag: "datatype", name: "TiltPercent100ThsValue", id: 0x1, type: "percent100ths",
-                            conformance: "O.a1", constraint: "desc"
+                            tag: "datatype", name: "TiltPercent100ThsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
+                            constraint: "desc"
                         }
                     ]
                 }
@@ -7072,8 +7108,9 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "AP", id: 0x0,
-                            description: "Support for attributes and commands required for endpoint to support launching any application within the supported application catalogs",
+                            tag: "datatype", name: "AP", id: 0x0, description: "ApplicationPlatform",
+                            details: "Support for attributes and commands required for endpoint to support launching any application " +
+                                     "within the supported application catalogs",
                             xref: { document: "cluster", section: "6.4.2" }
                         }
                     ]
@@ -7235,7 +7272,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "NU", id: 0x0, description: "Supports updates to output names",
+                            tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
+                            details: "Supports updates to output names",
                             xref: { document: "cluster", section: "6.5.2" }
                         }
                     ]
@@ -7326,12 +7364,13 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "CL", id: 0x0, description: "Provides list of available channels.",
+                            tag: "datatype", name: "CL", id: 0x0, description: "ChannelList",
+                            details: "Provides list of available channels.",
                             xref: { document: "cluster", section: "6.6.2" }
                         },
                         {
-                            tag: "datatype", name: "LI", id: 0x1,
-                            description: "Provides lineup info, which is a reference to an external source of lineup information.",
+                            tag: "datatype", name: "LI", id: 0x1, description: "LineupInfo",
+                            details: "Provides lineup info, which is a reference to an external source of lineup information.",
                             xref: { document: "cluster", section: "6.6.2" }
                         }
                     ]
@@ -7541,12 +7580,13 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "CS", id: 0x0,
-                            description: "Device supports content search (non-app specific)",
+                            tag: "datatype", name: "CS", id: 0x0, description: "ContentSearch",
+                            details: "Device supports content search (non-app specific)",
                             xref: { document: "cluster", section: "6.7.2" }
                         },
                         {
-                            tag: "datatype", name: "UP", id: 0x1, description: "Device supports basic URL-based file playback",
+                            tag: "datatype", name: "UP", id: 0x1, description: "UrlPlayback",
+                            details: "Device supports basic URL-based file playback",
                             xref: { document: "cluster", section: "6.7.2" }
                         }
                     ]
@@ -7934,17 +7974,18 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "NV", id: 0x0,
-                            description: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU",
+                            tag: "datatype", name: "NV", id: 0x0, description: "NavigationKeyCodes",
+                            details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU",
                             xref: { document: "cluster", section: "6.8.2" }
                         },
                         {
-                            tag: "datatype", name: "LK", id: 0x1,
-                            description: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)",
+                            tag: "datatype", name: "LK", id: 0x1, description: "LocationKeys",
+                            details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)",
                             xref: { document: "cluster", section: "6.8.2" }
                         },
                         {
-                            tag: "datatype", name: "NK", id: 0x2, description: "Supports numeric input 0..9",
+                            tag: "datatype", name: "NK", id: 0x2, description: "NumberKeys",
+                            details: "Supports numeric input 0..9",
                             xref: { document: "cluster", section: "6.8.2" }
                         }
                     ]
@@ -8010,7 +8051,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "NU", id: 0x0, description: "Supports updates to the input names",
+                            tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
+                            details: "Supports updates to the input names",
                             xref: { document: "cluster", section: "6.9.2" }
                         }
                     ]
@@ -8143,13 +8185,15 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "AS", id: 0x0,
-                            description: "Enables clients to implement more advanced media seeking behavior in their user interface, such as for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support",
+                            tag: "datatype", name: "AS", id: 0x0, description: "AdvancedSeek",
+                            details: "Enables clients to implement more advanced media seeking behavior in their user interface, such as " +
+                                     "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support",
                             xref: { document: "cluster", section: "6.10.2" }
                         },
+
                         {
-                            tag: "datatype", name: "VS", id: 0x1,
-                            description: "Support for commands to support variable speed playback on media that supports it.",
+                            tag: "datatype", name: "VS", id: 0x1, description: "VariableSpeed",
+                            details: "Support for commands to support variable speed playback on media that supports it.",
                             xref: { document: "cluster", section: "6.10.2" }
                         }
                     ]
@@ -9906,8 +9950,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "CS", id: 0x0,
-                            description: "The ability to support CacheAndSync security policy and MCSP.",
+                            tag: "datatype", name: "CS", id: 0x0, description: "CacheAndSync",
+                            details: "The ability to support CacheAndSync security policy and MCSP.",
                             xref: { document: "core", section: "11.2.5" }
                         }
                     ]
@@ -10200,8 +10244,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "CALFMT", id: 0x0,
-                            description: "The Node can be configured to use different calendar formats when conveying values to a user.",
+                            tag: "datatype", name: "CALFMT", id: 0x0, description: "CalendarFormat",
+                            details: "The Node can be configured to use different calendar formats when conveying values to a user.",
                             xref: { document: "core", section: "11.4.4" }
                         }
                     ]
@@ -10278,8 +10322,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "TEMP", id: 0x0,
-                            description: "The Node can be configured to use different units of temperature when conveying values to a user.",
+                            tag: "datatype", name: "TEMP", id: 0x0, description: "TemperatureUnit",
+                            details: "The Node can be configured to use different units of temperature when conveying values to a user.",
                             xref: { document: "core", section: "11.5.4" }
                         }
                     ]
@@ -10335,21 +10379,23 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "WIRED", id: 0x0, description: "A wired power source",
+                            tag: "datatype", name: "WIRED", id: 0x0, description: "Wired",
+                            details: "A wired power source",
                             xref: { document: "core", section: "11.7.4" }
                         },
                         {
-                            tag: "datatype", name: "BAT", id: 0x1, description: "A battery power source",
+                            tag: "datatype", name: "BAT", id: 0x1, description: "Battery",
+                            details: "A battery power source",
                             xref: { document: "core", section: "11.7.4" }
                         },
                         {
-                            tag: "datatype", name: "RECHG", id: 0x2,
-                            description: "A rechargeable battery power source (requires Battery feature)",
+                            tag: "datatype", name: "RECHG", id: 0x2, description: "Rechargeable",
+                            details: "A rechargeable battery power source (requires Battery feature)",
                             xref: { document: "core", section: "11.7.4" }
                         },
                         {
-                            tag: "datatype", name: "REPLC", id: 0x3,
-                            description: "A replaceable battery power source (requires Battery feature)",
+                            tag: "datatype", name: "REPLC", id: 0x3, description: "Replaceable",
+                            details: "A replaceable battery power source (requires Battery feature)",
                             xref: { document: "core", section: "11.7.4" }
                         }
                     ]
@@ -10960,15 +11006,18 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "WI", id: 0x0, conformance: "O.a1", description: "Wi-Fi related features",
+                            tag: "datatype", name: "WI", id: 0x0, conformance: "O.a", description: "WiFiNetworkInterface",
+                            details: "Wi-Fi related features",
                             xref: { document: "core", section: "11.8.4" }
                         },
                         {
-                            tag: "datatype", name: "TH", id: 0x1, conformance: "O.a1", description: "Thread related features",
+                            tag: "datatype", name: "TH", id: 0x1, conformance: "O.a", description: "ThreadNetworkInterface",
+                            details: "Thread related features",
                             xref: { document: "core", section: "11.8.4" }
                         },
                         {
-                            tag: "datatype", name: "ET", id: 0x2, conformance: "O.a1", description: "Ethernet related features",
+                            tag: "datatype", name: "ET", id: 0x2, conformance: "O.a", description: "EthernetNetworkInterface",
+                            details: "Ethernet related features",
                             xref: { document: "core", section: "11.8.4" }
                         }
                     ]
@@ -11292,11 +11341,11 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "core", section: "11.8.5.2" },
 
                     children: [
-                        { tag: "datatype", name: "2G4", id: 0x0, conformance: "O.a1+" },
-                        { tag: "datatype", name: "3G65", id: 0x1, conformance: "O.a1+" },
-                        { tag: "datatype", name: "5G", id: 0x2, conformance: "O.a1+" },
-                        { tag: "datatype", name: "6G", id: 0x3, conformance: "O.a1+" },
-                        { tag: "datatype", name: "60G", id: 0x4, conformance: "O.a1+" }
+                        { tag: "datatype", name: "2G4", id: 0x0, conformance: "O.a+" },
+                        { tag: "datatype", name: "3G65", id: 0x1, conformance: "O.a+" },
+                        { tag: "datatype", name: "5G", id: 0x2, conformance: "O.a+" },
+                        { tag: "datatype", name: "6G", id: 0x3, conformance: "O.a+" },
+                        { tag: "datatype", name: "60G", id: 0x4, conformance: "O.a+" }
                     ]
                 },
 
@@ -12172,8 +12221,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "WTRMRK", id: 0x0,
-                            description: "Node makes available the metrics for high watermark related to memory consumption.",
+                            tag: "datatype", name: "WTRMRK", id: 0x0, description: "Watermarks",
+                            details: "Node makes available the metrics for high watermark related to memory consumption.",
                             xref: { document: "core", section: "11.12.4" }
                         }
                     ]
@@ -12298,23 +12347,27 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "PKTCNT", id: 0x0,
-                            description: "Server supports the counts for the number of received and transmitted packets on the Thread interface.",
+                            tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
+                            details: "Server supports the counts for the number of received and transmitted packets on the Thread " +
+                                     "interface.",
+                            xref: { document: "core", section: "11.13.4" }
+                        },
+
+                        {
+                            tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
+                            details: "Server supports the counts for the number of errors that have occurred during the reception and " +
+                                     "transmission of packets on the Thread interface.",
+                            xref: { document: "core", section: "11.13.4" }
+                        },
+
+                        {
+                            tag: "datatype", name: "MLECNT", id: 0x2, description: "MleCounts",
+                            details: "Server supports the counts for various MLE layer happenings.",
                             xref: { document: "core", section: "11.13.4" }
                         },
                         {
-                            tag: "datatype", name: "ERRCNT", id: 0x1,
-                            description: "Server supports the counts for the number of errors that have occurred during the reception and transmission of packets on the Thread interface.",
-                            xref: { document: "core", section: "11.13.4" }
-                        },
-                        {
-                            tag: "datatype", name: "MLECNT", id: 0x2,
-                            description: "Server supports the counts for various MLE layer happenings.",
-                            xref: { document: "core", section: "11.13.4" }
-                        },
-                        {
-                            tag: "datatype", name: "MACCNT", id: 0x3,
-                            description: "Server supports the counts for various MAC layer happenings.",
+                            tag: "datatype", name: "MACCNT", id: 0x3, description: "MacCounts",
+                            details: "Server supports the counts for various MAC layer happenings.",
                             xref: { document: "core", section: "11.13.4" }
                         }
                     ]
@@ -12443,7 +12496,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "DetachedRoleCount", id: 0xe, type: "uint16", access: "R V",
-                    conformance: "[M, LECNT]", default: 0, quality: "C",
+                    conformance: "[MLECNT]", default: 0, quality: "C",
                     details: "The DetachedRoleCount attribute SHALL indicate the number of times the Node entered the " +
                              "OT_DEVICE_ROLE_DETACHED role as specified within the Thread specification. This value SHALL only be " +
                              "reset upon a Node reboot.",
@@ -12452,7 +12505,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ChildRoleCount", id: 0xf, type: "uint16", access: "R V",
-                    conformance: "[M, LECNT]", default: 0, quality: "C",
+                    conformance: "[MLECNT]", default: 0, quality: "C",
                     details: "The ChildRoleCount attribute SHALL indicate the number of times the Node entered the " +
                              "OT_DEVICE_ROLE_CHILD role as specified within the Thread specification. This value SHALL only be " +
                              "reset upon a Node reboot.",
@@ -12461,7 +12514,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RouterRoleCount", id: 0x10, type: "uint16", access: "R V",
-                    conformance: "[M, LECNT]", default: 0, quality: "C",
+                    conformance: "[MLECNT]", default: 0, quality: "C",
                     details: "The RouterRoleCount attribute SHALL indicate the number of times the Node entered the " +
                              "OT_DEVICE_ROLE_ROUTER role as specified within the Thread specification. This value SHALL only be " +
                              "reset upon a Node reboot.",
@@ -12470,7 +12523,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "LeaderRoleCount", id: 0x11, type: "uint16", access: "R V",
-                    conformance: "[M, LECNT]", default: 0, quality: "C",
+                    conformance: "[MLECNT]", default: 0, quality: "C",
                     details: "The LeaderRoleCount attribute SHALL indicate the number of times the Node entered the " +
                              "OT_DEVICE_ROLE_LEADER role as specified within the Thread specification. This value SHALL only be " +
                              "reset upon a Node reboot.",
@@ -12479,7 +12532,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "AttachAttemptCount", id: 0x12, type: "uint16", access: "R V",
-                    conformance: "[M, LECNT]", default: 0, quality: "C",
+                    conformance: "[MLECNT]", default: 0, quality: "C",
                     details: "The AttachAttemptCount attribute SHALL indicate the number of attempts that have been made to " +
                              "attach to a Thread network while the Node was detached from all Thread networks. This value SHALL " +
                              "only be reset upon a Node reboot.",
@@ -12488,7 +12541,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PartitionIdChangeCount", id: 0x13, type: "uint16", access: "R V",
-                    conformance: "[M, LECNT]", default: 0, quality: "C",
+                    conformance: "[MLECNT]", default: 0, quality: "C",
                     details: "The PartitionIdChangeCount attribute SHALL indicate the number of times that the Thread network " +
                              "that the Node is connected to has changed its Partition ID. This value SHALL only be reset upon a " +
                              "Node reboot.",
@@ -12497,7 +12550,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "BetterPartitionAttachAttemptCount", id: 0x14, type: "uint16",
-                    access: "R V", conformance: "[M, LECNT]", default: 0, quality: "C",
+                    access: "R V", conformance: "[MLECNT]", default: 0, quality: "C",
                     details: "The BetterPartitionAttachAttemptCount attribute SHALL indicate the number of times a Node has " +
                              "attempted to attach to a different Thread partition that it has determined is better than the " +
                              "partition it is currently attached to. This value SHALL only be reset upon a Node reboot.",
@@ -12506,7 +12559,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ParentChangeCount", id: 0x15, type: "uint16", access: "R V",
-                    conformance: "[M, LECNT]", default: 0, quality: "C",
+                    conformance: "[MLECNT]", default: 0, quality: "C",
                     details: "The ParentChangeCount attribute SHALL indicate the number of times a Node has changed its parent. " +
                              "This value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.22" }
@@ -12514,7 +12567,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxTotalCount", id: 0x16, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxTotalCount attribute SHALL indicate the total number of unique MAC frame transmission " +
                              "requests. The TxTotalCount attribute SHALL only be incremented by 1 for each MAC transmission " +
                              "request regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions. This value " +
@@ -12524,7 +12577,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxUnicastCount", id: 0x17, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxUnicastCount attribute SHALL indicate the total number of unique unicast MAC frame " +
                              "transmission requests. The TxUnicastCount attribute SHALL only be incremented by 1 for each unicast " +
                              "MAC transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -12534,7 +12587,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxBroadcastCount", id: 0x18, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxBroadcastCount attribute SHALL indicate the total number of unique broadcast MAC frame " +
                              "transmission requests. The TxBroadcastCount attribute SHALL only be incremented by 1 for each " +
                              "broadcast MAC transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -12544,7 +12597,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxAckRequestedCount", id: 0x19, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxAckRequestedCount attribute SHALL indicate the total number of unique MAC frame transmission " +
                              "requests with requested acknowledgment. The TxAckRequestedCount attribute SHALL only be incremented " +
                              "by 1 for each MAC transmission request with requested acknowledgment regardless of the amount of " +
@@ -12555,7 +12608,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxAckedCount", id: 0x1a, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxAckedCount attribute SHALL indicate the total number of unique MAC frame transmission " +
                              "requests that were acked. The TxAckedCount attribute SHALL only be incremented by 1 for each MAC " +
                              "transmission request that is acked regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -12565,7 +12618,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxNoAckRequestedCount", id: 0x1b, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxNoAckRequestedCount attribute SHALL indicate the total number of unique MAC frame " +
                              "transmission requests without requested acknowledgment. The TxNoAckRequestedCount attribute SHALL " +
                              "only be incremented by 1 for each MAC transmission request that is does not request acknowledgement " +
@@ -12575,7 +12628,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxDataCount", id: 0x1c, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxDataCount attribute SHALL indicate the total number of unique MAC Data frame transmission " +
                              "requests. The TxDataCount attribute SHALL only be incremented by 1 for each MAC Data frame " +
                              "transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -12585,7 +12638,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxDataPollCount", id: 0x1d, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxDataPollCount attribute SHALL indicate the total number of unique MAC Data Poll frame " +
                              "transmission requests. The TxDataPollCount attribute SHALL only be incremented by 1 for each MAC " +
                              "Data Poll frame transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -12595,7 +12648,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxBeaconCount", id: 0x1e, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxBeaconCount attribute SHALL indicate the total number of unique MAC Beacon frame transmission " +
                              "requests. The TxBeaconCount attribute SHALL only be incremented by 1 for each MAC Beacon frame " +
                              "transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions.",
@@ -12604,7 +12657,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxBeaconRequestCount", id: 0x1f, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxBeaconRequestCount attribute SHALL indicate the total number of unique MAC Beacon Request " +
                              "frame transmission requests. The TxBeaconRequestCount attribute SHALL only be incremented by 1 for " +
                              "each MAC Beacon Request frame transmission request regardless of the amount of CCA failures, " +
@@ -12614,7 +12667,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxOtherCount", id: 0x20, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxOtherCount attribute SHALL indicate the total number of unique MAC frame transmission " +
                              "requests that are not counted by any other attribute. The TxOtherCount attribute SHALL only be " +
                              "incremented by 1 for each MAC frame transmission request regardless of the amount of CCA failures, " +
@@ -12624,7 +12677,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxRetryCount", id: 0x21, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxRetryCount attribute SHALL indicate the total number of MAC retransmission attempts. The " +
                              "TxRetryCount attribute SHALL only be incremented by 1 for each retransmission attempt that may be " +
                              "triggered by lack of acknowledgement, CSMA/CA failure, or other type of transmission error. This " +
@@ -12634,7 +12687,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxDirectMaxRetryExpiryCount", id: 0x22, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxDirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC " +
                              "transmission packets that meet maximal retry limit for direct packets. The " +
                              "TxDirectMaxRetryExpiryCount attribute SHALL only be incremented by 1 for each unique MAC " +
@@ -12645,7 +12698,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxIndirectMaxRetryExpiryCount", id: 0x23, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxIndirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC " +
                              "transmission packets that meet maximal retry limit for indirect packets. The " +
                              "TxIndirectMaxRetryExpiryCount attribute SHALL only be incremented by 1 for each unique MAC " +
@@ -12656,7 +12709,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxErrCcaCount", id: 0x24, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxErrCcaCount attribute SHALL indicate the total number of CCA failures. The TxErrCcaCount " +
                              "attribute SHALL only be incremented by 1 for each instance of a CCA failure. This value SHALL only " +
                              "be reset upon a Node reboot.",
@@ -12665,7 +12718,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxErrAbortCount", id: 0x25, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxErrAbortCount attribute SHALL indicate the total number of unique MAC transmission request " +
                              "failures caused by an abort error. The TxErrAbortCount attribute SHALL only be incremented by 1 for " +
                              "each unique MAC transmission request failure caused by an abort error.",
@@ -12674,7 +12727,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "TxErrBusyChannelCount", id: 0x26, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The TxErrBusyChannelCount attribute SHALL indicate the total number of unique MAC transmission " +
                              "request failures caused by an error as the result of a busy channel (a CSMA/CA fail). The " +
                              "TxErrBusyChannelCount attribute SHALL only be incremented by 1 for each unique MAC transmission " +
@@ -12684,7 +12737,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxTotalCount", id: 0x27, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxTotalCount attribute SHALL indicate the total number of received unique MAC frames. This " +
                              "value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.40" }
@@ -12692,7 +12745,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxUnicastCount", id: 0x28, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxUnicastCount attribute SHALL indicate the total number of received unique unicast MAC frames. " +
                              "This value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.41" }
@@ -12700,7 +12753,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxBroadcastCount", id: 0x29, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxBroadcastCount attribute SHALL indicate the total number of received unique broadcast MAC " +
                              "frames. This value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.42" }
@@ -12708,7 +12761,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxDataCount", id: 0x2a, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxDataCount attribute SHALL indicate the total number of received unique MAC Data frames. This " +
                              "value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.43" }
@@ -12716,7 +12769,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxDataPollCount", id: 0x2b, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxDataPollCount attribute SHALL indicate the total number of received unique MAC Data Poll " +
                              "frames. This value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.44" }
@@ -12724,7 +12777,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxBeaconCount", id: 0x2c, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxBeaconCount attribute SHALL indicate the total number of received unique MAC Beacon frames. " +
                              "This value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.45" }
@@ -12732,7 +12785,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxBeaconRequestCount", id: 0x2d, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxBeaconRequestCount attribute SHALL indicate the total number of received unique MAC Beacon " +
                              "Request frames. This value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.46" }
@@ -12740,7 +12793,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxOtherCount", id: 0x2e, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxOtherCount attribute SHALL indicate the total number of received unique MAC frame requests " +
                              "that are not counted by any other attribute. This value SHALL only be reset upon a Node reboot.",
                     xref: { document: "core", section: "11.13.6.47" }
@@ -12748,7 +12801,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxAddressFilteredCount", id: 0x2f, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxAddressFilteredCount attribute SHALL indicate the total number of received unique MAC frame " +
                              "requests that have been dropped as a result of MAC filtering. This value SHALL only be reset upon a " +
                              "Node reboot.",
@@ -12757,7 +12810,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxDestAddrFilteredCount", id: 0x30, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxDestAddrFilteredCount attribute SHALL indicate the total number of received unique MAC frame " +
                              "requests that have been dropped as a result of a destination address check. This value SHALL only " +
                              "be reset upon a Node reboot.",
@@ -12766,7 +12819,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxDuplicatedCount", id: 0x31, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxDuplicatedCount attribute SHALL indicate the total number of received MAC frame requests that " +
                              "have been dropped as a result of being a duplicate of a previously received MAC frame request. This " +
                              "value SHALL only be reset upon a Node reboot.",
@@ -12775,7 +12828,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxErrNoFrameCount", id: 0x32, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxErrNoFrameCount attribute SHALL indicate the total number of received unique MAC frame " +
                              "requests that have been dropped as a result of missing or malformed frame contents. This value " +
                              "SHALL only be reset upon a Node reboot.",
@@ -12784,7 +12837,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxErrUnknownNeighborCount", id: 0x33, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxErrUnknownNeighborCount attribute SHALL indicate the total number of received unique MAC " +
                              "frame requests that have been dropped as a result of originating from an unknown neighbor device. " +
                              "This value SHALL only be reset upon a Node reboot.",
@@ -12793,7 +12846,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxErrInvalidScrAddrCount", id: 0x34, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxErrInvalidScrAddrCount attribute SHALL indicate the total number of received unique MAC frame " +
                              "requests that have been dropped as a result of containing an invalid source address. This value " +
                              "SHALL only be reset upon a Node reboot.",
@@ -12802,7 +12855,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxErrSecCount", id: 0x35, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxErrSecCount attribute SHALL indicate the total number of received unique MAC frame requests " +
                              "that have been dropped as a result of an error with the security of the received frame. This value " +
                              "SHALL only be reset upon a Node reboot.",
@@ -12811,7 +12864,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxErrFcsCount", id: 0x36, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxErrFcsCount attribute SHALL indicate the total number of received unique MAC frame requests " +
                              "that have been dropped as a result of an error with the FCS of the received frame. This value SHALL " +
                              "only be reset upon a Node reboot.",
@@ -12820,7 +12873,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RxErrOtherCount", id: 0x37, type: "uint32", access: "R V",
-                    conformance: "[M, ACCNT]", default: 0, quality: "C",
+                    conformance: "[MACCNT]", default: 0, quality: "C",
                     details: "The RxErrOtherCount attribute SHALL indicate the total number of received unique MAC frame requests " +
                              "that have been dropped as a result of an error that is not counted by any other attribute. This " +
                              "value SHALL only be reset upon a Node reboot.",
@@ -13236,13 +13289,16 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "PKTCNT", id: 0x0,
-                            description: "Node makes available the counts for the number of received and transmitted packets on the Wi-Fi interface.",
+                            tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
+                            details: "Node makes available the counts for the number of received and transmitted packets on the Wi-Fi " +
+                                     "interface.",
                             xref: { document: "core", section: "11.14.4" }
                         },
+
                         {
-                            tag: "datatype", name: "ERRCNT", id: 0x1,
-                            description: "Node makes available the counts for the number of errors that have occurred during the reception and transmission of packets on the Wi-Fi interface.",
+                            tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
+                            details: "Node makes available the counts for the number of errors that have occurred during the reception " +
+                                     "and transmission of packets on the Wi-Fi interface.",
                             xref: { document: "core", section: "11.14.4" }
                         }
                     ]
@@ -13297,7 +13353,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "BeaconRxCount", id: 0x6, type: "uint32", access: "R V",
-                    conformance: "P, KTCNT", default: 0, quality: "X C",
+                    conformance: "PKTCNT", default: 0, quality: "X C",
                     details: "The BeaconRxCount attribute SHALL indicate the count of the number of received beacons. The total " +
                              "number of expected beacons that could have been received during the interval since association " +
                              "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
@@ -13307,14 +13363,14 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PacketMulticastRxCount", id: 0x7, type: "uint32", access: "R V",
-                    conformance: "P, KTCNT", default: 0, quality: "X C",
+                    conformance: "PKTCNT", default: 0, quality: "X C",
                     details: "The PacketMulticastRxCount attribute SHALL indicate the number of multicast packets received by",
                     xref: { document: "core", section: "11.14.6.8" }
                 },
 
                 {
                     tag: "attribute", name: "PacketMulticastTxCount", id: 0x8, type: "uint32", access: "R V",
-                    conformance: "P, KTCNT", default: 0, quality: "X C",
+                    conformance: "PKTCNT", default: 0, quality: "X C",
                     details: "The PacketMulticastTxCount attribute SHALL indicate the number of multicast packets transmitted by " +
                              "the Node.",
                     xref: { document: "core", section: "11.14.6.9" }
@@ -13322,7 +13378,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PacketUnicastRxCount", id: 0x9, type: "uint32", access: "R V",
-                    conformance: "P, KTCNT", default: 0, quality: "X C",
+                    conformance: "PKTCNT", default: 0, quality: "X C",
                     details: "The PacketUnicastRxCount attribute SHALL indicate the number of unicast packets received by the " +
                              "Node.",
                     xref: { document: "core", section: "11.14.6.10" }
@@ -13330,7 +13386,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PacketUnicastTxCount", id: 0xa, type: "uint32", access: "R V",
-                    conformance: "P, KTCNT", default: 0, quality: "X C",
+                    conformance: "PKTCNT", default: 0, quality: "X C",
                     details: "The PacketUnicastTxCount attribute SHALL indicate the number of unicast packets transmitted by the " +
                              "Node.",
                     xref: { document: "core", section: "11.14.6.11" }
@@ -13476,13 +13532,16 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "PKTCNT", id: 0x0,
-                            description: "Node makes available the counts for the number of received and transmitted packets on the ethernet interface.",
+                            tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
+                            details: "Node makes available the counts for the number of received and transmitted packets on the ethernet " +
+                                     "interface.",
                             xref: { document: "core", section: "11.15.4" }
                         },
+
                         {
-                            tag: "datatype", name: "ERRCNT", id: 0x1,
-                            description: "Node makes available the counts for the number of errors that have occurred during the reception and transmission of packets on the ethernet interface.",
+                            tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
+                            details: "Node makes available the counts for the number of errors that have occurred during the reception " +
+                                     "and transmission of packets on the ethernet interface.",
                             xref: { document: "core", section: "11.15.4" }
                         }
                     ]
@@ -13508,7 +13567,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PacketRxCount", id: 0x2, type: "uint64", access: "R V",
-                    conformance: "P, KTCNT", default: 0,
+                    conformance: "PKTCNT", default: 0,
                     details: "The PacketRxCount attribute SHALL indicate the number of packets that have been received on the " +
                              "ethernet network interface. The PacketRxCount attribute SHALL be reset to 0 upon a reboot of the " +
                              "Node.",
@@ -13517,7 +13576,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PacketTxCount", id: 0x3, type: "uint64", access: "R V",
-                    conformance: "P, KTCNT", default: 0, quality: "C",
+                    conformance: "PKTCNT", default: 0, quality: "C",
                     details: "The PacketTxCount attribute SHALL indicate the number of packets that have been successfully " +
                              "transferred on the ethernet network interface. The PacketTxCount attribute SHALL be reset to 0 upon " +
                              "a reboot of the Node.",
@@ -13567,7 +13626,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "ResetCounts", id: 0x0, access: "M", conformance: "P, KTCNT | ERRCNT",
+                    tag: "command", name: "ResetCounts", id: 0x0, access: "M", conformance: "PKTCNT | ERRCNT",
                     direction: "request", response: "status",
                     details: "Reception of this command SHALL reset the following attributes to 0:",
                     xref: { document: "core", section: "11.15.7.1" }
@@ -13604,15 +13663,18 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "TZ", id: 0x0, description: "Server supports time zone.",
+                            tag: "datatype", name: "TZ", id: 0x0, description: "TimeZone",
+                            details: "Server supports time zone.",
                             xref: { document: "core", section: "11.16.5" }
                         },
                         {
-                            tag: "datatype", name: "NTPC", id: 0x1, description: "Server supports an NTP or SNTP client.",
+                            tag: "datatype", name: "NTPC", id: 0x1, description: "NtpClient",
+                            details: "Server supports an NTP or SNTP client.",
                             xref: { document: "core", section: "11.16.5" }
                         },
                         {
-                            tag: "datatype", name: "NTPS", id: 0x2, description: "Server supports an NTP server role.",
+                            tag: "datatype", name: "NTPS", id: 0x2, description: "NtpServer",
+                            details: "Server supports an NTP server role.",
                             xref: { document: "core", section: "11.16.5" }
                         }
                     ]
@@ -14327,7 +14389,8 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "BC", id: 0x0, description: "Node supports Basic Commissioning Method.",
+                            tag: "datatype", name: "BC", id: 0x0, description: "Basic",
+                            details: "Node supports Basic Commissioning Method.",
                             xref: { document: "core", section: "11.18.4" }
                         }
                     ]

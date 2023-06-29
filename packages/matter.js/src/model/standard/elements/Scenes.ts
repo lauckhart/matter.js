@@ -199,7 +199,10 @@ Matter.children.push({
                     details: "The Mode field contains information of how the scene copy is to proceed. This field SHALL be " +
                              "formatted as illustrated in Format of the Mode Field of the CopyScene Command.",
                     xref: { document: "cluster", section: "1.4.9.11.1" },
-                    children: [ { tag: "datatype", name: "CopyAllScenes", id: 0x1, conformance: "M" } ]
+                    children: [
+                        { tag: "datatype", name: "CopyAllScenes", id: 0x0 },
+                        { tag: "datatype", name: "Reserved", id: 0x1, conformance: "M" }
+                    ]
                 },
 
                 {
@@ -386,7 +389,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "AttributeId", id: 0x0, type: "attrib-id", access: "RW",
-                    conformance: "M, !Zigbee",
+                    conformance: "Matter, !Zigbee",
                     details: "This field SHALL be present or not present, for all instances in the Scenes cluster. If this field " +
                              "is not present, then the data type of AttributeValue SHALL be determined by the order and data type " +
                              "defined in the cluster specification. Otherwise the data type of AttributeValue SHALL be the data " +

@@ -21,4 +21,6 @@ export class EventModel extends ValueModel implements EventElement {
     static {
         Model.constructors[EventElement.Tag] = this;
     }
+
+    static Tag = EventElement.Tag;
 }

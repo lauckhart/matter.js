@@ -195,7 +195,7 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "MoveMode", id: 0x0, type: "MoveMode", conformance: "M", constraint: "desc",
                     details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field.",
                     xref: { document: "cluster", section: "1.6.6.2.1" }
                 },
@@ -228,7 +228,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "1.6.6.3" },
 
             children: [
-                { tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },

@@ -241,18 +241,25 @@ export abstract class Model {
      * 
      * @param test model class or a predicate object
      */
-    all<T extends Model>(constructor: abstract new(...args: any[]) => T) {
+    all<T extends Model>(constructor: Model.Constructor<T>) {
         return this.children.filter(c => c instanceof constructor) as T[];
     }
 
     /**
      * Retrieve a specific model by ID or name.
      */
-    get<T extends Model>(constructor: abstract new(...args: any[]) => T, key: number | string) {
+    get<T extends Model>(constructor: Model.Constructor<T>, key: number | string) {
         return this.children.find(
             c => c instanceof constructor
             && typeof key == "number" ? c.effectiveId == key : c.name == key
         ) as T;
+    }
+
+    /**
+     * Retrieve a model of a specific type from the ownership hierarchy.
+     */
+    owner<T extends Model>(constructor: Model.Constructor<T>) {
+        return new ModelTraversal().findOwner(constructor, this.parent);
     }
 
     /**
@@ -301,12 +308,21 @@ export abstract class Model {
      * Convert to non-class structure.
      */
     valueOf(): AnyElement {
-        const result = { ...this };
+        const result = {} as { [name: string]: any };
 
-        delete result.parent;
-        delete result.errors;
-        delete result.isTypeScope;
-        delete result.isType;
+        // Return all iterable properties minus metadata
+        for (const key in this) {
+            switch (key) {
+                case "parent":
+                case "errors":
+                case "isTypeScope":
+                case "isType":
+                    continue;
+
+                default:
+                    result[key] = this[key];
+            }
+        }
         
         return result as AnyElement;
     }
@@ -349,9 +365,9 @@ export abstract class Model {
 }
 
 export namespace Model {
-    export type Constructor<T> = abstract new(...args: any) => T;
+    export type Constructor<T extends Model> = abstract new(...args: any) => T;
 
-    export type LookupPredicate<T> = Constructor<T> | { type: Constructor<T>, test: (model: Model) => boolean };
+    export type LookupPredicate<T extends Model> = Constructor<T> | { type: Constructor<T>, test: (model: Model) => boolean };
 
     export type PropertyValidation = {
         name: string,

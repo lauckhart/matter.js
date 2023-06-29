@@ -23,12 +23,26 @@ export function Merge<
 export type ClassExtends<C> = { new(...args: any[]): C };
 
 /** Merge an array of objects into one. */
-export type MergeAll<T> = T extends [ infer O, ...infer R ]
-    ? O extends Properties ? Merge<O, MergeAll<R>> : O
-    : T;
+export type MergeAll<T> = T extends [ infer O extends Properties, ...infer R ]
+    ? Merge<O, MergeAll<R>>
+    : T extends []
+    ? {}
+    : never;
 
 export function MergeAll<T extends Properties[]>(...objects: T): MergeAll<T> {
     return Object.assign({}, ...objects);
 }
 
-/** Pluck an item from an array of objects */
+/** Pluck an item from an array of objects if present */
+export type FilteredPluck<K extends string, T extends Properties[]> =
+    T extends [ infer E, ...infer R extends Properties[] ]
+        ? K extends keyof E
+            ? [ E[K], ...FilteredPluck<K, R> ]
+            : FilteredPluck<K, R>
+        : T extends []
+            ? []
+        : never;
+
+export function FilteredPluck<K extends string, T extends Properties[]>(key: K, ...objects: T): FilteredPluck<K, T> {
+    return objects.map(o => (o as any)[key]).filter(o => o !== undefined) as any;
+}

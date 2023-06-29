@@ -20,27 +20,27 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "PRSCONST", id: 0x0, conformance: "O.a1+",
+                    tag: "datatype", name: "PRSCONST", id: 0x0, conformance: "O.a+",
                     description: "Supports operating in constant pressure mode",
                     xref: { document: "cluster", section: "4.2.4" }
                 },
                 {
-                    tag: "datatype", name: "PRSCOMP", id: 0x1, conformance: "O.a1+",
+                    tag: "datatype", name: "PRSCOMP", id: 0x1, conformance: "O.a+",
                     description: "Supports operating in compensated pressure mode",
                     xref: { document: "cluster", section: "4.2.4" }
                 },
                 {
-                    tag: "datatype", name: "FLW", id: 0x2, conformance: "O.a1+",
+                    tag: "datatype", name: "FLW", id: 0x2, conformance: "O.a+",
                     description: "Supports operating in constant flow mode",
                     xref: { document: "cluster", section: "4.2.4" }
                 },
                 {
-                    tag: "datatype", name: "SPD", id: 0x3, conformance: "O.a1+",
+                    tag: "datatype", name: "SPD", id: 0x3, conformance: "O.a+",
                     description: "Supports operating in constant speed mode",
                     xref: { document: "cluster", section: "4.2.4" }
                 },
                 {
-                    tag: "datatype", name: "TEMP", id: 0x4, conformance: "O.a1+",
+                    tag: "datatype", name: "TEMP", id: 0x4, conformance: "O.a+",
                     description: "Supports operating in constant temperature mode",
                     xref: { document: "cluster", section: "4.2.4" }
                 },
@@ -83,7 +83,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinConstPressure", id: 0x3, type: "int16", access: "R V",
-            conformance: "P, RSCONST, [AUTO]", default: null, quality: "X F",
+            conformance: "PRSCONST, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the minimum pressure the pump can achieve when it is working with the " +
                      "ControlMode attribute set to ConstantPressure.",
             xref: { document: "cluster", section: "4.2.7.4" }
@@ -91,7 +91,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxConstPressure", id: 0x4, type: "int16", access: "R V",
-            conformance: "P, RSCONST, [AUTO]", default: null, quality: "X F",
+            conformance: "PRSCONST, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum pressure the pump can achieve when it is working with the " +
                      "ControlMode attribute set to ConstantPressure.",
             xref: { document: "cluster", section: "4.2.7.5" }
@@ -99,7 +99,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinCompPressure", id: 0x5, type: "int16", access: "R V",
-            conformance: "P, RSCOMP, [AUTO]", default: null, quality: "X F",
+            conformance: "PRSCOMP, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the minimum compensated pressure the pump can achieve when it is working " +
                      "with the ControlMode attribute set to ProportionalPressure.",
             xref: { document: "cluster", section: "4.2.7.6" }
@@ -107,7 +107,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxCompPressure", id: 0x6, type: "int16", access: "R V",
-            conformance: "P, RSCOMP, [AUTO]", default: null, quality: "X F",
+            conformance: "PRSCOMP, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum compensated pressure the pump can achieve when it is working " +
                      "with the ControlMode attribute set to ProportionalPressure.",
             xref: { document: "cluster", section: "4.2.7.7" }
@@ -425,7 +425,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "ConstantPressure", id: 0x1, conformance: "P, RSCONST",
+                    tag: "datatype", name: "ConstantPressure", id: 0x1, conformance: "PRSCONST",
                     details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                              "In case of the internal pressure sensor, this will be the range derived from the [MinConstPressure " +
                              "– MaxConstPressure] attributes. In case of a remote pressure sensor, this will be the range derived " +
@@ -434,7 +434,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "ProportionalPressure", id: 0x2, conformance: "P, RSCOMP",
+                    tag: "datatype", name: "ProportionalPressure", id: 0x2, conformance: "PRSCOMP",
                     details: "The setpoint is interpreted as a percentage of the range derived of the [MinCompPressure – " +
                              "MaxCompPressure] attributes. The internal setpoint will be lowered (compensated) dependent on the " +
                              "flow in the pump (lower flow ⇒ lower internal setpoint).",

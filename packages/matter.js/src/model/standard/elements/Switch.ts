@@ -27,23 +27,23 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "LS", id: 0x0, conformance: "O.a1",
+                    tag: "datatype", name: "LS", id: 0x0, conformance: "O.a",
                     xref: { document: "cluster", section: "1.11.4" }
                 },
                 {
-                    tag: "datatype", name: "MS", id: 0x1, conformance: "O.a1",
+                    tag: "datatype", name: "MS", id: 0x1, conformance: "O.a",
                     xref: { document: "cluster", section: "1.11.4" }
                 },
                 {
-                    tag: "datatype", name: "MSR", id: 0x2, conformance: "[M, S]",
+                    tag: "datatype", name: "MSR", id: 0x2, conformance: "[MS]",
                     xref: { document: "cluster", section: "1.11.4" }
                 },
                 {
-                    tag: "datatype", name: "MSL", id: 0x3, conformance: "[M, S & M, SR]",
+                    tag: "datatype", name: "MSL", id: 0x3, conformance: "[MS & MSR]",
                     xref: { document: "cluster", section: "1.11.4" }
                 },
                 {
-                    tag: "datatype", name: "MSM", id: 0x4, conformance: "[M, S & M, SR]",
+                    tag: "datatype", name: "MSM", id: 0x4, conformance: "[MS & MSR]",
                     xref: { document: "cluster", section: "1.11.4" }
                 }
             ]
@@ -69,7 +69,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "MultiPressMax", id: 0x2, type: "uint8", conformance: "M, SM",
+            tag: "attribute", name: "MultiPressMax", id: 0x2, type: "uint8", conformance: "MSM",
             constraint: "min 2", default: 2, quality: "F",
             details: "This attribute SHALL indicate how many consecutive presses can be detected and reported by a " +
                      "momentary switch which supports multi-press (e.g. it will report the value 3 if it can detect " +
@@ -92,7 +92,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "InitialPress", id: 0x1, access: "V", conformance: "M, S", priority: "info",
+            tag: "event", name: "InitialPress", id: 0x1, access: "V", conformance: "MS", priority: "info",
             details: "This event SHALL be generated, when the momentary switch starts to be pressed (after debouncing).",
             xref: { document: "cluster", section: "1.11.7.2" },
 
@@ -105,7 +105,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "LongPress", id: 0x2, access: "V", conformance: "M, SL", priority: "info",
+            tag: "event", name: "LongPress", id: 0x2, access: "V", conformance: "MSL", priority: "info",
             details: "This event SHALL be generated, when the momentary switch has been pressed for a \"long\" time (this " +
                      "time interval is manufacturer determined (e.g. since it depends on the switch physics)).",
             xref: { document: "cluster", section: "1.11.7.3" },
@@ -119,7 +119,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "ShortRelease", id: 0x3, access: "V", conformance: "M, SR", priority: "info",
+            tag: "event", name: "ShortRelease", id: 0x3, access: "V", conformance: "MSR", priority: "info",
             details: "This event SHALL be generated, when the momentary switch has been released (after debouncing).",
             xref: { document: "cluster", section: "1.11.7.4" },
 
@@ -132,7 +132,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "LongRelease", id: 0x4, access: "V", conformance: "M, SL", priority: "info",
+            tag: "event", name: "LongRelease", id: 0x4, access: "V", conformance: "MSL", priority: "info",
             details: "This event SHALL be generated, when the momentary switch has been released (after debouncing) and " +
                      "after having been pressed for a long time, i.e. this event SHALL be generated when the switch is " +
                      "released if a LongPress event has been generated since since the previous InitialPress event. Also " +
@@ -148,8 +148,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "MultiPressOngoing", id: 0x5, access: "V", conformance: "M, SM",
-            priority: "info",
+            tag: "event", name: "MultiPressOngoing", id: 0x5, access: "V", conformance: "MSM", priority: "info",
             details: "This event SHALL be generated to indicate how many times the momentary switch has been pressed in a " +
                      "multi-press sequence, during that sequence. See Section 1.11.9, “Sequence of events for MultiPress” " +
                      "below.",
@@ -168,7 +167,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "MultiPressComplete", id: 0x6, access: "V", conformance: "M, SM",
+            tag: "event", name: "MultiPressComplete", id: 0x6, access: "V", conformance: "MSM",
             priority: "info",
             details: "This event SHALL be generated to indicate how many times the momentary switch has been pressed in a " +
                      "multi-press sequence, after it has been detected that the sequence has ended. See Section 1.11.9, " +

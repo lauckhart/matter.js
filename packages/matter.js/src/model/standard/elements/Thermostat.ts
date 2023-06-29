@@ -20,12 +20,12 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a1+",
+                    tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a+",
                     description: "Thermostat is capable of managing a heating device",
                     xref: { document: "cluster", section: "4.3.3.1" }
                 },
                 {
-                    tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a1+",
+                    tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a+",
                     description: "Thermostat is capable of managing a cooling device",
                     xref: { document: "cluster", section: "4.3.3.1" }
                 },
@@ -74,7 +74,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "O, CC",
+            tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "OCC",
             constraint: "desc", default: 1,
             details: "This attribute specifies whether the heated/cooled space is occupied or not, as measured locally or " +
                      "remotely (over the network). If bit 0 = 1, the space is occupied, else it is unoccupied. All other " +
@@ -181,14 +181,14 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature", access: "RW",
-            conformance: "COOL & O, CC", constraint: "desc", default: 2600, quality: "N",
+            conformance: "COOL & OCC", constraint: "desc", default: 2600, quality: "N",
             details: "This attribute specifies the cooling mode setpoint when the room is unoccupied.",
             xref: { document: "cluster", section: "4.3.7.15" }
         },
 
         {
             tag: "attribute", name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature", access: "RW",
-            conformance: "HEAT & O, CC", constraint: "desc", default: 2000, quality: "N",
+            conformance: "HEAT & OCC", constraint: "desc", default: 2000, quality: "N",
             details: "This attribute specifies the heating mode setpoint when the room is unoccupied.",
             xref: { document: "cluster", section: "4.3.7.16" }
         },
@@ -316,7 +316,7 @@ Matter.children.push({
                     description: "2nd stage heating is in use to achieve desired temperature"
                 },
                 { tag: "datatype", name: "Precooling", id: 0x6, conformance: "[COOL]", description: "(see Terms)" },
-                { tag: "datatype", name: "Fanonly", id: 0x7, conformance: "O" },
+                { tag: "datatype", name: "FanOnly", id: 0x7, conformance: "O" },
                 { tag: "datatype", name: "Dry", id: 0x8, conformance: "O" },
                 { tag: "datatype", name: "Sleep", id: 0x9, conformance: "O" }
             ]
@@ -329,14 +329,10 @@ Matter.children.push({
                      "corresponding to the alarm code is set to 1, the alarm is enabled, else it is disabled. Bits not " +
                      "corresponding to a code in the table are reserved.",
             xref: { document: "cluster", section: "4.3.7.25" },
-
             children: [
-                {
-                    tag: "datatype", name: "InitializationfailureThedevicefailedtocompleteinitializationatpowerUp",
-                    id: 0x0
-                },
-                { tag: "datatype", name: "Hardwarefailure", id: 0x1 },
-                { tag: "datatype", name: "SelfCalibrationfailure", id: 0x2 }
+                { tag: "datatype", name: "InitializationFailure", id: 0x0 },
+                { tag: "datatype", name: "HardwareFailure", id: 0x1 },
+                { tag: "datatype", name: "SelfCalibrationFailure", id: 0x2 }
             ]
         },
 
@@ -530,8 +526,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedSetback", id: 0x37, type: "temp-u8", access: "RW VM",
-            conformance: "SB & O, CC", constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax",
-            default: null, quality: "X N",
+            conformance: "SB & OCC", constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax", default: null,
+            quality: "X N",
             details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature " +
                      "Value to float above the UnoccupiedCooling setpoint (i.e., UnoccupiedCooling + UnoccupiedSetback) " +
                      "or below the UnoccupiedHeating setpoint (i.e., UnoccupiedHeating - UnoccupiedSetback) before " +
@@ -542,7 +538,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedSetbackMin", id: 0x38, type: "temp-u8", access: "R V",
-            conformance: "SB & O, CC", constraint: "0 to UnoccupiedSetbackMax", default: null, quality: "X F",
+            conformance: "SB & OCC", constraint: "0 to UnoccupiedSetbackMax", default: null, quality: "X F",
             details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
                      "UnoccupiedSetback attribute to be configured by a user.",
             xref: { document: "cluster", section: "4.3.7.41" }
@@ -550,8 +546,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedSetbackMax", id: 0x39, type: "temp-u8", access: "R V",
-            conformance: "SB & O, CC", constraint: "UnoccupiedSetbackMin to 25.4", default: null,
-            quality: "X F",
+            conformance: "SB & OCC", constraint: "UnoccupiedSetbackMin to 25.4", default: null, quality: "X F",
             details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
                      "UnoccupiedSetback attribute to be configured by a user.",
             xref: { document: "cluster", section: "4.3.7.42" }

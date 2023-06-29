@@ -44,9 +44,9 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "None", id: 0x0, description: "No presentation." },
-                { tag: "datatype", name: "Lightoutput", id: 0x1, description: "Light output of a lighting product." },
-                { tag: "datatype", name: "Visibleindicator", id: 0x2, description: "Typically a small LED." },
-                { tag: "datatype", name: "Audiblebeep", id: 0x3 },
+                { tag: "datatype", name: "LightOutput", id: 0x1, description: "Light output of a lighting product." },
+                { tag: "datatype", name: "VisibleIndicator", id: 0x2, description: "Typically a small LED." },
+                { tag: "datatype", name: "AudibleBeep", id: 0x3 },
                 {
                     tag: "datatype", name: "Display", id: 0x4,
                     description: "Presentation will be visible on display screen."
@@ -111,15 +111,15 @@ Matter.children.push({
                             description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice."
                         },
                         {
-                            tag: "datatype", name: "Channelchange", id: 0xb, conformance: "M",
+                            tag: "datatype", name: "ChannelChange", id: 0xb, conformance: "M",
                             description: "e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s and then minimum brightness for 7.5s."
                         },
                         {
-                            tag: "datatype", name: "Finisheffect", id: 0xfe, conformance: "M",
+                            tag: "datatype", name: "FinishEffect", id: 0xfe, conformance: "M",
                             description: "Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above), first complete the current 1s breathe effect and then terminate the effect."
                         },
                         {
-                            tag: "datatype", name: "Stopeffect", id: 0xff, conformance: "M",
+                            tag: "datatype", name: "StopEffect", id: 0xff, conformance: "M",
                             description: "Terminate the effect as soon as possible."
                         }
                     ]

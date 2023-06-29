@@ -54,7 +54,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketRxCount", id: 0x2, type: "uint64", access: "R V",
-            conformance: "P, KTCNT",
+            conformance: "PKTCNT",
             details: "The PacketRxCount attribute SHALL indicate the number of packets that have been received on the " +
                      "ethernet network interface. The PacketRxCount attribute SHALL be reset to 0 upon a reboot of the " +
                      "Node.",
@@ -63,7 +63,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketTxCount", id: 0x3, type: "uint64", access: "R V",
-            conformance: "P, KTCNT", quality: "C",
+            conformance: "PKTCNT", quality: "C",
             details: "The PacketTxCount attribute SHALL indicate the number of packets that have been successfully " +
                      "transferred on the ethernet network interface. The PacketTxCount attribute SHALL be reset to 0 upon " +
                      "a reboot of the Node.",
@@ -113,7 +113,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ResetCounts", id: 0x0, access: "M", conformance: "P, KTCNT | ERRCNT",
+            tag: "command", name: "ResetCounts", id: 0x0, access: "M", conformance: "PKTCNT | ERRCNT",
             direction: "request", response: "status",
             details: "Reception of this command SHALL reset the following attributes to 0:",
             xref: { document: "core", section: "11.15.7.1" }

@@ -60,7 +60,7 @@ Matter.children.push({
                     xref: { document: "cluster", section: "5.2.2" }
                 },
                 {
-                    tag: "datatype", name: "USR", id: 0x8, conformance: "[P, IN | RID]",
+                    tag: "datatype", name: "USR", id: 0x8, conformance: "[PIN | RID]",
                     description: "Lock supports the user commands and database",
                     xref: { document: "cluster", section: "5.2.2" }
                 },
@@ -163,7 +163,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "DoorState", id: 0x3, type: "enum8", access: "R V", conformance: "D, P, S",
+            tag: "attribute", name: "DoorState", id: 0x3, type: "enum8", access: "R V", conformance: "DPS",
             constraint: "desc", quality: "X P",
             details: "The current door state as defined in DoorStateEnum.",
             xref: { document: "cluster", section: "5.2.3.4" }
@@ -171,21 +171,21 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "DoorOpenEvents", id: 0x4, type: "uint32", access: "RW VM",
-            conformance: "[D, P, S]",
+            conformance: "[DPS]",
             details: "This attribute holds the number of door open events that have occurred since it was last zeroed.",
             xref: { document: "cluster", section: "5.2.3.5" }
         },
 
         {
             tag: "attribute", name: "DoorClosedEvents", id: 0x5, type: "uint32", access: "RW VM",
-            conformance: "[D, P, S]",
+            conformance: "[DPS]",
             details: "This attribute holds the number of door closed events that have occurred since it was last zeroed.",
             xref: { document: "cluster", section: "5.2.3.6" }
         },
 
         {
             tag: "attribute", name: "OpenPeriod", id: 0x6, type: "uint16", access: "RW VM",
-            conformance: "[D, P, S]",
+            conformance: "[DPS]",
             details: "This attribute holds the number of minutes the door has been open since the last time it " +
                      "transitioned from closed to open.",
             xref: { document: "cluster", section: "5.2.3.7" }
@@ -207,7 +207,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "NumberOfPinUsersSupported", id: 0x12, type: "uint16", access: "R V",
-            conformance: "P, IN", quality: "F",
+            conformance: "PIN", quality: "F",
             details: "The number of PIN users supported.",
             xref: { document: "cluster", section: "5.2.3.10" }
         },
@@ -242,14 +242,14 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxPinCodeLength", id: 0x17, type: "uint8", access: "R V",
-            conformance: "P, IN", quality: "F",
+            conformance: "PIN", quality: "F",
             details: "An 8 bit value indicates the maximum length in bytes of a PIN Code on this device.",
             xref: { document: "cluster", section: "5.2.3.15" }
         },
 
         {
             tag: "attribute", name: "MinPinCodeLength", id: 0x18, type: "uint8", access: "R V",
-            conformance: "P, IN", quality: "F",
+            conformance: "PIN", quality: "F",
             details: "An 8 bit value indicates the minimum length in bytes of a PIN Code on this device.",
             xref: { document: "cluster", section: "5.2.3.16" }
         },
@@ -278,8 +278,8 @@ Matter.children.push({
             details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.",
             xref: { document: "cluster", section: "5.2.3.19" },
             children: [
-                { tag: "datatype", name: "Single", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Dual", id: 0x2, conformance: "M" },
+                { tag: "datatype", name: "Single", id: 0x0 },
+                { tag: "datatype", name: "Dual", id: 0x1, conformance: "M" },
                 { tag: "datatype", name: "Tri", id: 0x4, conformance: "M" }
             ]
         },
@@ -350,9 +350,8 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.3.24" },
 
             children: [
-                { tag: "datatype", name: "Normal", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Vacation", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Privacy", id: 0x4, conformance: "M" },
+                { tag: "datatype", name: "Vacation", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "Privacy", id: 0x2, conformance: "M" },
                 { tag: "datatype", name: "NoRemoteLockUnlock", id: 0x8, conformance: "M" },
                 { tag: "datatype", name: "Passage", id: 0x10, conformance: "M" }
             ]
@@ -430,7 +429,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "WrongCodeEntryLimit", id: 0x30, type: "uint8", access: "RW VA",
-            conformance: "P, IN | RID", constraint: "1 to 255", quality: "P",
+            conformance: "PIN | RID", constraint: "1 to 255", quality: "P",
 
             details: "The number of incorrect Pin codes or RFID presentment attempts a user is allowed to enter before " +
                      "the lock will enter a lockout state. The value of this attribute is compared to all failing forms " +
@@ -444,7 +443,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UserCodeTemporaryDisableTime", id: 0x31, type: "uint8", access: "RW VA",
-            conformance: "P, IN | RID", constraint: "1 to 255", quality: "P",
+            conformance: "PIN | RID", constraint: "1 to 255", quality: "P",
             details: "The number of seconds that the lock shuts down following wrong code entry. Valid range is 1-255 " +
                      "seconds. Device can shut down to lock user out for specified amount of time. (Makes it difficult to " +
                      "try and guess a PIN for the device.) If the attribute accepts writes and an attempt to write the " +
@@ -454,7 +453,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SendPinOverTheAir", id: 0x32, type: "bool", access: "RW VA",
-            conformance: "[P, IN]", default: true, quality: "P",
+            conformance: "[PIN]", default: true, quality: "P",
             details: "Boolean set to True if it is ok for the door lock server to send PINs over the air. This attribute " +
                      "determines the behavior of the server’s TX operation. If it is false, then it is not ok for the " +
                      "device to send PIN in any messages over the air.",
@@ -463,7 +462,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RequirePiNforRemoteOperation", id: 0x33, type: "bool", access: "RW VA",
-            conformance: "COTA & P, IN", default: true, quality: "P",
+            conformance: "COTA & PIN", default: true, quality: "P",
             details: "Boolean set to True if the door lock server requires that an optional PINs be included in the " +
                      "payload of remote lock operation events like Lock, Unlock, Unlock with Timeout and Toggle in order " +
                      "to function.",
@@ -495,32 +494,32 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "LockingMechanismJammed", id: 0x0 },
-                { tag: "datatype", name: "LockResettoFactoryDefaults", id: 0x1 },
+                { tag: "datatype", name: "LockResetToFactoryDefaults", id: 0x1 },
                 { tag: "datatype", name: "Reserved", id: 0x2 },
                 { tag: "datatype", name: "RfModulePowerCycled", id: 0x3 },
-                { tag: "datatype", name: "TamperAlarmWrongcodeentrylimit", id: 0x4 },
-                { tag: "datatype", name: "TamperAlarmFrontescutcheonremovedfrommain", id: 0x5 },
-                { tag: "datatype", name: "ForcedDoorOpenunderDoorLockedCondition", id: 0x6 }
+                { tag: "datatype", name: "TamperAlarmWrongCodeEntryLimit", id: 0x4 },
+                { tag: "datatype", name: "TamperAlarmFrontEscutcheonRemovedFromMain", id: 0x5 },
+                { tag: "datatype", name: "ForcedDoorOpenUnderDoorLockedCondition", id: 0x6 }
             ]
         },
 
         {
             tag: "attribute", name: "KeypadOperationEventMask", id: 0x41, type: "map16", access: "RW VA",
-            conformance: "[NOT & P, IN]", default: 65535, quality: "P",
+            conformance: "[NOT & PIN]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off the transmission of keypad operation events. This mask DOES NOT " +
                      "apply to the storing of events in the event log. This mask only applies to the Operation Event " +
                      "Notification Command.",
             xref: { document: "cluster", section: "5.2.3.40" },
 
             children: [
-                { tag: "datatype", name: "UnknownormanufacturerSpecifickeypadoperationevent", id: 0x0 },
-                { tag: "datatype", name: "Locksourcekeypad", id: 0x1 },
-                { tag: "datatype", name: "Unlocksourcekeypad", id: 0x2 },
-                { tag: "datatype", name: "LocksourcekeypaderrorinvalidPin", id: 0x3 },
-                { tag: "datatype", name: "Locksourcekeypaderrorinvalidschedule", id: 0x4 },
-                { tag: "datatype", name: "Unlocksourcekeypaderrorinvalidcode", id: 0x5 },
-                { tag: "datatype", name: "Unlocksourcekeypaderrorinvalidschedule", id: 0x6 },
-                { tag: "datatype", name: "NonAccessUseroperationeventsourcekeypad", id: 0x7 }
+                { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadOperationEvent", id: 0x0 },
+                { tag: "datatype", name: "LockSourceKeypad", id: 0x1 },
+                { tag: "datatype", name: "UnlockSourceKeypad", id: 0x2 },
+                { tag: "datatype", name: "LockSourceKeypadErrorInvalidPin", id: 0x3 },
+                { tag: "datatype", name: "LockSourceKeypadErrorInvalidSchedule", id: 0x4 },
+                { tag: "datatype", name: "UnlockSourceKeypadErrorInvalidCode", id: 0x5 },
+                { tag: "datatype", name: "UnlockSourceKeypadErrorInvalidSchedule", id: 0x6 },
+                { tag: "datatype", name: "NonAccessUserOperationEventSourceKeypad", id: 0xf }
             ]
         },
 
@@ -532,13 +531,13 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.3.41" },
 
             children: [
-                { tag: "datatype", name: "UnknownormanufacturerSpecificremoteoperationevent", id: 0x0 },
-                { tag: "datatype", name: "Locksourceremote", id: 0x1 },
-                { tag: "datatype", name: "Unlocksourceremote", id: 0x2 },
-                { tag: "datatype", name: "Locksourceremoteerrorinvalidcode", id: 0x3 },
-                { tag: "datatype", name: "Locksourceremoteerrorinvalidschedule", id: 0x4 },
-                { tag: "datatype", name: "Unlocksourceremoteerrorinvalidcode", id: 0x5 },
-                { tag: "datatype", name: "Unlocksourceremoteerrorinvalidschedule", id: 0x6 }
+                { tag: "datatype", name: "UnknownOrManufacturerSpecificRemoteOperationEvent", id: 0x0 },
+                { tag: "datatype", name: "LockSourceRemote", id: 0x1 },
+                { tag: "datatype", name: "UnlockSourceRemote", id: 0x2 },
+                { tag: "datatype", name: "LockSourceRemoteErrorInvalidCode", id: 0x3 },
+                { tag: "datatype", name: "LockSourceRemoteErrorInvalidSchedule", id: 0x4 },
+                { tag: "datatype", name: "UnlockSourceRemoteErrorInvalidCode", id: 0x5 },
+                { tag: "datatype", name: "UnlockSourceRemoteErrorInvalidSchedule", id: 0x6 }
             ]
         },
 
@@ -550,17 +549,17 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.3.42" },
 
             children: [
-                { tag: "datatype", name: "UnknownormanufacturerSpecificmanualoperationevent", id: 0x0 },
+                { tag: "datatype", name: "UnknownOrManufacturerSpecificManualOperationEvent", id: 0x0 },
                 { tag: "datatype", name: "ThumbturnLock", id: 0x1 },
                 { tag: "datatype", name: "ThumbturnUnlock", id: 0x2 },
-                { tag: "datatype", name: "Onetouchlock", id: 0x3 },
-                { tag: "datatype", name: "KeyLock", id: 0x4 },
-                { tag: "datatype", name: "KeyUnlock", id: 0x5 },
-                { tag: "datatype", name: "Autolock", id: 0x6 },
-                { tag: "datatype", name: "ScheduleLock", id: 0x7 },
-                { tag: "datatype", name: "ScheduleUnlock", id: 0x8 },
-                { tag: "datatype", name: "ManualLockKeyorThumbturn", id: 0x9 },
-                { tag: "datatype", name: "ManualUnlockKeyorThumbturn", id: 0xa }
+                { tag: "datatype", name: "OneTouchLock", id: 0x7 },
+                { tag: "datatype", name: "KeyLock", id: 0x8 },
+                { tag: "datatype", name: "KeyUnlock", id: 0x9 },
+                { tag: "datatype", name: "AutoLock", id: 0xa },
+                { tag: "datatype", name: "ScheduleLock", id: 0xb },
+                { tag: "datatype", name: "ScheduleUnlock", id: 0xc },
+                { tag: "datatype", name: "ManualLock", id: 0xd },
+                { tag: "datatype", name: "ManualUnlock", id: 0xe }
             ]
         },
 
@@ -572,30 +571,30 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.3.43" },
 
             children: [
-                { tag: "datatype", name: "UnknownormanufacturerSpecifickeypadoperationevent", id: 0x0 },
-                { tag: "datatype", name: "LocksourceRfid", id: 0x1 },
-                { tag: "datatype", name: "UnlocksourceRfid", id: 0x2 },
-                { tag: "datatype", name: "LocksourceRfiDerrorinvalidRfidId", id: 0x3 },
-                { tag: "datatype", name: "LocksourceRfiDerrorinvalidschedule", id: 0x4 },
-                { tag: "datatype", name: "UnlocksourceRfiDerrorinvalidRfidId", id: 0x5 },
-                { tag: "datatype", name: "UnlocksourceRfiDerrorinvalidschedule", id: 0x6 }
+                { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadOperationEvent", id: 0x0 },
+                { tag: "datatype", name: "LockSourceRfid", id: 0x1 },
+                { tag: "datatype", name: "UnlockSourceRfid", id: 0x2 },
+                { tag: "datatype", name: "LockSourceRfidErrorInvalidRfidId", id: 0x3 },
+                { tag: "datatype", name: "LockSourceRfidErrorInvalidSchedule", id: 0x4 },
+                { tag: "datatype", name: "UnlockSourceRfidErrorInvalidRfidId", id: 0x5 },
+                { tag: "datatype", name: "UnlockSourceRfidErrorInvalidSchedule", id: 0x6 }
             ]
         },
 
         {
             tag: "attribute", name: "KeypadProgrammingEventMask", id: 0x45, type: "map16", access: "RW VA",
-            conformance: "[NOT & P, IN]", default: 65535, quality: "P",
+            conformance: "[NOT & PIN]", default: 65535, quality: "P",
             details: "Event mask used to turn on and off keypad programming events. This mask DOES NOT apply to the " +
                      "storing of events in the event log. This mask only applies to the Programming Event Notification " +
                      "Command.",
             xref: { document: "cluster", section: "5.2.3.44" },
 
             children: [
-                { tag: "datatype", name: "UnknownormanufacturerSpecifickeypadprogrammingevent", id: 0x0 },
-                { tag: "datatype", name: "ProgrammingPiNcodechangedsourcekeypad", id: 0x1 },
-                { tag: "datatype", name: "PiNaddedsourcekeypad", id: 0x2 },
-                { tag: "datatype", name: "PiNclearedsourcekeypad", id: 0x3 },
-                { tag: "datatype", name: "PiNchangedSourcekeypad", id: 0x4 }
+                { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", id: 0x0 },
+                { tag: "datatype", name: "ProgrammingPinCodeChangedSourceKeypad", id: 0x1 },
+                { tag: "datatype", name: "PinAddedSourceKeypad", id: 0x2 },
+                { tag: "datatype", name: "PinClearedSourceKeypad", id: 0x3 },
+                { tag: "datatype", name: "PinChangedSourceKeypad", id: 0x4 }
             ]
         },
 
@@ -608,26 +607,19 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.3.45" },
 
             children: [
-                { tag: "datatype", name: "UnknownormanufacturerSpecificremoteprogrammingevent", id: 0x0 },
-                { tag: "datatype", name: "PiNaddedsourceremote", id: 0x2 },
-                { tag: "datatype", name: "PiNclearedsourceremote", id: 0x3 },
-                { tag: "datatype", name: "PiNchangedSourceremote", id: 0x4 },
-                { tag: "datatype", name: "RfiDcodeaddedSourceremote", id: 0x5 },
-                { tag: "datatype", name: "RfiDcodeclearedSourceremote", id: 0x6 }
+                { tag: "datatype", name: "UnknownOrManufacturerSpecificRemoteProgrammingEvent", id: 0x0 },
+                { tag: "datatype", name: "PinAddedSourceRemote", id: 0x2 },
+                { tag: "datatype", name: "PinClearedSourceRemote", id: 0x3 },
+                { tag: "datatype", name: "PinChangedSourceRemote", id: 0x4 },
+                { tag: "datatype", name: "RfidCodeAddedSourceRemote", id: 0x5 },
+                { tag: "datatype", name: "RfidCodeClearedSourceRemote", id: 0x6 }
             ]
         },
 
         {
-            tag: "attribute", name: "RfidProgrammingEventMask", id: 0x47, type: "map16", access: "RW VA",
+            tag: "attribute", name: "RfidPro", id: 0x47, type: "map16", access: "RW VA",
             conformance: "[NOT & RID]", default: 65535, quality: "P",
-            details: "Event mask used to turn on and off RFID programming events. This mask DOES NOT apply to the storing " +
-                     "of events in the event log. This mask only applies to the Programming Event Notification Command.",
-            xref: { document: "cluster", section: "5.2.3.46" },
-            children: [
-                { tag: "datatype", name: "UnknownormanufacturerSpecifickeypadprogrammingevent", id: 0x0 },
-                { tag: "datatype", name: "IdAddedSourceRfid", id: 0x5 },
-                { tag: "datatype", name: "IDclearedSourceRfid", id: 0x6 }
-            ]
+            xref: { document: "cluster", section: "5.2.3" }
         },
 
         {
@@ -647,7 +639,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "DoorStateChange", id: 0x1, access: "V", conformance: "D, P, S",
+            tag: "event", name: "DoorStateChange", id: 0x1, access: "V", conformance: "DPS",
             priority: "critical",
             details: "The door lock server sends out a DoorStateChange event when the door lock door state changes. The " +
                      "data of this event SHALL contain the following information:",
@@ -861,7 +853,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "UnlockwithTimeout", id: 0x3, access: "O T", conformance: "O",
+            tag: "command", name: "UnlockWithTimeout", id: 0x3, access: "O T", conformance: "O",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
             children: [
@@ -880,37 +872,37 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "SetPinCode", id: 0x5, access: "A T", conformance: "!USR & P, IN",
+            tag: "command", name: "SetPinCode", id: 0x5, access: "A T", conformance: "!USR & PIN",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "GetPinCode", id: 0x6, access: "A", conformance: "!USR & P, IN",
+            tag: "command", name: "GetPinCode", id: 0x6, access: "A", conformance: "!USR & PIN",
             direction: "request", response: "GetPinCodeResponse",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "GetPinCodeResponse", id: 0x6, conformance: "!USR & P, IN",
+            tag: "command", name: "GetPinCodeResponse", id: 0x6, conformance: "!USR & PIN",
             direction: "response",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "ClearPinCode", id: 0x7, access: "A T", conformance: "!USR & P, IN",
+            tag: "command", name: "ClearPinCode", id: 0x7, access: "A T", conformance: "!USR & PIN",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "ClearAllPinCodes", id: 0x8, access: "A T", conformance: "!USR & P, IN",
+            tag: "command", name: "ClearAllPinCodes", id: 0x8, access: "A T", conformance: "!USR & PIN",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "SetUserStatus", id: 0x9, access: "A", conformance: "!USR & (P, IN | RID)",
+            tag: "command", name: "SetUserStatus", id: 0x9, access: "A", conformance: "!USR & (PIN | RID)",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "GetUserStatus", id: 0xa, access: "A", conformance: "!USR & (P, IN | RID)",
+            tag: "command", name: "GetUserStatus", id: 0xa, access: "A", conformance: "!USR & (PIN | RID)",
             direction: "request", response: "GetUserStatusResponse",
             xref: { document: "cluster", section: "5.2.4" }
         },
@@ -1061,12 +1053,12 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (P, IN | RID)",
+            tag: "command", name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (PIN | RID)",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (P, IN | RID)",
+            tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (PIN | RID)",
             direction: "request", response: "GetUserTypeResponse",
             xref: { document: "cluster", section: "5.2.4" }
         },
@@ -1246,10 +1238,10 @@ Matter.children.push({
                     description: "Tamper Alarm - front escutcheon removed from main"
                 },
                 {
-                    tag: "datatype", name: "DoorForcedOpen", id: 0x6, conformance: "[D, P, S]",
+                    tag: "datatype", name: "DoorForcedOpen", id: 0x6, conformance: "[DPS]",
                     description: "Forced Door Open under Door Locked Condition"
                 },
-                { tag: "datatype", name: "DoorAjar", id: 0x7, conformance: "[D, P, S]", description: "Door ajar" },
+                { tag: "datatype", name: "DoorAjar", id: 0x7, conformance: "[DPS]", description: "Door ajar" },
                 {
                     tag: "datatype", name: "ForcedUser", id: 0x8, conformance: "[USR]",
                     description: "Force User SOS alarm"
@@ -1300,7 +1292,7 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "ProgrammingPin", id: 0x0, conformance: "O" },
-                { tag: "datatype", name: "Pin", id: 0x1, conformance: "P, IN" },
+                { tag: "datatype", name: "Pin", id: 0x1, conformance: "PIN" },
                 { tag: "datatype", name: "Rfid", id: 0x2, conformance: "RID" },
                 { tag: "datatype", name: "Fingerprint", id: 0x3, conformance: "FGP" },
                 { tag: "datatype", name: "FingerVein", id: 0x4, conformance: "FGP" },
@@ -1337,9 +1329,8 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.6.6" },
 
             children: [
-                { tag: "datatype", name: "Sunday", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Monday", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Tuesday", id: 0x4, conformance: "M" },
+                { tag: "datatype", name: "Sunday", id: 0x0 },
+                { tag: "datatype", name: "Tuesday", id: 0x2, conformance: "M" },
                 { tag: "datatype", name: "Wednesday", id: 0x8, conformance: "M" },
                 { tag: "datatype", name: "Thursday", id: 0x10, conformance: "M" },
                 { tag: "datatype", name: "Friday", id: 0x20, conformance: "M" },
@@ -1353,30 +1344,24 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.6.7" },
 
             children: [
+                { tag: "datatype", name: "DoorOpen", id: 0x0, conformance: "DPS", description: "Door state is open" },
                 {
-                    tag: "datatype", name: "DoorOpen", id: 0x0, conformance: "D, P, S",
-                    description: "Door state is open"
-                },
-                {
-                    tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "D, P, S",
+                    tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "DPS",
                     description: "Door state is closed"
                 },
                 {
-                    tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "[D, P, S]",
+                    tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "[DPS]",
                     description: "Door state is jammed"
                 },
                 {
-                    tag: "datatype", name: "DoorForcedOpen", id: 0x3, conformance: "[D, P, S]",
+                    tag: "datatype", name: "DoorForcedOpen", id: 0x3, conformance: "[DPS]",
                     description: "Door state is currently forced open"
                 },
                 {
-                    tag: "datatype", name: "DoorUnspecifiedError", id: 0x4, conformance: "[D, P, S]",
+                    tag: "datatype", name: "DoorUnspecifiedError", id: 0x4, conformance: "[DPS]",
                     description: "Door state is invalid for unspecified reason"
                 },
-                {
-                    tag: "datatype", name: "DoorAjar", id: 0x5, conformance: "[D, P, S]",
-                    description: "Door state is ajar"
-                }
+                { tag: "datatype", name: "DoorAjar", id: 0x5, conformance: "[DPS]", description: "Door state is ajar" }
             ]
         },
 
@@ -1418,7 +1403,7 @@ Matter.children.push({
                     description: "Lock holiday schedule was added, cleared, or modified."
                 },
                 {
-                    tag: "datatype", name: "Pin", id: 0x6, conformance: "P, IN",
+                    tag: "datatype", name: "Pin", id: 0x6, conformance: "PIN",
                     description: "Lock user PIN code was added, cleared, or modified."
                 },
                 {
@@ -1615,7 +1600,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "USR & COTA, IN",
+                    tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "USR & COTA",
                     details: "User access and PIN code is restricted to remote lock/unlock commands only. This type of user might " +
                              "be useful for regular delivery services or voice assistant unlocking operations to prevent a PIN " +
                              "code credential created for them from being used at the keypad. The PIN code credential would only " +

@@ -68,7 +68,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "X, Y",
+            tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "XY",
             constraint: "0", default: 24939, quality: "N S P",
             details: "The CurrentX attribute contains the current value of the normalized chromaticity value x, as " +
                      "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
@@ -77,7 +77,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "X, Y",
+            tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "XY",
             constraint: "0", default: 24701, quality: "N S P",
             details: "The CurrentY attribute contains the current value of the normalized chromaticity value y, as " +
                      "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
@@ -96,7 +96,7 @@ Matter.children.push({
             children: [
                 { tag: "datatype", name: "None", id: 0x0 },
                 { tag: "datatype", name: "OtherUnknown", id: 0x1 },
-                { tag: "datatype", name: "Temperaturemonitoring", id: 0x2 },
+                { tag: "datatype", name: "TemperatureMonitoring", id: 0x2 },
                 { tag: "datatype", name: "OpticalLuminanceMonitoringAndFeedback", id: 0x3 },
                 { tag: "datatype", name: "OpticalColorMonitoringAndFeedback", id: 0x4 }
             ]
@@ -267,7 +267,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M, 0",
+            tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M0",
             constraint: "0", quality: "F",
             details: "The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined " +
                      "in the CIE xyY Color Space.",
@@ -275,7 +275,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M, 0",
+            tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M0",
             constraint: "0", quality: "F",
             details: "The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined " +
                      "in the CIE xyY Color Space.",
@@ -284,7 +284,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Primary1Intensity", id: 0x13, type: "uint8", access: "R V",
-            conformance: "M, 0", quality: "X F",
+            conformance: "M0", quality: "X F",
             details: "The Primary1intensity attribute contains a representation of the maximum intensity of this primary " +
                      "as defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast " +
                      "Configuration Cluster), normalized such that the primary with the highest maximum intensity " +
@@ -293,78 +293,78 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M, 1",
+            tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M1",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
-            tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M, 1",
+            tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M1",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
             tag: "attribute", name: "Primary2Intensity", id: 0x17, type: "uint8", access: "R V",
-            conformance: "M, 1", quality: "X F",
+            conformance: "M1", quality: "X F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
-            tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M, 2",
+            tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M2",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
-            tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M, 2",
+            tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M2",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
             tag: "attribute", name: "Primary3Intensity", id: 0x1b, type: "uint8", access: "R V",
-            conformance: "M, 2", quality: "X F",
+            conformance: "M2", quality: "X F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
-            tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M, 3",
+            tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M3",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M, 3",
+            tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M3",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
             tag: "attribute", name: "Primary4Intensity", id: 0x22, type: "uint8", access: "R V",
-            conformance: "M, 3", quality: "X F",
+            conformance: "M3", quality: "X F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M, 4",
+            tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M4",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M, 4",
+            tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M4",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
             tag: "attribute", name: "Primary5Intensity", id: 0x26, type: "uint8", access: "R V",
-            conformance: "M, 4", quality: "X F",
+            conformance: "M4", quality: "X F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M, 5",
+            tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M5",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M, 5",
+            tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M5",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
             tag: "attribute", name: "Primary6Intensity", id: 0x2a, type: "uint8", access: "R V",
-            conformance: "M, 5", quality: "X F",
+            conformance: "M5", quality: "X F",
             xref: { document: "cluster", section: "3.2.9" }
         },
 
@@ -455,16 +455,10 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "Direction", id: 0x1, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "Direction", id: 0x1, type: "Direction", conformance: "M",
+                    constraint: "desc",
                     details: "The Direction field SHALL be one of the non-reserved values in Values of the Direction Field.",
-                    xref: { document: "cluster", section: "3.2.11.4.2" },
-
-                    children: [
-                        { tag: "datatype", name: "Shortestdistance", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Longestdistance", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Up", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
-                    ]
+                    xref: { document: "cluster", section: "3.2.11.4.2" }
                 },
 
                 {
@@ -491,15 +485,10 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "MoveMode", id: 0x0, type: "MoveMode", conformance: "M", constraint: "desc",
                     details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the " +
                              "MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.",
-                    xref: { document: "cluster", section: "3.2.11.5.1" },
-                    children: [
-                        { tag: "datatype", name: "Stop", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
-                    ]
+                    xref: { document: "cluster", section: "3.2.11.5.1" }
                 },
 
                 {
@@ -528,15 +517,10 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc",
                     details: "The StepMode field SHALL be one of the non-reserved values in Values of the StepMode Field.",
-                    xref: { document: "cluster", section: "3.2.11.6.1" },
-                    children: [
-                        { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
-                    ]
+                    xref: { document: "cluster", section: "3.2.11.6.1" }
                 },
-
                 {
                     tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M",
                     details: "The change to be added to (or subtracted from) the current value of the device’s hue.",
@@ -589,15 +573,10 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "MoveMode", id: 0x0, type: "MoveMode", conformance: "M", constraint: "desc",
                     details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the " +
                              "MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.",
-                    xref: { document: "cluster", section: "3.2.11.8.1" },
-                    children: [
-                        { tag: "datatype", name: "Stop", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
-                    ]
+                    xref: { document: "cluster", section: "3.2.11.8.1" }
                 },
 
                 {
@@ -623,15 +602,10 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc",
                     details: "The StepMode field SHALL be one of the non-reserved values in Values of the StepMode Field.",
-                    xref: { document: "cluster", section: "3.2.11.9.1" },
-                    children: [
-                        { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
-                    ]
+                    xref: { document: "cluster", section: "3.2.11.9.1" }
                 },
-
                 {
                     tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M",
                     details: "The change to be added to (or subtracted from) the current value of the device’s saturation.",
@@ -678,8 +652,8 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "MoveToColor", id: 0x7, access: "O", conformance: "X, Y",
-            direction: "request", response: "status",
+            tag: "command", name: "MoveToColor", id: 0x7, access: "O", conformance: "XY", direction: "request",
+            response: "status",
             details: "The MoveToColor command SHALL have the following data fields:",
             xref: { document: "cluster", section: "3.2.11.11" },
 
@@ -699,7 +673,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "MoveColor", id: 0x8, access: "O", conformance: "X, Y", direction: "request",
+            tag: "command", name: "MoveColor", id: 0x8, access: "O", conformance: "XY", direction: "request",
             response: "status",
             details: "The MoveColor command SHALL have the following data fields:",
             xref: { document: "cluster", section: "3.2.11.12" },
@@ -728,7 +702,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "StepColor", id: 0x9, access: "O", conformance: "X, Y", direction: "request",
+            tag: "command", name: "StepColor", id: 0x9, access: "O", conformance: "XY", direction: "request",
             response: "status",
             details: "The StepColor command SHALL have the following data fields:",
             xref: { document: "cluster", section: "3.2.11.13" },
@@ -791,7 +765,8 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "Direction", id: 0x1, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "Direction", id: 0x1, type: "Direction", conformance: "M",
+                    constraint: "desc",
                     details: "This field is identical to the Direction field of the MoveToHue command of the Color Control " +
                              "cluster (see sub-clause Use of the OptionsMask and OptionsOverride fields).",
                     xref: { document: "cluster", section: "3.2.11.15.2" }
@@ -822,7 +797,7 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "MoveMode", id: 0x0, type: "MoveMode", conformance: "M", constraint: "desc",
                     details: "This field is identical to the MoveMode field of the MoveHue command of the Color Control cluster " +
                              "(see sub-clause MoveHue Command). If the MoveMode field is equal to 0 (Stop), the Rate field SHALL " +
                              "be ignored.",
@@ -856,7 +831,7 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc",
                     details: "This field is identical to the StepMode field of the StepHue command of the Color Control cluster " +
                              "(see sub-clause StepHue Command).",
                     xref: { document: "cluster", section: "3.2.11.17.1" }
@@ -938,7 +913,15 @@ Matter.children.push({
                     details: "The UpdateFlags field specifies which color loop attributes to update before the color loop is " +
                              "started. This field SHALL be formatted as illustrated in Format of the UpdateFlags Field of the " +
                              "ColorLoopSet Command.",
-                    xref: { document: "cluster", section: "3.2.11.19.1" }
+                    xref: { document: "cluster", section: "3.2.11.19.1" },
+
+                    children: [
+                        { tag: "datatype", name: "UpdateAction", id: 0x0 },
+                        { tag: "datatype", name: "UpdateDirection", id: 0x1 },
+                        { tag: "datatype", name: "UpdateTime", id: 0x2 },
+                        { tag: "datatype", name: "UpdateStartHue", id: 0x3 },
+                        { tag: "datatype", name: "Reserved", id: 0x4 }
+                    ]
                 },
 
                 {
@@ -949,12 +932,12 @@ Matter.children.push({
                     xref: { document: "cluster", section: "3.2.11.19.2" },
 
                     children: [
-                        { tag: "datatype", name: "DeActivatethecolorloop", id: 0x0 },
+                        { tag: "datatype", name: "DeActivateTheColorLoop", id: 0x0 },
                         {
-                            tag: "datatype", name: "ActivatethecolorloopfromthevalueintheColorLoopStartEnhancedHuefield",
+                            tag: "datatype", name: "ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField",
                             id: 0x1
                         },
-                        { tag: "datatype", name: "ActivatethecolorloopfromthevalueoftheEnhancedCurrentHueattribute", id: 0x2 }
+                        { tag: "datatype", name: "ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute", id: 0x2 }
                     ]
                 },
 
@@ -965,8 +948,8 @@ Matter.children.push({
                              "Values of the Direction Field of the ColorLoopSet Command.",
                     xref: { document: "cluster", section: "3.2.11.19.3" },
                     children: [
-                        { tag: "datatype", name: "Decrementthehueinthecolorloop", id: 0x0 },
-                        { tag: "datatype", name: "Incrementthehueinthecolorloop", id: 0x1 }
+                        { tag: "datatype", name: "DecrementTheHueInTheColorLoop", id: 0x0 },
+                        { tag: "datatype", name: "IncrementTheHueInTheColorLoop", id: 0x1 }
                     ]
                 },
 
@@ -987,7 +970,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | X, Y | CT",
+            tag: "command", name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | XY",
             direction: "request", response: "status",
             details: "The StopMoveStep command is provided to allow MoveTo and Step commands to be stopped. (Note this " +
                      "automatically provides symmetry to the Level Control cluster.)",
@@ -1106,6 +1089,54 @@ Matter.children.push({
                     tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M",
                     constraint: "desc"
                 }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "MoveMode", type: "enum8", conformance: "M",
+            xref: { document: "cluster", section: "3.2.11.5.1" },
+            children: [
+                { tag: "datatype", name: "Stop", id: 0x0, conformance: "M" },
+                { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "StepMode", type: "enum8", conformance: "M",
+            xref: { document: "cluster", section: "3.2.11.6.1" },
+            children: [
+                { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "Direction", type: "enum8", conformance: "M",
+            xref: { document: "cluster", section: "3.2.11.4.2" },
+
+            children: [
+                { tag: "datatype", name: "ShortestDistance", id: 0x0, conformance: "M" },
+                { tag: "datatype", name: "LongestDistance", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "Up", id: 0x2, conformance: "M" },
+                { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "HueMoveMode", type: "enum8", conformance: "M",
+            children: [
+                { tag: "datatype", name: "Stop", id: 0x0, conformance: "M" },
+                { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "HueStepMode", type: "enum8", conformance: "M",
+            children: [
+                { tag: "datatype", name: "Up", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "Down", id: 0x3, conformance: "M" }
             ]
         }
     ]

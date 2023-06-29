@@ -196,7 +196,11 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
                     details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field.",
-                    xref: { document: "cluster", section: "1.6.6.2.1" }
+                    xref: { document: "cluster", section: "1.6.6.2.1" },
+                    children: [
+                        { tag: "datatype", name: "Up", id: 0x0 },
+                        { tag: "datatype", name: "Down", id: 0x1 }
+                    ]
                 },
 
                 {

@@ -281,6 +281,19 @@ export class ModelTraversal {
     }
 
     /**
+     * Find an owning model of a specific type.
+     */
+    findOwner<T extends Model>(constructor: Model.Constructor<T>, model: Model | undefined): T | undefined {
+        if (!model || model instanceof constructor || !model.parent) {
+            return model as T | undefined;
+        }
+
+        return this.operation(() => {
+            return this.findOwner(constructor, model.parent);
+        });
+    }
+
+    /**
      * Find the root model.
      */
     findRoot(model: Model | undefined) {

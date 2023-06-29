@@ -39,7 +39,8 @@ Matter.children.push({
                      "set to 0.",
             xref: { document: "cluster", section: "3.3.6.3" },
             children: [
-                { tag: "datatype", name: "NonOperational", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "BallastNonOperational", id: 0x0 },
+                { tag: "datatype", name: "LampFailure", id: 0x1, conformance: "M" },
                 { tag: "datatype", name: "LampNotInSocket", id: 0x2, conformance: "M" }
             ]
         },

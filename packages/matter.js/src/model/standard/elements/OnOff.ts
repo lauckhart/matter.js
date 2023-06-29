@@ -150,7 +150,10 @@ Matter.children.push({
                     details: "The OnOffControl field contains information on how the server is to be operated. This field SHALL " +
                              "be formatted as illustrated in Format of the OnOffControl Field of the OnWithTimedOff Command.",
                     xref: { document: "cluster", section: "1.5.7.6.1" },
-                    children: [ { tag: "datatype", name: "AcceptOnlyWhenOn", id: 0x1, conformance: "M" } ]
+                    children: [
+                        { tag: "datatype", name: "AcceptOnlyWhenOn", id: 0x0 },
+                        { tag: "datatype", name: "Reserved", id: 0x1, conformance: "M" }
+                    ]
                 },
 
                 {

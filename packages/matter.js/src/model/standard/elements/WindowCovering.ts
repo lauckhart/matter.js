@@ -20,12 +20,12 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "LF", id: 0x0, conformance: "O.a1+",
+                    tag: "datatype", name: "LF", id: 0x0, conformance: "O.a+",
                     description: "Lift Control and behavior for lifting/sliding window coverings",
                     xref: { document: "cluster", section: "5.3.4" }
                 },
                 {
-                    tag: "datatype", name: "TL", id: 0x1, conformance: "O.a1+",
+                    tag: "datatype", name: "TL", id: 0x1, conformance: "O.a+",
                     description: "Tilt Control and behavior for tilting window coverings",
                     xref: { document: "cluster", section: "5.3.4" }
                 },
@@ -59,11 +59,11 @@ Matter.children.push({
                 { tag: "datatype", name: "Rollershade2Motor", id: 0x1, conformance: "M" },
                 { tag: "datatype", name: "RollershadeExterior", id: 0x2, conformance: "M" },
                 { tag: "datatype", name: "RollershadeExterior2Motor", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Draperycurtain", id: 0x4, conformance: "M" },
+                { tag: "datatype", name: "Drapery", id: 0x4, conformance: "M" },
                 { tag: "datatype", name: "Awning", id: 0x5, conformance: "M" },
                 { tag: "datatype", name: "Shutter", id: 0x6, conformance: "M" },
                 { tag: "datatype", name: "TiltBlindTiltOnly", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "TiltBlindLiftTilt", id: 0x8, conformance: "M" },
+                { tag: "datatype", name: "TiltBlindLift", id: 0x8, conformance: "M" },
                 { tag: "datatype", name: "ProjectorScreen", id: 0x9, conformance: "M" },
                 { tag: "datatype", name: "Unknown", id: 0xff, conformance: "M" }
             ]
@@ -71,7 +71,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PhysicalClosedLimitLift", id: 0x1, type: "uint16", access: "R V",
-            conformance: "[LF & P, A_LF & ABS]", quality: "F",
+            conformance: "[LF & PA_LF]", quality: "F",
             details: "The PhysicalClosedLimitLift attribute identifies the maximum possible encoder position possible (in " +
                      "centimeters) to position the height of the window covering Lift.",
             xref: { document: "cluster", section: "5.3.5.2" }
@@ -79,7 +79,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PhysicalClosedLimitTilt", id: 0x2, type: "uint16", access: "R V",
-            conformance: "[TL & P, A_TL & ABS]", quality: "F",
+            conformance: "[TL & PA_TL]", quality: "F",
             details: "The PhysicalClosedLimitTilt attribute identifies the maximum possible encoder position possible " +
                      "(tenth of a degrees) to position the angle of the window covering Tilt.",
             xref: { document: "cluster", section: "5.3.5.3" }
@@ -87,15 +87,15 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentPositionLift1", id: 0x3, type: "uint16", access: "R V",
-            conformance: "[LF & P, A_LF & ABS]",
-            constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift", default: null, quality: "X N",
+            conformance: "[LF & PA_LF]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
+            default: null, quality: "X N",
             xref: { document: "cluster", section: "5.3.5" }
         },
 
         {
             tag: "attribute", name: "CurrentPositionTilt1", id: 0x4, type: "uint16", access: "R V",
-            conformance: "[TL & P, A_TL & ABS]",
-            constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt", default: null, quality: "X N",
+            conformance: "[TL & PA_TL]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
+            default: null, quality: "X N",
             xref: { document: "cluster", section: "5.3.5" }
         },
 
@@ -137,12 +137,12 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentPositionLiftPercentage1", id: 0x8, type: "percent", access: "R V",
-            conformance: "[LF & P, A_LF]", constraint: "0 to 100", default: null, quality: "X N S P",
+            conformance: "[LF & PA_LF]", constraint: "0 to 100", default: null, quality: "X N S P",
             xref: { document: "cluster", section: "5.3.5" }
         },
         {
             tag: "attribute", name: "CurrentPositionTiltPercentage1", id: 0x9, type: "percent", access: "R V",
-            conformance: "[TL & P, A_TL]", constraint: "0 to 100", default: null, quality: "X N S P",
+            conformance: "[TL & PA_TL]", constraint: "0 to 100", default: null, quality: "X N S P",
             xref: { document: "cluster", section: "5.3.5" }
         },
 
@@ -161,15 +161,12 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TargetPositionLiftPercent100Ths2", id: 0xb, type: "percent100ths",
-            access: "R V", conformance: "LF & P, A_LF", constraint: "0 to 10000", default: null,
-            quality: "X S P",
+            access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X S P",
             xref: { document: "cluster", section: "5.3.5" }
         },
-
         {
             tag: "attribute", name: "TargetPositionTiltPercent100Ths2", id: 0xc, type: "percent100ths",
-            access: "R V", conformance: "TL & P, A_TL", constraint: "0 to 10000", default: null,
-            quality: "X S P",
+            access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X S P",
             xref: { document: "cluster", section: "5.3.5" }
         },
 
@@ -201,7 +198,7 @@ Matter.children.push({
                 { tag: "datatype", name: "CentralCurtain", id: 0x10, conformance: "M" },
                 { tag: "datatype", name: "RollerShutter", id: 0x11, conformance: "M" },
                 { tag: "datatype", name: "ExteriorVerticalScreen", id: 0x12, conformance: "M" },
-                { tag: "datatype", name: "AwningTerracePatio", id: 0x13, conformance: "M" },
+                { tag: "datatype", name: "AwningTerrace", id: 0x13, conformance: "M" },
                 { tag: "datatype", name: "AwningVerticalScreen", id: 0x14, conformance: "M" },
                 { tag: "datatype", name: "TiltOnlyPergola", id: 0x15, conformance: "M" },
                 { tag: "datatype", name: "SwingingShutter", id: 0x16, conformance: "M" },
@@ -212,21 +209,18 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentPositionLiftPercent100Ths1", id: 0xe, type: "percent100ths",
-            access: "R V", conformance: "LF & P, A_LF", constraint: "0 to 10000", default: null,
-            quality: "X N P",
+            access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X N P",
             xref: { document: "cluster", section: "5.3.5" }
         },
-
         {
             tag: "attribute", name: "CurrentPositionTiltPercent100Ths1", id: 0xf, type: "percent100ths",
-            access: "R V", conformance: "TL & P, A_TL", constraint: "0 to 10000", default: null,
-            quality: "X N P",
+            access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X N P",
             xref: { document: "cluster", section: "5.3.5" }
         },
 
         {
             tag: "attribute", name: "InstalledOpenLimitLift", id: 0x10, type: "uint16", access: "R V",
-            conformance: "LF & P, A_LF & ABS", constraint: "0 to 65534", quality: "N",
+            conformance: "LF & PA_LF", constraint: "0 to 65534", quality: "N",
             details: "The InstalledOpenLimitLift attribute identifies the Open Limit for Lifting the Window Covering " +
                      "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.17" }
@@ -234,7 +228,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitLift", id: 0x11, type: "uint16", access: "R V",
-            conformance: "LF & P, A_LF & ABS", constraint: "0 to 65534", default: 65535, quality: "N",
+            conformance: "LF & PA_LF", constraint: "0 to 65534", default: 65535, quality: "N",
             details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering " +
                      "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.18" }
@@ -242,7 +236,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledOpenLimitTilt", id: 0x12, type: "uint16", access: "R V",
-            conformance: "TL & P, A_TL & ABS", constraint: "0 to 65534", quality: "N",
+            conformance: "TL & PA_TL", constraint: "0 to 65534", quality: "N",
             details: "The InstalledOpenLimitTilt attribute identifies the Open Limit for Tilting the Window Covering " +
                      "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.19" }
@@ -250,7 +244,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16", access: "R V",
-            conformance: "TL & P, A_TL & ABS", constraint: "0 to 65534", default: 65535, quality: "N",
+            conformance: "TL & PA_TL", constraint: "0 to 65534", default: 65535, quality: "N",
             details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering " +
                      "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.20" }
@@ -386,19 +380,19 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GoToLiftPercentage", id: 0x5, access: "O", conformance: "LF & P, A_LF, [LF]",
+            tag: "command", name: "GoToLiftPercentage", id: 0x5, access: "O", conformance: "LF & PA_LF, [LF]",
             direction: "request", response: "status",
             details: "The GoToLiftPercentage command SHALL have the following data fields:",
             xref: { document: "cluster", section: "5.3.6.5" },
 
             children: [
                 {
-                    tag: "datatype", name: "LiftPercentageValue", id: 0x0, type: "percent", conformance: "O.a1",
+                    tag: "datatype", name: "LiftPercentageValue", id: 0x0, type: "percent", conformance: "O.a",
                     constraint: "desc"
                 },
                 {
-                    tag: "datatype", name: "LiftPercent100ThsValue", id: 0x1, type: "percent100ths",
-                    conformance: "O.a1", constraint: "desc"
+                    tag: "datatype", name: "LiftPercent100ThsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
+                    constraint: "desc"
                 }
             ]
         },
@@ -412,19 +406,19 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GoToTiltPercentage", id: 0x8, access: "O", conformance: "TL & P, A_TL, [TL]",
+            tag: "command", name: "GoToTiltPercentage", id: 0x8, access: "O", conformance: "TL & PA_TL, [TL]",
             direction: "request", response: "status",
             details: "The GoToTiltPercentage command SHALL have the following data fields:",
             xref: { document: "cluster", section: "5.3.6.7" },
 
             children: [
                 {
-                    tag: "datatype", name: "TiltPercentageValue", id: 0x0, type: "percent", conformance: "O.a1",
+                    tag: "datatype", name: "TiltPercentageValue", id: 0x0, type: "percent", conformance: "O.a",
                     constraint: "desc"
                 },
                 {
-                    tag: "datatype", name: "TiltPercent100ThsValue", id: 0x1, type: "percent100ths",
-                    conformance: "O.a1", constraint: "desc"
+                    tag: "datatype", name: "TiltPercent100ThsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
+                    constraint: "desc"
                 }
             ]
         }
