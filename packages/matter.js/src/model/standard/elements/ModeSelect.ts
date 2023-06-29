@@ -70,7 +70,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW", conformance: "D, EPONOFF",
+            tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW", conformance: "DEPONOFF",
             constraint: "desc", default: null, quality: "X N",
             details: "This attribute SHALL indicate the value of CurrentMode that depends on the state of the On/Off " +
                      "cluster on the same endpoint. If this attribute is not present or is set to null, it SHALL NOT have " +

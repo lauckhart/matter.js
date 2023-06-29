@@ -72,12 +72,12 @@ Matter.children.push({
             xref: { document: "cluster", section: "4.4.6.2" },
 
             children: [
-                { tag: "datatype", name: "OffLowMedHigh", id: 0x0, conformance: "O.a1" },
-                { tag: "datatype", name: "OffLowHigh", id: 0x1, conformance: "O.a1" },
+                { tag: "datatype", name: "OffLowMedHigh", id: 0x0, conformance: "O.a" },
+                { tag: "datatype", name: "OffLowHigh", id: 0x1, conformance: "O.a" },
                 { tag: "datatype", name: "OffLowMedHighAuto", id: 0x2, conformance: "[AUT]" },
                 { tag: "datatype", name: "OffLowHighAuto", id: 0x3, conformance: "[AUT]" },
                 { tag: "datatype", name: "OffOnAuto", id: 0x4, conformance: "[AUT]" },
-                { tag: "datatype", name: "OffOn", id: 0x5, conformance: "O.a1" }
+                { tag: "datatype", name: "OffOn", id: 0x5, conformance: "O.a" }
             ]
         },
 

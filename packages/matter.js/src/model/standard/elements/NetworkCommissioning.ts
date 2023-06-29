@@ -20,15 +20,15 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "WI", id: 0x0, conformance: "O.a1", description: "Wi-Fi related features",
+                    tag: "datatype", name: "WI", id: 0x0, conformance: "O.a", description: "Wi-Fi related features",
                     xref: { document: "core", section: "11.8.4" }
                 },
                 {
-                    tag: "datatype", name: "TH", id: 0x1, conformance: "O.a1", description: "Thread related features",
+                    tag: "datatype", name: "TH", id: 0x1, conformance: "O.a", description: "Thread related features",
                     xref: { document: "core", section: "11.8.4" }
                 },
                 {
-                    tag: "datatype", name: "ET", id: 0x2, conformance: "O.a1", description: "Ethernet related features",
+                    tag: "datatype", name: "ET", id: 0x2, conformance: "O.a", description: "Ethernet related features",
                     xref: { document: "core", section: "11.8.4" }
                 }
             ]
@@ -352,11 +352,11 @@ Matter.children.push({
             xref: { document: "core", section: "11.8.5.2" },
 
             children: [
-                { tag: "datatype", name: "2G4", id: 0x0, conformance: "O.a1+" },
-                { tag: "datatype", name: "3G65", id: 0x1, conformance: "O.a1+" },
-                { tag: "datatype", name: "5G", id: 0x2, conformance: "O.a1+" },
-                { tag: "datatype", name: "6G", id: 0x3, conformance: "O.a1+" },
-                { tag: "datatype", name: "60G", id: 0x4, conformance: "O.a1+" }
+                { tag: "datatype", name: "2G4", id: 0x0, conformance: "O.a+" },
+                { tag: "datatype", name: "3G65", id: 0x1, conformance: "O.a+" },
+                { tag: "datatype", name: "5G", id: 0x2, conformance: "O.a+" },
+                { tag: "datatype", name: "6G", id: 0x3, conformance: "O.a+" },
+                { tag: "datatype", name: "60G", id: 0x4, conformance: "O.a+" }
             ]
         },
 
@@ -419,7 +419,7 @@ Matter.children.push({
                 { tag: "datatype", name: "Channel", id: 0x3, type: "uint16", conformance: "WI" },
 
                 {
-                    tag: "datatype", name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]",
+                    tag: "datatype", name: "WiFiBand", id: 0x4, type: "WiFiBand", conformance: "[WI]",
                     details: "This field, if present, MAY be used to differentiate overlapping channel number values across " +
                              "different Wi-Fi frequency bands.",
                     xref: { document: "core", section: "11.8.5.5.1" }

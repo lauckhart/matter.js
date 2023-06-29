@@ -36,4 +36,6 @@ export class AttributeModel extends ValueModel implements AttributeElement {
     static {
         Model.constructors[AttributeElement.Tag] = this;
     }
+
+    static Tag = AttributeElement.Tag;
 }

@@ -9,11 +9,12 @@
 import "./util/setup.js";
 import { Logger } from "../src/log/Logger.js";
 import { AnyElement, MatterElement, MatterModel } from "../src/model/index.js";
-import { MergeModels, ValidateModel } from "../src/model/logic/index.js";
+import { MergeModels } from "../src/model/logic/index.js";
 import { TsFile } from "./util/TsFile.js";
 import { clean } from "./util/file.js";
 import { generateElement } from "./mom/common/generate-element.js";
 import { SpecMatter, ChipMatter, LocalMatter } from "../models/index.js";
+import { finalizeModel } from "./util/finalize-model.js";
 
 export const MODEL_PATH = "src/model/standard/elements";
 export const CLUSTER_SUFFIX = "Element";
@@ -50,11 +51,7 @@ function generateIndex(elements: AnyElement[]) {
 
 const matter = new MatterModel(MergeModels({ spec: SpecMatter, chip: ChipMatter, local: LocalMatter }) as MatterElement);
 
-logger.info("validate matter model");
-let validationResult: ValidateModel.Result | undefined;
-Logger.nest(() => {
-    validationResult = ValidateModel(matter);
-});
+const validationResult = finalizeModel(matter);
 
 logger.info("remove matter model elements")
 clean(`${MODEL_PATH}`);
@@ -72,4 +69,4 @@ Logger.nest(() => {
     generateIndex(matter.children);
 });
 
-validationResult?.report();
+validationResult.report();

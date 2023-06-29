@@ -8,13 +8,18 @@ export const INTERMEDIATE_PATH = "models";
 
 import { Logger } from "../../../src/log/Logger.js";
 import { MatterElement, MatterModel } from "../../../src/model/index.js";
-import { ValidateModel } from "../../../src/model/logic/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { TsFile } from "../../util/TsFile.js";
+import { finalizeModel } from "../../util/finalize-model.js";
 import { generateElement } from "./generate-element.js";
 
 const logger = Logger.get("generate-model");
 
+/**
+ * Create a model file containing an imported models.  These are "intermediate"
+ * in the sense that they're input to the merge process that generates the
+ * final model.
+ */
 export function generateIntermediateModel(source: string, elements: MatterElement.Child[]) {
     logger.info(`validate ${source}`);
     const matter = new MatterModel({
@@ -22,10 +27,7 @@ export function generateIntermediateModel(source: string, elements: MatterElemen
         children: elements
     });
 
-    let validationResult: ValidateModel.Result | undefined;
-    Logger.nest(() => {
-        validationResult = ValidateModel(matter);
-    });
+    const validationResult = finalizeModel(matter);
 
     const file = new TsFile(`${INTERMEDIATE_PATH}/${source}`);
     file.addImport("../src/model/index", "MatterElement");

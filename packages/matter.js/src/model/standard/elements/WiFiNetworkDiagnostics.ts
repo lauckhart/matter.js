@@ -82,7 +82,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "BeaconRxCount", id: 0x6, type: "uint32", access: "R V",
-            conformance: "P, KTCNT", quality: "X C",
+            conformance: "PKTCNT", quality: "X C",
             details: "The BeaconRxCount attribute SHALL indicate the count of the number of received beacons. The total " +
                      "number of expected beacons that could have been received during the interval since association " +
                      "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
@@ -92,14 +92,14 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketMulticastRxCount", id: 0x7, type: "uint32", access: "R V",
-            conformance: "P, KTCNT", quality: "X C",
+            conformance: "PKTCNT", quality: "X C",
             details: "The PacketMulticastRxCount attribute SHALL indicate the number of multicast packets received by",
             xref: { document: "core", section: "11.14.6.8" }
         },
 
         {
             tag: "attribute", name: "PacketMulticastTxCount", id: 0x8, type: "uint32", access: "R V",
-            conformance: "P, KTCNT", quality: "X C",
+            conformance: "PKTCNT", quality: "X C",
             details: "The PacketMulticastTxCount attribute SHALL indicate the number of multicast packets transmitted by " +
                      "the Node.",
             xref: { document: "core", section: "11.14.6.9" }
@@ -107,7 +107,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketUnicastRxCount", id: 0x9, type: "uint32", access: "R V",
-            conformance: "P, KTCNT", quality: "X C",
+            conformance: "PKTCNT", quality: "X C",
             details: "The PacketUnicastRxCount attribute SHALL indicate the number of unicast packets received by the " +
                      "Node.",
             xref: { document: "core", section: "11.14.6.10" }
@@ -115,7 +115,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketUnicastTxCount", id: 0xa, type: "uint32", access: "R V",
-            conformance: "P, KTCNT", quality: "X C",
+            conformance: "PKTCNT", quality: "X C",
             details: "The PacketUnicastTxCount attribute SHALL indicate the number of unicast packets transmitted by the " +
                      "Node.",
             xref: { document: "core", section: "11.14.6.11" }

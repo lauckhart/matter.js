@@ -8,7 +8,7 @@ import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, HtmlReference } from "./spec-types.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children, Bit, LimitedIdentifier } from "./translate-table.js";
+import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children, chooseIdentityAliases } from "./translate-table.js";
 
 const logger = Logger.get("translate-cluster");
 
@@ -170,12 +170,13 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
     function translateFeatures() {
         const records = translateTable("feature", definition.features, {
             id: Alias(Integer, "bit"),
-            description: Optional(Alias(Str, "name", "summary")),
-
             conformance: Optional(Str),
+            details: Optional(Alias(Str, "description", "summary")),
+
+            // Must define after details which uses description column
+            description: Optional(Alias(Identifier, "feature", "name")),
     
-            // Must define after description because name is overwritten
-            // otherwise
+            // Must define after description which uses name column
             name: Alias(UpperIdentifier, "code", "feature"),
     
             // Actual type is numeric but we let Model handle that translation
@@ -332,31 +333,17 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
             //     "type", "description", "statuscode", "presentation", "endproducttype", "effect"
             //
             // Turns out after this conversion we already had them all but
-            // leaving this logic in for future spec changes
-            let nameAliases = [ "name", "type", "description", "statuscode" ];
-            const fields = definition.table?.fields;
-            if (fields) {
-                let haveStandardAlias = false;
-
-                // Prefer standard aliases
-                nameAliases.forEach(n => {
-                    if (fields.indexOf(n) != -1) {
-                        haveStandardAlias = true;
-                    }
-                })
-
-                // If we didn't find a standard alias, assume the second column
-                // is the name
-                if (!haveStandardAlias) {
-                    if (fields[1]) {
-                        nameAliases = [ fields[1] ];
-                    }
-                }
-            }
+            // leaving this logic in as it's more general and will adapt better
+            // in the future
+            const { ids, names } = chooseIdentityAliases(
+                definition,
+                [ "id", "value", "enum" ],
+                [ "name", "type", "statuscode", "description" ]
+            );
 
             let records = translateTable("value", definition, {
-                id: Alias(Integer, "value", "enum"),
-                name: Alias(Identifier, ...nameAliases),
+                id: Alias(Integer, ...ids),
+                name: Alias(Identifier, ...names),
                 conformance: Optional(Str),
                 description: Optional(Alias(Str, "notes")),
                 meaning: Optional(Str)
@@ -369,26 +356,26 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
 
         case Metatype.bitmap: {
             let records: { id?: number, name: string }[];
-            if (hasColumn(definition, "attributebitmask", "alarmcode")) {
-                // Lock cluster's column names are all over the place
-                records = translateTable("bit", definition, {
-                    id: Alias(Bit, "attributebitmask", "alarmcode"),
-                    name: Alias(LimitedIdentifier, "eventdescription", "alarmcondition")
-                });
-            } else if (hasColumn(definition, "meaning")) {
+
+            if (hasColumn(definition, "meaning")) {
                 // Window covering cluster just plain made up their own format.
                 // Implemented a parser but maintaining is more work than just
-                // defining manually
+                // defining manually so tossed it
                 logger.warn("Ignoring weird window covering bitmasks");
                 return [];
             } else {
-                // Standard bitmap table
+                // Standard(ish) bitmap table
+                //
+                // Previously had identified aliases as "mappedprotocol", "statebit", "function", "relatedattribute"
+                // but this was only a partial list.  Auto-detection makes more sense
+                const { ids, names } = chooseIdentityAliases(definition, [ "bit", "id" ], [ "name", "eventdescription" ]);
                 records = translateTable("bit", definition, {
-                    id: Alias(Integer, "bit"),
-                    name: Alias(Identifier, "mappedprotocol", "statebit"),
+                    id: Alias(Integer, ...ids),
+                    name: Alias(Identifier, ...names),
                     description: Optional(Alias(Str, "summary"))
                 });
             }
+
             return translateRecordsToMatter("bit", records, DatatypeElement);
         }
 

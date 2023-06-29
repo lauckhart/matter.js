@@ -164,7 +164,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "DetachedRoleCount", id: 0xe, type: "uint16", access: "R V",
-            conformance: "[M, LECNT]", quality: "C",
+            conformance: "[MLECNT]", quality: "C",
             details: "The DetachedRoleCount attribute SHALL indicate the number of times the Node entered the " +
                      "OT_DEVICE_ROLE_DETACHED role as specified within the Thread specification. This value SHALL only be " +
                      "reset upon a Node reboot.",
@@ -173,7 +173,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ChildRoleCount", id: 0xf, type: "uint16", access: "R V",
-            conformance: "[M, LECNT]", quality: "C",
+            conformance: "[MLECNT]", quality: "C",
             details: "The ChildRoleCount attribute SHALL indicate the number of times the Node entered the " +
                      "OT_DEVICE_ROLE_CHILD role as specified within the Thread specification. This value SHALL only be " +
                      "reset upon a Node reboot.",
@@ -182,7 +182,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RouterRoleCount", id: 0x10, type: "uint16", access: "R V",
-            conformance: "[M, LECNT]", quality: "C",
+            conformance: "[MLECNT]", quality: "C",
             details: "The RouterRoleCount attribute SHALL indicate the number of times the Node entered the " +
                      "OT_DEVICE_ROLE_ROUTER role as specified within the Thread specification. This value SHALL only be " +
                      "reset upon a Node reboot.",
@@ -191,7 +191,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LeaderRoleCount", id: 0x11, type: "uint16", access: "R V",
-            conformance: "[M, LECNT]", quality: "C",
+            conformance: "[MLECNT]", quality: "C",
             details: "The LeaderRoleCount attribute SHALL indicate the number of times the Node entered the " +
                      "OT_DEVICE_ROLE_LEADER role as specified within the Thread specification. This value SHALL only be " +
                      "reset upon a Node reboot.",
@@ -200,7 +200,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AttachAttemptCount", id: 0x12, type: "uint16", access: "R V",
-            conformance: "[M, LECNT]", quality: "C",
+            conformance: "[MLECNT]", quality: "C",
             details: "The AttachAttemptCount attribute SHALL indicate the number of attempts that have been made to " +
                      "attach to a Thread network while the Node was detached from all Thread networks. This value SHALL " +
                      "only be reset upon a Node reboot.",
@@ -209,7 +209,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PartitionIdChangeCount", id: 0x13, type: "uint16", access: "R V",
-            conformance: "[M, LECNT]", quality: "C",
+            conformance: "[MLECNT]", quality: "C",
             details: "The PartitionIdChangeCount attribute SHALL indicate the number of times that the Thread network " +
                      "that the Node is connected to has changed its Partition ID. This value SHALL only be reset upon a " +
                      "Node reboot.",
@@ -218,7 +218,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "BetterPartitionAttachAttemptCount", id: 0x14, type: "uint16",
-            access: "R V", conformance: "[M, LECNT]", quality: "C",
+            access: "R V", conformance: "[MLECNT]", quality: "C",
             details: "The BetterPartitionAttachAttemptCount attribute SHALL indicate the number of times a Node has " +
                      "attempted to attach to a different Thread partition that it has determined is better than the " +
                      "partition it is currently attached to. This value SHALL only be reset upon a Node reboot.",
@@ -227,7 +227,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ParentChangeCount", id: 0x15, type: "uint16", access: "R V",
-            conformance: "[M, LECNT]", quality: "C",
+            conformance: "[MLECNT]", quality: "C",
             details: "The ParentChangeCount attribute SHALL indicate the number of times a Node has changed its parent. " +
                      "This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.22" }
@@ -235,7 +235,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxTotalCount", id: 0x16, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxTotalCount attribute SHALL indicate the total number of unique MAC frame transmission " +
                      "requests. The TxTotalCount attribute SHALL only be incremented by 1 for each MAC transmission " +
                      "request regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions. This value " +
@@ -245,7 +245,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxUnicastCount", id: 0x17, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxUnicastCount attribute SHALL indicate the total number of unique unicast MAC frame " +
                      "transmission requests. The TxUnicastCount attribute SHALL only be incremented by 1 for each unicast " +
                      "MAC transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -255,7 +255,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxBroadcastCount", id: 0x18, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxBroadcastCount attribute SHALL indicate the total number of unique broadcast MAC frame " +
                      "transmission requests. The TxBroadcastCount attribute SHALL only be incremented by 1 for each " +
                      "broadcast MAC transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -265,7 +265,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxAckRequestedCount", id: 0x19, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxAckRequestedCount attribute SHALL indicate the total number of unique MAC frame transmission " +
                      "requests with requested acknowledgment. The TxAckRequestedCount attribute SHALL only be incremented " +
                      "by 1 for each MAC transmission request with requested acknowledgment regardless of the amount of " +
@@ -276,7 +276,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxAckedCount", id: 0x1a, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxAckedCount attribute SHALL indicate the total number of unique MAC frame transmission " +
                      "requests that were acked. The TxAckedCount attribute SHALL only be incremented by 1 for each MAC " +
                      "transmission request that is acked regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -286,7 +286,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxNoAckRequestedCount", id: 0x1b, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxNoAckRequestedCount attribute SHALL indicate the total number of unique MAC frame " +
                      "transmission requests without requested acknowledgment. The TxNoAckRequestedCount attribute SHALL " +
                      "only be incremented by 1 for each MAC transmission request that is does not request acknowledgement " +
@@ -296,7 +296,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxDataCount", id: 0x1c, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxDataCount attribute SHALL indicate the total number of unique MAC Data frame transmission " +
                      "requests. The TxDataCount attribute SHALL only be incremented by 1 for each MAC Data frame " +
                      "transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -306,7 +306,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxDataPollCount", id: 0x1d, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxDataPollCount attribute SHALL indicate the total number of unique MAC Data Poll frame " +
                      "transmission requests. The TxDataPollCount attribute SHALL only be incremented by 1 for each MAC " +
                      "Data Poll frame transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
@@ -316,7 +316,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxBeaconCount", id: 0x1e, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxBeaconCount attribute SHALL indicate the total number of unique MAC Beacon frame transmission " +
                      "requests. The TxBeaconCount attribute SHALL only be incremented by 1 for each MAC Beacon frame " +
                      "transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions.",
@@ -325,7 +325,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxBeaconRequestCount", id: 0x1f, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxBeaconRequestCount attribute SHALL indicate the total number of unique MAC Beacon Request " +
                      "frame transmission requests. The TxBeaconRequestCount attribute SHALL only be incremented by 1 for " +
                      "each MAC Beacon Request frame transmission request regardless of the amount of CCA failures, " +
@@ -335,7 +335,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxOtherCount", id: 0x20, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxOtherCount attribute SHALL indicate the total number of unique MAC frame transmission " +
                      "requests that are not counted by any other attribute. The TxOtherCount attribute SHALL only be " +
                      "incremented by 1 for each MAC frame transmission request regardless of the amount of CCA failures, " +
@@ -345,7 +345,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxRetryCount", id: 0x21, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxRetryCount attribute SHALL indicate the total number of MAC retransmission attempts. The " +
                      "TxRetryCount attribute SHALL only be incremented by 1 for each retransmission attempt that may be " +
                      "triggered by lack of acknowledgement, CSMA/CA failure, or other type of transmission error. This " +
@@ -355,7 +355,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxDirectMaxRetryExpiryCount", id: 0x22, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxDirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC " +
                      "transmission packets that meet maximal retry limit for direct packets. The " +
                      "TxDirectMaxRetryExpiryCount attribute SHALL only be incremented by 1 for each unique MAC " +
@@ -366,7 +366,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxIndirectMaxRetryExpiryCount", id: 0x23, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxIndirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC " +
                      "transmission packets that meet maximal retry limit for indirect packets. The " +
                      "TxIndirectMaxRetryExpiryCount attribute SHALL only be incremented by 1 for each unique MAC " +
@@ -377,7 +377,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxErrCcaCount", id: 0x24, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxErrCcaCount attribute SHALL indicate the total number of CCA failures. The TxErrCcaCount " +
                      "attribute SHALL only be incremented by 1 for each instance of a CCA failure. This value SHALL only " +
                      "be reset upon a Node reboot.",
@@ -386,7 +386,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxErrAbortCount", id: 0x25, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxErrAbortCount attribute SHALL indicate the total number of unique MAC transmission request " +
                      "failures caused by an abort error. The TxErrAbortCount attribute SHALL only be incremented by 1 for " +
                      "each unique MAC transmission request failure caused by an abort error.",
@@ -395,7 +395,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxErrBusyChannelCount", id: 0x26, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The TxErrBusyChannelCount attribute SHALL indicate the total number of unique MAC transmission " +
                      "request failures caused by an error as the result of a busy channel (a CSMA/CA fail). The " +
                      "TxErrBusyChannelCount attribute SHALL only be incremented by 1 for each unique MAC transmission " +
@@ -405,7 +405,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxTotalCount", id: 0x27, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxTotalCount attribute SHALL indicate the total number of received unique MAC frames. This " +
                      "value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.40" }
@@ -413,7 +413,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxUnicastCount", id: 0x28, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxUnicastCount attribute SHALL indicate the total number of received unique unicast MAC frames. " +
                      "This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.41" }
@@ -421,7 +421,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxBroadcastCount", id: 0x29, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxBroadcastCount attribute SHALL indicate the total number of received unique broadcast MAC " +
                      "frames. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.42" }
@@ -429,7 +429,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxDataCount", id: 0x2a, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxDataCount attribute SHALL indicate the total number of received unique MAC Data frames. This " +
                      "value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.43" }
@@ -437,7 +437,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxDataPollCount", id: 0x2b, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxDataPollCount attribute SHALL indicate the total number of received unique MAC Data Poll " +
                      "frames. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.44" }
@@ -445,7 +445,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxBeaconCount", id: 0x2c, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxBeaconCount attribute SHALL indicate the total number of received unique MAC Beacon frames. " +
                      "This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.45" }
@@ -453,7 +453,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxBeaconRequestCount", id: 0x2d, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxBeaconRequestCount attribute SHALL indicate the total number of received unique MAC Beacon " +
                      "Request frames. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.46" }
@@ -461,7 +461,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxOtherCount", id: 0x2e, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxOtherCount attribute SHALL indicate the total number of received unique MAC frame requests " +
                      "that are not counted by any other attribute. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.47" }
@@ -469,7 +469,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxAddressFilteredCount", id: 0x2f, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxAddressFilteredCount attribute SHALL indicate the total number of received unique MAC frame " +
                      "requests that have been dropped as a result of MAC filtering. This value SHALL only be reset upon a " +
                      "Node reboot.",
@@ -478,7 +478,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxDestAddrFilteredCount", id: 0x30, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxDestAddrFilteredCount attribute SHALL indicate the total number of received unique MAC frame " +
                      "requests that have been dropped as a result of a destination address check. This value SHALL only " +
                      "be reset upon a Node reboot.",
@@ -487,7 +487,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxDuplicatedCount", id: 0x31, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxDuplicatedCount attribute SHALL indicate the total number of received MAC frame requests that " +
                      "have been dropped as a result of being a duplicate of a previously received MAC frame request. This " +
                      "value SHALL only be reset upon a Node reboot.",
@@ -496,7 +496,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxErrNoFrameCount", id: 0x32, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxErrNoFrameCount attribute SHALL indicate the total number of received unique MAC frame " +
                      "requests that have been dropped as a result of missing or malformed frame contents. This value " +
                      "SHALL only be reset upon a Node reboot.",
@@ -505,7 +505,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxErrUnknownNeighborCount", id: 0x33, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxErrUnknownNeighborCount attribute SHALL indicate the total number of received unique MAC " +
                      "frame requests that have been dropped as a result of originating from an unknown neighbor device. " +
                      "This value SHALL only be reset upon a Node reboot.",
@@ -514,7 +514,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxErrInvalidScrAddrCount", id: 0x34, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxErrInvalidScrAddrCount attribute SHALL indicate the total number of received unique MAC frame " +
                      "requests that have been dropped as a result of containing an invalid source address. This value " +
                      "SHALL only be reset upon a Node reboot.",
@@ -523,7 +523,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxErrSecCount", id: 0x35, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxErrSecCount attribute SHALL indicate the total number of received unique MAC frame requests " +
                      "that have been dropped as a result of an error with the security of the received frame. This value " +
                      "SHALL only be reset upon a Node reboot.",
@@ -532,7 +532,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxErrFcsCount", id: 0x36, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxErrFcsCount attribute SHALL indicate the total number of received unique MAC frame requests " +
                      "that have been dropped as a result of an error with the FCS of the received frame. This value SHALL " +
                      "only be reset upon a Node reboot.",
@@ -541,7 +541,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RxErrOtherCount", id: 0x37, type: "uint32", access: "R V",
-            conformance: "[M, ACCNT]", quality: "C",
+            conformance: "[MACCNT]", quality: "C",
             details: "The RxErrOtherCount attribute SHALL indicate the total number of received unique MAC frame requests " +
                      "that have been dropped as a result of an error that is not counted by any other attribute. This " +
                      "value SHALL only be reset upon a Node reboot.",

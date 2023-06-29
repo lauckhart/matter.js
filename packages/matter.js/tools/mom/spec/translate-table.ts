@@ -8,13 +8,14 @@ import { camelize } from "../../../src/util/String.js";
 import { HtmlReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, DatatypeElement, Specification } from "../../../src/model/index.js";
+import { WORDS } from "../../util/words.js";
 
 const logger = Logger.get("translate-table");
 
-// Generic type of table cell "translators" such as those that follow
+/** Generic type of table cell "translators" such as those that follow */
 type Translator<T> = (el: HTMLElement) => T;
 
-// String, trimmed with whitespace collapsed
+/** String, trimmed with whitespace collapsed */
 export const Str = (el: HTMLElement) => el.textContent
     ? el.textContent
         // Remove leading and trailing whitespace
@@ -27,66 +28,111 @@ export const Str = (el: HTMLElement) => el.textContent
         .replace(/\s+/g, " ")
     : "";
 
-// String with no space at all
+/** String with no space at all */
 export const NoSpace = (el: HTMLElement) => Str(el).replace(/\s/g, "");
 
-// Number parsed as integer
-export const Integer = (el: HTMLElement) => Number.parseInt(NoSpace(el));
+/** Number parsed as integer */
+export const Integer = (el: HTMLElement) => {
+    const text = Str(el);
+    
+    // Ignore range descriptions
+    if (text.match(/ (?:-|to) /)) {
+        return NaN;
+    }
 
-// Number encoded as BIT(n)
+    return Number.parseInt(NoSpace(el));
+}
+
+/** Number encoded as BIT(n) */
 export const Bit = (el: HTMLElement) => {
     const text = Str(el).replace(/bit\((\d+)\)/i, "$1");
     return Number.parseInt(text);
 }
 
-// CamelCase identifier.  Note we replace "Fo o" with "Foo" because space
-// errors are very common in the PDFs, especially in narrow columns and we
-// don't want to end up with FoO
+/**
+ * CamelCase identifier.  Note we replace "Fo o" with "Foo" because space
+ * errors are very common in the PDFs, especially in narrow columns and we
+ * don't want to end up with FoO
+ */
 export const Identifier = (el: HTMLElement) => {
-    let str = Str(el).replace(/[^\sA-Za-z0-9\-_]/g, "");
+    let str = Str(el);
 
-    // Skip this heuristic if there are words known to be properly lowercased
-    if (!str.match(/ (on|and|for) /)) {
-        str = str.replace(/ +([a-z])/g, "$1");
+    // If there are multiple paragraphs, only use the first if there is space
+    // in the string
+    if (str.indexOf(" ") != -1 && el.childNodes.length > 1) {
+        const limited = Str(el.firstChild as HTMLElement);
+        if (limited.length) {
+            str = limited;
+        }
     }
+
+    // Strip everything following a subset of characters known to be inside
+    // what is properly a "key"
+    str = str.replace(/^([a-z0-9 _:,\/\-\$]+).*/i, "$1");
+
+    // Use the english dictionary to heuristically improve camel casing
+    let parts = str.split(/\s+/);
+    for (let i = 0; i < parts.length - 1; i++) {
+        // If a word starts with lowercase, see if it's a word when
+        // concatenated with the previous word
+        if (parts[i + 1].match(/^[a-z]/)) {
+            // Get beginning of word from current part
+            const beginning = parts[i].replace(/^.*([A-Z])/, "$1");
+
+            // Get ending of word from next part
+            const ending = parts[i + 1].replace(/^([a-z]+).*/, "$1");
+
+            // If the concatenation is a word, assume it should be joined
+            if (WORDS.has(`${beginning}${ending}`.toLowerCase())) {
+                parts[i] = `${parts[i]}${parts[i + 1]}`;
+                parts.splice(i + 1, 1);
+
+                // Redo check from current point
+                i--;
+            }
+        }
+    }
+    str = parts.join(" ");
 
     return camelize(str, true);
 };
 
-// CamelCase identifier but only consider first sentence of first paragraph
+/** CamelCase identifier but only consider first sentence of first paragraph */
 export const LimitedIdentifier = (el: HTMLElement) => {
     return el.firstChild ? Identifier(el.firstChild as HTMLElement)?.replace(/^(.*)\.?.*/, "$1") : "";
 }
 
-// Identifier, all lowercase
+/** Identifier, all lowercase */
 export const LowerIdentifier = (el: HTMLElement) => Identifier(el).toLowerCase();
 
-// Identifier, all uppercase
+/** Identifier, all uppercase */
 export const UpperIdentifier = (el: HTMLElement) => Identifier(el).toUpperCase();
 
-// Modifier that allows a value to be undefined
+/** Modifier that allows a value to be undefined */
 type Optional<T> = { option: "optional", wrapped: Alias<T> | Translator<T> };
 export const Optional = <T> (wrapped: Alias<T> | Translator<T>): Optional<T> =>
     ({ option: "optional", wrapped });
 
-// Modifier that maps one or more columns to a canonical name
+/** Modifier that maps one or more columns to a canonical name */
 type Alias<T> = { option: "alias", sources: string[], wrapped: Translator<T> };
 export const Alias = <T> (wrapped: Translator<T>, ...sources: string[]): Alias<T> =>
     ({ option: "alias", sources, wrapped });
 
-// Injects a column with a fixed value
+/** Injects a column with a fixed value */
 type Constant<T> = { option: "constant", value: any };
 export const Constant = <T> (value: T): Constant<T> =>
     ({ option: "constant", value });
 
-// Converts detail section into children
+/** Converts detail section into children */
 type ChildTranslator = (tag: string, parentRecord: any, definition: HtmlReference) => DatatypeElement[] | undefined;
 type Children = { option: "children", translator: ChildTranslator}
 export const Children = (translator: ChildTranslator) =>
     ({ option: "children", translator });
 
-// A simple schema format.  This is all a little fancy for an ugly scraping
-// tool but accuracy and repeatability is the goal
+/**
+ * A simple schema format.  This is all a little fancy for an ugly scraping
+ * tool but accuracy and repeatability is the goal
+ */
 type TableSchema = {
     [name: string]: any;
 }
@@ -105,7 +151,7 @@ type TableRecord<T extends TableSchema> = {
 const has = (object: Object, name: string) =>
     !!Object.getOwnPropertyDescriptor(object, name);
 
-// Translates an array of key => HTMLElement records into a proper TS type
+/** Translates an array of key => HTMLElement records into a proper TS type */
 export function translateTable<T extends TableSchema>(
     tag: string,
     definition: HtmlReference | undefined,
@@ -227,7 +273,7 @@ export function translateRecordsToMatter<R, E extends { id?: number, name: strin
     return result;
 }
 
-// Attempt to install more specific xref and details
+/** Attempt to install more specific xref and details */
 function installPreciseDetails(
     tag: string,
     definitions: HtmlReference[],
@@ -261,4 +307,126 @@ function installPreciseDetails(
             }
         }
     })
+}
+
+/** The type of data we think is present in a field */
+enum InferredFieldType {
+    Unknown,
+    UniqueNumbers,
+    UniqueStrings
+};
+
+/** Examine a field in every row to infer the type of a field */
+function inferFieldType(definition: HtmlReference, name: string): InferredFieldType {
+    if (!definition.table) {
+        return InferredFieldType.Unknown;
+    }
+
+    const values = new Set<string>();
+    let inferredType = InferredFieldType.Unknown;
+
+    // Examine each row
+    for (const row of definition.table.rows) {
+        // Extract the value and rows without the named field
+        const value = row[name];
+        if (!value) {
+            return InferredFieldType.Unknown;
+        }
+        const str = Str(value);
+        if (str == "") {
+            return InferredFieldType.Unknown;
+        }
+
+        // We're only interested in fields with unique values
+        if (values.has(str)) {
+            return InferredFieldType.Unknown;
+        }
+        values.add(str);
+
+        // Update state based on the shape of the field
+        if (str.match(/^\d+/)) {
+            // Could be the ID.  Note we allow garbage after the ID
+            if (inferredType == InferredFieldType.UniqueStrings) {
+                return InferredFieldType.Unknown;
+            }
+            inferredType = InferredFieldType.UniqueNumbers;
+        } else {
+            // Could be the name
+            if (inferredType == InferredFieldType.UniqueNumbers) {
+                return InferredFieldType.Unknown;
+            }
+            inferredType = InferredFieldType.UniqueStrings;
+        }
+    };
+
+    return inferredType;
+}
+
+/** Infer the columns to use for ID and name */
+export function chooseIdentityAliases(definition: HtmlReference, preferredIds: string[], preferredNames: string[]) {
+    const fields = definition.table?.fields;
+
+    let ids: string[] | undefined;
+    let names: string[] | undefined;
+    let idIndex = -1, nameIndex = -1;
+
+    if (fields && fields.length > 1) {
+        // Use the first preferred ID that is present
+        for (const id of preferredIds) {
+            idIndex = fields.indexOf(id);
+            if (idIndex != -1) {
+                break;
+            }
+        }
+
+        // Use the first preferred name that is present
+        for (const name of preferredNames) {
+            nameIndex = fields.indexOf(name);
+            if (nameIndex != -1) {
+                break;
+            }
+        }
+
+        // If we didn't find a preferred ID, use the first IDish column
+        if (idIndex == -1) {
+            for (let i = 0; i < fields.length; i++) {
+                if (inferFieldType(definition, fields[i]) == InferredFieldType.UniqueNumbers) {
+                    idIndex = i;
+                    break;
+                }
+            }
+        }
+
+        // If we found the ID, set the alias
+        if (idIndex != -1) {
+            ids = [ fields[idIndex] ];
+        }
+
+        // If we didn't find a preferred name, use the first namish column
+        // following the ID
+        if (nameIndex == -1) {
+            for (let i = idIndex == -1 ? 0 : idIndex; i < fields.length; i++) {
+                if (inferFieldType(definition, fields[i]) == InferredFieldType.UniqueStrings) {
+                    nameIndex = i;
+                    break;
+                }
+            }
+        }
+
+        // If we found the name, set the alias
+        if (nameIndex != -1) {
+            names = [ fields[nameIndex] ];
+        }
+    }
+
+    // If ids or names is undefined, the table is probably invalid but return
+    // the preferred sets anyway
+    if (!ids) {
+        ids = preferredIds;
+    }
+    if (!names) {
+        names = preferredNames;
+    }
+
+    return { ids, names };
 }
