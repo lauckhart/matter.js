@@ -54,8 +54,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "2.2.5.5" },
             children: [
                 { tag: "datatype", name: "Photodiode", id: 0x0 },
-                { tag: "datatype", name: "Cmos", id: 0x1 },
-                { tag: "datatype", name: "ReservedForManufacturerSpecificLightSensorTypes", id: 0x40 }
+                { tag: "datatype", name: "Cmos", id: 0x1 }
             ]
         }
     ]

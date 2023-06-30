@@ -16,8 +16,21 @@ const logger = Logger.get("translate-table");
 type Translator<T> = (el: HTMLElement) => T;
 
 /** String, trimmed with whitespace collapsed */
-export const Str = (el: HTMLElement) => el.textContent
-    ? el.textContent
+export const Str = (el: HTMLElement) => {
+    // Remove footnote references
+    for (const child of el.querySelectorAll("span")) {
+        if (child.textContent?.match(/^[*0-9]$/)) {
+            child.remove();
+        }
+    }
+
+    const text = el.textContent
+
+    if (!text) {
+        return "";
+    }
+    
+    return text
         // Remove leading and trailing whitespace
         .trim()
 
@@ -25,8 +38,8 @@ export const Str = (el: HTMLElement) => el.textContent
         .replace(/\s*\u00ad\s*/g, "")
         
         // Collapse whitespace    
-        .replace(/\s+/g, " ")
-    : "";
+        .replace(/\s+/g, " ");
+}
 
 /** String with no space at all */
 export const NoSpace = (el: HTMLElement) => Str(el).replace(/\s/g, "");

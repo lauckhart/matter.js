@@ -9,6 +9,10 @@ import { Aspect } from "./Aspect.js";
 /**
  * An operational view of conformance as defined by the Matter Specification.
  * 
+ * We extend the specification's syntax to add ">", "<", ">=" and "<=".  These
+ * are required to encode some portions of the specification that are described
+ * in prose.
+ * 
  * "Conformance" controls when a data field or cluster element is allowed or
  * required.
  */
@@ -114,7 +118,11 @@ export namespace Conformance {
         OR = "|",
         XOR = "^",
         AND = "&",
-        DOT = "."
+        DOT = ".",
+        GT = ">",
+        LT = "<",
+        GTE = ">=",
+        LTE = "<="
     }
 
     export const M = Flag.Mandatory;
@@ -128,6 +136,10 @@ export namespace Conformance {
     export const XOR = Operator.XOR;
     export const AND = Operator.AND;
     export const DOT = Operator.DOT;
+    export const GT = Operator.GT;
+    export const LT = Operator.LT;
+    export const GTE = Operator.GTE;
+    export const LTE = Operator.LTE;
 
     export type Name = string;
 
@@ -161,6 +173,10 @@ export namespace Conformance {
             case Operator.AND:
             case Operator.EQ:
             case Operator.NE:
+            case Operator.GT:
+            case Operator.LT:
+            case Operator.GTE:
+            case Operator.LTE:
                 const operands = ast.param as Conformance.Ast.BinaryOperands;
                 return `${serializeAtomic(operands.lhs, OrXorAnd)} ${ast.type} ${serializeAtomic(operands.rhs, OrXorAnd)}`;
 
@@ -226,7 +242,11 @@ namespace Tokenizer {
         OptionalEnd = "]",
         GroupBegin = "(",
         GroupEnd = ")",
-        Plus = "+"
+        Plus = "+",
+        GreaterThan = ">",
+        LessThan = "<",
+        GreaterThanOrEqual = ">=",
+        LessThanOrEqual = "<="
     }
 
     export enum TokenType {
@@ -345,11 +365,16 @@ namespace Tokenizer {
                     break;
                     
                 case "!":
-                    if (peeked.value == "=") {
-                        next();
-                        yield { type: TokenType.Special, value: Special.NotEqual };
-                    } else {
-                        yield { type: TokenType.Special, value: Special.Not };
+                case ">":
+                case "<":
+                    {
+                        const base = current.value;
+                        if (peeked.value == "=") {
+                            next();
+                            yield { type: TokenType.Special, value: `${base}${peeked.value}` as Special };
+                        } else {
+                            yield { type: TokenType.Special, value: base as Special };
+                        }
                     }
                     break;
 
@@ -584,8 +609,10 @@ class Parser {
 }
 
 namespace Parser {
+    // Highest precedence first
     export const BinaryOperatorPrecedence = [
         [ Tokenizer.Special.Or, Tokenizer.Special.Xor, Tokenizer.Special.And ],
+        [ Tokenizer.Special.GreaterThan, Tokenizer.Special.LessThan, Tokenizer.Special.GreaterThanOrEqual, Tokenizer.Special.LessThanOrEqual ],
         [ Tokenizer.Special.Equal, Tokenizer.Special.NotEqual ]
     ]
 

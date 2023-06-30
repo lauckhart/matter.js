@@ -45,7 +45,7 @@ export class ClusterModel extends Model implements ClusterElement {
     }
 
     get features() {
-        return this.get(AttributeModel, Globals.FeatureMap.id);
+        return this.get(AttributeModel, Globals.FeatureMap.id)?.children || [];
     }
 
     override get children(): ClusterModel.Child[] {

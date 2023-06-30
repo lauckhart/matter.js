@@ -16,16 +16,16 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "6.6.2" },
 
             children: [
                 {
-                    tag: "datatype", name: "CL", id: 0x0, description: "Provides list of available channels.",
-                    xref: { document: "cluster", section: "6.6.2" }
+                    tag: "datatype", name: "CL", id: 0x0, description: "ChannelList",
+                    details: "Provides list of available channels."
                 },
                 {
-                    tag: "datatype", name: "LI", id: 0x1,
-                    description: "Provides lineup info, which is a reference to an external source of lineup information.",
-                    xref: { document: "cluster", section: "6.6.2" }
+                    tag: "datatype", name: "LI", id: 0x1, description: "LineupInfo",
+                    details: "Provides lineup info, which is a reference to an external source of lineup information."
                 }
             ]
         },

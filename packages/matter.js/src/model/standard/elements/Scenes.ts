@@ -16,12 +16,12 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "1.4.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "SCENENAMES", id: 0x0,
-                    description: "The ability to store a name for a scene.",
-                    xref: { document: "cluster", section: "1.4.4" }
+                    tag: "datatype", name: "SN", id: 0x0, description: "SceneNames",
+                    details: "The ability to store a name for a scene."
                 }
             ]
         },

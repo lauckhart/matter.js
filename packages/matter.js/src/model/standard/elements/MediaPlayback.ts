@@ -18,17 +18,17 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "6.10.2" },
 
             children: [
                 {
-                    tag: "datatype", name: "AS", id: 0x0,
-                    description: "Enables clients to implement more advanced media seeking behavior in their user interface, such as for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support",
-                    xref: { document: "cluster", section: "6.10.2" }
+                    tag: "datatype", name: "AS", id: 0x0, description: "AdvancedSeek",
+                    details: "Enables clients to implement more advanced media seeking behavior in their user interface, such as " +
+                             "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support"
                 },
                 {
-                    tag: "datatype", name: "VS", id: 0x1,
-                    description: "Support for commands to support variable speed playback on media that supports it.",
-                    xref: { document: "cluster", section: "6.10.2" }
+                    tag: "datatype", name: "VS", id: 0x1, description: "VariableSpeed",
+                    details: "Support for commands to support variable speed playback on media that supports it."
                 }
             ]
         },

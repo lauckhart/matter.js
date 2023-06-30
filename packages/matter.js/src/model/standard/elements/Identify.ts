@@ -16,14 +16,12 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "1.2.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "QUERY", id: 0x0, description: "Multicast query for identification state",
-                    details: "This feature supports a unicast, groupcast or multicast query of the cluster state, with a response " +
-                             "back to query initiator, if the identification state is active. This feature is supported for " +
-                             "underlying stacks that support a response to a multicast or groupcast command.",
-                    xref: { document: "cluster", section: "1.2.4.1" }
+                    tag: "datatype", name: "QRY", id: 0x0, description: "Query",
+                    details: "Multicast query for identification state"
                 }
             ]
         },

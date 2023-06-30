@@ -17,42 +17,36 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "4.3.3.1" },
 
             children: [
                 {
-                    tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a+",
-                    description: "Thermostat is capable of managing a heating device",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a+", description: "Heating",
+                    details: "Thermostat is capable of managing a heating device"
                 },
                 {
-                    tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a+",
-                    description: "Thermostat is capable of managing a cooling device",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a+", description: "Cooling",
+                    details: "Thermostat is capable of managing a cooling device"
                 },
                 {
-                    tag: "datatype", name: "OCC", id: 0x2, conformance: "O",
-                    description: "Supports Occupied and Unoccupied setpoints",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    tag: "datatype", name: "OCC", id: 0x2, conformance: "O", description: "Occupancy",
+                    details: "Supports Occupied and Unoccupied setpoints"
                 },
                 {
-                    tag: "datatype", name: "SCH", id: 0x3, conformance: "O",
-                    description: "Supports remote configuration of a weekly schedule of setpoint transitions",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    tag: "datatype", name: "SCH", id: 0x3, conformance: "O", description: "ScheduleConfiguration",
+                    details: "Supports remote configuration of a weekly schedule of setpoint transitions"
                 },
                 {
-                    tag: "datatype", name: "SB", id: 0x4, conformance: "O",
-                    description: "Supports configurable setback (or span)",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    tag: "datatype", name: "SB", id: 0x4, conformance: "O", description: "Setback",
+                    details: "Supports configurable setback (or span)"
                 },
                 {
-                    tag: "datatype", name: "AUTO", id: 0x5, conformance: "O",
-                    description: "Supports a System Mode of Auto",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    tag: "datatype", name: "AUTO", id: 0x5, conformance: "O", description: "AutoMode",
+                    details: "Supports a System Mode of Auto"
                 },
                 {
-                    tag: "datatype", name: "LTNE", id: 0x6, conformance: "O",
-                    description: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    tag: "datatype", name: "LTNE", id: 0x6, conformance: "O", description: "LocalTemperatureNotExposed",
+                    details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute"
                 }
             ]
         },
@@ -404,7 +398,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TemperatureSetpointHoldDuration", id: 0x24, type: "uint16",
-            access: "RW VM", conformance: "O", constraint: "0 to 1440", default: 65535, quality: "X N",
+            access: "RW VM", conformance: "O", constraint: "0 to 1440", quality: "X N",
             details: "This attribute sets the period in minutes for which a setpoint hold is active. Thermostats that " +
                      "support hold for a specified duration SHOULD implement this attribute. The null value indicates the " +
                      "field is unused. All other values are reserved.",

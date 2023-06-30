@@ -13,15 +13,13 @@ import { TlvGenerator } from "./TlvGenerator.js";
 /** Generates cluster attributes, commands and events */
 export class ClusterElementGenerator {
     private tlv: TlvGenerator;
-    private file: ClusterFile;
 
-    constructor(private target: Block, private cluster: ClusterModel) {
-        this.file = target.file as ClusterFile;
+    constructor(private file: ClusterFile, private cluster: ClusterModel) {
         this.tlv = new TlvGenerator(this.file, cluster);
     }
 
     defineElements(name: string, elements: ElementVariance) {
-        const block = this.target.expressions(`const ${name} = {`, `}`);
+        const block = this.file.definitions.expressions(`const ${name} = {`, `}`);
         const mandatory = new Set(elements.mandatory);
 
         this.defineTypedElements(AttributeModel, elements, block, model => {
@@ -56,7 +54,10 @@ export class ClusterElementGenerator {
             if (model.quality.changesOmitted) {
                 options.omitChanges = true;
             }
-            if (model.default !== undefined) {
+            // TODO - don't currently have a way to express "this field should
+            // default to the value of another field" as indicated by
+            // model.default.reference
+            if (model.default !== undefined && !(model.default && model.default.reference)) {
                 options.default = model.default;
             }
             if (model.access.readPriv) {

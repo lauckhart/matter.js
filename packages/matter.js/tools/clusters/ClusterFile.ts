@@ -5,18 +5,22 @@
  */
 
 import { ClusterModel } from "../../src/model/index.js";
-import { TsFile } from "../util/TsFile.js";
+import { Block, TsFile } from "../util/TsFile.js";
 import { clean } from "../util/file.js";
 
 const DEFINITION_PATH = "src/cluster/definitions"
 
 export class ClusterFile extends TsFile {
     clusterName: string;
+    types: Block;
+    definitions: Block;
 
     constructor(cluster: ClusterModel) {
         const name =`${cluster.name}Cluster`;
         super(ClusterFile.createFilename(name));
         this.clusterName = name;
+        this.types = this.section();
+        this.definitions = this.statements(`export namespace ${name} {`, "}");
     }
 
     static clean() {

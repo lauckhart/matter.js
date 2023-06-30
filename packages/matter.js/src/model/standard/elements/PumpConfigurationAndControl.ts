@@ -17,42 +17,36 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "4.2.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "PRSCONST", id: 0x0, conformance: "O.a+",
-                    description: "Supports operating in constant pressure mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    tag: "datatype", name: "PRSCONST", id: 0x0, conformance: "O.a+", description: "ConstantPressure",
+                    details: "Supports operating in constant pressure mode"
                 },
                 {
-                    tag: "datatype", name: "PRSCOMP", id: 0x1, conformance: "O.a+",
-                    description: "Supports operating in compensated pressure mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    tag: "datatype", name: "PRSCOMP", id: 0x1, conformance: "O.a+", description: "CompensatedPressure",
+                    details: "Supports operating in compensated pressure mode"
                 },
                 {
-                    tag: "datatype", name: "FLW", id: 0x2, conformance: "O.a+",
-                    description: "Supports operating in constant flow mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    tag: "datatype", name: "FLW", id: 0x2, conformance: "O.a+", description: "ConstantFlow",
+                    details: "Supports operating in constant flow mode"
                 },
                 {
-                    tag: "datatype", name: "SPD", id: 0x3, conformance: "O.a+",
-                    description: "Supports operating in constant speed mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    tag: "datatype", name: "SPD", id: 0x3, conformance: "O.a+", description: "ConstantSpeed",
+                    details: "Supports operating in constant speed mode"
                 },
                 {
-                    tag: "datatype", name: "TEMP", id: 0x4, conformance: "O.a+",
-                    description: "Supports operating in constant temperature mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    tag: "datatype", name: "TEMP", id: 0x4, conformance: "O.a+", description: "ConstantTemperature",
+                    details: "Supports operating in constant temperature mode"
                 },
                 {
-                    tag: "datatype", name: "AUTO", id: 0x5, conformance: "O",
-                    description: "Supports operating in automatic mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    tag: "datatype", name: "AUTO", id: 0x5, conformance: "O", description: "Automatic",
+                    details: "Supports operating in automatic mode"
                 },
                 {
-                    tag: "datatype", name: "LOCAL", id: 0x6, conformance: "O",
-                    description: "Supports operating using local settings",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    tag: "datatype", name: "LOCAL", id: 0x6, conformance: "O", description: "LocalOperation",
+                    details: "Supports operating using local settings"
                 }
             ]
         },

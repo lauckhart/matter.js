@@ -18,16 +18,16 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "6.7.2" },
 
             children: [
                 {
-                    tag: "datatype", name: "CS", id: 0x0,
-                    description: "Device supports content search (non-app specific)",
-                    xref: { document: "cluster", section: "6.7.2" }
+                    tag: "datatype", name: "CS", id: 0x0, description: "ContentSearch",
+                    details: "Device supports content search (non-app specific)"
                 },
                 {
-                    tag: "datatype", name: "UP", id: 0x1, description: "Device supports basic URL-based file playback",
-                    xref: { document: "cluster", section: "6.7.2" }
+                    tag: "datatype", name: "UP", id: 0x1, description: "UrlPlayback",
+                    details: "Device supports basic URL-based file playback"
                 }
             ]
         },

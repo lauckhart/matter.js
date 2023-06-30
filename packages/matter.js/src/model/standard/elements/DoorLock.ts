@@ -17,67 +17,56 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "5.2.2" },
 
             children: [
                 {
-                    tag: "datatype", name: "PIN", id: 0x0, conformance: "O",
-                    description: "Lock supports PIN credentials (via keypad, or over- the-air)",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "PIN", id: 0x0, conformance: "O", description: "PinCredential",
+                    details: "Lock supports PIN credentials (via keypad, or over- the-air)"
                 },
                 {
-                    tag: "datatype", name: "RID", id: 0x1, conformance: "O",
-                    description: "Lock supports RFID credentials",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "RID", id: 0x1, conformance: "O", description: "RfidCredential",
+                    details: "Lock supports RFID credentials"
                 },
                 {
-                    tag: "datatype", name: "FGP", id: 0x2, conformance: "P, O",
-                    description: "Lock supports finger related credentials (fingerprint, finger vein)",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "FGP", id: 0x2, conformance: "P, O", description: "FingerCredentials",
+                    details: "Lock supports finger related credentials (fingerprint, finger vein)"
                 },
                 {
-                    tag: "datatype", name: "LOG", id: 0x3, conformance: "O",
-                    description: "Lock supports local/on-lock logging when Events are not supported",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "LOG", id: 0x3, conformance: "O", description: "Logging",
+                    details: "Lock supports local/on-lock logging when Events are not supported"
                 },
                 {
-                    tag: "datatype", name: "WDSCH", id: 0x4, conformance: "O",
-                    description: "Lock supports week day user access schedules",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "WDSCH", id: 0x4, conformance: "O", description: "WeekDayAccessSchedules",
+                    details: "Lock supports week day user access schedules"
                 },
                 {
-                    tag: "datatype", name: "DPS", id: 0x5, conformance: "O",
-                    description: "Lock supports a door position sensor that indicates door’s state",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "DPS", id: 0x5, conformance: "O", description: "DoorPositionSensor",
+                    details: "Lock supports a door position sensor that indicates door’s state"
                 },
                 {
-                    tag: "datatype", name: "FACE", id: 0x6, conformance: "P, O",
-                    description: "Lock supports face related credentials (face, iris, retina)",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "FACE", id: 0x6, conformance: "P, O", description: "FaceCredentials",
+                    details: "Lock supports face related credentials (face, iris, retina)"
                 },
                 {
-                    tag: "datatype", name: "COTA", id: 0x7, conformance: "O",
-                    description: "PIN codes over- the-air supported for lock/unlock operations",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "COTA", id: 0x7, conformance: "O", description: "CredentialOverTheAirAccess",
+                    details: "PIN codes over- the-air supported for lock/unlock operations"
                 },
                 {
-                    tag: "datatype", name: "USR", id: 0x8, conformance: "[PIN | RID]",
-                    description: "Lock supports the user commands and database",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "USR", id: 0x8, conformance: "[PIN | RID]", description: "User",
+                    details: "Lock supports the user commands and database"
                 },
                 {
-                    tag: "datatype", name: "NOT", id: 0x9, conformance: "O",
-                    description: "Operation and Programming Notifications",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "NOT", id: 0x9, conformance: "O", description: "Notification",
+                    details: "Operation and Programming Notifications"
                 },
                 {
-                    tag: "datatype", name: "YDSCH", id: 0xa, conformance: "O",
-                    description: "Lock supports year day user access schedules",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "YDSCH", id: 0xa, conformance: "O", description: "YearDayAccessSchedules",
+                    details: "Lock supports year day user access schedules"
                 },
                 {
-                    tag: "datatype", name: "HDSCH", id: 0xb, conformance: "O",
-                    description: "Lock supports holiday schedules",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    tag: "datatype", name: "HDSCH", id: 0xb, conformance: "O", description: "HolidaySchedules",
+                    details: "Lock supports holiday schedules"
                 }
             ]
         },

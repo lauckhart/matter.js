@@ -18,7 +18,11 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
         [Conformance.Operator.AND]: "&&",
         [Conformance.Operator.EQ]: "==",
         [Conformance.Operator.NE]: "!=",
-        [Conformance.Operator.OR]: "||"
+        [Conformance.Operator.OR]: "||",
+        [Conformance.Operator.GT]: ">",
+        [Conformance.Operator.LT]: "<",
+        [Conformance.Operator.GTE]: ">=",
+        [Conformance.Operator.LTE]: "<="
     }
 
     // This generates JS expressions that test conformance.  The result of each
@@ -79,6 +83,10 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
             case Conformance.Operator.EQ:
             case Conformance.Operator.NE:
             case Conformance.Operator.OR:
+            case Conformance.Operator.GT:
+            case Conformance.Operator.LT:
+            case Conformance.Operator.GTE:
+            case Conformance.Operator.LTE:
                 const binops = ast.param as Conformance.Ast.BinaryOperands;
                 return `(${expr(binops.lhs, fn)} ${BinaryOperatorMap[ast.type]} ${expr(binops.rhs, fn)})`;
 

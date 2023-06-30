@@ -25,7 +25,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PhysicalMaxLevel", id: 0x1, type: "uint8", access: "R V", conformance: "M",
-            constraint: "1 to 254", default: 254,
+            constraint: "1 to 254",
             details: "The PhysicalMaxLevel attribute specifies the maximum light output the ballast can achieve according " +
                      "to the dimming light curve (see The Dimming Light Curve).",
             xref: { document: "cluster", section: "3.3.6.2" }
@@ -56,7 +56,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M",
-            constraint: "1 to 254", default: 254,
+            constraint: "1 to 254",
             details: "The MaxLevel attribute specifies the light output of the ballast according to the dimming light " +
                      "curve (see The Dimming Light Curve) when the Level Control Cluster’s CurrentLevel attribute equals " +
                      "to 254 (and the On/Off Cluster’s OnOff attribute equals to TRUE).",
@@ -84,7 +84,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "BallastFactorAdjustment", id: 0x15, type: "uint8", access: "RW",
-            conformance: "O", constraint: "100 to Ms", default: 255, quality: "X",
+            conformance: "O", constraint: "100 to Ms", quality: "X",
             details: "The BallastFactorAdjustment attribute specifies the multiplication factor, as a percentage, to be " +
                      "applied to the configured light output of the lamps. A typical usage of this mechanism is to " +
                      "compensate for reduction in efficiency over the lifetime of a lamp.",
@@ -115,7 +115,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LampRatedHours", id: 0x32, type: "uint24", access: "RW", conformance: "O",
-            default: 16777215, quality: "X",
+            quality: "X",
             details: "The LampRatedHours attribute specifies the number of hours of use the lamps are rated for by the " +
                      "manufacturer.",
             xref: { document: "cluster", section: "3.3.9.3" }
@@ -142,7 +142,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LampBurnHoursTripPoint", id: 0x35, type: "uint24", access: "RW",
-            conformance: "O", default: 16777215, quality: "X",
+            conformance: "O", quality: "X",
             details: "The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute MAY " +
                      "reach before an alarm is generated.",
             xref: { document: "cluster", section: "3.3.9.6" }

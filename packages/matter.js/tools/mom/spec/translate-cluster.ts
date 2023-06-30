@@ -189,7 +189,8 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             id: Globals.FeatureMap.id,
             name: Globals.FeatureMap.name,
             type: "FeatureMap",
-            children: values
+            children: values,
+            xref: definition.features?.xref
         });
     }
 }

@@ -17,27 +17,21 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "1.6.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "ONOFF", id: 0x0, default: 1,
-                    description: "Dependency with the On/Off cluster",
-                    xref: { document: "cluster", section: "1.6.4" }
+                    tag: "datatype", name: "OO", id: 0x0, default: 1, description: "OnOff",
+                    details: "Dependency with the On/Off cluster"
                 },
-
                 {
-                    tag: "datatype", name: "LIGHTING", id: 0x1,
-                    description: "Behavior that supports lighting applications",
-                    details: "This feature supports an interface for controlling the level of a light source. For the " +
-                             "CurrentLevel attribute:",
-                    xref: { document: "cluster", section: "1.6.4.2" }
+                    tag: "datatype", name: "LT", id: 0x1, description: "Lighting",
+                    details: "Behavior that supports lighting applications"
                 },
-
                 {
-                    tag: "datatype", name: "FREQUENCY", id: 0x2,
-                    description: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for frequency control.",
-                    details: "NOTE Frequency feature is provisional.",
-                    xref: { document: "cluster", section: "1.6.4.3" }
+                    tag: "datatype", name: "FQ", id: 0x2, description: "Frequency",
+                    details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
+                             "frequency control."
                 }
             ]
         },

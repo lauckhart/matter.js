@@ -18,12 +18,13 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "6.4.2" },
 
             children: [
                 {
-                    tag: "datatype", name: "AP", id: 0x0,
-                    description: "Support for attributes and commands required for endpoint to support launching any application within the supported application catalogs",
-                    xref: { document: "cluster", section: "6.4.2" }
+                    tag: "datatype", name: "AP", id: 0x0, description: "ApplicationPlatform",
+                    details: "Support for attributes and commands required for endpoint to support launching any application " +
+                             "within the supported application catalogs"
                 }
             ]
         },

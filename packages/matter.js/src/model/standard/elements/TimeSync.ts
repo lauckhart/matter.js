@@ -18,19 +18,20 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "core", section: "11.16.5" },
 
             children: [
                 {
-                    tag: "datatype", name: "TZ", id: 0x0, description: "Server supports time zone.",
-                    xref: { document: "core", section: "11.16.5" }
+                    tag: "datatype", name: "TZ", id: 0x0, description: "TimeZone",
+                    details: "Server supports time zone."
                 },
                 {
-                    tag: "datatype", name: "NTPC", id: 0x1, description: "Server supports an NTP or SNTP client.",
-                    xref: { document: "core", section: "11.16.5" }
+                    tag: "datatype", name: "NTPC", id: 0x1, description: "NtpClient",
+                    details: "Server supports an NTP or SNTP client."
                 },
                 {
-                    tag: "datatype", name: "NTPS", id: 0x2, description: "Server supports an NTP server role.",
-                    xref: { document: "core", section: "11.16.5" }
+                    tag: "datatype", name: "NTPS", id: 0x2, description: "NtpServer",
+                    details: "Server supports an NTP server role."
                 }
             ]
         },
