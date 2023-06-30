@@ -222,7 +222,7 @@ export namespace IdentifyCluster {
         }
     };
 
-    const QRY = {
+    const Query = {
         commands: {
             /**
              * This command is generated in response to receiving an
@@ -251,7 +251,7 @@ export namespace IdentifyCluster {
         supportedFeatures: { QRY: true },
         elements: [
             Base,
-            QRY
+            Query
         ]
     });
 };

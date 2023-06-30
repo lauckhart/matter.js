@@ -72,7 +72,7 @@ export namespace TimeFormatLocalizationCluster {
         }
     };
 
-    const CALFMT = {
+    const CalendarFormat = {
         attributes: {
             /**
              * The ActiveCalendarType attribute SHALL represent the calendar
@@ -106,7 +106,7 @@ export namespace TimeFormatLocalizationCluster {
         supportedFeatures: { CALFMT: true },
         elements: [
             Base,
-            CALFMT
+            CalendarFormat
         ]
     });
 };

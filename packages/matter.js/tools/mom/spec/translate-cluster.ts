@@ -8,7 +8,7 @@ import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { ClusterReference, HtmlReference } from "./spec-types.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children, chooseIdentityAliases } from "./translate-table.js";
+import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children, chooseIdentityAliases, Code } from "./translate-table.js";
 
 const logger = Logger.get("translate-cluster");
 
@@ -170,7 +170,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
     function translateFeatures() {
         const records = translateTable("feature", definition.features, {
             id: Alias(Integer, "bit"),
-            conformance: Optional(Str),
+            conformance: Optional(Code),
             details: Optional(Alias(Str, "description", "summary")),
 
             // Must define after details which uses description column
@@ -254,7 +254,7 @@ function translateFields(desc: string, fields?: HtmlReference) {
         quality: Optional(Str),
         default: Optional(NoSpace),
         access: Optional(Str),
-        conformance: Optional(Str),
+        conformance: Optional(Code),
         children: Children(translateValueChildren)
     });
 
@@ -345,7 +345,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
             let records = translateTable("value", definition, {
                 id: Alias(Integer, ...ids),
                 name: Alias(Identifier, ...names),
-                conformance: Optional(Str),
+                conformance: Optional(Code),
                 description: Optional(Alias(Str, "notes")),
                 meaning: Optional(Str)
             });
@@ -415,7 +415,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             direction: Str,
             response: Optional(Identifier),
             access: Optional(Str),
-            conformance: Optional(Str),
+            conformance: Optional(Code),
             children: Children(translateValueChildren)
         });
 
@@ -456,7 +456,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             name: Identifier,
             priority: Optional(LowerIdentifier),
             access: Optional(Str),
-            conformance: Optional(Str),
+            conformance: Optional(Code),
             children: Children(translateValueChildren)
         });
 
@@ -570,8 +570,37 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
     }
 }
 
+// A light attempt at making documentation seem slightly less repurposed
+function extractUsefulDocumentation(p: HTMLParagraphElement) {
+    return Str(p)
+        .replace(/This data type is derived from \S+(?: and has its values listed below)?\./, "")
+        .replace(/The data type \S+ is derived from \S+\./, "")
+        .replace(/The data type of the(?: \w+)+ is derived from \S+\./, "")
+        .replace(/The values of the(?: \w+)+ are listed below\./, "")
+        .replace(/(?:The )?\S+ Data Type is derived from \S+\./, "")
+        .replace(/, derived from \w+,/, "")
+        .replace(/SHALL/g, "shall")
+        .replace(/\s\s+/, "  ")
+        .trim();
+}
+
 function addDetails(element: AnyElement, definition: HtmlReference) {
-    if (definition.firstParagraph) {
-        element.details = Str(definition.firstParagraph);
+    let p = definition.firstParagraph;
+    if (!p) {
+        return;
+    }
+    let details = extractUsefulDocumentation(p);
+    while (!details && p) {
+        // These are useless as documentation.  Use the next paragraph or
+        // simply leave undocumented
+        if ((p.nextSibling as any)?.tagName == "P") {
+            p = p?.nextSibling as HTMLParagraphElement;
+            details = extractUsefulDocumentation(p);
+        } else {
+            return;
+        }
+    }
+    if (details) {
+        element.details = details;
     }
 }

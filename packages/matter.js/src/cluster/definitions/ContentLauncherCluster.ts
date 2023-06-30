@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { Attribute, AccessLevel, WritableAttribute, Command } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, WritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvUInt32, TlvEnum, TlvDouble } from "../../tlv/TlvNumber.js";
@@ -454,9 +454,7 @@ export namespace ContentLauncherCluster {
         UP: BitFlag(1)
     };
 
-    const Base = {};
-
-    const UP = {
+    const UrlPlayback = {
         attributes: {
             /**
              * This list provides list of content types supported by the Video
@@ -486,7 +484,7 @@ export namespace ContentLauncherCluster {
         }
     };
 
-    const CS = {
+    const ContentSearch = {
         commands: {
             /**
              * Upon receipt, this SHALL launch the specified content with
@@ -498,6 +496,20 @@ export namespace ContentLauncherCluster {
         }
     };
 
+    const ContentSearchOrUrlPlayback = {
+        commands: {
+            /**
+             * This command SHALL be generated in response to LaunchContent and
+             * LaunchURL commands.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3
+             */
+            launcherResponse: Command(2, LauncherResponseRequest, 2, TlvNoResponse)
+        }
+    };
+
+    const Base = {};
+
     export const Complete = BuildCluster({
         id,
         name,
@@ -507,10 +519,12 @@ export namespace ContentLauncherCluster {
             CS: true,
             UP: true
         },
+
         elements: [
-            Base,
-            UP,
-            CS
+            UrlPlayback,
+            ContentSearch,
+            ContentSearchOrUrlPlayback,
+            Base
         ]
     });
 };

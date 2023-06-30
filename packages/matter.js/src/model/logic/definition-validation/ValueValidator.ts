@@ -5,9 +5,9 @@
  */
 
 import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
-import { Metatype } from "../../definitions/index.js";
+import { DefinitionError, Metatype } from "../../definitions/index.js";
 import { CommandElement, DatatypeElement } from "../../elements/index.js";
-import { ValueModel } from "../../models/index.js";
+import { ClusterModel, ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 /**
@@ -21,10 +21,21 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         this.validateProperty({ name: "conformance", type: Conformance });
         this.validateProperty({ name: "access", type: Access });
         this.validateProperty({ name: "quality", type: Quality });
-        this.validateProperty({ name: "metatype", type: Metatype })
+        this.validateProperty({ name: "metatype", type: Metatype });
 
-        this.validateAspect("constraint");
+        this.model.conformance.validateReferences((type, name) => {
+            if (type == "name") {
+                // Feature lookup
+                const cluster = this.model.owner(ClusterModel);
+                return !!cluster?.features.find(f => f.name == name);
+            } else {
+                // Field lookup
+                return !!this.model.parent?.member(name);
+            }
+        });
+
         this.validateAspect("conformance");
+        this.validateAspect("constraint");
         this.validateAspect("access");
         this.validateAspect("quality");
 
@@ -35,9 +46,9 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
     }
 
     private validateAspect(name: string) {
-        const aspect = (this as any)[name];
+        const aspect = (this.model as any)[name];
         if (aspect?.errors) {
-            this.model.addErrors(aspect);
+            aspect.errors.forEach((e: DefinitionError) => this.model.error(e.code, e.message));
         }
     }
 

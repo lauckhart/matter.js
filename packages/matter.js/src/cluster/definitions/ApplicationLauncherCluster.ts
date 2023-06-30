@@ -7,12 +7,12 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { OptionalWritableAttribute, Command, TlvNoResponse, Attribute, AccessLevel } from "../../cluster/Cluster.js";
-import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
+import { Attribute, AccessLevel, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
+import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { TlvArray } from "../../tlv/TlvArray.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
@@ -162,6 +162,20 @@ export namespace ApplicationLauncherCluster {
         AP: BitFlag(0)
     };
 
+    const ApplicationPlatform = {
+        attributes: {
+            /**
+             * This attribute SHALL specify the list of supported application
+             * catalogs, where each entry in the list is the CSA-issued vendor
+             * ID for the catalog. The DIAL registry (see [DIAL Registry])
+             * SHALL use value 0x0000.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
+             */
+            catalogList: Attribute(0, TlvArray(TlvUInt16), { persistent: true, readAcl: AccessLevel.View })
+        }
+    };
+
     const Base = {
         attributes: {
             /**
@@ -211,20 +225,6 @@ export namespace ApplicationLauncherCluster {
         }
     };
 
-    const AP = {
-        attributes: {
-            /**
-             * This attribute SHALL specify the list of supported application
-             * catalogs, where each entry in the list is the CSA-issued vendor
-             * ID for the catalog. The DIAL registry (see [DIAL Registry])
-             * SHALL use value 0x0000.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
-             */
-            catalogList: Attribute(0, TlvArray(TlvUInt16), { persistent: true, readAcl: AccessLevel.View })
-        }
-    };
-
     export const Complete = BuildCluster({
         id,
         name,
@@ -232,8 +232,8 @@ export namespace ApplicationLauncherCluster {
         features: featureMap,
         supportedFeatures: { AP: true },
         elements: [
-            Base,
-            AP
+            ApplicationPlatform,
+            Base
         ]
     });
 };

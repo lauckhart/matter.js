@@ -40,8 +40,13 @@ export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
     }
 
     private parse(quality: Quality, definition: string) {
+        const text = definition.toUpperCase();
+        if (text == "DERIVED") {
+            return;
+        }
+
         let disallow = false;
-        for (const char of definition.toUpperCase()) {
+        for (const char of text) {
             if (char == " " || char == "\t") {
                 continue;
             }

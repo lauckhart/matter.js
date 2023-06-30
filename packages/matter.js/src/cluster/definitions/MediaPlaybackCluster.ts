@@ -316,7 +316,7 @@ export namespace MediaPlaybackCluster {
         }
     };
 
-    const AS = {
+    const AdvancedSeek = {
         attributes: {
             /**
              * This SHALL indicate the start time of the media, in case the
@@ -399,7 +399,7 @@ export namespace MediaPlaybackCluster {
         }
     };
 
-    const VS = {
+    const VariableSpeed = {
         commands: {
             /**
              * Upon receipt, this SHALL start playback of the media backward in
@@ -436,8 +436,8 @@ export namespace MediaPlaybackCluster {
         },
         elements: [
             Base,
-            AS,
-            VS
+            AdvancedSeek,
+            VariableSpeed
         ]
     });
 };

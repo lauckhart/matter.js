@@ -7,9 +7,11 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, OptionalAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvBitmap, TlvUInt8, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
@@ -187,6 +189,40 @@ export const SafetyStatus = TlvBitmap(TlvUInt16, {
     Protection: BitFlag(2048)
 });
 
+/**
+ * The GoToLiftPercentage command SHALL have the following data fields:
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
+ */
+export const GoToLiftPercentageRequest = TlvObject({
+    LiftPercentageValue: TlvOptionalField(0, TlvUInt8),
+    LiftPercent100ThsValue: TlvOptionalField(1, TlvUInt16)
+});
+
+/**
+ * The GoToTiltPercentage command SHALL have the following data fields:
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
+ */
+export const GoToTiltPercentageRequest = TlvObject({
+    TiltPercentageValue: TlvOptionalField(0, TlvUInt8),
+    TiltPercent100ThsValue: TlvOptionalField(1, TlvUInt16)
+});
+
+/**
+ * The GoToLiftValue command SHALL have the following data fields:
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.4
+ */
+export const GoToLiftValueRequest = TlvObject({ LiftValue: TlvField(0, TlvUInt16) });
+
+/**
+ * The GoToTiltValue command SHALL have the following data fields:
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.6
+ */
+export const GoToTiltValueRequest = TlvObject({ TiltValue: TlvField(0, TlvUInt16) });
+
 export namespace WindowCoveringCluster {
     export const id = 258;
     export const name = "WindowCovering";
@@ -212,7 +248,7 @@ export namespace WindowCoveringCluster {
          *
          * Position Aware lift control is supported.
          */
-        PALF: BitFlag(2),
+        PA_LF: BitFlag(2),
 
         /**
          * AbsolutePosition
@@ -226,7 +262,7 @@ export namespace WindowCoveringCluster {
          *
          * Position Aware tilt control is supported.
          */
-        PATL: BitFlag(4)
+        PA_TL: BitFlag(4)
     };
 
     const Base = {
@@ -328,7 +364,163 @@ export namespace WindowCoveringCluster {
         }
     };
 
-    const LF = {
+    const LiftAndPositionAwareLift = {
+        attributes: {
+            /**
+             * The PhysicalClosedLimitLift attribute identifies the maximum
+             * possible encoder position possible (in centimeters) to position
+             * the height of the window covering Lift.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.2
+             */
+            physicalClosedLimitLift: OptionalFixedAttribute(1, TlvUInt16, { readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentPositionLift attribute identifies the actual Lift
+             * position (in centimeters) of the window covering from the
+             * fully-open position.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.4
+             */
+            currentPositionLift: OptionalAttribute(3, TlvNullable(TlvUInt16), { persistent: true, default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentPositionLiftPercentage attribute identifies the
+             * actual position as a percentage from 0% to 100% with 1% default
+             * step. This attribute is equal to
+             * CurrentPositionLiftPercent100ths attribute divided by 100.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.11
+             */
+            currentPositionLiftPercentage: OptionalAttribute(8, TlvNullable(TlvUInt8), { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * The TargetPositionLiftPercent100ths attribute identifies the
+             * position where the Window Covering Lift will go or is moving to
+             * as a percentage.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.13
+             */
+            targetPositionLiftPercent100Ths: Attribute(11, TlvNullable(TlvUInt16), { scene: true, default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentPositionLiftPercent100ths attribute identifies the
+             * actual position as a percentage with a minimal step of 0.01%.
+             * E.g Max 10000 equals 100.00%.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.9
+             */
+            currentPositionLiftPercent100Ths: Attribute(14, TlvNullable(TlvUInt16), { persistent: true, default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * The InstalledOpenLimitLift attribute identifies the Open Limit
+             * for Lifting the Window Covering whether position (in
+             * centimeters) is encoded or timed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.17
+             */
+            installedOpenLimitLift: Attribute(16, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
+
+            /**
+             * The InstalledClosedLimitLift attribute identifies the Closed
+             * Limit for Lifting the Window Covering whether position (in
+             * centimeters) is encoded or timed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.18
+             */
+            installedClosedLimitLift: Attribute(17, TlvUInt16, { persistent: true, readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * The GoToLiftPercentage command SHALL have the following data
+             * fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
+             */
+            goToLiftPercentage: Command(5, GoToLiftPercentageRequest, 5, TlvNoResponse)
+        }
+    };
+
+    const TiltAndPositionAwareTilt = {
+        attributes: {
+            /**
+             * The PhysicalClosedLimitTilt attribute identifies the maximum
+             * possible encoder position possible (tenth of a degrees) to
+             * position the angle of the window covering Tilt.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.3
+             */
+            physicalClosedLimitTilt: OptionalFixedAttribute(2, TlvUInt16, { readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentPositionTilt attribute identifies the actual Tilt
+             * position (in tenth of an degree) of the window covering from the
+             * fully-open position.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.5
+             */
+            currentPositionTilt: OptionalAttribute(4, TlvNullable(TlvUInt16), { persistent: true, default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentPositionTiltPercentage attribute identifies the
+             * actual position as a percentage from 0% to 100% with 1% default
+             * step. This attribute is equal to
+             * CurrentPositionTiltPercent100ths attribute divided by 100.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.12
+             */
+            currentPositionTiltPercentage: OptionalAttribute(9, TlvNullable(TlvUInt8), { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * The TargetPositionTiltPercent100ths attribute identifies the
+             * position where the Window Covering Tilt will go or is moving to
+             * as a percentage.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.14
+             */
+            targetPositionTiltPercent100Ths: Attribute(12, TlvNullable(TlvUInt16), { scene: true, default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentPositionTiltPercent100ths attribute identifies the
+             * actual position as a percentage with a minimal step of 0.01%.
+             * E.g Max 10000 equals 100.00%.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.10
+             */
+            currentPositionTiltPercent100Ths: Attribute(15, TlvNullable(TlvUInt16), { persistent: true, default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * The InstalledOpenLimitTilt attribute identifies the Open Limit
+             * for Tilting the Window Covering whether position (in tenth of a
+             * degree) is encoded or timed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.19
+             */
+            installedOpenLimitTilt: Attribute(18, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
+
+            /**
+             * The InstalledClosedLimitTilt attribute identifies the Closed
+             * Limit for Tilting the Window Covering whether position (in tenth
+             * of a degree) is encoded or timed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.20
+             */
+            installedClosedLimitTilt: Attribute(19, TlvUInt16, { persistent: true, readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * The GoToTiltPercentage command SHALL have the following data
+             * fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
+             */
+            goToTiltPercentage: Command(8, GoToTiltPercentageRequest, 8, TlvNoResponse)
+        }
+    };
+
+    const Lift = {
         attributes: {
             /**
              * The NumberOfActuationsLift attribute identifies the total number
@@ -338,10 +530,20 @@ export namespace WindowCoveringCluster {
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.6
              */
             numberOfActuationsLift: OptionalAttribute(5, TlvUInt16, { persistent: true, readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * The GoToLiftPercentage command SHALL have the following data
+             * fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
+             */
+            goToLiftPercentage: OptionalCommand(5, GoToLiftPercentageRequest, 5, TlvNoResponse)
         }
     };
 
-    const TL = {
+    const Tilt = {
         attributes: {
             /**
              * The NumberOfActuationsTilt attribute identifies the total number
@@ -351,6 +553,38 @@ export namespace WindowCoveringCluster {
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.7
              */
             numberOfActuationsTilt: OptionalAttribute(6, TlvUInt16, { persistent: true, readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * The GoToTiltPercentage command SHALL have the following data
+             * fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
+             */
+            goToTiltPercentage: OptionalCommand(8, GoToTiltPercentageRequest, 8, TlvNoResponse)
+        }
+    };
+
+    const LiftAndAbsolutePosition = {
+        commands: {
+            /**
+             * The GoToLiftValue command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.4
+             */
+            goToLiftValue: OptionalCommand(4, GoToLiftValueRequest, 4, TlvNoResponse)
+        }
+    };
+
+    const TiltAndAbsolutePosition = {
+        commands: {
+            /**
+             * The GoToTiltValue command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.6
+             */
+            goToTiltValue: OptionalCommand(7, GoToTiltValueRequest, 7, TlvNoResponse)
         }
     };
 
@@ -363,15 +597,19 @@ export namespace WindowCoveringCluster {
         supportedFeatures: {
             LF: true,
             TL: true,
-            PALF: true,
+            PA_LF: true,
             ABS: true,
-            PATL: true
+            PA_TL: true
         },
 
         elements: [
             Base,
-            LF,
-            TL
+            LiftAndPositionAwareLift,
+            TiltAndPositionAwareTilt,
+            Lift,
+            Tilt,
+            LiftAndAbsolutePosition,
+            TiltAndAbsolutePosition
         ]
     });
 };

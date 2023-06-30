@@ -55,6 +55,10 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
      */
     static parse(access: Access, definition: string) {
         definition = definition.toUpperCase();
+        if (definition == "DERIVED") {
+            return [];
+        }
+
         const flags = [] as Access.Flags;
         for (let i = 0; i < definition.length; i++) {
             switch (definition[i]) {

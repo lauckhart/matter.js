@@ -117,7 +117,7 @@ export namespace AudioOutputCluster {
         }
     };
 
-    const NU = {
+    const NameUpdates = {
         commands: {
             /**
              * Upon receipt, this SHALL rename the output at a specific index
@@ -137,7 +137,7 @@ export namespace AudioOutputCluster {
         supportedFeatures: { NU: true },
         elements: [
             Base,
-            NU
+            NameUpdates
         ]
     });
 };

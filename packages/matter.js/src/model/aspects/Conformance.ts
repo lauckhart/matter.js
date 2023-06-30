@@ -60,6 +60,10 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
         }
     }
 
+    validateReferences(lookup: Conformance.ReferenceResolver<boolean>) {
+        return Conformance.validateReferences(this, this, lookup);
+    }
+
     override toString() {
         return Conformance.serialize(this);
     }
@@ -147,6 +151,8 @@ export namespace Conformance {
 
     export type ChoiceName = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z";
 
+    export type ReferenceResolver<T> = (type: Conformance.Special.Name | Conformance.Special.Value, name: string) => T;
+
     /**
      * Supported ways of expressing conformance.
      */
@@ -164,9 +170,43 @@ export namespace Conformance {
         }
         return serialized;
     }
+
+    export function validateReferences(conformance: Conformance, ast: Ast, resolver: ReferenceResolver<boolean>) {
+        switch (ast.type) {
+            case Operator.OR:
+            case Operator.XOR:
+            case Operator.AND:
+            case Operator.EQ:
+            case Operator.NE:
+            case Operator.GT:
+            case Operator.LT:
+            case Operator.GTE:
+            case Operator.LTE:
+                const operands = ast.param as Conformance.Ast.BinaryOperands;
+                validateReferences(conformance, operands.lhs, resolver);
+                validateReferences(conformance, operands.rhs, resolver);
+                break;
+
+            case Operator.NOT:
+                validateReferences(conformance, ast.param as Conformance.Ast.UnaryOperand, resolver);
+                break;
+
+            case Special.Group:
+                for (const a of ast.param as Conformance.Ast.Group) {
+                    validateReferences(conformance, a, resolver);
+                }
+                break;
+
+            case Special.Name:
+            case Special.Value:
+                if (typeof ast.param == "string" && !resolver(ast.type, ast.param)) {
+                    conformance.error(`UNRESOLVED_CONFORMANCE_${ast.type.toUpperCase()}`, `Conformance ${ast.type} reference "${ast.param}" does not resolve`);
+                }
+                break;
+        }
+    }
     
     export function serialize(ast: Ast): string {
-        if (!ast) debugger;
         switch (ast.type) {
             case Operator.OR:
             case Operator.XOR:
@@ -420,6 +460,10 @@ class Parser {
     private peeked?: Tokenizer.Token;
 
     constructor(private conformance: Conformance, definition: string) {
+        // Spec conformance sometimes encodes "or" (illegally) as "or" rather
+        // than "|"
+        definition = definition.replace(" or ", " | ");
+
         this.tokens = Tokenizer.tokenize(conformance, definition);
         const next = this.tokens.next();
         if (!next.done) {

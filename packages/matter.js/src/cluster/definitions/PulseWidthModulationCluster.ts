@@ -293,7 +293,7 @@ export namespace PulseWidthModulationCluster {
         }
     };
 
-    const LT = {
+    const Lighting = {
         attributes: {
             /**
              * The RemainingTime attribute represents the time remaining until
@@ -316,7 +316,7 @@ export namespace PulseWidthModulationCluster {
         }
     };
 
-    const FQ = {
+    const Frequency = {
         attributes: {
             /**
              * The CurrentFrequency attribute represents the frequency at which
@@ -371,8 +371,8 @@ export namespace PulseWidthModulationCluster {
         },
         elements: [
             Base,
-            LT,
-            FQ
+            Lighting,
+            Frequency
         ]
     });
 };

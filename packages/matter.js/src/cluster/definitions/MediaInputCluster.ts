@@ -162,7 +162,7 @@ export namespace MediaInputCluster {
         }
     };
 
-    const NU = {
+    const NameUpdates = {
         commands: {
             /**
              * Upon receipt, this SHALL rename the input at a specific index in
@@ -183,7 +183,7 @@ export namespace MediaInputCluster {
         supportedFeatures: { NU: true },
         elements: [
             Base,
-            NU
+            NameUpdates
         ]
     });
 };

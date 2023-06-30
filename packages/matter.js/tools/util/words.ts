@@ -8,3 +8,6 @@ import wordListPath from "word-list";
 import { readFileSync } from "fs";
 
 export const WORDS = new Set(readFileSync(wordListPath, "utf-8").split("\n"));
+
+// Acronym for "micro reciprocal degree" used by color cluster
+WORDS.add("mireds");

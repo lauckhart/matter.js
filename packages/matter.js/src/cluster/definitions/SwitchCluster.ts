@@ -138,7 +138,7 @@ export namespace SwitchCluster {
         }
     };
 
-    const MSM = {
+    const MomentarySwitchMultiPress = {
         attributes: {
             /**
              * This attribute SHALL indicate how many consecutive presses can
@@ -175,7 +175,7 @@ export namespace SwitchCluster {
         }
     };
 
-    const LS = {
+    const LatchingSwitch = {
         events: {
             /**
              * This event SHALL be generated, when the latching switch is moved
@@ -188,7 +188,7 @@ export namespace SwitchCluster {
         }
     };
 
-    const MS = {
+    const MomentarySwitch = {
         events: {
             /**
              * This event SHALL be generated, when the momentary switch starts
@@ -200,7 +200,7 @@ export namespace SwitchCluster {
         }
     };
 
-    const MSL = {
+    const MomentarySwitchLongPress = {
         events: {
             /**
              * This event SHALL be generated, when the momentary switch has
@@ -226,7 +226,7 @@ export namespace SwitchCluster {
         }
     };
 
-    const MSR = {
+    const MomentarySwitchRelease = {
         events: {
             /**
              * This event SHALL be generated, when the momentary switch has
@@ -254,11 +254,11 @@ export namespace SwitchCluster {
 
         elements: [
             Base,
-            MSM,
-            LS,
-            MS,
-            MSL,
-            MSR
+            MomentarySwitchMultiPress,
+            LatchingSwitch,
+            MomentarySwitch,
+            MomentarySwitchLongPress,
+            MomentarySwitchRelease
         ]
     });
 };

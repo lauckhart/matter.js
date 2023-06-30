@@ -116,7 +116,7 @@ export namespace AdministratorCommissioningCluster {
         }
     };
 
-    const BC = {
+    const Basic = {
         commands: {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 11.18.8
@@ -133,7 +133,7 @@ export namespace AdministratorCommissioningCluster {
         supportedFeatures: { BC: true },
         elements: [
             Base,
-            BC
+            Basic
         ]
     });
 };

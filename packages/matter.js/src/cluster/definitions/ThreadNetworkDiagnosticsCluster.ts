@@ -643,7 +643,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
         }
     };
 
-    const ERRCNT = {
+    const ErrorCounts = {
         attributes: {
             /**
              * The OverrunCount attribute SHALL indicate the number of packets
@@ -668,7 +668,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
         }
     };
 
-    const MLECNT = {
+    const MleCounts = {
         attributes: {
             /**
              * The DetachedRoleCount attribute SHALL indicate the number of
@@ -752,7 +752,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
         }
     };
 
-    const MACCNT = {
+    const MacCounts = {
         attributes: {
             /**
              * The TxTotalCount attribute SHALL indicate the total number of
@@ -1139,9 +1139,9 @@ export namespace ThreadNetworkDiagnosticsCluster {
 
         elements: [
             Base,
-            ERRCNT,
-            MLECNT,
-            MACCNT
+            ErrorCounts,
+            MleCounts,
+            MacCounts
         ]
     });
 };

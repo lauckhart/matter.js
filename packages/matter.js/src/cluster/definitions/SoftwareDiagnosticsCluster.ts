@@ -143,7 +143,7 @@ export namespace SoftwareDiagnosticsCluster {
         }
     };
 
-    const WTRMRK = {
+    const Watermarks = {
         attributes: {
             /**
              * The CurrentHeapHighWatermark attribute SHALL indicate the
@@ -175,7 +175,7 @@ export namespace SoftwareDiagnosticsCluster {
         supportedFeatures: { WTRMRK: true },
         elements: [
             Base,
-            WTRMRK
+            Watermarks
         ]
     });
 };
