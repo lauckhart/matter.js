@@ -18,11 +18,12 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "6.9.2" },
 
             children: [
                 {
-                    tag: "datatype", name: "NU", id: 0x0, description: "Supports updates to the input names",
-                    xref: { document: "cluster", section: "6.9.2" }
+                    tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
+                    details: "Supports updates to the input names"
                 }
             ]
         },

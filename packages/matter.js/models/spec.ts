@@ -19,12 +19,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.2.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "QRY", id: 0x0, description: "Query",
-                            details: "Multicast query for identification state",
-                            xref: { document: "cluster", section: "1.2.4" }
+                            details: "Multicast query for identification state"
                         }
                     ]
                 },
@@ -161,12 +161,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.3.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "GN", id: 0x0, default: 0, description: "GroupNames",
-                            details: "The ability to store a name for a group.",
-                            xref: { document: "cluster", section: "1.3.4" }
+                            details: "The ability to store a name for a group."
                         }
                     ]
                 },
@@ -314,12 +314,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.4.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "SN", id: 0x0, default: 0, description: "SceneNames",
-                            details: "The ability to store a name for a scene.",
-                            xref: { document: "cluster", section: "1.4.4" }
+                            details: "The ability to store a name for a scene."
                         }
                     ]
                 },
@@ -707,12 +707,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.5.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "LT", id: 0x0, description: "LevelControlForLighting",
-                            details: "Behavior that supports lighting applications.",
-                            xref: { document: "cluster", section: "1.5.4" }
+                            details: "Behavior that supports lighting applications."
                         }
                     ]
                 },
@@ -892,24 +892,21 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.6.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "OO", id: 0x0, default: 1, description: "OnOff",
-                            details: "Dependency with the On/Off cluster",
-                            xref: { document: "cluster", section: "1.6.4" }
+                            details: "Dependency with the On/Off cluster"
                         },
                         {
                             tag: "datatype", name: "LT", id: 0x1, default: 0, description: "Lighting",
-                            details: "Behavior that supports lighting applications",
-                            xref: { document: "cluster", section: "1.6.4" }
+                            details: "Behavior that supports lighting applications"
                         },
-
                         {
                             tag: "datatype", name: "FQ", id: 0x2, default: 0, description: "Frequency",
                             details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
-                                     "frequency control.",
-                            xref: { document: "cluster", section: "1.6.4" }
+                                     "frequency control."
                         }
                     ]
                 },
@@ -1180,24 +1177,21 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.6.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "OO", id: 0x0, default: 1, description: "OnOff",
-                            details: "Dependency with the On/Off cluster",
-                            xref: { document: "cluster", section: "1.6.4" }
+                            details: "Dependency with the On/Off cluster"
                         },
                         {
                             tag: "datatype", name: "LT", id: 0x1, default: 0, description: "Lighting",
-                            details: "Behavior that supports lighting applications",
-                            xref: { document: "cluster", section: "1.6.4" }
+                            details: "Behavior that supports lighting applications"
                         },
-
                         {
                             tag: "datatype", name: "FQ", id: 0x2, default: 0, description: "Frequency",
                             details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
-                                     "frequency control.",
-                            xref: { document: "cluster", section: "1.6.4" }
+                                     "frequency control."
                         }
                     ]
                 },
@@ -1489,12 +1483,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.8.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "DEPONOFF", id: 0x0, description: "OnOff",
-                            details: "Dependency with the On/Off cluster",
-                            xref: { document: "cluster", section: "1.8.4" }
+                            details: "Dependency with the On/Off cluster"
                         }
                     ]
                 },
@@ -1674,29 +1668,19 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.11.4" },
 
                     children: [
-                        {
-                            tag: "datatype", name: "LS", id: 0x0, conformance: "O.a", description: "LatchingSwitch",
-                            xref: { document: "cluster", section: "1.11.4" }
-                        },
-                        {
-                            tag: "datatype", name: "MS", id: 0x1, conformance: "O.a", description: "MomentarySwitch",
-                            xref: { document: "cluster", section: "1.11.4" }
-                        },
-                        {
-                            tag: "datatype", name: "MSR", id: 0x2, conformance: "[MS]", description: "MomentarySwitchRelease",
-                            xref: { document: "cluster", section: "1.11.4" }
-                        },
+                        { tag: "datatype", name: "LS", id: 0x0, conformance: "O.a", description: "LatchingSwitch" },
+                        { tag: "datatype", name: "MS", id: 0x1, conformance: "O.a", description: "MomentarySwitch" },
+                        { tag: "datatype", name: "MSR", id: 0x2, conformance: "[MS]", description: "MomentarySwitchRelease" },
                         {
                             tag: "datatype", name: "MSL", id: 0x3, conformance: "[MS & MSR]",
-                            description: "MomentarySwitchLongPress",
-                            xref: { document: "cluster", section: "1.11.4" }
+                            description: "MomentarySwitchLongPress"
                         },
                         {
                             tag: "datatype", name: "MSM", id: 0x4, conformance: "[MS & MSR]",
-                            description: "MomentarySwitchMultiPress",
-                            xref: { document: "cluster", section: "1.11.4" }
+                            description: "MomentarySwitchMultiPress"
                         }
                     ]
                 },
@@ -1934,12 +1918,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "2.4.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "EXT", id: 0x0, conformance: "O", description: "Extended",
-                            details: "The cluster is capable of extended range and resolution",
-                            xref: { document: "cluster", section: "2.4.4" }
+                            details: "The cluster is capable of extended range and resolution"
                         }
                     ]
                 },
@@ -2023,7 +2007,7 @@ export const SpecMatter: MatterElement = {
                 {
                     tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
                     constraint: "MinMeasuredValue to MaxMeasuredValue", default: null, quality: "X P",
-                    details: "MeasuredValue represents the flow in m3/h as follows: MeasuredValue = 10 x Flow",
+                    details: "MeasuredValue represents the flow in m/h as follows: MeasuredValue = 10 x Flow",
                     xref: { document: "cluster", section: "2.5.4.1" }
                 },
 
@@ -2324,32 +2308,28 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "3.2.5" },
 
                     children: [
                         {
                             tag: "datatype", name: "HS", id: 0x0, description: "HueSaturation",
-                            details: "Supports color specification via hue/saturation.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Supports color specification via hue/saturation."
                         },
                         {
                             tag: "datatype", name: "EHUE", id: 0x1, description: "EnhancedHue",
-                            details: "Enhanced hue is supported.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Enhanced hue is supported."
                         },
                         {
                             tag: "datatype", name: "CL", id: 0x2, description: "ColorLoop",
-                            details: "Color loop is supported.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Color loop is supported."
                         },
                         {
                             tag: "datatype", name: "XY", id: 0x3, description: "Xy",
-                            details: "Supports color specification via XY.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Supports color specification via XY."
                         },
                         {
                             tag: "datatype", name: "CT", id: 0x4, description: "ColorTemperature",
-                            details: "Supports specification of color temperature.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Supports specification of color temperature."
                         }
                     ]
                 },
@@ -2578,7 +2558,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M0",
+                    tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     details: "The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined " +
                              "in the CIE xyY Color Space.",
@@ -2586,7 +2566,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M0",
+                    tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     details: "The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined " +
                              "in the CIE xyY Color Space.",
@@ -2595,7 +2575,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "Primary1Intensity", id: 0x13, type: "uint8", access: "R V",
-                    conformance: "M0", quality: "X F",
+                    conformance: "M", quality: "X F",
                     details: "The Primary1intensity attribute contains a representation of the maximum intensity of this primary " +
                              "as defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast " +
                              "Configuration Cluster), normalized such that the primary with the highest maximum intensity " +
@@ -2604,78 +2584,78 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M1",
+                    tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
-                    tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M1",
+                    tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
                     tag: "attribute", name: "Primary2Intensity", id: 0x17, type: "uint8", access: "R V",
-                    conformance: "M1", quality: "X F",
+                    conformance: "M", quality: "X F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
-                    tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M2",
+                    tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
-                    tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M2",
+                    tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
                     tag: "attribute", name: "Primary3Intensity", id: 0x1b, type: "uint8", access: "R V",
-                    conformance: "M2", quality: "X F",
+                    conformance: "M", quality: "X F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
-                    tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M3",
+                    tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M3",
+                    tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary4Intensity", id: 0x22, type: "uint8", access: "R V",
-                    conformance: "M3", quality: "X F",
+                    conformance: "M", quality: "X F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M4",
+                    tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M4",
+                    tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary5Intensity", id: 0x26, type: "uint8", access: "R V",
-                    conformance: "M4", quality: "X F",
+                    conformance: "M", quality: "X F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M5",
+                    tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
-                    tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M5",
+                    tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary6Intensity", id: 0x2a, type: "uint8", access: "R V",
-                    conformance: "M5", quality: "X F",
+                    conformance: "M", quality: "X F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
 
@@ -3641,42 +3621,36 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "4.2.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "PRSCONST", id: 0x0, conformance: "O.a+", description: "ConstantPressure",
-                            details: "Supports operating in constant pressure mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in constant pressure mode"
                         },
                         {
                             tag: "datatype", name: "PRSCOMP", id: 0x1, conformance: "O.a+", description: "CompensatedPressure",
-                            details: "Supports operating in compensated pressure mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in compensated pressure mode"
                         },
                         {
                             tag: "datatype", name: "FLW", id: 0x2, conformance: "O.a+", description: "ConstantFlow",
-                            details: "Supports operating in constant flow mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in constant flow mode"
                         },
                         {
                             tag: "datatype", name: "SPD", id: 0x3, conformance: "O.a+", description: "ConstantSpeed",
-                            details: "Supports operating in constant speed mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in constant speed mode"
                         },
                         {
                             tag: "datatype", name: "TEMP", id: 0x4, conformance: "O.a+", description: "ConstantTemperature",
-                            details: "Supports operating in constant temperature mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in constant temperature mode"
                         },
                         {
                             tag: "datatype", name: "AUTO", id: 0x5, conformance: "O", description: "Automatic",
-                            details: "Supports operating in automatic mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in automatic mode"
                         },
                         {
                             tag: "datatype", name: "LOCAL", id: 0x6, conformance: "O", description: "LocalOperation",
-                            details: "Supports operating using local settings",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating using local settings"
                         }
                     ]
                 },
@@ -4096,42 +4070,36 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "4.3.3.1" },
 
                     children: [
                         {
                             tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a+", description: "Heating",
-                            details: "Thermostat is capable of managing a heating device",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Thermostat is capable of managing a heating device"
                         },
                         {
                             tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a+", description: "Cooling",
-                            details: "Thermostat is capable of managing a cooling device",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Thermostat is capable of managing a cooling device"
                         },
                         {
                             tag: "datatype", name: "OCC", id: 0x2, conformance: "O", description: "Occupancy",
-                            details: "Supports Occupied and Unoccupied setpoints",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Supports Occupied and Unoccupied setpoints"
                         },
                         {
                             tag: "datatype", name: "SCH", id: 0x3, conformance: "O", description: "ScheduleConfiguration",
-                            details: "Supports remote configuration of a weekly schedule of setpoint transitions",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Supports remote configuration of a weekly schedule of setpoint transitions"
                         },
                         {
                             tag: "datatype", name: "SB", id: 0x4, conformance: "O", description: "Setback",
-                            details: "Supports configurable setback (or span)",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Supports configurable setback (or span)"
                         },
                         {
                             tag: "datatype", name: "AUTO", id: 0x5, conformance: "O", description: "AutoMode",
-                            details: "Supports a System Mode of Auto",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Supports a System Mode of Auto"
                         },
                         {
                             tag: "datatype", name: "LTNE", id: 0x6, conformance: "O", description: "LocalTemperatureNotExposed",
-                            details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute"
                         }
                     ]
                 },
@@ -4855,27 +4823,24 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "4.4.5" },
 
                     children: [
                         {
                             tag: "datatype", name: "SPD", id: 0x0, description: "MultiSpeed",
-                            details: "1-100 speeds",
-                            xref: { document: "cluster", section: "4.4.5" }
+                            details: "1-100 speeds"
                         },
                         {
                             tag: "datatype", name: "AUT", id: 0x1, description: "Auto",
-                            details: "Automatic mode supported for fan speed",
-                            xref: { document: "cluster", section: "4.4.5" }
+                            details: "Automatic mode supported for fan speed"
                         },
                         {
                             tag: "datatype", name: "RCK", id: 0x2, description: "Rocking",
-                            details: "Rocking movement supported",
-                            xref: { document: "cluster", section: "4.4.5" }
+                            details: "Rocking movement supported"
                         },
                         {
                             tag: "datatype", name: "WND", id: 0x3, description: "Wind",
-                            details: "Wind emulation supported",
-                            xref: { document: "cluster", section: "4.4.5" }
+                            details: "Wind emulation supported"
                         }
                     ]
                 },
@@ -5111,67 +5076,56 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "5.2.2" },
 
                     children: [
                         {
                             tag: "datatype", name: "PIN", id: 0x0, conformance: "O", description: "PinCredential",
-                            details: "Lock supports PIN credentials (via keypad, or over- the-air)",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports PIN credentials (via keypad, or over- the-air)"
                         },
                         {
                             tag: "datatype", name: "RID", id: 0x1, conformance: "O", description: "RfidCredential",
-                            details: "Lock supports RFID credentials",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports RFID credentials"
                         },
                         {
                             tag: "datatype", name: "FGP", id: 0x2, conformance: "P, O", description: "FingerCredentials",
-                            details: "Lock supports finger related credentials (fingerprint, finger vein)",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports finger related credentials (fingerprint, finger vein)"
                         },
                         {
                             tag: "datatype", name: "LOG", id: 0x3, conformance: "O", description: "Logging",
-                            details: "Lock supports local/on-lock logging when Events are not supported",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports local/on-lock logging when Events are not supported"
                         },
                         {
                             tag: "datatype", name: "WDSCH", id: 0x4, conformance: "O", description: "WeekDayAccessSchedules",
-                            details: "Lock supports week day user access schedules",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports week day user access schedules"
                         },
                         {
                             tag: "datatype", name: "DPS", id: 0x5, conformance: "O", description: "DoorPositionSensor",
-                            details: "Lock supports a door position sensor that indicates door’s state",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports a door position sensor that indicates door’s state"
                         },
                         {
                             tag: "datatype", name: "FACE", id: 0x6, conformance: "P, O", description: "FaceCredentials",
-                            details: "Lock supports face related credentials (face, iris, retina)",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports face related credentials (face, iris, retina)"
                         },
                         {
                             tag: "datatype", name: "COTA", id: 0x7, conformance: "O", description: "CredentialOverTheAirAccess",
-                            details: "PIN codes over- the-air supported for lock/unlock operations",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "PIN codes over- the-air supported for lock/unlock operations"
                         },
                         {
                             tag: "datatype", name: "USR", id: 0x8, conformance: "[PIN | RID]", description: "User",
-                            details: "Lock supports the user commands and database",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports the user commands and database"
                         },
                         {
                             tag: "datatype", name: "NOT", id: 0x9, conformance: "O", description: "Notification",
-                            details: "Operation and Programming Notifications",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Operation and Programming Notifications"
                         },
                         {
                             tag: "datatype", name: "YDSCH", id: 0xa, conformance: "O", description: "YearDayAccessSchedules",
-                            details: "Lock supports year day user access schedules",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports year day user access schedules"
                         },
                         {
                             tag: "datatype", name: "HDSCH", id: 0xb, conformance: "O", description: "HolidaySchedules",
-                            details: "Lock supports holiday schedules",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports holiday schedules"
                         }
                     ]
                 },
@@ -6521,32 +6475,28 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "5.3.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "LF", id: 0x0, conformance: "O.a+", description: "Lift",
-                            details: "Lift Control and behavior for lifting/sliding window coverings",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Lift Control and behavior for lifting/sliding window coverings"
                         },
                         {
                             tag: "datatype", name: "TL", id: 0x1, conformance: "O.a+", description: "Tilt",
-                            details: "Tilt Control and behavior for tilting window coverings",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Tilt Control and behavior for tilting window coverings"
                         },
                         {
                             tag: "datatype", name: "PALF", id: 0x2, conformance: "[LF]", description: "PositionAwareLift",
-                            details: "Position Aware lift control is supported.",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Position Aware lift control is supported."
                         },
                         {
                             tag: "datatype", name: "ABS", id: 0x3, conformance: "O", description: "AbsolutePosition",
-                            details: "Absolute positioning is supported.",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Absolute positioning is supported."
                         },
                         {
                             tag: "datatype", name: "PATL", id: 0x4, conformance: "[TL]", description: "PositionAwareTilt",
-                            details: "Position Aware tilt control is supported.",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Position Aware tilt control is supported."
                         }
                     ]
                 },
@@ -6590,17 +6540,21 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "CurrentPositionLift1", id: 0x3, type: "uint16", access: "R V",
+                    tag: "attribute", name: "CurrentPositionLift", id: 0x3, type: "uint16", access: "R V",
                     conformance: "[LF & PA_LF]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
                     default: null, quality: "X N",
-                    xref: { document: "cluster", section: "5.3.5" }
+                    details: "The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the " +
+                             "window covering from the fully-open position.",
+                    xref: { document: "cluster", section: "5.3.5.4" }
                 },
 
                 {
-                    tag: "attribute", name: "CurrentPositionTilt1", id: 0x4, type: "uint16", access: "R V",
+                    tag: "attribute", name: "CurrentPositionTilt", id: 0x4, type: "uint16", access: "R V",
                     conformance: "[TL & PA_TL]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
                     default: null, quality: "X N",
-                    xref: { document: "cluster", section: "5.3.5" }
+                    details: "The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of " +
+                             "the window covering from the fully-open position.",
+                    xref: { document: "cluster", section: "5.3.5.5" }
                 },
 
                 {
@@ -6630,14 +6584,21 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "CurrentPositionLiftPercentage1", id: 0x8, type: "percent", access: "R V",
+                    tag: "attribute", name: "CurrentPositionLiftPercentage", id: 0x8, type: "percent", access: "R V",
                     conformance: "[LF & PA_LF]", constraint: "0 to 100", default: null, quality: "X N S P",
-                    xref: { document: "cluster", section: "5.3.5" }
+                    details: "The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% " +
+                             "to 100% with 1% default step. This attribute is equal to CurrentPositionLiftPercent100ths attribute " +
+                             "divided by 100.",
+                    xref: { document: "cluster", section: "5.3.5.11" }
                 },
+
                 {
-                    tag: "attribute", name: "CurrentPositionTiltPercentage1", id: 0x9, type: "percent", access: "R V",
+                    tag: "attribute", name: "CurrentPositionTiltPercentage", id: 0x9, type: "percent", access: "R V",
                     conformance: "[TL & PA_TL]", constraint: "0 to 100", default: null, quality: "X N S P",
-                    xref: { document: "cluster", section: "5.3.5" }
+                    details: "The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% " +
+                             "to 100% with 1% default step. This attribute is equal to CurrentPositionTiltPercent100ths attribute " +
+                             "divided by 100.",
+                    xref: { document: "cluster", section: "5.3.5.12" }
                 },
 
                 {
@@ -6649,14 +6610,19 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "TargetPositionLiftPercent100Ths2", id: 0xb, type: "percent100ths",
+                    tag: "attribute", name: "TargetPositionLiftPercent100Ths", id: 0xb, type: "percent100ths",
                     access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X S P",
-                    xref: { document: "cluster", section: "5.3.5" }
+                    details: "The TargetPositionLiftPercent100ths attribute identifies the position where the Window Covering " +
+                             "Lift will go or is moving to as a percentage.",
+                    xref: { document: "cluster", section: "5.3.5.13" }
                 },
+
                 {
-                    tag: "attribute", name: "TargetPositionTiltPercent100Ths2", id: 0xc, type: "percent100ths",
+                    tag: "attribute", name: "TargetPositionTiltPercent100Ths", id: 0xc, type: "percent100ths",
                     access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X S P",
-                    xref: { document: "cluster", section: "5.3.5" }
+                    details: "The TargetPositionTiltPercent100ths attribute identifies the position where the Window Covering " +
+                             "Tilt will go or is moving to as a percentage.",
+                    xref: { document: "cluster", section: "5.3.5.14" }
                 },
 
                 {
@@ -6697,14 +6663,19 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "attribute", name: "CurrentPositionLiftPercent100Ths1", id: 0xe, type: "percent100ths",
+                    tag: "attribute", name: "CurrentPositionLiftPercent100Ths", id: 0xe, type: "percent100ths",
                     access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X N P",
-                    xref: { document: "cluster", section: "5.3.5" }
+                    details: "The CurrentPositionLiftPercent100ths attribute identifies the actual position as a percentage with " +
+                             "a minimal step of 0.01%. E.g Max 10000 equals 100.00%.",
+                    xref: { document: "cluster", section: "5.3.5.9" }
                 },
+
                 {
-                    tag: "attribute", name: "CurrentPositionTiltPercent100Ths1", id: 0xf, type: "percent100ths",
+                    tag: "attribute", name: "CurrentPositionTiltPercent100Ths", id: 0xf, type: "percent100ths",
                     access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X N P",
-                    xref: { document: "cluster", section: "5.3.5" }
+                    details: "The CurrentPositionTiltPercent100ths attribute identifies the actual position as a percentage with " +
+                             "a minimal step of 0.01%. E.g Max 10000 equals 100.00%.",
+                    xref: { document: "cluster", section: "5.3.5.10" }
                 },
 
                 {
@@ -7105,13 +7076,13 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "6.4.2" },
 
                     children: [
                         {
                             tag: "datatype", name: "AP", id: 0x0, description: "ApplicationPlatform",
                             details: "Support for attributes and commands required for endpoint to support launching any application " +
-                                     "within the supported application catalogs",
-                            xref: { document: "cluster", section: "6.4.2" }
+                                     "within the supported application catalogs"
                         }
                     ]
                 },
@@ -7269,12 +7240,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "6.5.2" },
 
                     children: [
                         {
                             tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
-                            details: "Supports updates to output names",
-                            xref: { document: "cluster", section: "6.5.2" }
+                            details: "Supports updates to output names"
                         }
                     ]
                 },
@@ -7361,17 +7332,16 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "6.6.2" },
 
                     children: [
                         {
                             tag: "datatype", name: "CL", id: 0x0, description: "ChannelList",
-                            details: "Provides list of available channels.",
-                            xref: { document: "cluster", section: "6.6.2" }
+                            details: "Provides list of available channels."
                         },
                         {
                             tag: "datatype", name: "LI", id: 0x1, description: "LineupInfo",
-                            details: "Provides lineup info, which is a reference to an external source of lineup information.",
-                            xref: { document: "cluster", section: "6.6.2" }
+                            details: "Provides lineup info, which is a reference to an external source of lineup information."
                         }
                     ]
                 },
@@ -7577,17 +7547,16 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "6.7.2" },
 
                     children: [
                         {
                             tag: "datatype", name: "CS", id: 0x0, description: "ContentSearch",
-                            details: "Device supports content search (non-app specific)",
-                            xref: { document: "cluster", section: "6.7.2" }
+                            details: "Device supports content search (non-app specific)"
                         },
                         {
                             tag: "datatype", name: "UP", id: 0x1, description: "UrlPlayback",
-                            details: "Device supports basic URL-based file playback",
-                            xref: { document: "cluster", section: "6.7.2" }
+                            details: "Device supports basic URL-based file playback"
                         }
                     ]
                 },
@@ -7971,22 +7940,20 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "6.8.2" },
 
                     children: [
                         {
                             tag: "datatype", name: "NV", id: 0x0, description: "NavigationKeyCodes",
-                            details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU",
-                            xref: { document: "cluster", section: "6.8.2" }
+                            details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU"
                         },
                         {
                             tag: "datatype", name: "LK", id: 0x1, description: "LocationKeys",
-                            details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)",
-                            xref: { document: "cluster", section: "6.8.2" }
+                            details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)"
                         },
                         {
                             tag: "datatype", name: "NK", id: 0x2, description: "NumberKeys",
-                            details: "Supports numeric input 0..9",
-                            xref: { document: "cluster", section: "6.8.2" }
+                            details: "Supports numeric input 0..9"
                         }
                     ]
                 },
@@ -8048,12 +8015,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "6.9.2" },
 
                     children: [
                         {
                             tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
-                            details: "Supports updates to the input names",
-                            xref: { document: "cluster", section: "6.9.2" }
+                            details: "Supports updates to the input names"
                         }
                     ]
                 },
@@ -8182,19 +8149,17 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "6.10.2" },
 
                     children: [
                         {
                             tag: "datatype", name: "AS", id: 0x0, description: "AdvancedSeek",
                             details: "Enables clients to implement more advanced media seeking behavior in their user interface, such as " +
-                                     "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support",
-                            xref: { document: "cluster", section: "6.10.2" }
+                                     "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support"
                         },
-
                         {
                             tag: "datatype", name: "VS", id: 0x1, description: "VariableSpeed",
-                            details: "Support for commands to support variable speed playback on media that supports it.",
-                            xref: { document: "cluster", section: "6.10.2" }
+                            details: "Support for commands to support variable speed playback on media that supports it."
                         }
                     ]
                 },
@@ -9947,12 +9912,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.2.5" },
 
                     children: [
                         {
                             tag: "datatype", name: "CS", id: 0x0, description: "CacheAndSync",
-                            details: "The ability to support CacheAndSync security policy and MCSP.",
-                            xref: { document: "core", section: "11.2.5" }
+                            details: "The ability to support CacheAndSync security policy and MCSP."
                         }
                     ]
                 },
@@ -10241,12 +10206,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.4.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "CALFMT", id: 0x0, description: "CalendarFormat",
-                            details: "The Node can be configured to use different calendar formats when conveying values to a user.",
-                            xref: { document: "core", section: "11.4.4" }
+                            details: "The Node can be configured to use different calendar formats when conveying values to a user."
                         }
                     ]
                 },
@@ -10319,12 +10284,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.5.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "TEMP", id: 0x0, description: "TemperatureUnit",
-                            details: "The Node can be configured to use different units of temperature when conveying values to a user.",
-                            xref: { document: "core", section: "11.5.4" }
+                            details: "The Node can be configured to use different units of temperature when conveying values to a user."
                         }
                     ]
                 },
@@ -10376,27 +10341,24 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.7.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "WIRED", id: 0x0, description: "Wired",
-                            details: "A wired power source",
-                            xref: { document: "core", section: "11.7.4" }
+                            details: "A wired power source"
                         },
                         {
                             tag: "datatype", name: "BAT", id: 0x1, description: "Battery",
-                            details: "A battery power source",
-                            xref: { document: "core", section: "11.7.4" }
+                            details: "A battery power source"
                         },
                         {
                             tag: "datatype", name: "RECHG", id: 0x2, description: "Rechargeable",
-                            details: "A rechargeable battery power source (requires Battery feature)",
-                            xref: { document: "core", section: "11.7.4" }
+                            details: "A rechargeable battery power source (requires Battery feature)"
                         },
                         {
                             tag: "datatype", name: "REPLC", id: 0x3, description: "Replaceable",
-                            details: "A replaceable battery power source (requires Battery feature)",
-                            xref: { document: "core", section: "11.7.4" }
+                            details: "A replaceable battery power source (requires Battery feature)"
                         }
                     ]
                 },
@@ -11003,22 +10965,20 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.8.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "WI", id: 0x0, conformance: "O.a", description: "WiFiNetworkInterface",
-                            details: "Wi-Fi related features",
-                            xref: { document: "core", section: "11.8.4" }
+                            details: "Wi-Fi related features"
                         },
                         {
                             tag: "datatype", name: "TH", id: 0x1, conformance: "O.a", description: "ThreadNetworkInterface",
-                            details: "Thread related features",
-                            xref: { document: "core", section: "11.8.4" }
+                            details: "Thread related features"
                         },
                         {
                             tag: "datatype", name: "ET", id: 0x2, conformance: "O.a", description: "EthernetNetworkInterface",
-                            details: "Ethernet related features",
-                            xref: { document: "core", section: "11.8.4" }
+                            details: "Ethernet related features"
                         }
                     ]
                 },
@@ -12218,12 +12178,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.12.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "WTRMRK", id: 0x0, description: "Watermarks",
-                            details: "Node makes available the metrics for high watermark related to memory consumption.",
-                            xref: { document: "core", section: "11.12.4" }
+                            details: "Node makes available the metrics for high watermark related to memory consumption."
                         }
                     ]
                 },
@@ -12344,31 +12304,26 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.13.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
                             details: "Server supports the counts for the number of received and transmitted packets on the Thread " +
-                                     "interface.",
-                            xref: { document: "core", section: "11.13.4" }
+                                     "interface."
                         },
-
                         {
                             tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
                             details: "Server supports the counts for the number of errors that have occurred during the reception and " +
-                                     "transmission of packets on the Thread interface.",
-                            xref: { document: "core", section: "11.13.4" }
+                                     "transmission of packets on the Thread interface."
                         },
-
                         {
                             tag: "datatype", name: "MLECNT", id: 0x2, description: "MleCounts",
-                            details: "Server supports the counts for various MLE layer happenings.",
-                            xref: { document: "core", section: "11.13.4" }
+                            details: "Server supports the counts for various MLE layer happenings."
                         },
                         {
                             tag: "datatype", name: "MACCNT", id: 0x3, description: "MacCounts",
-                            details: "Server supports the counts for various MAC layer happenings.",
-                            xref: { document: "core", section: "11.13.4" }
+                            details: "Server supports the counts for various MAC layer happenings."
                         }
                     ]
                 },
@@ -13286,20 +13241,18 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.14.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
                             details: "Node makes available the counts for the number of received and transmitted packets on the Wi-Fi " +
-                                     "interface.",
-                            xref: { document: "core", section: "11.14.4" }
+                                     "interface."
                         },
-
                         {
                             tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
                             details: "Node makes available the counts for the number of errors that have occurred during the reception " +
-                                     "and transmission of packets on the Wi-Fi interface.",
-                            xref: { document: "core", section: "11.14.4" }
+                                     "and transmission of packets on the Wi-Fi interface."
                         }
                     ]
                 },
@@ -13529,20 +13482,18 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.15.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
                             details: "Node makes available the counts for the number of received and transmitted packets on the ethernet " +
-                                     "interface.",
-                            xref: { document: "core", section: "11.15.4" }
+                                     "interface."
                         },
-
                         {
                             tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
                             details: "Node makes available the counts for the number of errors that have occurred during the reception " +
-                                     "and transmission of packets on the ethernet interface.",
-                            xref: { document: "core", section: "11.15.4" }
+                                     "and transmission of packets on the ethernet interface."
                         }
                     ]
                 },
@@ -13660,22 +13611,20 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.16.5" },
 
                     children: [
                         {
                             tag: "datatype", name: "TZ", id: 0x0, description: "TimeZone",
-                            details: "Server supports time zone.",
-                            xref: { document: "core", section: "11.16.5" }
+                            details: "Server supports time zone."
                         },
                         {
                             tag: "datatype", name: "NTPC", id: 0x1, description: "NtpClient",
-                            details: "Server supports an NTP or SNTP client.",
-                            xref: { document: "core", section: "11.16.5" }
+                            details: "Server supports an NTP or SNTP client."
                         },
                         {
                             tag: "datatype", name: "NTPS", id: 0x2, description: "NtpServer",
-                            details: "Server supports an NTP server role.",
-                            xref: { document: "core", section: "11.16.5" }
+                            details: "Server supports an NTP server role."
                         }
                     ]
                 },
@@ -14386,12 +14335,12 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "core", section: "11.18.4" },
 
                     children: [
                         {
                             tag: "datatype", name: "BC", id: 0x0, description: "Basic",
-                            details: "Node supports Basic Commissioning Method.",
-                            xref: { document: "core", section: "11.18.4" }
+                            details: "Node supports Basic Commissioning Method."
                         }
                     ]
                 },

@@ -17,19 +17,20 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "core", section: "11.8.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "WI", id: 0x0, conformance: "O.a", description: "Wi-Fi related features",
-                    xref: { document: "core", section: "11.8.4" }
+                    tag: "datatype", name: "WI", id: 0x0, conformance: "O.a", description: "WiFiNetworkInterface",
+                    details: "Wi-Fi related features"
                 },
                 {
-                    tag: "datatype", name: "TH", id: 0x1, conformance: "O.a", description: "Thread related features",
-                    xref: { document: "core", section: "11.8.4" }
+                    tag: "datatype", name: "TH", id: 0x1, conformance: "O.a", description: "ThreadNetworkInterface",
+                    details: "Thread related features"
                 },
                 {
-                    tag: "datatype", name: "ET", id: 0x2, conformance: "O.a", description: "Ethernet related features",
-                    xref: { document: "core", section: "11.8.4" }
+                    tag: "datatype", name: "ET", id: 0x2, conformance: "O.a", description: "EthernetNetworkInterface",
+                    details: "Ethernet related features"
                 }
             ]
         },

@@ -17,11 +17,12 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "core", section: "11.18.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "BC", id: 0x0, description: "Node supports Basic Commissioning Method.",
-                    xref: { document: "core", section: "11.18.4" }
+                    tag: "datatype", name: "BC", id: 0x0, description: "Basic",
+                    details: "Node supports Basic Commissioning Method."
                 }
             ]
         },

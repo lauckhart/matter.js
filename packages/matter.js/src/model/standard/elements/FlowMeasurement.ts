@@ -18,7 +18,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
             constraint: "MinMeasuredValue to MaxMeasuredValue", default: null, quality: "X P",
-            details: "MeasuredValue represents the flow in m3/h as follows: MeasuredValue = 10 x Flow",
+            details: "MeasuredValue represents the flow in m/h as follows: MeasuredValue = 10 x Flow",
             xref: { document: "cluster", section: "2.5.4.1" }
         },
 

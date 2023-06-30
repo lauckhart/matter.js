@@ -18,27 +18,26 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "core", section: "11.13.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "PKTCNT", id: 0x0,
-                    description: "Server supports the counts for the number of received and transmitted packets on the Thread interface.",
-                    xref: { document: "core", section: "11.13.4" }
+                    tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
+                    details: "Server supports the counts for the number of received and transmitted packets on the Thread " +
+                             "interface."
                 },
                 {
-                    tag: "datatype", name: "ERRCNT", id: 0x1,
-                    description: "Server supports the counts for the number of errors that have occurred during the reception and transmission of packets on the Thread interface.",
-                    xref: { document: "core", section: "11.13.4" }
+                    tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
+                    details: "Server supports the counts for the number of errors that have occurred during the reception and " +
+                             "transmission of packets on the Thread interface."
                 },
                 {
-                    tag: "datatype", name: "MLECNT", id: 0x2,
-                    description: "Server supports the counts for various MLE layer happenings.",
-                    xref: { document: "core", section: "11.13.4" }
+                    tag: "datatype", name: "MLECNT", id: 0x2, description: "MleCounts",
+                    details: "Server supports the counts for various MLE layer happenings."
                 },
                 {
-                    tag: "datatype", name: "MACCNT", id: 0x3,
-                    description: "Server supports the counts for various MAC layer happenings.",
-                    xref: { document: "core", section: "11.13.4" }
+                    tag: "datatype", name: "MACCNT", id: 0x3, description: "MacCounts",
+                    details: "Server supports the counts for various MAC layer happenings."
                 }
             ]
         },

@@ -18,21 +18,20 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "6.8.2" },
 
             children: [
                 {
-                    tag: "datatype", name: "NV", id: 0x0,
-                    description: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU",
-                    xref: { document: "cluster", section: "6.8.2" }
+                    tag: "datatype", name: "NV", id: 0x0, description: "NavigationKeyCodes",
+                    details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU"
                 },
                 {
-                    tag: "datatype", name: "LK", id: 0x1,
-                    description: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)",
-                    xref: { document: "cluster", section: "6.8.2" }
+                    tag: "datatype", name: "LK", id: 0x1, description: "LocationKeys",
+                    details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)"
                 },
                 {
-                    tag: "datatype", name: "NK", id: 0x2, description: "Supports numeric input 0..9",
-                    xref: { document: "cluster", section: "6.8.2" }
+                    tag: "datatype", name: "NK", id: 0x2, description: "NumberKeys",
+                    details: "Supports numeric input 0..9"
                 }
             ]
         },

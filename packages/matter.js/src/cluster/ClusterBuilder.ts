@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BitSchema } from "../schema/index.js";
+import { BitSchema, TypeFromPartialBitSchema } from "../schema/index.js";
 import { FilteredPluck, MergeAll } from "../util/Type.js";
 import { Attributes, Cluster, Commands, Events } from "./Cluster.js";
 
@@ -14,34 +14,42 @@ export type ClusterElements = {
     events?: Events
 };
 
-/*
 export type BuildCluster<
     F extends BitSchema,
+    SF extends TypeFromPartialBitSchema<F>,
     E extends ClusterElements[]
 > = Cluster<
     F,
-    TypeFromPartialBitSchema<F>,
+    SF,
     MergeAll<FilteredPluck<"attributes", E>>,
     MergeAll<FilteredPluck<"commands", E>>,
     MergeAll<FilteredPluck<"events", E>>
 >;
-*/
 
-export function BuildCluster<
+export type BuildClusterDefinition<
     F extends BitSchema,
+    SF extends TypeFromPartialBitSchema<F>,
     E extends ClusterElements[]
->(
+> = {
     id: number,
     name: string,
     revision: number,
-    features: F,
+    features?: F,
+    supportedFeatures?: SF,
     elements: E
- ) {
+};
+
+export function BuildCluster<
+    F extends BitSchema,
+    SF extends TypeFromPartialBitSchema<F>,
+    E extends ClusterElements[]
+>({ id, name, revision, features, supportedFeatures, elements}: BuildClusterDefinition<F, SF, E>) {
     return Cluster({
         id,
         name,
         revision,
         features,
+        supportedFeatures,
         attributes: MergeAll(...FilteredPluck("attributes", ...elements)),
         commands: MergeAll(...FilteredPluck("commands", ...elements)),
         events: MergeAll(...FilteredPluck("events", ...elements))

@@ -17,25 +17,24 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "core", section: "11.7.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "WIRED", id: 0x0, description: "A wired power source",
-                    xref: { document: "core", section: "11.7.4" }
+                    tag: "datatype", name: "WIRED", id: 0x0, description: "Wired",
+                    details: "A wired power source"
                 },
                 {
-                    tag: "datatype", name: "BAT", id: 0x1, description: "A battery power source",
-                    xref: { document: "core", section: "11.7.4" }
+                    tag: "datatype", name: "BAT", id: 0x1, description: "Battery",
+                    details: "A battery power source"
                 },
                 {
-                    tag: "datatype", name: "RECHG", id: 0x2,
-                    description: "A rechargeable battery power source (requires Battery feature)",
-                    xref: { document: "core", section: "11.7.4" }
+                    tag: "datatype", name: "RECHG", id: 0x2, description: "Rechargeable",
+                    details: "A rechargeable battery power source (requires Battery feature)"
                 },
                 {
-                    tag: "datatype", name: "REPLC", id: 0x3,
-                    description: "A replaceable battery power source (requires Battery feature)",
-                    xref: { document: "core", section: "11.7.4" }
+                    tag: "datatype", name: "REPLC", id: 0x3, description: "Replaceable",
+                    details: "A replaceable battery power source (requires Battery feature)"
                 }
             ]
         },

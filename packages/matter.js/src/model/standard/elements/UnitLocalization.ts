@@ -20,12 +20,12 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "core", section: "11.5.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "TEMP", id: 0x0,
-                    description: "The Node can be configured to use different units of temperature when conveying values to a user.",
-                    xref: { document: "core", section: "11.5.4" }
+                    tag: "datatype", name: "TEMP", id: 0x0, description: "TemperatureUnit",
+                    details: "The Node can be configured to use different units of temperature when conveying values to a user."
                 }
             ]
         },

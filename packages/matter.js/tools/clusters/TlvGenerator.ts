@@ -12,14 +12,11 @@ import { ClusterFile } from "./ClusterFile.js";
 
 /** Adds TLV structures for ValueModels to a ClusterFile */
 export class TlvGenerator {
-    private definitions;
     private definedDatatypes = new Set<Model>();
     private definedNames = new Set<string>();
     private scopedNames = new Set<string>();
 
     constructor(private file: ClusterFile, cluster: ClusterModel) {
-        this.definitions = file.section();
-
         // Find datatype names that conflict at top-level module scope.
         // Datatypes at cluster level get to use their own name but for nested
         // structures we prepend the parent name
@@ -169,9 +166,9 @@ export class TlvGenerator {
     }
 
     private defineEnum(name: string, model: ValueModel) {
-        const block = this.definitions.expressions(`export const enum ${name} {`, "}")
+        const block = this.file.types.expressions(`export const enum ${name} {`, "}")
             .document(model);
-        this.definitions.insertingBefore(block, () => {
+        this.file.types.insertingBefore(block, () => {
             model.children.forEach(child => {
                 block.atom(`${asObjectKey(child.name)} = ${child.id}`)
                     .document(child);
@@ -181,9 +178,9 @@ export class TlvGenerator {
 
     private defineStruct(name: string, model: ValueModel) {
         this.file.addImport("tlv/TlvObject", "TlvObject");
-        const block = this.definitions.expressions(`export const ${name} = TlvObject({`, "})")
+        const block = this.file.types.expressions(`export const ${name} = TlvObject({`, "})")
             .document(model);
-        this.definitions.insertingBefore(block, () => {
+        this.file.types.insertingBefore(block, () => {
             model.children.forEach(field => {
                 let tlv: string;
                 if (field.conformance.type == Conformance.Flag.Mandatory) {
@@ -225,10 +222,10 @@ export class TlvGenerator {
         this.file.addImport("tlv/TlvNumber", tlvNum);
 
         this.file.addImport("schema/BitmapSchema", "BitFlag");
-        const block = this.definitions.expressions(`export const ${name} = TlvBitmap(${tlvNum}, {`, "})")
+        const block = this.file.types.expressions(`export const ${name} = TlvBitmap(${tlvNum}, {`, "})")
             .document(model);
 
-        this.definitions.insertingBefore(block, () => {
+        this.file.types.insertingBefore(block, () => {
             model.children.forEach(child => {
                 block.atom(child.name, `BitFlag(${child.id})`)
                     .document(child);

@@ -19,17 +19,18 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "core", section: "11.15.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "PKTCNT", id: 0x0,
-                    description: "Node makes available the counts for the number of received and transmitted packets on the ethernet interface.",
-                    xref: { document: "core", section: "11.15.4" }
+                    tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
+                    details: "Node makes available the counts for the number of received and transmitted packets on the ethernet " +
+                             "interface."
                 },
                 {
-                    tag: "datatype", name: "ERRCNT", id: 0x1,
-                    description: "Node makes available the counts for the number of errors that have occurred during the reception and transmission of packets on the ethernet interface.",
-                    xref: { document: "core", section: "11.15.4" }
+                    tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
+                    details: "Node makes available the counts for the number of errors that have occurred during the reception " +
+                             "and transmission of packets on the ethernet interface."
                 }
             ]
         },

@@ -17,28 +17,28 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "3.2.5" },
 
             children: [
                 {
-                    tag: "datatype", name: "HS", id: 0x0,
-                    description: "Supports color specification via hue/saturation.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    tag: "datatype", name: "HS", id: 0x0, description: "HueSaturation",
+                    details: "Supports color specification via hue/saturation."
                 },
                 {
-                    tag: "datatype", name: "EHUE", id: 0x1, description: "Enhanced hue is supported.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    tag: "datatype", name: "EHUE", id: 0x1, description: "EnhancedHue",
+                    details: "Enhanced hue is supported."
                 },
                 {
-                    tag: "datatype", name: "CL", id: 0x2, description: "Color loop is supported.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    tag: "datatype", name: "CL", id: 0x2, description: "ColorLoop",
+                    details: "Color loop is supported."
                 },
                 {
-                    tag: "datatype", name: "XY", id: 0x3, description: "Supports color specification via XY.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    tag: "datatype", name: "XY", id: 0x3, description: "Xy",
+                    details: "Supports color specification via XY."
                 },
                 {
-                    tag: "datatype", name: "CT", id: 0x4, description: "Supports specification of color temperature.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    tag: "datatype", name: "CT", id: 0x4, description: "ColorTemperature",
+                    details: "Supports specification of color temperature."
                 }
             ]
         },
@@ -69,7 +69,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "XY",
-            constraint: "0", default: 24939, quality: "N S P",
+            constraint: "0", default: 1558, quality: "N S P",
             details: "The CurrentX attribute contains the current value of the normalized chromaticity value x, as " +
                      "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
                      "the color.",
@@ -78,7 +78,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "XY",
-            constraint: "0", default: 24701, quality: "N S P",
+            constraint: "0", default: 1543, quality: "N S P",
             details: "The CurrentY attribute contains the current value of the normalized chromaticity value y, as " +
                      "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
                      "the color.",
@@ -111,7 +111,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ColorTemperatureMireds", id: 0x7, type: "uint16", access: "R V",
-            conformance: "CT", constraint: "0", default: 250, quality: "N S P",
+            conformance: "CT", constraint: "0", quality: "N S P",
             details: "The ColorTemperatureMireds attribute contains a scaled inverse of the current value of the color " +
                      "temperature. The unit of ColorTemperatureMireds is the mired (micro reciprocal degree), AKA mirek " +
                      "(micro reciprocal kelvin). It is updated as fast as practical during commands that change the color.",
@@ -237,7 +237,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CoupleColorTempToLevelMinMireds", id: 0x400d, type: "uint16",
-            access: "R V", conformance: "CT | ColorTemperatureMi",
+            access: "R V", conformance: "CT",
             constraint: "ColorTempPhysicalMinMireds to ColorTemperatureMireds",
             details: "The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the " +
                      "ColorTemperatureMireds attribute for the purposes of coupling the ColorTemperatureMireds attribute " +
@@ -249,7 +249,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "StartUpColorTemperatureMireds", id: 0x4010, type: "uint16",
-            access: "RW VM", conformance: "CT | ColorTemperatureMi", constraint: "0", quality: "X",
+            access: "RW VM", conformance: "CT", constraint: "0", quality: "X",
             details: "The StartUpColorTemperatureMireds attribute SHALL define the desired startup color temperature " +
                      "value a lamp SHALL use when it is supplied with power and this value SHALL be reflected in the " +
                      "ColorTemperatureMireds attribute. In addition, the ColorMode and EnhancedColorMode attributes SHALL " +
@@ -267,16 +267,16 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M0",
-            constraint: "0", quality: "F",
+            tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V",
+            conformance: "NumberOfPrimaries > 0", constraint: "0", quality: "F",
             details: "The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined " +
                      "in the CIE xyY Color Space.",
             xref: { document: "cluster", section: "3.2.8.2" }
         },
 
         {
-            tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M0",
-            constraint: "0", quality: "F",
+            tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V",
+            conformance: "NumberOfPrimaries > 0", constraint: "0", quality: "F",
             details: "The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined " +
                      "in the CIE xyY Color Space.",
             xref: { document: "cluster", section: "3.2.8.3" }
@@ -284,7 +284,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Primary1Intensity", id: 0x13, type: "uint8", access: "R V",
-            conformance: "M0", quality: "X F",
+            conformance: "NumberOfPrimaries > 0", quality: "X F",
             details: "The Primary1intensity attribute contains a representation of the maximum intensity of this primary " +
                      "as defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast " +
                      "Configuration Cluster), normalized such that the primary with the highest maximum intensity " +
@@ -293,78 +293,78 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M1",
-            constraint: "0", quality: "F",
+            tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V",
+            conformance: "NumberOfPrimaries > 1", constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
-            tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M1",
-            constraint: "0", quality: "F",
+            tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V",
+            conformance: "NumberOfPrimaries > 1", constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
             tag: "attribute", name: "Primary2Intensity", id: 0x17, type: "uint8", access: "R V",
-            conformance: "M1", quality: "X F",
+            conformance: "NumberOfPrimaries > 1", quality: "X F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
-            tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M2",
-            constraint: "0", quality: "F",
+            tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V",
+            conformance: "NumberOfPrimaries > 2", constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
-            tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M2",
-            constraint: "0", quality: "F",
+            tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V",
+            conformance: "NumberOfPrimaries > 2", constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
             tag: "attribute", name: "Primary3Intensity", id: 0x1b, type: "uint8", access: "R V",
-            conformance: "M2", quality: "X F",
+            conformance: "NumberOfPrimaries > 2", quality: "X F",
             xref: { document: "cluster", section: "3.2.8" }
         },
         {
-            tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M3",
+            tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M3",
+            tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
             tag: "attribute", name: "Primary4Intensity", id: 0x22, type: "uint8", access: "R V",
-            conformance: "M3", quality: "X F",
+            conformance: "M", quality: "X F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M4",
+            tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M4",
+            tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
             tag: "attribute", name: "Primary5Intensity", id: 0x26, type: "uint8", access: "R V",
-            conformance: "M4", quality: "X F",
+            conformance: "M", quality: "X F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M5",
+            tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
-            tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M5",
+            tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M",
             constraint: "0", quality: "F",
             xref: { document: "cluster", section: "3.2.9" }
         },
         {
             tag: "attribute", name: "Primary6Intensity", id: 0x2a, type: "uint8", access: "R V",
-            conformance: "M5", quality: "X F",
+            conformance: "M", quality: "X F",
             xref: { document: "cluster", section: "3.2.9" }
         },
 

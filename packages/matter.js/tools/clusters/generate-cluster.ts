@@ -18,36 +18,60 @@ const logger = Logger.get("generate-cluster");
 export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
     logger.info(`${cluster.name} → ${file.name}.ts`);
 
-    const ns = file.statements(`export namespace ${cluster.name}Cluster {`, "}")
-        .document(cluster);
-
-    ns.atom(`export const name = ${JSON.stringify(cluster.name)}`);
-    ns.atom(`export const revision = ${JSON.stringify(cluster.revision)}`);
+    if (cluster.id != undefined) {
+        file.definitions.atom(`export const id = ${cluster.id}`);
+    }
+    file.definitions.atom(`export const name = ${JSON.stringify(cluster.name)}`);
+    file.definitions.atom(`export const revision = ${JSON.stringify(cluster.revision)}`);
 
     const features = cluster.features;
-    if (features?.children.length) {
+    const allFeatures = Array<string>();
+    if (features.length) {
         file.addImport("schema/BitmapSchema", "BitFlag");
-        const featureBlock = ns.expressions("export const featureMap = {", "}");
-        features.children.forEach(feature => {
+        const featureBlock = file.definitions.expressions("export const featureMap = {", "}");
+        features.forEach(feature => {
+            allFeatures.push(feature.name);
             featureBlock.atom(feature.name, `BitFlag(${feature.effectiveId})`)
                 .document(feature);
         });
     }
 
     const variance = ClusterVariance(cluster);
+
     const elementSets = {} as { [name: string]: ElementVariance };
     elementSets.Base = variance;
-    Object.entries(variance.features).forEach(([name, elements]) => camelize(name))
-
-    const gen = new ClusterElementGenerator(ns, cluster);
-
-    file.addImport("cluster/Cluster", "Cluster");
-    const complete = ns.expressions("export const Complete = Cluster({", "})")
-        .document(cluster, `This cluster definition includes all elements an implementation may support.  For type safety, use \`${cluster.name}.with()\` and a list of supported features.`);
-    if (cluster.id != undefined) {
-        complete.atom("id", `0x${cluster.id.toString(16)}`);
+    for (const name in variance.features) {
+        elementSets[name] = variance.features[name];
     }
-    complete.atom("name", JSON.stringify(cluster.name));
-    complete.atom("revision", JSON.stringify(cluster.revision));
+    variance.featureSets.forEach(featureSet => {
+        elementSets[new Array(...featureSet.flags).join("")] = featureSet;
+    })
 
+    const gen = new ClusterElementGenerator(file, cluster);
+    for (const name in elementSets) {
+        gen.defineElements(name, elementSets[name]);
+    }
+
+    if (cluster.id == undefined) {
+        // Following generation logic does not apply to base clusters
+        return;
+    }
+
+    file.addImport("cluster/ClusterBuilder", "BuildCluster");
+
+    const complete = file.definitions.expressions("export const Complete = BuildCluster({", "})");
+    complete.atom("id");
+    complete.atom("name");
+    complete.atom("revision");
+    if (features.length) {
+        complete.atom("features", "featureMap");
+        const completeFeatures = complete.expressions("supportedFeatures: {", "}");
+        for (const f of allFeatures) {
+            completeFeatures.atom(f, "true");
+        }
+    }
+    const completeElements = complete.expressions("elements: [", "]");
+    for (const e of Object.keys(elementSets)) {
+        completeElements.atom(e);
+    }
 }

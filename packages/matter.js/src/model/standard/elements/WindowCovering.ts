@@ -17,32 +17,28 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "5.3.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "LF", id: 0x0, conformance: "O.a+",
-                    description: "Lift Control and behavior for lifting/sliding window coverings",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    tag: "datatype", name: "LF", id: 0x0, conformance: "O.a+", description: "Lift",
+                    details: "Lift Control and behavior for lifting/sliding window coverings"
                 },
                 {
-                    tag: "datatype", name: "TL", id: 0x1, conformance: "O.a+",
-                    description: "Tilt Control and behavior for tilting window coverings",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    tag: "datatype", name: "TL", id: 0x1, conformance: "O.a+", description: "Tilt",
+                    details: "Tilt Control and behavior for tilting window coverings"
                 },
                 {
-                    tag: "datatype", name: "PALF", id: 0x2, conformance: "[LF]",
-                    description: "Position Aware lift control is supported.",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    tag: "datatype", name: "PALF", id: 0x2, conformance: "[LF]", description: "PositionAwareLift",
+                    details: "Position Aware lift control is supported."
                 },
                 {
-                    tag: "datatype", name: "ABS", id: 0x3, conformance: "O",
-                    description: "Absolute positioning is supported.",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    tag: "datatype", name: "ABS", id: 0x3, conformance: "O", description: "AbsolutePosition",
+                    details: "Absolute positioning is supported."
                 },
                 {
-                    tag: "datatype", name: "PATL", id: 0x4, conformance: "[TL]",
-                    description: "Position Aware tilt control is supported.",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    tag: "datatype", name: "PATL", id: 0x4, conformance: "[TL]", description: "PositionAwareTilt",
+                    details: "Position Aware tilt control is supported."
                 }
             ]
         },
@@ -86,17 +82,21 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "CurrentPositionLift1", id: 0x3, type: "uint16", access: "R V",
+            tag: "attribute", name: "CurrentPositionLift", id: 0x3, type: "uint16", access: "R V",
             conformance: "[LF & PA_LF]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
             default: null, quality: "X N",
-            xref: { document: "cluster", section: "5.3.5" }
+            details: "The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the " +
+                     "window covering from the fully-open position.",
+            xref: { document: "cluster", section: "5.3.5.4" }
         },
 
         {
-            tag: "attribute", name: "CurrentPositionTilt1", id: 0x4, type: "uint16", access: "R V",
+            tag: "attribute", name: "CurrentPositionTilt", id: 0x4, type: "uint16", access: "R V",
             conformance: "[TL & PA_TL]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
             default: null, quality: "X N",
-            xref: { document: "cluster", section: "5.3.5" }
+            details: "The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of " +
+                     "the window covering from the fully-open position.",
+            xref: { document: "cluster", section: "5.3.5.5" }
         },
 
         {
@@ -136,14 +136,21 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "CurrentPositionLiftPercentage1", id: 0x8, type: "percent", access: "R V",
+            tag: "attribute", name: "CurrentPositionLiftPercentage", id: 0x8, type: "percent", access: "R V",
             conformance: "[LF & PA_LF]", constraint: "0 to 100", default: null, quality: "X N S P",
-            xref: { document: "cluster", section: "5.3.5" }
+            details: "The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% " +
+                     "to 100% with 1% default step. This attribute is equal to CurrentPositionLiftPercent100ths attribute " +
+                     "divided by 100.",
+            xref: { document: "cluster", section: "5.3.5.11" }
         },
+
         {
-            tag: "attribute", name: "CurrentPositionTiltPercentage1", id: 0x9, type: "percent", access: "R V",
+            tag: "attribute", name: "CurrentPositionTiltPercentage", id: 0x9, type: "percent", access: "R V",
             conformance: "[TL & PA_TL]", constraint: "0 to 100", default: null, quality: "X N S P",
-            xref: { document: "cluster", section: "5.3.5" }
+            details: "The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% " +
+                     "to 100% with 1% default step. This attribute is equal to CurrentPositionTiltPercent100ths attribute " +
+                     "divided by 100.",
+            xref: { document: "cluster", section: "5.3.5.12" }
         },
 
         {
@@ -160,14 +167,19 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "TargetPositionLiftPercent100Ths2", id: 0xb, type: "percent100ths",
+            tag: "attribute", name: "TargetPositionLiftPercent100Ths", id: 0xb, type: "percent100ths",
             access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X S P",
-            xref: { document: "cluster", section: "5.3.5" }
+            details: "The TargetPositionLiftPercent100ths attribute identifies the position where the Window Covering " +
+                     "Lift will go or is moving to as a percentage.",
+            xref: { document: "cluster", section: "5.3.5.13" }
         },
+
         {
-            tag: "attribute", name: "TargetPositionTiltPercent100Ths2", id: 0xc, type: "percent100ths",
+            tag: "attribute", name: "TargetPositionTiltPercent100Ths", id: 0xc, type: "percent100ths",
             access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X S P",
-            xref: { document: "cluster", section: "5.3.5" }
+            details: "The TargetPositionTiltPercent100ths attribute identifies the position where the Window Covering " +
+                     "Tilt will go or is moving to as a percentage.",
+            xref: { document: "cluster", section: "5.3.5.14" }
         },
 
         {
@@ -208,14 +220,19 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "CurrentPositionLiftPercent100Ths1", id: 0xe, type: "percent100ths",
+            tag: "attribute", name: "CurrentPositionLiftPercent100Ths", id: 0xe, type: "percent100ths",
             access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X N P",
-            xref: { document: "cluster", section: "5.3.5" }
+            details: "The CurrentPositionLiftPercent100ths attribute identifies the actual position as a percentage with " +
+                     "a minimal step of 0.01%. E.g Max 10000 equals 100.00%.",
+            xref: { document: "cluster", section: "5.3.5.9" }
         },
+
         {
-            tag: "attribute", name: "CurrentPositionTiltPercent100Ths1", id: 0xf, type: "percent100ths",
+            tag: "attribute", name: "CurrentPositionTiltPercent100Ths", id: 0xf, type: "percent100ths",
             access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X N P",
-            xref: { document: "cluster", section: "5.3.5" }
+            details: "The CurrentPositionTiltPercent100ths attribute identifies the actual position as a percentage with " +
+                     "a minimal step of 0.01%. E.g Max 10000 equals 100.00%.",
+            xref: { document: "cluster", section: "5.3.5.10" }
         },
 
         {
@@ -228,7 +245,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitLift", id: 0x11, type: "uint16", access: "R V",
-            conformance: "LF & PA_LF", constraint: "0 to 65534", default: 65535, quality: "N",
+            conformance: "LF & PA_LF", constraint: "0 to 65534", quality: "N",
             details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering " +
                      "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.18" }
@@ -244,7 +261,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16", access: "R V",
-            conformance: "TL & PA_TL", constraint: "0 to 65534", default: 65535, quality: "N",
+            conformance: "TL & PA_TL", constraint: "0 to 65534", quality: "N",
             details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering " +
                      "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.20" }

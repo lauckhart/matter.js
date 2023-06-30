@@ -18,12 +18,12 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "2.4.4" },
 
             children: [
                 {
-                    tag: "datatype", name: "EXT", id: 0x0, conformance: "O",
-                    description: "The cluster is capable of extended range and resolution",
-                    xref: { document: "cluster", section: "2.4.4" }
+                    tag: "datatype", name: "EXT", id: 0x0, conformance: "O", description: "Extended",
+                    details: "The cluster is capable of extended range and resolution"
                 }
             ]
         },

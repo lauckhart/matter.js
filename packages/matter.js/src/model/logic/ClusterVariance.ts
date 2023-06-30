@@ -6,8 +6,7 @@
 
 import { Conformance } from "../aspects/index.js";
 import { FeatureSet } from "../definitions/index.js";
-import { Globals } from "../elements/index.js";
-import { AttributeModel, ClusterModel, ValueModel, DatatypeModel } from "../models/index.js";
+import { AttributeModel, ClusterModel, ValueModel } from "../models/index.js";
 import { RecordValidator } from "./RecordValidator.js";
 
 /**
@@ -57,10 +56,7 @@ export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
         featureSets: []
     }
 
-    const featureSet = getFeatures(cluster);
-    if (!featureSet) {
-        return result;
-    }
+    const featureSet = new FeatureSet(cluster.features.map(f => f.name));
 
     const complex = Array<ValueModel>();
 
@@ -73,7 +69,17 @@ export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
 // Add variance of the form O, M, FEATURE, [FEATURE], ignoring D and P
 function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[], featureSet: FeatureSet) {
     for (const child of cluster.children) {
-        if (!(child instanceof ValueModel) || child.base?.global) {
+        if (!(child instanceof ValueModel)) {
+            continue;
+        }
+
+        // Skip global attributes
+        if (child instanceof AttributeModel && child.base instanceof AttributeModel && child.base.global) {
+            continue;
+        }
+
+        // Skip excluded
+        if (child.conformance?.type == Conformance.Flag.Disallowed) {
             continue;
         }
 
@@ -97,6 +103,7 @@ function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: Valu
                 pool.optional.push(child);
             }
         } else {
+            console.log(child.conformance.toString());
             complex.push(child);
         }
     }
@@ -109,11 +116,10 @@ function addFeatureSets(cluster: ClusterModel, result: ClusterVariance, complex:
 
     const validCombinations = getValidCombinations(cluster);
 
-    // TODO
-    validCombinations;
-    cluster;
-    result;
-    featureSet;
+    for (const element of complex) {
+        const record = { test: true };
+        RecordValidator([ new DatatypeModel({ name: "test", conformance: "" }) ])
+    }
 }
 
 function getSimpleVariance(element: ValueModel, featureSet: FeatureSet) {
@@ -131,6 +137,7 @@ function getSimpleVariance(element: ValueModel, featureSet: FeatureSet) {
 
             case Conformance.Special.Group:
                 const group = node.param as Conformance.Ast.Group;
+                let singleNodeVariance: SimpleVariance | undefined;
                 for (let i = 0; i < group.length; i++) {
                     switch (group[i].type) {
                         case Conformance.Flag.Provisional:
@@ -140,10 +147,17 @@ function getSimpleVariance(element: ValueModel, featureSet: FeatureSet) {
                             break;
 
                         default:
-                            return fromNode(group[i]);
+                            if (singleNodeVariance) {
+                                return undefined;
+                            }
+                            singleNodeVariance = fromNode(group[i]);
+                            if (singleNodeVariance == undefined) {
+                                return undefined;
+                            }
+                            break;
                     }
                 }
-                return { mandatory: false };
+                return singleNodeVariance || { mandatory: false };
 
             case Conformance.Special.OptionalIf:
                 const simple = fromNode(node.param as Conformance.Ast.Option);
@@ -158,6 +172,16 @@ function getSimpleVariance(element: ValueModel, featureSet: FeatureSet) {
                     return { mandatory: true, feature: node.param as string };
                 }
                 break;
+
+            case Conformance.Operator.EQ:
+            case Conformance.Operator.NE:
+            case Conformance.Operator.GT:
+            case Conformance.Operator.LT:
+            case Conformance.Operator.GTE:
+            case Conformance.Operator.LTE:
+                // These operators are very uncommon.  Right now this is the
+                // correct choice everywhere they are used
+                return { mandatory: false }
         }
         return undefined;
     }
@@ -179,16 +203,6 @@ function getValidCombinations(cluster: ClusterModel): FeatureSet[] {
     }
 
     return valid;
-}
-
-function getFeatures(cluster: ClusterModel): FeatureSet {
-    const featureMap = cluster.get(AttributeModel, Globals.FeatureMap.id);
-    if (!featureMap) {
-        return new FeatureSet();
-    }
-    const features = featureMap.all(DatatypeModel);
-    const featureNames = features.map(f => f.name);
-    return new FeatureSet(featureNames);
 }
 
 function permute<T>(array: T[]): T[][] {

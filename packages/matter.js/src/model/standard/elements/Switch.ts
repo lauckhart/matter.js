@@ -24,27 +24,19 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "1.11.4" },
 
             children: [
-                {
-                    tag: "datatype", name: "LS", id: 0x0, conformance: "O.a",
-                    xref: { document: "cluster", section: "1.11.4" }
-                },
-                {
-                    tag: "datatype", name: "MS", id: 0x1, conformance: "O.a",
-                    xref: { document: "cluster", section: "1.11.4" }
-                },
-                {
-                    tag: "datatype", name: "MSR", id: 0x2, conformance: "[MS]",
-                    xref: { document: "cluster", section: "1.11.4" }
-                },
+                { tag: "datatype", name: "LS", id: 0x0, conformance: "O.a", description: "LatchingSwitch" },
+                { tag: "datatype", name: "MS", id: 0x1, conformance: "O.a", description: "MomentarySwitch" },
+                { tag: "datatype", name: "MSR", id: 0x2, conformance: "[MS]", description: "MomentarySwitchRelease" },
                 {
                     tag: "datatype", name: "MSL", id: 0x3, conformance: "[MS & MSR]",
-                    xref: { document: "cluster", section: "1.11.4" }
+                    description: "MomentarySwitchLongPress"
                 },
                 {
                     tag: "datatype", name: "MSM", id: 0x4, conformance: "[MS & MSR]",
-                    xref: { document: "cluster", section: "1.11.4" }
+                    description: "MomentarySwitchMultiPress"
                 }
             ]
         },
