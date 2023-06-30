@@ -1086,6 +1086,39 @@ export const GetHolidayScheduleRequest = TlvObject({ HolidayIndex: TlvField(0, T
 export const ClearHolidayScheduleRequest = TlvObject({ HolidayIndex: TlvField(0, TlvUInt8) });
 
 /**
+ * Event mask used to turn on and off the transmission of keypad operation
+ * events. This mask DOES NOT apply to the storing of events in the event log.
+ * This mask only applies to the Operation Event Notification Command.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.40
+ */
+export const KeypadOperationEventMask = TlvBitmap(TlvUInt16, {
+    UnknownOrManufacturerSpecificKeypadOperationEvent: BitFlag(0),
+    LockSourceKeypad: BitFlag(1),
+    UnlockSourceKeypad: BitFlag(2),
+    LockSourceKeypadErrorInvalidPin: BitFlag(3),
+    LockSourceKeypadErrorInvalidSchedule: BitFlag(4),
+    UnlockSourceKeypadErrorInvalidCode: BitFlag(5),
+    UnlockSourceKeypadErrorInvalidSchedule: BitFlag(6),
+    NonAccessUserOperationEventSourceKeypad: BitFlag(15)
+});
+
+/**
+ * Event mask used to turn on and off keypad programming events. This mask DOES
+ * NOT apply to the storing of events in the event log. This mask only applies
+ * to the Programming Event Notification Command.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.44
+ */
+export const KeypadProgrammingEventMask = TlvBitmap(TlvUInt16, {
+    UnknownOrManufacturerSpecificKeypadProgrammingEvent: BitFlag(0),
+    ProgrammingPinCodeChangedSourceKeypad: BitFlag(1),
+    PinAddedSourceKeypad: BitFlag(2),
+    PinClearedSourceKeypad: BitFlag(3),
+    PinChangedSourceKeypad: BitFlag(4)
+});
+
+/**
  * Event mask used to turn on and off the transmission of remote operation
  * events. This mask DOES NOT apply to the storing of events in the event log.
  * This mask only applies to the Operation Event
@@ -1137,6 +1170,23 @@ export const RemoteProgrammingEventMask = TlvBitmap(TlvUInt16, {
     PinChangedSourceRemote: BitFlag(4),
     RfidCodeAddedSourceRemote: BitFlag(5),
     RfidCodeClearedSourceRemote: BitFlag(6)
+});
+
+/**
+ * Event mask used to turn on and off RFID operation events. This mask DOES NOT
+ * apply to the storing of events in the event log. This mask only applies to
+ * the Operation Event Notification Command.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.43
+ */
+export const RfidOperationEventMask = TlvBitmap(TlvUInt16, {
+    UnknownOrManufacturerSpecificKeypadOperationEvent: BitFlag(0),
+    LockSourceRfid: BitFlag(1),
+    UnlockSourceRfid: BitFlag(2),
+    LockSourceRfidErrorInvalidRfidId: BitFlag(3),
+    LockSourceRfidErrorInvalidSchedule: BitFlag(4),
+    UnlockSourceRfidErrorInvalidRfidId: BitFlag(5),
+    UnlockSourceRfidErrorInvalidSchedule: BitFlag(6)
 });
 
 export namespace DoorLockCluster {
@@ -1428,7 +1478,7 @@ export namespace DoorLockCluster {
         }
     };
 
-    const DPS = {
+    const DoorPositionSensor = {
         attributes: {
             /**
              * The current door state as defined in DoorStateEnum.
@@ -1474,7 +1524,7 @@ export namespace DoorLockCluster {
         }
     };
 
-    const LOG = {
+    const Logging = {
         attributes: {
             /**
              * The number of available log records.
@@ -1510,7 +1560,7 @@ export namespace DoorLockCluster {
         }
     };
 
-    const USR = {
+    const User = {
         attributes: {
             /**
              * Number of total users supported by the lock.
@@ -1604,7 +1654,7 @@ export namespace DoorLockCluster {
         }
     };
 
-    const PIN = {
+    const PinCredential = {
         attributes: {
             /**
              * The number of PIN users supported.
@@ -1641,7 +1691,7 @@ export namespace DoorLockCluster {
         }
     };
 
-    const RID = {
+    const RfidCredential = {
         attributes: {
             /**
              * The number of RFID users supported.
@@ -1674,7 +1724,7 @@ export namespace DoorLockCluster {
         }
     };
 
-    const WDSCH = {
+    const WeekDayAccessSchedules = {
         attributes: {
             /**
              * The number of configurable week day schedule supported per user.
@@ -1707,7 +1757,7 @@ export namespace DoorLockCluster {
         }
     };
 
-    const YDSCH = {
+    const YearDayAccessSchedules = {
         attributes: {
             /**
              * The number of configurable year day schedule supported per user.
@@ -1740,7 +1790,7 @@ export namespace DoorLockCluster {
         }
     };
 
-    const HDSCH = {
+    const HolidaySchedules = {
         attributes: {
             /**
              * The number of holiday schedules supported for the entire door
@@ -1774,7 +1824,76 @@ export namespace DoorLockCluster {
         }
     };
 
-    const NOT = {
+    const PinCredentialOrRfidCredential = {
+        attributes: {
+            /**
+             * The number of incorrect Pin codes or RFID presentment attempts a
+             * user is allowed to enter before the lock will enter a lockout
+             * state. The value of this attribute is compared to all failing
+             * forms of credential presentation, including Pin codes used in an
+             * Unlock Command when RequirePINforRemoteOperation is set to true.
+             * Valid range is 1-255 incorrect attempts. The lockout state will
+             * be for the duration of UserCodeTemporaryDisableTime. If the
+             * attribute accepts writes and an attempt to write the value 0 is
+             * made, the device SHALL respond with CONSTRAINT_ERROR.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.34
+             */
+            wrongCodeEntryLimit: WritableAttribute(48, TlvUInt8, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
+
+            /**
+             * The number of seconds that the lock shuts down following wrong
+             * code entry. Valid range is 1-255 seconds. Device can shut down
+             * to lock user out for specified amount of time. (Makes it
+             * difficult to try and guess a PIN for the device.) If the
+             * attribute accepts writes and an attempt to write the attribute
+             * to 0 is made, the device SHALL respond with CONSTRAINT_ERROR.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.35
+             */
+            userCodeTemporaryDisableTime: WritableAttribute(49, TlvUInt8, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
+        }
+    };
+
+    const CredentialOverTheAirAccessAndPinCredential = {
+        attributes: {
+            /**
+             * Boolean set to True if the door lock server requires that an
+             * optional PINs be included in the payload of remote lock
+             * operation events like Lock, Unlock, Unlock with Timeout and
+             * Toggle in order to function.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.37
+             */
+            requirePiNforRemoteOperation: WritableAttribute(51, TlvBoolean, { default: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
+        }
+    };
+
+    const NotificationAndPinCredential = {
+        attributes: {
+            /**
+             * Event mask used to turn on and off the transmission of keypad
+             * operation events. This mask DOES NOT apply to the storing of
+             * events in the event log. This mask only applies to the Operation
+             * Event Notification Command.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.40
+             */
+            keypadOperationEventMask: OptionalWritableAttribute(65, KeypadOperationEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
+
+            /**
+             * Event mask used to turn on and off keypad programming events.
+             * This mask DOES NOT apply to the storing of events in the event
+             * log. This mask only applies to the Programming Event
+             * Notification Command.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.44
+             */
+            keypadProgrammingEventMask: OptionalWritableAttribute(69, KeypadProgrammingEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
+        }
+    };
+
+    const Notification = {
         attributes: {
             /**
              * Event mask used to turn on and off the transmission of remote
@@ -1820,6 +1939,121 @@ export namespace DoorLockCluster {
         }
     };
 
+    const NotificationAndRfidCredential = {
+        attributes: {
+            /**
+             * Event mask used to turn on and off RFID operation events. This
+             * mask DOES NOT apply to the storing of events in the event log.
+             * This mask only applies to the Operation Event Notification
+             * Command.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.43
+             */
+            rfidOperationEventMask: OptionalWritableAttribute(68, RfidOperationEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3
+             */
+            rfidPro: OptionalWritableAttribute(71, TlvUInt16, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
+        }
+    };
+
+    const PinCredentialNotUser = {
+        commands: {
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            setPinCode: Command(5, TlvNoArguments, 5, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            getPinCode: Command(6, TlvNoArguments, 6, TlvNoArguments),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            getPinCodeResponse: Command(6, TlvNoArguments, 6, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            clearPinCode: Command(7, TlvNoArguments, 7, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            clearAllPinCodes: Command(8, TlvNoArguments, 8, TlvNoResponse)
+        }
+    };
+
+    const PinCredentialAndRfidCredentialNotUser = {
+        commands: {
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            setUserStatus: OptionalCommand(9, TlvNoArguments, 9, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            getUserStatus: OptionalCommand(10, TlvNoArguments, 10, TlvNoArguments),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            setUserType: OptionalCommand(20, TlvNoArguments, 20, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            getUserType: OptionalCommand(21, TlvNoArguments, 21, TlvNoArguments)
+        }
+    };
+
+    const NotUser = {
+        commands: {
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            getUserStatusResponse: Command(10, TlvNoArguments, 10, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            getUserTypeResponse: Command(21, TlvNoArguments, 21, TlvNoResponse)
+        }
+    };
+
+    const RfidCredentialNotUser = {
+        commands: {
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            setRfidCode: Command(22, TlvNoArguments, 22, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            getRfidCode: Command(23, TlvNoArguments, 23, TlvNoArguments),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            getRfidCodeResponse: Command(23, TlvNoArguments, 23, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            clearRfidCode: Command(24, TlvNoArguments, 24, TlvNoResponse),
+
+            /**
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+             */
+            clearAllRfidCodes: Command(25, TlvNoArguments, 25, TlvNoResponse)
+        }
+    };
+
     export const Complete = BuildCluster({
         id,
         name,
@@ -1843,15 +2077,23 @@ export namespace DoorLockCluster {
 
         elements: [
             Base,
-            DPS,
-            LOG,
-            USR,
-            PIN,
-            RID,
-            WDSCH,
-            YDSCH,
-            HDSCH,
-            NOT
+            DoorPositionSensor,
+            Logging,
+            User,
+            PinCredential,
+            RfidCredential,
+            WeekDayAccessSchedules,
+            YearDayAccessSchedules,
+            HolidaySchedules,
+            PinCredentialOrRfidCredential,
+            CredentialOverTheAirAccessAndPinCredential,
+            NotificationAndPinCredential,
+            Notification,
+            NotificationAndRfidCredential,
+            PinCredentialNotUser,
+            PinCredentialAndRfidCredentialNotUser,
+            NotUser,
+            RfidCredentialNotUser
         ]
     });
 };

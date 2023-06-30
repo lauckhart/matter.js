@@ -7,12 +7,12 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute } from "../../cluster/Cluster.js";
-import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
-import { TlvUInt16, TlvInt16, TlvEnum } from "../../tlv/TlvNumber.js";
-import { TlvString } from "../../tlv/TlvString.js";
-import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
+import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
+import { TlvUInt16, TlvEnum, TlvInt16 } from "../../tlv/TlvNumber.js";
+import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
+import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
@@ -66,6 +66,45 @@ export const ChannelInfoStruct = TlvObject({
 });
 
 /**
+ * LineupInfoTypeEnum Data Type is derived from enum8.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.3
+ */
+export const enum LineupInfoTypeEnum {
+    /**
+     * MultiSystemOperator
+     */
+    Mso = 0
+};
+
+/**
+ * The Lineup Info allows references to external lineup sources like Gracenote.
+ * The combination of OperatorName, LineupName, and PostalCode MUST uniquely
+ * identify a lineup.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.2
+ */
+export const LineupInfoStruct = TlvObject({
+    /**
+     * This SHALL indicate the name of the operator, for example “Comcast”.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.2.1
+     */
+    OperatorName: TlvField(0, TlvString),
+
+    LineupName: TlvOptionalField(1, TlvString),
+    PostalCode: TlvOptionalField(2, TlvString),
+
+    /**
+     * This SHALL indicate the type of lineup. This field is optional, but
+     * SHOULD be provided when known.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.2.4
+     */
+    LineupInfoType: TlvField(3, TlvEnum<LineupInfoTypeEnum>())
+});
+
+/**
  * Change the channel to the channel with the given Number in the ChannelList
  * attribute. The data for this command SHALL be as follows:
  *
@@ -106,42 +145,64 @@ export const SkipChannelRequest = TlvObject({
 });
 
 /**
- * LineupInfoTypeEnum Data Type is derived from enum8.
+ * StatusEnum Data Type is derived from enum8.
  *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.3
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.4
  */
-export const enum LineupInfoTypeEnum {
+export const enum StatusEnum {
     /**
-     * MultiSystemOperator
+     * Command succeeded
      */
-    Mso = 0
+    Success = 0,
+
+    /**
+     * More than one equal match for the ChannelInfoStruct passed in.
+     */
+    MultipleMatches = 1,
+
+    /**
+     * No matches for the ChannelInfoStruct passed in.
+     */
+    NoMatches = 2
 };
 
 /**
- * The Lineup Info allows references to external lineup sources like Gracenote.
- * The combination of OperatorName, LineupName, and PostalCode MUST uniquely
- * identify a lineup.
+ * This command SHALL be generated in response to a ChangeChannel command. The
+ * data for this command SHALL be as follows:
  *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.2
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.2
  */
-export const LineupInfoStruct = TlvObject({
+export const ChangeChannelResponseRequest = TlvObject({
     /**
-     * This SHALL indicate the name of the operator, for example “Comcast”.
+     * This SHALL indicate the status of the command which resulted in this
+     * response.
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.2.1
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.2.1
      */
-    OperatorName: TlvField(0, TlvString),
-
-    LineupName: TlvOptionalField(1, TlvString),
-    PostalCode: TlvOptionalField(2, TlvString),
+    Status: TlvField(0, TlvEnum<StatusEnum>()),
 
     /**
-     * This SHALL indicate the type of lineup. This field is optional, but
-     * SHOULD be provided when known.
+     * This SHALL indicate Optional app-specific data.
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.2.4
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.2.2
      */
-    LineupInfoType: TlvField(3, TlvEnum<LineupInfoTypeEnum>())
+    Data: TlvOptionalField(1, TlvByteString)
+});
+
+/**
+ * Change the channel to the channel case-insensitive exact matching the value
+ * passed as an argument.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.1
+ */
+export const ChangeChannelRequest = TlvObject({
+    /**
+     * This SHALL contain a user-input string to match in order to identify the
+     * target channel.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.1.1
+     */
+    Match: TlvField(0, TlvString)
 });
 
 export namespace ChannelCluster {
@@ -164,6 +225,29 @@ export namespace ChannelCluster {
          * lineup information.
          */
         LI: BitFlag(1)
+    };
+
+    const ChannelList = {
+        attributes: {
+            /**
+             * This optional list provides the channels supported.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.1
+             */
+            channelList: Attribute(0, TlvArray(ChannelInfoStruct), { readAcl: AccessLevel.View })
+        }
+    };
+
+    const LineupInfo = {
+        attributes: {
+            /**
+             * This optional field identifies the channel lineup using external
+             * data sources.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.2
+             */
+            lineup: Attribute(1, TlvNullable(LineupInfoStruct), { default: null, readAcl: AccessLevel.View })
+        }
     };
 
     const Base = {
@@ -199,26 +283,23 @@ export namespace ChannelCluster {
         }
     };
 
-    const CL = {
-        attributes: {
+    const ChannelListOrLineupInfo = {
+        commands: {
             /**
-             * This optional list provides the channels supported.
+             * Change the channel to the channel case-insensitive exact
+             * matching the value passed as an argument.
              *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.1
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.1
              */
-            channelList: Attribute(0, TlvArray(ChannelInfoStruct), { readAcl: AccessLevel.View })
-        }
-    };
+            changeChannel: Command(0, ChangeChannelRequest, 1, ChangeChannelResponseRequest),
 
-    const LI = {
-        attributes: {
             /**
-             * This optional field identifies the channel lineup using external
-             * data sources.
+             * This command SHALL be generated in response to a ChangeChannel
+             * command. The data for this command SHALL be as follows:
              *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.2
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.2
              */
-            lineup: Attribute(1, TlvNullable(LineupInfoStruct), { default: null, readAcl: AccessLevel.View })
+            changeChannelResponse: Command(1, ChangeChannelResponseRequest, 1, TlvNoResponse)
         }
     };
 
@@ -231,10 +312,12 @@ export namespace ChannelCluster {
             CL: true,
             LI: true
         },
+
         elements: [
+            ChannelList,
+            LineupInfo,
             Base,
-            CL,
-            LI
+            ChannelListOrLineupInfo
         ]
     });
 };

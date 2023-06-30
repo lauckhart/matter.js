@@ -54,7 +54,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ChangeChannel", id: 0x0, access: "O", conformance: "CL, LI",
+            tag: "command", name: "ChangeChannel", id: 0x0, access: "O", conformance: "CL | LI",
             direction: "request", response: "ChangeChannelResponse",
             details: "Change the channel to the channel case-insensitive exact matching the value passed as an argument.",
             xref: { document: "cluster", section: "6.6.4.1" },
@@ -69,7 +69,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ChangeChannelResponse", id: 0x1, conformance: "CL, LI",
+            tag: "command", name: "ChangeChannelResponse", id: 0x1, conformance: "CL | LI",
             direction: "response",
             details: "This command SHALL be generated in response to a ChangeChannel command. The data for this command " +
                      "SHALL be as follows:",

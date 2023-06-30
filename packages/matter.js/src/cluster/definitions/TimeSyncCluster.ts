@@ -306,7 +306,7 @@ export namespace TimeSyncCluster {
         }
     };
 
-    const NTPC = {
+    const NtpClient = {
         attributes: {
             /**
              * The default NTP server the server’s Node may use if other time
@@ -324,7 +324,7 @@ export namespace TimeSyncCluster {
         }
     };
 
-    const TZ = {
+    const TimeZone = {
         attributes: {
             /**
              * A list of time zone offsets from UTC and when they SHALL take
@@ -398,7 +398,7 @@ export namespace TimeSyncCluster {
         }
     };
 
-    const NTPS = {
+    const NtpServer = {
         attributes: {
             /**
              * If the server is running an NTP server, this value SHALL be the
@@ -424,9 +424,9 @@ export namespace TimeSyncCluster {
 
         elements: [
             Base,
-            NTPC,
-            TZ,
-            NTPS
+            NtpClient,
+            TimeZone,
+            NtpServer
         ]
     });
 };

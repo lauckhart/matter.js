@@ -362,7 +362,7 @@ export namespace PowerSourceCluster {
         }
     };
 
-    const WIRED = {
+    const Wired = {
         attributes: {
             /**
              * This attribute SHALL indicate the assessed RMS or DC voltage
@@ -468,7 +468,7 @@ export namespace PowerSourceCluster {
         }
     };
 
-    const BAT = {
+    const Battery = {
         attributes: {
             /**
              * This attribute SHALL indicate the currently measured output
@@ -571,7 +571,7 @@ export namespace PowerSourceCluster {
         }
     };
 
-    const REPLC = {
+    const Replaceable = {
         attributes: {
             /**
              * This attribute SHALL provide a user-facing description of this
@@ -636,7 +636,7 @@ export namespace PowerSourceCluster {
         }
     };
 
-    const RECHG = {
+    const Rechargeable = {
         attributes: {
             /**
              * This attribute SHALL indicate the current state of the battery
@@ -721,10 +721,10 @@ export namespace PowerSourceCluster {
 
         elements: [
             Base,
-            WIRED,
-            BAT,
-            REPLC,
-            RECHG
+            Wired,
+            Battery,
+            Replaceable,
+            Rechargeable
         ]
     });
 };

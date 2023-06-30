@@ -4,219 +4,280 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Conformance } from "../aspects/index.js";
-import { FeatureSet } from "../definitions/index.js";
+import { InternalError } from "../../common/index.js";
+import { isDeepEqual } from "../../util/index.js";
 import { AttributeModel, ClusterModel, ValueModel } from "../models/index.js";
-import { RecordValidator } from "./RecordValidator.js";
+
+function pattern(...parts: string[]) {
+    parts = parts.map(p => {
+        switch (p) {
+            case "[":
+            case "]":
+            case "(":
+            case ")":
+                return `\\${p}`;
+
+            default:
+                return p;
+        }
+    });
+    return new RegExp(`^${parts.join("")}$`);
+}
+
+const FEATURE = "([A-Z_][A-Z_]+)"
+const OR = " \\| ";
+const AND = " & ";
+const NOT = "!";
+
+/**
+ * We use a rules-based approach to process cluster variance.  The goal is to
+ * classify into as few sets as possible.  This leads to fewer duplicated
+ * elements and reduced complexity of generated clusters.
+ * 
+ * An alternative would be to permute features, test for conformance, then
+ * infer the condition from conforming feature permutations.  For now though
+ * current approach is much simpler.  Could revisit if variance permutations
+ * increases drastically with feature Matter versions.
+ * 
+ * Matches string form rather than the AST because that is also simpler for
+ * the moment.  Note this is less fragile than it may appear because string is
+ * normalized product of parser -> AST -> serializer.
+ * 
+ * Note also that this only applies to conformance of cluster-level elements.
+ * There is considerably more variance in field-level conformance but we handle
+ * that with the record validator which supports the entire dialect.
+ */
+const VarianceMatchers: ComplexVarianceMatcher[] = [
+    // Mandatory, unconditional
+    {
+        pattern: pattern("(?:|M)"),
+        processor: (add) => {
+            add();
+        }
+    },
+    
+    // Optional, unconditional
+    {
+        pattern: pattern("(?:O|desc)"),
+        processor: (add) => {
+            add(true);
+        }
+    },
+
+    // Optional, unconditional.  Ignores field expression which can only be
+    // enforced at runtime
+    {
+        pattern: /^[A-Z][a-z].* >/,
+        processor: (add) => {
+            add(true);
+        }
+    },
+
+    // FOO
+    {
+        pattern: pattern(FEATURE),
+        processor: (add, match) => {
+            add(false, { allOf: match })
+        }
+    },
+
+    // [FOO]
+    {
+        pattern: pattern("[", FEATURE, "]"),
+        processor: (add, match) => {
+            add(true, { allOf: match })
+        }
+    },
+    
+    // FOO | BAR or FOO, BAR
+    {
+        pattern: pattern(FEATURE, "(?:, | \\| )", FEATURE),
+        processor: (add, match) => {
+            add(false, { anyOf: match });
+        }
+    },
+
+    // FOO & BAR
+    {
+        pattern: pattern(FEATURE, AND, FEATURE),
+        processor: (add, match) => {
+            add(false, { allOf: match });
+        }
+    },
+
+    // FOO, [BAR]
+    {
+        pattern: pattern(FEATURE, ", ", "[", FEATURE, "]"),
+        processor: (add, match) => {
+            // Must add to two sets because optionality differs
+            add(false, { allOf: [ match[0] ] });
+            add(true, { allOf: [ match[1] ] });
+        }
+    },
+
+    // !FOO & BAR
+    {
+        pattern: pattern(NOT, FEATURE, AND, FEATURE),
+        processor: (add, match) => {
+            add(false, { allOf: [ match[1] ], not: match[0] });
+        }
+    },
+
+    // !FOO & [BAR]
+    {
+        pattern: pattern(NOT, FEATURE, AND, "[", FEATURE, "]"),
+        processor: (add, match) => {
+            add(true, { allOf: [ match[1] ], not: match[0] });
+        }
+    },
+
+    // !FOO & (BAR | BIZ)
+    {
+        pattern: pattern(NOT, FEATURE, AND, "(", FEATURE, OR, FEATURE, ")"),
+        processor: (add, match) => {
+            add(true, { allOf: match.slice(1), not: match[0] });
+        }
+    },
+
+    // !FOO
+    {
+        pattern: pattern(NOT, FEATURE),
+        processor: (add, match) => {
+            add(false, { not: match[0] });
+        }
+    },
+
+    // [!FOO]
+    {
+        pattern: pattern("[", NOT, FEATURE, "]"),
+        processor: (add, match) => {
+            add(true, { not: match[0] });
+        }
+    },
+
+    // [FOO & BAR]
+    {
+        pattern: pattern("[", FEATURE, AND, FEATURE, "]"),
+        processor: (add, match) => {
+            add(true, { allOf: match });
+        }
+    },
+
+    // FOO & BAR, [BIZ]
+    {
+        pattern: pattern(FEATURE, AND, FEATURE, ", ", "[", FEATURE, "]"),
+        processor: (add, match) => {
+            add(false, { allOf: match.slice(0, 2) });
+            add(true, { allOf: [ match[2] ] });
+        }
+    }
+];
+
+/**
+ * The condition for supported patterns of complex variance.
+ */
+export type VarianceCondition = {
+    anyOf?: string[],
+    allOf?: string[],
+    not?: string
+}
 
 /**
  * Lists mandatory and optional elements for a specific context.
  */
 export type ElementVariance = {
     mandatory: ValueModel[],
-    optional: ValueModel[]
+    optional: ValueModel[],
+    condition?: VarianceCondition
 }
-
-/**
- * Details simple feature variance for elements that vary solely on the
- * presence of a single feature.
- */
-export type FeatureVariance = { [name: FeatureSet.Flag]: ElementVariance }
-
-/**
- * Details complex feature variance that depends on a combination of feature
- * flags.
- */
-export type FeatureSetVariance = ElementVariance & {
-    flags: FeatureSet
-};
 
 /**
  * Details all variance for a cluster.
  */
-export type ClusterVariance = ElementVariance & {
-    features: FeatureVariance,
-    featureSets: FeatureSetVariance[]
-}
-
-type SimpleVariance = {
-    mandatory: boolean,
-    feature?: FeatureSet.Flag
-}
+export type ClusterVariance = ElementVariance[];
 
 /**
  * Computes valid feature feature combinations for a cluster and which
  * elements apply to each valid combination. 
  */
 export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
-    const result: ClusterVariance = {
-        mandatory: [],
-        optional: [],
-        features: {},
-        featureSets: []
-    }
-
-    const featureSet = new FeatureSet(cluster.features.map(f => f.name));
-
-    const complex = Array<ValueModel>();
-
-    addSimple(cluster, result, complex, featureSet);
-    addFeatureSets(cluster, result, complex, featureSet);
-
+    const result = [] as ClusterVariance;
+    cluster.children.forEach(child => addElement(result, child));
     return result;
 }
 
-// Add variance of the form O, M, FEATURE, [FEATURE], ignoring D and P
-function addSimple(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[], featureSet: FeatureSet) {
-    for (const child of cluster.children) {
-        if (!(child instanceof ValueModel)) {
-            continue;
-        }
-
-        // Skip global attributes
-        if (child instanceof AttributeModel && child.base instanceof AttributeModel && child.base.global) {
-            continue;
-        }
-
-        // Skip excluded
-        if (child.conformance?.type == Conformance.Flag.Disallowed) {
-            continue;
-        }
-
-        const simple = getSimpleVariance(child, featureSet);
-        if (simple) {
-            let pool: ElementVariance;
-            if (simple.feature) {
-                pool = result.features[simple.feature];
-                if (!pool) {
-                    pool = result.features[simple.feature] = {
-                        mandatory: [],
-                        optional: []
-                    };
-                }
-            } else {
-                pool = result;
-            }
-            if (simple.mandatory) {
-                pool.mandatory.push(child);
-            } else {
-                pool.optional.push(child);
-            }
-        } else {
-            console.log(child.conformance.toString());
-            complex.push(child);
-        }
-    }
+type ComplexVarianceMatcher = {
+    pattern: RegExp,
+    processor: (
+        add: (optional?: boolean, condition?: VarianceCondition) => void,
+        match: string[]
+    ) => void
 }
 
-function addFeatureSets(cluster: ClusterModel, result: ClusterVariance, complex: ValueModel[], featureSet: FeatureSet) {
-    if (!complex.length) {
+function addElement(variance: ClusterVariance, element: ValueModel) {
+    if (element.base instanceof AttributeModel && element.base.global) {
         return;
     }
 
-    const validCombinations = getValidCombinations(cluster);
+    let text = element.conformance.toString();
 
-    for (const element of complex) {
-        const record = { test: true };
-        RecordValidator([ new DatatypeModel({ name: "test", conformance: "" }) ])
+    if (text == "X") {
+        return;
     }
-}
 
-function getSimpleVariance(element: ValueModel, featureSet: FeatureSet) {
-    function fromNode(node: Conformance.Ast): SimpleVariance | undefined {
-        switch (node.type) {
-            case Conformance.Flag.Mandatory:
-                return { mandatory: true };
-
-            case Conformance.Flag.Optional:
-            case Conformance.Special.Empty:
-            case Conformance.Special.Desc:
-            case Conformance.Flag.Provisional:
-            case Conformance.Flag.Deprecated:
-                return { mandatory: false };
-
-            case Conformance.Special.Group:
-                const group = node.param as Conformance.Ast.Group;
-                let singleNodeVariance: SimpleVariance | undefined;
-                for (let i = 0; i < group.length; i++) {
-                    switch (group[i].type) {
-                        case Conformance.Flag.Provisional:
-                        case Conformance.Flag.Deprecated:
-                        case Conformance.Special.Empty:
-                        case Conformance.Special.Desc:
-                            break;
-
-                        default:
-                            if (singleNodeVariance) {
-                                return undefined;
-                            }
-                            singleNodeVariance = fromNode(group[i]);
-                            if (singleNodeVariance == undefined) {
-                                return undefined;
-                            }
-                            break;
-                    }
-                }
-                return singleNodeVariance || { mandatory: false };
-
-            case Conformance.Special.OptionalIf:
-                const simple = fromNode(node.param as Conformance.Ast.Option);
-                if (simple && simple.mandatory) {
-                    simple.mandatory = false;
-                    return simple;
-                }
-                break;
-
-            case Conformance.Special.Name:
-                if (featureSet.has(node.param as string)) {
-                    return { mandatory: true, feature: node.param as string };
-                }
-                break;
-
-            case Conformance.Operator.EQ:
-            case Conformance.Operator.NE:
-            case Conformance.Operator.GT:
-            case Conformance.Operator.LT:
-            case Conformance.Operator.GTE:
-            case Conformance.Operator.LTE:
-                // These operators are very uncommon.  Right now this is the
-                // correct choice everywhere they are used
-                return { mandatory: false }
+    while (true) {
+        if (text == "D") {
+            text = "O";
+            break;
         }
-        return undefined;
-    }
-    return fromNode(element.conformance);
-}
-
-function getValidCombinations(cluster: ClusterModel): FeatureSet[] {
-    const featureMap = cluster.get(AttributeModel, "featureMap");
-    const featureModels = featureMap?.children || [];
-    const features = new FeatureSet(featureModels.map(f => f.name));
-
-    const valid = [];
-    for (const subset of permute(features.array)) {
-        const featureSet = new FeatureSet(subset);
-        const validator = RecordValidator(featureModels, featureSet);
-        if (validator.validate(featureSet.record).valid) {
-            valid.push(featureSet);
+        if (text == "P") {
+            text = "M";
+            break;
+        }
+        if (text.match(/^[DP], /)) {
+            text = text.substring(3);
+        } else {
+            break;
         }
     }
 
-    return valid;
+    for (const matcher of VarianceMatchers) {
+        const match = text.match(matcher.pattern);
+        if (match) {
+            matcher.processor((optional, condition) => {
+                addVariance(variance, element, optional, condition);
+            }, match.slice(1));
+            return;
+        }
+    }
+    throw new InternalError(`New rule needed for conformance "${element.conformance}" (element ${element.path})`);
 }
 
-function permute<T>(array: T[]): T[][] {
-    const permutations = Array<T[]>();
+function addVariance(clusterVariance: ClusterVariance, element: ValueModel, optional?: boolean, condition?: VarianceCondition) {
+    let into: ElementVariance | undefined;
 
-    function permute(onto: Array<T>, from: number) {
-        for (let i = from; i < array.length; i++) {
-            const base = Array(...onto, array[i]);
-            permutations.push(base);
-            permute(base, i + 1);
+    // Find set
+    for (const existing of clusterVariance) {
+        if (isDeepEqual(existing.condition, condition)) {
+            into = existing;
+            break;
         }
     }
 
-    permute(Array<T>(), 0);
+    // If set does not exist, create it
+    if (!into) {
+        into = {
+            condition,
+            optional: [],
+            mandatory: []
+        }
+        clusterVariance.push(into);
+    }
 
-    return permutations;
+    // Add the element to the set
+    if (optional) {
+        into.optional.push(element);
+    } else {
+        into.mandatory.push(element);
+    }
 }

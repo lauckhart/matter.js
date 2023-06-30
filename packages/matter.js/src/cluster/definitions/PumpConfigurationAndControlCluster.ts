@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { FixedAttribute, AccessLevel, OptionalAttribute, Attribute, OptionalWritableAttribute, WritableAttribute, OptionalEvent, EventPriority } from "../../cluster/Cluster.js";
+import { FixedAttribute, AccessLevel, OptionalAttribute, Attribute, OptionalWritableAttribute, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvBitmap, TlvEnum, TlvUInt24, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -463,6 +463,208 @@ export namespace PumpConfigurationAndControlCluster {
         }
     };
 
+    const ConstantPressure = {
+        attributes: {
+            /**
+             * This attribute specifies the minimum pressure the pump can
+             * achieve when it is working with the ControlMode attribute set to
+             * ConstantPressure.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.4
+             */
+            minConstPressure: FixedAttribute(3, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum pressure the pump can
+             * achieve when it is working with the ControlMode attribute set to
+             * ConstantPressure.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.5
+             */
+            maxConstPressure: FixedAttribute(4, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
+        }
+    };
+
+    const Automatic = {
+        attributes: {
+            /**
+             * This attribute specifies the minimum pressure the pump can
+             * achieve when it is working with the ControlMode attribute set to
+             * ConstantPressure.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.4
+             */
+            minConstPressure: OptionalFixedAttribute(3, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum pressure the pump can
+             * achieve when it is working with the ControlMode attribute set to
+             * ConstantPressure.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.5
+             */
+            maxConstPressure: OptionalFixedAttribute(4, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the minimum compensated pressure the
+             * pump can achieve when it is working with the ControlMode
+             * attribute set to ProportionalPressure.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.6
+             */
+            minCompPressure: OptionalFixedAttribute(5, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum compensated pressure the
+             * pump can achieve when it is working with the ControlMode
+             * attribute set to ProportionalPressure.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.7
+             */
+            maxCompPressure: OptionalFixedAttribute(6, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the minimum speed the pump can achieve
+             * when it is working with the ControlMode attribute set to
+             * ConstantSpeed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
+             */
+            minConstSpeed: OptionalFixedAttribute(7, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum speed the pump can achieve
+             * when it is working with the ControlMode attribute set to
+             * ConstantSpeed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
+             */
+            maxConstSpeed: OptionalFixedAttribute(8, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the minimum flow the pump can achieve
+             * when it is working with the Con
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
+             */
+            minConstFlow: OptionalFixedAttribute(9, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum flow the pump can achieve
+             * when it is working with the ControlMode attribute set to
+             * ConstantFlow.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
+             */
+            maxConstFlow: OptionalFixedAttribute(10, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the minimum temperature the pump can
+             * maintain in the system when it is working with the ControlMode
+             * attribute set to ConstantTemperature.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
+             */
+            minConstTemp: OptionalFixedAttribute(11, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum temperature the pump can
+             * maintain in the system when it is working with the ControlMode
+             * attribute set to ConstantTemperature.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
+             */
+            maxConstTemp: OptionalFixedAttribute(12, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
+        }
+    };
+
+    const CompensatedPressure = {
+        attributes: {
+            /**
+             * This attribute specifies the minimum compensated pressure the
+             * pump can achieve when it is working with the ControlMode
+             * attribute set to ProportionalPressure.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.6
+             */
+            minCompPressure: FixedAttribute(5, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum compensated pressure the
+             * pump can achieve when it is working with the ControlMode
+             * attribute set to ProportionalPressure.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.7
+             */
+            maxCompPressure: FixedAttribute(6, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
+        }
+    };
+
+    const ConstantSpeed = {
+        attributes: {
+            /**
+             * This attribute specifies the minimum speed the pump can achieve
+             * when it is working with the ControlMode attribute set to
+             * ConstantSpeed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
+             */
+            minConstSpeed: FixedAttribute(7, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum speed the pump can achieve
+             * when it is working with the ControlMode attribute set to
+             * ConstantSpeed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
+             */
+            maxConstSpeed: FixedAttribute(8, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View })
+        }
+    };
+
+    const ConstantFlow = {
+        attributes: {
+            /**
+             * This attribute specifies the minimum flow the pump can achieve
+             * when it is working with the Con
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
+             */
+            minConstFlow: FixedAttribute(9, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum flow the pump can achieve
+             * when it is working with the ControlMode attribute set to
+             * ConstantFlow.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
+             */
+            maxConstFlow: FixedAttribute(10, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View })
+        }
+    };
+
+    const ConstantTemperature = {
+        attributes: {
+            /**
+             * This attribute specifies the minimum temperature the pump can
+             * maintain in the system when it is working with the ControlMode
+             * attribute set to ConstantTemperature.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
+             */
+            minConstTemp: FixedAttribute(11, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum temperature the pump can
+             * maintain in the system when it is working with the ControlMode
+             * attribute set to ConstantTemperature.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
+             */
+            maxConstTemp: FixedAttribute(12, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
+        }
+    };
+
     export const Complete = BuildCluster({
         id,
         name,
@@ -479,6 +681,14 @@ export namespace PumpConfigurationAndControlCluster {
             LOCAL: true
         },
 
-        elements: [ Base ]
+        elements: [
+            Base,
+            ConstantPressure,
+            Automatic,
+            CompensatedPressure,
+            ConstantSpeed,
+            ConstantFlow,
+            ConstantTemperature
+        ]
     });
 };

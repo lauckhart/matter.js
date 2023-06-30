@@ -29,7 +29,7 @@ Matter.children.push({
                     details: "Tilt Control and behavior for tilting window coverings"
                 },
                 {
-                    tag: "datatype", name: "PALF", id: 0x2, conformance: "[LF]", description: "PositionAwareLift",
+                    tag: "datatype", name: "PA_LF", id: 0x2, conformance: "[LF]", description: "PositionAwareLift",
                     details: "Position Aware lift control is supported."
                 },
                 {
@@ -37,7 +37,7 @@ Matter.children.push({
                     details: "Absolute positioning is supported."
                 },
                 {
-                    tag: "datatype", name: "PATL", id: 0x4, conformance: "[TL]", description: "PositionAwareTilt",
+                    tag: "datatype", name: "PA_TL", id: 0x4, conformance: "[TL]", description: "PositionAwareTilt",
                     details: "Position Aware tilt control is supported."
                 }
             ]

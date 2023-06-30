@@ -63,7 +63,7 @@ export namespace PressureMeasurementCluster {
         }
     };
 
-    const EXT = {
+    const Extended = {
         attributes: {
             /**
              * ScaledValue represents the pressure in Pascals as follows:
@@ -117,7 +117,7 @@ export namespace PressureMeasurementCluster {
         supportedFeatures: { EXT: true },
         elements: [
             Base,
-            EXT
+            Extended
         ]
     });
 };

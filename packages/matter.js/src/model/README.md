@@ -16,6 +16,7 @@ collectively to
 [Matter 1.1 Application Cluster Specification](https://csa-iot.org/developer-resource/specifications-download-request/), and
 [Matter 1.1 Device Library Specification](https://csa-iot.org/developer-resource/specifications-download-request/).
 
+
 ## Code structure
 
 Subfolders support specific functions:
@@ -37,6 +38,7 @@ the data model beyond simple data modeling.  Our models are all subtypes of
 [Model](models/Model.ts).
 
 [MatterModel](models/MatterModel.ts) is the primary entrypoint to the API.
+
 
 ## Usage
 
@@ -101,8 +103,8 @@ conformance, constraints, etc.
 
 ### CHIP data model
 
-Input model _[chip.ts](../../models/chip.ts)_ is the CHIP data
-model.  _CHIP_ is _[Project CHIP's connectedhomeip repository](https://github.com/project-chip/connectedhomeip/)_.
+Input model [chip.ts](../../models/chip.ts) is the CHIP data
+model.  _CHIP_ is [Project CHIP's connectedhomeip repository](https://github.com/project-chip/connectedhomeip/).
 At the time of this writing this is the most robust open-source programmatic
 definition of Matter elements and serves as a defacto standard for Matter
 definitions.
@@ -124,6 +126,22 @@ Input model _[../../models/local.ts](../../models/local.ts)_ defines elements
 that are unavailable (or incorrect) in the other models.  This partial model is
 the result of editorial decisions by matter.js contributors.
 
+### Standard (final) data model
+
+Unlike above data models, the _standard data model_ in
+[src/model/standard](./standard) is part of the matter.js public API.  This
+represents our best attempt at a complete Matter data model.
+
+[generate-model.ts](../../tools/generate-model.ts) creates this model by
+analyzing and combining elements from the models above.
+
+To update the standard model:
+
+```sh
+cd matter.js/packages/matter.js
+npm run generate-model
+```
+
 ## Cluster generation
 
 One of the ways we use the Matter Object Model is to generate cluster
@@ -134,5 +152,29 @@ To run:
 
 ```sh
 cd matter.js/packages/matter.js
+npm run generate-model
 npm run generate-clusters
 ```
+
+Note that if you make changes to the input models you need to re-run
+[generate-model.ts](../../tools/generate-model.ts) to update the standard
+model because [generate-cluster.ts](../../tools/generate-clusters.ts) uses it
+as input.
+
+## Ensuring correctness
+
+Many of the scripts mentioned above generate models.  It is important that
+these models are accurate.
+
+To this end, there is extensive validation that every generator runs before
+output.  Validation prints detailed information about the state of every
+element in the model.
+
+Each validation error is associated with an error code.  If there are errors,
+a summary of the errors is printed at the end of validation.
+
+The final model is also validated during testing by
+[MatterTest](../../test/model/standard/MatterTest.ts).
+
+Automatic validation can't find every semantic error but it does ensure the
+resulting model is functional.

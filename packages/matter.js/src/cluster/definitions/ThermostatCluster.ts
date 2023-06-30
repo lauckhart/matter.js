@@ -821,7 +821,7 @@ export namespace ThermostatCluster {
         }
     };
 
-    const OCC = {
+    const Occupancy = {
         attributes: {
             /**
              * This attribute specifies whether the heated/cooled space is
@@ -835,7 +835,7 @@ export namespace ThermostatCluster {
         }
     };
 
-    const HEAT = {
+    const Heating = {
         attributes: {
             /**
              * This attribute specifies the absolute minimum level that the
@@ -890,7 +890,7 @@ export namespace ThermostatCluster {
         }
     };
 
-    const COOL = {
+    const Cooling = {
         attributes: {
             /**
              * This attribute specifies the absolute minimum level that the
@@ -946,7 +946,45 @@ export namespace ThermostatCluster {
         }
     };
 
-    const AUTO = {
+    const NotLocalTemperatureNotExposed = {
+        attributes: {
+            /**
+             * This attribute specifies the offset the Thermostat server SHALL
+             * make to the measured temperature (locally or remotely) to adjust
+             * the LocalTemperature Value prior to using, displaying or
+             * reporting it.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.12
+             */
+            localTemperatureCalibration: OptionalWritableAttribute(16, TlvInt8, { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage })
+        }
+    };
+
+    const CoolingAndOccupancy = {
+        attributes: {
+            /**
+             * This attribute specifies the cooling mode setpoint when the room
+             * is unoccupied.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.15
+             */
+            unoccupiedCoolingSetpoint: WritableAttribute(19, TlvInt16, { persistent: true, default: 2600 })
+        }
+    };
+
+    const HeatingAndOccupancy = {
+        attributes: {
+            /**
+             * This attribute specifies the heating mode setpoint when the room
+             * is unoccupied.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.16
+             */
+            unoccupiedHeatingSetpoint: WritableAttribute(20, TlvInt16, { persistent: true, default: 2000 })
+        }
+    };
+
+    const AutoMode = {
         attributes: {
             /**
              * On devices which support the AUTO feature, this attribute
@@ -964,7 +1002,7 @@ export namespace ThermostatCluster {
         }
     };
 
-    const SCH = {
+    const ScheduleConfiguration = {
         attributes: {
             /**
              * This attribute represents the day of the week that this
@@ -1015,7 +1053,7 @@ export namespace ThermostatCluster {
         }
     };
 
-    const SB = {
+    const Setback = {
         attributes: {
             /**
              * This attribute specifies the amount that the Thermostat server
@@ -1051,6 +1089,42 @@ export namespace ThermostatCluster {
         }
     };
 
+    const SetbackAndOccupancy = {
+        attributes: {
+            /**
+             * This attribute specifies the amount that the Thermostat server
+             * will allow the LocalTemperature Value to float above the
+             * UnoccupiedCooling setpoint (i.e., UnoccupiedCooling +
+             * UnoccupiedSetback) or below the UnoccupiedHeating setpoint
+             * (i.e., UnoccupiedHeating - UnoccupiedSetback) before initiating
+             * a state change to bring the temperature back to the user’s
+             * desired setpoint. This attribute is sometimes also referred to
+             * as the “span.”
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.40
+             */
+            unoccupiedSetback: WritableAttribute(55, TlvNullable(TlvUInt8), { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }),
+
+            /**
+             * This attribute specifies the minimum value that the Thermostat
+             * server will allow the UnoccupiedSetback attribute to be
+             * configured by a user.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.41
+             */
+            unoccupiedSetbackMin: FixedAttribute(56, TlvNullable(TlvUInt8), { default: null, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute specifies the maximum value that the Thermostat
+             * server will allow the UnoccupiedSetback attribute to be
+             * configured by a user.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.42
+             */
+            unoccupiedSetbackMax: FixedAttribute(57, TlvNullable(TlvUInt8), { default: null, readAcl: AccessLevel.View })
+        }
+    };
+
     export const Complete = BuildCluster({
         id,
         name,
@@ -1069,12 +1143,16 @@ export namespace ThermostatCluster {
 
         elements: [
             Base,
-            OCC,
-            HEAT,
-            COOL,
-            AUTO,
-            SCH,
-            SB
+            Occupancy,
+            Heating,
+            Cooling,
+            NotLocalTemperatureNotExposed,
+            CoolingAndOccupancy,
+            HeatingAndOccupancy,
+            AutoMode,
+            ScheduleConfiguration,
+            Setback,
+            SetbackAndOccupancy
         ]
     });
 };

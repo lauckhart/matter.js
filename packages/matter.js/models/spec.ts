@@ -685,7 +685,7 @@ export const SpecMatter: MatterElement = {
                 {
                     tag: "datatype", name: "ExtensionFieldSet", type: "struct",
                     details: "This data type indicates for a given cluster a set of attributes and their values. Only attributes " +
-                             "which have the \"S\" designation in the Quality column of the cluster specification SHALL be used in " +
+                             "which have the \"S\" designation in the Quality column of the cluster specification shall be used in " +
                              "the AttributeValueList field.",
                     xref: { document: "cluster", section: "1.4.6.2" },
 
@@ -863,8 +863,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "StartUpOnOffEnum", type: "enum8",
-                    details: "The data type StartUpOnOffEnum is derived from enum8. The values of the StartUpOnOffEnum data type " +
-                             "are listed below.",
                     xref: { document: "cluster", section: "1.5.5.1" },
 
                     children: [
@@ -2260,7 +2258,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OccupancyBitmap", type: "map8",
-                    details: "This data type is derived from bitmap8.",
                     xref: { document: "cluster", section: "2.7.5.1" },
 
                     children: [
@@ -2273,7 +2270,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OccupancySensorTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "cluster", section: "2.7.5.2" },
 
                     children: [
@@ -2286,7 +2282,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OccupancySensorTypeBitmap", type: "map8",
-                    details: "This data type is derived from bitmap8.",
                     xref: { document: "cluster", section: "2.7.5.3" },
 
                     children: [
@@ -2528,7 +2523,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CoupleColorTempToLevelMinMireds", id: 0x400d, type: "uint16",
-                    access: "R V", conformance: "CT | ColorTemperatureMi",
+                    access: "R V", conformance: "CT | ColorTemperatureMireds",
                     constraint: "ColorTempPhysicalMinMireds to ColorTemperatureMireds",
                     details: "The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the " +
                              "ColorTemperatureMireds attribute for the purposes of coupling the ColorTemperatureMireds attribute " +
@@ -2540,7 +2535,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "StartUpColorTemperatureMireds", id: 0x4010, type: "uint16",
-                    access: "RW VM", conformance: "CT | ColorTemperatureMi", constraint: "0", quality: "X",
+                    access: "RW VM", conformance: "CT | ColorTemperatureMireds", constraint: "0", quality: "X",
                     details: "The StartUpColorTemperatureMireds attribute SHALL define the desired startup color temperature " +
                              "value a lamp SHALL use when it is supplied with power and this value SHALL be reflected in the " +
                              "ColorTemperatureMireds attribute. In addition, the ColorMode and EnhancedColorMode attributes SHALL " +
@@ -3922,7 +3917,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "PumpStatusBitmap", type: "map16",
-                    details: "This data type is derived from map16.",
                     xref: { document: "cluster", section: "4.2.6.1" },
 
                     children: [
@@ -3986,7 +3980,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OperationModeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "cluster", section: "4.2.6.2" },
 
                     children: [
@@ -4005,7 +3998,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ControlModeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "cluster", section: "4.2.6.3" },
 
                     children: [
@@ -4765,31 +4757,24 @@ export const SpecMatter: MatterElement = {
                     tag: "command", name: "GetRelayStatusLogResponse", id: 0x1, conformance: "O", direction: "response",
                     xref: { document: "cluster", section: "4.3.8" }
                 },
-
                 {
                     tag: "datatype", name: "temperature", type: "int16", description: "Temperature",
-                    details: "This type, derived from int16, represents a temperature on the Celsius scale with a resolution of " +
-                             "0.01°C.",
+                    details: "This type represents a temperature on the Celsius scale with a resolution of 0.01°C.",
                     xref: { document: "cluster", section: "4.3.9.1" }
                 },
-
                 {
                     tag: "datatype", name: "temp-diff", type: "int16", description: "Temperature Difference",
-                    details: "This type, derived from int16, represents a temperature difference with a resolution of 0.01°C.",
+                    details: "This type represents a temperature difference with a resolution of 0.01°C.",
                     xref: { document: "cluster", section: "4.3.9.2" }
                 },
-
                 {
                     tag: "datatype", name: "temp-s8", type: "int8", description: "Signed Temperature (°C x 10)",
-                    details: "This type, derived from int8, represents a temperature from -12.7°C to 12.7°C with a resolution of " +
-                             "0.1°C.",
+                    details: "This type represents a temperature from -12.7°C to 12.7°C with a resolution of 0.1°C.",
                     xref: { document: "cluster", section: "4.3.9.3" }
                 },
-
                 {
                     tag: "datatype", name: "temp-u8", type: "uint8", description: "Unsigned Temperature (°C x 10)",
-                    details: "This type, derived from uint8, represents a temperature from 0°C to 25.5°C with a resolution of " +
-                             "0.1°C.",
+                    details: "This type represents a temperature from 0°C to 25.5°C with a resolution of 0.1°C.",
                     xref: { document: "cluster", section: "4.3.9.4" }
                 },
 
@@ -6067,8 +6052,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "AlarmCodeEnum", type: "enum8",
-                    details: "The Alarm Code enum SHALL indicate the alarm type. The data type of the Alarm Code enum is derived " +
-                             "from enum8.",
+                    details: "The Alarm Code enum shall indicate the alarm type.",
                     xref: { document: "cluster", section: "5.2.6.1" },
 
                     children: [
@@ -6106,8 +6090,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "CredentialRuleEnum", type: "enum8",
-                    details: "The CredentialRule enum used in various commands SHALL indicate the credential rule that can be " +
-                             "applied to a particular user. The data type of the CredentialRule enum is derived from enum8.",
+                    details: "The CredentialRule enum used in various commands shall indicate the credential rule that can be " +
+                             "applied to a particular user.",
                     xref: { document: "cluster", section: "5.2.6.2" },
                     children: [
                         { tag: "datatype", name: "Single", id: 0x0, conformance: "USR" },
@@ -6118,7 +6102,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "CredentialStruct", type: "struct",
-                    details: "The CredentialStruct is used in LockOperation event and Get User Record Response command and SHALL " +
+                    details: "The CredentialStruct is used in LockOperation event and Get User Record Response command and shall " +
                              "indicate the credential types and their corresponding indices (if any) for the event or user record.",
                     xref: { document: "cluster", section: "5.2.6.3" },
 
@@ -6141,8 +6125,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "CredentialTypeEnum", type: "enum8",
-                    details: "The Credential Type enum SHALL indicate the credential type. The data type of the Credential Type " +
-                             "enum is derived from enum8.",
+                    details: "The Credential Type enum shall indicate the credential type.",
                     xref: { document: "cluster", section: "5.2.6.4" },
 
                     children: [
@@ -6157,8 +6140,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "DataOperationTypeEnum", type: "enum8",
-                    details: "The DataOperationType enum SHALL indicate the data operation performed. The data type of the " +
-                             "DataOperationType enum is derived from enum8.",
+                    details: "The DataOperationType enum shall indicate the data operation performed.",
                     xref: { document: "cluster", section: "5.2.6.5" },
 
                     children: [
@@ -6179,8 +6161,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "DaysMaskMap", type: "map8",
-                    details: "The DaysMask field used in various commands and SHALL indicate the days of the week the Week Day " +
-                             "schedule applies for. The data type of the DaysMask field is derived from map8.",
+                    details: "The DaysMask field used in various commands and shall indicate the days of the week the Week Day " +
+                             "schedule applies for.",
                     xref: { document: "cluster", section: "5.2.6.6" },
 
                     children: [
@@ -6196,7 +6178,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "DoorStateEnum", type: "enum8",
-                    details: "The DoorState enumeration SHALL indicate the current door state. The data type of the DoorState",
+                    details: "The DoorState enumeration shall indicate the current door state. The data type of the DoorState",
                     xref: { document: "cluster", section: "5.2.6.7" },
 
                     children: [
@@ -6229,8 +6211,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "LockDataTypeEnum", type: "enum8",
-                    details: "The LockDataType enum SHALL indicate the data type that is being or has changed. The data type of " +
-                             "the DataType enum is derived from enum8.",
+                    details: "The LockDataType enum shall indicate the data type that is being or has changed.",
                     xref: { document: "cluster", section: "5.2.6.9" },
 
                     children: [
@@ -6283,8 +6264,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "LockOperationTypeEnum", type: "enum8",
-                    details: "The LockOperationType enumeration SHALL indicate the type of Lock operation performed. The data " +
-                             "type of the LockOperationType enum field is derived from enum8.",
+                    details: "The LockOperationType enumeration shall indicate the type of Lock operation performed.",
                     xref: { document: "cluster", section: "5.2.6.10" },
 
                     children: [
@@ -6297,8 +6277,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OperationErrorEnum", type: "enum8",
-                    details: "The OperationError enumeration SHALL indicate the error cause of the Lock/Unlock operation " +
-                             "performed. The data type of the OperationError enum field is derived from enum8.",
+                    details: "The OperationError enumeration shall indicate the error cause of the Lock/Unlock operation " +
+                             "performed.",
                     xref: { document: "cluster", section: "5.2.6.11" },
 
                     children: [
@@ -6312,8 +6292,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OperatingModeEnum", type: "enum8",
-                    details: "The OperatingMode enumeration SHALL indicate the lock operating mode. The data type of the " +
-                             "OperatingMode enum field is derived from enum8.",
+                    details: "The OperatingMode enumeration shall indicate the lock operating mode.",
                     xref: { document: "cluster", section: "5.2.6.12" },
 
                     children: [
@@ -6355,8 +6334,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OperationSourceEnum", type: "enum8",
-                    details: "The OperationSource enumeration SHALL indicate the source of the Lock/Unlock operation performed. " +
-                             "The data type of the OperationSource enum field is derived from enum8.",
+                    details: "The OperationSource enumeration shall indicate the source of the Lock/Unlock operation performed.",
                     xref: { document: "cluster", section: "5.2.6.13" },
 
                     children: [
@@ -6375,7 +6353,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "UserStatusEnum", type: "enum8",
-                    details: "The UserStatus enum used in various commands SHALL indicate what the status is for a specific user " +
+                    details: "The UserStatus enum used in various commands shall indicate what the status is for a specific user " +
                              "ID.",
                     xref: { document: "cluster", section: "5.2.6.15" },
                     children: [
@@ -6387,7 +6365,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "UserTypeEnum", type: "enum8",
-                    details: "The UserType enum used in various commands SHALL indicate what the type is for a specific user ID.",
+                    details: "The UserType enum used in various commands shall indicate what the type is for a specific user ID.",
                     xref: { document: "cluster", section: "5.2.6.16" },
 
                     children: [
@@ -6487,7 +6465,7 @@ export const SpecMatter: MatterElement = {
                             details: "Tilt Control and behavior for tilting window coverings"
                         },
                         {
-                            tag: "datatype", name: "PALF", id: 0x2, conformance: "[LF]", description: "PositionAwareLift",
+                            tag: "datatype", name: "PA_LF", id: 0x2, conformance: "[LF]", description: "PositionAwareLift",
                             details: "Position Aware lift control is supported."
                         },
                         {
@@ -6495,7 +6473,7 @@ export const SpecMatter: MatterElement = {
                             details: "Absolute positioning is supported."
                         },
                         {
-                            tag: "datatype", name: "PATL", id: 0x4, conformance: "[TL]", description: "PositionAwareTilt",
+                            tag: "datatype", name: "PA_TL", id: 0x4, conformance: "[TL]", description: "PositionAwareTilt",
                             details: "Position Aware tilt control is supported."
                         }
                     ]
@@ -7044,7 +7022,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ApplicationStatusEnum", type: "enum8",
-                    details: "ApplicationStatusEnum Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.3.4.2" },
 
                     children: [
@@ -7183,7 +7160,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "StatusEnum Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.4.5.1" },
 
                     children: [
@@ -7310,7 +7286,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OutputTypeEnum", type: "enum8",
-                    details: "OutputType Data Type is derived from enum8.",
+                    details: "The type of output, expressed as an enum, with the following values:",
                     xref: { document: "cluster", section: "6.5.5.2" },
 
                     children: [
@@ -7370,7 +7346,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "ChangeChannel", id: 0x0, access: "O", conformance: "CL, LI",
+                    tag: "command", name: "ChangeChannel", id: 0x0, access: "O", conformance: "CL | LI",
                     direction: "request", response: "ChangeChannelResponse",
                     details: "Change the channel to the channel case-insensitive exact matching the value passed as an argument.",
                     xref: { document: "cluster", section: "6.6.4.1" },
@@ -7385,7 +7361,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "ChangeChannelResponse", id: 0x1, conformance: "CL, LI",
+                    tag: "command", name: "ChangeChannelResponse", id: 0x1, conformance: "CL | LI",
                     direction: "response",
                     details: "This command SHALL be generated in response to a ChangeChannel command. The data for this command " +
                              "SHALL be as follows:",
@@ -7515,14 +7491,12 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "LineupInfoTypeEnum", type: "enum8",
-                    details: "LineupInfoTypeEnum Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.6.5.3" },
                     children: [ { tag: "datatype", name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator" } ]
                 },
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "StatusEnum Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.6.5.4" },
 
                     children: [
@@ -7659,7 +7633,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "StatusEnum Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.7.5.1" },
 
                     children: [
@@ -7720,7 +7693,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ParameterEnum", type: "enum8",
-                    details: "Parameter Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.7.5.4" },
 
                     children: [
@@ -7909,7 +7881,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "MetricTypeEnum", type: "enum8",
-                    details: "MetricTypeEnum Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.7.5.9" },
 
                     children: [
@@ -7990,7 +7961,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "Status Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.8.4.1" },
 
                     children: [
@@ -8118,7 +8088,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "InputTypeEnum", type: "enum8",
-                    details: "InputType Data Type is derived from enum8.",
+                    details: "The type of input, expressed as an enum, with the following values:",
                     xref: { document: "cluster", section: "6.9.5.2" },
 
                     children: [
@@ -8386,7 +8356,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "PlaybackStateEnum", type: "enum8",
-                    details: "PlaybackStateEnum Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.10.5.1" },
 
                     children: [
@@ -8411,7 +8380,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "Status Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.10.5.2" },
 
                     children: [
@@ -8551,7 +8519,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "Status Data Type is derived from enum8.",
                     xref: { document: "cluster", section: "6.11.5.2" },
 
                     children: [
@@ -8692,7 +8659,7 @@ export const SpecMatter: MatterElement = {
             children: [
                 {
                     tag: "attribute", name: "LabelList", id: 0x0, type: "list", conformance: "M", constraint: "Derived",
-                    default: [], quality: "I",
+                    default: [],
                     details: "This is a list of string tuples. Each entry is a LabelStruct.",
                     xref: { document: "core", section: "9.7.5.1" },
                     children: [ { tag: "datatype", name: "entry", type: "LabelStruct" } ]
@@ -8867,7 +8834,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ChangeTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "9.10.4.1" },
                     children: [
                         { tag: "datatype", name: "Changed", id: 0x0, conformance: "M" },
@@ -8878,7 +8844,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "AccessControlEntryPrivilegeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "9.10.4.2" },
 
                     children: [
@@ -8904,7 +8869,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "AccessControlEntryAuthModeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "9.10.4.3" },
                     children: [
                         { tag: "datatype", name: "Pase", id: 0x1, conformance: "M" },
@@ -9310,7 +9274,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "CommandBits", type: "map16",
-                    details: "This data type is derived from map16.",
                     xref: { document: "core", section: "9.14.4.1" },
 
                     children: [
@@ -9367,7 +9330,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ActionTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "9.14.4.2" },
 
                     children: [
@@ -9420,7 +9382,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ActionStateEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "9.14.4.3" },
 
                     children: [
@@ -9433,7 +9394,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ActionErrorEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "9.14.4.4" },
                     children: [
                         { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
@@ -9443,7 +9403,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "EndpointListTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8 and has its values listed below.",
                     xref: { document: "core", section: "9.14.4.5" },
 
                     children: [
@@ -10019,7 +9978,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "GroupKeySecurityPolicyEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.2.6.1" },
                     children: [
                         { tag: "datatype", name: "TrustFirst", id: 0x0, conformance: "M" },
@@ -10029,7 +9987,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "GroupKeyMulticastPolicyEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.2.6.2" },
 
                     children: [
@@ -10068,7 +10025,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "GroupKeySetStruct", type: "struct",
-                    details: "This field SHALL provide the fabric-unique index for the associated group key set, as specified in " +
+                    details: "This field shall provide the fabric-unique index for the associated group key set, as specified in " +
                              "Section 4.15.3.5.1, “Group Key Set ID”.",
                     xref: { document: "core", section: "11.2.6.4" },
 
@@ -10246,7 +10203,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "HourFormatEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.4.5.1" },
                     children: [
                         { tag: "datatype", name: "12Hr", id: 0x0, conformance: "M" },
@@ -10256,7 +10212,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "CalendarTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.4.5.2" },
 
                     children: [
@@ -10305,7 +10260,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "TempUnitEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.5.5.1" },
                     children: [
                         { tag: "datatype", name: "Fahrenheit", id: 0x0, conformance: "M" },
@@ -10724,7 +10678,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "WiredFaultEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.7.5.1" },
                     children: [
                         { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
@@ -10735,7 +10688,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "BatFaultEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.7.5.2" },
                     children: [
                         { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
@@ -10746,7 +10698,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "BatChargeFaultEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.7.5.3" },
 
                     children: [
@@ -10766,7 +10717,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "PowerSourceStatusEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.7.5.4" },
 
                     children: [
@@ -10779,7 +10729,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "WiredCurrentTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.7.5.5" },
                     children: [
                         { tag: "datatype", name: "Ac", id: 0x0, conformance: "M" },
@@ -10789,7 +10738,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "BatChargeLevelEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.7.5.6" },
                     children: [
                         { tag: "datatype", name: "Ok", id: 0x0, conformance: "M" },
@@ -10800,7 +10748,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "BatReplaceabilityEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.7.5.7" },
 
                     children: [
@@ -10813,7 +10760,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "BatCommonDesignationEnum", type: "enum16",
-                    details: "This data type is derived from enum16.",
                     xref: { document: "core", section: "11.7.5.8" },
 
                     children: [
@@ -10903,7 +10849,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "BatApprovedChemistryEnum", type: "enum16",
-                    details: "This data type is derived from enum16.",
                     xref: { document: "core", section: "11.7.5.9" },
 
                     children: [
@@ -10945,7 +10890,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "BatChargeStateEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.7.5.10" },
 
                     children: [
@@ -11274,7 +11218,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "WiFiSecurityBitmap", type: "map8",
-                    details: "This data type is derived from map8.",
+                    details: "WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the Security field of the " +
+                             "WiFiInterfaceScanResultStruct.",
                     xref: { document: "core", section: "11.8.5.1" },
 
                     children: [
@@ -11297,7 +11242,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "WiFiBandEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
+                    details: "WiFiBandEnum encodes a supported Wi-Fi frequency band present in the WiFiBand field of the " +
+                             "WiFiInterfaceScanResultStruct.",
                     xref: { document: "core", section: "11.8.5.2" },
 
                     children: [
@@ -11311,7 +11257,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "NetworkCommissioningStatusEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.8.5.3" },
 
                     children: [
@@ -11554,7 +11499,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "CommissioningErrorEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
+                    details: "This enumeration is used by several response commands in this cluster to indicate particular errors.",
                     xref: { document: "core", section: "11.9.4.1" },
 
                     children: [
@@ -11568,7 +11513,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "RegulatoryLocationTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
+                    details: "This enumeration is used by the RegulatoryConfig and LocationCapability attributes to indicate " +
+                             "possible radio usage.",
                     xref: { document: "core", section: "11.9.4.2" },
                     children: [
                         { tag: "datatype", name: "Indoor", id: 0x0, conformance: "M" },
@@ -11690,7 +11636,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "IntentEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.10.4.1" },
 
                     children: [
@@ -11719,7 +11664,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.10.4.2" },
 
                     children: [
@@ -11758,7 +11702,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "TransferProtocolEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.10.4.3" },
 
                     children: [
@@ -12015,7 +11958,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "HardwareFaultEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.11.4.1" },
 
                     children: [
@@ -12035,7 +11977,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "RadioFaultEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.11.4.2" },
 
                     children: [
@@ -12051,7 +11992,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "NetworkFaultEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.11.4.3" },
 
                     children: [
@@ -12064,7 +12004,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "InterfaceTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.11.4.4" },
 
                     children: [
@@ -12078,7 +12017,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "BootReasonEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.11.4.5" },
 
                     children: [
@@ -12933,7 +12871,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "NetworkFaultEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.13.5.1" },
 
                     children: [
@@ -12946,7 +12883,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ConnectionStatusEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.13.5.2" },
                     children: [
                         { tag: "datatype", name: "Connected", id: 0x0, conformance: "M" },
@@ -12956,7 +12892,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "RoutingRoleEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.13.5.3" },
 
                     children: [
@@ -13079,7 +13014,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "RouteTableStruct", type: "struct",
-                    details: "This field SHALL specify the IEEE 802.15.4 extended address for the Node for which this route table " +
+                    details: "This field shall specify the IEEE 802.15.4 extended address for the Node for which this route table " +
                              "entry corresponds.",
                     xref: { document: "core", section: "11.13.5.5" },
 
@@ -13422,7 +13357,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "SecurityTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.14.5.1" },
 
                     children: [
@@ -13437,7 +13371,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "WiFiVersionEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.14.5.2" },
 
                     children: [
@@ -13452,7 +13385,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "AssociationFailureCauseEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.14.5.3" },
 
                     children: [
@@ -13465,7 +13397,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ConnectionStatusEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.14.5.4" },
                     children: [
                         { tag: "datatype", name: "Connected", id: 0x0, conformance: "M" },
@@ -13585,7 +13516,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "PHYRateEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.15.5.1" },
 
                     children: [
@@ -13791,7 +13721,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "GranularityEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.16.6.1" },
 
                     children: [
@@ -13805,7 +13734,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "TimeSourceEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.16.6.2" },
 
                     children: [
@@ -14223,7 +14151,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "CertificateChainTypeEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
+                    details: "This enumeration is used by the CertificateChainRequest command to convey which certificate from " +
+                             "the device attestation certificate chain to transmit back to the client.",
                     xref: { document: "core", section: "11.17.4.2" },
                     children: [
                         { tag: "datatype", name: "DacCertificate", id: 0x1, conformance: "M" },
@@ -14233,7 +14162,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "NodeOperationalCertStatusEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
+                    details: "This enumeration is used by the NOCResponse common response command to convey detailed out",
                     xref: { document: "core", section: "11.17.4.3" },
 
                     children: [
@@ -14422,7 +14351,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "CommissioningWindowStatusEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.18.5.1" },
                     children: [
                         { tag: "datatype", name: "WindowNotOpen", id: 0x0, conformance: "M" },
@@ -14535,7 +14463,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "StatusEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
+                    details: "See Section 11.19.3.2, “Querying the OTA Provider” for the semantics of these values.",
                     xref: { document: "core", section: "11.19.6.4.1" },
 
                     children: [
@@ -14548,7 +14476,9 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ApplyUpdateActionEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
+                    details: "See Section 11.19.3.6, “Applying a software update” for the semantics of the values. This " +
+                             "enumeration is used in the Action field of the ApplyUpdateResponse command. See (Section " +
+                             "11.19.6.5.4.1, “Action Field”).",
                     xref: { document: "core", section: "11.19.6.4.2" },
                     children: [
                         { tag: "datatype", name: "Proceed", id: 0x0, conformance: "M" },
@@ -14559,7 +14489,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "DownloadProtocolEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.19.6.4.3" },
 
                     children: [
@@ -14687,7 +14616,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "AnnouncementReasonEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.19.7.4.1" },
                     children: [
                         { tag: "datatype", name: "SimpleAnnouncement", id: 0x0, conformance: "M" },
@@ -14698,7 +14626,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "UpdateStateEnum", type: "enum8",
-                    details: "This data type is derived from enum8.",
                     xref: { document: "core", section: "11.19.7.4.5" },
 
                     children: [
@@ -14716,7 +14643,6 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ChangeReasonEnum", type: "enum8",
-                    details: "The ChangeReasonEnum Data Type is derived from enum8.",
                     xref: { document: "core", section: "11.19.7.4.15" },
 
                     children: [

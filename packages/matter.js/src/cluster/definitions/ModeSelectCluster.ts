@@ -169,7 +169,7 @@ export namespace ModeSelectCluster {
         }
     };
 
-    const DEPONOFF = {
+    const OnOff = {
         attributes: {
             /**
              * This attribute SHALL indicate the value of CurrentMode that
@@ -193,7 +193,7 @@ export namespace ModeSelectCluster {
         supportedFeatures: { DEPONOFF: true },
         elements: [
             Base,
-            DEPONOFF
+            OnOff
         ]
     });
 };

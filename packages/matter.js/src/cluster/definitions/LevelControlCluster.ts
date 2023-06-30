@@ -335,7 +335,7 @@ export namespace LevelControlCluster {
         }
     };
 
-    const LT = {
+    const Lighting = {
         attributes: {
             /**
              * The RemainingTime attribute represents the time remaining until
@@ -358,7 +358,7 @@ export namespace LevelControlCluster {
         }
     };
 
-    const FQ = {
+    const Frequency = {
         attributes: {
             /**
              * The CurrentFrequency attribute represents the frequency at which
@@ -413,8 +413,8 @@ export namespace LevelControlCluster {
         },
         elements: [
             Base,
-            LT,
-            FQ
+            Lighting,
+            Frequency
         ]
     });
 };

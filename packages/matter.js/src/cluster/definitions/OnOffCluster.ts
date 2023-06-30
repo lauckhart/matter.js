@@ -173,7 +173,7 @@ export namespace OnOffCluster {
         }
     };
 
-    const LT = {
+    const LevelControlForLighting = {
         attributes: {
             /**
              * In order to support the use case where the user gets back the
@@ -267,7 +267,7 @@ export namespace OnOffCluster {
         supportedFeatures: { LT: true },
         elements: [
             Base,
-            LT
+            LevelControlForLighting
         ]
     });
 };

@@ -291,13 +291,6 @@ export abstract class Model {
     }
 
     /**
-     * Record validation errors from an aspect of this model.
-     */
-    addErrors(aspect: { errors: DefinitionError[] }) {
-        aspect.errors?.forEach((e) => this.errors?.push({ ...e, source: `${this.path} ${e.source}`}))
-    }
-
-    /**
      * Convert model to JSON.
      */
     toJSON() {

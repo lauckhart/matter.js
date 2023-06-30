@@ -22,7 +22,8 @@ const TEST_DEFINITIONS = [
     "AB.a2",
     "AB.a2+",
     "AB == 2",
-    "Mom"
+    "Mom",
+    "[AB].a"
 ]
 
 const TEST_DEFINITIONS2 = {

@@ -38,9 +38,7 @@ export namespace UnitLocalizationCluster {
         TEMP: BitFlag(0)
     };
 
-    const Base = {};
-
-    const TEMP = {
+    const TemperatureUnit = {
         attributes: {
             /**
              * The TemperatureUnit attribute SHALL indicate the unit for the
@@ -54,6 +52,8 @@ export namespace UnitLocalizationCluster {
         }
     };
 
+    const Base = {};
+
     export const Complete = BuildCluster({
         id,
         name,
@@ -61,8 +61,8 @@ export namespace UnitLocalizationCluster {
         features: featureMap,
         supportedFeatures: { TEMP: true },
         elements: [
-            Base,
-            TEMP
+            TemperatureUnit,
+            Base
         ]
     });
 };

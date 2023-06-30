@@ -36,16 +36,44 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
         });
     }
 
-    const variance = ClusterVariance(cluster);
-
+    const featureNames = Object.fromEntries(features.map(f => [ f.name, f.description ]));
     const elementSets = {} as { [name: string]: ElementVariance };
-    elementSets.Base = variance;
-    for (const name in variance.features) {
-        elementSets[name] = variance.features[name];
+    const clusterVariance = ClusterVariance(cluster);
+    for (const elementVariance of clusterVariance) {
+        let name;
+
+        if (elementVariance.condition?.allOf) {
+            name = elementVariance.condition.allOf.map(f => featureNames[f]).join("And");
+        }
+
+        if (elementVariance.condition?.anyOf) {
+            const members = Array<string>();
+            if (name) {
+                members.push(name);
+            }
+            members.push(...elementVariance.condition.anyOf);
+            name = members.map(f => featureNames[f]).join("Or");
+        }
+
+        if (elementVariance.condition?.not) {
+            name = `${name || ""}Not${featureNames[elementVariance.condition.not]}`;
+        }
+
+        if (!name) {
+            name = "Base";
+        }
+
+        let set = elementSets[name];
+        if (!set) {
+            set = {
+                mandatory: [],
+                optional: [],
+            }
+            elementSets[name] = set;
+        }
+        set.mandatory.push(...elementVariance.mandatory);
+        set.optional.push(...elementVariance.optional);
     }
-    variance.featureSets.forEach(featureSet => {
-        elementSets[new Array(...featureSet.flags).join("")] = featureSet;
-    })
 
     const gen = new ClusterElementGenerator(file, cluster);
     for (const name in elementSets) {

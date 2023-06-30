@@ -7,66 +7,12 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { OptionalAttribute, AccessLevel, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
-import { TlvUInt16, TlvEnum, TlvBitmap, TlvUInt8, TlvInt16 } from "../../tlv/TlvNumber.js";
+import { Attribute, AccessLevel, Command, TlvNoResponse, OptionalAttribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute } from "../../cluster/Cluster.js";
+import { TlvUInt8, TlvEnum, TlvUInt16, TlvBitmap, TlvInt16 } from "../../tlv/TlvNumber.js";
+import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
-
-/**
- * The DriftCompensation attribute indicates what mechanism, if any, is in use
- * for compensation for color/intensity drift over time. It SHALL be one of the
- * non-reserved values in Values of the DriftCompensation Attribute.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.6
- */
-export const enum DriftCompensation {
-    None = 0,
-    OtherUnknown = 1,
-    TemperatureMonitoring = 2,
-    OpticalLuminanceMonitoringAndFeedback = 3,
-    OpticalColorMonitoringAndFeedback = 4
-};
-
-/**
- * The ColorMode attribute indicates which attributes are currently determining
- * the color of the device.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.9
- */
-export const enum ColorMode {
-    CurrentHueAndCurrentSaturation = 0,
-    CurrentXAndCurrentY = 1,
-    ColorTemperatureMireds = 2
-};
-
-/**
- * The Options attribute is meant to be changed only during commissioning. The
- * Options attribute is a bitmap that determines the default behavior of some
- * cluster commands. Each command that is dependent on the Options attribute
- * SHALL first construct a temporary Options bitmap that is in effect during
- * the command processing. The temporary Options bitmap has the same format and
- * meaning as the Options attribute, but includes any bits that may be
- * overridden by command fields.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
- */
-export const Options = TlvBitmap(TlvUInt8, { ExecuteIfOff: BitFlag(1) });
-
-/**
- * The EnhancedColorMode attribute specifies which attributes are currently
- * determining the color of the device, as detailed in Values of the
- * EnhancedColorMode Attribute.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.12
- */
-export const enum EnhancedColorMode {
-    CurrentHueAndCurrentSaturation = 0,
-    CurrentXAndCurrentY = 1,
-    ColorTemperatureMireds = 2,
-    EnhancedCurrentHueAndCurrentSaturation = 3
-};
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.2
@@ -280,6 +226,60 @@ export const MoveToHueAndSaturationRequest = TlvObject({
     OptionsMask: TlvField(3, TlvUInt8),
     OptionsOverride: TlvField(4, TlvUInt8)
 });
+
+/**
+ * The DriftCompensation attribute indicates what mechanism, if any, is in use
+ * for compensation for color/intensity drift over time. It SHALL be one of the
+ * non-reserved values in Values of the DriftCompensation Attribute.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.6
+ */
+export const enum DriftCompensation {
+    None = 0,
+    OtherUnknown = 1,
+    TemperatureMonitoring = 2,
+    OpticalLuminanceMonitoringAndFeedback = 3,
+    OpticalColorMonitoringAndFeedback = 4
+};
+
+/**
+ * The ColorMode attribute indicates which attributes are currently determining
+ * the color of the device.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.9
+ */
+export const enum ColorMode {
+    CurrentHueAndCurrentSaturation = 0,
+    CurrentXAndCurrentY = 1,
+    ColorTemperatureMireds = 2
+};
+
+/**
+ * The Options attribute is meant to be changed only during commissioning. The
+ * Options attribute is a bitmap that determines the default behavior of some
+ * cluster commands. Each command that is dependent on the Options attribute
+ * SHALL first construct a temporary Options bitmap that is in effect during
+ * the command processing. The temporary Options bitmap has the same format and
+ * meaning as the Options attribute, but includes any bits that may be
+ * overridden by command fields.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
+ */
+export const Options = TlvBitmap(TlvUInt8, { ExecuteIfOff: BitFlag(1) });
+
+/**
+ * The EnhancedColorMode attribute specifies which attributes are currently
+ * determining the color of the device, as detailed in Values of the
+ * EnhancedColorMode Attribute.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.12
+ */
+export const enum EnhancedColorMode {
+    CurrentHueAndCurrentSaturation = 0,
+    CurrentXAndCurrentY = 1,
+    ColorTemperatureMireds = 2,
+    EnhancedCurrentHueAndCurrentSaturation = 3
+};
 
 /**
  * The MoveToColor command SHALL have the following data fields:
@@ -692,6 +692,18 @@ export const ColorLoopSetRequest = TlvObject({
     OptionsOverride: TlvField(6, TlvUInt8)
 });
 
+/**
+ * The StopMoveStep command is provided to allow MoveTo and Step commands to be
+ * stopped. (Note this automatically provides symmetry to the Level Control
+ * cluster.)
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.20
+ */
+export const StopMoveStepRequest = TlvObject({
+    OptionsMask: TlvField(0, TlvUInt8),
+    OptionsOverride: TlvField(1, TlvUInt8)
+});
+
 export namespace ColorControlCluster {
     export const id = 768;
     export const name = "ColorControl";
@@ -732,6 +744,81 @@ export namespace ColorControlCluster {
          * Supports specification of color temperature.
          */
         CT: BitFlag(4)
+    };
+
+    const HueSaturation = {
+        attributes: {
+            /**
+             * The CurrentHue attribute contains the current hue value of the
+             * light. It is updated as fast as practical during commands that
+             * change the hue.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.1
+             */
+            currentHue: Attribute(0, TlvUInt8, { persistent: true, readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentSaturation attribute holds the current saturation
+             * value of the light. It is updated as fast as practical during
+             * commands that change the saturation.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.2
+             */
+            currentSaturation: Attribute(1, TlvUInt8, { scene: true, persistent: true, readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * The MoveToHue command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4
+             */
+            moveToHue: Command(0, MoveToHueRequest, 0, TlvNoResponse),
+
+            /**
+             * The MoveHue command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.5
+             */
+            moveHue: Command(1, MoveHueRequest, 1, TlvNoResponse),
+
+            /**
+             * The StepHue command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.6
+             */
+            stepHue: Command(2, StepHueRequest, 2, TlvNoResponse),
+
+            /**
+             * The MoveToSaturation command SHALL have the following data
+             * fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.7
+             */
+            moveToSaturation: Command(3, MoveToSaturationRequest, 3, TlvNoResponse),
+
+            /**
+             * The MoveSaturation command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.8
+             */
+            moveSaturation: Command(4, MoveSaturationRequest, 4, TlvNoResponse),
+
+            /**
+             * The StepSaturation command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.9
+             */
+            stepSaturation: Command(5, StepSaturationRequest, 5, TlvNoResponse),
+
+            /**
+             * The MoveToHueAndSaturation command SHALL have the following data
+             * fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.10
+             */
+            moveToHueAndSaturation: Command(6, MoveToHueAndSaturationRequest, 6, TlvNoResponse)
+        }
     };
 
     const Base = {
@@ -993,82 +1080,7 @@ export namespace ColorControlCluster {
         }
     };
 
-    const HS = {
-        attributes: {
-            /**
-             * The CurrentHue attribute contains the current hue value of the
-             * light. It is updated as fast as practical during commands that
-             * change the hue.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.1
-             */
-            currentHue: Attribute(0, TlvUInt8, { persistent: true, readAcl: AccessLevel.View }),
-
-            /**
-             * The CurrentSaturation attribute holds the current saturation
-             * value of the light. It is updated as fast as practical during
-             * commands that change the saturation.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.2
-             */
-            currentSaturation: Attribute(1, TlvUInt8, { scene: true, persistent: true, readAcl: AccessLevel.View })
-        },
-
-        commands: {
-            /**
-             * The MoveToHue command SHALL have the following data fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4
-             */
-            moveToHue: Command(0, MoveToHueRequest, 0, TlvNoResponse),
-
-            /**
-             * The MoveHue command SHALL have the following data fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.5
-             */
-            moveHue: Command(1, MoveHueRequest, 1, TlvNoResponse),
-
-            /**
-             * The StepHue command SHALL have the following data fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.6
-             */
-            stepHue: Command(2, StepHueRequest, 2, TlvNoResponse),
-
-            /**
-             * The MoveToSaturation command SHALL have the following data
-             * fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.7
-             */
-            moveToSaturation: Command(3, MoveToSaturationRequest, 3, TlvNoResponse),
-
-            /**
-             * The MoveSaturation command SHALL have the following data fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.8
-             */
-            moveSaturation: Command(4, MoveSaturationRequest, 4, TlvNoResponse),
-
-            /**
-             * The StepSaturation command SHALL have the following data fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.9
-             */
-            stepSaturation: Command(5, StepSaturationRequest, 5, TlvNoResponse),
-
-            /**
-             * The MoveToHueAndSaturation command SHALL have the following data
-             * fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.10
-             */
-            moveToHueAndSaturation: Command(6, MoveToHueAndSaturationRequest, 6, TlvNoResponse)
-        }
-    };
-
-    const XY = {
+    const Xy = {
         attributes: {
             /**
              * The CurrentX attribute contains the current value of the
@@ -1115,7 +1127,7 @@ export namespace ColorControlCluster {
         }
     };
 
-    const CT = {
+    const ColorTemperature = {
         attributes: {
             /**
              * The ColorTemperatureMireds attribute contains a scaled inverse
@@ -1205,7 +1217,7 @@ export namespace ColorControlCluster {
         }
     };
 
-    const EHUE = {
+    const EnhancedHue = {
         attributes: {
             /**
              * The EnhancedCurrentHue attribute represents non-equidistant
@@ -1257,7 +1269,7 @@ export namespace ColorControlCluster {
         }
     };
 
-    const CL = {
+    const ColorLoop = {
         attributes: {
             /**
              * The ColorLoopActive attribute specifies the current active
@@ -1319,6 +1331,19 @@ export namespace ColorControlCluster {
         }
     };
 
+    const HueSaturationOrXy = {
+        commands: {
+            /**
+             * The StopMoveStep command is provided to allow MoveTo and Step
+             * commands to be stopped. (Note this automatically provides
+             * symmetry to the Level Control cluster.)
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.20
+             */
+            stopMoveStep: Command(71, StopMoveStepRequest, 71, TlvNoResponse)
+        }
+    };
+
     export const Complete = BuildCluster({
         id,
         name,
@@ -1334,12 +1359,13 @@ export namespace ColorControlCluster {
         },
 
         elements: [
+            HueSaturation,
             Base,
-            HS,
-            XY,
-            CT,
-            EHUE,
-            CL
+            Xy,
+            ColorTemperature,
+            EnhancedHue,
+            ColorLoop,
+            HueSaturationOrXy
         ]
     });
 };

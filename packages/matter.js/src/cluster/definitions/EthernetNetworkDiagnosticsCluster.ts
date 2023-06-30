@@ -7,10 +7,11 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { OptionalAttribute, AccessLevel, Attribute } from "../../cluster/Cluster.js";
+import { OptionalAttribute, AccessLevel, Attribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
+import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
@@ -94,7 +95,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
         }
     };
 
-    const PKTCNT = {
+    const PacketCounts = {
         attributes: {
             /**
              * The PacketRxCount attribute SHALL indicate the number of packets
@@ -118,7 +119,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
         }
     };
 
-    const ERRCNT = {
+    const ErrorCounts = {
         attributes: {
             /**
              * The TxErrCount attribute SHALL indicate the number of failed
@@ -153,6 +154,18 @@ export namespace EthernetNetworkDiagnosticsCluster {
         }
     };
 
+    const PacketCountsOrErrorCounts = {
+        commands: {
+            /**
+             * Reception of this command SHALL reset the following attributes
+             * to 0:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.15.7.1
+             */
+            resetCounts: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        }
+    };
+
     export const Complete = BuildCluster({
         id,
         name,
@@ -162,10 +175,12 @@ export namespace EthernetNetworkDiagnosticsCluster {
             PKTCNT: true,
             ERRCNT: true
         },
+
         elements: [
             Base,
-            PKTCNT,
-            ERRCNT
+            PacketCounts,
+            ErrorCounts,
+            PacketCountsOrErrorCounts
         ]
     });
 };

@@ -229,7 +229,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
         }
     };
 
-    const ERRCNT = {
+    const ErrorCounts = {
         attributes: {
             /**
              * The BeaconLostCount attribute SHALL indicate the count of the
@@ -264,7 +264,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
         }
     };
 
-    const PKTCNT = {
+    const PacketCounts = {
         attributes: {
             /**
              * The BeaconRxCount attribute SHALL indicate the count of the
@@ -323,8 +323,8 @@ export namespace WiFiNetworkDiagnosticsCluster {
         },
         elements: [
             Base,
-            ERRCNT,
-            PKTCNT
+            ErrorCounts,
+            PacketCounts
         ]
     });
 };

@@ -63,29 +63,22 @@ export const Bit = (el: HTMLElement) => {
 }
 
 /**
- * CamelCase identifier.  Note we replace "Fo o" with "Foo" because space
- * errors are very common in the PDFs, especially in narrow columns and we
- * don't want to end up with FoO
+ * DSL or identifier.  Note we replace "Fo o" with "Foo" because space errors
+ * are very common in the PDFs, especially in narrow columns and we don't want
+ * to end up with FoO
  */
-export const Identifier = (el: HTMLElement) => {
+export const Code = (el: HTMLElement) => {
     let str = Str(el);
 
-    // If there are multiple paragraphs, only use the first if there is space
-    // in the string
-    if (str.indexOf(" ") != -1 && el.childNodes.length > 1) {
-        const limited = Str(el.firstChild as HTMLElement);
-        if (limited.length) {
-            str = limited;
-        }
-    }
-
-    // Strip everything following a subset of characters known to be inside
-    // what is properly a "key"
-    str = str.replace(/^([a-z0-9 _:,\/\-\$]+).*/i, "$1");
-
-    // Use the english dictionary to heuristically improve camel casing
+    // Use the english dictionary to heuristically repair whitespace errors
     let parts = str.split(/\s+/);
     for (let i = 0; i < parts.length - 1; i++) {
+        // If the current word is all uppercase, assume it's a standalone
+        // identifier
+        if (parts[i].match(/^[A-Z_]+$/)) {
+            continue;
+        }
+
         // If a word starts with lowercase, see if it's a word when
         // concatenated with the previous word
         if (parts[i + 1].match(/^[a-z]/)) {
@@ -107,19 +100,34 @@ export const Identifier = (el: HTMLElement) => {
     }
     str = parts.join(" ");
 
-    return camelize(str, true);
-};
-
-/** CamelCase identifier but only consider first sentence of first paragraph */
-export const LimitedIdentifier = (el: HTMLElement) => {
-    return el.firstChild ? Identifier(el.firstChild as HTMLElement)?.replace(/^(.*)\.?.*/, "$1") : "";
+    return str;
 }
 
-/** Identifier, all lowercase */
+/** Camelized identifier */
+export const Identifier = (el: HTMLElement) => {
+    let str = Code(el);
+
+    // If there are multiple paragraphs, only use the first if there is space
+    // in the string
+    if (str.indexOf(" ") != -1 && el.childNodes.length > 1) {
+        const limited = Str(el.firstChild as HTMLElement);
+        if (limited.length) {
+            str = limited;
+        }
+    }
+
+    // Strip everything following a subset of characters known to be inside
+    // what is properly a "key"
+    str = str.replace(/^([a-z0-9 _:,\/\-\$]+).*/i, "$1");
+
+    return camelize(str, true);
+}
+
+/** Identifier, all lowercase.  Used for matching so "_" removed */
 export const LowerIdentifier = (el: HTMLElement) => Identifier(el).toLowerCase();
 
-/** Identifier, all uppercase */
-export const UpperIdentifier = (el: HTMLElement) => Identifier(el).toUpperCase();
+/** Identifier, all uppercase.  Used for naming so "_" left in */
+export const UpperIdentifier = (el: HTMLElement) => Code(el).toUpperCase();
 
 /** Modifier that allows a value to be undefined */
 type Optional<T> = { option: "optional", wrapped: Alias<T> | Translator<T> };

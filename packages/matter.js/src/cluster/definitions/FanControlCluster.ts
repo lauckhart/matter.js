@@ -185,7 +185,7 @@ export namespace FanControlCluster {
         }
     };
 
-    const SPD = {
+    const MultiSpeed = {
         attributes: {
             /**
              * This attribute SHALL indicate that the fan has one speed (value
@@ -218,7 +218,7 @@ export namespace FanControlCluster {
         }
     };
 
-    const RCK = {
+    const Rocking = {
         attributes: {
             /**
              * This attribute is a bitmap that indicates what rocking motions
@@ -240,7 +240,7 @@ export namespace FanControlCluster {
         }
     };
 
-    const WND = {
+    const Wind = {
         attributes: {
             /**
              * This attribute is a bitmap that indicates what wind modes the
@@ -278,9 +278,9 @@ export namespace FanControlCluster {
 
         elements: [
             Base,
-            SPD,
-            RCK,
-            WND
+            MultiSpeed,
+            Rocking,
+            Wind
         ]
     });
 };

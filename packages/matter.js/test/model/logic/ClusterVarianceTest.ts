@@ -4,21 +4,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterElement, ClusterModel, ClusterVariance, ElementVariance, FeatureSet, Conformance, Globals, MatterModel } from "../../../src/model/index.js"
+import {
+    ClusterElement,
+    ClusterModel,
+    ClusterVariance,
+    Conformance,
+    Globals,
+    MatterModel,
+    VarianceCondition
+} from "../../../src/model/index.js"
 
 describe("ClusterVariance", () => {
     describe("invariant", () => {
         it("classifies mandatory", () => {
             expectVariance(
                 attrs({ name: "attr", conformance: "M" }),
-                { mandatory: [ "attr" ]}
+                { mandatory: [ "attr" ] }
             )
         })
 
         it("classifies optional", () => {
             expectVariance(
                 attrs({ name: "attr", conformance: "O" }),
-                { optional: [ "attr" ]}
+                { optional: [ "attr" ] }
             )
         })
 
@@ -38,14 +46,14 @@ describe("ClusterVariance", () => {
         it("ignores deprecation", () => {
             expectVariance(
                 attrs({ name: "attr", conformance: "D" }),
-                { optional: [ "attr" ]}
+                { optional: [ "attr" ] }
             )
         })
 
         it("ignores provisional", () => {
             expectVariance(
                 attrs({ name: "attr", conformance: "P, M" }),
-                { mandatory: [ "attr" ]}
+                { mandatory: [ "attr" ] }
             )
         })
     })
@@ -57,7 +65,7 @@ describe("ClusterVariance", () => {
                     [ "FOO" ],
                     { name: "attr", conformance: "FOO" }
                 ),
-                { features: { FOO: { mandatory: [ "attr" ] } } }
+                { mandatory: [ "attr" ], condition: { allOf: [ "FOO" ] } }
             );
         })
 
@@ -67,7 +75,7 @@ describe("ClusterVariance", () => {
                     [ "FOO" ],
                     { name: "attr", conformance: "[FOO]" }
                 ),
-                { features: { FOO: { optional: [ "attr" ] } } }
+                { optional: [ "attr" ], condition: { allOf: [ "FOO" ] } }
             );
         })
 
@@ -85,17 +93,30 @@ describe("ClusterVariance", () => {
                 {
                     mandatory: [ "attr1", "attr6" ],
                     optional: [ "attr5" ],
-                    features: {
-                        FOO: { mandatory: [ "attr2" ], optional: [ "attr4" ] },
-                        BAR: { optional: [ "attr3" ] }
-                    }
+                },
+                {
+                    mandatory: [ "attr2" ],
+                    optional: [ "attr4" ],
+                    condition: { allOf: [ "FOO" ] }
+                },
+                {
+                    optional: [ "attr3" ],
+                    condition: { allOf: [ "BAR" ] }
                 }
-            );
+            )
         })
     })
 
     describe("complex variance", () => {
-
+        it("parses FOO | BAR", () => {
+            expectVariance(
+                attrs([ "FOO", "BAR" ], { name: "attr", conformance: "FOO | BAR" }),
+                {
+                    mandatory: [ "attr" ],
+                    condition: { anyOf: [ "FOO", "BAR" ] }
+                }
+            )
+        })
     })
 })
 
@@ -138,45 +159,27 @@ function analyze(children: ClusterElement.Child[]) {
 
 type ExpectedElementVariance = {
     mandatory?: string[],
-    optional?: string[]
+    optional?: string[],
+    condition?: VarianceCondition
 }
 
-type ExpectedClusterVariance = ExpectedElementVariance & {
-    features?: { [name: string]: ExpectedElementVariance },
-    featureSets?: (ExpectedElementVariance & { flags: FeatureSet.Flag[] })[]
+function actualToExpected(actual: ClusterVariance) {
+    return actual.map(a => {
+        const e = {} as ExpectedElementVariance;
+        if (a.mandatory.length) {
+            e.mandatory = a.mandatory.map(a => a.name);
+        }
+        if (a.optional.length) {
+            e.optional = a.optional.map(a => a.name);
+        }
+        if (a.condition) {
+            e.condition = a.condition;
+        }
+        return e;
+    })
 }
 
-function elementNames(variance: ElementVariance) {
-    const result = {} as ExpectedElementVariance;
-    if (variance.optional.length) {
-        result.optional = variance.optional.map(e => e.name);
-    }
-    if (variance.mandatory.length) {
-        result.mandatory = variance.mandatory.map(e => e.name);
-    }
-    return result;
-}
-
-function actualToExpected(variance: ClusterVariance) {
-    const actual: ExpectedClusterVariance = {
-        ...elementNames(variance)
-    }
-    if (Object.keys(variance.features).length) {
-        actual.features = Object.fromEntries(
-            Object.entries(
-                variance.features
-            ).map(([k, v]) => [ k, elementNames(v) ]));
-    }
-    if (variance.featureSets.length) {
-        actual.featureSets = variance.featureSets.map(featureSet => ({
-            ...elementNames(featureSet),
-            flags: Array(...featureSet.flags)
-        }))
-    }
-    return actual;
-}
-
-function expectVariance(children: ClusterElement.Child[], expected: ExpectedClusterVariance) {
+function expectVariance(children: ClusterElement.Child[], ...expected: ExpectedElementVariance[]) {
     const variance = analyze(children);
     const actual = actualToExpected(variance);
     expect(actual).toStrictEqual(expected);
