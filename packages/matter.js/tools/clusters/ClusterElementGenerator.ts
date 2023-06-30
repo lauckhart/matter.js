@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, AttributeModel, ClusterModel, CommandModel, ElementTag, ElementVariance, EventElement, EventModel, Model } from "../../src/model/index.js";
+import { Access, AttributeModel, ClusterModel, CommandModel, ElementTag, ElementVariance, EventElement, EventModel, Metatype, Model } from "../../src/model/index.js";
 import { serialize, camelize } from "../../src/util/String.js";
 import { Block } from "../util/TsFile.js";
 import { ClusterFile } from "./ClusterFile.js";
@@ -54,11 +54,15 @@ export class ClusterElementGenerator {
             if (model.quality.changesOmitted) {
                 options.omitChanges = true;
             }
+
+            const tlvType = this.tlv.reference(model);
+
             // TODO - don't currently have a way to express "this field should
             // default to the value of another field" as indicated by
             // model.default.reference
-            if (model.default !== undefined && !(model.default && model.default.reference)) {
-                options.default = model.default;
+            const def = this.createDefaultValue(model, tlvType);
+            if (def !== undefined) {
+                options.default = def;
             }
             if (model.access.readPriv) {
                 options.readAcl = serialize.asIs(this.mapPrivilege(model.access.readPriv));
@@ -67,7 +71,7 @@ export class ClusterElementGenerator {
                 options.writeAcl = serialize.asIs(this.mapPrivilege(model.access.writePriv));
             }
     
-            const args = [ model.id, this.tlv.reference(model) ];
+            const args = [ model.id, tlvType ];
             if (Object.keys(options).length) {
                 args.push(serialize(options)!);
             }
@@ -161,4 +165,26 @@ export class ClusterElementGenerator {
         }
     }
 
+    private createDefaultValue(model: AttributeModel, tlvType: string) {
+        let def = model.default;
+
+        // TODO - don't currently have a way to express "this field should
+        // default to the value of another field" as indicated by
+        // model.default.reference
+        if (def !== undefined && !(def && def.reference)) {
+            if (model.effectiveMetatype == Metatype.bitmap) {
+                if (!Array.isArray(def)) {
+                    // TLV doesn't understand anything other than an object
+                    // as the default value.  To create said object we need
+                    // named references
+                    return;
+                }
+
+                this.file.addImport("schema/BitmapSchema", "BitFlags");
+                def = serialize.asIs(`BitFlags(${tlvType}Bits, ${def.map(flag => serialize(flag)).join(", ")})`);
+            }
+
+            return def;
+        }
+    }
 }

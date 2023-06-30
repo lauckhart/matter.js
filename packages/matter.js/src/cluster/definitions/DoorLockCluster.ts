@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFlags } from "../../schema/BitmapSchema.js";
 import { Attribute, AccessLevel, OptionalWritableAttribute, WritableAttribute, FixedAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Event, EventPriority } from "../../cluster/Cluster.js";
-import { TlvEnum, TlvUInt8, TlvUInt32, TlvBitmap, TlvUInt16, TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvBitmap, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -109,12 +109,14 @@ export const enum LockType {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.24
  */
-export const SupportedOperatingModes = TlvBitmap(TlvUInt16, {
+export const SupportedOperatingModesBits = {
     Vacation: BitFlag(1),
     Privacy: BitFlag(2),
     NoRemoteLockUnlock: BitFlag(8),
     Passage: BitFlag(16)
-});
+};
+
+export const SupportedOperatingModes = TlvBitmap(TlvUInt16, SupportedOperatingModesBits);
 
 /**
  * This attribute represents the default configurations as they are physically
@@ -125,14 +127,16 @@ export const SupportedOperatingModes = TlvBitmap(TlvUInt16, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.28
  */
-export const DefaultConfigurationRegister = TlvBitmap(TlvUInt16, {
+export const DefaultConfigurationRegisterBits = {
     EnableLocalProgrammingEnabled: BitFlag(1),
     KeypadInterfaceDefaultAccessEnabled: BitFlag(2),
     RemoteInterfaceDefaultAccessIsEnabled: BitFlag(4),
     SoundEnabled: BitFlag(32),
     AutoRelockTimeSet: BitFlag(64),
     LedSettingsSet: BitFlag(128)
-});
+};
+
+export const DefaultConfigurationRegister = TlvBitmap(TlvUInt16, DefaultConfigurationRegisterBits);
 
 /**
  * The local programming features that will be disabled when
@@ -144,12 +148,14 @@ export const DefaultConfigurationRegister = TlvBitmap(TlvUInt16, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.33
  */
-export const LocalProgrammingFeatures = TlvBitmap(TlvUInt8, {
+export const LocalProgrammingFeaturesBits = {
     AddUsersCredentialsSchedulesLocally: BitFlag(1),
     ModifyUsersCredentialsSchedulesLocally: BitFlag(2),
     ClearUsersCredentialsSchedulesLocally: BitFlag(4),
     AdjustLockSettingsLocally: BitFlag(8)
-});
+};
+
+export const LocalProgrammingFeatures = TlvBitmap(TlvUInt8, LocalProgrammingFeaturesBits);
 
 /**
  * This attribute is only supported if the Alarms cluster is on the same
@@ -161,7 +167,7 @@ export const LocalProgrammingFeatures = TlvBitmap(TlvUInt8, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.39
  */
-export const AlarmMask = TlvBitmap(TlvUInt16, {
+export const AlarmMaskBits = {
     LockingMechanismJammed: BitFlag(0),
     LockResetToFactoryDefaults: BitFlag(1),
     Reserved: BitFlag(2),
@@ -169,7 +175,9 @@ export const AlarmMask = TlvBitmap(TlvUInt16, {
     TamperAlarmWrongCodeEntryLimit: BitFlag(4),
     TamperAlarmFrontEscutcheonRemovedFromMain: BitFlag(5),
     ForcedDoorOpenUnderDoorLockedCondition: BitFlag(6)
-});
+};
+
+export const AlarmMask = TlvBitmap(TlvUInt16, AlarmMaskBits);
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -190,8 +198,7 @@ export const UnlockWithTimeoutRequest = TlvObject({
 });
 
 /**
- * The Alarm Code enum SHALL indicate the alarm type. The data type of the
- * Alarm Code enum is derived from enum8.
+ * The Alarm Code enum shall indicate the alarm type.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.1
  */
@@ -254,9 +261,8 @@ export const DoorLockAlarmEvent = TlvObject({
 });
 
 /**
- * The LockOperationType enumeration SHALL indicate the type of Lock operation
- * performed. The data type of the LockOperationType enum field is derived from
- * enum8.
+ * The LockOperationType enumeration shall indicate the type of Lock operation
+ * performed.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.10
  */
@@ -268,9 +274,8 @@ export const enum LockOperationTypeEnum {
 };
 
 /**
- * The OperationSource enumeration SHALL indicate the source of the Lock/Unlock
- * operation performed. The data type of the OperationSource enum field is
- * derived from enum8.
+ * The OperationSource enumeration shall indicate the source of the Lock/Unlock
+ * operation performed.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.13
  */
@@ -288,8 +293,7 @@ export const enum OperationSourceEnum {
 };
 
 /**
- * The Credential Type enum SHALL indicate the credential type. The data type
- * of the Credential Type enum is derived from enum8.
+ * The Credential Type enum shall indicate the credential type.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.4
  */
@@ -304,7 +308,7 @@ export const enum CredentialTypeEnum {
 
 /**
  * The CredentialStruct is used in LockOperation event and Get User Record
- * Response command and SHALL indicate the credential types and their
+ * Response command and shall indicate the credential types and their
  * corresponding indices (if any) for the event or user record.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.3
@@ -389,9 +393,8 @@ export const LockOperationEvent = TlvObject({
 });
 
 /**
- * The OperationError enumeration SHALL indicate the error cause of the
- * Lock/Unlock operation performed. The data type of the OperationError enum
- * field is derived from enum8.
+ * The OperationError enumeration shall indicate the error cause of the
+ * Lock/Unlock operation performed.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.11
  */
@@ -469,7 +472,7 @@ export const LockOperationErrorEvent = TlvObject({
 });
 
 /**
- * The DoorState enumeration SHALL indicate the current door state. The data
+ * The DoorState enumeration shall indicate the current door state. The data
  * type of the DoorState
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.7
@@ -528,15 +531,16 @@ export const DoorStateChangeEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.19
  */
-export const CredentialRulesSupport = TlvBitmap(TlvUInt8, {
+export const CredentialRulesSupportBits = {
     Single: BitFlag(0),
     Dual: BitFlag(1),
     Tri: BitFlag(4)
-});
+};
+
+export const CredentialRulesSupport = TlvBitmap(TlvUInt8, CredentialRulesSupportBits);
 
 /**
- * The DataOperationType enum SHALL indicate the data operation performed. The
- * data type of the DataOperationType enum is derived from enum8.
+ * The DataOperationType enum shall indicate the data operation performed.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.5
  */
@@ -558,7 +562,7 @@ export const enum DataOperationTypeEnum {
 };
 
 /**
- * The UserStatus enum used in various commands SHALL indicate what the status
+ * The UserStatus enum used in various commands shall indicate what the status
  * is for a specific user ID.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.15
@@ -570,7 +574,7 @@ export const enum UserStatusEnum {
 };
 
 /**
- * The UserType enum used in various commands SHALL indicate what the type is
+ * The UserType enum used in various commands shall indicate what the type is
  * for a specific user ID.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.16
@@ -669,9 +673,8 @@ export const enum UserTypeEnum {
 };
 
 /**
- * The CredentialRule enum used in various commands SHALL indicate the
- * credential rule that can be applied to a particular user. The data type of
- * the CredentialRule enum is derived from enum8.
+ * The CredentialRule enum used in various commands shall indicate the
+ * credential rule that can be applied to a particular user.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.2
  */
@@ -773,8 +776,8 @@ export const GetCredentialStatusRequest = TlvObject({ Credential: TlvField(0, Cr
 export const ClearCredentialRequest = TlvObject({ Credential: TlvField(0, TlvNullable(CredentialStruct)) });
 
 /**
- * The LockDataType enum SHALL indicate the data type that is being or has
- * changed. The data type of the DataType enum is derived from enum8.
+ * The LockDataType enum shall indicate the data type that is being or has
+ * changed.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.9
  */
@@ -907,20 +910,21 @@ export const LockUserChangeEvent = TlvObject({
 });
 
 /**
- * The DaysMask field used in various commands and SHALL indicate the days of
- * the week the Week Day schedule applies for. The data type of the DaysMask
- * field is derived from map8.
+ * The DaysMask field used in various commands and shall indicate the days of
+ * the week the Week Day schedule applies for.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.6
  */
-export const DaysMaskMap = TlvBitmap(TlvUInt8, {
+export const DaysMaskMapBits = {
     Sunday: BitFlag(0),
     Tuesday: BitFlag(2),
     Wednesday: BitFlag(8),
     Thursday: BitFlag(16),
     Friday: BitFlag(32),
     Saturday: BitFlag(64)
-});
+};
+
+export const DaysMaskMap = TlvBitmap(TlvUInt8, DaysMaskMapBits);
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -1003,8 +1007,7 @@ export const ClearYearDayScheduleRequest = TlvObject({
 });
 
 /**
- * The OperatingMode enumeration SHALL indicate the lock operating mode. The
- * data type of the OperatingMode enum field is derived from enum8.
+ * The OperatingMode enumeration shall indicate the lock operating mode.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12
  */
@@ -1092,7 +1095,7 @@ export const ClearHolidayScheduleRequest = TlvObject({ HolidayIndex: TlvField(0,
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.40
  */
-export const KeypadOperationEventMask = TlvBitmap(TlvUInt16, {
+export const KeypadOperationEventMaskBits = {
     UnknownOrManufacturerSpecificKeypadOperationEvent: BitFlag(0),
     LockSourceKeypad: BitFlag(1),
     UnlockSourceKeypad: BitFlag(2),
@@ -1101,7 +1104,9 @@ export const KeypadOperationEventMask = TlvBitmap(TlvUInt16, {
     UnlockSourceKeypadErrorInvalidCode: BitFlag(5),
     UnlockSourceKeypadErrorInvalidSchedule: BitFlag(6),
     NonAccessUserOperationEventSourceKeypad: BitFlag(15)
-});
+};
+
+export const KeypadOperationEventMask = TlvBitmap(TlvUInt16, KeypadOperationEventMaskBits);
 
 /**
  * Event mask used to turn on and off keypad programming events. This mask DOES
@@ -1110,13 +1115,15 @@ export const KeypadOperationEventMask = TlvBitmap(TlvUInt16, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.44
  */
-export const KeypadProgrammingEventMask = TlvBitmap(TlvUInt16, {
+export const KeypadProgrammingEventMaskBits = {
     UnknownOrManufacturerSpecificKeypadProgrammingEvent: BitFlag(0),
     ProgrammingPinCodeChangedSourceKeypad: BitFlag(1),
     PinAddedSourceKeypad: BitFlag(2),
     PinClearedSourceKeypad: BitFlag(3),
     PinChangedSourceKeypad: BitFlag(4)
-});
+};
+
+export const KeypadProgrammingEventMask = TlvBitmap(TlvUInt16, KeypadProgrammingEventMaskBits);
 
 /**
  * Event mask used to turn on and off the transmission of remote operation
@@ -1125,7 +1132,7 @@ export const KeypadProgrammingEventMask = TlvBitmap(TlvUInt16, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.41
  */
-export const RemoteOperationEventMask = TlvBitmap(TlvUInt16, {
+export const RemoteOperationEventMaskBits = {
     UnknownOrManufacturerSpecificRemoteOperationEvent: BitFlag(0),
     LockSourceRemote: BitFlag(1),
     UnlockSourceRemote: BitFlag(2),
@@ -1133,7 +1140,9 @@ export const RemoteOperationEventMask = TlvBitmap(TlvUInt16, {
     LockSourceRemoteErrorInvalidSchedule: BitFlag(4),
     UnlockSourceRemoteErrorInvalidCode: BitFlag(5),
     UnlockSourceRemoteErrorInvalidSchedule: BitFlag(6)
-});
+};
+
+export const RemoteOperationEventMask = TlvBitmap(TlvUInt16, RemoteOperationEventMaskBits);
 
 /**
  * Event mask used to turn on and off manual operation events. This mask DOES
@@ -1142,7 +1151,7 @@ export const RemoteOperationEventMask = TlvBitmap(TlvUInt16, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.42
  */
-export const ManualOperationEventMask = TlvBitmap(TlvUInt16, {
+export const ManualOperationEventMaskBits = {
     UnknownOrManufacturerSpecificManualOperationEvent: BitFlag(0),
     ThumbturnLock: BitFlag(1),
     ThumbturnUnlock: BitFlag(2),
@@ -1154,7 +1163,9 @@ export const ManualOperationEventMask = TlvBitmap(TlvUInt16, {
     ScheduleUnlock: BitFlag(12),
     ManualLock: BitFlag(13),
     ManualUnlock: BitFlag(14)
-});
+};
+
+export const ManualOperationEventMask = TlvBitmap(TlvUInt16, ManualOperationEventMaskBits);
 
 /**
  * Event mask used to turn on and off remote programming events. This mask DOES
@@ -1163,14 +1174,16 @@ export const ManualOperationEventMask = TlvBitmap(TlvUInt16, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.45
  */
-export const RemoteProgrammingEventMask = TlvBitmap(TlvUInt16, {
+export const RemoteProgrammingEventMaskBits = {
     UnknownOrManufacturerSpecificRemoteProgrammingEvent: BitFlag(0),
     PinAddedSourceRemote: BitFlag(2),
     PinClearedSourceRemote: BitFlag(3),
     PinChangedSourceRemote: BitFlag(4),
     RfidCodeAddedSourceRemote: BitFlag(5),
     RfidCodeClearedSourceRemote: BitFlag(6)
-});
+};
+
+export const RemoteProgrammingEventMask = TlvBitmap(TlvUInt16, RemoteProgrammingEventMaskBits);
 
 /**
  * Event mask used to turn on and off RFID operation events. This mask DOES NOT
@@ -1179,7 +1192,7 @@ export const RemoteProgrammingEventMask = TlvBitmap(TlvUInt16, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.43
  */
-export const RfidOperationEventMask = TlvBitmap(TlvUInt16, {
+export const RfidOperationEventMaskBits = {
     UnknownOrManufacturerSpecificKeypadOperationEvent: BitFlag(0),
     LockSourceRfid: BitFlag(1),
     UnlockSourceRfid: BitFlag(2),
@@ -1187,7 +1200,9 @@ export const RfidOperationEventMask = TlvBitmap(TlvUInt16, {
     LockSourceRfidErrorInvalidSchedule: BitFlag(4),
     UnlockSourceRfidErrorInvalidRfidId: BitFlag(5),
     UnlockSourceRfidErrorInvalidSchedule: BitFlag(6)
-});
+};
+
+export const RfidOperationEventMask = TlvBitmap(TlvUInt16, RfidOperationEventMaskBits);
 
 export namespace DoorLockCluster {
     export const id = 257;
@@ -1355,7 +1370,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.24
              */
-            supportedOperatingModes: FixedAttribute(38, SupportedOperatingModes, { default: 65526, readAcl: AccessLevel.View }),
+            supportedOperatingModes: FixedAttribute(38, SupportedOperatingModes, { default: BitFlags(SupportedOperatingModesBits, "Privacy", "Passage"), readAcl: AccessLevel.View }),
 
             /**
              * This attribute represents the default configurations as they are
@@ -1429,7 +1444,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.39
              */
-            alarmMask: OptionalWritableAttribute(64, AlarmMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
+            alarmMask: OptionalWritableAttribute(64, AlarmMask, { default: BitFlags(AlarmMaskBits, "LockResetToFactoryDefaults", "Reserved", "TamperAlarmWrongCodeEntryLimit"), readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
         },
 
         commands: {
@@ -1575,7 +1590,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.19
              */
-            credentialRulesSupport: FixedAttribute(27, CredentialRulesSupport, { default: 1, readAcl: AccessLevel.View }),
+            credentialRulesSupport: FixedAttribute(27, CredentialRulesSupport, { default: BitFlags(CredentialRulesSupportBits, "Dual"), readAcl: AccessLevel.View }),
 
             /**
              * The number of credentials that could be assigned for each user.
@@ -1879,7 +1894,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.40
              */
-            keypadOperationEventMask: OptionalWritableAttribute(65, KeypadOperationEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
+            keypadOperationEventMask: OptionalWritableAttribute(65, KeypadOperationEventMask, { default: BitFlags(KeypadOperationEventMaskBits, "LockSourceKeypad", "UnlockSourceKeypad", "LockSourceKeypadErrorInvalidSchedule"), readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
 
             /**
              * Event mask used to turn on and off keypad programming events.
@@ -1889,7 +1904,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.44
              */
-            keypadProgrammingEventMask: OptionalWritableAttribute(69, KeypadProgrammingEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
+            keypadProgrammingEventMask: OptionalWritableAttribute(69, KeypadProgrammingEventMask, { default: BitFlags(KeypadProgrammingEventMaskBits, "ProgrammingPinCodeChangedSourceKeypad", "PinAddedSourceKeypad", "PinChangedSourceKeypad"), readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
         }
     };
 
@@ -1903,7 +1918,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.41
              */
-            remoteOperationEventMask: OptionalWritableAttribute(66, RemoteOperationEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
+            remoteOperationEventMask: OptionalWritableAttribute(66, RemoteOperationEventMask, { default: BitFlags(RemoteOperationEventMaskBits, "LockSourceRemote", "UnlockSourceRemote", "LockSourceRemoteErrorInvalidSchedule"), readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
 
             /**
              * Event mask used to turn on and off manual operation events. This
@@ -1913,7 +1928,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.42
              */
-            manualOperationEventMask: OptionalWritableAttribute(67, ManualOperationEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
+            manualOperationEventMask: OptionalWritableAttribute(67, ManualOperationEventMask, { default: BitFlags(ManualOperationEventMaskBits, "ThumbturnLock", "ThumbturnUnlock", "KeyLock"), readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
 
             /**
              * Event mask used to turn on and off remote programming events.
@@ -1923,7 +1938,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.45
              */
-            remoteProgrammingEventMask: OptionalWritableAttribute(70, RemoteProgrammingEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
+            remoteProgrammingEventMask: OptionalWritableAttribute(70, RemoteProgrammingEventMask, { default: BitFlags(RemoteProgrammingEventMaskBits, "PinAddedSourceRemote", "PinChangedSourceRemote"), readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
         },
 
         commands: {
@@ -1949,12 +1964,12 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.43
              */
-            rfidOperationEventMask: OptionalWritableAttribute(68, RfidOperationEventMask, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
+            rfidOperationEventMask: OptionalWritableAttribute(68, RfidOperationEventMask, { default: BitFlags(RfidOperationEventMaskBits, "LockSourceRfid", "UnlockSourceRfid", "LockSourceRfidErrorInvalidSchedule"), readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3
              */
-            rfidPro: OptionalWritableAttribute(71, TlvUInt16, { default: 65535, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
+            rfidPro: OptionalWritableAttribute(71, TlvUInt16, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer })
         }
     };
 

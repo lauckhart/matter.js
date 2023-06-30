@@ -44,7 +44,8 @@ export const BasicCommissioningInfo = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
+ * This enumeration is used by the RegulatoryConfig and LocationCapability
+ * attributes to indicate possible radio usage.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.2
  */
@@ -55,7 +56,8 @@ export const enum RegulatoryLocationTypeEnum {
 };
 
 /**
- * This data type is derived from enum8.
+ * This enumeration is used by several response commands in this cluster to
+ * indicate particular errors.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.1
  */

@@ -24,12 +24,14 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.5
  */
-export const NameSupport = TlvBitmap(TlvUInt8, {
+export const NameSupportBits = {
     /**
      * The ability to store a name for a scene.
      */
     SceneNames: BitFlag(7)
-});
+};
+
+export const NameSupport = TlvBitmap(TlvUInt8, NameSupportBits);
 
 /**
  * The AddSceneResponse command SHALL have the following data fields:
@@ -72,7 +74,7 @@ export const AttributeValuePair = TlvObject({
 /**
  * This data type indicates for a given cluster a set of attributes and their
  * values. Only attributes which have the "S" designation in the Quality column
- * of the cluster specification SHALL be used in the AttributeValueList field.
+ * of the cluster specification shall be used in the AttributeValueList field.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.6.2
  */
@@ -306,10 +308,12 @@ export const CopySceneResponseRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11.1
  */
-export const Mode = TlvBitmap(TlvUInt8, {
+export const ModeBits = {
     CopyAllScenes: BitFlag(0),
     Reserved: BitFlag(1)
-});
+};
+
+export const Mode = TlvBitmap(TlvUInt8, ModeBits);
 
 /**
  * The CopyScene command allows a client to efficiently copy scenes from one

@@ -15,7 +15,7 @@ import { TlvString } from "../../tlv/TlvString.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * OutputType Data Type is derived from enum8.
+ * The type of output, expressed as an enum, with the following values:
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.2
  */

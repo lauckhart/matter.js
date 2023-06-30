@@ -8,7 +8,7 @@
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, AccessLevel, Command, TlvNoResponse } from "../../cluster/Cluster.js";
-import { TlvBitmap, TlvUInt8, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -23,12 +23,14 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.6.1
  */
-export const NameSupport = TlvBitmap(TlvUInt8, {
+export const NameSupportBits = {
     /**
      * The ability to store a name for a group.
      */
     GroupNames: BitFlag(7)
-});
+};
+
+export const NameSupport = TlvBitmap(TlvUInt8, NameSupportBits);
 
 /**
  * The AddGroupResponse is sent by the Groups cluster server in response to an

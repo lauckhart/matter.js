@@ -233,7 +233,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CommandBits", type: "map16", conformance: "M",
-            details: "This data type is derived from map16.",
             xref: { document: "core", section: "9.14.4.1" },
 
             children: [
@@ -286,7 +285,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ActionTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "9.14.4.2" },
 
             children: [
@@ -339,7 +337,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ActionStateEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "9.14.4.3" },
 
             children: [
@@ -352,7 +349,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ActionErrorEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "9.14.4.4" },
             children: [
                 { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
@@ -362,7 +358,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "EndpointListTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8 and has its values listed below.",
             xref: { document: "core", section: "9.14.4.5" },
 
             children: [

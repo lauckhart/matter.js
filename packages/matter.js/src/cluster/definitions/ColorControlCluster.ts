@@ -265,7 +265,9 @@ export const enum ColorMode {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
  */
-export const Options = TlvBitmap(TlvUInt8, { ExecuteIfOff: BitFlag(1) });
+export const OptionsBits = { ExecuteIfOff: BitFlag(1) };
+
+export const Options = TlvBitmap(TlvUInt8, OptionsBits);
 
 /**
  * The EnhancedColorMode attribute specifies which attributes are currently
@@ -606,13 +608,15 @@ export const EnhancedMoveToHueAndSaturationRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.1
  */
-export const UpdateFlags = TlvBitmap(TlvUInt8, {
+export const UpdateFlagsBits = {
     UpdateAction: BitFlag(0),
     UpdateDirection: BitFlag(1),
     UpdateTime: BitFlag(2),
     UpdateStartHue: BitFlag(3),
     Reserved: BitFlag(4)
-});
+};
+
+export const UpdateFlags = TlvBitmap(TlvUInt8, UpdateFlagsBits);
 
 /**
  * The Action field specifies the action to take for the color loop if the

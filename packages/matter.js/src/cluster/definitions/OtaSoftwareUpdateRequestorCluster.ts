@@ -27,8 +27,6 @@ export const ProviderLocationStruct = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.5
  */
 export const enum UpdateStateEnum {
@@ -44,8 +42,6 @@ export const enum UpdateStateEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.1
  */
 export const enum AnnouncementReasonEnum {
@@ -69,8 +65,6 @@ export const AnnounceOtaProviderRequest = TlvObject({
 });
 
 /**
- * The ChangeReasonEnum Data Type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.15
  */
 export const enum ChangeReasonEnum {

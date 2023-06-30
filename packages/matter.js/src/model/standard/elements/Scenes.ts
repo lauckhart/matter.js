@@ -409,7 +409,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "ExtensionFieldSet", type: "struct", conformance: "M",
             details: "This data type indicates for a given cluster a set of attributes and their values. Only attributes " +
-                     "which have the \"S\" designation in the Quality column of the cluster specification SHALL be used in " +
+                     "which have the \"S\" designation in the Quality column of the cluster specification shall be used in " +
                      "the AttributeValueList field.",
             xref: { document: "cluster", section: "1.4.6.2" },
 

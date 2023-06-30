@@ -60,7 +60,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "HourFormatEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.4.5.1" },
             children: [
                 { tag: "datatype", name: "12Hr", id: 0x0, conformance: "M" },
@@ -70,7 +69,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CalendarTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.4.5.2" },
 
             children: [

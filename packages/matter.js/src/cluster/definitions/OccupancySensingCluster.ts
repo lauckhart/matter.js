@@ -7,26 +7,24 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { Attribute, AccessLevel, OptionalWritableAttribute } from "../../cluster/Cluster.js";
-import { TlvBitmap, TlvUInt8, TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from bitmap8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.1
  */
-export const OccupancyBitmap = TlvBitmap(TlvUInt8, {
+export const OccupancyBitmapBits = {
     /**
      * Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.
      */
     Occupied: BitFlag(1)
-});
+};
+
+export const OccupancyBitmap = TlvBitmap(TlvUInt8, OccupancyBitmapBits);
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.2
  */
 export const enum OccupancySensorTypeEnum {
@@ -37,11 +35,9 @@ export const enum OccupancySensorTypeEnum {
 };
 
 /**
- * This data type is derived from bitmap8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.3
  */
-export const OccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, {
+export const OccupancySensorTypeBitmapBits = {
     /**
      * Indicates a ultrasonic sensor.
      */
@@ -51,7 +47,9 @@ export const OccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, {
      * Indicates a physical contact sensor.
      */
     PhysicalContact: BitFlag(4)
-});
+};
+
+export const OccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, OccupancySensorTypeBitmapBits);
 
 export namespace OccupancySensingCluster {
     export const id = 1030;

@@ -16,7 +16,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * InputType Data Type is derived from enum8.
+ * The type of input, expressed as an enum, with the following values:
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.2
  */

@@ -89,7 +89,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OutputTypeEnum", type: "enum8", conformance: "M",
-            details: "OutputType Data Type is derived from enum8.",
+            details: "The type of output, expressed as an enum, with the following values:",
             xref: { document: "cluster", section: "6.5.5.2" },
 
             children: [

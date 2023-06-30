@@ -197,7 +197,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "GranularityEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.16.6.1" },
 
             children: [
@@ -211,7 +210,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "TimeSourceEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.16.6.2" },
 
             children: [

@@ -64,11 +64,13 @@ export const enum FanModeSequence {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.8
  */
-export const RockSupport = TlvBitmap(TlvUInt8, {
+export const RockSupportBits = {
     RockLeftRight: BitFlag(0),
     RockUpDown: BitFlag(1),
     RockRound: BitFlag(2)
-});
+};
+
+export const RockSupport = TlvBitmap(TlvUInt8, RockSupportBits);
 
 /**
  * This attribute is a bitmap that indicates the current active fan rocking
@@ -78,11 +80,13 @@ export const RockSupport = TlvBitmap(TlvUInt8, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
  */
-export const RockSetting = TlvBitmap(TlvUInt8, {
+export const RockSettingBits = {
     RockLeftRight: BitFlag(0),
     RockUpDown: BitFlag(1),
     RockRound: BitFlag(2)
-});
+};
+
+export const RockSetting = TlvBitmap(TlvUInt8, RockSettingBits);
 
 /**
  * This attribute is a bitmap that indicates what wind modes the server
@@ -91,10 +95,12 @@ export const RockSetting = TlvBitmap(TlvUInt8, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.10
  */
-export const WindSupport = TlvBitmap(TlvUInt8, {
+export const WindSupportBits = {
     SleepWind: BitFlag(0),
     NaturalWind: BitFlag(1)
-});
+};
+
+export const WindSupport = TlvBitmap(TlvUInt8, WindSupportBits);
 
 /**
  * This attribute is a bitmap that indicates the current active fan wind
@@ -104,10 +110,12 @@ export const WindSupport = TlvBitmap(TlvUInt8, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
  */
-export const WindSetting = TlvBitmap(TlvUInt8, {
+export const WindSettingBits = {
     SleepWind: BitFlag(0),
     NaturalWind: BitFlag(1)
-});
+};
+
+export const WindSetting = TlvBitmap(TlvUInt8, WindSettingBits);
 
 export namespace FanControlCluster {
     export const id = 514;

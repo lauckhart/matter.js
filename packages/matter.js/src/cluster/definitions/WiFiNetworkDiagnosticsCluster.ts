@@ -16,8 +16,6 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.1
  */
 export const enum SecurityTypeEnum {
@@ -30,8 +28,6 @@ export const enum SecurityTypeEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.2
  */
 export const enum WiFiVersionEnum {
@@ -63,8 +59,6 @@ export const DisconnectionEvent = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.3
  */
 export const enum AssociationFailureCauseEnum {
@@ -103,8 +97,6 @@ export const AssociationFailureEvent = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.4
  */
 export const enum ConnectionStatusEnum {

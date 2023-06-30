@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFlags } from "../../schema/BitmapSchema.js";
 import { Attribute, AccessLevel, OptionalAttribute, OptionalWritableAttribute, WritableAttribute, Command, TlvNoResponse, OptionalCommand, OptionalFixedAttribute, FixedAttribute } from "../../cluster/Cluster.js";
-import { TlvInt16, TlvBitmap, TlvUInt8, TlvEnum, TlvUInt16, TlvUInt32, TlvInt8 } from "../../tlv/TlvNumber.js";
+import { TlvInt16, TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16, TlvUInt32, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -21,7 +21,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.22
  */
-export const RemoteSensing = TlvBitmap(TlvUInt8, {
+export const RemoteSensingBits = {
     /**
      * When set, LocalTemperature Value is derived from a remote node
      */
@@ -36,7 +36,9 @@ export const RemoteSensing = TlvBitmap(TlvUInt8, {
      * When set, Occupancy is derived from a remote node
      */
     Occupancy: BitFlag(2)
-});
+};
+
+export const RemoteSensing = TlvBitmap(TlvUInt8, RemoteSensingBits);
 
 /**
  * This attribute specifies the overall operating environment of the
@@ -128,11 +130,13 @@ export const enum SystemMode {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.25
  */
-export const AlarmMask = TlvBitmap(TlvUInt8, {
+export const AlarmMaskBits = {
     InitializationFailure: BitFlag(0),
     HardwareFailure: BitFlag(1),
     SelfCalibrationFailure: BitFlag(2)
-});
+};
+
+export const AlarmMask = TlvBitmap(TlvUInt8, AlarmMaskBits);
 
 /**
  * This attribute specifies the temperature hold status on the thermostat. If
@@ -168,7 +172,7 @@ export const enum TemperatureSetpointHold {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.32
  */
-export const ThermostatProgrammingOperationMode = TlvBitmap(TlvUInt8, {
+export const ThermostatProgrammingOperationModeBits = {
     /**
      * Schedule programming mode. This enables any programmed weekly schedule
      * configurations.
@@ -184,7 +188,9 @@ export const ThermostatProgrammingOperationMode = TlvBitmap(TlvUInt8, {
      * Economy/EnergyStar mode
      */
     Economy: BitFlag(2)
-});
+};
+
+export const ThermostatProgrammingOperationMode = TlvBitmap(TlvUInt8, ThermostatProgrammingOperationModeBits);
 
 /**
  * This attribute represents the current relay state of the heat, cool, and fan
@@ -192,7 +198,7 @@ export const ThermostatProgrammingOperationMode = TlvBitmap(TlvUInt8, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.33
  */
-export const ThermostatRunningState = TlvBitmap(TlvUInt16, {
+export const ThermostatRunningStateBits = {
     /**
      * Heat State On
      */
@@ -232,7 +238,9 @@ export const ThermostatRunningState = TlvBitmap(TlvUInt16, {
     CoolSecondStageStateOn: BitFlag(16),
     FanSecondStageStateOn: BitFlag(32),
     FanThirdStageStateOn: BitFlag(64)
-});
+};
+
+export const ThermostatRunningState = TlvBitmap(TlvUInt16, ThermostatRunningStateBits);
 
 /**
  * This attribute specifies the source of the current active
@@ -354,7 +362,7 @@ export const enum AcCompressorType {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.48
  */
-export const AcErrorCode = TlvBitmap(TlvUInt32, {
+export const AcErrorCodeBits = {
     /**
      * Compressor Failure or Refrigerant Leakage
      */
@@ -379,7 +387,9 @@ export const AcErrorCode = TlvBitmap(TlvUInt32, {
      * Fan Failure
      */
     FanFail: BitFlag(4)
-});
+};
+
+export const AcErrorCode = TlvBitmap(TlvUInt32, AcErrorCodeBits);
 
 /**
  * This attribute indicates the position of Louver on the AC.
@@ -446,7 +456,9 @@ export const SetpointRaiseLowerRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.4
  */
-export const Occupancy = TlvBitmap(TlvUInt8, { Occupied: BitFlag(1) });
+export const OccupancyBits = { Occupied: BitFlag(1) };
+
+export const Occupancy = TlvBitmap(TlvUInt8, OccupancyBits);
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7
@@ -473,7 +485,7 @@ export const enum StartOfWeek {
     Saturday = 6
 };
 
-export const DayOfWeek = TlvBitmap(TlvUInt8, {
+export const DayOfWeekBits = {
     Sunday: BitFlag(1),
     Monday: BitFlag(2),
     Tuesday: BitFlag(4),
@@ -482,12 +494,15 @@ export const DayOfWeek = TlvBitmap(TlvUInt8, {
     Friday: BitFlag(32),
     Saturday: BitFlag(64),
     Away: BitFlag(128)
-});
+};
 
-export const ModeForSequence = TlvBitmap(TlvUInt8, {
+export const DayOfWeek = TlvBitmap(TlvUInt8, DayOfWeekBits);
+export const ModeForSequenceBits = {
     HeatSetpointPresent: BitFlag(1),
     CoolSetpointPresent: BitFlag(2)
-});
+};
+
+export const ModeForSequence = TlvBitmap(TlvUInt8, ModeForSequenceBits);
 
 /**
  * This represents a single transition in a Thermostat schedule
@@ -831,7 +846,7 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.4
              */
-            occupancy: Attribute(2, Occupancy, { default: 1, readAcl: AccessLevel.View })
+            occupancy: Attribute(2, Occupancy, { default: BitFlags(OccupancyBits, "Occupied"), readAcl: AccessLevel.View })
         }
     };
 

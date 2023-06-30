@@ -13,8 +13,6 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * Status Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.4.1
  */
 export const enum StatusEnum {

@@ -16,9 +16,6 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * The data type StartUpOnOffEnum is derived from enum8. The values of the
- * StartUpOnOffEnum data type are listed below.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.5.1
  */
 export const enum StartUpOnOffEnum {
@@ -83,10 +80,12 @@ export const OffWithEffectRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6.1
  */
-export const OnOffControl = TlvBitmap(TlvUInt8, {
+export const OnOffControlBits = {
     AcceptOnlyWhenOn: BitFlag(0),
     Reserved: BitFlag(1)
-});
+};
+
+export const OnOffControl = TlvBitmap(TlvUInt8, OnOffControlBits);
 
 /**
  * The OnWithTimedOff command allows devices to be turned on for a specific

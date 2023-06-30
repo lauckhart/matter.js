@@ -196,8 +196,6 @@ export class TlvGenerator {
     }
 
     private defineBitmap(name: string, model: ValueModel) {
-        this.file.addImport("tlv/TlvNumber", "TlvBitmap");
-
         let tlvNum;
         switch (model.metabase?.name) {
             case "map8":
@@ -219,10 +217,12 @@ export class TlvGenerator {
             default:
                 throw new InternalError(`${model.path}: Could not determine numeric type for ${model.type}`);
         }
-        this.file.addImport("tlv/TlvNumber", tlvNum);
 
+        this.file.addImport("tlv/TlvNumber", tlvNum);
+        this.file.addImport("tlv/TlvNumber", "TlvBitmap");
         this.file.addImport("schema/BitmapSchema", "BitFlag");
-        const block = this.file.types.expressions(`export const ${name} = TlvBitmap(${tlvNum}, {`, "})")
+
+        const block = this.file.types.expressions(`export const ${name}Bits = {`, "}")
             .document(model);
 
         this.file.types.insertingBefore(block, () => {
@@ -231,6 +231,8 @@ export class TlvGenerator {
                     .document(child);
             });
         });
+
+        this.file.types.atom(`export const ${name} = TlvBitmap(${tlvNum}, ${name}Bits)`);
     }
 
     private defineDatatype(model: ValueModel) {

@@ -263,7 +263,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "map8", access: "R V",
-            conformance: "USR", default: 1, quality: "F",
+            conformance: "USR", default: [ "Dual" ], quality: "F",
             details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.",
             xref: { document: "cluster", section: "5.2.3.19" },
             children: [
@@ -332,7 +332,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SupportedOperatingModes", id: 0x26, type: "map16", access: "R V",
-            conformance: "M", default: 65526, quality: "F",
+            conformance: "M", default: [ "Privacy", "Passage" ], quality: "F",
             details: "This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All " +
                      "operating modes NOT supported by a lock SHALL be set to one. The value of the OperatingMode " +
                      "enumeration defines the related bit to be set, as shown below:",
@@ -474,7 +474,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AlarmMask", id: 0x40, type: "map16", access: "RW VA", conformance: "O",
-            default: 65535, quality: "P",
+            default: [ "LockResetToFactoryDefaults", "Reserved", "TamperAlarmWrongCodeEntryLimit" ],
+            quality: "P",
             details: "This attribute is only supported if the Alarms cluster is on the same endpoint. The alarm mask is " +
                      "used to turn on/off alarms for particular functions. Alarms for an alarm group are enabled if the " +
                      "associated alarm mask bit is set. Each bit represents a group of alarms. Entire alarm groups can be " +
@@ -494,7 +495,9 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "KeypadOperationEventMask", id: 0x41, type: "map16", access: "RW VA",
-            conformance: "[NOT & PIN]", default: 65535, quality: "P",
+            conformance: "[NOT & PIN]",
+            default: [ "LockSourceKeypad", "UnlockSourceKeypad", "LockSourceKeypadErrorInvalidSchedule" ],
+            quality: "P",
             details: "Event mask used to turn on and off the transmission of keypad operation events. This mask DOES NOT " +
                      "apply to the storing of events in the event log. This mask only applies to the Operation Event " +
                      "Notification Command.",
@@ -514,7 +517,9 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RemoteOperationEventMask", id: 0x42, type: "map16", access: "RW VA",
-            conformance: "[NOT]", default: 65535, quality: "P",
+            conformance: "[NOT]",
+            default: [ "LockSourceRemote", "UnlockSourceRemote", "LockSourceRemoteErrorInvalidSchedule" ],
+            quality: "P",
             details: "Event mask used to turn on and off the transmission of remote operation events. This mask DOES NOT " +
                      "apply to the storing of events in the event log. This mask only applies to the Operation Event",
             xref: { document: "cluster", section: "5.2.3.41" },
@@ -532,7 +537,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ManualOperationEventMask", id: 0x43, type: "map16", access: "RW VA",
-            conformance: "[NOT]", default: 65535, quality: "P",
+            conformance: "[NOT]", default: [ "ThumbturnLock", "ThumbturnUnlock", "KeyLock" ], quality: "P",
             details: "Event mask used to turn on and off manual operation events. This mask DOES NOT apply to the storing " +
                      "of events in the event log. This mask only applies to the Operation Event Notification Command.",
             xref: { document: "cluster", section: "5.2.3.42" },
@@ -554,7 +559,9 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RfidOperationEventMask", id: 0x44, type: "map16", access: "RW VA",
-            conformance: "[NOT & RID]", default: 65535, quality: "P",
+            conformance: "[NOT & RID]",
+            default: [ "LockSourceRfid", "UnlockSourceRfid", "LockSourceRfidErrorInvalidSchedule" ],
+            quality: "P",
             details: "Event mask used to turn on and off RFID operation events. This mask DOES NOT apply to the storing " +
                      "of events in the event log. This mask only applies to the Operation Event Notification Command.",
             xref: { document: "cluster", section: "5.2.3.43" },
@@ -572,7 +579,9 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "KeypadProgrammingEventMask", id: 0x45, type: "map16", access: "RW VA",
-            conformance: "[NOT & PIN]", default: 65535, quality: "P",
+            conformance: "[NOT & PIN]",
+            default: [ "ProgrammingPinCodeChangedSourceKeypad", "PinAddedSourceKeypad", "PinChangedSourceKeypad" ],
+            quality: "P",
             details: "Event mask used to turn on and off keypad programming events. This mask DOES NOT apply to the " +
                      "storing of events in the event log. This mask only applies to the Programming Event Notification " +
                      "Command.",
@@ -589,7 +598,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RemoteProgrammingEventMask", id: 0x46, type: "map16", access: "RW VA",
-            conformance: "[NOT]", default: 65535, quality: "P",
+            conformance: "[NOT]", default: [ "PinAddedSourceRemote", "PinChangedSourceRemote" ], quality: "P",
             details: "Event mask used to turn on and off remote programming events. This mask DOES NOT apply to the " +
                      "storing of events in the event log. This mask only applies to the Programming Event Notification " +
                      "Command.",
@@ -1201,8 +1210,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "AlarmCodeEnum", type: "enum8", conformance: "M",
-            details: "The Alarm Code enum SHALL indicate the alarm type. The data type of the Alarm Code enum is derived " +
-                     "from enum8.",
+            details: "The Alarm Code enum shall indicate the alarm type.",
             xref: { document: "cluster", section: "5.2.6.1" },
 
             children: [
@@ -1240,8 +1248,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CredentialRuleEnum", type: "enum8", conformance: "M",
-            details: "The CredentialRule enum used in various commands SHALL indicate the credential rule that can be " +
-                     "applied to a particular user. The data type of the CredentialRule enum is derived from enum8.",
+            details: "The CredentialRule enum used in various commands shall indicate the credential rule that can be " +
+                     "applied to a particular user.",
             xref: { document: "cluster", section: "5.2.6.2" },
             children: [
                 { tag: "datatype", name: "Single", id: 0x0, conformance: "USR" },
@@ -1252,7 +1260,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CredentialStruct", type: "struct", conformance: "M",
-            details: "The CredentialStruct is used in LockOperation event and Get User Record Response command and SHALL " +
+            details: "The CredentialStruct is used in LockOperation event and Get User Record Response command and shall " +
                      "indicate the credential types and their corresponding indices (if any) for the event or user record.",
             xref: { document: "cluster", section: "5.2.6.3" },
 
@@ -1275,8 +1283,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CredentialTypeEnum", type: "enum8", conformance: "M",
-            details: "The Credential Type enum SHALL indicate the credential type. The data type of the Credential Type " +
-                     "enum is derived from enum8.",
+            details: "The Credential Type enum shall indicate the credential type.",
             xref: { document: "cluster", section: "5.2.6.4" },
 
             children: [
@@ -1291,8 +1298,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "DataOperationTypeEnum", type: "enum8", conformance: "M",
-            details: "The DataOperationType enum SHALL indicate the data operation performed. The data type of the " +
-                     "DataOperationType enum is derived from enum8.",
+            details: "The DataOperationType enum shall indicate the data operation performed.",
             xref: { document: "cluster", section: "5.2.6.5" },
 
             children: [
@@ -1313,8 +1319,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "DaysMaskMap", type: "map8", conformance: "M",
-            details: "The DaysMask field used in various commands and SHALL indicate the days of the week the Week Day " +
-                     "schedule applies for. The data type of the DaysMask field is derived from map8.",
+            details: "The DaysMask field used in various commands and shall indicate the days of the week the Week Day " +
+                     "schedule applies for.",
             xref: { document: "cluster", section: "5.2.6.6" },
 
             children: [
@@ -1329,7 +1335,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "DoorStateEnum", type: "enum8", conformance: "M",
-            details: "The DoorState enumeration SHALL indicate the current door state. The data type of the DoorState",
+            details: "The DoorState enumeration shall indicate the current door state. The data type of the DoorState",
             xref: { document: "cluster", section: "5.2.6.7" },
 
             children: [
@@ -1362,8 +1368,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "LockDataTypeEnum", type: "enum8", conformance: "M",
-            details: "The LockDataType enum SHALL indicate the data type that is being or has changed. The data type of " +
-                     "the DataType enum is derived from enum8.",
+            details: "The LockDataType enum shall indicate the data type that is being or has changed.",
             xref: { document: "cluster", section: "5.2.6.9" },
 
             children: [
@@ -1416,8 +1421,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "LockOperationTypeEnum", type: "enum8", conformance: "M",
-            details: "The LockOperationType enumeration SHALL indicate the type of Lock operation performed. The data " +
-                     "type of the LockOperationType enum field is derived from enum8.",
+            details: "The LockOperationType enumeration shall indicate the type of Lock operation performed.",
             xref: { document: "cluster", section: "5.2.6.10" },
 
             children: [
@@ -1430,8 +1434,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OperationErrorEnum", type: "enum8", conformance: "M",
-            details: "The OperationError enumeration SHALL indicate the error cause of the Lock/Unlock operation " +
-                     "performed. The data type of the OperationError enum field is derived from enum8.",
+            details: "The OperationError enumeration shall indicate the error cause of the Lock/Unlock operation " +
+                     "performed.",
             xref: { document: "cluster", section: "5.2.6.11" },
 
             children: [
@@ -1445,8 +1449,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OperatingModeEnum", type: "enum8", conformance: "M",
-            details: "The OperatingMode enumeration SHALL indicate the lock operating mode. The data type of the " +
-                     "OperatingMode enum field is derived from enum8.",
+            details: "The OperatingMode enumeration shall indicate the lock operating mode.",
             xref: { document: "cluster", section: "5.2.6.12" },
 
             children: [
@@ -1488,8 +1491,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OperationSourceEnum", type: "enum8", conformance: "M",
-            details: "The OperationSource enumeration SHALL indicate the source of the Lock/Unlock operation performed. " +
-                     "The data type of the OperationSource enum field is derived from enum8.",
+            details: "The OperationSource enumeration shall indicate the source of the Lock/Unlock operation performed.",
             xref: { document: "cluster", section: "5.2.6.13" },
 
             children: [
@@ -1508,7 +1510,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "UserStatusEnum", type: "enum8", conformance: "M",
-            details: "The UserStatus enum used in various commands SHALL indicate what the status is for a specific user " +
+            details: "The UserStatus enum used in various commands shall indicate what the status is for a specific user " +
                      "ID.",
             xref: { document: "cluster", section: "5.2.6.15" },
             children: [
@@ -1520,7 +1522,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "UserTypeEnum", type: "enum8", conformance: "M",
-            details: "The UserType enum used in various commands SHALL indicate what the type is for a specific user ID.",
+            details: "The UserType enum used in various commands shall indicate what the type is for a specific user ID.",
             xref: { document: "cluster", section: "5.2.6.16" },
 
             children: [

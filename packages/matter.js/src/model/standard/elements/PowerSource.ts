@@ -394,7 +394,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "WiredFaultEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.7.5.1" },
             children: [
                 { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
@@ -405,7 +404,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "BatFaultEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.7.5.2" },
             children: [
                 { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
@@ -416,7 +414,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "BatChargeFaultEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.7.5.3" },
 
             children: [
@@ -436,7 +433,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "PowerSourceStatusEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.7.5.4" },
 
             children: [
@@ -449,7 +445,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "WiredCurrentTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.7.5.5" },
             children: [
                 { tag: "datatype", name: "Ac", id: 0x0, conformance: "M" },
@@ -459,7 +454,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "BatChargeLevelEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.7.5.6" },
             children: [
                 { tag: "datatype", name: "Ok", id: 0x0, conformance: "M" },
@@ -470,7 +464,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "BatReplaceabilityEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.7.5.7" },
 
             children: [
@@ -483,7 +476,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "BatCommonDesignationEnum", type: "enum16", conformance: "M",
-            details: "This data type is derived from enum16.",
             xref: { document: "core", section: "11.7.5.8" },
 
             children: [
@@ -573,7 +565,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "BatApprovedChemistryEnum", type: "enum16", conformance: "M",
-            details: "This data type is derived from enum16.",
             xref: { document: "core", section: "11.7.5.9" },
 
             children: [
@@ -615,7 +606,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "BatChargeStateEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.7.5.10" },
 
             children: [

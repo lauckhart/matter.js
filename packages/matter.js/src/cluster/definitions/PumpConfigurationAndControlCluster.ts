@@ -14,11 +14,9 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from map16.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1
  */
-export const PumpStatusBitmap = TlvBitmap(TlvUInt16, {
+export const PumpStatusBitmapBits = {
     /**
      * A fault related to the system or pump device is detected.
      *
@@ -103,11 +101,11 @@ export const PumpStatusBitmap = TlvBitmap(TlvUInt16, {
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.6
      */
     RemoteTemperature: BitFlag(256)
-});
+};
+
+export const PumpStatusBitmap = TlvBitmap(TlvUInt16, PumpStatusBitmapBits);
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.2
  */
 export const enum OperationModeEnum {
@@ -126,8 +124,6 @@ export const enum OperationModeEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.3
  */
 export const enum ControlModeEnum {

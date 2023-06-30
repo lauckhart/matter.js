@@ -122,7 +122,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "AnnouncementReasonEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.19.7.4.1" },
             children: [
                 { tag: "datatype", name: "SimpleAnnouncement", id: 0x0, conformance: "M" },
@@ -133,7 +132,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "UpdateStateEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.19.7.4.5" },
 
             children: [
@@ -151,7 +149,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ChangeReasonEnum", type: "enum8", conformance: "M",
-            details: "The ChangeReasonEnum Data Type is derived from enum8.",
             xref: { document: "core", section: "11.19.7.4.15" },
 
             children: [

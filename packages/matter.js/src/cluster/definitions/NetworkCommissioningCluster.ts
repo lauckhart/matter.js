@@ -43,8 +43,6 @@ export const NetworkInfoStruct = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.3
  */
 export const enum NetworkCommissioningStatusEnum {
@@ -64,11 +62,12 @@ export const enum NetworkCommissioningStatusEnum {
 };
 
 /**
- * This data type is derived from map8.
+ * WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the
+ * Security field of the WiFiInterfaceScanResultStruct.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.1
  */
-export const WiFiSecurityBitmap = TlvBitmap(TlvUInt8, {
+export const WiFiSecurityBitmapBits = {
     /**
      * Supports unencrypted Wi-Fi
      */
@@ -93,8 +92,9 @@ export const WiFiSecurityBitmap = TlvBitmap(TlvUInt8, {
      * Supports Wi-Fi using WPA3-Personal security
      */
     Wpa3Personal: BitFlag(4)
-});
+};
 
+export const WiFiSecurityBitmap = TlvBitmap(TlvUInt8, WiFiSecurityBitmapBits);
 export const enum WiFiBand {
     "2G4" = 0,
     "3G65" = 1,

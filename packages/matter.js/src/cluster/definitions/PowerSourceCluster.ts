@@ -17,8 +17,6 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.4
  */
 export const enum PowerSourceStatusEnum {
@@ -29,8 +27,6 @@ export const enum PowerSourceStatusEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.5
  */
 export const enum WiredCurrentTypeEnum {
@@ -39,8 +35,6 @@ export const enum WiredCurrentTypeEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.1
  */
 export const enum WiredFaultEnum {
@@ -75,8 +69,6 @@ export const WiredFaultChangeEvent = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.6
  */
 export const enum BatChargeLevelEnum {
@@ -86,8 +78,6 @@ export const enum BatChargeLevelEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.7
  */
 export const enum BatReplaceabilityEnum {
@@ -98,8 +88,6 @@ export const enum BatReplaceabilityEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.2
  */
 export const enum BatFaultEnum {
@@ -121,8 +109,6 @@ export const BatFaultChangeEvent = TlvObject({
 });
 
 /**
- * This data type is derived from enum16.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.8
  */
 export const enum BatCommonDesignationEnum {
@@ -210,8 +196,6 @@ export const enum BatCommonDesignationEnum {
 };
 
 /**
- * This data type is derived from enum16.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.9
  */
 export const enum BatApprovedChemistryEnum {
@@ -251,8 +235,6 @@ export const enum BatApprovedChemistryEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.10
  */
 export const enum BatChargeStateEnum {
@@ -263,8 +245,6 @@ export const enum BatChargeStateEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.3
  */
 export const enum BatChargeFaultEnum {

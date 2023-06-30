@@ -129,7 +129,9 @@ export const CertificateChainResponseRequest = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
+ * This enumeration is used by the CertificateChainRequest command to convey
+ * which certificate from the device attestation certificate chain to transmit
+ * back to the client.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.2
  */
@@ -176,7 +178,8 @@ export const CsrRequestRequest = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
+ * This enumeration is used by the NOCResponse common response command to
+ * convey detailed out
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.3
  */

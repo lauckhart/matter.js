@@ -117,7 +117,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ConfigStatus", id: 0x7, type: "map8", access: "R V", conformance: "M",
-            constraint: "desc", default: 3, quality: "N",
+            constraint: "desc", default: [ "Operational", "OnlineReserved" ], quality: "N",
             details: "The ConfigStatus attribute makes configuration and status information available. To change " +
                      "settings, devices SHALL write to the Mode attribute of the Window Covering Settings Attribute Set. " +
                      "The behavior causing the setting or clearing of each bit is vendor specific. See table below for " +
