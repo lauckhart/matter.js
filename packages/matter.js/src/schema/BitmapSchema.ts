@@ -179,7 +179,7 @@ export type FlagsToBitmap<T extends string[]> = {
 export type BitFlags<T extends BitSchema, F extends Extract<keyof T, string>[]> =
     Merge<{ [key in keyof T]: false }, FlagsToBitmap<F>>;
 
-/** Create a bitmap schema with a sequence of flags set */
+/** Create a bitmap schema with a named subset of flags set */
 export function BitFlags<T extends BitSchema, F extends Extract<keyof T, string>[]>(bitSchemas: T, ...flags: [ ...F ]) {
     return Object.fromEntries(Object.keys(bitSchemas).map(
         ([name]) => [ name, !(flags.indexOf(name as Extract<keyof T, string>) == -1) ]

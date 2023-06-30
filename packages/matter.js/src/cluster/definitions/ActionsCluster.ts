@@ -15,8 +15,6 @@ import { BitFlag } from "../../schema/BitmapSchema.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2
  */
 export const enum ActionTypeEnum {
@@ -76,11 +74,9 @@ export const enum ActionTypeEnum {
 };
 
 /**
- * This data type is derived from map16.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.1
  */
-export const CommandBits = TlvBitmap(TlvUInt16, {
+export const CommandBitsBits = {
     /**
      * Indicate support for InstantActionWithTransition command
      */
@@ -135,11 +131,11 @@ export const CommandBits = TlvBitmap(TlvUInt16, {
      * Indicate support for DisableActionWithDuration command
      */
     DisableActionWithDuration: BitFlag(2048)
-});
+};
+
+export const CommandBits = TlvBitmap(TlvUInt16, CommandBitsBits);
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.3
  */
 export const enum ActionStateEnum {
@@ -209,8 +205,6 @@ export const ActionStruct = TlvObject({
 });
 
 /**
- * This data type is derived from enum8 and has its values listed below.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.5
  */
 export const enum EndpointListTypeEnum {
@@ -431,8 +425,6 @@ export const StateChangedEvent = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.4
  */
 export const enum ActionErrorEnum {

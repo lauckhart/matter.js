@@ -16,8 +16,6 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * PlaybackStateEnum Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.1
  */
 export const enum PlaybackStateEnum {
@@ -44,8 +42,6 @@ export const enum PlaybackStateEnum {
 };
 
 /**
- * Status Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.2
  */
 export const enum StatusEnum {

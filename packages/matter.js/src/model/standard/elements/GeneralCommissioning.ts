@@ -143,7 +143,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CommissioningErrorEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
+            details: "This enumeration is used by several response commands in this cluster to indicate particular errors.",
             xref: { document: "core", section: "11.9.4.1" },
 
             children: [
@@ -157,7 +157,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "RegulatoryLocationTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
+            details: "This enumeration is used by the RegulatoryConfig and LocationCapability attributes to indicate " +
+                     "possible radio usage.",
             xref: { document: "core", section: "11.9.4.2" },
             children: [
                 { tag: "datatype", name: "Indoor", id: 0x0, conformance: "M" },

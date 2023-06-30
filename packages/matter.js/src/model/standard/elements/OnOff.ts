@@ -172,8 +172,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "StartUpOnOffEnum", type: "enum8", conformance: "M",
-            details: "The data type StartUpOnOffEnum is derived from enum8. The values of the StartUpOnOffEnum data type " +
-                     "are listed below.",
             xref: { document: "cluster", section: "1.5.5.1" },
 
             children: [

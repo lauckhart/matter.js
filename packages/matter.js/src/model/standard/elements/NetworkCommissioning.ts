@@ -326,7 +326,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "WiFiSecurityBitmap", type: "map8",
-            details: "This data type is derived from map8.",
+            details: "WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the Security field of the " +
+                     "WiFiInterfaceScanResultStruct.",
             xref: { document: "core", section: "11.8.5.1" },
 
             children: [
@@ -349,7 +350,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "WiFiBandEnum", type: "enum8",
-            details: "This data type is derived from enum8.",
+            details: "WiFiBandEnum encodes a supported Wi-Fi frequency band present in the WiFiBand field of the " +
+                     "WiFiInterfaceScanResultStruct.",
             xref: { document: "core", section: "11.8.5.2" },
 
             children: [
@@ -363,7 +365,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "NetworkCommissioningStatusEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.8.5.3" },
 
             children: [

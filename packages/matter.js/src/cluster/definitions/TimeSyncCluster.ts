@@ -18,8 +18,6 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.1
  */
 export const enum GranularityEnum {
@@ -31,8 +29,6 @@ export const enum GranularityEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.2
  */
 export const enum TimeSourceEnum {

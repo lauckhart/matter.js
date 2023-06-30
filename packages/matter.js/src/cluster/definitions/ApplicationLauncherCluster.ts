@@ -50,8 +50,6 @@ export const ApplicationEPStruct = TlvObject({
 });
 
 /**
- * StatusEnum Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.5.1
  */
 export const enum StatusEnum {

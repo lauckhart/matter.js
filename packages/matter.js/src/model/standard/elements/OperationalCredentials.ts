@@ -303,7 +303,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CertificateChainTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
+            details: "This enumeration is used by the CertificateChainRequest command to convey which certificate from " +
+                     "the device attestation certificate chain to transmit back to the client.",
             xref: { document: "core", section: "11.17.4.2" },
             children: [
                 { tag: "datatype", name: "DacCertificate", id: 0x1, conformance: "M" },
@@ -313,7 +314,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "NodeOperationalCertStatusEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
+            details: "This enumeration is used by the NOCResponse common response command to convey detailed out",
             xref: { document: "core", section: "11.17.4.3" },
 
             children: [

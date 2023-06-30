@@ -645,7 +645,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "NetworkFaultEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.13.5.1" },
 
             children: [
@@ -658,7 +657,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ConnectionStatusEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.13.5.2" },
             children: [
                 { tag: "datatype", name: "Connected", id: 0x0, conformance: "M" },
@@ -668,7 +666,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "RoutingRoleEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.13.5.3" },
 
             children: [
@@ -791,7 +788,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "RouteTableStruct", type: "struct", conformance: "M",
-            details: "This field SHALL specify the IEEE 802.15.4 extended address for the Node for which this route table " +
+            details: "This field shall specify the IEEE 802.15.4 extended address for the Node for which this route table " +
                      "entry corresponds.",
             xref: { document: "core", section: "11.13.5.5" },
 

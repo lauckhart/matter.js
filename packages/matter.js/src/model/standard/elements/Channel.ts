@@ -199,14 +199,12 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "LineupInfoTypeEnum", type: "enum8", conformance: "M",
-            details: "LineupInfoTypeEnum Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.6.5.3" },
             children: [ { tag: "datatype", name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator" } ]
         },
 
         {
             tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
-            details: "StatusEnum Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.6.5.4" },
 
             children: [

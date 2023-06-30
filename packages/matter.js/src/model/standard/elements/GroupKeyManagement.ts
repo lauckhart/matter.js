@@ -125,7 +125,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "GroupKeySecurityPolicyEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.2.6.1" },
             children: [
                 { tag: "datatype", name: "TrustFirst", id: 0x0, conformance: "M" },
@@ -135,7 +134,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "GroupKeyMulticastPolicyEnum", type: "enum8",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.2.6.2" },
 
             children: [
@@ -174,7 +172,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "GroupKeySetStruct", type: "struct", conformance: "M",
-            details: "This field SHALL provide the fabric-unique index for the associated group key set, as specified in " +
+            details: "This field shall provide the fabric-unique index for the associated group key set, as specified in " +
                      "Section 4.15.3.5.1, “Group Key Set ID”.",
             xref: { document: "core", section: "11.2.6.4" },
 

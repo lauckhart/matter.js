@@ -123,7 +123,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OccupancyBitmap", type: "map8", conformance: "M",
-            details: "This data type is derived from bitmap8.",
             xref: { document: "cluster", section: "2.7.5.1" },
 
             children: [
@@ -136,7 +135,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OccupancySensorTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "cluster", section: "2.7.5.2" },
 
             children: [
@@ -149,7 +147,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OccupancySensorTypeBitmap", type: "map8", conformance: "M",
-            details: "This data type is derived from bitmap8.",
             xref: { document: "cluster", section: "2.7.5.3" },
 
             children: [

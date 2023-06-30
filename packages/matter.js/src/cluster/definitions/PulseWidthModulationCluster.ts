@@ -25,10 +25,12 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
  */
-export const Options = TlvBitmap(TlvUInt8, {
+export const OptionsBits = {
     ExecuteIfOff: BitFlag(0),
     CoupleColorTempToLevel: BitFlag(1)
-});
+};
+
+export const Options = TlvBitmap(TlvUInt8, OptionsBits);
 
 /**
  * The MoveToLevel command SHALL have the following data fields:

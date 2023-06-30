@@ -318,7 +318,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "PumpStatusBitmap", type: "map16", conformance: "M",
-            details: "This data type is derived from map16.",
             xref: { document: "cluster", section: "4.2.6.1" },
 
             children: [
@@ -388,7 +387,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OperationModeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "cluster", section: "4.2.6.2" },
 
             children: [
@@ -407,7 +405,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ControlModeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "cluster", section: "4.2.6.3" },
 
             children: [

@@ -112,7 +112,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
+            details: "See Section 11.19.3.2, “Querying the OTA Provider” for the semantics of these values.",
             xref: { document: "core", section: "11.19.6.4.1" },
 
             children: [
@@ -125,7 +125,9 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ApplyUpdateActionEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
+            details: "See Section 11.19.3.6, “Applying a software update” for the semantics of the values. This " +
+                     "enumeration is used in the Action field of the ApplyUpdateResponse command. See (Section " +
+                     "11.19.6.5.4.1, “Action Field”).",
             xref: { document: "core", section: "11.19.6.4.2" },
             children: [
                 { tag: "datatype", name: "Proceed", id: 0x0, conformance: "M" },
@@ -136,7 +138,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "DownloadProtocolEnum", type: "enum8",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.19.6.4.3" },
 
             children: [

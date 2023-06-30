@@ -18,8 +18,6 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.3
  */
 export const enum RoutingRoleEnum {
@@ -154,7 +152,7 @@ export const NeighborTableStruct = TlvObject({
 });
 
 /**
- * This field SHALL specify the IEEE 802.15.4 extended address for the Node for
+ * This field shall specify the IEEE 802.15.4 extended address for the Node for
  * which this route table entry corresponds.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.5
@@ -347,8 +345,6 @@ export const OperationalDatasetComponents = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.1
  */
 export const enum NetworkFaultEnum {
@@ -359,8 +355,6 @@ export const enum NetworkFaultEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.2
  */
 export const enum ConnectionStatusEnum {

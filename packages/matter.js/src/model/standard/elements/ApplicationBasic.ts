@@ -104,7 +104,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ApplicationStatusEnum", type: "enum8", conformance: "M",
-            details: "ApplicationStatusEnum Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.3.4.2" },
 
             children: [

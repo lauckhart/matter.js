@@ -66,8 +66,6 @@ export const ChannelInfoStruct = TlvObject({
 });
 
 /**
- * LineupInfoTypeEnum Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.3
  */
 export const enum LineupInfoTypeEnum {
@@ -145,8 +143,6 @@ export const SkipChannelRequest = TlvObject({
 });
 
 /**
- * StatusEnum Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.4
  */
 export const enum StatusEnum {

@@ -199,7 +199,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "SecurityTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.14.5.1" },
 
             children: [
@@ -214,7 +213,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "WiFiVersionEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.14.5.2" },
 
             children: [
@@ -229,7 +227,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "AssociationFailureCauseEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.14.5.3" },
 
             children: [
@@ -242,7 +239,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ConnectionStatusEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.14.5.4" },
             children: [
                 { tag: "datatype", name: "Connected", id: 0x0, conformance: "M" },

@@ -15,8 +15,6 @@ import { TlvByteString } from "../../tlv/TlvString.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.3
  */
 export const enum AccessControlEntryAuthModeEnum {
@@ -80,8 +78,6 @@ export const AccessControlExtensionStruct = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.1
  */
 export const enum ChangeTypeEnum {

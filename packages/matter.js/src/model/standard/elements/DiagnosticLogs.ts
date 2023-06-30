@@ -96,7 +96,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "IntentEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.10.4.1" },
 
             children: [
@@ -125,7 +124,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.10.4.2" },
 
             children: [
@@ -164,7 +162,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "TransferProtocolEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.10.4.3" },
 
             children: [

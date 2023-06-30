@@ -13,8 +13,6 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.5.5.1
  */
 export const enum TempUnitEnum {

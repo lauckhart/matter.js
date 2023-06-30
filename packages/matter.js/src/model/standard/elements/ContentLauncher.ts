@@ -130,7 +130,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "StatusEnum", type: "enum8", conformance: "M",
-            details: "StatusEnum Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.7.5.1" },
 
             children: [
@@ -191,7 +190,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ParameterEnum", type: "enum8", conformance: "M",
-            details: "Parameter Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.7.5.4" },
 
             children: [
@@ -380,7 +378,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "MetricTypeEnum", type: "enum8", conformance: "M",
-            details: "MetricTypeEnum Data Type is derived from enum8.",
             xref: { document: "cluster", section: "6.7.5.9" },
 
             children: [

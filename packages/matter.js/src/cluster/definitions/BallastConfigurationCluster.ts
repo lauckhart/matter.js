@@ -22,11 +22,13 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.3
  */
-export const BallastStatus = TlvBitmap(TlvUInt8, {
+export const BallastStatusBits = {
     BallastNonOperational: BitFlag(0),
     LampFailure: BitFlag(1),
     LampNotInSocket: BitFlag(2)
-});
+};
+
+export const BallastStatus = TlvBitmap(TlvUInt8, BallastStatusBits);
 
 /**
  * The LampAlarmMode attribute specifies which attributes MAY cause an alarm
@@ -37,7 +39,9 @@ export const BallastStatus = TlvBitmap(TlvUInt8, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.5
  */
-export const LampAlarmMode = TlvBitmap(TlvUInt8, { LampBurnHours: BitFlag(1) });
+export const LampAlarmModeBits = { LampBurnHours: BitFlag(1) };
+
+export const LampAlarmMode = TlvBitmap(TlvUInt8, LampAlarmModeBits);
 
 export namespace BallastConfigurationCluster {
     export const id = 769;

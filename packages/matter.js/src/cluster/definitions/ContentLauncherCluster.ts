@@ -16,8 +16,6 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * StatusEnum Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.1
  */
 export const enum StatusEnum {
@@ -61,8 +59,6 @@ export const LauncherResponseRequest = TlvObject({
 });
 
 /**
- * MetricTypeEnum Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9
  */
 export const enum MetricTypeEnum {
@@ -238,8 +234,6 @@ export const LaunchUrlRequest = TlvObject({
 });
 
 /**
- * Parameter Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.4
  */
 export const enum ParameterEnum {

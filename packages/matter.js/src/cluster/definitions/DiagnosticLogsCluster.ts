@@ -13,8 +13,6 @@ import { TlvByteString, TlvString } from "../../tlv/TlvString.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2
  */
 export const enum StatusEnum {
@@ -107,8 +105,6 @@ export const RetrieveLogsResponseRequest = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1
  */
 export const enum IntentEnum {
@@ -139,8 +135,6 @@ export const enum IntentEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3
  */
 export const enum TransferProtocolEnum {

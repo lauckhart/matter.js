@@ -69,7 +69,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "OCC",
-            constraint: "desc", default: 1,
+            constraint: "desc", default: [ "Occupied" ],
             details: "This attribute specifies whether the heated/cooled space is occupied or not, as measured locally or " +
                      "remotely (over the network). If bit 0 = 1, the space is occupied, else it is unoccupied. All other " +
                      "bits are reserved.",
@@ -747,31 +747,24 @@ Matter.children.push({
             tag: "command", name: "GetRelayStatusLogResponse", id: 0x1, conformance: "O", direction: "response",
             xref: { document: "cluster", section: "4.3.8" }
         },
-
         {
             tag: "datatype", name: "temperature", type: "int16", description: "Temperature",
-            details: "This type, derived from int16, represents a temperature on the Celsius scale with a resolution of " +
-                     "0.01°C.",
+            details: "This type represents a temperature on the Celsius scale with a resolution of 0.01°C.",
             xref: { document: "cluster", section: "4.3.9.1" }
         },
-
         {
             tag: "datatype", name: "temp-diff", type: "int16", description: "Temperature Difference",
-            details: "This type, derived from int16, represents a temperature difference with a resolution of 0.01°C.",
+            details: "This type represents a temperature difference with a resolution of 0.01°C.",
             xref: { document: "cluster", section: "4.3.9.2" }
         },
-
         {
             tag: "datatype", name: "temp-s8", type: "int8", description: "Signed Temperature (°C x 10)",
-            details: "This type, derived from int8, represents a temperature from -12.7°C to 12.7°C with a resolution of " +
-                     "0.1°C.",
+            details: "This type represents a temperature from -12.7°C to 12.7°C with a resolution of 0.1°C.",
             xref: { document: "cluster", section: "4.3.9.3" }
         },
-
         {
             tag: "datatype", name: "temp-u8", type: "uint8", description: "Unsigned Temperature (°C x 10)",
-            details: "This type, derived from uint8, represents a temperature from 0°C to 25.5°C with a resolution of " +
-                     "0.1°C.",
+            details: "This type represents a temperature from 0°C to 25.5°C with a resolution of 0.1°C.",
             xref: { document: "cluster", section: "4.3.9.4" }
         },
 

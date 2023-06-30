@@ -36,8 +36,6 @@ export const TargetInfoStruct = TlvObject({
 });
 
 /**
- * Status Data Type is derived from enum8.
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.5.2
  */
 export const enum StatusEnum {

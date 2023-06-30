@@ -64,8 +64,6 @@ export const GroupInfoMapStruct = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.1
  */
 export const enum GroupKeySecurityPolicyEnum {
@@ -74,8 +72,6 @@ export const enum GroupKeySecurityPolicyEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.2
  */
 export const enum GroupKeyMulticastPolicyEnum {
@@ -96,7 +92,7 @@ export const enum GroupKeyMulticastPolicyEnum {
 };
 
 /**
- * This field SHALL provide the fabric-unique index for the associated group
+ * This field shall provide the fabric-unique index for the associated group
  * key set, as specified in Section 4.15.3.5.1, “Group Key Set ID”.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4

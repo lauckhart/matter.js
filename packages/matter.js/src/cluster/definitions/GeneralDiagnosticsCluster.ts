@@ -16,8 +16,6 @@ import { TlvEnum, TlvUInt16, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.4
  */
 export const enum InterfaceTypeEnum {
@@ -112,8 +110,6 @@ export const NetworkInterface = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.5
  */
 export const enum BootReasonEnum {
@@ -127,8 +123,6 @@ export const enum BootReasonEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.1
  */
 export const enum HardwareFaultEnum {
@@ -146,8 +140,6 @@ export const enum HardwareFaultEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.2
  */
 export const enum RadioFaultEnum {
@@ -161,8 +153,6 @@ export const enum RadioFaultEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.3
  */
 export const enum NetworkFaultEnum {

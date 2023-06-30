@@ -5286,7 +5286,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "map8", access: "R V",
-                    conformance: "USR", default: 1, quality: "F",
+                    conformance: "USR", default: [ "Dual" ], quality: "F",
                     details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.",
                     xref: { document: "cluster", section: "5.2.3.19" },
                     children: [
@@ -5355,7 +5355,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "SupportedOperatingModes", id: 0x26, type: "map16", access: "R V",
-                    conformance: "M", default: 65526, quality: "F",
+                    conformance: "M", default: [ "Privacy", "Passage" ], quality: "F",
                     details: "This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All " +
                              "operating modes NOT supported by a lock SHALL be set to one. The value of the OperatingMode " +
                              "enumeration defines the related bit to be set, as shown below:",
@@ -5482,7 +5482,8 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "AlarmMask", id: 0x40, type: "map16", access: "RW VA", conformance: "O",
-                    default: 65535, quality: "P",
+                    default: [ "LockResetToFactoryDefaults", "Reserved", "TamperAlarmWrongCodeEntryLimit" ],
+                    quality: "P",
                     details: "This attribute is only supported if the Alarms cluster is on the same endpoint. The alarm mask is " +
                              "used to turn on/off alarms for particular functions. Alarms for an alarm group are enabled if the " +
                              "associated alarm mask bit is set. Each bit represents a group of alarms. Entire alarm groups can be " +
@@ -5502,7 +5503,9 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "KeypadOperationEventMask", id: 0x41, type: "map16", access: "RW VA",
-                    conformance: "[NOT & PIN]", default: 65535, quality: "P",
+                    conformance: "[NOT & PIN]",
+                    default: [ "LockSourceKeypad", "UnlockSourceKeypad", "LockSourceKeypadErrorInvalidSchedule" ],
+                    quality: "P",
                     details: "Event mask used to turn on and off the transmission of keypad operation events. This mask DOES NOT " +
                              "apply to the storing of events in the event log. This mask only applies to the Operation Event " +
                              "Notification Command.",
@@ -5522,7 +5525,9 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RemoteOperationEventMask", id: 0x42, type: "map16", access: "RW VA",
-                    conformance: "[NOT]", default: 65535, quality: "P",
+                    conformance: "[NOT]",
+                    default: [ "LockSourceRemote", "UnlockSourceRemote", "LockSourceRemoteErrorInvalidSchedule" ],
+                    quality: "P",
                     details: "Event mask used to turn on and off the transmission of remote operation events. This mask DOES NOT " +
                              "apply to the storing of events in the event log. This mask only applies to the Operation Event",
                     xref: { document: "cluster", section: "5.2.3.41" },
@@ -5540,7 +5545,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ManualOperationEventMask", id: 0x43, type: "map16", access: "RW VA",
-                    conformance: "[NOT]", default: 65535, quality: "P",
+                    conformance: "[NOT]", default: [ "ThumbturnLock", "ThumbturnUnlock", "KeyLock" ], quality: "P",
                     details: "Event mask used to turn on and off manual operation events. This mask DOES NOT apply to the storing " +
                              "of events in the event log. This mask only applies to the Operation Event Notification Command.",
                     xref: { document: "cluster", section: "5.2.3.42" },
@@ -5562,7 +5567,9 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RfidOperationEventMask", id: 0x44, type: "map16", access: "RW VA",
-                    conformance: "[NOT & RID]", default: 65535, quality: "P",
+                    conformance: "[NOT & RID]",
+                    default: [ "LockSourceRfid", "UnlockSourceRfid", "LockSourceRfidErrorInvalidSchedule" ],
+                    quality: "P",
                     details: "Event mask used to turn on and off RFID operation events. This mask DOES NOT apply to the storing " +
                              "of events in the event log. This mask only applies to the Operation Event Notification Command.",
                     xref: { document: "cluster", section: "5.2.3.43" },
@@ -5580,7 +5587,9 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "KeypadProgrammingEventMask", id: 0x45, type: "map16", access: "RW VA",
-                    conformance: "[NOT & PIN]", default: 65535, quality: "P",
+                    conformance: "[NOT & PIN]",
+                    default: [ "ProgrammingPinCodeChangedSourceKeypad", "PinAddedSourceKeypad", "PinChangedSourceKeypad" ],
+                    quality: "P",
                     details: "Event mask used to turn on and off keypad programming events. This mask DOES NOT apply to the " +
                              "storing of events in the event log. This mask only applies to the Programming Event Notification " +
                              "Command.",
@@ -5597,7 +5606,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "RemoteProgrammingEventMask", id: 0x46, type: "map16", access: "RW VA",
-                    conformance: "[NOT]", default: 65535, quality: "P",
+                    conformance: "[NOT]", default: [ "PinAddedSourceRemote", "PinChangedSourceRemote" ], quality: "P",
                     details: "Event mask used to turn on and off remote programming events. This mask DOES NOT apply to the " +
                              "storing of events in the event log. This mask only applies to the Programming Event Notification " +
                              "Command.",

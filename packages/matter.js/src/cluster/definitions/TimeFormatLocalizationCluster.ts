@@ -14,8 +14,6 @@ import { TlvArray } from "../../tlv/TlvArray.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.1
  */
 export const enum HourFormatEnum {
@@ -24,8 +22,6 @@ export const enum HourFormatEnum {
 };
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.2
  */
 export const enum CalendarTypeEnum {

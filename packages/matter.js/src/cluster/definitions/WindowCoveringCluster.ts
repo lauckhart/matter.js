@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFlags } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand } from "../../cluster/Cluster.js";
-import { TlvEnum, TlvBitmap, TlvUInt8, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
@@ -44,7 +44,7 @@ export const enum Type {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
  */
-export const ConfigStatus = TlvBitmap(TlvUInt8, {
+export const ConfigStatusBits = {
     Operational: BitFlag(1),
     OnlineReserved: BitFlag(2),
     LiftMovementReversed: BitFlag(4),
@@ -52,7 +52,9 @@ export const ConfigStatus = TlvBitmap(TlvUInt8, {
     TiltPositionAware: BitFlag(16),
     LiftEncoderControlled: BitFlag(32),
     TiltEncoderControlled: BitFlag(64)
-});
+};
+
+export const ConfigStatus = TlvBitmap(TlvUInt8, ConfigStatusBits);
 
 /**
  * The OperationalStatus attribute keeps track of currently ongoing operations
@@ -61,11 +63,13 @@ export const ConfigStatus = TlvBitmap(TlvUInt8, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
  */
-export const OperationalStatus = TlvBitmap(TlvUInt8, {
+export const OperationalStatusBits = {
     Global: BitFlag(3),
     Lift: BitFlag(12),
     Tilt: BitFlag(48)
-});
+};
+
+export const OperationalStatus = TlvBitmap(TlvUInt8, OperationalStatusBits);
 
 /**
  * The EndProductType attribute identifies the product type in complement of
@@ -110,12 +114,14 @@ export const enum EndProductType {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
  */
-export const Mode = TlvBitmap(TlvUInt8, {
+export const ModeBits = {
     MotorDirectionReversed: BitFlag(1),
     CalibrationMode: BitFlag(2),
     MaintenanceMode: BitFlag(4),
     LedFeedback: BitFlag(8)
-});
+};
+
+export const Mode = TlvBitmap(TlvUInt8, ModeBits);
 
 /**
  * The SafetyStatus attribute reflects the state of the safety sensors and the
@@ -126,7 +132,7 @@ export const Mode = TlvBitmap(TlvUInt8, {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
  */
-export const SafetyStatus = TlvBitmap(TlvUInt16, {
+export const SafetyStatusBits = {
     /**
      * Tampering detected on sensors or any other safety equipment. Ex: a
      * device has been forcedly moved without its actuator(s).
@@ -187,7 +193,9 @@ export const SafetyStatus = TlvBitmap(TlvUInt16, {
      * Protection is activated.
      */
     Protection: BitFlag(2048)
-});
+};
+
+export const SafetyStatus = TlvBitmap(TlvUInt16, SafetyStatusBits);
 
 /**
  * The GoToLiftPercentage command SHALL have the following data fields:
@@ -285,7 +293,7 @@ export namespace WindowCoveringCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
              */
-            configStatus: Attribute(7, ConfigStatus, { persistent: true, default: 3, readAcl: AccessLevel.View }),
+            configStatus: Attribute(7, ConfigStatus, { persistent: true, default: BitFlags(ConfigStatusBits, "Operational", "OnlineReserved"), readAcl: AccessLevel.View }),
 
             /**
              * The OperationalStatus attribute keeps track of currently ongoing

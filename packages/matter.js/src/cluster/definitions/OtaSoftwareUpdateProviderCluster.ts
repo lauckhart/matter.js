@@ -15,7 +15,8 @@ import { TlvArray } from "../../tlv/TlvArray.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This data type is derived from enum8.
+ * See Section 11.19.3.2, “Querying the OTA Provider” for the semantics of
+ * these values.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.1
  */
@@ -43,8 +44,6 @@ export const QueryImageResponseRequest = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.3
  */
 export const enum DownloadProtocolEnum {
@@ -73,7 +72,9 @@ export const QueryImageRequest = TlvObject({
 });
 
 /**
- * This data type is derived from enum8.
+ * See Section 11.19.3.6, “Applying a software update” for the semantics of the
+ * values. This enumeration is used in the Action field of the
+ * ApplyUpdateResponse command. See (Section 11.19.6.5.4.1, “Action Field”).
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.2
  */

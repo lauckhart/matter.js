@@ -248,7 +248,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "HardwareFaultEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.11.4.1" },
 
             children: [
@@ -268,7 +267,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "RadioFaultEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.11.4.2" },
 
             children: [
@@ -284,7 +282,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "NetworkFaultEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.11.4.3" },
 
             children: [
@@ -297,7 +294,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "InterfaceTypeEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.11.4.4" },
 
             children: [
@@ -311,7 +307,6 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "BootReasonEnum", type: "enum8", conformance: "M",
-            details: "This data type is derived from enum8.",
             xref: { document: "core", section: "11.11.4.5" },
 
             children: [

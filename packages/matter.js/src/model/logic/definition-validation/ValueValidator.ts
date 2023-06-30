@@ -82,55 +82,66 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             return;
         }
 
-        if (this.model.default == undefined) {
+        let def = this.model.default;
+        if (def == undefined) {
             return;
         }
 
-        // Special "reference" object referencing another field by name
-        if (typeof this.model.default == "object" && this.model.default.reference) {
-            const reference = this.model.default.reference;
-            const other = this.model.parent?.member(reference);
-            if (!other) {
-                this.error("MEMBER_UNKNOWN", `Default value references unknown property ${reference}`);
-            }
+        if (this.validateSpecialDefault(metatype, def)) {
             return;
-        }
-
-        // If the default value is a string referencing another field, convert
-        // to a reference object
-        if (typeof this.model.default == "string") {
-            const other = this.model.parent?.member(this.model.default);
-            if (other) {
-                this.model.default = { reference: other.name };
-                return;
-            }
         }
 
         // Convert value to proper type if possible
-        const value = Metatype.cast(metatype, this.model.default);
-        if (value == Metatype.Invalid) {
-            this.error("INVALID_VALUE", `Value "${this.model.default}" is not a ${metatype}`);
+        def = Metatype.cast(metatype, def);
+        if (def == Metatype.Invalid) {
+            this.error("INVALID_VALUE", `Value "${def}" is not a ${metatype}`);
             return;
         }
-        this.model.default = value;
 
         // For bitmaps and enums, convert string name to numeric ID
         if (metatype == Metatype.bitmap || metatype == Metatype.enum) {
-            if (typeof value == "string") {
-                let member = this.model.member(value);
+            if (typeof def == "string") {
+                let member = this.model.member(def);
 
                 // If the name didn't match, try case-insensitive search
                 if (!member) {
-                    member = this.model.member(model => model.name.toLowerCase() == value.toLowerCase());
+                    member = this.model.member(model => model.name.toLowerCase() == def.toLowerCase());
                 }
 
                 if (member && member.effectiveId != undefined) {
-                    this.model.default = member.effectiveId;
+                    def = member.effectiveId;
                 } else {
-                    this.error("INVALID_ENTRY", `"${value}" is not in ${metatype} ${this.model.type}`);
+                    this.error("INVALID_ENTRY", `"${def}" is not in ${metatype} ${this.model.type}`);
                 }
             }
         }
+
+        // If default bitmap values are numeric, convert them to a flag array
+        if (metatype == Metatype.bitmap && typeof def == "number") {
+            const flags = Array<string>();
+
+            for (let bit = 1; bit <= def; bit <<= 1) {
+                if (def & bit) {
+                    const flag = this.model.member(bit);
+                    if (flag) {
+                        flags.push(flag.name);
+                    } else {
+                        // Do not count as an error if there are a lot of high
+                        // bits set.  The spec often specifies masks as
+                        // inclusive of undefined values
+                        if (!(def & 0xff00)) {
+                            this.error("INVALID_DEFAULT_BIT", `Bitmap default bit ${Math.log2(bit)} is not defined`);
+                        }
+                    }
+                }
+            }
+
+            if (flags.length) {
+                def = flags;
+            }
+        }
+
+        this.model.default = def;
     }
 
     private validateEntries() {
@@ -187,6 +198,43 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                     this.error("OVERLY_TYPED_ARRAY", `array element with multiple entry types`);
                 }
                 break;
+        }
+    }
+
+    private validateSpecialDefault(metatype: Metatype, def: any) {
+        // Special "reference" object referencing another field by name
+        if (typeof def == "object" && def.reference) {
+            const reference = def.reference;
+            const other = this.model.parent?.member(reference);
+            if (!other) {
+                this.error("MEMBER_UNKNOWN", `Default value references unknown property ${reference}`);
+            }
+            return true;
+        }
+
+        // If the default value is a string referencing another field, convert
+        // to a reference object
+        if (typeof def == "string") {
+            const other = this.model.parent?.member(def);
+            if (other) {
+                this.model.default = { reference: other.name };
+                return true;
+            }
+        }
+
+        // If the default value for bitmaps is an array, treat as a set of
+        // flag names or IDs; validate as such
+        if (metatype == Metatype.bitmap && Array.isArray(def)) {
+            for (const value of def) {
+                if (typeof value != "string" && typeof value != "number") {
+                    this.error("INVALID_BIT_FLAG", `Default bit flag ${def} is not a string or number`);
+                    continue;
+                }
+                if (!this.model.member(value)) {
+                    this.error("UNRESOLVED_BIT_FLAG", `Default bit flag ${def} is not a valid bit value`);
+                }
+            }
+            return true;
         }
     }
 }
