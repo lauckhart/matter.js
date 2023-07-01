@@ -15,7 +15,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-export const enum ProductFinishEnum {
+export const enum TlvProductFinishEnum {
     Other = 0,
     Matte = 1,
     Satin = 2,
@@ -24,7 +24,7 @@ export const enum ProductFinishEnum {
     Fabric = 5
 };
 
-export const enum ColorEnum {
+export const enum TlvColorEnum {
     Black = 0,
     Navy = 1,
     Green = 2,
@@ -48,28 +48,27 @@ export const enum ColorEnum {
     Gold = 20
 };
 
-export const ProductAppearanceStruct = TlvObject({
-    Finish: TlvField(0, TlvEnum<ProductFinishEnum>()),
-    PrimaryColor: TlvField(1, TlvNullable(TlvEnum<ColorEnum>()))
+export const TlvProductAppearanceStruct = TlvObject({
+    finish: TlvField(0, TlvEnum<TlvProductFinishEnum>()),
+    primaryColor: TlvField(1, TlvNullable(TlvEnum<TlvColorEnum>()))
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
  */
-export const StartUpEvent = TlvObject({ SoftwareVersion: TlvField(0, TlvUInt32) });
+export const TlvStartUpEvent = TlvObject({ softwareVersion: TlvField(0, TlvUInt32) });
 
 /**
- * This event SHALL be generated when there is a change in the Reachable
- * attribute. Its purpose is to provide an indication towards interested
- * parties that the reachability of a bridged device (over the non-Matter
- * network) has changed, so they MAY take appropriate action.
+ * This event SHALL be generated when there is a change in the Reachable attribute. Its purpose is to provide an
+ * indication towards interested parties that the reachability of a bridged device (over the non-Matter network) has
+ * changed, so they MAY take appropriate action.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
  */
-export const ReachableChangedEvent = TlvObject({ ReachableNewValue: TlvField(0, TlvBoolean) });
+export const TlvReachableChangedEvent = TlvObject({ reachableNewValue: TlvField(0, TlvBoolean) });
 
 export namespace BridgedDeviceBasicInformationCluster {
-    export const id = 57;
+    export const id = 0x39;
     export const name = "BridgedDeviceBasicInformation";
     export const revision = 1;
 
@@ -150,14 +149,14 @@ export namespace BridgedDeviceBasicInformationCluster {
              */
             uniqueId: OptionalAttribute(18, TlvString),
 
-            productAppearance: OptionalAttribute(20, ProductAppearanceStruct)
+            productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
         },
 
         events: {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
              */
-            startUp: OptionalEvent(0, EventPriority.Critical, StartUpEvent),
+            startUp: OptionalEvent(0, EventPriority.Critical, TlvStartUpEvent),
 
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
@@ -170,22 +169,15 @@ export namespace BridgedDeviceBasicInformationCluster {
             leave: OptionalEvent(2, EventPriority.Info, TlvNoArguments),
 
             /**
-             * This event SHALL be generated when there is a change in the
-             * Reachable attribute. Its purpose is to provide an indication
-             * towards interested parties that the reachability of a bridged
-             * device (over the non-Matter network) has changed, so they MAY
-             * take appropriate action.
+             * This event SHALL be generated when there is a change in the Reachable attribute. Its purpose is to
+             * provide an indication towards interested parties that the reachability of a bridged device (over the
+             * non-Matter network) has changed, so they MAY take appropriate action.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
              */
-            reachableChanged: Event(3, EventPriority.Info, ReachableChangedEvent)
+            reachableChanged: Event(3, EventPriority.Info, TlvReachableChangedEvent)
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

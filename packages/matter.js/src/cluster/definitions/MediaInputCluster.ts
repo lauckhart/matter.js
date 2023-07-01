@@ -20,7 +20,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.2
  */
-export const enum InputTypeEnum {
+export const enum TlvInputTypeEnum {
     /**
      * Indicates content not coming from a physical input.
      */
@@ -44,68 +44,61 @@ export const enum InputTypeEnum {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.1
  */
-export const InputInfoStruct = TlvObject({
+export const TlvInputInfoStruct = TlvObject({
     /**
      * This SHALL indicate the unique index into the list of Inputs.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.1.1
      */
-    Index: TlvField(0, TlvUInt8),
+    index: TlvField(0, TlvUInt8),
 
     /**
      * This SHALL indicate the type of input
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.1.2
      */
-    InputType: TlvField(1, TlvEnum<InputTypeEnum>()),
+    inputType: TlvField(1, TlvEnum<TlvInputTypeEnum>()),
 
     /**
-     * This SHALL indicate the input name, such as “HDMI 1”. This field may be
-     * blank, but SHOULD be provided when known.
+     * This SHALL indicate the input name, such as “HDMI 1”. This field may be blank, but SHOULD be provided when known.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.1.3
      */
-    Name: TlvField(2, TlvString),
+    name: TlvField(2, TlvString),
 
     /**
-     * This SHALL indicate the user editable input description, such as “Living
-     * room Playstation”. This field may be blank, but SHOULD be provided when
-     * known.
+     * This SHALL indicate the user editable input description, such as “Living room Playstation”. This field may be
+     * blank, but SHOULD be provided when known.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.1.4
      */
-    Description: TlvField(3, TlvString)
+    description: TlvField(3, TlvString)
 });
 
 /**
- * Upon receipt, this SHALL change the media input on the device to the input
- * at a specific index in the Input List.
+ * Upon receipt, this SHALL change the media input on the device to the input at a specific index in the Input List.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.1
  */
-export const SelectInputRequest = TlvObject({
+export const TlvSelectInputRequest = TlvObject({
     /**
-     * This SHALL indicate the index field of the InputInfoStruct from the
-     * InputList attribute in which to change to.
+     * This SHALL indicate the index field of the InputInfoStruct from the InputList attribute in which to change to.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.1.1
      */
-    Index: TlvField(0, TlvUInt8)
+    index: TlvField(0, TlvUInt8)
 });
 
 /**
- * Upon receipt, this SHALL rename the input at a specific index in the Input
- * List. Updates to the input name SHALL appear in the device’s settings menus.
+ * Upon receipt, this SHALL rename the input at a specific index in the Input List. Updates to the input name SHALL
+ * appear in the device’s settings menus.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.4
  */
-export const RenameInputRequest = TlvObject({
-    Index: TlvField(0, TlvUInt8),
-    Name: TlvField(1, TlvString)
-});
+export const TlvRenameInputRequest = TlvObject({ index: TlvField(0, TlvUInt8), name: TlvField(1, TlvString) });
 
 export namespace MediaInputCluster {
-    export const id = 1287;
+    export const id = 0x507;
     export const name = "MediaInput";
     export const revision = 1;
 
@@ -125,11 +118,10 @@ export namespace MediaInputCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.1
              */
-            inputList: Attribute(0, TlvArray(InputInfoStruct), { readAcl: AccessLevel.View }),
+            inputList: Attribute(0, TlvArray(TlvInputInfoStruct), { readAcl: AccessLevel.View }),
 
             /**
-             * This field contains the value of the index field of the
-             * currently selected InputInfoStruct.
+             * This field contains the value of the index field of the currently selected InputInfoStruct.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.2
              */
@@ -138,16 +130,15 @@ export namespace MediaInputCluster {
 
         commands: {
             /**
-             * Upon receipt, this SHALL change the media input on the device to
-             * the input at a specific index in the Input List.
+             * Upon receipt, this SHALL change the media input on the device to the input at a specific index in the
+             * Input List.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.1
              */
-            selectInput: Command(0, SelectInputRequest, 0, TlvNoResponse),
+            selectInput: Command(0, TlvSelectInputRequest, 0, TlvNoResponse),
 
             /**
-             * Upon receipt, this SHALL display the active status of the input
-             * list on screen.
+             * Upon receipt, this SHALL display the active status of the input list on screen.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.2
              */
@@ -165,13 +156,12 @@ export namespace MediaInputCluster {
     const NameUpdates = {
         commands: {
             /**
-             * Upon receipt, this SHALL rename the input at a specific index in
-             * the Input List. Updates to the input name SHALL appear in the
-             * device’s settings menus.
+             * Upon receipt, this SHALL rename the input at a specific index in the Input List. Updates to the input
+             * name SHALL appear in the device’s settings menus.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.4
              */
-            renameInput: Command(3, RenameInputRequest, 3, TlvNoResponse)
+            renameInput: Command(3, TlvRenameInputRequest, 3, TlvNoResponse)
         }
     };
 
@@ -181,9 +171,6 @@ export namespace MediaInputCluster {
         revision,
         features: featureMap,
         supportedFeatures: { nameUpdates: true },
-        elements: [
-            Base,
-            NameUpdates
-        ]
+        elements: [ Base, NameUpdates ]
     });
 };

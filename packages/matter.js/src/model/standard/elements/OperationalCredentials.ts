@@ -17,7 +17,7 @@ Matter.children.push({
 
     children: [
         {
-            tag: "attribute", name: "NoCs", id: 0x0, type: "list", access: "R A", conformance: "M",
+            tag: "attribute", name: "NoCs", id: 0x0, type: "list", access: "R F A", conformance: "M",
             constraint: "max SupportedFabrics", quality: "N C",
             details: "This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct.",
             xref: { document: "core", section: "11.17.5.1" },
@@ -66,7 +66,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AttestationRequest", id: 0x0, access: "R A", conformance: "M",
+            tag: "command", name: "AttestationRequest", id: 0x0, access: "A", conformance: "M",
             direction: "request", response: "AttestationResponse",
             details: "This command SHALL be generated to request the Attestation Information, in the form of an " +
                      "AttestationResponse Command. If the AttestationNonce that is provided in the command is malformed, a",
@@ -104,7 +104,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "CertificateChainRequest", id: 0x2, access: "R A", conformance: "M",
+            tag: "command", name: "CertificateChainRequest", id: 0x2, access: "A", conformance: "M",
             direction: "request", response: "CertificateChainResponse",
             details: "If the CertificateType is not a valid value per CertificateChainTypeEnum then the command SHALL " +
                      "fail with a Status Code of INVALID_COMMAND.",
@@ -135,7 +135,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "CsrRequest", id: 0x4, access: "R A", conformance: "M", direction: "request",
+            tag: "command", name: "CsrRequest", id: 0x4, access: "A", conformance: "M", direction: "request",
             response: "CsrResponse",
             details: "This command SHALL be generated to execute the Node Operational CSR Procedure and subsequently " +
                      "return the NOCSR Information, in the form of a CSRResponse Command.",
@@ -167,7 +167,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddNoc", id: 0x6, access: "R A", conformance: "M", direction: "request",
+            tag: "command", name: "AddNoc", id: 0x6, access: "A", conformance: "M", direction: "request",
             response: "NocResponse",
             details: "This command SHALL add a new NOC chain to the device and commission a new Fabric association upon " +
                      "successful validation of all arguments and preconditions.",
@@ -204,7 +204,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "UpdateNoc", id: 0x7, access: "R F A", conformance: "M", direction: "request",
+            tag: "command", name: "UpdateNoc", id: 0x7, access: "F A", conformance: "M", direction: "request",
             response: "NocResponse",
             details: "This command SHALL replace the NOC and optional associated ICAC (if present) scoped under the " +
                      "accessing fabric upon successful validation of all arguments and preconditions. The new value SHALL " +
@@ -256,7 +256,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "UpdateFabricLabel", id: 0x9, access: "R F A", conformance: "M",
+            tag: "command", name: "UpdateFabricLabel", id: 0x9, access: "F A", conformance: "M",
             direction: "request", response: "NocResponse",
             details: "This command SHALL be used by an Administrator to set the user-visible Label field for a given " +
                      "Fabric, as reflected by entries in the Fabrics attribute.",
@@ -271,8 +271,8 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "RemoveFabric", id: 0xa, access: "R A", conformance: "M",
-            direction: "request", response: "NocResponse",
+            tag: "command", name: "RemoveFabric", id: 0xa, access: "A", conformance: "M", direction: "request",
+            response: "NocResponse",
             details: "This command is used by Administrators to remove a given Fabric and delete all associated " +
                      "fabric-scoped data.",
             xref: { document: "core", section: "11.17.6.12" },
@@ -286,7 +286,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddTrustedRootCertificate", id: 0xb, access: "R A", conformance: "M",
+            tag: "command", name: "AddTrustedRootCertificate", id: 0xb, access: "A", conformance: "M",
             direction: "request", response: "status",
             details: "This command SHALL add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding " +
                      "representation, to the TrustedRootCertificates Attribute list and SHALL ensure the next AddNOC " +
@@ -339,7 +339,7 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "Noc", id: 0x1, type: "octstr", access: "R S", conformance: "M",
+                    tag: "datatype", name: "Noc", id: 0x1, type: "octstr", access: "S", conformance: "M",
                     constraint: "max 400", quality: "X",
                     details: "This field SHALL contain the NOC for the struct’s associated fabric, encoded using Matter " +
                              "Certificate Encoding.",

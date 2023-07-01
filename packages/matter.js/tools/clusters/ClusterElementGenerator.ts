@@ -22,7 +22,7 @@ export class ClusterElementGenerator {
         const block = this.file.definitions.expressions(`const ${name} = {`, `}`);
         const mandatory = new Set(elements.mandatory);
 
-        this.defineTypedElements(AttributeModel, elements, block, model => {
+        this.defineTypedElements(AttributeModel, elements, block, (model, add) => {
             if (model.base instanceof AttributeModel && model.base.global) {
                 return;
             }
@@ -43,43 +43,44 @@ export class ClusterElementGenerator {
     
             const factory = factoryParts.join("");
             this.file.addImport("cluster/Cluster", factory);
-    
-            const options = {} as { [name: string]: any };
-            if (model.quality.scene) {
-                options.scene = true;
-            }
-            if (model.quality.nonvolatile) {
-                options.persistent = true;
-            }
-            if (model.quality.changesOmitted) {
-                options.omitChanges = true;
-            }
 
             const tlvType = this.tlv.reference(model);
+
+            const block = add(factory);
+            block.atom(model.id);
+            block.atom(tlvType);
+    
+            const options = block.expressions("{", "}");
+            if (model.quality.scene) {
+                options.atom("scene", true);
+            }
+            if (model.quality.nonvolatile) {
+                options.atom("persistent", true);;
+            }
+            if (model.quality.changesOmitted) {
+                options.atom("omitChanges", true);
+            }
 
             // TODO - don't currently have a way to express "this field should
             // default to the value of another field" as indicated by
             // model.default.reference
             const def = this.createDefaultValue(model, tlvType);
             if (def !== undefined) {
-                options.default = def;
+                options.value(def, "default: ");
             }
             if (model.access.readPriv) {
-                options.readAcl = serialize.asIs(this.mapPrivilege(model.access.readPriv));
+                options.atom("readAcl", this.mapPrivilege(model.access.readPriv));
             }
             if (model.access.writePriv) {
-                options.writeAcl = serialize.asIs(this.mapPrivilege(model.access.writePriv));
+                options.atom("writeAcl", this.mapPrivilege(model.access.writePriv));
             }
-    
-            const args = [ model.id, tlvType ];
-            if (Object.keys(options).length) {
-                args.push(serialize(options)!);
+
+            if (!options.length) {
+                options.remove();
             }
-    
-            return `${factory}(${args.join(", ")})`;
         });
     
-        this.defineTypedElements(CommandModel, elements, block, model => {
+        this.defineTypedElements(CommandModel, elements, block, (model, add) => {
             if (!model.isRequest) {
                 return;
             }
@@ -91,31 +92,30 @@ export class ClusterElementGenerator {
                 factory = "OptionalCommand";
             }
             this.file.addImport("cluster/Cluster", factory);
-    
-            let responseType;
-            let responseId;
-    
+
+            const block = add(factory);
+            block.atom(model.id);
+            block.atom(this.tlv.reference(model));
+
             // Note - we end up mapping "status" response type to TlvNoResponse.
             // Technically "no response" and "status response" are different things
             // but there's currently only a single place in the specification where
             // it makes a difference and neither we nor CHIP implement it yet
+            let responseModel;
             if (model.response && model.response != "status") {
-                const responseModel = this.cluster.get(CommandModel, model.response);
-                if (responseModel) {
-                    responseId = responseModel.id;
-                    responseType = this.tlv.reference(responseModel);
-                }
+                responseModel = this.cluster.get(CommandModel, model.response);
             }
-            if (!responseType) {
+            if (responseModel) {
+                block.atom(responseModel.id);
+                block.atom(this.tlv.reference(responseModel));
+            } else {
                 this.file.addImport("cluster/Cluster", "TlvNoResponse");
-                responseId = model.id;
-                responseType = "TlvNoResponse";
+                block.atom(model.id);
+                block.atom("TlvNoResponse");
             }
-    
-            return `${factory}(${model.id}, ${this.tlv.reference(model)}, ${responseId}, ${responseType})`;
         });
-    
-        this.defineTypedElements(EventModel, elements, block, model => {
+
+        this.defineTypedElements(EventModel, elements, block, (model, add) => {
             let factory;
             if (mandatory.has(model)) {
                 factory = "Event";
@@ -126,8 +126,11 @@ export class ClusterElementGenerator {
             this.file.addImport("cluster/Cluster", "EventPriority");
     
             const priority = camelize(model.priority ?? EventElement.Priority.Debug);
-    
-            return `${factory}(${model.id}, EventPriority.${priority}, ${this.tlv.reference(model)})`;
+
+            const block = add(factory);
+            block.atom(model.id);
+            block.atom(`EventPriority.${priority}`);
+            block.atom(this.tlv.reference(model));
         });
     }
 
@@ -140,28 +143,21 @@ export class ClusterElementGenerator {
         type: T,
         elements: ElementVariance,
         target: Block,
-        define: (model: InstanceType<T>) => string | undefined
+        define: (model: InstanceType<T>, add: (factory: string) => Block) => void
     ) {
         const typed = [ ...elements.optional, ...elements.mandatory ]
             .filter(e => e instanceof type && !e.deprecated)
             .sort((a, b) => a.id! - b.id!)
 
-        const definitions = Array<{ model: Model, body: string }>();
+        const definitions = target.expressions(`${type.Tag}s: {`, "}");
         for (const model of typed) {
-            const body = define(model as InstanceType<T>);
-            
-            if (body) {
-                definitions.push({ model, body });
-            }
+            define(model as InstanceType<T>, factory =>
+                definitions.expressions(`${camelize(model.name, false)}: ${factory}(`, ")")
+                    .document(model)
+            );
         }
         if (!definitions.length) {
-            return;
-        }
-
-        const elementBlock = target.expressions(`${type.Tag}s: {`, "}");
-        for (const { model, body } of definitions) {
-            elementBlock.atom(camelize(model.name, false), body)
-                .document(model);
+            definitions.remove();
         }
     }
 

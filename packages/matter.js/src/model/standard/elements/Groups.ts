@@ -43,7 +43,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddGroup", id: 0x0, access: "R F M", conformance: "M", direction: "request",
+            tag: "command", name: "AddGroup", id: 0x0, access: "F M", conformance: "M", direction: "request",
             response: "AddGroupResponse",
             details: "The AddGroup command allows a client to add group membership in a particular group for the server " +
                      "endpoint.",
@@ -55,7 +55,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ViewGroup", id: 0x1, access: "R F", conformance: "M", direction: "request",
+            tag: "command", name: "ViewGroup", id: 0x1, access: "F O", conformance: "M", direction: "request",
             response: "ViewGroupResponse",
             details: "The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse " +
                      "command containing the name string for a particular group.",
@@ -64,7 +64,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetGroupMembership", id: 0x2, access: "R F", conformance: "M",
+            tag: "command", name: "GetGroupMembership", id: 0x2, access: "F O", conformance: "M",
             direction: "request", response: "GetGroupMembershipResponse",
             details: "The GetGroupMembership command allows a client to inquire about the group membership of the server " +
                      "endpoint, in a number of ways.",
@@ -80,8 +80,8 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "RemoveGroup", id: 0x3, access: "R F M", conformance: "M",
-            direction: "request", response: "RemoveGroupResponse",
+            tag: "command", name: "RemoveGroup", id: 0x3, access: "F M", conformance: "M", direction: "request",
+            response: "RemoveGroupResponse",
             details: "The RemoveGroup command allows a client to request that the server removes the membership for the " +
                      "server endpoint, if any, in a particular group.",
             xref: { document: "cluster", section: "1.3.7.4" },
@@ -89,7 +89,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "RemoveAllGroups", id: 0x4, access: "R F M", conformance: "M",
+            tag: "command", name: "RemoveAllGroups", id: 0x4, access: "F M", conformance: "M",
             direction: "request", response: "status",
             details: "The RemoveAllGroups command allows a client to direct the server to remove all group associations " +
                      "for the server endpoint.",
@@ -97,7 +97,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddGroupIfIdentifying", id: 0x5, access: "R F M", conformance: "M",
+            tag: "command", name: "AddGroupIfIdentifying", id: 0x5, access: "F M", conformance: "M",
             direction: "request", response: "status",
             details: "The AddGroupIfIdentifying command allows a client to add group membership in a particular group for " +
                      "the server endpoint, on condition that the endpoint is identifying itself. Identifying " +

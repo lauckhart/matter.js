@@ -17,56 +17,52 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2
  */
-export const enum ActionTypeEnum {
+export const enum TlvActionTypeEnum {
     Other = 0,
 
     /**
-     * Can be used to set a static state of the associated endpoints (typically
-     * using InstantAction or InstantActionWithTransition), or to bring these
-     * endpoints into a more dynamic state (typically using StartAction), where
-     * the endpoints would e.g. gradually cycle through certain colors for a
-     * pleasing effect. A voice controller could use "set" (to map to
-     * InstantAction) or "play" (to map to StartAction) to trig
+     * Can be used to set a static state of the associated endpoints (typically using InstantAction or
+     * InstantActionWithTransition), or to bring these endpoints into a more dynamic state (typically using
+     * StartAction), where the endpoints would e.g. gradually cycle through certain colors for a pleasing effect. A
+     * voice controller could use "set" (to map to InstantAction) or "play" (to map to StartAction) to trig
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2.1
      */
     Scene = 1,
 
     /**
-     * Indicates an action which involves a sequence of events/states of the
-     * associated endpoints, such as a wake-up experience.
+     * Indicates an action which involves a sequence of events/states of the associated endpoints, such as a wake-up
+     * experience.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2.2
      */
     Sequence = 2,
 
     /**
-     * Indications an automation (e.g. a motion sensor controlling lights, an
-     * alarm system) which can be
+     * Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can be
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2.3
      */
     Automation = 3,
 
     /**
-     * Indicates some action which the server will execute when a certain
-     * condition (which normally does not happen) is not met.
+     * Indicates some action which the server will execute when a certain condition (which normally does not happen) is
+     * not met.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2.4
      */
     Exception = 4,
 
     /**
-     * Indicates an action that can be triggered (e.g. by InstantAction) to
-     * notify the user.
+     * Indicates an action that can be triggered (e.g. by InstantAction) to notify the user.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2.5
      */
     Notification = 5,
 
     /**
-     * Similar to Notification but with a higher priority (and might override
-     * other endpoint states which Type=Notification would not override).
+     * Similar to Notification but with a higher priority (and might override other endpoint states which
+     * Type=Notification would not override).
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2.6
      */
@@ -76,69 +72,69 @@ export const enum ActionTypeEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.1
  */
-export const CommandBitsBits = {
+export const TlvCommandBitsBits = {
     /**
      * Indicate support for InstantActionWithTransition command
      */
-    InstantActionWithTransition: BitFlag(1),
+    instantActionWithTransition: BitFlag(1),
 
     /**
      * Indicate support for StartAction command
      */
-    StartAction: BitFlag(2),
+    startAction: BitFlag(2),
 
     /**
      * Indicate support for StartActionWithDuration command
      */
-    StartActionWithDuration: BitFlag(3),
+    startActionWithDuration: BitFlag(3),
 
     /**
      * Indicate support for StopAction command
      */
-    StopAction: BitFlag(16),
+    stopAction: BitFlag(16),
 
     /**
      * Indicate support for PauseAction command
      */
-    PauseAction: BitFlag(32),
+    pauseAction: BitFlag(32),
 
     /**
      * Indicate support for PauseActionWithDuration command
      */
-    PauseActionWithDuration: BitFlag(64),
+    pauseActionWithDuration: BitFlag(64),
 
     /**
      * Indicate support for ResumeAction command
      */
-    ResumeAction: BitFlag(128),
+    resumeAction: BitFlag(128),
 
     /**
      * Indicate support for EnableAction command
      */
-    EnableAction: BitFlag(256),
+    enableAction: BitFlag(256),
 
     /**
      * Indicate support for EnableActionWithDuration command
      */
-    EnableActionWithDuration: BitFlag(512),
+    enableActionWithDuration: BitFlag(512),
 
     /**
      * Indicate support for DisableAction command
      */
-    DisableAction: BitFlag(1024),
+    disableAction: BitFlag(1024),
 
     /**
      * Indicate support for DisableActionWithDuration command
      */
-    DisableActionWithDuration: BitFlag(2048)
+    disableActionWithDuration: BitFlag(2048)
 };
 
-export const CommandBits = TlvBitmap(TlvUInt16, CommandBitsBits);
+export const TlvCommandBits = TlvBitmap(TlvUInt16, TlvCommandBitsBits);
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.3
  */
-export const enum ActionStateEnum {
+export const enum TlvActionStateEnum {
     Inactive = 0,
     Active = 1,
     Paused = 2,
@@ -146,95 +142,84 @@ export const enum ActionStateEnum {
 };
 
 /**
- * This data type holds the details of a single action, and contains the data
- * fields below.
+ * This data type holds the details of a single action, and contains the data fields below.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6
  */
-export const ActionStruct = TlvObject({
+export const TlvActionStruct = TlvObject({
     /**
      * This field SHALL provide an unique identifier used to identify an action.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.1
      */
-    ActionId: TlvField(0, TlvUInt16),
+    actionId: TlvField(0, TlvUInt16),
 
     /**
-     * This field SHALL indicate the name (as assigned by the user or
-     * automatically by the server) associated with this action. This can be
-     * used for identifying the action to the user by the client. Example: "my
-     * colorful scene".
+     * This field SHALL indicate the name (as assigned by the user or automatically by the server) associated with this
+     * action. This can be used for identifying the action to the user by the client. Example: "my colorful scene".
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.2
      */
-    Name: TlvField(1, TlvString.bound({ maxLength: 32 })),
+    name: TlvField(1, TlvString.bound({ maxLength: 32 })),
 
     /**
-     * This field SHALL indicate the type of action. The value of Type of an
-     * action, along with its SupportedCommands can be used by the client in
-     * its UX or logic to determine how to present or use such action. See
-     * ActionTypeEnum for details and examples.
+     * This field SHALL indicate the type of action. The value of Type of an action, along with its SupportedCommands
+     * can be used by the client in its UX or logic to determine how to present or use such action. See ActionTypeEnum
+     * for details and examples.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.3
      */
-    Type: TlvField(2, TlvEnum<ActionTypeEnum>()),
+    type: TlvField(2, TlvEnum<TlvActionTypeEnum>()),
 
     /**
-     * This field SHALL provide a reference to the associated endpoint list,
-     * which specifies the endpoints on this Node which will be impacted by
-     * this ActionID.
+     * This field SHALL provide a reference to the associated endpoint list, which specifies the endpoints on this Node
+     * which will be impacted by this ActionID.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.4
      */
-    EndpointListId: TlvField(3, TlvUInt16),
+    endpointListId: TlvField(3, TlvUInt16),
 
     /**
-     * This field is a bitmap which SHALL be used to indicate which of the
-     * cluster’s commands are sup
+     * This field is a bitmap which SHALL be used to indicate which of the cluster’s commands are sup
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.5
      */
-    SupportedCommands: TlvField(4, CommandBits),
+    supportedCommands: TlvField(4, TlvCommandBits),
 
     /**
      * This field SHALL indicate the current state of this action.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.6
      */
-    State: TlvField(5, TlvEnum<ActionStateEnum>())
+    state: TlvField(5, TlvEnum<TlvActionStateEnum>())
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.5
  */
-export const enum EndpointListTypeEnum {
+export const enum TlvEndpointListTypeEnum {
     /**
-     * This value is provided for the case of an endpoint list which is tied
-     * specifically to this action i.e. not independently created by the user.
-     * For Type=Other the Name MAY be empty. A Matter controller would
-     * typically not use this for anything else than just to know which
-     * endpoints would be affected by the action.
+     * This value is provided for the case of an endpoint list which is tied specifically to this action i.e. not
+     * independently created by the user. For Type=Other the Name MAY be empty. A Matter controller would typically not
+     * use this for anything else than just to know which endpoints would be affected by the action.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.5.1
      */
     Other = 0,
 
     /**
-     * Is used for the situation where an endpoint can only be part of one such
-     * rooms (e.g. physical mapping). Using these exposed logical groups, a
-     * Matter controller who has a similar grouping concept can use it to place
-     * each endpoint (bridged device) in the right room automatically, without
-     * user having to redo that setup for each device in each system - both at
-     * first contact and upon later updates to the endpoints (e.g. user adds a
-     * bridged device or creates a new room).
+     * Is used for the situation where an endpoint can only be part of one such rooms (e.g. physical mapping). Using
+     * these exposed logical groups, a Matter controller who has a similar grouping concept can use it to place each
+     * endpoint (bridged device) in the right room automatically, without user having to redo that setup for each
+     * device in each system - both at first contact and upon later updates to the endpoints (e.g. user adds a bridged
+     * device or creates a new room).
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.5.2
      */
     Room = 1,
 
     /**
-     * Is a more general concept where an endpoint can be part of multiple
-     * zones, e.g. a light in the living
+     * Is a more general concept where an endpoint can be part of multiple zones, e.g. a light in the living
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.5.3
      */
@@ -242,23 +227,22 @@ export const enum EndpointListTypeEnum {
 };
 
 /**
- * This data type holds the details of a single endpoint list, which relates to
- * a set of endpoints that have some logical relation, and contains the data
- * fields below.
+ * This data type holds the details of a single endpoint list, which relates to a set of endpoints that have some
+ * logical relation, and contains the data fields below.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.7
  */
-export const EndpointListStruct = TlvObject({
-    EndpointListId: TlvField(0, TlvUInt16),
-    Name: TlvField(1, TlvString.bound({ maxLength: 32 })),
-    Type: TlvField(2, TlvEnum<EndpointListTypeEnum>()),
+export const TlvEndpointListStruct = TlvObject({
+    endpointListId: TlvField(0, TlvUInt16),
+    name: TlvField(1, TlvString.bound({ maxLength: 32 })),
+    type: TlvField(2, TlvEnum<TlvEndpointListTypeEnum>()),
 
     /**
      * This field SHALL provide a list of endpoint numbers.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.7.1
      */
-    Endpoints: TlvField(3, TlvArray(TlvUInt16))
+    endpoints: TlvField(3, TlvArray(TlvUInt16))
 });
 
 /**
@@ -266,9 +250,9 @@ export const EndpointListStruct = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.1
  */
-export const InstantActionRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32)
+export const TlvInstantActionRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32)
 });
 
 /**
@@ -276,16 +260,16 @@ export const InstantActionRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.2
  */
-export const InstantActionWithTransitionRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32),
+export const TlvInstantActionWithTransitionRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32),
 
     /**
      * This field SHALL indicate the transition time in 1/10th of seconds.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.2.1
      */
-    TransitionTime: TlvField(2, TlvUInt16)
+    transitionTime: TlvField(2, TlvUInt16)
 });
 
 /**
@@ -293,9 +277,9 @@ export const InstantActionWithTransitionRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.3
  */
-export const StartActionRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32)
+export const TlvStartActionRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32)
 });
 
 /**
@@ -303,16 +287,16 @@ export const StartActionRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.4
  */
-export const StartActionWithDurationRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32),
+export const TlvStartActionWithDurationRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32),
 
     /**
      * This field SHALL indicate the requested duration in seconds.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.4.1
      */
-    Duration: TlvField(2, TlvUInt32)
+    duration: TlvField(2, TlvUInt32)
 });
 
 /**
@@ -320,9 +304,9 @@ export const StartActionWithDurationRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.5
  */
-export const StopActionRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32)
+export const TlvStopActionRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32)
 });
 
 /**
@@ -330,9 +314,9 @@ export const StopActionRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.6
  */
-export const PauseActionRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32)
+export const TlvPauseActionRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32)
 });
 
 /**
@@ -340,10 +324,10 @@ export const PauseActionRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.7
  */
-export const PauseActionWithDurationRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32),
-    Duration: TlvField(2, TlvUInt32)
+export const TlvPauseActionWithDurationRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32),
+    duration: TlvField(2, TlvUInt32)
 });
 
 /**
@@ -351,9 +335,9 @@ export const PauseActionWithDurationRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.8
  */
-export const ResumeActionRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32)
+export const TlvResumeActionRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32)
 });
 
 /**
@@ -361,9 +345,9 @@ export const ResumeActionRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.9
  */
-export const EnableActionRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32)
+export const TlvEnableActionRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32)
 });
 
 /**
@@ -371,10 +355,10 @@ export const EnableActionRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.10
  */
-export const EnableActionWithDurationRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32),
-    Duration: TlvField(2, TlvUInt32)
+export const TlvEnableActionWithDurationRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32),
+    duration: TlvField(2, TlvUInt32)
 });
 
 /**
@@ -382,9 +366,9 @@ export const EnableActionWithDurationRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.11
  */
-export const DisableActionRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32)
+export const TlvDisableActionRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32)
 });
 
 /**
@@ -392,100 +376,98 @@ export const DisableActionRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.12
  */
-export const DisableActionWithDurationRequest = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvOptionalField(1, TlvUInt32),
-    Duration: TlvField(2, TlvUInt32)
+export const TlvDisableActionWithDurationRequest = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvOptionalField(1, TlvUInt32),
+    duration: TlvField(2, TlvUInt32)
 });
 
 /**
- * This event SHALL be generated when there is a change in the State of an
- * ActionID during the execution of an action and the most recent command using
- * that ActionID used an InvokeID data field.
+ * This event SHALL be generated when there is a change in the State of an ActionID during the execution of an action
+ * and the most recent command using that ActionID used an InvokeID data field.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.1
  */
-export const StateChangedEvent = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
+export const TlvStateChangedEvent = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
 
     /**
-     * This field SHALL be set to the InvokeID which was provided to the most
-     * recent command referencing this ActionID.
+     * This field SHALL be set to the InvokeID which was provided to the most recent command referencing this ActionID.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.1.1
      */
-    InvokeId: TlvField(1, TlvUInt32),
+    invokeId: TlvField(1, TlvUInt32),
 
     /**
      * This field SHALL be set to state that the action has changed to.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.1.2
      */
-    NewState: TlvField(2, TlvEnum<ActionStateEnum>())
+    newState: TlvField(2, TlvEnum<TlvActionStateEnum>())
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.4
  */
-export const enum ActionErrorEnum {
+export const enum TlvActionErrorEnum {
     Unknown = 0,
     Interrupted = 1
 };
 
 /**
- * This event SHALL be generated when there is some error which prevents the
- * action from its normal planned execution and the most recent command using
- * that ActionID used an InvokeID data field.
+ * This event SHALL be generated when there is some error which prevents the action from its normal planned execution
+ * and the most recent command using that ActionID used an InvokeID data field.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.2
  */
-export const ActionFailedEvent = TlvObject({
-    ActionId: TlvField(0, TlvUInt16),
-    InvokeId: TlvField(1, TlvUInt32),
-    NewState: TlvField(2, TlvEnum<ActionStateEnum>()),
+export const TlvActionFailedEvent = TlvObject({
+    actionId: TlvField(0, TlvUInt16),
+    invokeId: TlvField(1, TlvUInt32),
+    newState: TlvField(2, TlvEnum<TlvActionStateEnum>()),
 
     /**
-     * This field SHALL be set to indicate the reason for non-successful
-     * progress of the action.
+     * This field SHALL be set to indicate the reason for non-successful progress of the action.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.2.1
      */
-    Error: TlvField(3, TlvEnum<ActionErrorEnum>())
+    error: TlvField(3, TlvEnum<TlvActionErrorEnum>())
 });
 
 export namespace ActionsCluster {
-    export const id = 37;
+    export const id = 0x25;
     export const name = "Actions";
     export const revision = 1;
 
     const Base = {
         attributes: {
             /**
-             * The ActionList attribute holds the list of actions. Each entry
-             * SHALL have an unique ActionID, and its EndpointListID SHALL
-             * exist in the EndpointLists attribute.
+             * The ActionList attribute holds the list of actions. Each entry SHALL have an unique ActionID, and its
+             * EndpointListID SHALL exist in the EndpointLists attribute.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.1
              */
-            actionList: Attribute(0, TlvArray(ActionStruct), { readAcl: AccessLevel.View }),
+            actionList: Attribute(0, TlvArray(TlvActionStruct), { readAcl: AccessLevel.View }),
 
             /**
-             * The EndpointLists attribute holds the list of endpoint lists.
-             * Each entry SHALL have an unique EndpointListID.
+             * The EndpointLists attribute holds the list of endpoint lists. Each entry SHALL have an unique
+             * EndpointListID.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.2
              */
-            endpointLists: Attribute(1, TlvArray(EndpointListStruct), { readAcl: AccessLevel.View }),
+            endpointLists: Attribute(1, TlvArray(TlvEndpointListStruct), { readAcl: AccessLevel.View }),
 
             /**
-             * The SetupURL attribute (when provided) SHALL indicate a URL; its
-             * syntax SHALL follow the syntax as specified in RFC 3986, max.
-             * 512 ASCII characters. The location referenced by this URL SHALL
-             * provide additional information for the actions provided:
+             * The SetupURL attribute (when provided) SHALL indicate a URL; its syntax SHALL follow the syntax as
+             * specified in RFC 3986, max. 512 ASCII characters. The location referenced by this URL SHALL provide
+             * additional information for the actions provided:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.3
              */
-            setupUrl: OptionalAttribute(2, TlvString.bound({ maxLength: 512 }), { default: "empty", readAcl: AccessLevel.View })
+            setupUrl: OptionalAttribute(
+                2,
+                TlvString.bound({ maxLength: 512 }),
+                { default: "empty", readAcl: AccessLevel.View }
+            )
         },
 
         commands: {
@@ -494,113 +476,104 @@ export namespace ActionsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.1
              */
-            instantAction: OptionalCommand(0, InstantActionRequest, 0, TlvNoResponse),
+            instantAction: OptionalCommand(0, TlvInstantActionRequest, 0, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.2
              */
-            instantActionWithTransition: OptionalCommand(1, InstantActionWithTransitionRequest, 1, TlvNoResponse),
+            instantActionWithTransition: OptionalCommand(1, TlvInstantActionWithTransitionRequest, 1, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.3
              */
-            startAction: OptionalCommand(2, StartActionRequest, 2, TlvNoResponse),
+            startAction: OptionalCommand(2, TlvStartActionRequest, 2, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.4
              */
-            startActionWithDuration: OptionalCommand(3, StartActionWithDurationRequest, 3, TlvNoResponse),
+            startActionWithDuration: OptionalCommand(3, TlvStartActionWithDurationRequest, 3, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.5
              */
-            stopAction: OptionalCommand(4, StopActionRequest, 4, TlvNoResponse),
+            stopAction: OptionalCommand(4, TlvStopActionRequest, 4, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.6
              */
-            pauseAction: OptionalCommand(5, PauseActionRequest, 5, TlvNoResponse),
+            pauseAction: OptionalCommand(5, TlvPauseActionRequest, 5, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.7
              */
-            pauseActionWithDuration: OptionalCommand(6, PauseActionWithDurationRequest, 6, TlvNoResponse),
+            pauseActionWithDuration: OptionalCommand(6, TlvPauseActionWithDurationRequest, 6, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.8
              */
-            resumeAction: OptionalCommand(7, ResumeActionRequest, 7, TlvNoResponse),
+            resumeAction: OptionalCommand(7, TlvResumeActionRequest, 7, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.9
              */
-            enableAction: OptionalCommand(8, EnableActionRequest, 8, TlvNoResponse),
+            enableAction: OptionalCommand(8, TlvEnableActionRequest, 8, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.10
              */
-            enableActionWithDuration: OptionalCommand(9, EnableActionWithDurationRequest, 9, TlvNoResponse),
+            enableActionWithDuration: OptionalCommand(9, TlvEnableActionWithDurationRequest, 9, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.11
              */
-            disableAction: OptionalCommand(10, DisableActionRequest, 10, TlvNoResponse),
+            disableAction: OptionalCommand(10, TlvDisableActionRequest, 10, TlvNoResponse),
 
             /**
              * This command SHALL have the following data fields:
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.12
              */
-            disableActionWithDuration: OptionalCommand(11, DisableActionWithDurationRequest, 11, TlvNoResponse)
+            disableActionWithDuration: OptionalCommand(11, TlvDisableActionWithDurationRequest, 11, TlvNoResponse)
         },
 
         events: {
             /**
-             * This event SHALL be generated when there is a change in the
-             * State of an ActionID during the execution of an action and the
-             * most recent command using that ActionID used an InvokeID data
-             * field.
+             * This event SHALL be generated when there is a change in the State of an ActionID during the execution of
+             * an action and the most recent command using that ActionID used an InvokeID data field.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.1
              */
-            stateChanged: Event(0, EventPriority.Info, StateChangedEvent),
+            stateChanged: Event(0, EventPriority.Info, TlvStateChangedEvent),
 
             /**
-             * This event SHALL be generated when there is some error which
-             * prevents the action from its normal planned execution and the
-             * most recent command using that ActionID used an InvokeID data
-             * field.
+             * This event SHALL be generated when there is some error which prevents the action from its normal planned
+             * execution and the most recent command using that ActionID used an InvokeID data field.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.2
              */
-            actionFailed: Event(1, EventPriority.Info, ActionFailedEvent)
+            actionFailed: Event(1, EventPriority.Info, TlvActionFailedEvent)
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

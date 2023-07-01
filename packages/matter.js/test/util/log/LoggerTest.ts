@@ -141,6 +141,27 @@ describe("Logger", () => {
         });
     });
 
+    describe("nesting", () => {
+        it("nests once", () => {
+            Logger.nest(() => {
+                assert.match(logTestLine()!.log, /⎸ test/);
+            });
+        });
+
+        it("nests twice", () => {
+            Logger.nest(() => {
+                Logger.nest(() => {
+                    assert.match(logTestLine()!.log, /⎸   test/);
+                });
+            });
+        });
+
+        it("unnests", () => {
+            Logger.nest(() => {});
+            assert.equal(logTestLine()!.log.indexOf("⎸"), -1);
+        })
+    })
+
     describe("plainFormat", () => {
         it("formats lines correctly", () => {
             const result = logTestLine();

@@ -278,6 +278,7 @@ export namespace MergeModels {
             "conformance": [ "local", "spec", "chip" ],
             "constraint": [ "local", "spec", "chip" ],
             "quality": [ "local", "spec", "chip" ],
+            "access": [ "local", "spec", "chip" ],
 
             // Prefer spec for element names
             "name": [ "local", "spec", "chip" ],

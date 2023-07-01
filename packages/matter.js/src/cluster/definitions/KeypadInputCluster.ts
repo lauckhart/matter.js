@@ -12,43 +12,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-/**
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.4.1
- */
-export const enum StatusEnum {
-    /**
-     * Command succeeded
-     */
-    Success = 0,
-
-    /**
-     * Command failed: Key code is not supported.
-     */
-    UnsupportedKey = 1,
-
-    /**
-     * Command failed: Requested key code is invalid in the context of the
-     * responder’s current state.
-     */
-    InvalidKeyInCurrentState = 2
-};
-
-/**
- * This command SHALL be generated in response to a SendKey command. The data
- * for this command SHALL be as follows:
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
- */
-export const SendKeyResponseRequest = TlvObject({
-    /**
-     * This SHALL indicate the status of the command.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2.1
-     */
-    Status: TlvField(0, TlvEnum<StatusEnum>())
-});
-
-export const enum CecKeyCode {
+export const enum TlvCecKeyCode {
     Select = 0,
     Up = 1,
     Down = 2,
@@ -142,17 +106,51 @@ export const enum CecKeyCode {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
  */
-export const SendKeyRequest = TlvObject({
+export const TlvSendKeyRequest = TlvObject({
     /**
      * This SHALL indicate the key code to process.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1.1
      */
-    KeyCode: TlvField(0, TlvEnum<CecKeyCode>())
+    keyCode: TlvField(0, TlvEnum<TlvCecKeyCode>())
+});
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.4.1
+ */
+export const enum TlvStatusEnum {
+    /**
+     * Command succeeded
+     */
+    Success = 0,
+
+    /**
+     * Command failed: Key code is not supported.
+     */
+    UnsupportedKey = 1,
+
+    /**
+     * Command failed: Requested key code is invalid in the context of the responder’s current state.
+     */
+    InvalidKeyInCurrentState = 2
+};
+
+/**
+ * This command SHALL be generated in response to a SendKey command. The data for this command SHALL be as follows:
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
+ */
+export const TlvSendKeyResponseRequest = TlvObject({
+    /**
+     * This SHALL indicate the status of the command.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2.1
+     */
+    status: TlvField(0, TlvEnum<TlvStatusEnum>())
 });
 
 export namespace KeypadInputCluster {
-    export const id = 1289;
+    export const id = 0x509;
     export const name = "KeypadInput";
     export const revision = 1;
 
@@ -182,20 +180,19 @@ export namespace KeypadInputCluster {
     const Base = {
         commands: {
             /**
-             * Upon receipt, this SHALL process a keycode as input to the media
-             * device.
+             * Upon receipt, this SHALL process a keycode as input to the media device.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
              */
-            sendKey: Command(0, SendKeyRequest, 1, SendKeyResponseRequest),
+            sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponseRequest),
 
             /**
-             * This command SHALL be generated in response to a SendKey
-             * command. The data for this command SHALL be as follows:
+             * This command SHALL be generated in response to a SendKey command. The data for this command SHALL be as
+             * follows:
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
              */
-            sendKeyResponse: Command(1, SendKeyResponseRequest, 1, TlvNoResponse)
+            sendKeyResponse: Command(1, TlvSendKeyResponseRequest, 1, TlvNoResponse)
         }
     };
 
@@ -204,11 +201,7 @@ export namespace KeypadInputCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: {
-            navigationKeyCodes: true,
-            locationKeys: true,
-            numberKeys: true
-        },
+        supportedFeatures: { navigationKeyCodes: true, locationKeys: true, numberKeys: true },
         elements: [ Base ]
     });
 };

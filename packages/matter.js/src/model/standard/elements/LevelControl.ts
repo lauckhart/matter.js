@@ -94,7 +94,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OnOffTransitionTime", id: 0x10, type: "uint16", access: "RW",
+            tag: "attribute", name: "OnOffTransitionTime", id: 0x10, type: "uint16", access: "RW VO",
             conformance: "O",
             details: "The OnOffTransitionTime attribute represents the time taken to move to or from the target level " +
                      "when On or Off commands are received by an On/Off cluster on the same endpoint. It is specified in " +
@@ -103,7 +103,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OnLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M",
+            tag: "attribute", name: "OnLevel", id: 0x11, type: "uint8", access: "RW VO", conformance: "M",
             constraint: "MinLevel to MaxLevel", default: null, quality: "X",
             details: "The OnLevel attribute determines the value that the CurrentLevel attribute is set to when the OnOff " +
                      "attribute of an On/Off cluster on the same endpoint is set to TRUE, as a result of processing an " +
@@ -113,7 +113,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OnTransitionTime", id: 0x12, type: "uint16", access: "RW",
+            tag: "attribute", name: "OnTransitionTime", id: 0x12, type: "uint16", access: "RW VO",
             conformance: "O", default: null, quality: "X",
             details: "The OnTransitionTime attribute represents the time taken to move the current level from the minimum " +
                      "level to the maximum level when an On command is received by an On/Off cluster on the same " +
@@ -123,7 +123,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OffTransitionTime", id: 0x13, type: "uint16", access: "RW",
+            tag: "attribute", name: "OffTransitionTime", id: 0x13, type: "uint16", access: "RW VO",
             conformance: "O", default: null, quality: "X",
             details: "The OffTransitionTime attribute represents the time taken to move the current level from the " +
                      "maximum level to the minimum level when an Off command is received by an On/Off cluster on the same " +
@@ -133,15 +133,15 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "DefaultMoveRate", id: 0x14, type: "uint8", access: "RW", conformance: "O",
-            quality: "X",
+            tag: "attribute", name: "DefaultMoveRate", id: 0x14, type: "uint8", access: "RW VO",
+            conformance: "O", quality: "X",
             details: "The DefaultMoveRate attribute determines the movement rate, in units per second, when a Move " +
                      "command is received with a null value Rate parameter.",
             xref: { document: "cluster", section: "1.6.5.13" }
         },
 
         {
-            tag: "attribute", name: "Options", id: 0xf, type: "map8", access: "RW", conformance: "M",
+            tag: "attribute", name: "Options", id: 0xf, type: "map8", access: "RW VO", conformance: "M",
             constraint: "desc",
             details: "The Options attribute is meant to be changed only during commissioning. The Options attribute is a " +
                      "bitmap that determines the default behavior of some cluster commands. Each command that is " +

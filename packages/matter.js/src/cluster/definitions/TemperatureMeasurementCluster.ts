@@ -14,7 +14,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 
 export namespace TemperatureMeasurementCluster {
-    export const id = 1026;
+    export const id = 0x402;
     export const name = "TemperatureMeasurement";
     export const revision = 1;
 
@@ -25,39 +25,40 @@ export namespace TemperatureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.1
              */
-            measuredValue: Attribute(0, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            measuredValue: Attribute(
+                0,
+                TlvNullable(TlvInt16.bound({ min: "MinMeasuredValuetoMaxMeasuredValue", max: "MinMeasuredValuetoMaxMeasuredValue" })),
+                { readAcl: AccessLevel.View }
+            ),
 
             /**
-             * The MinMeasuredValue attribute indicates the minimum value of
-             * MeasuredValue that is capable of being measured. See Measured
-             * Value for more details.
+             * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of being
+             * measured. See Measured Value for more details.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.2
              */
             minMeasuredValue: Attribute(1, TlvNullable(TlvInt16), { default: 32768, readAcl: AccessLevel.View }),
 
             /**
-             * The MaxMeasuredValue attribute indicates the maximum value of
-             * MeasuredValue that is capable of being measured. See Measured
-             * Value for more details.
+             * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that is capable of being
+             * measured. See Measured Value for more details.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.3
              */
-            maxMeasuredValue: Attribute(2, TlvNullable(TlvInt16), { default: 32768, readAcl: AccessLevel.View }),
+            maxMeasuredValue: Attribute(
+                2,
+                TlvNullable(TlvInt16.bound({ min: "MinMeasuredValue1", max: 32767 })),
+                { default: 32768, readAcl: AccessLevel.View }
+            ),
 
             /**
              * See Measured Value.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16, { readAcl: AccessLevel.View })
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { readAcl: AccessLevel.View })
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

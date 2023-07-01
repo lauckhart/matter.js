@@ -115,7 +115,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ScanNetworks", id: 0x0, access: "R A", conformance: "WI | TH",
+            tag: "command", name: "ScanNetworks", id: 0x0, access: "A", conformance: "WI | TH",
             direction: "request", response: "ScanNetworksResponse",
             details: "This command SHALL scan on the Cluster instance’s associated network interface for either of:",
             xref: { document: "core", section: "11.8.7.1" },
@@ -187,7 +187,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddOrUpdateWiFiNetwork", id: 0x2, access: "R A", conformance: "WI",
+            tag: "command", name: "AddOrUpdateWiFiNetwork", id: 0x2, access: "A", conformance: "WI",
             direction: "request", response: "NetworkConfigResponse",
             details: "This command SHALL be used to add or modify Wi-Fi network configurations.",
             xref: { document: "core", section: "11.8.7.3" },
@@ -207,7 +207,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "AddOrUpdateThreadNetwork", id: 0x3, access: "R A", conformance: "TH",
+            tag: "command", name: "AddOrUpdateThreadNetwork", id: 0x3, access: "A", conformance: "TH",
             direction: "request", response: "NetworkConfigResponse",
             details: "This command SHALL be used to add or modify Thread network configurations.",
             xref: { document: "core", section: "11.8.7.4" },
@@ -226,7 +226,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "RemoveNetwork", id: 0x4, access: "R A", conformance: "WI | TH",
+            tag: "command", name: "RemoveNetwork", id: 0x4, access: "A", conformance: "WI | TH",
             direction: "request", response: "NetworkConfigResponse",
             details: "This command SHALL remove the network configuration from the Cluster if there was already a network " +
                      "configuration with the same NetworkID. The relative order of the entries in the Networks attribute " +
@@ -271,7 +271,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ConnectNetwork", id: 0x6, access: "R A", conformance: "WI | TH",
+            tag: "command", name: "ConnectNetwork", id: 0x6, access: "A", conformance: "WI | TH",
             direction: "request", response: "ConnectNetworkResponse",
             details: "This command SHALL attempt to connect to a network whose configuration was previously added by " +
                      "either the AddOrUpdateWiFiNetwork or AddOrUpdateThreadNetwork commands. Network is identified by " +
@@ -308,7 +308,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ReorderNetwork", id: 0x8, access: "R A", conformance: "WI | TH",
+            tag: "command", name: "ReorderNetwork", id: 0x8, access: "A", conformance: "WI | TH",
             direction: "request", response: "NetworkConfigResponse",
             details: "This command SHALL set the specific order of the network configuration selected by its NetworkID in " +
                      "the Networks attribute list to match the position given by NetworkIndex.",

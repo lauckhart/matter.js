@@ -16,7 +16,7 @@ Matter.children.push({
 
     children: [
         {
-            tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW",
+            tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW F VA",
             conformance: "M", constraint: "desc",
             details: "This field is a list of ProviderLocationStruct whose entries SHALL be set by Administrators, either " +
                      "during Commissioning or at a later time, to set the Provider Location for the default OTA Provider " +

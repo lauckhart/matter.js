@@ -292,7 +292,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Language", id: 0x21, type: "string", access: "RW VM", conformance: "O",
+            tag: "attribute", name: "Language", id: 0x21, type: "string", access: "R[W] VM", conformance: "O",
             constraint: "max 3", quality: "P",
             details: "Modifies the language for the on-screen or audible user interface using a 2-byte language code from " +
                      "ISO-639-1.",
@@ -300,14 +300,14 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "LedSettings", id: 0x22, type: "uint8", access: "RW VM", conformance: "O",
+            tag: "attribute", name: "LedSettings", id: 0x22, type: "uint8", access: "R[W] VM", conformance: "O",
             constraint: "desc", quality: "P",
             details: "The settings for the LED support three different modes, shown below:",
             xref: { document: "cluster", section: "5.2.3.25" }
         },
 
         {
-            tag: "attribute", name: "AutoRelockTime", id: 0x23, type: "uint32", access: "RW VM",
+            tag: "attribute", name: "AutoRelockTime", id: 0x23, type: "uint32", access: "R[W] VM",
             conformance: "O", quality: "P",
             details: "The number of seconds to wait after unlocking a lock before it automatically locks again. " +
                      "0=disabled. If set, unlock operations from any source will be timed. For one time unlock with " +
@@ -316,7 +316,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "SoundVolume", id: 0x24, type: "uint8", access: "RW VM", conformance: "O",
+            tag: "attribute", name: "SoundVolume", id: 0x24, type: "uint8", access: "R[W] VM", conformance: "O",
             constraint: "desc", quality: "P",
             details: "The sound volume on a door lock has four possible settings: silent, low, high and medium volumes, " +
                      "shown below:",
@@ -324,8 +324,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OperatingMode", id: 0x25, type: "enum8", access: "RW VM", conformance: "M",
-            constraint: "desc", quality: "P",
+            tag: "attribute", name: "OperatingMode", id: 0x25, type: "enum8", access: "R[W] VM",
+            conformance: "M", constraint: "desc", quality: "P",
             details: "The current operating mode of the lock (see OperatingModeEnum).",
             xref: { document: "cluster", section: "5.2.3.23" }
         },
@@ -366,7 +366,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "EnableLocalProgramming", id: 0x28, type: "bool", access: "RW VA",
+            tag: "attribute", name: "EnableLocalProgramming", id: 0x28, type: "bool", access: "R[W] VA",
             conformance: "O", default: true, quality: "P",
             details: "Enable/disable local programming on the door lock of certain features (see LocalProgrammingFeatures " +
                      "attribute). If this value is set to TRUE then local programming is enabled on the door lock for all " +
@@ -399,7 +399,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "LocalProgrammingFeatures", id: 0x2c, type: "map8", access: "RW VA",
+            tag: "attribute", name: "LocalProgrammingFeatures", id: 0x2c, type: "map8", access: "R[W] VA",
             conformance: "O", quality: "P",
             details: "The local programming features that will be disabled when EnableLocalProgramming attribute is set " +
                      "to False. If a door lock doesn’t support disabling one aspect of local programming it SHALL return " +
@@ -417,7 +417,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "WrongCodeEntryLimit", id: 0x30, type: "uint8", access: "RW VA",
+            tag: "attribute", name: "WrongCodeEntryLimit", id: 0x30, type: "uint8", access: "R[W] VA",
             conformance: "PIN | RID", constraint: "1 to 255", quality: "P",
 
             details: "The number of incorrect Pin codes or RFID presentment attempts a user is allowed to enter before " +
@@ -431,7 +431,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "UserCodeTemporaryDisableTime", id: 0x31, type: "uint8", access: "RW VA",
+            tag: "attribute", name: "UserCodeTemporaryDisableTime", id: 0x31, type: "uint8", access: "R[W] VA",
             conformance: "PIN | RID", constraint: "1 to 255", quality: "P",
             details: "The number of seconds that the lock shuts down following wrong code entry. Valid range is 1-255 " +
                      "seconds. Device can shut down to lock user out for specified amount of time. (Makes it difficult to " +
@@ -441,7 +441,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "SendPinOverTheAir", id: 0x32, type: "bool", access: "RW VA",
+            tag: "attribute", name: "SendPinOverTheAir", id: 0x32, type: "bool", access: "R[W] VA",
             conformance: "[PIN]", default: true, quality: "P",
             details: "Boolean set to True if it is ok for the door lock server to send PINs over the air. This attribute " +
                      "determines the behavior of the server’s TX operation. If it is false, then it is not ok for the " +
@@ -450,7 +450,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "RequirePiNforRemoteOperation", id: 0x33, type: "bool", access: "RW VA",
+            tag: "attribute", name: "RequirePiNforRemoteOperation", id: 0x33, type: "bool", access: "R[W] VA",
             conformance: "COTA & PIN", default: true, quality: "P",
             details: "Boolean set to True if the door lock server requires that an optional PINs be included in the " +
                      "payload of remote lock operation events like Lock, Unlock, Unlock with Timeout and Toggle in order " +
@@ -464,7 +464,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "ExpiringUserTimeout", id: 0x35, type: "uint16", access: "RW VA",
+            tag: "attribute", name: "ExpiringUserTimeout", id: 0x35, type: "uint16", access: "R[W] VA",
             conformance: "[USR]", constraint: "1 to 2880", quality: "P",
             details: "Number of minutes a PIN, RFID, Fingerprint, or other credential associated with a user of type " +
                      "ExpiringUser SHALL remain valid after its first use before expiring. When the credential expires " +
@@ -910,7 +910,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetWeekDaySchedule", id: 0xb, access: "R A", conformance: "WDSCH",
+            tag: "command", name: "SetWeekDaySchedule", id: 0xb, access: "A", conformance: "WDSCH",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
 
@@ -926,7 +926,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetWeekDaySchedule", id: 0xc, access: "R A", conformance: "WDSCH",
+            tag: "command", name: "GetWeekDaySchedule", id: 0xc, access: "A", conformance: "WDSCH",
             direction: "request", response: "GetWeekDayScheduleResponse",
             xref: { document: "cluster", section: "5.2.4" },
             children: [
@@ -953,7 +953,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ClearWeekDaySchedule", id: 0xd, access: "R A", conformance: "WDSCH",
+            tag: "command", name: "ClearWeekDaySchedule", id: 0xd, access: "A", conformance: "WDSCH",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
             children: [
@@ -963,7 +963,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetYearDaySchedule", id: 0xe, access: "R A", conformance: "YDSCH",
+            tag: "command", name: "SetYearDaySchedule", id: 0xe, access: "A", conformance: "YDSCH",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
 
@@ -976,7 +976,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetYearDaySchedule", id: 0xf, access: "R A", conformance: "YDSCH",
+            tag: "command", name: "GetYearDaySchedule", id: 0xf, access: "A", conformance: "YDSCH",
             direction: "request", response: "GetYearDayScheduleResponse",
             xref: { document: "cluster", section: "5.2.4" },
             children: [
@@ -1000,7 +1000,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ClearYearDaySchedule", id: 0x10, access: "R A", conformance: "YDSCH",
+            tag: "command", name: "ClearYearDaySchedule", id: 0x10, access: "A", conformance: "YDSCH",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
             children: [
@@ -1010,7 +1010,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetHolidaySchedule", id: 0x11, access: "R A", conformance: "HDSCH",
+            tag: "command", name: "SetHolidaySchedule", id: 0x11, access: "A", conformance: "HDSCH",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
 
@@ -1023,7 +1023,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetHolidaySchedule", id: 0x12, access: "R A", conformance: "HDSCH",
+            tag: "command", name: "GetHolidaySchedule", id: 0x12, access: "A", conformance: "HDSCH",
             direction: "request", response: "GetHolidayScheduleResponse",
             xref: { document: "cluster", section: "5.2.4" },
             children: [ { tag: "datatype", name: "HolidayIndex", type: "uint8", conformance: "M" } ]
@@ -1044,7 +1044,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ClearHolidaySchedule", id: 0x13, access: "R A", conformance: "HDSCH",
+            tag: "command", name: "ClearHolidaySchedule", id: 0x13, access: "A", conformance: "HDSCH",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
             children: [ { tag: "datatype", name: "HolidayIndex", type: "uint8", conformance: "M" } ]
@@ -1091,7 +1091,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetUser", id: 0x1a, access: "R A", conformance: "USR", direction: "request",
+            tag: "command", name: "SetUser", id: 0x1a, access: "A T", conformance: "USR", direction: "request",
             response: "status",
             xref: { document: "cluster", section: "5.2.4" },
 
@@ -1107,7 +1107,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetUser", id: 0x1b, access: "R A", conformance: "USR", direction: "request",
+            tag: "command", name: "GetUser", id: 0x1b, access: "A", conformance: "USR", direction: "request",
             response: "GetUserResponse",
             xref: { document: "cluster", section: "5.2.4" },
             children: [ { tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M" } ]
@@ -1135,7 +1135,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ClearUser", id: 0x1d, access: "R A", conformance: "USR",
+            tag: "command", name: "ClearUser", id: 0x1d, access: "A T", conformance: "USR",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
             children: [ { tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M" } ]
@@ -1153,7 +1153,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetCredential", id: 0x22, access: "R A", conformance: "USR",
+            tag: "command", name: "SetCredential", id: 0x22, access: "A T", conformance: "USR",
             direction: "request", response: "SetCredentialResponse",
             xref: { document: "cluster", section: "5.2.4" },
 
@@ -1178,7 +1178,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "GetCredentialStatus", id: 0x24, access: "R A", conformance: "USR",
+            tag: "command", name: "GetCredentialStatus", id: 0x24, access: "A", conformance: "USR",
             direction: "request", response: "GetCredentialStatusResponse",
             xref: { document: "cluster", section: "5.2.4" },
             children: [ { tag: "datatype", name: "Credential", type: "CredentialStruct", conformance: "M" } ]
@@ -1202,7 +1202,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ClearCredential", id: 0x26, access: "R A", conformance: "USR",
+            tag: "command", name: "ClearCredential", id: 0x26, access: "A T", conformance: "USR",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" },
             children: [ { tag: "datatype", name: "Credential", type: "CredentialStruct", conformance: "M", quality: "X" } ]

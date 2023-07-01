@@ -14,51 +14,55 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 
 export namespace FlowMeasurementCluster {
-    export const id = 1028;
+    export const id = 0x404;
     export const name = "FlowMeasurement";
     export const revision = 1;
 
     const Base = {
         attributes: {
             /**
-             * MeasuredValue represents the flow in m/h as follows:
-             * MeasuredValue = 10 x Flow
+             * MeasuredValue represents the flow in m/h as follows: MeasuredValue = 10 x Flow
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.5.4.1
              */
-            measuredValue: Attribute(0, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            measuredValue: Attribute(
+                0,
+                TlvNullable(TlvUInt16.bound({ min: "MinMeasuredValue", max: "MaxMeasuredValue" })),
+                { default: null, readAcl: AccessLevel.View }
+            ),
 
             /**
-             * The MinMeasuredValue attribute indicates the minimum value of
-             * MeasuredValue that can be measured. See Measured Value for more
-             * details.
+             * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. See
+             * Measured Value for more details.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.5.4.2
              */
-            minMeasuredValue: Attribute(1, TlvNullable(TlvUInt16), { readAcl: AccessLevel.View }),
+            minMeasuredValue: Attribute(
+                1,
+                TlvNullable(TlvUInt16.bound({ min: 0, max: "MaxMeasuredValue1" })),
+                { readAcl: AccessLevel.View }
+            ),
 
             /**
-             * The MaxMeasuredValue attribute indicates the maximum value of
-             * MeasuredValue that can be measured. See Measured Value for more
-             * details.
+             * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. See
+             * Measured Value for more details.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.5.4.3
              */
-            maxMeasuredValue: Attribute(2, TlvNullable(TlvUInt16), { readAcl: AccessLevel.View }),
+            maxMeasuredValue: Attribute(
+                2,
+                TlvNullable(TlvUInt16.bound({ min: "MinMeasuredValue1", max: 65534 })),
+                { readAcl: AccessLevel.View }
+            ),
 
             /**
              * See Measured Value.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.5.4.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16, { readAcl: AccessLevel.View })
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { readAcl: AccessLevel.View })
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

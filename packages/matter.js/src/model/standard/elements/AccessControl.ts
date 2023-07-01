@@ -18,7 +18,7 @@ Matter.children.push({
 
     children: [
         {
-            tag: "attribute", name: "Acl", id: 0x0, type: "list", access: "RW A", conformance: "M",
+            tag: "attribute", name: "Acl", id: 0x0, type: "list", access: "RW F A", conformance: "M",
             constraint: "desc",
             details: "An attempt to add an Access Control Entry when no more entries are available SHALL result in a " +
                      "RESOURCE_EXHAUSTED error being reported and the ACL attribute SHALL NOT have the entry",
@@ -27,7 +27,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Extension", id: 0x1, type: "list", access: "RW A", conformance: "O",
+            tag: "attribute", name: "Extension", id: 0x1, type: "list", access: "RW F A", conformance: "O",
             constraint: "desc",
             details: "If present, the Access Control Extensions MAY be used by Administrators to store arbitrary data " +
                      "related to fabric’s Access Control Entries.",
@@ -60,7 +60,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "AccessControlEntryChanged", id: 0x0, access: "R S A", conformance: "M",
+            tag: "event", name: "AccessControlEntryChanged", id: 0x0, access: "S A", conformance: "M",
             priority: "info",
             details: "The cluster SHALL send AccessControlEntryChanged events whenever its ACL attribute data is changed " +
                      "by an Administrator.",
@@ -91,7 +91,7 @@ Matter.children.push({
         },
 
         {
-            tag: "event", name: "AccessControlExtensionChanged", id: 0x1, access: "R S A", conformance: "M",
+            tag: "event", name: "AccessControlExtensionChanged", id: 0x1, access: "S A", conformance: "M",
             priority: "info",
             details: "The cluster SHALL send AccessControlExtensionChanged events whenever its extension attribute data " +
                      "is changed by an Administrator.",
@@ -149,14 +149,14 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "AuthMode", id: 0x2, type: "AccessControlEntryAuthModeEnum", access: "R S",
+                    tag: "datatype", name: "AuthMode", id: 0x2, type: "AccessControlEntryAuthModeEnum", access: "S",
                     conformance: "M", quality: "X",
                     details: "The AuthMode field SHALL specify the authentication mode required by this Access Control Entry.",
                     xref: { document: "core", section: "9.10.4.5.2" }
                 },
 
                 {
-                    tag: "datatype", name: "Targets", id: 0x4, type: "list", access: "R S", conformance: "M",
+                    tag: "datatype", name: "Targets", id: 0x4, type: "list", access: "S", conformance: "M",
                     constraint: "max TargetsPerAccessControlEntry", quality: "X",
                     details: "The targets field SHALL specify a list of AccessControlTargetStruct, which define the clusters on " +
                              "this Node to which this Access Control Entry grants access.",
@@ -178,7 +178,7 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "Data", id: 0x1, type: "octstr", access: "R S", conformance: "M",
+                    tag: "datatype", name: "Data", id: 0x1, type: "octstr", access: "S", conformance: "M",
                     constraint: "max 128",
                     details: "This field MAY be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s",
                     xref: { document: "core", section: "9.10.4.6.1" }

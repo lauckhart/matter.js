@@ -31,5 +31,9 @@ describe("String", () => {
                 assert.equal(camelize(k), v)
             });
         }
+
+        it(`camelizes lowercase`, () => {
+            assert.equal(camelize("Foo", false), "foo");
+        })
     })
 })

@@ -8,19 +8,45 @@
 
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
-import { TlvEnum, TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
+import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
-import { TlvArray } from "../../tlv/TlvArray.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * See Section 11.19.3.2, “Querying the OTA Provider” for the semantics of
- * these values.
+ * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.3
+ */
+export const enum TlvDownloadProtocolEnum {
+    BdxSynchronous = 0,
+    BdxAsynchronous = 1,
+    Https = 2,
+    VendorSpecific = 3
+};
+
+/**
+ * Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA Provider to match
+ * the OTA Requestor’s constraints provided in the payload fields.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
+ */
+export const TlvQueryImageRequest = TlvObject({
+    vendorId: TlvField(0, TlvUInt16),
+    productId: TlvField(1, TlvUInt16),
+    softwareVersion: TlvField(2, TlvUInt32),
+    protocolsSupported: TlvField(3, TlvArray(TlvEnum<TlvDownloadProtocolEnum>())),
+    hardwareVersion: TlvOptionalField(4, TlvUInt16),
+    location: TlvOptionalField(5, TlvString.bound({ minLength: 2, maxLength: 2 })),
+    requestorCanConsent: TlvOptionalField(6, TlvBoolean),
+    metadataForProvider: TlvOptionalField(7, TlvByteString.bound({ maxLength: 512 }))
+});
+
+/**
+ * See Section 11.19.3.2, “Querying the OTA Provider” for the semantics of these values.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.1
  */
-export const enum StatusEnum {
+export const enum TlvStatusEnum {
     UpdateAvailable = 0,
     Busy = 1,
     NotAvailable = 2,
@@ -32,53 +58,34 @@ export const enum StatusEnum {
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
  */
-export const QueryImageResponseRequest = TlvObject({
-    Status: TlvField(0, TlvEnum<StatusEnum>()),
-    DelayedActionTime: TlvOptionalField(1, TlvUInt32),
-    ImageUri: TlvOptionalField(2, TlvString.bound({ maxLength: 256 })),
-    SoftwareVersion: TlvOptionalField(3, TlvUInt32),
-    SoftwareVersionString: TlvOptionalField(4, TlvString.bound({ minLength: 1, maxLength: 64 })),
-    UpdateToken: TlvOptionalField(5, TlvByteString.bound({ minLength: 8, maxLength: 32 })),
-    UserConsentNeeded: TlvOptionalField(6, TlvBoolean),
-    MetadataForRequestor: TlvOptionalField(7, TlvByteString.bound({ maxLength: 512 }))
+export const TlvQueryImageResponseRequest = TlvObject({
+    status: TlvField(0, TlvEnum<TlvStatusEnum>()),
+    delayedActionTime: TlvOptionalField(1, TlvUInt32),
+    imageUri: TlvOptionalField(2, TlvString.bound({ maxLength: 256 })),
+    softwareVersion: TlvOptionalField(3, TlvUInt32),
+    softwareVersionString: TlvOptionalField(4, TlvString.bound({ minLength: 1, maxLength: 64 })),
+    updateToken: TlvOptionalField(5, TlvByteString.bound({ minLength: 8, maxLength: 32 })),
+    userConsentNeeded: TlvOptionalField(6, TlvBoolean),
+    metadataForRequestor: TlvOptionalField(7, TlvByteString.bound({ maxLength: 512 }))
 });
 
 /**
- * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.3
- */
-export const enum DownloadProtocolEnum {
-    BdxSynchronous = 0,
-    BdxAsynchronous = 1,
-    Https = 2,
-    VendorSpecific = 3
-};
-
-/**
- * Upon receipt, this command SHALL trigger an attempt to find an updated
- * Software Image by the OTA Provider to match the OTA Requestor’s constraints
- * provided in the payload fields.
+ * < Previous | Contents | Next >
  *
- * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
+ * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
  */
-export const QueryImageRequest = TlvObject({
-    VendorId: TlvField(0, TlvUInt16),
-    ProductId: TlvField(1, TlvUInt16),
-    SoftwareVersion: TlvField(2, TlvUInt32),
-    ProtocolsSupported: TlvField(3, TlvArray(TlvEnum<DownloadProtocolEnum>())),
-    HardwareVersion: TlvOptionalField(4, TlvUInt16),
-    Location: TlvOptionalField(5, TlvString.bound({ minLength: 2, maxLength: 2 })),
-    RequestorCanConsent: TlvOptionalField(6, TlvBoolean),
-    MetadataForProvider: TlvOptionalField(7, TlvByteString.bound({ maxLength: 512 }))
+export const TlvApplyUpdateRequestRequest = TlvObject({
+    updateToken: TlvField(0, TlvByteString.bound({ minLength: 8, maxLength: 32 })),
+    newVersion: TlvField(1, TlvUInt32)
 });
 
 /**
- * See Section 11.19.3.6, “Applying a software update” for the semantics of the
- * values. This enumeration is used in the Action field of the
- * ApplyUpdateResponse command. See (Section 11.19.6.5.4.1, “Action Field”).
+ * See Section 11.19.3.6, “Applying a software update” for the semantics of the values. This enumeration is used in the
+ * Action field of the ApplyUpdateResponse command. See (Section 11.19.6.5.4.1, “Action Field”).
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.2
  */
-export const enum ApplyUpdateActionEnum {
+export const enum TlvApplyUpdateActionEnum {
     Proceed = 0,
     AwaitNextAction = 1,
     Discontinue = 2
@@ -89,19 +96,9 @@ export const enum ApplyUpdateActionEnum {
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
  */
-export const ApplyUpdateResponseRequest = TlvObject({
-    Action: TlvField(0, TlvEnum<ApplyUpdateActionEnum>()),
-    DelayedActionTime: TlvField(1, TlvUInt32)
-});
-
-/**
- * < Previous | Contents | Next >
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
- */
-export const ApplyUpdateRequestRequest = TlvObject({
-    UpdateToken: TlvField(0, TlvByteString.bound({ minLength: 8, maxLength: 32 })),
-    NewVersion: TlvField(1, TlvUInt32)
+export const TlvApplyUpdateResponseRequest = TlvObject({
+    action: TlvField(0, TlvEnum<TlvApplyUpdateActionEnum>()),
+    delayedActionTime: TlvField(1, TlvUInt32)
 });
 
 /**
@@ -109,61 +106,55 @@ export const ApplyUpdateRequestRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.22
  */
-export const NotifyUpdateAppliedRequest = TlvObject({
-    UpdateToken: TlvField(0, TlvByteString.bound({ minLength: 8, maxLength: 32 })),
-    SoftwareVersion: TlvField(1, TlvUInt32)
+export const TlvNotifyUpdateAppliedRequest = TlvObject({
+    updateToken: TlvField(0, TlvByteString.bound({ minLength: 8, maxLength: 32 })),
+    softwareVersion: TlvField(1, TlvUInt32)
 });
 
 export namespace OtaSoftwareUpdateProviderCluster {
-    export const id = 41;
+    export const id = 0x29;
     export const name = "OtaSoftwareUpdateProvider";
     export const revision = 1;
 
     const Base = {
         commands: {
             /**
-             * Upon receipt, this command SHALL trigger an attempt to find an
-             * updated Software Image by the OTA Provider to match the OTA
-             * Requestor’s constraints provided in the payload fields.
+             * Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA
+             * Provider to match the OTA Requestor’s constraints provided in the payload fields.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
              */
-            queryImage: Command(0, QueryImageRequest, 1, QueryImageResponseRequest),
+            queryImage: Command(0, TlvQueryImageRequest, 1, TlvQueryImageResponseRequest),
 
             /**
              * < Previous | Contents | Next >
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
              */
-            queryImageResponse: Command(1, QueryImageResponseRequest, 1, TlvNoResponse),
+            queryImageResponse: Command(1, TlvQueryImageResponseRequest, 1, TlvNoResponse),
 
             /**
              * < Previous | Contents | Next >
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
              */
-            applyUpdateRequest: Command(2, ApplyUpdateRequestRequest, 3, ApplyUpdateResponseRequest),
+            applyUpdateRequest: Command(2, TlvApplyUpdateRequestRequest, 3, TlvApplyUpdateResponseRequest),
 
             /**
              * < Previous | Contents | Next >
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
              */
-            applyUpdateResponse: Command(3, ApplyUpdateResponseRequest, 3, TlvNoResponse),
+            applyUpdateResponse: Command(3, TlvApplyUpdateResponseRequest, 3, TlvNoResponse),
 
             /**
              * < Previous | Contents | Next >
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.22
              */
-            notifyUpdateApplied: Command(4, NotifyUpdateAppliedRequest, 4, TlvNoResponse)
+            notifyUpdateApplied: Command(4, TlvNotifyUpdateAppliedRequest, 4, TlvNoResponse)
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

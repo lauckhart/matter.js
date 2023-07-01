@@ -127,7 +127,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "HvacSystemTypeConfiguration", id: 0x9, type: "map8", access: "RW VM",
+            tag: "attribute", name: "HvacSystemTypeConfiguration", id: 0x9, type: "map8", access: "R[W] VM",
             conformance: "D", constraint: "desc", quality: "N",
             details: "This attribute specifies the HVAC system type controlled by the thermostat. If the thermostat uses " +
                      "physical DIP switches to set these parameters, this information SHALL be available read-only from " +
@@ -160,28 +160,28 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OccupiedCoolingSetpoint", id: 0x11, type: "temperature", access: "RW",
+            tag: "attribute", name: "OccupiedCoolingSetpoint", id: 0x11, type: "temperature", access: "RW VO",
             conformance: "COOL", constraint: "desc", default: 2600, quality: "N S",
             details: "This attribute specifies the cooling mode setpoint when the room is occupied.",
             xref: { document: "cluster", section: "4.3.7.13" }
         },
 
         {
-            tag: "attribute", name: "OccupiedHeatingSetpoint", id: 0x12, type: "temperature", access: "RW",
+            tag: "attribute", name: "OccupiedHeatingSetpoint", id: 0x12, type: "temperature", access: "RW VO",
             conformance: "HEAT", constraint: "desc", default: 2000, quality: "N S",
             details: "This attribute specifies the heating mode setpoint when the room is occupied.",
             xref: { document: "cluster", section: "4.3.7.14" }
         },
 
         {
-            tag: "attribute", name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature", access: "RW",
+            tag: "attribute", name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature", access: "RW VO",
             conformance: "COOL & OCC", constraint: "desc", default: 2600, quality: "N",
             details: "This attribute specifies the cooling mode setpoint when the room is unoccupied.",
             xref: { document: "cluster", section: "4.3.7.15" }
         },
 
         {
-            tag: "attribute", name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature", access: "RW",
+            tag: "attribute", name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature", access: "RW VO",
             conformance: "HEAT & OCC", constraint: "desc", default: 2000, quality: "N",
             details: "This attribute specifies the heating mode setpoint when the room is unoccupied.",
             xref: { document: "cluster", section: "4.3.7.16" }
@@ -216,7 +216,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "MinSetpointDeadBand", id: 0x19, type: "temp-s8", access: "RW VM",
+            tag: "attribute", name: "MinSetpointDeadBand", id: 0x19, type: "temp-s8", access: "R[W] VM",
             conformance: "AUTO", constraint: "0 to 2.5", default: 25, quality: "N",
             details: "On devices which support the AUTO feature, this attribute specifies the minimum difference between " +
                      "the Heat Setpoint and the Cool Setpoint.",
@@ -697,7 +697,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetWeeklySchedule", id: 0x1, access: "R M", conformance: "SCH",
+            tag: "command", name: "SetWeeklySchedule", id: 0x1, access: "M", conformance: "SCH",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "4.3.8" },
 
@@ -720,7 +720,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ClearWeeklySchedule", id: 0x3, access: "R M", conformance: "SCH",
+            tag: "command", name: "ClearWeeklySchedule", id: 0x3, access: "M", conformance: "SCH",
             direction: "request",
             xref: { document: "cluster", section: "4.3.8" }
         },

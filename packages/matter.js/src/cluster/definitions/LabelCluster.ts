@@ -16,24 +16,21 @@ import { TlvString } from "../../tlv/TlvString.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.7.4.1
  */
-export const LabelStruct = TlvObject({
+export const TlvLabelStruct = TlvObject({
     /**
-     * The Label or Value semantic is not defined here. Label examples: "room",
-     * "zone", "group", "direction".
+     * The Label or Value semantic is not defined here. Label examples: "room", "zone", "group", "direction".
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.7.4.1.1
      */
-    Label: TlvField(0, TlvString.bound({ maxLength: 16 })),
+    label: TlvField(0, TlvString.bound({ maxLength: 16 })),
 
     /**
-     * The Label or Value semantic is not defined here. The Value is a
-     * discriminator for a Label that may have multiple instances. Label:Value
-     * examples: "room":"bedroom 2", "orientation":"North", "floor":"2",
-     * "direction":"up"
+     * The Label or Value semantic is not defined here. The Value is a discriminator for a Label that may have multiple
+     * instances. Label:Value examples: "room":"bedroom 2", "orientation":"North", "floor":"2", "direction":"up"
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.7.4.1.2
      */
-    Value: TlvField(1, TlvString.bound({ maxLength: 16 }))
+    value: TlvField(1, TlvString.bound({ maxLength: 16 }))
 });
 
 export namespace LabelCluster {
@@ -47,7 +44,7 @@ export namespace LabelCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.7.5.1
              */
-            labelList: Attribute(0, TlvArray(LabelStruct))
+            labelList: Attribute(0, TlvArray(TlvLabelStruct))
         }
     };
 };

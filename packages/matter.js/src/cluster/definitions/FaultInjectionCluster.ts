@@ -12,7 +12,7 @@ import { TlvEnum, TlvUInt32, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-export const enum FaultType {
+export const enum TlvFaultType {
     Unspecified = 0,
     SystemFault = 1,
     InetFault = 2,
@@ -20,36 +20,27 @@ export const enum FaultType {
     CertFault = 4
 };
 
-export const FailAtFaultRequest = TlvObject({
-    Type: TlvField(0, TlvEnum<FaultType>()),
-    Id: TlvField(1, TlvUInt32),
-    NumCallsToSkip: TlvField(2, TlvUInt32),
-    NumCallsToFail: TlvField(3, TlvUInt32),
-    TakeMutex: TlvField(4, TlvBoolean)
+export const TlvFailAtFaultRequest = TlvObject({
+    type: TlvField(0, TlvEnum<TlvFaultType>()),
+    id: TlvField(1, TlvUInt32),
+    numCallsToSkip: TlvField(2, TlvUInt32),
+    numCallsToFail: TlvField(3, TlvUInt32),
+    takeMutex: TlvField(4, TlvBoolean)
 });
 
-export const FailRandomlyAtFaultRequest = TlvObject({
-    Type: TlvField(0, TlvEnum<FaultType>()),
-    Id: TlvField(1, TlvUInt32),
-    Percentage: TlvField(2, TlvUInt8)
+export const TlvFailRandomlyAtFaultRequest = TlvObject({
+    type: TlvField(0, TlvEnum<TlvFaultType>()),
+    id: TlvField(1, TlvUInt32),
+    percentage: TlvField(2, TlvUInt8)
 });
 
 export namespace FaultInjectionCluster {
-    export const id = 4294048774;
+    export const id = 0xfff1fc06;
     export const name = "FaultInjection";
     export const revision = 1;
-
-    const Base = {
-        commands: {
-            failAtFault: Command(0, FailAtFaultRequest, 0, TlvNoResponse),
-            failRandomlyAtFault: Command(1, FailRandomlyAtFaultRequest, 1, TlvNoResponse)
-        }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    const Base = {commands: {
+            failAtFault: Command(0, TlvFailAtFaultRequest, 0, TlvNoResponse),
+            failRandomlyAtFault: Command(1, TlvFailRandomlyAtFaultRequest, 1, TlvNoResponse)
+        }};
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

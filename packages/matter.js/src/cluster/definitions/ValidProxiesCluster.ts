@@ -18,22 +18,21 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.4.1
  */
-export const ValidProxyStruct = TlvObject({ NodeId: TlvField(1, TlvUInt64) });
+export const TlvValidProxyStruct = TlvObject({ nodeId: TlvField(1, TlvUInt64) });
 
 export namespace ValidProxiesCluster {
-    export const id = 68;
+    export const id = 0x44;
     export const name = "ValidProxies";
     export const revision = 1;
 
     const Base = {
         attributes: {
             /**
-             * List of valid proxies that can proxy this Node. Each entry in
-             * this list is fabric-scoped.
+             * List of valid proxies that can proxy this Node. Each entry in this list is fabric-scoped.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.5.1
              */
-            validProxyList: WritableFixedAttribute(0, TlvArray(ValidProxyStruct), { persistent: true })
+            validProxyList: WritableFixedAttribute(0, TlvArray(TlvValidProxyStruct), { persistent: true })
         },
 
         commands: {
@@ -49,10 +48,5 @@ export namespace ValidProxiesCluster {
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

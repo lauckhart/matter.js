@@ -60,7 +60,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "ArmFailSafe", id: 0x0, access: "R A", conformance: "M", direction: "request",
+            tag: "command", name: "ArmFailSafe", id: 0x0, access: "A", conformance: "M", direction: "request",
             response: "ArmFailSafeResponse",
             details: "The arguments for this command are as follows:",
             xref: { document: "core", section: "11.9.6.2" },
@@ -96,7 +96,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetRegulatoryConfig", id: 0x2, access: "R A", conformance: "M",
+            tag: "command", name: "SetRegulatoryConfig", id: 0x2, access: "A", conformance: "M",
             direction: "request", response: "SetRegulatoryConfigResponse",
             details: "This SHALL add or update the regulatory configuration in the RegulatoryConfig Attribute to the " +
                      "value provided in the NewRegulatoryConfig field.",
@@ -124,7 +124,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "CommissioningComplete", id: 0x4, access: "R F A", conformance: "M",
+            tag: "command", name: "CommissioningComplete", id: 0x4, access: "F A", conformance: "M",
             direction: "request", response: "CommissioningCompleteResponse",
             details: "This command has no data.",
             xref: { document: "core", section: "11.9.6.6" }

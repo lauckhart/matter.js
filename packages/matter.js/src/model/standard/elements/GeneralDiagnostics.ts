@@ -207,7 +207,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "TestEventTrigger", id: 0x0, access: "R M", conformance: "M",
+            tag: "command", name: "TestEventTrigger", id: 0x0, access: "M", conformance: "M",
             direction: "request", response: "status",
             details: "This command SHALL be supported to provide a means for certification tests to trigger some test- " +
                      "plan-specific events, necessary to assist in automation of device interactions for some " +

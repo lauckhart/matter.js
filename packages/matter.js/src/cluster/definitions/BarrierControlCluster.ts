@@ -12,10 +12,10 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-export const BarrierControlGoToPercentRequest = TlvObject({ PercentOpen: TlvField(0, TlvUInt8) });
+export const TlvBarrierControlGoToPercentRequest = TlvObject({ percentOpen: TlvField(0, TlvUInt8) });
 
 export namespace BarrierControlCluster {
-    export const id = 259;
+    export const id = 0x103;
     export const name = "BarrierControl";
     export const revision = 1;
 
@@ -34,15 +34,10 @@ export namespace BarrierControlCluster {
         },
 
         commands: {
-            barrierControlGoToPercent: Command(0, BarrierControlGoToPercentRequest, 0, TlvNoResponse),
+            barrierControlGoToPercent: Command(0, TlvBarrierControlGoToPercentRequest, 0, TlvNoResponse),
             barrierControlStop: Command(1, TlvNoArguments, 1, TlvNoResponse)
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

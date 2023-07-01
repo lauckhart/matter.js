@@ -5,7 +5,7 @@
  */
 
 import { ByteArray } from "../util/ByteArray.js";
-import { Merge } from "../util/index.js";
+import { Merge } from "../util/Type.js";
 import { Schema } from "./Schema.js";
 
 const enum BitRangeType {

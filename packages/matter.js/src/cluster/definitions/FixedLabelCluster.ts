@@ -12,13 +12,10 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-export const LabelStruct = TlvObject({
-    Label: TlvField(0, TlvString),
-    Value: TlvField(1, TlvString)
-});
+export const TlvLabelStruct = TlvObject({ label: TlvField(0, TlvString), value: TlvField(1, TlvString) });
 
 export namespace FixedLabelCluster {
-    export const id = 64;
+    export const id = 0x40;
     export const name = "FixedLabel";
     export const revision = 1;
 
@@ -27,14 +24,9 @@ export namespace FixedLabelCluster {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
              */
-            labelList: Attribute(0, TlvArray(LabelStruct), { persistent: true, readAcl: AccessLevel.View })
+            labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, readAcl: AccessLevel.View })
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

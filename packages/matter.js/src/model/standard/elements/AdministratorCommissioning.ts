@@ -59,7 +59,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "OpenCommissioningWindow", id: 0x0, access: "R A", conformance: "M",
+            tag: "command", name: "OpenCommissioningWindow", id: 0x0, access: "A T", conformance: "M",
             direction: "request", response: "status",
             xref: { document: "core", section: "11.18.8" },
 
@@ -73,14 +73,14 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "OpenBasicCommissioningWindow", id: 0x1, access: "R A", conformance: "BC",
+            tag: "command", name: "OpenBasicCommissioningWindow", id: 0x1, access: "A T", conformance: "BC",
             direction: "request", response: "status",
             xref: { document: "core", section: "11.18.8" },
             children: [ { tag: "datatype", name: "CommissioningTimeout", type: "uint16", conformance: "M" } ]
         },
 
         {
-            tag: "command", name: "RevokeCommissioning", id: 0x2, access: "R A", conformance: "M",
+            tag: "command", name: "RevokeCommissioning", id: 0x2, access: "A T", conformance: "M",
             direction: "request", response: "status",
             details: "This command is used by a current Administrator to instruct a Node to revoke any active Open " +
                      "Commissioning Window or Open Basic Commissioning Window command. This is an idempotent command and " +

@@ -31,7 +31,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW",
+            tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW VM",
             conformance: "M", default: null, quality: "X N",
             details: "The HourFormat attribute SHALL represent the format that the Node is currently configured to use " +
                      "when conveying the hour unit of time. If provided, this value SHALL take priority over any unit",
@@ -39,7 +39,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "ActiveCalendarType", id: 0x1, type: "CalendarTypeEnum", access: "RW",
+            tag: "attribute", name: "ActiveCalendarType", id: 0x1, type: "CalendarTypeEnum", access: "RW VM",
             conformance: "CALFMT", default: null, quality: "X N",
             details: "The ActiveCalendarType attribute SHALL represent the calendar format that the Node is currently " +
                      "configured to use when conveying dates. If provided, this value SHALL take priority over any unit " +

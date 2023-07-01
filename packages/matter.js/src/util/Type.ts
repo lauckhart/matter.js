@@ -43,6 +43,6 @@ export type FilteredPluck<K extends string, T extends Properties[]> =
             ? []
         : never;
 
-export function FilteredPluck<K extends string, T extends Properties[]>(key: K, ...objects: [...T]): FilteredPluck<K, T> {
+export function FilteredPluck<K extends string, T extends Properties[]>(key: K, objects: T): FilteredPluck<K, T> {
     return objects.map(o => (o as any)[key]).filter(o => o !== undefined) as any;
 }

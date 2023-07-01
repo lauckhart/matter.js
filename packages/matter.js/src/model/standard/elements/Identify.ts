@@ -27,7 +27,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "IdentifyTime", id: 0x0, type: "uint16", access: "RW", conformance: "M",
+            tag: "attribute", name: "IdentifyTime", id: 0x0, type: "uint16", access: "RW VO", conformance: "M",
             details: "This attribute specifies the remaining length of time, in seconds, that the endpoint will continue " +
                      "to identify itself.",
             xref: { document: "cluster", section: "1.2.5.1" }
@@ -57,7 +57,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "Identify", id: 0x0, access: "R M", conformance: "M", direction: "request",
+            tag: "command", name: "Identify", id: 0x0, access: "M", conformance: "M", direction: "request",
             response: "status",
             details: "This command starts or stops the receiving device identifying itself. This command SHALL have the " +
                      "following data fields:",
@@ -74,7 +74,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "TriggerEffect", id: 0x40, access: "R M", conformance: "O",
+            tag: "command", name: "TriggerEffect", id: 0x40, access: "M", conformance: "O",
             direction: "request", response: "status",
 
             details: "This command allows the support of feedback to the user, such as a certain light effect. It is used " +
