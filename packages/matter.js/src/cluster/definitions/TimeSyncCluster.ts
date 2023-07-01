@@ -229,21 +229,21 @@ export namespace TimeSyncCluster {
          *
          * Server supports time zone.
          */
-        TZ: BitFlag(0),
+        timeZone: BitFlag(0),
 
         /**
          * NtpClient
          *
          * Server supports an NTP or SNTP client.
          */
-        NTPC: BitFlag(1),
+        ntpClient: BitFlag(1),
 
         /**
          * NtpServer
          *
          * Server supports an NTP server role.
          */
-        NTPS: BitFlag(2)
+        ntpServer: BitFlag(2)
     };
 
     const Base = {
@@ -413,9 +413,9 @@ export namespace TimeSyncCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            TZ: true,
-            NTPC: true,
-            NTPS: true
+            timeZone: true,
+            ntpClient: true,
+            ntpServer: true
         },
 
         elements: [

@@ -98,7 +98,7 @@ export namespace SoftwareDiagnosticsCluster {
          * Node makes available the metrics for high watermark related to
          * memory consumption.
          */
-        WTRMRK: BitFlag(0)
+        watermarks: BitFlag(0)
     };
 
     const Base = {
@@ -172,7 +172,7 @@ export namespace SoftwareDiagnosticsCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { WTRMRK: true },
+        supportedFeatures: { watermarks: true },
         elements: [
             Base,
             Watermarks

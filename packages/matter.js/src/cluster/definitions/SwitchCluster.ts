@@ -90,27 +90,27 @@ export namespace SwitchCluster {
         /**
          * LatchingSwitch
          */
-        LS: BitFlag(0),
+        latchingSwitch: BitFlag(0),
 
         /**
          * MomentarySwitch
          */
-        MS: BitFlag(1),
+        momentarySwitch: BitFlag(1),
 
         /**
          * MomentarySwitchRelease
          */
-        MSR: BitFlag(2),
+        momentarySwitchRelease: BitFlag(2),
 
         /**
          * MomentarySwitchLongPress
          */
-        MSL: BitFlag(3),
+        momentarySwitchLongPress: BitFlag(3),
 
         /**
          * MomentarySwitchMultiPress
          */
-        MSM: BitFlag(4)
+        momentarySwitchMultiPress: BitFlag(4)
     };
 
     const Base = {
@@ -245,11 +245,11 @@ export namespace SwitchCluster {
         features: featureMap,
 
         supportedFeatures: {
-            LS: true,
-            MS: true,
-            MSR: true,
-            MSL: true,
-            MSM: true
+            latchingSwitch: true,
+            momentarySwitch: true,
+            momentarySwitchRelease: true,
+            momentarySwitchLongPress: true,
+            momentarySwitchMultiPress: true
         },
 
         elements: [

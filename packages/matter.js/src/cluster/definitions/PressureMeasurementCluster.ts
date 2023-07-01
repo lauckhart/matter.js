@@ -25,7 +25,7 @@ export namespace PressureMeasurementCluster {
          *
          * The cluster is capable of extended range and resolution
          */
-        EXT: BitFlag(0)
+        extended: BitFlag(0)
     };
 
     const Base = {
@@ -114,7 +114,7 @@ export namespace PressureMeasurementCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { EXT: true },
+        supportedFeatures: { extended: true },
         elements: [
             Base,
             Extended

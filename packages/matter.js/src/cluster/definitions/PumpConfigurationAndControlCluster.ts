@@ -203,49 +203,49 @@ export namespace PumpConfigurationAndControlCluster {
          *
          * Supports operating in constant pressure mode
          */
-        PRSCONST: BitFlag(0),
+        constantPressure: BitFlag(0),
 
         /**
          * CompensatedPressure
          *
          * Supports operating in compensated pressure mode
          */
-        PRSCOMP: BitFlag(1),
+        compensatedPressure: BitFlag(1),
 
         /**
          * ConstantFlow
          *
          * Supports operating in constant flow mode
          */
-        FLW: BitFlag(2),
+        constantFlow: BitFlag(2),
 
         /**
          * ConstantSpeed
          *
          * Supports operating in constant speed mode
          */
-        SPD: BitFlag(3),
+        constantSpeed: BitFlag(3),
 
         /**
          * ConstantTemperature
          *
          * Supports operating in constant temperature mode
          */
-        TEMP: BitFlag(4),
+        constantTemperature: BitFlag(4),
 
         /**
          * Automatic
          *
          * Supports operating in automatic mode
          */
-        AUTO: BitFlag(5),
+        automatic: BitFlag(5),
 
         /**
          * LocalOperation
          *
          * Supports operating using local settings
          */
-        LOCAL: BitFlag(6)
+        localOperation: BitFlag(6)
     };
 
     const Base = {
@@ -668,13 +668,13 @@ export namespace PumpConfigurationAndControlCluster {
         features: featureMap,
 
         supportedFeatures: {
-            PRSCONST: true,
-            PRSCOMP: true,
-            FLW: true,
-            SPD: true,
-            TEMP: true,
-            AUTO: true,
-            LOCAL: true
+            constantPressure: true,
+            compensatedPressure: true,
+            constantFlow: true,
+            constantSpeed: true,
+            constantTemperature: true,
+            automatic: true,
+            localOperation: true
         },
 
         elements: [

@@ -128,28 +128,28 @@ export namespace FanControlCluster {
          *
          * 1-100 speeds
          */
-        SPD: BitFlag(0),
+        multiSpeed: BitFlag(0),
 
         /**
          * Auto
          *
          * Automatic mode supported for fan speed
          */
-        AUT: BitFlag(1),
+        auto: BitFlag(1),
 
         /**
          * Rocking
          *
          * Rocking movement supported
          */
-        RCK: BitFlag(2),
+        rocking: BitFlag(2),
 
         /**
          * Wind
          *
          * Wind emulation supported
          */
-        WND: BitFlag(3)
+        wind: BitFlag(3)
     };
 
     const Base = {
@@ -278,10 +278,10 @@ export namespace FanControlCluster {
         features: featureMap,
 
         supportedFeatures: {
-            SPD: true,
-            AUT: true,
-            RCK: true,
-            WND: true
+            multiSpeed: true,
+            auto: true,
+            rocking: true,
+            wind: true
         },
 
         elements: [

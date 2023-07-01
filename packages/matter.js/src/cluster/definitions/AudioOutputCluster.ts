@@ -88,7 +88,7 @@ export namespace AudioOutputCluster {
          *
          * Supports updates to output names
          */
-        NU: BitFlag(0)
+        nameUpdates: BitFlag(0)
     };
 
     const Base = {
@@ -134,7 +134,7 @@ export namespace AudioOutputCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { NU: true },
+        supportedFeatures: { nameUpdates: true },
         elements: [
             Base,
             NameUpdates

@@ -157,7 +157,7 @@ export namespace ApplicationLauncherCluster {
          * Support for attributes and commands required for endpoint to support
          * launching any application within the supported application catalogs
          */
-        AP: BitFlag(0)
+        applicationPlatform: BitFlag(0)
     };
 
     const ApplicationPlatform = {
@@ -228,7 +228,7 @@ export namespace ApplicationLauncherCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { AP: true },
+        supportedFeatures: { applicationPlatform: true },
         elements: [
             ApplicationPlatform,
             Base

@@ -212,7 +212,7 @@ export namespace ChannelCluster {
          *
          * Provides list of available channels.
          */
-        CL: BitFlag(0),
+        channelList: BitFlag(0),
 
         /**
          * LineupInfo
@@ -220,7 +220,7 @@ export namespace ChannelCluster {
          * Provides lineup info, which is a reference to an external source of
          * lineup information.
          */
-        LI: BitFlag(1)
+        lineupInfo: BitFlag(1)
     };
 
     const ChannelList = {
@@ -305,8 +305,8 @@ export namespace ChannelCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            CL: true,
-            LI: true
+            channelList: true,
+            lineupInfo: true
         },
 
         elements: [

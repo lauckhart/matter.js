@@ -564,21 +564,21 @@ export namespace ThermostatCluster {
          *
          * Thermostat is capable of managing a heating device
          */
-        HEAT: BitFlag(0),
+        heating: BitFlag(0),
 
         /**
          * Cooling
          *
          * Thermostat is capable of managing a cooling device
          */
-        COOL: BitFlag(1),
+        cooling: BitFlag(1),
 
         /**
          * Occupancy
          *
          * Supports Occupied and Unoccupied setpoints
          */
-        OCC: BitFlag(2),
+        occupancy: BitFlag(2),
 
         /**
          * ScheduleConfiguration
@@ -586,21 +586,21 @@ export namespace ThermostatCluster {
          * Supports remote configuration of a weekly schedule of setpoint
          * transitions
          */
-        SCH: BitFlag(3),
+        scheduleConfiguration: BitFlag(3),
 
         /**
          * Setback
          *
          * Supports configurable setback (or span)
          */
-        SB: BitFlag(4),
+        setback: BitFlag(4),
 
         /**
          * AutoMode
          *
          * Supports a System Mode of Auto
          */
-        AUTO: BitFlag(5),
+        autoMode: BitFlag(5),
 
         /**
          * LocalTemperatureNotExposed
@@ -608,7 +608,7 @@ export namespace ThermostatCluster {
          * Thermostat does not expose the LocalTemperature Value in the
          * LocalTemperature attribute
          */
-        LTNE: BitFlag(6)
+        localTemperatureNotExposed: BitFlag(6)
     };
 
     const Base = {
@@ -1147,13 +1147,13 @@ export namespace ThermostatCluster {
         features: featureMap,
 
         supportedFeatures: {
-            HEAT: true,
-            COOL: true,
-            OCC: true,
-            SCH: true,
-            SB: true,
-            AUTO: true,
-            LTNE: true
+            heating: true,
+            cooling: true,
+            occupancy: true,
+            scheduleConfiguration: true,
+            setback: true,
+            autoMode: true,
+            localTemperatureNotExposed: true
         },
 
         elements: [

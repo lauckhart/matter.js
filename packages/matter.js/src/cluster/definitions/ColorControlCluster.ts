@@ -719,35 +719,35 @@ export namespace ColorControlCluster {
          *
          * Supports color specification via hue/saturation.
          */
-        HS: BitFlag(0),
+        hueSaturation: BitFlag(0),
 
         /**
          * EnhancedHue
          *
          * Enhanced hue is supported.
          */
-        EHUE: BitFlag(1),
+        enhancedHue: BitFlag(1),
 
         /**
          * ColorLoop
          *
          * Color loop is supported.
          */
-        CL: BitFlag(2),
+        colorLoop: BitFlag(2),
 
         /**
          * Xy
          *
          * Supports color specification via XY.
          */
-        XY: BitFlag(3),
+        xy: BitFlag(3),
 
         /**
          * ColorTemperature
          *
          * Supports specification of color temperature.
          */
-        CT: BitFlag(4)
+        colorTemperature: BitFlag(4)
     };
 
     const HueSaturation = {
@@ -1355,11 +1355,11 @@ export namespace ColorControlCluster {
         features: featureMap,
 
         supportedFeatures: {
-            HS: true,
-            EHUE: true,
-            CL: true,
-            XY: true,
-            CT: true
+            hueSaturation: true,
+            enhancedHue: true,
+            colorLoop: true,
+            xy: true,
+            colorTemperature: true
         },
 
         elements: [

@@ -126,7 +126,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
          * Node makes available the counts for the number of received and
          * transmitted packets on the Wi-Fi interface.
          */
-        PKTCNT: BitFlag(0),
+        packetCounts: BitFlag(0),
 
         /**
          * ErrorCounts
@@ -135,7 +135,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
          * occurred during the reception and transmission of packets on the
          * Wi-Fi interface.
          */
-        ERRCNT: BitFlag(1)
+        errorCounts: BitFlag(1)
     };
 
     const Base = {
@@ -310,8 +310,8 @@ export namespace WiFiNetworkDiagnosticsCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            PKTCNT: true,
-            ERRCNT: true
+            packetCounts: true,
+            errorCounts: true
         },
         elements: [
             Base,

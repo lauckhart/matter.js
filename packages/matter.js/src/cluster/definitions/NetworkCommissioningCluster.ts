@@ -353,21 +353,21 @@ export namespace NetworkCommissioningCluster {
          *
          * Wi-Fi related features
          */
-        WI: BitFlag(0),
+        wiFiNetworkInterface: BitFlag(0),
 
         /**
          * ThreadNetworkInterface
          *
          * Thread related features
          */
-        TH: BitFlag(1),
+        threadNetworkInterface: BitFlag(1),
 
         /**
          * EthernetNetworkInterface
          *
          * Ethernet related features
          */
-        ET: BitFlag(2)
+        ethernetNetworkInterface: BitFlag(2)
     };
 
     const Base = {
@@ -564,9 +564,9 @@ export namespace NetworkCommissioningCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            WI: true,
-            TH: true,
-            ET: true
+            wiFiNetworkInterface: true,
+            threadNetworkInterface: true,
+            ethernetNetworkInterface: true
         },
 
         elements: [
