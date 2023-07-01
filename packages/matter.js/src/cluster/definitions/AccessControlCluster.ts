@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WritableAttribute, AccessLevel, OptionalWritableAttribute, FixedAttribute, Event, EventPriority } from "../../cluster/Cluster.js";
+import { WritableFabricScopedAttribute, AccessLevel, OptionalWritableFabricScopedAttribute, FixedAttribute, Event, EventPriority } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt32, TlvUInt16, TlvUInt64 } from "../../tlv/TlvNumber.js";
@@ -17,7 +17,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.3
  */
-export const enum AccessControlEntryAuthModeEnum {
+export const enum TlvAccessControlEntryAuthModeEnum {
     Pase = 1,
     Case = 2,
     Group = 3
@@ -26,13 +26,13 @@ export const enum AccessControlEntryAuthModeEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.4
  */
-export const AccessControlTargetStruct = TlvObject({
-    Cluster: TlvField(0, TlvNullable(TlvUInt32)),
-    Endpoint: TlvField(1, TlvNullable(TlvUInt16)),
-    DeviceType: TlvField(2, TlvNullable(TlvUInt32))
+export const TlvAccessControlTargetStruct = TlvObject({
+    cluster: TlvField(0, TlvNullable(TlvUInt32)),
+    endpoint: TlvField(1, TlvNullable(TlvUInt16)),
+    deviceType: TlvField(2, TlvNullable(TlvUInt32))
 });
 
-export const enum AccessControlEntryPrivilegeEnum {
+export const enum TlvAccessControlEntryPrivilegeEnum {
     View = 1,
     ProxyView = 2,
     Operate = 3,
@@ -43,165 +43,171 @@ export const enum AccessControlEntryPrivilegeEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5
  */
-export const AccessControlEntryStruct = TlvObject({
+export const TlvAccessControlEntryStruct = TlvObject({
     /**
-     * The AuthMode field SHALL specify the authentication mode required by
-     * this Access Control Entry.
+     * The AuthMode field SHALL specify the authentication mode required by this Access Control Entry.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.2
      */
-    AuthMode: TlvField(2, TlvNullable(TlvEnum<AccessControlEntryAuthModeEnum>())),
+    authMode: TlvField(2, TlvNullable(TlvEnum<TlvAccessControlEntryAuthModeEnum>())),
 
     /**
-     * The targets field SHALL specify a list of AccessControlTargetStruct,
-     * which define the clusters on this Node to which this Access Control
-     * Entry grants access.
+     * The targets field SHALL specify a list of AccessControlTargetStruct, which define the clusters on this Node to
+     * which this Access Control Entry grants access.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.4
      */
-    Targets: TlvField(4, TlvNullable(TlvArray(AccessControlTargetStruct))),
+    targets: TlvField(4, TlvNullable(TlvArray(TlvAccessControlTargetStruct))),
 
-    Privilege: TlvField(2, TlvEnum<AccessControlEntryPrivilegeEnum>())
+    privilege: TlvField(2, TlvEnum<TlvAccessControlEntryPrivilegeEnum>())
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.6
  */
-export const AccessControlExtensionStruct = TlvObject({
+export const TlvAccessControlExtensionStruct = TlvObject({
     /**
-     * This field MAY be used by manufacturers to store arbitrary TLV-encoded
-     * data related to a fabric’s
+     * This field MAY be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.6.1
      */
-    Data: TlvField(1, TlvByteString.bound({ maxLength: 128 }))
+    data: TlvField(1, TlvByteString.bound({ maxLength: 128 }))
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.1
  */
-export const enum ChangeTypeEnum {
+export const enum TlvChangeTypeEnum {
     Changed = 0,
     Added = 1,
     Removed = 2
 };
 
 /**
- * The cluster SHALL send AccessControlEntryChanged events whenever its ACL
- * attribute data is changed by an Administrator.
+ * The cluster SHALL send AccessControlEntryChanged events whenever its ACL attribute data is changed by an
+ * Administrator.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1
  */
-export const AccessControlEntryChangedEvent = TlvObject({
+export const TlvAccessControlEntryChangedEvent = TlvObject({
     /**
-     * The Node ID of the Administrator that made the change, if the change
-     * occurred via a CASE session.
+     * The Node ID of the Administrator that made the change, if the change occurred via a CASE session.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1.1
      */
-    AdminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
+    adminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
 
     /**
      * The type of change as appropriate.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1.3
      */
-    ChangeType: TlvField(3, TlvNullable(TlvEnum<ChangeTypeEnum>())),
+    changeType: TlvField(3, TlvNullable(TlvEnum<TlvChangeTypeEnum>())),
 
     /**
      * The latest value of the changed entry.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1.4
      */
-    LatestValue: TlvField(4, TlvNullable(AccessControlEntryStruct))
+    latestValue: TlvField(4, TlvNullable(TlvAccessControlEntryStruct))
 });
 
 /**
- * The cluster SHALL send AccessControlExtensionChanged events whenever its
- * extension attribute data is changed by an Administrator.
+ * The cluster SHALL send AccessControlExtensionChanged events whenever its extension attribute data is changed by an
+ * Administrator.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.2
  */
-export const AccessControlExtensionChangedEvent = TlvObject({
-    AdminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
-    ChangeType: TlvField(3, TlvNullable(TlvEnum<ChangeTypeEnum>())),
-    LatestValue: TlvField(4, TlvNullable(AccessControlExtensionStruct))
+export const TlvAccessControlExtensionChangedEvent = TlvObject({
+    adminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
+    changeType: TlvField(3, TlvNullable(TlvEnum<TlvChangeTypeEnum>())),
+    latestValue: TlvField(4, TlvNullable(TlvAccessControlExtensionStruct))
 });
 
 export namespace AccessControlCluster {
-    export const id = 31;
+    export const id = 0x1f;
     export const name = "AccessControl";
     export const revision = 1;
 
     const Base = {
         attributes: {
             /**
-             * An attempt to add an Access Control Entry when no more entries
-             * are available SHALL result in a RESOURCE_EXHAUSTED error being
-             * reported and the ACL attribute SHALL NOT have the entry
+             * An attempt to add an Access Control Entry when no more entries are available SHALL result in a
+             * RESOURCE_EXHAUSTED error being reported and the ACL attribute SHALL NOT have the entry
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.3
              */
-            acl: WritableAttribute(0, TlvArray(AccessControlEntryStruct), { readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }),
+            acl: WritableFabricScopedAttribute(
+                0,
+                TlvArray(TlvAccessControlEntryStruct),
+                { readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+            ),
 
             /**
-             * If present, the Access Control Extensions MAY be used by
-             * Administrators to store arbitrary data related to fabric’s
-             * Access Control Entries.
+             * If present, the Access Control Extensions MAY be used by Administrators to store arbitrary data related
+             * to fabric’s Access Control Entries.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.4
              */
-            extension: OptionalWritableAttribute(1, TlvArray(AccessControlExtensionStruct), { readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }),
+            extension: OptionalWritableFabricScopedAttribute(
+                1,
+                TlvArray(TlvAccessControlExtensionStruct),
+                { readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+            ),
 
             /**
-             * This attribute SHALL provide the minimum number of Subjects per
-             * entry that are supported by this server.
+             * This attribute SHALL provide the minimum number of Subjects per entry that are supported by this server.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.5
              */
-            subjectsPerAccessControlEntry: FixedAttribute(2, TlvUInt16, { default: 4, readAcl: AccessLevel.View }),
+            subjectsPerAccessControlEntry: FixedAttribute(
+                2,
+                TlvUInt16.bound({ min: 4 }),
+                { default: 4, readAcl: AccessLevel.View }
+            ),
 
             /**
-             * This attribute SHALL provide the minimum number of Targets per
-             * entry that are supported by this server.
+             * This attribute SHALL provide the minimum number of Targets per entry that are supported by this server.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.6
              */
-            targetsPerAccessControlEntry: FixedAttribute(3, TlvUInt16, { default: 3, readAcl: AccessLevel.View }),
+            targetsPerAccessControlEntry: FixedAttribute(
+                3,
+                TlvUInt16.bound({ min: 3 }),
+                { default: 3, readAcl: AccessLevel.View }
+            ),
 
             /**
-             * This attribute SHALL provide the minimum number of ACL Entries
-             * per fabric that are supported by this server.
+             * This attribute SHALL provide the minimum number of ACL Entries per fabric that are supported by this
+             * server.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.7
              */
-            accessControlEntriesPerFabric: FixedAttribute(4, TlvUInt16, { default: 4, readAcl: AccessLevel.View })
+            accessControlEntriesPerFabric: FixedAttribute(
+                4,
+                TlvUInt16.bound({ min: 4 }),
+                { default: 4, readAcl: AccessLevel.View }
+            )
         },
 
         events: {
             /**
-             * The cluster SHALL send AccessControlEntryChanged events whenever
-             * its ACL attribute data is changed by an Administrator.
+             * The cluster SHALL send AccessControlEntryChanged events whenever its ACL attribute data is changed by an
+             * Administrator.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1
              */
-            accessControlEntryChanged: Event(0, EventPriority.Info, AccessControlEntryChangedEvent),
+            accessControlEntryChanged: Event(0, EventPriority.Info, TlvAccessControlEntryChangedEvent),
 
             /**
-             * The cluster SHALL send AccessControlExtensionChanged events
-             * whenever its extension attribute data is changed by an
-             * Administrator.
+             * The cluster SHALL send AccessControlExtensionChanged events whenever its extension attribute data is
+             * changed by an Administrator.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.2
              */
-            accessControlExtensionChanged: Event(1, EventPriority.Info, AccessControlExtensionChangedEvent)
+            accessControlExtensionChanged: Event(1, EventPriority.Info, TlvAccessControlExtensionChangedEvent)
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

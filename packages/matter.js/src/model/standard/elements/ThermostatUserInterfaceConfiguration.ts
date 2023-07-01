@@ -17,7 +17,7 @@ Matter.children.push({
 
     children: [
         {
-            tag: "attribute", name: "TemperatureDisplayMode", id: 0x0, type: "enum8", access: "RW",
+            tag: "attribute", name: "TemperatureDisplayMode", id: 0x0, type: "enum8", access: "RW VO",
             conformance: "M", constraint: "desc",
             details: "The TemperatureDisplayMode attribute specifies the units of the temperature displayed on the " +
                      "thermostat screen.",

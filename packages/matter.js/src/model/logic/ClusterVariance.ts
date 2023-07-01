@@ -24,7 +24,8 @@ function pattern(...parts: string[]) {
     return new RegExp(`^${parts.join("")}$`);
 }
 
-const FEATURE = "([A-Z_][A-Z_]+)"
+const FEATURE = "([A-Z_][A-Z_]+)";
+const FIELD = "[A-Z][A-Za-z_$]+";
 const OR = " \\| ";
 const AND = " & ";
 const NOT = "!";
@@ -47,7 +48,7 @@ const NOT = "!";
  * There is considerably more variance in field-level conformance but we handle
  * that with the record validator which supports the entire dialect.
  */
-const VarianceMatchers: ComplexVarianceMatcher[] = [
+const VarianceMatchers: VarianceMatcher[] = [
     // Mandatory, unconditional
     {
         pattern: pattern("(?:|M)"),
@@ -67,9 +68,17 @@ const VarianceMatchers: ComplexVarianceMatcher[] = [
     // Optional, unconditional.  Ignores field expression which can only be
     // enforced at runtime
     {
-        pattern: /^[A-Z][a-z].* >/,
+        pattern: pattern(FIELD, " > ", "\\d+"),
         processor: (add) => {
             add(true);
+        }
+    },
+
+    // FOO & fieldName (field ignored as must be runtime enforced)
+    {
+        pattern: pattern(FEATURE, " & ", FIELD),
+        processor: (add, match) => {
+            add(true, { allOf: match });
         }
     },
 
@@ -206,7 +215,7 @@ export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
     return result;
 }
 
-type ComplexVarianceMatcher = {
+type VarianceMatcher = {
     pattern: RegExp,
     processor: (
         add: (optional?: boolean, condition?: VarianceCondition) => void,

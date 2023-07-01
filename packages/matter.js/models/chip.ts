@@ -395,14 +395,8 @@ export const ChipMatter: MatterElement = {
             details: "Commands to trigger a Node to allow a new Administrator to commission it.",
 
             children: [
-                {
-                    tag: "attribute", name: "WindowStatus", id: 0x0, type: "CommissioningWindowStatusEnum",
-                    conformance: "M"
-                },
-                {
-                    tag: "attribute", name: "AdminFabricIndex", id: 0x1, type: "fabric-idx", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "WindowStatus", id: 0x0, type: "CommissioningWindowStatusEnum", conformance: "M" },
+                { tag: "attribute", name: "AdminFabricIndex", id: 0x1, type: "fabric-idx", conformance: "M", quality: "X" },
                 { tag: "attribute", name: "AdminVendorId", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
 
                 {
@@ -445,19 +439,10 @@ export const ChipMatter: MatterElement = {
                      "is represented as an endpoint.",
 
             children: [
-                {
-                    tag: "attribute", name: "ApplicationVendorName", id: 0x0, type: "string", conformance: "O",
-                    default: ""
-                },
-                {
-                    tag: "attribute", name: "ApplicationVendorId", id: 0x1, type: "vendor-id", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "ApplicationVendorName", id: 0x0, type: "string", conformance: "O", default: "" },
+                { tag: "attribute", name: "ApplicationVendorId", id: 0x1, type: "vendor-id", conformance: "O", default: 0 },
                 { tag: "attribute", name: "ApplicationName", id: 0x2, type: "string", conformance: "M" },
-                {
-                    tag: "attribute", name: "ApplicationProductId", id: 0x3, type: "uint16", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "ApplicationProductId", id: 0x3, type: "uint16", conformance: "O", default: 0 },
                 { tag: "attribute", name: "ApplicationApp", id: 0x4, type: "ApplicationStruct", conformance: "M" },
                 {
                     tag: "attribute", name: "ApplicationStatus", id: 0x5, type: "ApplicationStatusEnum",
@@ -570,10 +555,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "AudioOutputList", id: 0x0, type: "list", conformance: "M",
                     children: [ { tag: "datatype", name: "entry", type: "OutputInfoStruct" } ]
                 },
-                {
-                    tag: "attribute", name: "AudioOutputCurrentOutput", id: 0x1, type: "uint8", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "AudioOutputCurrentOutput", id: 0x1, type: "uint8", conformance: "O", default: 0 },
                 {
                     tag: "command", name: "SelectOutput", id: 0x0, conformance: "M", direction: "request",
                     children: [ { tag: "datatype", name: "Index", type: "uint8", conformance: "M" } ]
@@ -627,14 +609,8 @@ export const ChipMatter: MatterElement = {
                     ]
                 },
 
-                {
-                    tag: "attribute", name: "MinLevel", id: 0x10, type: "uint8", access: "RW", conformance: "M",
-                    default: 1
-                },
-                {
-                    tag: "attribute", name: "MaxLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M",
-                    default: 0
-                },
+                { tag: "attribute", name: "MinLevel", id: 0x10, type: "uint8", access: "RW", conformance: "M", default: 1 },
+                { tag: "attribute", name: "MaxLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M", default: 0 },
                 {
                     tag: "attribute", name: "IntrinsicBallastFactor", id: 0x14, type: "uint8", access: "RW",
                     conformance: "O", quality: "X"
@@ -645,10 +621,7 @@ export const ChipMatter: MatterElement = {
                 },
                 { tag: "attribute", name: "LampQuantity", id: 0x20, type: "uint8", conformance: "M" },
                 { tag: "attribute", name: "LampType", id: 0x30, type: "string", access: "RW", conformance: "O" },
-                {
-                    tag: "attribute", name: "LampManufacturer", id: 0x31, type: "string", access: "RW",
-                    conformance: "O"
-                },
+                { tag: "attribute", name: "LampManufacturer", id: 0x31, type: "string", access: "RW", conformance: "O" },
                 {
                     tag: "attribute", name: "LampRatedHours", id: 0x32, type: "uint24", access: "RW", conformance: "O",
                     default: 0, quality: "X"
@@ -706,14 +679,8 @@ export const ChipMatter: MatterElement = {
                 },
                 { tag: "attribute", name: "Reachable", id: 0x11, type: "bool", conformance: "O", default: true },
                 { tag: "attribute", name: "UniqueId", id: 0x12, type: "string", conformance: "O" },
-                {
-                    tag: "attribute", name: "CapabilityMinima", id: 0x13, type: "CapabilityMinimaStruct",
-                    conformance: "M"
-                },
-                {
-                    tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct",
-                    conformance: "O"
-                },
+                { tag: "attribute", name: "CapabilityMinima", id: 0x13, type: "CapabilityMinimaStruct", conformance: "M" },
+                { tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct", conformance: "O" },
                 {
                     tag: "event", name: "StartUp", id: 0x0, conformance: "M", priority: "critical",
                     children: [ { tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M" } ]
@@ -852,10 +819,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "SerialNumber", id: 0xf, type: "string", conformance: "O" },
                 { tag: "attribute", name: "Reachable", id: 0x11, type: "bool", conformance: "M", default: true },
                 { tag: "attribute", name: "UniqueId", id: 0x12, type: "string", conformance: "O" },
-                {
-                    tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct",
-                    conformance: "O"
-                },
+                { tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct", conformance: "O" },
                 {
                     tag: "event", name: "StartUp", id: 0x0, conformance: "O", priority: "critical",
                     children: [ { tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M" } ]
@@ -1108,14 +1072,8 @@ export const ChipMatter: MatterElement = {
                     children: [ { tag: "datatype", name: "entry", type: "ProviderLocation" } ]
                 },
                 { tag: "attribute", name: "UpdatePossible", id: 0x1, type: "bool", conformance: "M", default: true },
-                {
-                    tag: "attribute", name: "UpdateState", id: 0x2, type: "OtaUpdateStateEnum", conformance: "M",
-                    default: 0
-                },
-                {
-                    tag: "attribute", name: "UpdateStateProgress", id: 0x3, type: "uint8", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "UpdateState", id: 0x2, type: "OtaUpdateStateEnum", conformance: "M", default: 0 },
+                { tag: "attribute", name: "UpdateStateProgress", id: 0x3, type: "uint8", conformance: "M", quality: "X" },
 
                 {
                     tag: "command", name: "AnnounceOtaProvider", id: 0x0, conformance: "O", direction: "request",
@@ -1213,14 +1171,8 @@ export const ChipMatter: MatterElement = {
 
             children: [
                 { tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 18 },
-                {
-                    tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M",
-                    default: 18
-                },
-                {
-                    tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M",
-                    default: 0
-                },
+                { tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M", default: 18 },
+                { tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M", default: 0 },
                 {
                     tag: "attribute", name: "ExpectedClients", id: 0x3, type: "list", conformance: "M",
                     children: [ { tag: "datatype", name: "entry", type: "MonitoringRegistration" } ]
@@ -1244,10 +1196,7 @@ export const ChipMatter: MatterElement = {
                     ]
                 },
 
-                {
-                    tag: "command", name: "StayAwakeRequest", id: 0x2, access: "R M", conformance: "O",
-                    direction: "request"
-                },
+                { tag: "command", name: "StayAwakeRequest", id: 0x2, access: "R M", conformance: "O", direction: "request" },
 
                 {
                     tag: "datatype", name: "MonitoringRegistration", type: "struct", access: "R F", conformance: "M",
@@ -1290,10 +1239,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "ColorControlColorTemperature", id: 0x7, type: "uint16", conformance: "O",
                     default: 0, quality: "P"
                 },
-                {
-                    tag: "attribute", name: "ColorControlColorMode", id: 0x8, type: "enum8", conformance: "M",
-                    default: 1
-                },
+                { tag: "attribute", name: "ColorControlColorMode", id: 0x8, type: "enum8", conformance: "M", default: 1 },
                 {
                     tag: "attribute", name: "ColorControlOptions", id: 0xf, type: "map8", access: "RW",
                     conformance: "M", default: 0,
@@ -1594,10 +1540,13 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "LaunchUrl", id: 0x1, conformance: "O", direction: "request",
                     response: "LauncherResponse",
+
                     children: [
                         { tag: "datatype", name: "ContentUrl", type: "string", conformance: "M" },
                         { tag: "datatype", name: "DisplayString", type: "string", conformance: "O" },
-                        { tag: "datatype", name: "BrandingInformation", type: "BrandingInformationStruct", conformance: "O" }
+                        {
+                            tag: "datatype", name: "BrandingInformation", type: "BrandingInformationStruct", conformance: "O"
+                        }
                     ]
                 },
 
@@ -1801,31 +1750,13 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "LockState", id: 0x0, type: "DlLockState", conformance: "M", quality: "X P" },
                 { tag: "attribute", name: "LockType", id: 0x1, type: "DlLockType", conformance: "M" },
                 { tag: "attribute", name: "ActuatorEnabled", id: 0x2, type: "bool", conformance: "M" },
-                {
-                    tag: "attribute", name: "DoorState", id: 0x3, type: "DoorStateEnum", conformance: "O",
-                    quality: "X P"
-                },
-                {
-                    tag: "attribute", name: "DoorOpenEvents", id: 0x4, type: "uint32", access: "RW VM",
-                    conformance: "O"
-                },
-                {
-                    tag: "attribute", name: "DoorClosedEvents", id: 0x5, type: "uint32", access: "RW VM",
-                    conformance: "O"
-                },
+                { tag: "attribute", name: "DoorState", id: 0x3, type: "DoorStateEnum", conformance: "O", quality: "X P" },
+                { tag: "attribute", name: "DoorOpenEvents", id: 0x4, type: "uint32", access: "RW VM", conformance: "O" },
+                { tag: "attribute", name: "DoorClosedEvents", id: 0x5, type: "uint32", access: "RW VM", conformance: "O" },
                 { tag: "attribute", name: "OpenPeriod", id: 0x6, type: "uint16", access: "RW VM", conformance: "O" },
-                {
-                    tag: "attribute", name: "NumTotalUsersSupported", id: 0x11, type: "uint16", conformance: "O",
-                    default: 0
-                },
-                {
-                    tag: "attribute", name: "NumPinUsersSupported", id: 0x12, type: "uint16", conformance: "O",
-                    default: 0
-                },
-                {
-                    tag: "attribute", name: "NumRfidUsersSupported", id: 0x13, type: "uint16", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "NumTotalUsersSupported", id: 0x11, type: "uint16", conformance: "O", default: 0 },
+                { tag: "attribute", name: "NumPinUsersSupported", id: 0x12, type: "uint16", conformance: "O", default: 0 },
+                { tag: "attribute", name: "NumRfidUsersSupported", id: 0x13, type: "uint16", conformance: "O", default: 0 },
                 {
                     tag: "attribute", name: "NumWeekdaySchedulesSupportedPerUser", id: 0x14, type: "uint8",
                     conformance: "O", default: 0
@@ -1844,7 +1775,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "MinRfidCodeLength", id: 0x1a, type: "uint8", conformance: "O" },
                 {
                     tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "DlCredentialRuleMask",
-                    conformance: "O", default: 1
+                    conformance: "O", default: [ "Single" ]
                 },
                 {
                     tag: "attribute", name: "NumCredentialsSupportedPerUser", id: 0x1c, type: "uint8", conformance: "O",
@@ -1872,7 +1803,7 @@ export const ChipMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "SupportedOperatingModes", id: 0x26, type: "DlSupportedOperatingModes",
-                    conformance: "M", default: 65526
+                    conformance: "M", default: [ "Vacation", "Privacy", "Passage" ]
                 },
                 {
                     tag: "attribute", name: "DefaultConfigurationRegister", id: 0x27,
@@ -2074,7 +2005,9 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "UserUniqueId", type: "uint32", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "UserStatus", type: "UserStatusEnum", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "UserType", type: "UserTypeEnum", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X" }
+                        {
+                            tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X"
+                        }
                     ]
                 },
 
@@ -2093,7 +2026,9 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "UserUniqueId", type: "uint32", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "UserStatus", type: "UserStatusEnum", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "UserType", type: "UserTypeEnum", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X"
+                        },
                         { tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "CreatorFabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
                         {
@@ -2157,8 +2092,11 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "ClearCredential", id: 0x26, access: "R A", conformance: "O",
                     direction: "request",
-                    children: [ { tag: "datatype", name: "Credential", type: "CredentialStruct", conformance: "M", quality: "X" } ]
+                    children: [
+                        { tag: "datatype", name: "Credential", type: "CredentialStruct", conformance: "M", quality: "X" }
+                    ]
                 },
+
                 {
                     tag: "event", name: "DoorLockAlarm", id: 0x0, conformance: "M", priority: "critical",
                     children: [ { tag: "datatype", name: "AlarmCode", type: "AlarmCodeEnum", conformance: "M" } ]
@@ -2488,10 +2426,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "PacketTxCount", id: 0x3, type: "uint64", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxErrCount", id: 0x4, type: "uint64", conformance: "O", default: 0 },
                 { tag: "attribute", name: "CollisionCount", id: 0x5, type: "uint64", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "EthernetOverrunCount", id: 0x6, type: "uint64", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "EthernetOverrunCount", id: 0x6, type: "uint64", conformance: "O", default: 0 },
                 { tag: "attribute", name: "CarrierDetect", id: 0x7, type: "bool", conformance: "O", quality: "X" },
                 { tag: "attribute", name: "TimeSinceReset", id: 0x8, type: "uint64", conformance: "O", default: 0 },
                 { tag: "command", name: "ResetCounts", id: 0x0, conformance: "M", direction: "request" },
@@ -2540,15 +2475,9 @@ export const ChipMatter: MatterElement = {
                 },
                 { tag: "attribute", name: "SpeedCurrent", id: 0x6, type: "uint8", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RockSupport", id: 0x7, type: "map8", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "RockSetting", id: 0x8, type: "map8", access: "RW", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "RockSetting", id: 0x8, type: "map8", access: "RW", conformance: "O", default: 0 },
                 { tag: "attribute", name: "WindSupport", id: 0x9, type: "map8", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "WindSetting", id: 0xa, type: "map8", access: "RW", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "WindSetting", id: 0xa, type: "map8", access: "RW", conformance: "O", default: 0 },
 
                 {
                     tag: "datatype", name: "FanModeType", type: "enum8", conformance: "M",
@@ -2647,18 +2576,9 @@ export const ChipMatter: MatterElement = {
             details: "Attributes and commands for configuring the measurement of flow, and reporting flow measurements.",
 
             children: [
-                {
-                    tag: "attribute", name: "FlowMeasuredValue", id: 0x0, type: "uint16", conformance: "M",
-                    quality: "X"
-                },
-                {
-                    tag: "attribute", name: "FlowMinMeasuredValue", id: 0x1, type: "uint16", conformance: "M",
-                    quality: "X"
-                },
-                {
-                    tag: "attribute", name: "FlowMaxMeasuredValue", id: 0x2, type: "uint16", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "FlowMeasuredValue", id: 0x0, type: "uint16", conformance: "M", quality: "X" },
+                { tag: "attribute", name: "FlowMinMeasuredValue", id: 0x1, type: "uint16", conformance: "M", quality: "X" },
+                { tag: "attribute", name: "FlowMaxMeasuredValue", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
                 { tag: "attribute", name: "FlowTolerance", id: 0x3, type: "uint16", conformance: "O", default: 0 }
             ]
         },
@@ -2676,14 +2596,8 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "BasicCommissioningInfo", id: 0x1, type: "BasicCommissioningInfo",
                     conformance: "M"
                 },
-                {
-                    tag: "attribute", name: "RegulatoryConfig", id: 0x2, type: "RegulatoryLocationType",
-                    conformance: "M"
-                },
-                {
-                    tag: "attribute", name: "LocationCapability", id: 0x3, type: "RegulatoryLocationType",
-                    conformance: "M"
-                },
+                { tag: "attribute", name: "RegulatoryConfig", id: 0x2, type: "RegulatoryLocationType", conformance: "M" },
+                { tag: "attribute", name: "LocationCapability", id: 0x3, type: "RegulatoryLocationType", conformance: "M" },
                 {
                     tag: "attribute", name: "SupportsConcurrentConnection", id: 0x4, type: "bool", conformance: "M",
                     default: true
@@ -2783,10 +2697,7 @@ export const ChipMatter: MatterElement = {
                 },
                 { tag: "attribute", name: "RebootCount", id: 0x1, type: "uint16", conformance: "M", default: 0 },
                 { tag: "attribute", name: "UpTime", id: 0x2, type: "uint64", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "TotalOperationalHours", id: 0x3, type: "uint32", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "TotalOperationalHours", id: 0x3, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "BootReasons", id: 0x4, type: "BootReasonEnum", conformance: "O" },
                 {
                     tag: "attribute", name: "ActiveHardwareFaults", id: 0x5, type: "list", conformance: "O",
@@ -3157,14 +3068,8 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "IllumMeasuredValue", id: 0x0, type: "uint16", conformance: "M", default: 0,
                     quality: "X P"
                 },
-                {
-                    tag: "attribute", name: "IllumMinMeasuredValue", id: 0x1, type: "uint16", conformance: "M",
-                    quality: "X"
-                },
-                {
-                    tag: "attribute", name: "IllumMaxMeasuredValue", id: 0x2, type: "uint16", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "IllumMinMeasuredValue", id: 0x1, type: "uint16", conformance: "M", quality: "X" },
+                { tag: "attribute", name: "IllumMaxMeasuredValue", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
                 { tag: "attribute", name: "IllumTolerance", id: 0x3, type: "uint16", conformance: "O" },
                 {
                     tag: "attribute", name: "IllumLightSensorType", id: 0x4, type: "enum8", conformance: "O",
@@ -3316,10 +3221,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "OnOffTransitionTime", id: 0x10, type: "uint16", access: "RW",
                     conformance: "O", default: 0
                 },
-                {
-                    tag: "attribute", name: "OnLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "OnLevel", id: 0x11, type: "uint8", access: "RW", conformance: "M", quality: "X" },
                 {
                     tag: "attribute", name: "OnTransitionTime", id: 0x12, type: "uint16", access: "RW",
                     conformance: "O", quality: "X"
@@ -3489,10 +3391,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "MediaInputList", id: 0x0, type: "list", conformance: "M",
                     children: [ { tag: "datatype", name: "entry", type: "InputInfoStruct" } ]
                 },
-                {
-                    tag: "attribute", name: "MediaInputCurrentInput", id: 0x1, type: "uint8", conformance: "M",
-                    default: 0
-                },
+                { tag: "attribute", name: "MediaInputCurrentInput", id: 0x1, type: "uint8", conformance: "M", default: 0 },
                 {
                     tag: "command", name: "SelectInput", id: 0x0, conformance: "M", direction: "request",
                     children: [ { tag: "datatype", name: "Index", type: "uint8", conformance: "M" } ]
@@ -3670,10 +3569,7 @@ export const ChipMatter: MatterElement = {
 
             children: [
                 { tag: "attribute", name: "ModeDescription", id: 0x0, type: "string", conformance: "M" },
-                {
-                    tag: "attribute", name: "StandardNamespace", id: 0x1, type: "enum16", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "StandardNamespace", id: 0x1, type: "enum16", conformance: "M", quality: "X" },
                 {
                     tag: "attribute", name: "SupportedModes", id: 0x2, type: "list", conformance: "M",
                     children: [ { tag: "datatype", name: "entry", type: "ModeOptionStruct" } ]
@@ -3683,10 +3579,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "StartUpMode", id: 0x4, type: "uint8", access: "RW", conformance: "O",
                     quality: "X"
                 },
-                {
-                    tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW", conformance: "O",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW", conformance: "O", quality: "X" },
                 {
                     tag: "command", name: "ChangeToMode", id: 0x0, conformance: "M", direction: "request",
                     children: [ { tag: "datatype", name: "NewMode", type: "uint8", conformance: "M" } ]
@@ -3723,10 +3616,7 @@ export const ChipMatter: MatterElement = {
                 },
                 { tag: "attribute", name: "ScanMaxTimeSeconds", id: 0x2, type: "uint8", conformance: "O" },
                 { tag: "attribute", name: "ConnectMaxTimeSeconds", id: 0x3, type: "uint8", conformance: "O" },
-                {
-                    tag: "attribute", name: "InterfaceEnabled", id: 0x4, type: "bool", access: "RW VA",
-                    conformance: "M"
-                },
+                { tag: "attribute", name: "InterfaceEnabled", id: 0x4, type: "bool", access: "RW VA", conformance: "M" },
                 {
                     tag: "attribute", name: "LastNetworkingStatus", id: 0x5, type: "NetworkCommissioningStatus",
                     access: "R A", conformance: "M", quality: "X"
@@ -3912,10 +3802,7 @@ export const ChipMatter: MatterElement = {
             details: "Attributes and commands for configuring occupancy sensing, and reporting occupancy status.",
 
             children: [
-                {
-                    tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", conformance: "M",
-                    quality: "P"
-                },
+                { tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", conformance: "M", quality: "P" },
                 {
                     tag: "attribute", name: "OccupancySensorType", id: 0x1, type: "OccupancySensorTypeEnum",
                     conformance: "M"
@@ -3992,18 +3879,9 @@ export const ChipMatter: MatterElement = {
             details: "Attributes and commands for switching devices between 'On' and 'Off' states.",
 
             children: [
-                {
-                    tag: "attribute", name: "OnOff", id: 0x0, type: "bool", conformance: "M", default: true,
-                    quality: "P"
-                },
-                {
-                    tag: "attribute", name: "GlobalSceneControl", id: 0x4000, type: "bool", conformance: "O",
-                    default: true
-                },
-                {
-                    tag: "attribute", name: "OnTime", id: 0x4001, type: "uint16", access: "RW", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "OnOff", id: 0x0, type: "bool", conformance: "M", default: true, quality: "P" },
+                { tag: "attribute", name: "GlobalSceneControl", id: 0x4000, type: "bool", conformance: "O", default: true },
+                { tag: "attribute", name: "OnTime", id: 0x4001, type: "uint16", access: "RW", conformance: "O", default: 0 },
                 {
                     tag: "attribute", name: "OffWaitTime", id: 0x4002, type: "uint16", access: "RW", conformance: "O",
                     default: 0
@@ -4097,8 +3975,11 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "CertificateChainRequest", id: 0x2, access: "R A", conformance: "M",
                     direction: "request", response: "CertificateChainResponse",
-                    children: [ { tag: "datatype", name: "CertificateType", type: "CertificateChainTypeEnum", conformance: "M" } ]
+                    children: [
+                        { tag: "datatype", name: "CertificateType", type: "CertificateChainTypeEnum", conformance: "M" }
+                    ]
                 },
+
                 {
                     tag: "command", name: "CertificateChainResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [ { tag: "datatype", name: "Certificate", type: "octstr", conformance: "M" } ]
@@ -4221,10 +4102,7 @@ export const ChipMatter: MatterElement = {
                      "provides power to the Node.",
 
             children: [
-                {
-                    tag: "attribute", name: "PowerSourceStatus", id: 0x0, type: "PowerSourceStatusEnum",
-                    conformance: "M"
-                },
+                { tag: "attribute", name: "PowerSourceStatus", id: 0x0, type: "PowerSourceStatusEnum", conformance: "M" },
                 { tag: "attribute", name: "PowerSourceOrder", id: 0x1, type: "uint8", conformance: "M" },
                 { tag: "attribute", name: "PowerSourceDescription", id: 0x2, type: "string", conformance: "M" },
                 {
@@ -4250,10 +4128,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "PowerSourceActiveWiredFaults", id: 0xa, type: "list", conformance: "O",
                     children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
                 },
-                {
-                    tag: "attribute", name: "PowerSourceBatVoltage", id: 0xb, type: "uint32", conformance: "O",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "PowerSourceBatVoltage", id: 0xb, type: "uint32", conformance: "O", quality: "X" },
                 {
                     tag: "attribute", name: "PowerSourceBatPercentRemaining", id: 0xc, type: "uint8", conformance: "O",
                     quality: "X"
@@ -4558,13 +4433,10 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "PowerSourceConfiguration", id: 0x2e,
             description: "Power Source Configuration",
             details: "This cluster is used to describe the configuration and capabilities of a Device's power system.",
-
-            children: [
-                {
-                    tag: "attribute", name: "Sources", id: 0x0, type: "list", conformance: "M",
-                    children: [ { tag: "datatype", name: "entry", type: "uint8" } ]
-                }
-            ]
+            children: [ {
+                tag: "attribute", name: "Sources", id: 0x0, type: "list", conformance: "M",
+                children: [ { tag: "datatype", name: "entry", type: "uint8" } ]
+            } ]
         },
 
         {
@@ -4642,10 +4514,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "PumpStatus", id: 0x10, type: "PumpStatusBitmap", conformance: "O",
                     default: 0, quality: "P"
                 },
-                {
-                    tag: "attribute", name: "EffectiveOperationMode", id: 0x11, type: "OperationModeEnum",
-                    conformance: "M"
-                },
+                { tag: "attribute", name: "EffectiveOperationMode", id: 0x11, type: "OperationModeEnum", conformance: "M" },
                 { tag: "attribute", name: "EffectiveControlMode", id: 0x12, type: "ControlModeEnum", conformance: "M" },
                 { tag: "attribute", name: "Capacity", id: 0x13, type: "int16", conformance: "M", quality: "X P" },
                 { tag: "attribute", name: "Speed", id: 0x14, type: "uint16", conformance: "O", quality: "X" },
@@ -4764,10 +4633,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "CurrentGroup", id: 0x2, type: "group-id", conformance: "M", default: 0 },
                 { tag: "attribute", name: "SceneValid", id: 0x3, type: "bool", conformance: "M", default: true },
                 { tag: "attribute", name: "SceneNameSupport", id: 0x4, type: "map8", conformance: "M", default: 0 },
-                {
-                    tag: "attribute", name: "LastConfiguredBy", id: 0x5, type: "node-id", conformance: "O",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "LastConfiguredBy", id: 0x5, type: "node-id", conformance: "O", quality: "X" },
 
                 {
                     tag: "command", name: "AddScene", id: 0x0, access: "R F M", conformance: "M", direction: "request",
@@ -5150,16 +5016,11 @@ export const ChipMatter: MatterElement = {
             details: "An interface for configuring and controlling the functionality of a thermostat.",
 
             children: [
+                { tag: "attribute", name: "LocalTemperature", id: 0x0, type: "int16", conformance: "M", quality: "X P" },
+                { tag: "attribute", name: "OutdoorTemperature", id: 0x1, type: "int16", conformance: "O", quality: "X" },
                 {
-                    tag: "attribute", name: "LocalTemperature", id: 0x0, type: "int16", conformance: "M",
-                    quality: "X P"
-                },
-                {
-                    tag: "attribute", name: "OutdoorTemperature", id: 0x1, type: "int16", conformance: "O",
-                    quality: "X"
-                },
-                {
-                    tag: "attribute", name: "ThermostatOccupancy", id: 0x2, type: "map8", conformance: "O", default: 1,
+                    tag: "attribute", name: "ThermostatOccupancy", id: 0x2, type: "map8", conformance: "O",
+                    default: [ "Occupied" ],
                     children: [ { tag: "datatype", name: "Occupied", id: 0x1, conformance: "M" } ]
                 },
                 {
@@ -5300,42 +5161,21 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "SetpointChangeAmount", id: 0x31, type: "int16", conformance: "O",
                     default: 32768, quality: "X"
                 },
-                {
-                    tag: "attribute", name: "SetpointChangeSourceTimestamp", id: 0x32, type: "epoch-s",
-                    conformance: "O"
-                },
+                { tag: "attribute", name: "SetpointChangeSourceTimestamp", id: 0x32, type: "epoch-s", conformance: "O" },
                 {
                     tag: "attribute", name: "OccupiedSetback", id: 0x34, type: "uint8", access: "RW VM",
                     conformance: "O", quality: "X"
                 },
-                {
-                    tag: "attribute", name: "OccupiedSetbackMin", id: 0x35, type: "uint8", conformance: "O",
-                    quality: "X"
-                },
-                {
-                    tag: "attribute", name: "OccupiedSetbackMax", id: 0x36, type: "uint8", conformance: "O",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "OccupiedSetbackMin", id: 0x35, type: "uint8", conformance: "O", quality: "X" },
+                { tag: "attribute", name: "OccupiedSetbackMax", id: 0x36, type: "uint8", conformance: "O", quality: "X" },
                 {
                     tag: "attribute", name: "UnoccupiedSetback", id: 0x37, type: "uint8", access: "RW VM",
                     conformance: "O", quality: "X"
                 },
-                {
-                    tag: "attribute", name: "UnoccupiedSetbackMin", id: 0x38, type: "uint8", conformance: "O",
-                    quality: "X"
-                },
-                {
-                    tag: "attribute", name: "UnoccupiedSetbackMax", id: 0x39, type: "uint8", conformance: "O",
-                    quality: "X"
-                },
-                {
-                    tag: "attribute", name: "EmergencyHeatDelta", id: 0x3a, type: "uint8", access: "RW VM",
-                    conformance: "O"
-                },
-                {
-                    tag: "attribute", name: "AcType", id: 0x40, type: "enum8", access: "RW VM", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "UnoccupiedSetbackMin", id: 0x38, type: "uint8", conformance: "O", quality: "X" },
+                { tag: "attribute", name: "UnoccupiedSetbackMax", id: 0x39, type: "uint8", conformance: "O", quality: "X" },
+                { tag: "attribute", name: "EmergencyHeatDelta", id: 0x3a, type: "uint8", access: "RW VM", conformance: "O" },
+                { tag: "attribute", name: "AcType", id: 0x40, type: "enum8", access: "RW VM", conformance: "O", default: 0 },
                 {
                     tag: "attribute", name: "AcCapacity", id: 0x41, type: "uint16", access: "RW VM", conformance: "O",
                     default: 0
@@ -5516,10 +5356,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "NetworkName", id: 0x2, type: "string", conformance: "M", default: "",
                     quality: "X"
                 },
-                {
-                    tag: "attribute", name: "DiagPanId", id: 0x3, type: "uint16", conformance: "M", default: 0,
-                    quality: "X"
-                },
+                { tag: "attribute", name: "DiagPanId", id: 0x3, type: "uint16", conformance: "M", default: 0, quality: "X" },
                 {
                     tag: "attribute", name: "DiagExtendedPanId", id: 0x4, type: "uint64", conformance: "M", default: 0,
                     quality: "X"
@@ -5543,14 +5380,8 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "ChildRoleCount", id: 0xf, type: "uint16", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RouterRoleCount", id: 0x10, type: "uint16", conformance: "O", default: 0 },
                 { tag: "attribute", name: "LeaderRoleCount", id: 0x11, type: "uint16", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "AttachAttemptCount", id: 0x12, type: "uint16", conformance: "O",
-                    default: 0
-                },
-                {
-                    tag: "attribute", name: "PartitionIdChangeCount", id: 0x13, type: "uint16", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "AttachAttemptCount", id: 0x12, type: "uint16", conformance: "O", default: 0 },
+                { tag: "attribute", name: "PartitionIdChangeCount", id: 0x13, type: "uint16", conformance: "O", default: 0 },
                 {
                     tag: "attribute", name: "BetterPartitionAttachAttemptCount", id: 0x14, type: "uint16",
                     conformance: "O", default: 0
@@ -5559,22 +5390,13 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "TxTotalCount", id: 0x16, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxUnicastCount", id: 0x17, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxBroadcastCount", id: 0x18, type: "uint32", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "TxAckRequestedCount", id: 0x19, type: "uint32", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "TxAckRequestedCount", id: 0x19, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxAckedCount", id: 0x1a, type: "uint32", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "TxNoAckRequestedCount", id: 0x1b, type: "uint32", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "TxNoAckRequestedCount", id: 0x1b, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxDataCount", id: 0x1c, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxDataPollCount", id: 0x1d, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxBeaconCount", id: 0x1e, type: "uint32", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "TxBeaconRequestCount", id: 0x1f, type: "uint32", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "TxBeaconRequestCount", id: 0x1f, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxOtherCount", id: 0x20, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxRetryCount", id: 0x21, type: "uint32", conformance: "O", default: 0 },
                 {
@@ -5587,25 +5409,16 @@ export const ChipMatter: MatterElement = {
                 },
                 { tag: "attribute", name: "TxErrCcaCount", id: 0x24, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TxErrAbortCount", id: 0x25, type: "uint32", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "TxErrBusyChannelCount", id: 0x26, type: "uint32", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "TxErrBusyChannelCount", id: 0x26, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RxTotalCount", id: 0x27, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RxUnicastCount", id: 0x28, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RxBroadcastCount", id: 0x29, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RxDataCount", id: 0x2a, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RxDataPollCount", id: 0x2b, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RxBeaconCount", id: 0x2c, type: "uint32", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "RxBeaconRequestCount", id: 0x2d, type: "uint32", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "RxBeaconRequestCount", id: 0x2d, type: "uint32", conformance: "O", default: 0 },
                 { tag: "attribute", name: "RxOtherCount", id: 0x2e, type: "uint32", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "RxAddressFilteredCount", id: 0x2f, type: "uint32", conformance: "O",
-                    default: 0
-                },
+                { tag: "attribute", name: "RxAddressFilteredCount", id: 0x2f, type: "uint32", conformance: "O", default: 0 },
                 {
                     tag: "attribute", name: "RxDestaddrFilteredCount", id: 0x30, type: "uint32", conformance: "O",
                     default: 0
@@ -5631,10 +5444,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "PendingTimestamp", id: 0x39, type: "uint64", conformance: "O", default: 0,
                     quality: "X"
                 },
-                {
-                    tag: "attribute", name: "Delay", id: 0x3a, type: "uint32", conformance: "O", default: 0,
-                    quality: "X"
-                },
+                { tag: "attribute", name: "Delay", id: 0x3a, type: "uint32", conformance: "O", default: 0, quality: "X" },
                 {
                     tag: "attribute", name: "SecurityPolicy", id: 0x3b, type: "SecurityPolicy", conformance: "M",
                     quality: "X"
@@ -5649,9 +5459,12 @@ export const ChipMatter: MatterElement = {
                     children: [ { tag: "datatype", name: "entry", type: "NetworkFault" } ]
                 },
                 { tag: "command", name: "ResetCounts", id: 0x0, conformance: "O", direction: "request" },
+
                 {
                     tag: "event", name: "ConnectionStatus", id: 0x0, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M" } ]
+                    children: [
+                        { tag: "datatype", name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M" }
+                    ]
                 },
 
                 {
@@ -5770,10 +5583,7 @@ export const ChipMatter: MatterElement = {
                      "preferred format.",
 
             children: [
-                {
-                    tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW",
-                    conformance: "M"
-                },
+                { tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW", conformance: "M" },
                 {
                     tag: "attribute", name: "ActiveCalendarType", id: 0x1, type: "CalendarTypeEnum", access: "RW",
                     conformance: "O"
@@ -5819,10 +5629,7 @@ export const ChipMatter: MatterElement = {
 
             children: [
                 { tag: "attribute", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", quality: "X" },
-                {
-                    tag: "attribute", name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M",
-                    default: 0
-                },
+                { tag: "attribute", name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M", default: 0 },
                 { tag: "attribute", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: 0 },
                 {
                     tag: "attribute", name: "TrustedTimeNodeId", id: 0x3, type: "node-id", access: "RW VA",
@@ -5920,10 +5727,7 @@ export const ChipMatter: MatterElement = {
                      "by which they can be configured to use a user’s preferred unit.",
 
             children: [
-                {
-                    tag: "attribute", name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", access: "RW",
-                    conformance: "O"
-                },
+                { tag: "attribute", name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", access: "RW", conformance: "O" },
 
                 {
                     tag: "datatype", name: "TempUnitEnum", type: "enum8", conformance: "M",
@@ -5974,10 +5778,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "SecurityType", id: 0x1, type: "SecurityTypeEnum", conformance: "M",
                     quality: "X"
                 },
-                {
-                    tag: "attribute", name: "WifiVersion", id: 0x2, type: "WiFiVersionEnum", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "WifiVersion", id: 0x2, type: "WiFiVersionEnum", conformance: "M", quality: "X" },
                 {
                     tag: "attribute", name: "ChannelNumber", id: 0x3, type: "uint16", conformance: "M", default: 0,
                     quality: "X"
@@ -6023,15 +5824,20 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "event", name: "AssociationFailure", id: 0x1, conformance: "O", priority: "info",
+
                     children: [
-                        { tag: "datatype", name: "AssociationFailure", type: "AssociationFailureCauseEnum", conformance: "M" },
+                        {
+                            tag: "datatype", name: "AssociationFailure", type: "AssociationFailureCauseEnum", conformance: "M"
+                        },
                         { tag: "datatype", name: "Status", type: "uint16", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "event", name: "ConnectionStatus", id: 0x2, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M" } ]
+                    children: [
+                        { tag: "datatype", name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M" }
+                    ]
                 },
 
                 {
@@ -6095,14 +5901,8 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "WcPhysicalClosedLimitTilt", id: 0x2, type: "uint16", conformance: "O",
                     default: 0
                 },
-                {
-                    tag: "attribute", name: "WcCurrentPositionLift", id: 0x3, type: "uint16", conformance: "O",
-                    quality: "X"
-                },
-                {
-                    tag: "attribute", name: "WcCurrentPositionTilt", id: 0x4, type: "uint16", conformance: "O",
-                    quality: "X"
-                },
+                { tag: "attribute", name: "WcCurrentPositionLift", id: 0x3, type: "uint16", conformance: "O", quality: "X" },
+                { tag: "attribute", name: "WcCurrentPositionTilt", id: 0x4, type: "uint16", conformance: "O", quality: "X" },
                 {
                     tag: "attribute", name: "WcNumberOfActuationsLift", id: 0x5, type: "uint16", conformance: "O",
                     default: 0
@@ -6113,7 +5913,7 @@ export const ChipMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "WcConfigStatus", id: 0x7, type: "ConfigStatus", conformance: "M",
-                    default: 3
+                    default: [ "Operational", "OnlineReserved" ]
                 },
                 {
                     tag: "attribute", name: "WcCurrentPositionLiftPercentage", id: 0x8, type: "percent",
@@ -6163,10 +5963,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "WcInstalledClosedLimitTilt", id: 0x13, type: "uint16", conformance: "O",
                     default: 0
                 },
-                {
-                    tag: "attribute", name: "WcMode", id: 0x17, type: "Mode", access: "RW VM", conformance: "M",
-                    default: 0
-                },
+                { tag: "attribute", name: "WcMode", id: 0x17, type: "Mode", access: "RW VM", conformance: "M", default: 0 },
                 {
                     tag: "attribute", name: "WcSafetyStatus", id: 0x1a, type: "SafetyStatus", conformance: "O",
                     default: 0, quality: "P"
@@ -6178,17 +5975,24 @@ export const ChipMatter: MatterElement = {
                     tag: "command", name: "GoToLiftValue", id: 0x4, conformance: "O", direction: "request",
                     children: [ { tag: "datatype", name: "LiftValue", type: "uint16", conformance: "M" } ]
                 },
+
                 {
                     tag: "command", name: "GoToLiftPercentage", id: 0x5, conformance: "O", direction: "request",
-                    children: [ { tag: "datatype", name: "LiftPercent100ThsValue", type: "percent100ths", conformance: "M" } ]
+                    children: [
+                        { tag: "datatype", name: "LiftPercent100ThsValue", type: "percent100ths", conformance: "M" }
+                    ]
                 },
+
                 {
                     tag: "command", name: "GoToTiltValue", id: 0x7, conformance: "O", direction: "request",
                     children: [ { tag: "datatype", name: "TiltValue", type: "uint16", conformance: "M" } ]
                 },
+
                 {
                     tag: "command", name: "GoToTiltPercentage", id: 0x8, conformance: "O", direction: "request",
-                    children: [ { tag: "datatype", name: "TiltPercent100ThsValue", type: "percent100ths", conformance: "M" } ]
+                    children: [
+                        { tag: "datatype", name: "TiltPercent100ThsValue", type: "percent100ths", conformance: "M" }
+                    ]
                 },
 
                 {
@@ -6320,14 +6124,8 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "BarrierCommandCloseEvents", id: 0x7, type: "uint16", access: "RW",
                     conformance: "O", default: 0
                 },
-                {
-                    tag: "attribute", name: "BarrierOpenPeriod", id: 0x8, type: "uint16", access: "RW",
-                    conformance: "O"
-                },
-                {
-                    tag: "attribute", name: "BarrierClosePeriod", id: 0x9, type: "uint16", access: "RW",
-                    conformance: "O"
-                },
+                { tag: "attribute", name: "BarrierOpenPeriod", id: 0x8, type: "uint16", access: "RW", conformance: "O" },
+                { tag: "attribute", name: "BarrierClosePeriod", id: 0x9, type: "uint16", access: "RW", conformance: "O" },
                 { tag: "attribute", name: "BarrierPosition", id: 0xa, type: "uint8", conformance: "M" },
                 {
                     tag: "command", name: "BarrierControlGoToPercent", id: 0x0, conformance: "M", direction: "request",
@@ -6354,40 +6152,19 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "DcPower", id: 0x106, type: "int16", conformance: "O", default: 32768 },
                 { tag: "attribute", name: "DcPowerMin", id: 0x107, type: "int16", conformance: "O", default: 32768 },
                 { tag: "attribute", name: "DcPowerMax", id: 0x108, type: "int16", conformance: "O", default: 32768 },
-                {
-                    tag: "attribute", name: "DcVoltageMultiplier", id: 0x200, type: "uint16", conformance: "O",
-                    default: 1
-                },
+                { tag: "attribute", name: "DcVoltageMultiplier", id: 0x200, type: "uint16", conformance: "O", default: 1 },
                 { tag: "attribute", name: "DcVoltageDivisor", id: 0x201, type: "uint16", conformance: "O", default: 1 },
-                {
-                    tag: "attribute", name: "DcCurrentMultiplier", id: 0x202, type: "uint16", conformance: "O",
-                    default: 1
-                },
+                { tag: "attribute", name: "DcCurrentMultiplier", id: 0x202, type: "uint16", conformance: "O", default: 1 },
                 { tag: "attribute", name: "DcCurrentDivisor", id: 0x203, type: "uint16", conformance: "O", default: 1 },
-                {
-                    tag: "attribute", name: "DcPowerMultiplier", id: 0x204, type: "uint16", conformance: "O",
-                    default: 1
-                },
+                { tag: "attribute", name: "DcPowerMultiplier", id: 0x204, type: "uint16", conformance: "O", default: 1 },
                 { tag: "attribute", name: "DcPowerDivisor", id: 0x205, type: "uint16", conformance: "O", default: 1 },
                 { tag: "attribute", name: "AcFrequency", id: 0x300, type: "uint16", conformance: "O", default: 65535 },
-                {
-                    tag: "attribute", name: "AcFrequencyMin", id: 0x301, type: "uint16", conformance: "O",
-                    default: 65535
-                },
-                {
-                    tag: "attribute", name: "AcFrequencyMax", id: 0x302, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "AcFrequencyMin", id: 0x301, type: "uint16", conformance: "O", default: 65535 },
+                { tag: "attribute", name: "AcFrequencyMax", id: 0x302, type: "uint16", conformance: "O", default: 65535 },
                 { tag: "attribute", name: "NeutralCurrent", id: 0x303, type: "uint16", conformance: "O", default: 0 },
                 { tag: "attribute", name: "TotalActivePower", id: 0x304, type: "int32", conformance: "O", default: 0 },
-                {
-                    tag: "attribute", name: "TotalReactivePower", id: 0x305, type: "int32", conformance: "O",
-                    default: 0
-                },
-                {
-                    tag: "attribute", name: "TotalApparentPower", id: 0x306, type: "uint32", conformance: "O",
-                    default: 1
-                },
+                { tag: "attribute", name: "TotalReactivePower", id: 0x305, type: "int32", conformance: "O", default: 0 },
+                { tag: "attribute", name: "TotalApparentPower", id: 0x306, type: "uint32", conformance: "O", default: 1 },
                 {
                     tag: "attribute", name: "Measured1StHarmonicCurrent", id: 0x307, type: "int16", conformance: "O",
                     default: 32768
@@ -6436,14 +6213,8 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "MeasuredPhase11ThHarmonicCurrent", id: 0x312, type: "int16",
                     conformance: "O", default: 32768
                 },
-                {
-                    tag: "attribute", name: "AcFrequencyMultiplier", id: 0x400, type: "uint16", conformance: "O",
-                    default: 1
-                },
-                {
-                    tag: "attribute", name: "AcFrequencyDivisor", id: 0x401, type: "uint16", conformance: "O",
-                    default: 1
-                },
+                { tag: "attribute", name: "AcFrequencyMultiplier", id: 0x400, type: "uint16", conformance: "O", default: 1 },
+                { tag: "attribute", name: "AcFrequencyDivisor", id: 0x401, type: "uint16", conformance: "O", default: 1 },
                 { tag: "attribute", name: "PowerMultiplier", id: 0x402, type: "uint32", conformance: "O", default: 1 },
                 { tag: "attribute", name: "PowerDivisor", id: 0x403, type: "uint32", conformance: "O", default: 1 },
                 {
@@ -6470,42 +6241,18 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "InstantaneousReactiveCurrent", id: 0x503, type: "int16", conformance: "O",
                     default: 65535
                 },
-                {
-                    tag: "attribute", name: "InstantaneousPower", id: 0x504, type: "int16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "InstantaneousPower", id: 0x504, type: "int16", conformance: "O", default: 65535 },
                 { tag: "attribute", name: "RmsVoltage", id: 0x505, type: "uint16", conformance: "O", default: 65535 },
-                {
-                    tag: "attribute", name: "RmsVoltageMin", id: 0x506, type: "uint16", conformance: "O",
-                    default: 32768
-                },
-                {
-                    tag: "attribute", name: "RmsVoltageMax", id: 0x507, type: "uint16", conformance: "O",
-                    default: 32768
-                },
+                { tag: "attribute", name: "RmsVoltageMin", id: 0x506, type: "uint16", conformance: "O", default: 32768 },
+                { tag: "attribute", name: "RmsVoltageMax", id: 0x507, type: "uint16", conformance: "O", default: 32768 },
                 { tag: "attribute", name: "RmsCurrent", id: 0x508, type: "uint16", conformance: "O", default: 65535 },
-                {
-                    tag: "attribute", name: "RmsCurrentMin", id: 0x509, type: "uint16", conformance: "O",
-                    default: 65535
-                },
-                {
-                    tag: "attribute", name: "RmsCurrentMax", id: 0x50a, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "RmsCurrentMin", id: 0x509, type: "uint16", conformance: "O", default: 65535 },
+                { tag: "attribute", name: "RmsCurrentMax", id: 0x50a, type: "uint16", conformance: "O", default: 65535 },
                 { tag: "attribute", name: "ActivePower", id: 0x50b, type: "int16", conformance: "O", default: 65535 },
-                {
-                    tag: "attribute", name: "ActivePowerMin", id: 0x50c, type: "int16", conformance: "O",
-                    default: 65535
-                },
-                {
-                    tag: "attribute", name: "ActivePowerMax", id: 0x50d, type: "int16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "ActivePowerMin", id: 0x50c, type: "int16", conformance: "O", default: 65535 },
+                { tag: "attribute", name: "ActivePowerMax", id: 0x50d, type: "int16", conformance: "O", default: 65535 },
                 { tag: "attribute", name: "ReactivePower", id: 0x50e, type: "int16", conformance: "O", default: 65535 },
-                {
-                    tag: "attribute", name: "ApparentPower", id: 0x50f, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "ApparentPower", id: 0x50f, type: "uint16", conformance: "O", default: 65535 },
                 { tag: "attribute", name: "AcPowerFactor", id: 0x510, type: "int8", conformance: "O", default: 0 },
                 {
                     tag: "attribute", name: "AverageRmsVoltageMeasurementPeriod", id: 0x511, type: "uint16",
@@ -6531,49 +6278,25 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "RmsVoltageSwellPeriod", id: 0x517, type: "uint16", access: "RW",
                     conformance: "O", default: 0
                 },
-                {
-                    tag: "attribute", name: "AcVoltageMultiplier", id: 0x600, type: "uint16", conformance: "O",
-                    default: 1
-                },
+                { tag: "attribute", name: "AcVoltageMultiplier", id: 0x600, type: "uint16", conformance: "O", default: 1 },
                 { tag: "attribute", name: "AcVoltageDivisor", id: 0x601, type: "uint16", conformance: "O", default: 1 },
-                {
-                    tag: "attribute", name: "AcCurrentMultiplier", id: 0x602, type: "uint16", conformance: "O",
-                    default: 1
-                },
+                { tag: "attribute", name: "AcCurrentMultiplier", id: 0x602, type: "uint16", conformance: "O", default: 1 },
                 { tag: "attribute", name: "AcCurrentDivisor", id: 0x603, type: "uint16", conformance: "O", default: 1 },
-                {
-                    tag: "attribute", name: "AcPowerMultiplier", id: 0x604, type: "uint16", conformance: "O",
-                    default: 1
-                },
+                { tag: "attribute", name: "AcPowerMultiplier", id: 0x604, type: "uint16", conformance: "O", default: 1 },
                 { tag: "attribute", name: "AcPowerDivisor", id: 0x605, type: "uint16", conformance: "O", default: 1 },
                 {
                     tag: "attribute", name: "DcOverloadAlarmsMask", id: 0x700, type: "map8", access: "RW",
                     conformance: "O", default: 0
                 },
-                {
-                    tag: "attribute", name: "DcVoltageOverload", id: 0x701, type: "int16", conformance: "O",
-                    default: 65535
-                },
-                {
-                    tag: "attribute", name: "DcCurrentOverload", id: 0x702, type: "int16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "DcVoltageOverload", id: 0x701, type: "int16", conformance: "O", default: 65535 },
+                { tag: "attribute", name: "DcCurrentOverload", id: 0x702, type: "int16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "AcOverloadAlarmsMask", id: 0x800, type: "map16", access: "RW",
                     conformance: "O", default: 0
                 },
-                {
-                    tag: "attribute", name: "AcVoltageOverload", id: 0x801, type: "int16", conformance: "O",
-                    default: 65535
-                },
-                {
-                    tag: "attribute", name: "AcCurrentOverload", id: 0x802, type: "int16", conformance: "O",
-                    default: 65535
-                },
-                {
-                    tag: "attribute", name: "AcPowerOverload", id: 0x803, type: "int16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "AcVoltageOverload", id: 0x801, type: "int16", conformance: "O", default: 65535 },
+                { tag: "attribute", name: "AcCurrentOverload", id: 0x802, type: "int16", conformance: "O", default: 65535 },
+                { tag: "attribute", name: "AcPowerOverload", id: 0x803, type: "int16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "AcReactivePowerOverload", id: 0x804, type: "int16", conformance: "O",
                     default: 65535
@@ -6595,14 +6318,8 @@ export const ChipMatter: MatterElement = {
                     default: 65535
                 },
                 { tag: "attribute", name: "RmsVoltageSag", id: 0x809, type: "int16", conformance: "O", default: 65535 },
-                {
-                    tag: "attribute", name: "RmsVoltageSwell", id: 0x80a, type: "int16", conformance: "O",
-                    default: 65535
-                },
-                {
-                    tag: "attribute", name: "LineCurrentPhaseB", id: 0x901, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "RmsVoltageSwell", id: 0x80a, type: "int16", conformance: "O", default: 65535 },
+                { tag: "attribute", name: "LineCurrentPhaseB", id: 0x901, type: "uint16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "ActiveCurrentPhaseB", id: 0x902, type: "int16", conformance: "O",
                     default: 65535
@@ -6611,10 +6328,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "ReactiveCurrentPhaseB", id: 0x903, type: "int16", conformance: "O",
                     default: 65535
                 },
-                {
-                    tag: "attribute", name: "RmsVoltagePhaseB", id: 0x905, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "RmsVoltagePhaseB", id: 0x905, type: "uint16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "RmsVoltageMinPhaseB", id: 0x906, type: "uint16", conformance: "O",
                     default: 65535
@@ -6623,10 +6337,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "RmsVoltageMaxPhaseB", id: 0x907, type: "uint16", conformance: "O",
                     default: 65535
                 },
-                {
-                    tag: "attribute", name: "RmsCurrentPhaseB", id: 0x908, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "RmsCurrentPhaseB", id: 0x908, type: "uint16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "RmsCurrentMinPhaseB", id: 0x909, type: "uint16", conformance: "O",
                     default: 65535
@@ -6635,10 +6346,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "RmsCurrentMaxPhaseB", id: 0x90a, type: "uint16", conformance: "O",
                     default: 65535
                 },
-                {
-                    tag: "attribute", name: "ActivePowerPhaseB", id: 0x90b, type: "int16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "ActivePowerPhaseB", id: 0x90b, type: "int16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "ActivePowerMinPhaseB", id: 0x90c, type: "int16", conformance: "O",
                     default: 65535
@@ -6684,10 +6392,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "RmsVoltageSwellPeriodPhaseB", id: 0x917, type: "uint16", conformance: "O",
                     default: 0
                 },
-                {
-                    tag: "attribute", name: "LineCurrentPhaseC", id: 0xa01, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "LineCurrentPhaseC", id: 0xa01, type: "uint16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "ActiveCurrentPhaseC", id: 0xa02, type: "int16", conformance: "O",
                     default: 65535
@@ -6696,10 +6401,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "ReactiveCurrentPhaseC", id: 0xa03, type: "int16", conformance: "O",
                     default: 65535
                 },
-                {
-                    tag: "attribute", name: "RmsVoltagePhaseC", id: 0xa05, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "RmsVoltagePhaseC", id: 0xa05, type: "uint16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "RmsVoltageMinPhaseC", id: 0xa06, type: "uint16", conformance: "O",
                     default: 65535
@@ -6708,10 +6410,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "RmsVoltageMaxPhaseC", id: 0xa07, type: "uint16", conformance: "O",
                     default: 65535
                 },
-                {
-                    tag: "attribute", name: "RmsCurrentPhaseC", id: 0xa08, type: "uint16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "RmsCurrentPhaseC", id: 0xa08, type: "uint16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "RmsCurrentMinPhaseC", id: 0xa09, type: "uint16", conformance: "O",
                     default: 65535
@@ -6720,10 +6419,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "RmsCurrentMaxPhaseC", id: 0xa0a, type: "uint16", conformance: "O",
                     default: 65535
                 },
-                {
-                    tag: "attribute", name: "ActivePowerPhaseC", id: 0xa0b, type: "int16", conformance: "O",
-                    default: 65535
-                },
+                { tag: "attribute", name: "ActivePowerPhaseC", id: 0xa0b, type: "int16", conformance: "O", default: 65535 },
                 {
                     tag: "attribute", name: "ActivePowerMinPhaseC", id: 0xa0c, type: "int16", conformance: "O",
                     default: 65535

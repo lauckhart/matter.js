@@ -45,7 +45,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OnTime", id: 0x4001, type: "uint16", access: "RW", conformance: "LT",
+            tag: "attribute", name: "OnTime", id: 0x4001, type: "uint16", access: "RW VO", conformance: "LT",
             quality: "X",
             details: "The OnTime attribute specifies the length of time (in 1/10ths second) that the ‘On’ state SHALL be " +
                      "maintained before automatically transitioning to the ‘Off’ state when using the OnWithTimedOff " +
@@ -55,8 +55,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OffWaitTime", id: 0x4002, type: "uint16", access: "RW", conformance: "LT",
-            quality: "X",
+            tag: "attribute", name: "OffWaitTime", id: 0x4002, type: "uint16", access: "RW VO",
+            conformance: "LT", quality: "X",
 
             details: "The OffWaitTime attribute specifies the length of time (in 1/10ths second) that the ‘Off’ state " +
                      "SHALL be guarded to prevent another OnWithTimedOff command turning the server back to its ‘On’ " +

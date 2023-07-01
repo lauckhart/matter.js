@@ -37,7 +37,8 @@
     "generate-chip": "node --loader ts-node/esm tools/generate-chip.ts",
     "generate-model": "node --loader ts-node/esm tools/generate-model.ts",
     "generate-clusters": "node --loader ts-node/esm tools/generate-clusters.ts",
-    "dump-model-names": "node --loader ts-node/esm tools/dump-model-names.ts"
+    "dump-model-names": "node --loader ts-node/esm tools/dump-model-names.ts",
+    "generate": "npm run generate-model && npm run generate-clusters"
   },
   "dependencies": {
     "bn.js": "^5.2.1",

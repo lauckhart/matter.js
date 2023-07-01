@@ -12,30 +12,30 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-export const GetProfileInfoResponseCommandRequest = TlvObject({
-    ProfileCount: TlvField(0, TlvUInt8),
-    ProfileIntervalPeriod: TlvField(1, TlvUInt8),
-    MaxNumberOfIntervals: TlvField(2, TlvUInt8),
-    ListOfAttributes: TlvField(3, TlvUInt16)
+export const TlvGetProfileInfoResponseCommandRequest = TlvObject({
+    profileCount: TlvField(0, TlvUInt8),
+    profileIntervalPeriod: TlvField(1, TlvUInt8),
+    maxNumberOfIntervals: TlvField(2, TlvUInt8),
+    listOfAttributes: TlvField(3, TlvUInt16)
 });
 
-export const GetMeasurementProfileResponseCommandRequest = TlvObject({
-    StartTime: TlvField(0, TlvUInt32),
-    Status: TlvField(1, TlvUInt8),
-    ProfileIntervalPeriod: TlvField(2, TlvUInt8),
-    NumberOfIntervalsDelivered: TlvField(3, TlvUInt8),
-    AttributeId: TlvField(4, TlvUInt16),
-    Intervals: TlvField(5, TlvUInt8)
+export const TlvGetMeasurementProfileResponseCommandRequest = TlvObject({
+    startTime: TlvField(0, TlvUInt32),
+    status: TlvField(1, TlvUInt8),
+    profileIntervalPeriod: TlvField(2, TlvUInt8),
+    numberOfIntervalsDelivered: TlvField(3, TlvUInt8),
+    attributeId: TlvField(4, TlvUInt16),
+    intervals: TlvField(5, TlvUInt8)
 });
 
-export const GetMeasurementProfileCommandRequest = TlvObject({
-    AttributeId: TlvField(0, TlvUInt16),
-    StartTime: TlvField(1, TlvUInt32),
-    NumberOfIntervals: TlvField(2, TlvUInt8)
+export const TlvGetMeasurementProfileCommandRequest = TlvObject({
+    attributeId: TlvField(0, TlvUInt16),
+    startTime: TlvField(1, TlvUInt32),
+    numberOfIntervals: TlvField(2, TlvUInt8)
 });
 
 export namespace ElectricalMeasurementCluster {
-    export const id = 2820;
+    export const id = 0xb04;
     export const name = "ElectricalMeasurement";
     export const revision = 1;
 
@@ -172,17 +172,19 @@ export namespace ElectricalMeasurementCluster {
         },
 
         commands: {
-            getProfileInfoResponseCommand: OptionalCommand(0, GetProfileInfoResponseCommandRequest, 0, TlvNoResponse),
+            getProfileInfoResponseCommand: OptionalCommand(0, TlvGetProfileInfoResponseCommandRequest, 0, TlvNoResponse),
             getProfileInfoCommand: OptionalCommand(0, TlvNoArguments, 0, TlvNoResponse),
-            getMeasurementProfileResponseCommand: OptionalCommand(1, GetMeasurementProfileResponseCommandRequest, 1, TlvNoResponse),
-            getMeasurementProfileCommand: OptionalCommand(1, GetMeasurementProfileCommandRequest, 1, TlvNoResponse)
+
+            getMeasurementProfileResponseCommand: OptionalCommand(
+                1,
+                TlvGetMeasurementProfileResponseCommandRequest,
+                1,
+                TlvNoResponse
+            ),
+
+            getMeasurementProfileCommand: OptionalCommand(1, TlvGetMeasurementProfileCommandRequest, 1, TlvNoResponse)
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

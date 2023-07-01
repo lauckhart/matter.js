@@ -11,12 +11,11 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * The TemperatureDisplayMode attribute specifies the units of the temperature
- * displayed on the thermostat screen.
+ * The TemperatureDisplayMode attribute specifies the units of the temperature displayed on the thermostat screen.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.1
  */
-export const enum TemperatureDisplayMode {
+export const enum TlvTemperatureDisplayMode {
     /**
      * Temperature displayed in °C
      */
@@ -29,12 +28,11 @@ export const enum TemperatureDisplayMode {
 };
 
 /**
- * The KeypadLockout attribute specifies the level of functionality that is
- * available to the user via the keypad.
+ * The KeypadLockout attribute specifies the level of functionality that is available to the user via the keypad.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.2
  */
-export const enum KeypadLockout {
+export const enum TlvKeypadLockout {
     /**
      * All functionality available to the user
      */
@@ -67,15 +65,13 @@ export const enum KeypadLockout {
 };
 
 /**
- * The ScheduleProgrammingVisibility attribute is used to hide the weekly
- * schedule programming functionality or menu on a thermostat from a user to
- * prevent local user programming of the weekly schedule. The schedule
- * programming MAY still be performed via a remote interface, and the
- * thermostat MAY operate in schedule programming mode.
+ * The ScheduleProgrammingVisibility attribute is used to hide the weekly schedule programming functionality or menu on
+ * a thermostat from a user to prevent local user programming of the weekly schedule. The schedule programming MAY
+ * still be performed via a remote interface, and the thermostat MAY operate in schedule programming mode.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.3
  */
-export const enum ScheduleProgrammingVisibility {
+export const enum TlvScheduleProgrammingVisibility {
     /**
      * Local schedule programming functionality is enabled at the thermostat
      */
@@ -88,46 +84,51 @@ export const enum ScheduleProgrammingVisibility {
 };
 
 export namespace ThermostatUserInterfaceConfigurationCluster {
-    export const id = 516;
+    export const id = 0x204;
     export const name = "ThermostatUserInterfaceConfiguration";
     export const revision = 1;
 
     const Base = {
         attributes: {
             /**
-             * The TemperatureDisplayMode attribute specifies the units of the
-             * temperature displayed on the thermostat screen.
+             * The TemperatureDisplayMode attribute specifies the units of the temperature displayed on the thermostat
+             * screen.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.1
              */
-            temperatureDisplayMode: WritableAttribute(0, TlvEnum<TemperatureDisplayMode>()),
+            temperatureDisplayMode: WritableAttribute(
+                0,
+                TlvEnum<TlvTemperatureDisplayMode>(),
+                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+            ),
 
             /**
-             * The KeypadLockout attribute specifies the level of functionality
-             * that is available to the user via the keypad.
+             * The KeypadLockout attribute specifies the level of functionality that is available to the user via the
+             * keypad.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.2
              */
-            keypadLockout: WritableAttribute(1, TlvEnum<KeypadLockout>(), { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }),
+            keypadLockout: WritableAttribute(
+                1,
+                TlvEnum<TlvKeypadLockout>(),
+                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            ),
 
             /**
-             * The ScheduleProgrammingVisibility attribute is used to hide the
-             * weekly schedule programming functionality or menu on a
-             * thermostat from a user to prevent local user programming of the
-             * weekly schedule. The schedule programming MAY still be performed
-             * via a remote interface, and the thermostat MAY operate in
-             * schedule programming mode.
+             * The ScheduleProgrammingVisibility attribute is used to hide the weekly schedule programming
+             * functionality or menu on a thermostat from a user to prevent local user programming of the weekly
+             * schedule. The schedule programming MAY still be performed via a remote interface, and the thermostat MAY
+             * operate in schedule programming mode.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.3
              */
-            scheduleProgrammingVisibility: OptionalWritableAttribute(2, TlvEnum<ScheduleProgrammingVisibility>(), { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage })
+            scheduleProgrammingVisibility: OptionalWritableAttribute(
+                2,
+                TlvEnum<TlvScheduleProgrammingVisibility>(),
+                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            )
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

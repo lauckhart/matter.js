@@ -40,7 +40,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "CurrentApp", id: 0x1, type: "ApplicationEPStruct", access: "RW",
+            tag: "attribute", name: "CurrentApp", id: 0x1, type: "ApplicationEPStruct", access: "R V",
             conformance: "O", constraint: "desc", default: null, quality: "X",
             details: "This attribute SHALL specify the current in-focus application, identified using an Application ID, " +
                      "catalog vendor ID and the corresponding endpoint number when the application is represented by a " +

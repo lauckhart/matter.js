@@ -106,11 +106,19 @@ export class ModelValidator<T extends Model> {
         const identities = {} as { [identity: string]: number };
 
         for (const child of this.model.children) {
-            const identity = `${child.tag}:${child.name}:${(child as any).conformance}`;
-            if (identities[identity]) {
-                identities[identity]++;
-            } else {
-                identities[identity] = 1;
+            function addIdentity(id: string | number) {
+                const identity = `${child.tag}:${id}:${(child as any).conformance}`;
+                if (identities[identity]) {
+                    identities[identity]++;
+                } else {
+                    identities[identity] = 1;
+                }
+            }
+
+            addIdentity(child.name);
+
+            if (child.effectiveId) {
+                addIdentity(child.effectiveId);
             }
         }
 

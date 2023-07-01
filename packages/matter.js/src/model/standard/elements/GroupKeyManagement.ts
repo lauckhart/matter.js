@@ -28,7 +28,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "GroupKeyMap", id: 0x0, type: "list", access: "RW VM", conformance: "M",
+            tag: "attribute", name: "GroupKeyMap", id: 0x0, type: "list", access: "RW F VM", conformance: "M",
             constraint: "desc", quality: "N",
             details: "This attribute is a list of GroupKeyMapStruct entries. Each entry associates a logical Group Id " +
                      "with a particular group key set.",
@@ -67,16 +67,16 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "KeySetWrite", id: 0x0, access: "R F A", conformance: "M",
-            direction: "request", response: "status",
+            tag: "command", name: "KeySetWrite", id: 0x0, access: "F A", conformance: "M", direction: "request",
+            response: "status",
             details: "This command is used by Administrators to set the state of a given Group Key Set, including atomi",
             xref: { document: "core", section: "11.2.8.1" },
             children: [ { tag: "datatype", name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" } ]
         },
 
         {
-            tag: "command", name: "KeySetRead", id: 0x1, access: "R F A", conformance: "M",
-            direction: "request", response: "KeySetReadResponse",
+            tag: "command", name: "KeySetRead", id: 0x1, access: "F A", conformance: "M", direction: "request",
+            response: "KeySetReadResponse",
             details: "This command is used by Administrators to read the state of a given Group Key Set.",
             xref: { document: "core", section: "11.2.8.2" },
             children: [ { tag: "datatype", name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" } ]
@@ -92,7 +92,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "KeySetRemove", id: 0x3, access: "R F A", conformance: "M",
+            tag: "command", name: "KeySetRemove", id: 0x3, access: "F A", conformance: "M",
             direction: "request", response: "status",
             details: "This command is used by Administrators to remove all state of a given Group Key Set.",
             xref: { document: "core", section: "11.2.8.4" },
@@ -100,7 +100,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "KeySetReadAllIndices", id: 0x4, access: "R F A", conformance: "M",
+            tag: "command", name: "KeySetReadAllIndices", id: 0x4, access: "F A", conformance: "M",
             direction: "request", response: "KeySetReadAllIndicesResponse",
             details: "This command is used by Administrators to query a list of all Group Key Sets associated with the " +
                      "accessing fabric.",

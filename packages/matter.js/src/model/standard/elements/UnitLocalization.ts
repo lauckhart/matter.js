@@ -31,7 +31,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", access: "RW",
+            tag: "attribute", name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", access: "RW VM",
             conformance: "TEMP", default: null, quality: "X N",
             details: "The TemperatureUnit attribute SHALL indicate the unit for the Node to use only when conveying " +
                      "temperature in communication to the user. If provided, this value SHALL take priority over any unit " +

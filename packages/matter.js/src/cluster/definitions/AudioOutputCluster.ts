@@ -19,7 +19,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.2
  */
-export const enum OutputTypeEnum {
+export const enum TlvOutputTypeEnum {
     /**
      * HDMI
      */
@@ -37,48 +37,44 @@ export const enum OutputTypeEnum {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.1
  */
-export const OutputInfoStruct = TlvObject({
+export const TlvOutputInfoStruct = TlvObject({
     /**
      * This SHALL indicate the unique index into the list of outputs.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.1.1
      */
-    Index: TlvField(0, TlvUInt8),
+    index: TlvField(0, TlvUInt8),
 
     /**
      * This SHALL indicate the type of output
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.1.2
      */
-    OutputType: TlvField(1, TlvEnum<OutputTypeEnum>()),
+    outputType: TlvField(1, TlvEnum<TlvOutputTypeEnum>()),
 
     /**
-     * The device defined and user editable output name, such as “Soundbar”,
-     * “Speakers”. This field may be blank, but SHOULD be provided when known.
+     * The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be blank, but
+     * SHOULD be provided when known.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.1.3
      */
-    Name: TlvField(2, TlvString)
+    name: TlvField(2, TlvString)
 });
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4
  */
-export const SelectOutputRequest = TlvObject({ Index: TlvField(0, TlvUInt8) });
+export const TlvSelectOutputRequest = TlvObject({ index: TlvField(0, TlvUInt8) });
 
 /**
- * Upon receipt, this SHALL rename the output at a specific index in the Output
- * List.
+ * Upon receipt, this SHALL rename the output at a specific index in the Output List.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4.2
  */
-export const RenameOutputRequest = TlvObject({
-    Index: TlvField(0, TlvUInt8),
-    Name: TlvField(1, TlvString)
-});
+export const TlvRenameOutputRequest = TlvObject({ index: TlvField(0, TlvUInt8), name: TlvField(1, TlvString) });
 
 export namespace AudioOutputCluster {
-    export const id = 1291;
+    export const id = 0x50b;
     export const name = "AudioOutput";
     export const revision = 1;
 
@@ -98,11 +94,10 @@ export namespace AudioOutputCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.3.1
              */
-            outputList: Attribute(0, TlvArray(OutputInfoStruct), { readAcl: AccessLevel.View }),
+            outputList: Attribute(0, TlvArray(TlvOutputInfoStruct), { readAcl: AccessLevel.View }),
 
             /**
-             * This field contains the value of the index field of the
-             * currently selected OutputInfoStruct.
+             * This field contains the value of the index field of the currently selected OutputInfoStruct.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.3.2
              */
@@ -113,19 +108,18 @@ export namespace AudioOutputCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4
              */
-            selectOutput: Command(0, SelectOutputRequest, 0, TlvNoResponse)
+            selectOutput: Command(0, TlvSelectOutputRequest, 0, TlvNoResponse)
         }
     };
 
     const NameUpdates = {
         commands: {
             /**
-             * Upon receipt, this SHALL rename the output at a specific index
-             * in the Output List.
+             * Upon receipt, this SHALL rename the output at a specific index in the Output List.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4.2
              */
-            renameOutput: Command(1, RenameOutputRequest, 1, TlvNoResponse)
+            renameOutput: Command(1, TlvRenameOutputRequest, 1, TlvNoResponse)
         }
     };
 
@@ -135,9 +129,6 @@ export namespace AudioOutputCluster {
         revision,
         features: featureMap,
         supportedFeatures: { nameUpdates: true },
-        elements: [
-            Base,
-            NameUpdates
-        ]
+        elements: [ Base, NameUpdates ]
     });
 };

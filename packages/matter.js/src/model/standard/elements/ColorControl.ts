@@ -132,7 +132,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Options", id: 0xf, type: "map8", access: "RW", conformance: "M",
+            tag: "attribute", name: "Options", id: 0xf, type: "map8", access: "RW VO", conformance: "M",
             constraint: "desc",
             details: "The Options attribute is meant to be changed only during commissioning. The Options attribute is a " +
                      "bitmap that determines the default behavior of some cluster commands. Each command that is " +
@@ -237,7 +237,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CoupleColorTempToLevelMinMireds", id: 0x400d, type: "uint16",
-            access: "R V", conformance: "CT",
+            access: "R V", conformance: "CT & ColorTemperatureMireds",
             constraint: "ColorTempPhysicalMinMireds to ColorTemperatureMireds",
             details: "The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the " +
                      "ColorTemperatureMireds attribute for the purposes of coupling the ColorTemperatureMireds attribute " +
@@ -249,7 +249,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "StartUpColorTemperatureMireds", id: 0x4010, type: "uint16",
-            access: "RW VM", conformance: "CT", constraint: "0", quality: "X",
+            access: "RW VM", conformance: "CT & ColorTemperatureMireds", constraint: "0", quality: "X",
             details: "The StartUpColorTemperatureMireds attribute SHALL define the desired startup color temperature " +
                      "value a lamp SHALL use when it is supplied with power and this value SHALL be reflected in the " +
                      "ColorTemperatureMireds attribute. In addition, the ColorMode and EnhancedColorMode attributes SHALL " +

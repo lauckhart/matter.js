@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { WritableAttribute, FixedAttribute, AccessLevel } from "../../cluster/Cluster.js";
+import { WritableAttribute, AccessLevel, FixedAttribute } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -16,7 +16,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.1
  */
-export const enum HourFormatEnum {
+export const enum TlvHourFormatEnum {
     "12Hr" = 0,
     "24Hr" = 1
 };
@@ -24,7 +24,7 @@ export const enum HourFormatEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.2
  */
-export const enum CalendarTypeEnum {
+export const enum TlvCalendarTypeEnum {
     Buddhist = 0,
     Chinese = 1,
     Coptic = 2,
@@ -40,7 +40,7 @@ export const enum CalendarTypeEnum {
 };
 
 export namespace TimeFormatLocalizationCluster {
-    export const id = 44;
+    export const id = 0x2c;
     export const name = "TimeFormatLocalization";
     export const revision = 1;
 
@@ -48,8 +48,7 @@ export namespace TimeFormatLocalizationCluster {
         /**
          * CalendarFormat
          *
-         * The Node can be configured to use different calendar formats when
-         * conveying values to a user.
+         * The Node can be configured to use different calendar formats when conveying values to a user.
          */
         calendarFormat: BitFlag(0)
     };
@@ -57,40 +56,47 @@ export namespace TimeFormatLocalizationCluster {
     const Base = {
         attributes: {
             /**
-             * The HourFormat attribute SHALL represent the format that the
-             * Node is currently configured to use when conveying the hour unit
-             * of time. If provided, this value SHALL take priority over any
-             * unit
+             * The HourFormat attribute SHALL represent the format that the Node is currently configured to use when
+             * conveying the hour unit of time. If provided, this value SHALL take priority over any unit
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.1
              */
-            hourFormat: WritableAttribute(0, TlvNullable(TlvEnum<HourFormatEnum>()), { persistent: true, default: null })
+            hourFormat: WritableAttribute(
+                0,
+                TlvNullable(TlvEnum<TlvHourFormatEnum>()),
+                { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            )
         }
     };
 
     const CalendarFormat = {
         attributes: {
             /**
-             * The ActiveCalendarType attribute SHALL represent the calendar
-             * format that the Node is currently configured to use when
-             * conveying dates. If provided, this value SHALL take priority
-             * over any unit implied through the ActiveLocale Attribute.
+             * The ActiveCalendarType attribute SHALL represent the calendar format that the Node is currently
+             * configured to use when conveying dates. If provided, this value SHALL take priority over any unit
+             * implied through the ActiveLocale Attribute.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.2
              */
-            activeCalendarType: WritableAttribute(1, TlvNullable(TlvEnum<CalendarTypeEnum>()), { persistent: true, default: null }),
+            activeCalendarType: WritableAttribute(
+                1,
+                TlvNullable(TlvEnum<TlvCalendarTypeEnum>()),
+                { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            ),
 
             /**
-             * The SupportedCalendarTypes attribute SHALL represent a list of
-             * CalendarTypeEnum values that are supported by the Node. The list
-             * SHALL NOT contain any duplicate entries. The ordering of items
-             * within the list SHOULD NOT express any meaning. The maximum
-             * length of the SupportedCalendarTypes list SHALL be equivalent to
-             * the number of enumerations within CalendarTypeEnum.
+             * The SupportedCalendarTypes attribute SHALL represent a list of CalendarTypeEnum values that are
+             * supported by the Node. The list SHALL NOT contain any duplicate entries. The ordering of items within
+             * the list SHOULD NOT express any meaning. The maximum length of the SupportedCalendarTypes list SHALL be
+             * equivalent to the number of enumerations within CalendarTypeEnum.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.3
              */
-            supportedCalendarTypes: FixedAttribute(2, TlvArray(TlvEnum<CalendarTypeEnum>()), { readAcl: AccessLevel.View })
+            supportedCalendarTypes: FixedAttribute(
+                2,
+                TlvArray(TlvEnum<TlvCalendarTypeEnum>()),
+                { readAcl: AccessLevel.View }
+            )
         }
     };
 
@@ -100,9 +106,6 @@ export namespace TimeFormatLocalizationCluster {
         revision,
         features: featureMap,
         supportedFeatures: { calendarFormat: true },
-        elements: [
-            Base,
-            CalendarFormat
-        ]
+        elements: [ Base, CalendarFormat ]
     });
 };

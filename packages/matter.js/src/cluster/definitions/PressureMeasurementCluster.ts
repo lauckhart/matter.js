@@ -15,7 +15,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 
 export namespace PressureMeasurementCluster {
-    export const id = 1027;
+    export const id = 0x403;
     export const name = "PressureMeasurement";
     export const revision = 1;
 
@@ -35,31 +35,38 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.1
              */
-            measuredValue: Attribute(0, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            measuredValue: Attribute(
+                0,
+                TlvNullable(TlvInt16.bound({ min: "MinMeasuredValue", max: "MaxMeasuredValue" })),
+                { readAcl: AccessLevel.View }
+            ),
 
             /**
-             * This attribute indicates the minimum value of MeasuredValue that
-             * can be measured. See Measured Value for more details.
+             * This attribute indicates the minimum value of MeasuredValue that can be measured. See Measured Value for
+             * more details.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.2
              */
             minMeasuredValue: Attribute(1, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
 
             /**
-             * This attribute indicates the maximum value of MeasuredValue that
-             * can be measured. See Measured Value for more details.
+             * This attribute indicates the maximum value of MeasuredValue that can be measured. See Measured Value for
+             * more details.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.3
              */
-            maxMeasuredValue: Attribute(2, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            maxMeasuredValue: Attribute(
+                2,
+                TlvNullable(TlvInt16.bound({ min: "MinMeasuredValue1", max: 32767 })),
+                { readAcl: AccessLevel.View }
+            ),
 
             /**
-             * This attribute indicates the magnitude of the possible error
-             * that is associated with ScaledValue.
+             * This attribute indicates the magnitude of the possible error that is associated with ScaledValue.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16, { readAcl: AccessLevel.View })
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { readAcl: AccessLevel.View })
         }
     };
 
@@ -70,42 +77,50 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.5
              */
-            scaledValue: Attribute(16, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            scaledValue: Attribute(
+                16,
+                TlvNullable(TlvInt16.bound({ min: "MinScaledValue", max: "MaxScaledValue" })),
+                { readAcl: AccessLevel.View }
+            ),
 
             /**
-             * The MinScaledValue attribute indicates the minimum value of
-             * ScaledValue that can be measured. The null value indicates that
-             * the value is not available.
+             * The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The null
+             * value indicates that the value is not available.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.6
              */
             minScaledValue: Attribute(17, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
 
             /**
-             * This attribute indicates the maximum value of ScaledValue that
-             * can be measured. MaxScaledValue SHALL be greater than
-             * MinScaledValue.
+             * This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue SHALL be
+             * greater than MinScaledValue.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.7
              */
-            maxScaledValue: Attribute(18, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            maxScaledValue: Attribute(
+                18,
+                TlvNullable(TlvInt16.bound({ min: "MinScaledValue1", max: 32767 })),
+                { readAcl: AccessLevel.View }
+            ),
 
             /**
-             * This attribute indicates the magnitude of the possible error
-             * that is associated with ScaledValue. The true value is located
-             * in the range
+             * This attribute indicates the magnitude of the possible error that is associated with ScaledValue. The
+             * true value is located in the range
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.8
              */
-            scaledTolerance: OptionalAttribute(19, TlvUInt16, { readAcl: AccessLevel.View }),
+            scaledTolerance: OptionalAttribute(
+                19,
+                TlvUInt16.bound({ min: 0, max: 2048 }),
+                { readAcl: AccessLevel.View }
+            ),
 
             /**
-             * This attribute indicates the base 10 exponent used to obtain
-             * ScaledValue (see ScaledValue Attribute).
+             * This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue Attribute).
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.9
              */
-            scale: Attribute(20, TlvInt8, { readAcl: AccessLevel.View })
+            scale: Attribute(20, TlvInt8.bound({ min: -127, max: 127 }), { readAcl: AccessLevel.View })
         }
     };
 
@@ -115,9 +130,6 @@ export namespace PressureMeasurementCluster {
         revision,
         features: featureMap,
         supportedFeatures: { extended: true },
-        elements: [
-            Base,
-            Extended
-        ]
+        elements: [ Base, Extended ]
     });
 };

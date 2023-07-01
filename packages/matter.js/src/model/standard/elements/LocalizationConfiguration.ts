@@ -19,7 +19,7 @@ Matter.children.push({
 
     children: [
         {
-            tag: "attribute", name: "ActiveLocale", id: 0x0, type: "string", access: "RW", conformance: "M",
+            tag: "attribute", name: "ActiveLocale", id: 0x0, type: "string", access: "RW VM", conformance: "M",
             constraint: "max 35", quality: "N",
             details: "The ActiveLocale attribute SHALL represent the locale that the Node is currently configured to use " +
                      "when conveying information. The ActiveLocale attribute SHALL be a Language Tag as defined by BCP47 " +

@@ -63,7 +63,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "StartUpMode", id: 0x4, type: "uint8", access: "RW", conformance: "O",
+            tag: "attribute", name: "StartUpMode", id: 0x4, type: "uint8", access: "RW VO", conformance: "O",
             constraint: "desc", quality: "X N",
             details: "The StartUpMode attribute value indicates the desired startup mode for the server when it is " +
                      "supplied with power.",
@@ -71,7 +71,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW", conformance: "DEPONOFF",
+            tag: "attribute", name: "OnMode", id: 0x5, type: "uint8", access: "RW VO", conformance: "DEPONOFF",
             constraint: "desc", default: null, quality: "X N",
             details: "This attribute SHALL indicate the value of CurrentMode that depends on the state of the On/Off " +
                      "cluster on the same endpoint. If this attribute is not present or is set to null, it SHALL NOT have " +

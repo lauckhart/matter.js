@@ -42,7 +42,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "SupportedStreamingProtocols", id: 0x1, type: "map32", access: "RW",
+            tag: "attribute", name: "SupportedStreamingProtocols", id: 0x1, type: "map32", access: "R V",
             conformance: "UP", quality: "N",
             details: "This attribute provides information about supported streaming protocols.",
             xref: { document: "cluster", section: "6.7.3.2" }

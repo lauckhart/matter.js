@@ -16,10 +16,10 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.5.1
  */
-export const StateChangeEvent = TlvObject({ StateValue: TlvField(0, TlvBoolean) });
+export const TlvStateChangeEvent = TlvObject({ stateValue: TlvField(0, TlvBoolean) });
 
 export namespace BooleanStateCluster {
-    export const id = 69;
+    export const id = 0x45;
     export const name = "BooleanState";
     export const revision = 1;
 
@@ -35,19 +35,13 @@ export namespace BooleanStateCluster {
 
         events: {
             /**
-             * This event SHALL be generated when the StateValue attribute
-             * changes.
+             * This event SHALL be generated when the StateValue attribute changes.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.5.1
              */
-            stateChange: OptionalEvent(0, EventPriority.Info, StateChangeEvent)
+            stateChange: OptionalEvent(0, EventPriority.Info, TlvStateChangeEvent)
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

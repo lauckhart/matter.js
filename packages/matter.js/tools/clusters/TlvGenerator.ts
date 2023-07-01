@@ -5,10 +5,24 @@
  */
 
 import { InternalError } from "../../src/common/index.js";
-import { ClusterModel, CommandModel, Conformance, Datatype, DatatypeModel, EventModel, Metatype, Model, ValueModel } from "../../src/model/index.js";
+import { ClusterModel, CommandModel, Conformance, Datatype, DatatypeModel, EventModel, Globals, Metatype, Model, ValueModel } from "../../src/model/index.js";
 import { camelize, serialize } from "../../src/util/index.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
+
+const IntegerGlobalMap: { [name: string]: [ string, string ]} = {
+    [Globals.actionId.name]: [ "datatype", "TlvAttributeId" ],
+    [Globals.clusterId.name]: [ "datatype", "TlvClusterId" ],
+    [Globals.commandId.name]: [ "datatype", "TlvCommandId" ],
+    [Globals.deviceTypeId.name]: [ "datatype", "TlvDeviceTypeId" ],
+    [Globals.endpointNo.name]: [ "datatype", "TlvEndpointNumber" ],
+    [Globals.eventId.name]: [ "datatype", "TlvEventId" ],
+    [Globals.fabricId.name]: [ "datatype", "TlvFabricId" ],
+    [Globals.groupId.name]: [ "datatype", "TlvGroupId" ],
+    [Globals.nodeId.name]: [ "datatype", "TlvNodeId" ],
+    [Globals.SubjectId.name]: [ "datatype", "TlvSubjectId" ],
+    [Globals.vendorId.name]: [ "datatype", "TlvVendorId" ]
+};
 
 /** Adds TLV structures for ValueModels to a ClusterFile */
 export class TlvGenerator {
@@ -39,6 +53,19 @@ export class TlvGenerator {
     }
 
     /**
+     * Import TLV type with automatic file naming.  Returns the name.
+     */
+    importTlv(fileOrDirectory: string, name: string) {
+        if (fileOrDirectory == "datatype") {
+            fileOrDirectory = `${fileOrDirectory}/${name.replace(/^Tlv/, "")}`;
+        } else if (fileOrDirectory == "tlv") {
+            fileOrDirectory = `${fileOrDirectory}/${name}`;
+        }
+        this.file.addImport(fileOrDirectory, name);
+        return name;
+    }
+
+    /**
      * Reference a TLV type.  Adds definitions to the file as necessary.
      * 
      * @return the referencing TS expression as a string
@@ -52,8 +79,7 @@ export class TlvGenerator {
         let tlv: string;
         switch (metabase.metatype) {
             case Metatype.boolean:
-                tlv = "TlvBoolean";
-                this.file.addImport("tlv/TlvBoolean", tlv);
+                tlv = this.importTlv("tlv", "TlvBoolean");
                 break;
 
             case Metatype.float:
@@ -62,22 +88,20 @@ export class TlvGenerator {
                 } else {
                     tlv = "TlvDouble";
                 }
-                this.file.addImport("tlv/TlvNumber", tlv);
+                this.importTlv("tlv/TlvNumber", tlv);
                 break;
 
             case Metatype.integer:
-                tlv = this.integerTlv(metabase);
+                tlv = this.integerTlv(metabase, model);
                 break;
 
             case Metatype.any:
-                tlv = "TlvAny";
-                this.file.addImport("tlv/TlvAny", tlv);
+                tlv = this.importTlv("tlv", "TlvAny");
                 break;
     
             case Metatype.bytes:
             case Metatype.string:
-                tlv = metabase.name == Datatype.octstr ? "TlvByteString" : "TlvString";
-                this.file.addImport("tlv/TlvString", tlv);
+                tlv = this.importTlv("tlv/TlvString", metabase.name == Datatype.octstr ? "TlvByteString" : "TlvString");
                 if (model.constraint.min != undefined || model.constraint.max != undefined) {
                     const bounds = {} as any;
                     if (model.constraint.min) {
@@ -91,7 +115,7 @@ export class TlvGenerator {
                 break;
     
             case Metatype.array:
-                this.file.addImport("tlv/TlvArray", "TlvArray");
+                this.importTlv("tlv", "TlvArray");
                 const entry = model.listEntry;
                 if (!entry) {
                     throw new InternalError(`${model.path}: No list entry type`);
@@ -107,7 +131,7 @@ export class TlvGenerator {
                     } else {
                         // No fields; revert to the primitive type the bitmap
                         // derives from
-                        tlv = this.primitiveTlv(metabase);
+                        tlv = this.primitiveTlv(metabase, model);
                     }
                 }
                 break;
@@ -116,12 +140,12 @@ export class TlvGenerator {
                 {
                     const dt = this.defineDatatype(model);
                     if (dt) {
-                        this.file.addImport("tlv/TlvNumber", "TlvEnum");
+                        this.importTlv("tlv/TlvNumber", "TlvEnum");
                         tlv = `TlvEnum<${dt}>()`;
                     } else {
                         // No fields; revert to the primitive type the enum
                         // derives from
-                        tlv = this.primitiveTlv(metabase);
+                        tlv = this.primitiveTlv(metabase, model);
                     }
                 }
                 break;
@@ -135,8 +159,7 @@ export class TlvGenerator {
                         // This is only legal for commands but we'll fall back
                         // to it in the (illegal) case where an object has no
                         // fields
-                        this.file.addImport("tlv/TlvNoArguments", "TlvNoArguments");
-                        return "TlvNoArguments";
+                        return this.importTlv("tlv", "TlvNoArguments");
                     }
                 }
                 break;
@@ -145,24 +168,41 @@ export class TlvGenerator {
                 throw new InternalError(`${model.path}: No tlv mapping for base type ${metabase.name}`);
         }
         if (model.quality.nullable) {
-            this.file.addImport("tlv/TlvNullable", "TlvNullable");
+            this.importTlv("tlv", "TlvNullable");
             tlv = `TlvNullable(${tlv})`;
         }
         return tlv;
     }
 
-    private integerTlv(metabase: ValueModel) {
-        const tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
-        this.file.addImport("tlv/TlvNumber", tlv);
+    private integerTlv(metabase: ValueModel, model: ValueModel) {
+        const globalMapping = IntegerGlobalMap[model.globalBase?.type as any];
+        if (globalMapping) {
+            return this.importTlv(...globalMapping);
+        }
+        
+        let tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
+        this.importTlv("tlv/TlvNumber", tlv);
+
+        const bounds = {} as { min?: number, max?: number };
+        if (model.constraint.min != undefined) {
+            bounds.min = model.constraint.min;
+        }
+        if (model.constraint.max != undefined) {
+            bounds.max = model.constraint.max;
+        }
+        if (Object.keys(bounds).length) {
+            tlv = `${tlv}.bound(${serialize(bounds)})`;
+        }
+
         return tlv;
     }
 
-    private primitiveTlv(metabase: ValueModel) {
+    private primitiveTlv(metabase: ValueModel, model: ValueModel) {
         const primitive = metabase.primitiveBase;
         if (!primitive) {
             throw new InternalError(`No primitive base for type ${metabase.name}`);
         }
-        return this.integerTlv(primitive);
+        return this.integerTlv(primitive, model);
     }
 
     private defineEnum(name: string, model: ValueModel) {
@@ -177,7 +217,7 @@ export class TlvGenerator {
     }
 
     private defineStruct(name: string, model: ValueModel) {
-        this.file.addImport("tlv/TlvObject", "TlvObject");
+        this.importTlv("tlv", "TlvObject");
         const block = this.file.types.expressions(`export const ${name} = TlvObject({`, "})")
             .document(model);
         this.file.types.insertingBefore(block, () => {
@@ -188,8 +228,8 @@ export class TlvGenerator {
                 } else {
                     tlv = "TlvOptionalField"
                 }
-                this.file.addImport("tlv/TlvObject", tlv);
-                block.atom(field.name, `${tlv}(${field.effectiveId}, ${this.reference(field)})`)
+                this.importTlv("tlv/TlvObject", tlv);
+                block.atom(camelize(field.name, false), `${tlv}(${field.effectiveId}, ${this.reference(field)})`)
                     .document(field);
             });
         });
@@ -218,16 +258,16 @@ export class TlvGenerator {
                 throw new InternalError(`${model.path}: Could not determine numeric type for ${model.type}`);
         }
 
-        this.file.addImport("tlv/TlvNumber", tlvNum);
-        this.file.addImport("tlv/TlvNumber", "TlvBitmap");
-        this.file.addImport("schema/BitmapSchema", "BitFlag");
+        this.importTlv("tlv/TlvNumber", tlvNum);
+        this.importTlv("tlv/TlvNumber", "TlvBitmap");
+        this.importTlv("schema/BitmapSchema", "BitFlag");
 
         const block = this.file.types.expressions(`export const ${name}Bits = {`, "}")
             .document(model);
 
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(child => {
-                block.atom(child.name, `BitFlag(${child.id})`)
+                block.atom(camelize(child.name, false), `BitFlag(${child.id})`)
                     .document(child);
             });
         });
@@ -258,13 +298,14 @@ export class TlvGenerator {
             name += "Event";
         }
 
+        name = "Tlv" + name;
+
         if (this.definedDatatypes.has(model)) {
             return name;
         }
 
         this.definedDatatypes.add(model);
         if (this.definedNames.has(name)) {
-            debugger;
             throw new InternalError(`Duplicate definitions of module-scope "${name}"`);
         }
         this.definedNames.add(name);

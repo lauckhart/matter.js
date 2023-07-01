@@ -7,19 +7,19 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { WritableAttribute, Attribute, AccessLevel, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
+import { WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This attribute specifies how the identification state is presented to the
- * user. This field SHALL contain one of the values listed below:
+ * This attribute specifies how the identification state is presented to the user. This field SHALL contain one of the
+ * values listed below:
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
  */
-export const enum IdentifyType {
+export const enum TlvIdentifyType {
     /**
      * No presentation.
      */
@@ -43,29 +43,28 @@ export const enum IdentifyType {
     Display = 4,
 
     /**
-     * Presentation will be conveyed by actuator functionality such as through
-     * a window blind operation or in-wall relay.
+     * Presentation will be conveyed by actuator functionality such as through a window blind operation or in-wall
+     * relay.
      */
     Actuator = 5
 };
 
 /**
- * This command starts or stops the receiving device identifying itself. This
- * command SHALL have the following data fields:
+ * This command starts or stops the receiving device identifying itself. This command SHALL have the following data
+ * fields:
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
  */
-export const IdentifyRequest = TlvObject({ IdentifyTime: TlvField(0, TlvUInt16) });
+export const TlvIdentifyRequest = TlvObject({ identifyTime: TlvField(0, TlvUInt16) });
 
 /**
- * This field specifies the identify effect to use. All values of the
- * EffectIdentifier SHALL be supported. Implementors MAY deviate from the
- * example light effects in the table below, but they SHOULD indicate during
- * testing how they handle each effect.
+ * This field specifies the identify effect to use. All values of the EffectIdentifier SHALL be supported. Implementors
+ * MAY deviate from the example light effects in the table below, but they SHOULD indicate during testing how they
+ * handle each effect.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.1
  */
-export const enum EffectIdentifier {
+export const enum TlvEffectIdentifier {
     /**
      * e.g., Light is turned on/off once.
      */
@@ -77,22 +76,19 @@ export const enum EffectIdentifier {
     Breathe = 1,
 
     /**
-     * e.g., Colored light turns green for 1 second; non-colored light flashes
-     * twice.
+     * e.g., Colored light turns green for 1 second; non-colored light flashes twice.
      */
     Okay = 2,
 
     /**
-     * e.g., Colored light turns orange for 8 seconds; non-colored light
-     * switches to the maximum brightness for 0.5s and then minimum brightness
-     * for 7.5s.
+     * e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s
+     * and then minimum brightness for 7.5s.
      */
     ChannelChange = 11,
 
     /**
-     * Complete the current effect sequence before terminating. e.g., if in the
-     * middle of a breathe effect (as above), first complete the current 1s
-     * breathe effect and then terminate the effect.
+     * Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above),
+     * first complete the current 1s breathe effect and then terminate the effect.
      */
     FinishEffect = 254,
 
@@ -103,68 +99,63 @@ export const enum EffectIdentifier {
 };
 
 /**
- * This field is used to indicate which variant of the effect, indicated in the
- * EffectIdentifier field, SHOULD be triggered. If a device does not support
- * the given variant, it SHALL use the default variant. This field SHALL
+ * This field is used to indicate which variant of the effect, indicated in the EffectIdentifier field, SHOULD be
+ * triggered. If a device does not support the given variant, it SHALL use the default variant. This field SHALL
  * contain one of the values listed below:
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.2
  */
-export const enum EffectVariant { Default = 0 };
+export const enum TlvEffectVariant {
+    Default = 0
+};
 
 /**
- * This command allows the support of feedback to the user, such as a certain
- * light effect. It is used to allow an implementation to provide visual
- * feedback to the user under certain circumstances such as a color light
- * turning green when it has successfully connected to a network. The use of
- * this command and the effects themselves are entirely up to the implementer
- * to use whenever a visual feedback is useful but it is not the same as and
- * does not replace the identify mechanism used during commissioning.
+ * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow an
+ * implementation to provide visual feedback to the user under certain circumstances such as a color light turning
+ * green when it has successfully connected to a network. The use of this command and the effects themselves are
+ * entirely up to the implementer to use whenever a visual feedback is useful but it is not the same as and does not
+ * replace the identify mechanism used during commissioning.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
  */
-export const TriggerEffectRequest = TlvObject({
+export const TlvTriggerEffectRequest = TlvObject({
     /**
-     * This field specifies the identify effect to use. All values of the
-     * EffectIdentifier SHALL be supported. Implementors MAY deviate from the
-     * example light effects in the table below, but they SHOULD indicate
-     * during testing how they handle each effect.
+     * This field specifies the identify effect to use. All values of the EffectIdentifier SHALL be supported.
+     * Implementors MAY deviate from the example light effects in the table below, but they SHOULD indicate during
+     * testing how they handle each effect.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.1
      */
-    EffectIdentifier: TlvField(0, TlvEnum<EffectIdentifier>()),
+    effectIdentifier: TlvField(0, TlvEnum<TlvEffectIdentifier>()),
 
     /**
-     * This field is used to indicate which variant of the effect, indicated in
-     * the EffectIdentifier field, SHOULD be triggered. If a device does not
-     * support the given variant, it SHALL use the default variant. This field
-     * SHALL contain one of the values listed below:
+     * This field is used to indicate which variant of the effect, indicated in the EffectIdentifier field, SHOULD be
+     * triggered. If a device does not support the given variant, it SHALL use the default variant. This field SHALL
+     * contain one of the values listed below:
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.2
      */
-    EffectVariant: TlvField(1, TlvEnum<EffectVariant>())
+    effectVariant: TlvField(1, TlvEnum<TlvEffectVariant>())
 });
 
 /**
- * This command is generated in response to receiving an IdentifyQuery command,
- * see IdentifyQuery Command, in the case that the device is currently
- * identifying itself.
+ * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command, in the case
+ * that the device is currently identifying itself.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
  */
-export const IdentifyQueryResponseRequest = TlvObject({
+export const TlvIdentifyQueryResponseRequest = TlvObject({
     /**
-     * This field contains the current value of the IdentifyTime attribute, and
-     * specifies the length of time, in seconds, that the device will continue
-     * to identify itself.
+     * This field contains the current value of the IdentifyTime attribute, and specifies the length of time, in
+     * seconds, that the device will continue to identify itself.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4.1
      */
-    Timeout: TlvField(0, TlvUInt16)
+    timeout: TlvField(0, TlvUInt16)
 });
 
 export namespace IdentifyCluster {
-    export const id = 3;
+    export const id = 0x3;
     export const name = "Identify";
     export const revision = 1;
 
@@ -180,66 +171,61 @@ export namespace IdentifyCluster {
     const Base = {
         attributes: {
             /**
-             * This attribute specifies the remaining length of time, in
-             * seconds, that the endpoint will continue to identify itself.
+             * This attribute specifies the remaining length of time, in seconds, that the endpoint will continue to
+             * identify itself.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
              */
-            identifyTime: WritableAttribute(0, TlvUInt16),
+            identifyTime: WritableAttribute(0, TlvUInt16, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }),
 
             /**
-             * This attribute specifies how the identification state is
-             * presented to the user. This field SHALL contain one of the
-             * values listed below:
+             * This attribute specifies how the identification state is presented to the user. This field SHALL contain
+             * one of the values listed below:
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
              */
-            identifyType: Attribute(1, TlvEnum<IdentifyType>(), { readAcl: AccessLevel.View })
+            identifyType: Attribute(1, TlvEnum<TlvIdentifyType>(), { readAcl: AccessLevel.View })
         },
 
         commands: {
             /**
-             * This command starts or stops the receiving device identifying
-             * itself. This command SHALL have the following data fields:
+             * This command starts or stops the receiving device identifying itself. This command SHALL have the
+             * following data fields:
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
              */
-            identify: Command(0, IdentifyRequest, 0, TlvNoResponse),
+            identify: Command(0, TlvIdentifyRequest, 0, TlvNoResponse),
 
             /**
-             * This command allows the support of feedback to the user, such as
-             * a certain light effect. It is used to allow an implementation to
-             * provide visual feedback to the user under certain circumstances
-             * such as a color light turning green when it has successfully
-             * connected to a network. The use of this command and the effects
-             * themselves are entirely up to the implementer to use whenever a
-             * visual feedback is useful but it is not the same as and does not
-             * replace the identify mechanism used during commissioning.
+             * This command allows the support of feedback to the user, such as a certain light effect. It is used to
+             * allow an implementation to provide visual feedback to the user under certain circumstances such as a
+             * color light turning green when it has successfully connected to a network. The use of this command and
+             * the effects themselves are entirely up to the implementer to use whenever a visual feedback is useful
+             * but it is not the same as and does not replace the identify mechanism used during commissioning.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
              */
-            triggerEffect: OptionalCommand(64, TriggerEffectRequest, 64, TlvNoResponse)
+            triggerEffect: OptionalCommand(64, TlvTriggerEffectRequest, 64, TlvNoResponse)
         }
     };
 
     const Query = {
         commands: {
             /**
-             * This command is generated in response to receiving an
-             * IdentifyQuery command, see IdentifyQuery Command, in the case
-             * that the device is currently identifying itself.
+             * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command,
+             * in the case that the device is currently identifying itself.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
              */
-            identifyQueryResponse: Command(0, IdentifyQueryResponseRequest, 0, TlvNoResponse),
+            identifyQueryResponse: Command(0, TlvIdentifyQueryResponseRequest, 0, TlvNoResponse),
 
             /**
-             * This command allows the sending device to request the target or
-             * targets to respond if they are currently identifying themselves.
+             * This command allows the sending device to request the target or targets to respond if they are currently
+             * identifying themselves.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
              */
-            identifyQuery: Command(1, TlvNoArguments, 0, IdentifyQueryResponseRequest)
+            identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponseRequest)
         }
     };
 
@@ -249,9 +235,6 @@ export namespace IdentifyCluster {
         revision,
         features: featureMap,
         supportedFeatures: { query: true },
-        elements: [
-            Base,
-            Query
-        ]
+        elements: [ Base, Query ]
     });
 };

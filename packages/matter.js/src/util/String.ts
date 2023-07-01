@@ -107,6 +107,14 @@ export function serialize(value: any) {
         if (typeof value == "boolean") {
             return value ? "true" : "false";
         }
+        if (ArrayBuffer.isView(value)) {
+            const dv = new DataView(value.buffer);
+            const bytes = Array<string>();
+            for (let i = 0; i < dv.byteLength; i++) {
+                bytes.push(dv.getUint8(i).toString(16).padStart(2, "0"));
+            }
+            return bytes.join("");
+        }
 
         // Composite objects after this
         if (visited.has(value)) {
@@ -162,5 +170,25 @@ export namespace serialize {
             value[SERIALIZE] = function() { return this.toString(); };
         }
         return value;
+    }
+
+    /**
+     * Test whether a value serializes as a structure or a primitive.
+     */
+    export function isPrimitive(value: any) {
+        if (
+            value == undefined
+            || value instanceof Date
+            || ArrayBuffer.isView(value)
+            || value[SERIALIZE]
+        ) {
+            return true;
+        }
+
+        if (Array.isArray(value)) {
+            return false;
+        }
+
+        return typeof value != "object";
     }
 }

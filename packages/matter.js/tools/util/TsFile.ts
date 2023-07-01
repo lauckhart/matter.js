@@ -5,6 +5,7 @@
  */
 
 import { Specification } from "../../src/model/index.js";
+import { serialize } from "../../src/util/String.js";
 import { writeMatterFile } from "./file.js";
 import { asObjectKey, wordWrap } from "./string.js";
 
@@ -17,7 +18,7 @@ const HEADER = `/**
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/`;
 
 const INDENT = "    ";
-const WRAP_WIDTH = 80;
+const WRAP_WIDTH = 120;
 
 type Documentation = {
     description?: string,
@@ -246,6 +247,33 @@ export class Block extends Entry {
         return atom;
     }
 
+    /** Add an atom or block that recreates the input value */
+    value(value: any, prefix: string = "", suffix: string = "") {
+        if (value === undefined) {
+            return;
+        }
+
+        if (Array.isArray(value)) {
+            const block = this.expressions(`${prefix}[`, `]${suffix}`);
+            value.forEach(v => v === undefined ? block.atom("null") : block.value(v));
+            return block;
+        }
+
+        if (serialize.isPrimitive(value)) {
+            const serialized = serialize(value);
+            if (serialized == undefined) {
+                return;
+            }
+            return this.atom(`${prefix}${serialized}${suffix}`);
+        }
+
+        const block = this.expressions(`${prefix}{`, `}${suffix}`);
+        for (const k in value) {
+            block.value(value[k], `${asObjectKey(k)}: `);
+        }
+        return block;
+    }
+
     /** Execute logic with block configured for specific insertion point */
     insertingBefore<T>(before: Entry, fn: () => T) {
         const oldAddBefore = this.addBefore;
@@ -331,37 +359,59 @@ class StatementBlock extends NestedBlock {
 enum ExpressionLayout {
     None,
     SingleLine,
+    SingleNested,
     MultipleLines,
     Verbose
 };
 
-function chooseExpressionLayout(currentLayout: ExpressionLayout, serializedEntry: string) {
-    const multiline = serializedEntry.indexOf("\n") != -1;
-    const simpleBlock = serializedEntry.match(/^(?:\[.*\]|\{.*\})$/);
+function chooseExpressionLayout(lineLength: number, serializedEntries: string[]) {
+    let currentLayout = ExpressionLayout.None;
+    for (const entry of serializedEntries) {
+        const multiline = entry.indexOf("\n") != -1;
 
-    // If the entry is multiline but not a block, must use verbose layout
-    if (multiline && !simpleBlock) {
-        return ExpressionLayout.Verbose;
+        // Any comment or assignment automatically forces verbose layout mode
+        if (entry.match(/(?:\/\*|\/\/| = )/)) {
+            return ExpressionLayout.Verbose;
+        }
+
+        switch (currentLayout) {
+            case ExpressionLayout.None:
+                if (multiline) {
+                    currentLayout = ExpressionLayout.SingleNested;
+                } else {
+                    lineLength += entry.trim().length;
+                    if (lineLength >= WRAP_WIDTH + INDENT.length) {
+                        currentLayout = ExpressionLayout.MultipleLines;
+                    } else {
+                        currentLayout = ExpressionLayout.SingleLine;
+                    }
+                }
+                break;
+
+            case ExpressionLayout.SingleNested:
+                return ExpressionLayout.Verbose;
+
+            case ExpressionLayout.SingleLine:
+                if (multiline) {
+                    return ExpressionLayout.Verbose;
+                }
+
+                lineLength += entry.trim().length + 2;
+                
+                if (lineLength >= WRAP_WIDTH + INDENT.length) {
+                    currentLayout = ExpressionLayout.MultipleLines;
+                }
+
+                break;
+
+            case ExpressionLayout.MultipleLines:
+                if (multiline) {
+                    return ExpressionLayout.Verbose;
+                }
+                break;
+        }
     }
-
-    switch (currentLayout) {
-        case ExpressionLayout.None:
-            return simpleBlock ? ExpressionLayout.Verbose : ExpressionLayout.SingleLine;
-
-        case ExpressionLayout.SingleLine:
-            if (!multiline) {
-                return ExpressionLayout.MultipleLines;
-            }
-            break;
-
-        case ExpressionLayout.MultipleLines:
-            if (!multiline) {
-                return currentLayout;
-            }
-            break;
-    }
-
-    return ExpressionLayout.Verbose;
+    return currentLayout;
 }
 
 class ExpressionBlock extends NestedBlock {
@@ -370,23 +420,38 @@ class ExpressionBlock extends NestedBlock {
     }
 
     override layOutEntries(linePrefix: string, serializedEntries: string[]) {
-        // Scan the entries to determine how we format the code
-        let layout = ExpressionLayout.None;
-        for (const entry of serializedEntries) {
-            layout = chooseExpressionLayout(layout, entry);
-            if (layout == ExpressionLayout.Verbose) {
-                // Must use least optimal "verbose" format
-                break;
-            }
+        let adornmentLength = linePrefix.length + this.prefix.length;
+        const isArrayOrObject = this.prefix.match(/[\[{]/);
+        if (isArrayOrObject) {
+            adornmentLength += 2;
         }
+
+        // Scan the entries to determine how we format the code
+        const layout = chooseExpressionLayout(adornmentLength, serializedEntries);
 
         // Render optimized layouts
         switch (layout) {
             case ExpressionLayout.None:
                 return `${linePrefix}${this.prefix}${this.suffix}`;
 
+            case ExpressionLayout.SingleNested:
+                {
+                    // Need to reserialize with reduced padding
+                    let line = this.entries[0].toString(linePrefix).trim();
+                    if (isArrayOrObject) {
+                        line = ` ${line} `;
+                    }
+                    return `${linePrefix}${this.prefix}${line}${this.suffix}`;
+                }
+
             case ExpressionLayout.SingleLine:
-                return `${linePrefix}${this.prefix} ${serializedEntries[0].trim()} ${this.suffix}`;
+                {
+                    let line = serializedEntries.map(e => e.trim()).join(", ");
+                    if (isArrayOrObject) {
+                        line = ` ${line} `;
+                    };
+                    return `${linePrefix}${this.prefix}${line}${this.suffix}`;
+                }
 
             case ExpressionLayout.MultipleLines:
                 return `${linePrefix}${this.prefix}\n${serializedEntries.join(",\n")}\n${linePrefix}${this.suffix}`;

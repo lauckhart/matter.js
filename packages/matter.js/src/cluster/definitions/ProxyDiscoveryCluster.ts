@@ -13,7 +13,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 
 export namespace ProxyDiscoveryCluster {
-    export const id = 67;
+    export const id = 0x43;
     export const name = "ProxyDiscovery";
     export const revision = 1;
 
@@ -31,10 +31,5 @@ export namespace ProxyDiscoveryCluster {
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

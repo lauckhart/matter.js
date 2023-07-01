@@ -20,7 +20,7 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
     logger.info(`${cluster.name} → ${file.name}.ts`);
 
     if (cluster.id != undefined) {
-        file.definitions.atom(`export const id = ${cluster.id}`);
+        file.definitions.atom(`export const id = 0x${cluster.id.toString(16)}`);
     }
     file.definitions.atom(`export const name = ${JSON.stringify(cluster.name)}`);
     file.definitions.atom(`export const revision = ${JSON.stringify(cluster.revision)}`);

@@ -13,7 +13,7 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 
 export namespace LowPowerCluster {
-    export const id = 1288;
+    export const id = 0x508;
     export const name = "LowPower";
     export const revision = 1;
 
@@ -28,10 +28,5 @@ export namespace LowPowerCluster {
         }
     };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
-    });
+    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

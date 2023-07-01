@@ -6,6 +6,7 @@
 
 import { InternalError } from "../../common/index.js";
 import { Datatype, ElementTag } from "../definitions/index.js";
+import { AnyElement } from "../elements/index.js";
 import { type Model, type ValueModel, type DatatypeModel, CommandModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
@@ -143,6 +144,47 @@ export class ModelTraversal {
                 return this.findType(model.parent, type, model.allowedBaseTags);
             }
         });
+    }
+
+    /**
+     * Find the first global model this model derives from, if any.
+     */
+    findGlobalBase(model: Model | undefined): Model | undefined {
+        if (!model) {
+            return;
+        }
+        let result: Model | undefined;
+
+        this.visitInheritance(model, (model) => {
+            if (model.global) {
+                result = model;
+                return false;
+            }
+        });
+
+        return result;
+    }
+
+    /**
+     * Determine whether this model derives from another.
+     */
+    instanceOf(model: Model | undefined, other: Model | AnyElement | undefined): boolean {
+        if (!model || !other) {
+            return false;
+        }
+        if (model == other) {
+            return true;
+        }
+        let result = false;
+
+        this.visitInheritance(model, (model) => {
+            if (model.name == other.name && model.global == other.global) {
+                result = true;
+                return false;
+            }
+        });
+
+        return result;
     }
 
     /**

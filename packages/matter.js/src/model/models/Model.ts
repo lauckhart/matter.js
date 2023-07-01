@@ -201,6 +201,14 @@ export abstract class Model {
     }
 
     /**
+     * Get the first global base type.  This may have semantic meaning more
+     * specific than the base primitive type.
+     */
+    get globalBase() {
+        return new ModelTraversal().findGlobalBase(this);
+    }
+
+    /**
      * A local or parent xref.
      */
     get effectiveXref() {
@@ -339,6 +347,13 @@ export abstract class Model {
      */
     member(key: ModelTraversal.ElementSelector): Model | undefined {
         return new ModelTraversal().findMember(this, key, [ ElementTag.Datatype, ElementTag.Attribute ]);
+    }
+
+    /**
+     * Does this model derive from another?
+     */
+    instanceOf(other: Model | AnyElement) {
+        return new ModelTraversal().instanceOf(this, other);
     }
 
     constructor(definition: BaseElement) {
