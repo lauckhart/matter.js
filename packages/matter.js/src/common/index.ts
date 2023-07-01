@@ -6,5 +6,6 @@
 
 export * from "./Broadcaster.js";
 export * from "./MatterError.js";
+export * from "./InternalError.js";
 export * from "./Scanner.js";
 export * from "./TryCatchHandler.js";

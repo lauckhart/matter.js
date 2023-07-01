@@ -5,6 +5,7 @@
  */
 
 import { ByteArray } from "../util/ByteArray.js";
+import { Merge } from "../util/index.js";
 import { Schema } from "./Schema.js";
 
 const enum BitRangeType {
@@ -169,6 +170,20 @@ export class ByteArrayBitmapSchemaInternal<T extends BitSchema> extends Schema<T
         }
         return result as TypeFromBitSchema<T>;
     }
+}
+
+export type FlagsToBitmap<T extends string[]> = {
+    [ name in T[number] ]: true
+}
+
+export type BitFlags<T extends BitSchema, F extends Extract<keyof T, string>[]> =
+    Merge<{ [key in keyof T]: false }, FlagsToBitmap<F>>;
+
+/** Create a bitmap schema with a named subset of flags set */
+export function BitFlags<T extends BitSchema, F extends Extract<keyof T, string>[]>(bitSchemas: T, ...flags: [ ...F ]) {
+    return Object.fromEntries(Object.keys(bitSchemas).map(
+        ([name]) => [ name, !(flags.indexOf(name as Extract<keyof T, string>) == -1) ]
+    )) as BitFlags<T, F>;
 }
 
 /** Declares a bitmap schema by indicating the bit position and their names. */
