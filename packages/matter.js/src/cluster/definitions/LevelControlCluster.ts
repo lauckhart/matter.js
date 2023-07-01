@@ -173,14 +173,14 @@ export namespace LevelControlCluster {
          *
          * Dependency with the On/Off cluster
          */
-        OO: BitFlag(0),
+        onOff: BitFlag(0),
 
         /**
          * Lighting
          *
          * Behavior that supports lighting applications
          */
-        LT: BitFlag(1),
+        lighting: BitFlag(1),
 
         /**
          * Frequency
@@ -188,7 +188,7 @@ export namespace LevelControlCluster {
          * Supports frequency attributes and behavior. The Pulse Width
          * Modulation cluster was created for frequency control.
          */
-        FQ: BitFlag(2)
+        frequency: BitFlag(2)
     };
 
     const Base = {
@@ -411,9 +411,9 @@ export namespace LevelControlCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            OO: true,
-            LT: true,
-            FQ: true
+            onOff: true,
+            lighting: true,
+            frequency: true
         },
         elements: [
             Base,

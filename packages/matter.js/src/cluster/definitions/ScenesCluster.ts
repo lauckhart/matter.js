@@ -383,7 +383,7 @@ export namespace ScenesCluster {
          *
          * The ability to store a name for a scene.
          */
-        SN: BitFlag(0)
+        sceneNames: BitFlag(0)
     };
 
     const Base = {
@@ -603,7 +603,7 @@ export namespace ScenesCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { SN: true },
+        supportedFeatures: { sceneNames: true },
         elements: [ Base ]
     });
 };

@@ -33,7 +33,7 @@ export namespace UnitLocalizationCluster {
          * The Node can be configured to use different units of temperature
          * when conveying values to a user.
          */
-        TEMP: BitFlag(0)
+        temperatureUnit: BitFlag(0)
     };
 
     const TemperatureUnit = {
@@ -57,7 +57,7 @@ export namespace UnitLocalizationCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { TEMP: true },
+        supportedFeatures: { temperatureUnit: true },
         elements: [
             TemperatureUnit,
             Base

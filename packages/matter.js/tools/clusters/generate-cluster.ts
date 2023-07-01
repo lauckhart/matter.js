@@ -12,6 +12,7 @@ import {
 import { Logger } from "../../src/log/index.js";
 import { ClusterFile } from "./ClusterFile.js";
 import { ClusterElementGenerator } from "./ClusterElementGenerator.js";
+import { camelize } from "../../src/util/index.js";
 
 const logger = Logger.get("generate-cluster");
 
@@ -30,8 +31,9 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
         file.addImport("schema/BitmapSchema", "BitFlag");
         const featureBlock = file.definitions.expressions("export const featureMap = {", "}");
         features.forEach(feature => {
-            allFeatures.push(feature.name);
-            featureBlock.atom(feature.name, `BitFlag(${feature.effectiveId})`)
+            const name = feature.description ? camelize(feature.description, false) : feature.name;
+            allFeatures.push(name);
+            featureBlock.atom(name, `BitFlag(${feature.effectiveId})`)
                 .document(feature);
         });
     }

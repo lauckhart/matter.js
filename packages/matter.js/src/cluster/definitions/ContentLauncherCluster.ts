@@ -438,14 +438,14 @@ export namespace ContentLauncherCluster {
          *
          * Device supports content search (non-app specific)
          */
-        CS: BitFlag(0),
+        contentSearch: BitFlag(0),
 
         /**
          * UrlPlayback
          *
          * Device supports basic URL-based file playback
          */
-        UP: BitFlag(1)
+        urlPlayback: BitFlag(1)
     };
 
     const UrlPlayback = {
@@ -510,8 +510,8 @@ export namespace ContentLauncherCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            CS: true,
-            UP: true
+            contentSearch: true,
+            urlPlayback: true
         },
 
         elements: [

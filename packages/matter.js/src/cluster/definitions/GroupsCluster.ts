@@ -138,7 +138,7 @@ export namespace GroupsCluster {
          *
          * The ability to store a name for a group.
          */
-        GN: BitFlag(0)
+        groupNames: BitFlag(0)
     };
 
     const Base = {
@@ -248,7 +248,7 @@ export namespace GroupsCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { GN: true },
+        supportedFeatures: { groupNames: true },
         elements: [ Base ]
     });
 };

@@ -242,35 +242,35 @@ export namespace WindowCoveringCluster {
          *
          * Lift Control and behavior for lifting/sliding window coverings
          */
-        LF: BitFlag(0),
+        lift: BitFlag(0),
 
         /**
          * Tilt
          *
          * Tilt Control and behavior for tilting window coverings
          */
-        TL: BitFlag(1),
+        tilt: BitFlag(1),
 
         /**
          * PositionAwareLift
          *
          * Position Aware lift control is supported.
          */
-        PA_LF: BitFlag(2),
+        positionAwareLift: BitFlag(2),
 
         /**
          * AbsolutePosition
          *
          * Absolute positioning is supported.
          */
-        ABS: BitFlag(3),
+        absolutePosition: BitFlag(3),
 
         /**
          * PositionAwareTilt
          *
          * Position Aware tilt control is supported.
          */
-        PA_TL: BitFlag(4)
+        positionAwareTilt: BitFlag(4)
     };
 
     const Base = {
@@ -603,11 +603,11 @@ export namespace WindowCoveringCluster {
         features: featureMap,
 
         supportedFeatures: {
-            LF: true,
-            TL: true,
-            PA_LF: true,
-            ABS: true,
-            PA_TL: true
+            lift: true,
+            tilt: true,
+            positionAwareLift: true,
+            absolutePosition: true,
+            positionAwareTilt: true
         },
 
         elements: [

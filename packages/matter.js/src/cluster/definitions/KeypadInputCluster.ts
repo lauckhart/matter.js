@@ -162,21 +162,21 @@ export namespace KeypadInputCluster {
          *
          * Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU
          */
-        NV: BitFlag(0),
+        navigationKeyCodes: BitFlag(0),
 
         /**
          * LocationKeys
          *
          * Supports CEC keys 0x0A (Settings) and 0x09 (Home)
          */
-        LK: BitFlag(1),
+        locationKeys: BitFlag(1),
 
         /**
          * NumberKeys
          *
          * Supports numeric input 0..9
          */
-        NK: BitFlag(2)
+        numberKeys: BitFlag(2)
     };
 
     const Base = {
@@ -205,9 +205,9 @@ export namespace KeypadInputCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            NV: true,
-            LK: true,
-            NK: true
+            navigationKeyCodes: true,
+            locationKeys: true,
+            numberKeys: true
         },
         elements: [ Base ]
     });

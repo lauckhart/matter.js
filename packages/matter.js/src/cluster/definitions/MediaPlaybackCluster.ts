@@ -212,7 +212,7 @@ export namespace MediaPlaybackCluster {
          * their user interface, such as for example a "seek bar". Adds support
          * for Attributes and Commands related to advanced seek support
          */
-        AS: BitFlag(0),
+        advancedSeek: BitFlag(0),
 
         /**
          * VariableSpeed
@@ -220,7 +220,7 @@ export namespace MediaPlaybackCluster {
          * Support for commands to support variable speed playback on media
          * that supports it.
          */
-        VS: BitFlag(1)
+        variableSpeed: BitFlag(1)
     };
 
     const Base = {
@@ -427,8 +427,8 @@ export namespace MediaPlaybackCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            AS: true,
-            VS: true
+            advancedSeek: true,
+            variableSpeed: true
         },
         elements: [
             Base,

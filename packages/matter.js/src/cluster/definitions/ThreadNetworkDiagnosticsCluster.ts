@@ -406,7 +406,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
          * Server supports the counts for the number of received and
          * transmitted packets on the Thread interface.
          */
-        PKTCNT: BitFlag(0),
+        packetCounts: BitFlag(0),
 
         /**
          * ErrorCounts
@@ -415,21 +415,21 @@ export namespace ThreadNetworkDiagnosticsCluster {
          * occurred during the reception and transmission of packets on the
          * Thread interface.
          */
-        ERRCNT: BitFlag(1),
+        errorCounts: BitFlag(1),
 
         /**
          * MleCounts
          *
          * Server supports the counts for various MLE layer happenings.
          */
-        MLECNT: BitFlag(2),
+        mleCounts: BitFlag(2),
 
         /**
          * MacCounts
          *
          * Server supports the counts for various MAC layer happenings.
          */
-        MACCNT: BitFlag(3)
+        macCounts: BitFlag(3)
     };
 
     const Base = {
@@ -1125,10 +1125,10 @@ export namespace ThreadNetworkDiagnosticsCluster {
         features: featureMap,
 
         supportedFeatures: {
-            PKTCNT: true,
-            ERRCNT: true,
-            MLECNT: true,
-            MACCNT: true
+            packetCounts: true,
+            errorCounts: true,
+            mleCounts: true,
+            macCounts: true
         },
 
         elements: [

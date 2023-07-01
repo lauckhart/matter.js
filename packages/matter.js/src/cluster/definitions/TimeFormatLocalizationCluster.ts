@@ -51,7 +51,7 @@ export namespace TimeFormatLocalizationCluster {
          * The Node can be configured to use different calendar formats when
          * conveying values to a user.
          */
-        CALFMT: BitFlag(0)
+        calendarFormat: BitFlag(0)
     };
 
     const Base = {
@@ -99,7 +99,7 @@ export namespace TimeFormatLocalizationCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { CALFMT: true },
+        supportedFeatures: { calendarFormat: true },
         elements: [
             Base,
             CalendarFormat

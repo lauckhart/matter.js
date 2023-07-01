@@ -132,7 +132,7 @@ export namespace OnOffCluster {
          *
          * Behavior that supports lighting applications.
          */
-        LT: BitFlag(0)
+        levelControlForLighting: BitFlag(0)
     };
 
     const Base = {
@@ -263,7 +263,7 @@ export namespace OnOffCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { LT: true },
+        supportedFeatures: { levelControlForLighting: true },
         elements: [
             Base,
             LevelControlForLighting

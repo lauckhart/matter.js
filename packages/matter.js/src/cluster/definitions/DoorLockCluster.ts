@@ -1215,84 +1215,84 @@ export namespace DoorLockCluster {
          *
          * Lock supports PIN credentials (via keypad, or over- the-air)
          */
-        PIN: BitFlag(0),
+        pinCredential: BitFlag(0),
 
         /**
          * RfidCredential
          *
          * Lock supports RFID credentials
          */
-        RID: BitFlag(1),
+        rfidCredential: BitFlag(1),
 
         /**
          * FingerCredentials
          *
          * Lock supports finger related credentials (fingerprint, finger vein)
          */
-        FGP: BitFlag(2),
+        fingerCredentials: BitFlag(2),
 
         /**
          * Logging
          *
          * Lock supports local/on-lock logging when Events are not supported
          */
-        LOG: BitFlag(3),
+        logging: BitFlag(3),
 
         /**
          * WeekDayAccessSchedules
          *
          * Lock supports week day user access schedules
          */
-        WDSCH: BitFlag(4),
+        weekDayAccessSchedules: BitFlag(4),
 
         /**
          * DoorPositionSensor
          *
          * Lock supports a door position sensor that indicates door’s state
          */
-        DPS: BitFlag(5),
+        doorPositionSensor: BitFlag(5),
 
         /**
          * FaceCredentials
          *
          * Lock supports face related credentials (face, iris, retina)
          */
-        FACE: BitFlag(6),
+        faceCredentials: BitFlag(6),
 
         /**
          * CredentialOverTheAirAccess
          *
          * PIN codes over- the-air supported for lock/unlock operations
          */
-        COTA: BitFlag(7),
+        credentialOverTheAirAccess: BitFlag(7),
 
         /**
          * User
          *
          * Lock supports the user commands and database
          */
-        USR: BitFlag(8),
+        user: BitFlag(8),
 
         /**
          * Notification
          *
          * Operation and Programming Notifications
          */
-        NOT: BitFlag(9),
+        notification: BitFlag(9),
 
         /**
          * YearDayAccessSchedules
          *
          * Lock supports year day user access schedules
          */
-        YDSCH: BitFlag(10),
+        yearDayAccessSchedules: BitFlag(10),
 
         /**
          * HolidaySchedules
          *
          * Lock supports holiday schedules
          */
-        HDSCH: BitFlag(11)
+        holidaySchedules: BitFlag(11)
     };
 
     const Base = {
@@ -2076,18 +2076,18 @@ export namespace DoorLockCluster {
         features: featureMap,
 
         supportedFeatures: {
-            PIN: true,
-            RID: true,
-            FGP: true,
-            LOG: true,
-            WDSCH: true,
-            DPS: true,
-            FACE: true,
-            COTA: true,
-            USR: true,
-            NOT: true,
-            YDSCH: true,
-            HDSCH: true
+            pinCredential: true,
+            rfidCredential: true,
+            fingerCredentials: true,
+            logging: true,
+            weekDayAccessSchedules: true,
+            doorPositionSensor: true,
+            faceCredentials: true,
+            credentialOverTheAirAccess: true,
+            user: true,
+            notification: true,
+            yearDayAccessSchedules: true,
+            holidaySchedules: true
         },
 
         elements: [

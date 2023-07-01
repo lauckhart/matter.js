@@ -42,7 +42,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
          * Node makes available the counts for the number of received and
          * transmitted packets on the ethernet interface.
          */
-        PKTCNT: BitFlag(0),
+        packetCounts: BitFlag(0),
 
         /**
          * ErrorCounts
@@ -51,7 +51,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
          * occurred during the reception and transmission of packets on the
          * ethernet interface.
          */
-        ERRCNT: BitFlag(1)
+        errorCounts: BitFlag(1)
     };
 
     const Base = {
@@ -170,8 +170,8 @@ export namespace EthernetNetworkDiagnosticsCluster {
         revision,
         features: featureMap,
         supportedFeatures: {
-            PKTCNT: true,
-            ERRCNT: true
+            packetCounts: true,
+            errorCounts: true
         },
 
         elements: [

@@ -174,7 +174,7 @@ export namespace IdentifyCluster {
          *
          * Multicast query for identification state
          */
-        QRY: BitFlag(0)
+        query: BitFlag(0)
     };
 
     const Base = {
@@ -248,7 +248,7 @@ export namespace IdentifyCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { QRY: true },
+        supportedFeatures: { query: true },
         elements: [
             Base,
             Query

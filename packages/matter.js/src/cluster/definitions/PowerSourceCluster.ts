@@ -283,28 +283,28 @@ export namespace PowerSourceCluster {
          *
          * A wired power source
          */
-        WIRED: BitFlag(0),
+        wired: BitFlag(0),
 
         /**
          * Battery
          *
          * A battery power source
          */
-        BAT: BitFlag(1),
+        battery: BitFlag(1),
 
         /**
          * Rechargeable
          *
          * A rechargeable battery power source (requires Battery feature)
          */
-        RECHG: BitFlag(2),
+        rechargeable: BitFlag(2),
 
         /**
          * Replaceable
          *
          * A replaceable battery power source (requires Battery feature)
          */
-        REPLC: BitFlag(3)
+        replaceable: BitFlag(3)
     };
 
     const Base = {
@@ -693,10 +693,10 @@ export namespace PowerSourceCluster {
         features: featureMap,
 
         supportedFeatures: {
-            WIRED: true,
-            BAT: true,
-            RECHG: true,
-            REPLC: true
+            wired: true,
+            battery: true,
+            rechargeable: true,
+            replaceable: true
         },
 
         elements: [

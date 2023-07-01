@@ -103,7 +103,7 @@ export namespace ModeSelectCluster {
          *
          * Dependency with the On/Off cluster
          */
-        DEPONOFF: BitFlag(0)
+        onOff: BitFlag(0)
     };
 
     const Base = {
@@ -190,7 +190,7 @@ export namespace ModeSelectCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { DEPONOFF: true },
+        supportedFeatures: { onOff: true },
         elements: [
             Base,
             OnOff

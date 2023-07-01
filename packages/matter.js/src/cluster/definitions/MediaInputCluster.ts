@@ -115,7 +115,7 @@ export namespace MediaInputCluster {
          *
          * Supports updates to the input names
          */
-        NU: BitFlag(0)
+        nameUpdates: BitFlag(0)
     };
 
     const Base = {
@@ -180,7 +180,7 @@ export namespace MediaInputCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { NU: true },
+        supportedFeatures: { nameUpdates: true },
         elements: [
             Base,
             NameUpdates

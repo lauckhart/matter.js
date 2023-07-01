@@ -236,7 +236,7 @@ export namespace GroupKeyManagementCluster {
          *
          * The ability to support CacheAndSync security policy and MCSP.
          */
-        CS: BitFlag(0)
+        cacheAndSync: BitFlag(0)
     };
 
     const Base = {
@@ -346,7 +346,7 @@ export namespace GroupKeyManagementCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { CS: true },
+        supportedFeatures: { cacheAndSync: true },
         elements: [ Base ]
     });
 };

@@ -51,7 +51,7 @@ export namespace AdministratorCommissioningCluster {
          *
          * Node supports Basic Commissioning Method.
          */
-        BC: BitFlag(0)
+        basic: BitFlag(0)
     };
 
     const Base = {
@@ -128,7 +128,7 @@ export namespace AdministratorCommissioningCluster {
         name,
         revision,
         features: featureMap,
-        supportedFeatures: { BC: true },
+        supportedFeatures: { basic: true },
         elements: [
             Base,
             Basic
