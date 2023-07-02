@@ -20,22 +20,13 @@ Matter.children.push({
             xref: { document: "cluster", section: "4.4.5" },
 
             children: [
-                {
-                    tag: "datatype", name: "SPD", id: 0x0, description: "MultiSpeed",
-                    details: "1-100 speeds"
-                },
+                { tag: "datatype", name: "SPD", id: 0x0, description: "MultiSpeed", details: "1-100 speeds" },
                 {
                     tag: "datatype", name: "AUT", id: 0x1, description: "Auto",
                     details: "Automatic mode supported for fan speed"
                 },
-                {
-                    tag: "datatype", name: "RCK", id: 0x2, description: "Rocking",
-                    details: "Rocking movement supported"
-                },
-                {
-                    tag: "datatype", name: "WND", id: 0x3, description: "Wind",
-                    details: "Wind emulation supported"
-                }
+                { tag: "datatype", name: "RCK", id: 0x2, description: "Rocking", details: "Rocking movement supported" },
+                { tag: "datatype", name: "WND", id: 0x3, description: "Wind", details: "Wind emulation supported" }
             ]
         },
 
@@ -159,10 +150,7 @@ Matter.children.push({
             details: "This attribute is a bitmap that indicates what wind modes the server supports. At least one wind " +
                      "mode bit SHALL be set. The bitmap is shown in the table below.",
             xref: { document: "cluster", section: "4.4.6.10" },
-            children: [
-                { tag: "datatype", name: "SleepWind", id: 0x0 },
-                { tag: "datatype", name: "NaturalWind", id: 0x1 }
-            ]
+            children: [ { tag: "datatype", name: "SleepWind", id: 0x0 }, { tag: "datatype", name: "NaturalWind", id: 0x1 } ]
         },
 
         {
@@ -172,10 +160,7 @@ Matter.children.push({
                      "SHALL only be set to 1, if the corresponding bit in the WindSupport attribute is set to 1, " +
                      "otherwise a status code of CONSTRAINT_ERROR SHALL be returned.",
             xref: { document: "cluster", section: "4.4.6.11" },
-            children: [
-                { tag: "datatype", name: "SleepWind", id: 0x0 },
-                { tag: "datatype", name: "NaturalWind", id: 0x1 }
-            ]
+            children: [ { tag: "datatype", name: "SleepWind", id: 0x0 }, { tag: "datatype", name: "NaturalWind", id: 0x1 } ]
         }
     ]
 });

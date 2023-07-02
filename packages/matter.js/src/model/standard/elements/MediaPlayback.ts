@@ -171,20 +171,18 @@ Matter.children.push({
                      "data as follows:",
             xref: { document: "cluster", section: "6.10.4.9" },
 
-            children: [
-                {
-                    tag: "datatype", name: "DeltaPositionMilliseconds", id: 0x0, type: "uint64", conformance: "M",
+            children: [ {
+                tag: "datatype", name: "DeltaPositionMilliseconds", id: 0x0, type: "uint64", conformance: "M",
 
-                    details: "This SHALL indicate the duration of the time span to skip forward in the media, in milliseconds. In " +
-                             "case the resulting position falls in the middle of a frame, the server SHALL set the position to " +
-                             "the beginning of that frame and set the SampledPosition attribute on the cluster accordingly. If " +
-                             "the resultant position falls beyond the furthest valid position in the media the client MAY seek " +
-                             "forward to, the position should be set to that furthest valid position. If the SampledPosition " +
-                             "attribute is supported it SHALL be updated on the cluster accordingly.",
+                details: "This SHALL indicate the duration of the time span to skip forward in the media, in milliseconds. In " +
+                         "case the resulting position falls in the middle of a frame, the server SHALL set the position to " +
+                         "the beginning of that frame and set the SampledPosition attribute on the cluster accordingly. If " +
+                         "the resultant position falls beyond the furthest valid position in the media the client MAY seek " +
+                         "forward to, the position should be set to that furthest valid position. If the SampledPosition " +
+                         "attribute is supported it SHALL be updated on the cluster accordingly.",
 
-                    xref: { document: "cluster", section: "6.10.4.9.1" }
-                }
-            ]
+                xref: { document: "cluster", section: "6.10.4.9.1" }
+            } ]
         },
 
         {
@@ -194,20 +192,18 @@ Matter.children.push({
                      "data as follows:",
             xref: { document: "cluster", section: "6.10.4.10" },
 
-            children: [
-                {
-                    tag: "datatype", name: "DeltaPositionMilliseconds", id: 0x0, type: "uint64", conformance: "M",
+            children: [ {
+                tag: "datatype", name: "DeltaPositionMilliseconds", id: 0x0, type: "uint64", conformance: "M",
 
-                    details: "This SHALL indicate the duration of the time span to skip backward in the media, in milliseconds. " +
-                             "In case the resulting position falls in the middle of a frame, the server SHALL set the position to " +
-                             "the beginning of that frame and set the SampledPosition attribute on the cluster accordingly. If " +
-                             "the resultant position falls before the earliest valid position to which a client MAY seek back to, " +
-                             "the position should be set to that earliest valid position. If the SampledPosition attribute is " +
-                             "supported it SHALL be updated on the cluster accordingly.",
+                details: "This SHALL indicate the duration of the time span to skip backward in the media, in milliseconds. " +
+                         "In case the resulting position falls in the middle of a frame, the server SHALL set the position to " +
+                         "the beginning of that frame and set the SampledPosition attribute on the cluster accordingly. If " +
+                         "the resultant position falls before the earliest valid position to which a client MAY seek back to, " +
+                         "the position should be set to that earliest valid position. If the SampledPosition attribute is " +
+                         "supported it SHALL be updated on the cluster accordingly.",
 
-                    xref: { document: "cluster", section: "6.10.4.10.1" }
-                }
-            ]
+                xref: { document: "cluster", section: "6.10.4.10.1" }
+            } ]
         },
 
         {
@@ -237,20 +233,18 @@ Matter.children.push({
                      "as follows:",
             xref: { document: "cluster", section: "6.10.4.11" },
 
-            children: [
-                {
-                    tag: "datatype", name: "Position", id: 0x0, type: "uint64", conformance: "M",
+            children: [ {
+                tag: "datatype", name: "Position", id: 0x0, type: "uint64", conformance: "M",
 
-                    details: "This SHALL indicate the position (in milliseconds) in the media to seek to. In case the position " +
-                             "falls in the middle of a frame, the server SHALL set the position to the beginning of that frame " +
-                             "and set the SampledPosition attribute on the cluster accordingly. If the position falls before the " +
-                             "earliest valid position or beyond the furthest valid position to which a client MAY seek back or " +
-                             "forward to respectively, the status of SEEK_OUT_OF_RANGE SHALL be returned and no change SHALL be " +
-                             "made to the position of the playback.",
+                details: "This SHALL indicate the position (in milliseconds) in the media to seek to. In case the position " +
+                         "falls in the middle of a frame, the server SHALL set the position to the beginning of that frame " +
+                         "and set the SampledPosition attribute on the cluster accordingly. If the position falls before the " +
+                         "earliest valid position or beyond the furthest valid position to which a client MAY seek back or " +
+                         "forward to respectively, the status of SEEK_OUT_OF_RANGE SHALL be returned and no change SHALL be " +
+                         "made to the position of the playback.",
 
-                    xref: { document: "cluster", section: "6.10.4.11.1" }
-                }
-            ]
+                xref: { document: "cluster", section: "6.10.4.11.1" }
+            } ]
         },
 
         {
@@ -262,10 +256,7 @@ Matter.children.push({
                     tag: "datatype", name: "Playing", id: 0x0, conformance: "M",
                     description: "Media is currently playing (includes FF and REW)"
                 },
-                {
-                    tag: "datatype", name: "Paused", id: 0x1, conformance: "M",
-                    description: "Media is currently paused"
-                },
+                { tag: "datatype", name: "Paused", id: 0x1, conformance: "M", description: "Media is currently paused" },
                 {
                     tag: "datatype", name: "NotPlaying", id: 0x2, conformance: "M",
                     description: "Media is not currently playing"

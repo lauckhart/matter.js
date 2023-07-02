@@ -35,19 +35,13 @@ Matter.children.push({
             tag: "attribute", name: "ProductName", id: 0x3, type: "string", conformance: "O",
             xref: { document: "core", section: "9.13.4" }
         },
-        {
-            tag: "attribute", name: "ProductId", id: 0x4, conformance: "X",
-            xref: { document: "core", section: "9.13.4" }
-        },
+        { tag: "attribute", name: "ProductId", id: 0x4, conformance: "X", xref: { document: "core", section: "9.13.4" } },
         {
             tag: "attribute", name: "NodeLabel", id: 0x5, type: "string", access: "RW", conformance: "O",
             default: "",
             xref: { document: "core", section: "9.13.4" }
         },
-        {
-            tag: "attribute", name: "Location", id: 0x6, conformance: "X",
-            xref: { document: "core", section: "9.13.4" }
-        },
+        { tag: "attribute", name: "Location", id: 0x6, conformance: "X", xref: { document: "core", section: "9.13.4" } },
         {
             tag: "attribute", name: "HardwareVersion", id: 0x7, type: "uint16", conformance: "O",
             xref: { document: "core", section: "9.13.4" }
@@ -100,14 +94,11 @@ Matter.children.push({
             tag: "attribute", name: "CapabilityMinima", id: 0x13, conformance: "X",
             xref: { document: "core", section: "9.13.4" }
         },
-        {
-            tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct",
-            conformance: "O"
-        },
+        { tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct", conformance: "O" },
         {
             tag: "event", name: "StartUp", id: 0x0, conformance: "O", priority: "critical",
             xref: { document: "core", section: "9.13.5" },
-            children: [ { tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M" } ]
+            children: [ { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" } ]
         },
         {
             tag: "event", name: "ShutDown", id: 0x1, conformance: "O", priority: "critical",
@@ -124,14 +115,14 @@ Matter.children.push({
                      "provide an indication towards interested parties that the reachability of a bridged device (over " +
                      "the non-Matter network) has changed, so they MAY take appropriate action.",
             xref: { document: "core", section: "9.13.5.1" },
-            children: [ { tag: "datatype", name: "ReachableNewValue", type: "bool", conformance: "M" } ]
+            children: [ { tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M" } ]
         },
 
         {
             tag: "datatype", name: "ProductAppearanceStruct", type: "struct", conformance: "M",
             children: [
-                { tag: "datatype", name: "Finish", type: "ProductFinishEnum", conformance: "M" },
-                { tag: "datatype", name: "PrimaryColor", type: "ColorEnum", conformance: "M", quality: "X" }
+                { tag: "datatype", name: "Finish", id: 0x0, type: "ProductFinishEnum", conformance: "M" },
+                { tag: "datatype", name: "PrimaryColor", id: 0x1, type: "ColorEnum", conformance: "M", quality: "X" }
             ]
         },
 

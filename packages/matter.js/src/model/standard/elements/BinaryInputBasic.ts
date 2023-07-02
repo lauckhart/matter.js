@@ -14,27 +14,12 @@ Matter.children.push({
              "that measurement.",
 
     children: [
-        {
-            tag: "attribute", name: "ActiveText", id: 0x4, type: "string", access: "RW", conformance: "O",
-            default: ""
-        },
-        {
-            tag: "attribute", name: "Description", id: 0x1c, type: "string", access: "RW", conformance: "O",
-            default: ""
-        },
-        {
-            tag: "attribute", name: "InactiveText", id: 0x2e, type: "string", access: "RW", conformance: "O",
-            default: ""
-        },
-        {
-            tag: "attribute", name: "OutOfService", id: 0x51, type: "bool", access: "RW", conformance: "M",
-            default: true
-        },
+        { tag: "attribute", name: "ActiveText", id: 0x4, type: "string", access: "RW", conformance: "O", default: "" },
+        { tag: "attribute", name: "Description", id: 0x1c, type: "string", access: "RW", conformance: "O", default: "" },
+        { tag: "attribute", name: "InactiveText", id: 0x2e, type: "string", access: "RW", conformance: "O", default: "" },
+        { tag: "attribute", name: "OutOfService", id: 0x51, type: "bool", access: "RW", conformance: "M", default: true },
         { tag: "attribute", name: "Polarity", id: 0x54, type: "enum8", conformance: "O" },
-        {
-            tag: "attribute", name: "PresentValue", id: 0x55, type: "bool", access: "RW", conformance: "M",
-            quality: "P"
-        },
+        { tag: "attribute", name: "PresentValue", id: 0x55, type: "bool", access: "RW", conformance: "M", quality: "P" },
         { tag: "attribute", name: "Reliability", id: 0x67, type: "enum8", access: "RW", conformance: "O" },
         { tag: "attribute", name: "StatusFlags", id: 0x6f, type: "map8", conformance: "M", quality: "P" },
         { tag: "attribute", name: "ApplicationType", id: 0x100, type: "uint32", conformance: "O" }

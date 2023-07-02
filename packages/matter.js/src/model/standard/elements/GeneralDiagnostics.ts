@@ -196,14 +196,11 @@ Matter.children.push({
             details: "The BootReason Event SHALL indicate the reason that caused the device to start-up. The data of this " +
                      "event SHALL contain the following information:",
             xref: { document: "core", section: "11.11.8.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M",
-                    details: "This field SHALL contain the reason for this BootReason event.",
-                    xref: { document: "core", section: "11.11.8.4.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M",
+                details: "This field SHALL contain the reason for this BootReason event.",
+                xref: { document: "core", section: "11.11.8.4.1" }
+            } ]
         },
 
         {
@@ -236,14 +233,11 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "StatusCode", type: "status",
-
-            children: [
-                {
-                    tag: "datatype", name: "EnableKeyMismatch", id: 0x2,
-                    details: "Provided EnableKey does not match the previously configured value.",
-                    xref: { document: "core", section: "11.11.5" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "EnableKeyMismatch", id: 0x2,
+                details: "Provided EnableKey does not match the previously configured value.",
+                xref: { document: "core", section: "11.11.5" }
+            } ]
         },
 
         {

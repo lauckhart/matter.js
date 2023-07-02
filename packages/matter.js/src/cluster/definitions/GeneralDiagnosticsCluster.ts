@@ -316,11 +316,7 @@ export namespace GeneralDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.7
              */
-            activeRadioFaults: OptionalAttribute(
-                6,
-                TlvArray(TlvEnum<TlvRadioFaultEnum>()),
-                { readAcl: AccessLevel.View }
-            ),
+            activeRadioFaults: OptionalAttribute(6, TlvArray(TlvEnum<TlvRadioFaultEnum>()), { readAcl: AccessLevel.View }),
 
             /**
              * The ActiveNetworkFaults attribute SHALL indicate the set of faults currently detected by the Node. When

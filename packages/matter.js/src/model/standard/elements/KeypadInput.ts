@@ -29,10 +29,7 @@ Matter.children.push({
                     tag: "datatype", name: "LK", id: 0x1, description: "LocationKeys",
                     details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)"
                 },
-                {
-                    tag: "datatype", name: "NK", id: 0x2, description: "NumberKeys",
-                    details: "Supports numeric input 0..9"
-                }
+                { tag: "datatype", name: "NK", id: 0x2, description: "NumberKeys", details: "Supports numeric input 0..9" }
             ]
         },
 
@@ -41,14 +38,11 @@ Matter.children.push({
             response: "SendKeyResponse",
             details: "Upon receipt, this SHALL process a keycode as input to the media device.",
             xref: { document: "cluster", section: "6.8.3.1" },
-
-            children: [
-                {
-                    tag: "datatype", name: "KeyCode", id: 0x0, type: "CecKeyCode", conformance: "M",
-                    details: "This SHALL indicate the key code to process.",
-                    xref: { document: "cluster", section: "6.8.3.1.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "KeyCode", id: 0x0, type: "CecKeyCode", conformance: "M",
+                details: "This SHALL indicate the key code to process.",
+                xref: { document: "cluster", section: "6.8.3.1.1" }
+            } ]
         },
 
         {
@@ -56,14 +50,11 @@ Matter.children.push({
             details: "This command SHALL be generated in response to a SendKey command. The data for this command SHALL " +
                      "be as follows:",
             xref: { document: "cluster", section: "6.8.3.2" },
-
-            children: [
-                {
-                    tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
-                    details: "This SHALL indicate the status of the command.",
-                    xref: { document: "cluster", section: "6.8.3.2.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
+                details: "This SHALL indicate the status of the command.",
+                xref: { document: "cluster", section: "6.8.3.2.1" }
+            } ]
         },
 
         {

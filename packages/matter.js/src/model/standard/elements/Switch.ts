@@ -74,26 +74,20 @@ Matter.children.push({
             details: "This event SHALL be generated, when the latching switch is moved to a new position. It MAY have " +
                      "been delayed by debouncing within the switch.",
             xref: { document: "cluster", section: "1.11.7.1" },
-
-            children: [
-                {
-                    tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                    constraint: "0 to NumberOfPositions1"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
+                constraint: "0 to NumberOfPositions1"
+            } ]
         },
 
         {
             tag: "event", name: "InitialPress", id: 0x1, access: "V", conformance: "MS", priority: "info",
             details: "This event SHALL be generated, when the momentary switch starts to be pressed (after debouncing).",
             xref: { document: "cluster", section: "1.11.7.2" },
-
-            children: [
-                {
-                    tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                    constraint: "0 to NumberOfPositions1"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
+                constraint: "0 to NumberOfPositions1"
+            } ]
         },
 
         {
@@ -101,26 +95,20 @@ Matter.children.push({
             details: "This event SHALL be generated, when the momentary switch has been pressed for a \"long\" time (this " +
                      "time interval is manufacturer determined (e.g. since it depends on the switch physics)).",
             xref: { document: "cluster", section: "1.11.7.3" },
-
-            children: [
-                {
-                    tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                    constraint: "0 to NumberOfPositions1"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
+                constraint: "0 to NumberOfPositions1"
+            } ]
         },
 
         {
             tag: "event", name: "ShortRelease", id: 0x3, access: "V", conformance: "MSR", priority: "info",
             details: "This event SHALL be generated, when the momentary switch has been released (after debouncing).",
             xref: { document: "cluster", section: "1.11.7.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
-                    constraint: "0 to NumberOfPositions1"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
+                constraint: "0 to NumberOfPositions1"
+            } ]
         },
 
         {
@@ -130,13 +118,10 @@ Matter.children.push({
                      "released if a LongPress event has been generated since since the previous InitialPress event. Also " +
                      "see Section 1.11.8, “Sequence of generated events”.",
             xref: { document: "cluster", section: "1.11.7.5" },
-
-            children: [
-                {
-                    tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
-                    constraint: "0 to NumberOfPositions1"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
+                constraint: "0 to NumberOfPositions1"
+            } ]
         },
 
         {

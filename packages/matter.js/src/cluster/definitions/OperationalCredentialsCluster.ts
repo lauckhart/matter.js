@@ -26,7 +26,7 @@ export const TlvNOCStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.4.1
      */
-    noc: TlvField(1, TlvNullable(TlvByteString.bound({ maxLength: 400 }))),
+    noc: TlvField(1, TlvByteString.bound({ maxLength: 400 })),
 
     /**
      * This field SHALL contain the ICAC or the struct’s associated fabric, encoded using Matter Certificate Encoding.
@@ -44,6 +44,16 @@ export const TlvNOCStruct = TlvObject({
  */
 export const TlvFabricDescriptorStruct = TlvObject({
     /**
+     * This field SHALL contain the public key for the trusted root that scopes the fabric referenced by FabricIndex
+     * and its associated operational credential (see Section 6.4.5.3, “Trusted Root CA Certificates”). The format for
+     * the key shall be the same as that used in the ec-pub-key field of the Matter Certificate Encoding for the root
+     * in the operational certificate chain.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.1
+     */
+    rootPublicKey: TlvField(1, TlvByteString.bound({ minLength: 65, maxLength: 65 })),
+
+    /**
      * This field SHALL contain the value of AdminVendorID provided in the AddNOC command that led to the creation of
      * this FabricDescriptorStruct. The set of allowed values is defined in Section 11.17.6.8.3, “AdminVendorID Field”.
      *
@@ -60,14 +70,20 @@ export const TlvFabricDescriptorStruct = TlvObject({
     fabricId: TlvField(3, TlvUInt64),
 
     /**
+     * This field SHALL contain the NodeID in use within the fabric referenced by FabricIndex. This field SHALL match
+     * the value found in the matter-node-id field from the operational certificate providing this operational identity.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.4
+     */
+    nodeId: TlvField(4, TlvUInt64),
+
+    /**
      * This field SHALL contain a commissioner-set label for the fabric referenced by FabricIndex. This label is set by
      * the UpdateFabricLabel command.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.5
      */
-    label: TlvField(5, TlvString.bound({ maxLength: 32 })),
-
-    rootPublicKey: TlvField(3, TlvByteString)
+    label: TlvField(5, TlvString.bound({ maxLength: 32 }))
 });
 
 /**
@@ -302,13 +318,7 @@ export namespace OperationalCredentialsCluster {
             noCs: FabricScopedAttribute(
                 0,
                 TlvArray(TlvNOCStruct),
-
-                {
-                    persistent: true,
-                    omitChanges: true,
-                    readAcl: AccessLevel.Administer,
-                    writeAcl: AccessLevel.Administer
-                }
+                { persistent: true, omitChanges: true, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
             ),
 
             /**
@@ -385,12 +395,7 @@ export namespace OperationalCredentialsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
              */
-            certificateChainRequest: Command(
-                2,
-                TlvCertificateChainRequestRequest,
-                3,
-                TlvCertificateChainResponseRequest
-            ),
+            certificateChainRequest: Command(2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponseRequest),
 
             /**
              * This command SHALL be generated in response to a CertificateChainRequest command.

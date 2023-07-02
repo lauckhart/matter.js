@@ -18,13 +18,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.8.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "DEPONOFF", id: 0x0, description: "OnOff",
-                    details: "Dependency with the On/Off cluster"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "DEPONOFF", id: 0x0, description: "OnOff",
+                details: "Dependency with the On/Off cluster"
+            } ]
         },
 
         {

@@ -165,8 +165,8 @@ Matter.children.push({
             details: "This structure encodes a fabric-scoped location of an OTA provider on a given fabric.",
             xref: { document: "core", section: "11.19.7.4.20" },
             children: [
-                { tag: "datatype", name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M" },
-                { tag: "datatype", name: "ProviderNodeId", type: "node-id", conformance: "M" }
+                { tag: "datatype", name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M" },
+                { tag: "datatype", name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M" }
             ]
         }
     ]

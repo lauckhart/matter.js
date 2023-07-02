@@ -109,11 +109,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.8
              */
-            scaledTolerance: OptionalAttribute(
-                19,
-                TlvUInt16.bound({ min: 0, max: 2048 }),
-                { readAcl: AccessLevel.View }
-            ),
+            scaledTolerance: OptionalAttribute(19, TlvUInt16.bound({ min: 0, max: 2048 }), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue Attribute).

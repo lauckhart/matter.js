@@ -21,10 +21,7 @@ Matter.children.push({
             xref: { document: "core", section: "11.16.5" },
 
             children: [
-                {
-                    tag: "datatype", name: "TZ", id: 0x0, description: "TimeZone",
-                    details: "Server supports time zone."
-                },
+                { tag: "datatype", name: "TZ", id: 0x0, description: "TimeZone", details: "Server supports time zone." },
                 {
                     tag: "datatype", name: "NTPC", id: 0x1, description: "NtpClient",
                     details: "Server supports an NTP or SNTP client."
@@ -185,14 +182,11 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "StatusCode", type: "status",
-
-            children: [
-                {
-                    tag: "datatype", name: "TimeNotAccepted", id: 0x2,
-                    details: "Server rejected the attempt to set the UTC time",
-                    xref: { document: "core", section: "11.16.7" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "TimeNotAccepted", id: 0x2,
+                details: "Server rejected the attempt to set the UTC time",
+                xref: { document: "core", section: "11.16.7" }
+            } ]
         },
 
         {

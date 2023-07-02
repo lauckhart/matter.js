@@ -9,10 +9,39 @@
 import { WritableFabricScopedAttribute, AccessLevel, OptionalWritableFabricScopedAttribute, FixedAttribute, Event, EventPriority } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { TlvEnum, TlvUInt32, TlvUInt16, TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt64, TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+
+/**
+ * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2
+ */
+export const enum TlvAccessControlEntryPrivilegeEnum {
+    View = 1,
+    ProxyView = 2,
+
+    /**
+     * This value implicitly grants View privileges
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2.1
+     */
+    Operate = 3,
+
+    /**
+     * This value implicitly grants Operate & View privileges
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2.2
+     */
+    Manage = 4,
+
+    /**
+     * This value implicitly grants Manage, Operate, Proxy View & View privileges
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2.3
+     */
+    Administer = 5
+};
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.3
@@ -32,24 +61,30 @@ export const TlvAccessControlTargetStruct = TlvObject({
     deviceType: TlvField(2, TlvNullable(TlvUInt32))
 });
 
-export const enum TlvAccessControlEntryPrivilegeEnum {
-    View = 1,
-    ProxyView = 2,
-    Operate = 3,
-    Manage = 4,
-    Administer = 5
-};
-
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5
  */
 export const TlvAccessControlEntryStruct = TlvObject({
     /**
+     * The privilege field SHALL specify the level of privilege granted by this Access Control Entry.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.1
+     */
+    privilege: TlvField(1, TlvEnum<TlvAccessControlEntryPrivilegeEnum>()),
+
+    /**
      * The AuthMode field SHALL specify the authentication mode required by this Access Control Entry.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.2
      */
-    authMode: TlvField(2, TlvNullable(TlvEnum<TlvAccessControlEntryAuthModeEnum>())),
+    authMode: TlvField(2, TlvEnum<TlvAccessControlEntryAuthModeEnum>()),
+
+    /**
+     * The subjects field SHALL specify a list of Subject IDs, to which this Access Control Entry grants access.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.3
+     */
+    subjects: TlvField(3, TlvNullable(TlvArray(TlvUInt64))),
 
     /**
      * The targets field SHALL specify a list of AccessControlTargetStruct, which define the clusters on this Node to
@@ -57,9 +92,7 @@ export const TlvAccessControlEntryStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.4
      */
-    targets: TlvField(4, TlvNullable(TlvArray(TlvAccessControlTargetStruct))),
-
-    privilege: TlvField(2, TlvEnum<TlvAccessControlEntryPrivilegeEnum>())
+    targets: TlvField(4, TlvNullable(TlvArray(TlvAccessControlTargetStruct)))
 });
 
 /**

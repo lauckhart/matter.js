@@ -26,14 +26,12 @@ Matter.children.push({
                      "which can be used for password-authenticated session establishment (PASE) with the Commissionee.",
             xref: { document: "cluster", section: "6.2.4.1" },
 
-            children: [
-                {
-                    tag: "datatype", name: "TempAccountIdentifier", id: 0x0, type: "string", conformance: "M",
-                    details: "This attribute SHALL specify the client’s Temporary Account Identifier. The length of this field " +
-                             "SHALL be at least 16 characters to protect the account holder against password guessing attacks.",
-                    xref: { document: "cluster", section: "6.2.4.1.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "TempAccountIdentifier", id: 0x0, type: "string", conformance: "M",
+                details: "This attribute SHALL specify the client’s Temporary Account Identifier. The length of this field " +
+                         "SHALL be at least 16 characters to protect the account holder against password guessing attacks.",
+                xref: { document: "cluster", section: "6.2.4.1.1" }
+            } ]
         },
 
         {
@@ -43,15 +41,13 @@ Matter.children.push({
                      "Content App.",
             xref: { document: "cluster", section: "6.2.4.2" },
 
-            children: [
-                {
-                    tag: "datatype", name: "SetupPin", id: 0x0, type: "string", conformance: "M", constraint: "min 11",
-                    quality: "X",
-                    details: "This field SHALL provide the setup PIN code as a text string at least 11 characters in length or " +
-                             "null to indicate that the accounts do not match.",
-                    xref: { document: "cluster", section: "6.2.4.2.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "SetupPin", id: 0x0, type: "string", conformance: "M", constraint: "min 11",
+                quality: "X",
+                details: "This field SHALL provide the setup PIN code as a text string at least 11 characters in length or " +
+                         "null to indicate that the accounts do not match.",
+                xref: { document: "cluster", section: "6.2.4.2.1" }
+            } ]
         },
 
         {

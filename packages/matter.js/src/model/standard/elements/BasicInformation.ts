@@ -202,10 +202,7 @@ Matter.children.push({
             xref: { document: "core", section: "11.1.5.20" }
         },
 
-        {
-            tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct",
-            conformance: "O"
-        },
+        { tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct", conformance: "O" },
 
         {
             tag: "event", name: "StartUp", id: 0x0, access: "V", conformance: "M", priority: "critical",
@@ -214,14 +211,12 @@ Matter.children.push({
                      "it completes a boot or reboot process.",
             xref: { document: "core", section: "11.1.6.1" },
 
-            children: [
-                {
-                    tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
-                    details: "This field SHALL be set to the same value as the one available in the Software Version attribute of " +
-                             "the Basic Information Cluster.",
-                    xref: { document: "core", section: "11.1.6.1.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
+                details: "This field SHALL be set to the same value as the one available in the Software Version attribute of " +
+                         "the Basic Information Cluster.",
+                xref: { document: "core", section: "11.1.6.1.1" }
+            } ]
         },
 
         {
@@ -243,28 +238,23 @@ Matter.children.push({
                      "usable, and subsequent interactions targeting that fabric will most likely fail.",
             xref: { document: "core", section: "11.1.6.3" },
 
-            children: [
-                {
-                    tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M",
-                    constraint: "1 to 254",
-                    details: "This field SHALL contain the local Fabric Index of the fabric which the node is about to leave.",
-                    xref: { document: "core", section: "11.1.6.3.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M",
+                constraint: "1 to 254",
+                details: "This field SHALL contain the local Fabric Index of the fabric which the node is about to leave.",
+                xref: { document: "core", section: "11.1.6.3.1" }
+            } ]
         },
 
         {
             tag: "event", name: "ReachableChanged", id: 0x3, access: "V", conformance: "desc", priority: "info",
             details: "This event SHALL be supported if and only if the Reachable attribute is supported.",
             xref: { document: "core", section: "11.1.6.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M",
-                    details: "This field SHALL indicate the value of the Reachable attribute after it was changed.",
-                    xref: { document: "core", section: "11.1.6.4.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M",
+                details: "This field SHALL indicate the value of the Reachable attribute after it was changed.",
+                xref: { document: "core", section: "11.1.6.4.1" }
+            } ]
         },
 
         {
@@ -295,8 +285,8 @@ Matter.children.push({
         {
             tag: "datatype", name: "ProductAppearanceStruct", type: "struct", conformance: "M",
             children: [
-                { tag: "datatype", name: "Finish", type: "ProductFinishEnum", conformance: "M" },
-                { tag: "datatype", name: "PrimaryColor", type: "ColorEnum", conformance: "M", quality: "X" }
+                { tag: "datatype", name: "Finish", id: 0x0, type: "ProductFinishEnum", conformance: "M" },
+                { tag: "datatype", name: "PrimaryColor", id: 0x1, type: "ColorEnum", conformance: "M", quality: "X" }
             ]
         },
 

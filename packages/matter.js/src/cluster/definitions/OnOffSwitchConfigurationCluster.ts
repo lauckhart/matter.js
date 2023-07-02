@@ -26,9 +26,9 @@ export namespace OnOffSwitchConfigurationCluster {
     export const id = 0x7;
     export const name = "OnOffSwitchConfiguration";
     export const revision = 1;
-    const Base = {attributes: {
-            switchType: Attribute(0, TlvEnum<TlvSwitchType>()),
-            switchActions: WritableAttribute(16, TlvEnum<TlvSwitchActions>())
-        }};
+    const Base = { attributes: {
+        switchType: Attribute(0, TlvEnum<TlvSwitchType>()),
+        switchActions: WritableAttribute(16, TlvEnum<TlvSwitchActions>())
+    } };
     export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

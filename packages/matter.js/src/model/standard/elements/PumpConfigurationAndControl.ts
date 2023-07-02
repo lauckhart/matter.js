@@ -351,10 +351,7 @@ Matter.children.push({
                     xref: { document: "cluster", section: "4.2.6.1.3" }
                 },
 
-                {
-                    tag: "datatype", name: "Running", id: 0x20, conformance: "M",
-                    description: "Pump is currently running"
-                },
+                { tag: "datatype", name: "Running", id: 0x20, conformance: "M", description: "Pump is currently running" },
 
                 {
                     tag: "datatype", name: "RemotePressure", id: 0x40, conformance: "M",

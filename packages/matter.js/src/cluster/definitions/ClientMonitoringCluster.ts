@@ -13,10 +13,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-export const TlvMonitoringRegistration = TlvObject({
-    clientNodeId: TlvField(0, TlvUInt64),
-    iCid: TlvField(1, TlvUInt64)
-});
+export const TlvMonitoringRegistration = TlvObject({ clientNodeId: TlvField(1, TlvUInt64), iCid: TlvField(2, TlvUInt64) });
 
 export const TlvRegisterClientMonitoringRequest = TlvObject({
     clientNodeId: TlvField(0, TlvUInt64),

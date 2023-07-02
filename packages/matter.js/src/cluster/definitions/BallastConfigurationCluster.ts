@@ -52,11 +52,7 @@ export namespace BallastConfigurationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.1
              */
-            physicalMinLevel: Attribute(
-                0,
-                TlvUInt8.bound({ min: 1, max: 254 }),
-                { default: 1, readAcl: AccessLevel.View }
-            ),
+            physicalMinLevel: Attribute(0, TlvUInt8.bound({ min: 1, max: 254 }), { default: 1, readAcl: AccessLevel.View }),
 
             /**
              * The PhysicalMaxLevel attribute specifies the maximum light output the ballast can achieve according to

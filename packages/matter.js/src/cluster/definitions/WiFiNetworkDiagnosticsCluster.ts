@@ -189,11 +189,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.12
              */
-            currentMaxRate: OptionalAttribute(
-                11,
-                TlvNullable(TlvUInt64),
-                { omitChanges: true, readAcl: AccessLevel.View }
-            )
+            currentMaxRate: OptionalAttribute(11, TlvNullable(TlvUInt64), { omitChanges: true, readAcl: AccessLevel.View })
         },
 
         events: {
@@ -273,11 +269,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.8
              */
-            packetMulticastRxCount: Attribute(
-                7,
-                TlvNullable(TlvUInt32),
-                { omitChanges: true, readAcl: AccessLevel.View }
-            ),
+            packetMulticastRxCount: Attribute(7, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View }),
 
             /**
              * The PacketMulticastTxCount attribute SHALL indicate the number of multicast packets transmitted by the
@@ -285,11 +277,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.9
              */
-            packetMulticastTxCount: Attribute(
-                8,
-                TlvNullable(TlvUInt32),
-                { omitChanges: true, readAcl: AccessLevel.View }
-            ),
+            packetMulticastTxCount: Attribute(8, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View }),
 
             /**
              * The PacketUnicastRxCount attribute SHALL indicate the number of unicast packets received by the Node.
@@ -303,11 +291,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.11
              */
-            packetUnicastTxCount: Attribute(
-                10,
-                TlvNullable(TlvUInt32),
-                { omitChanges: true, readAcl: AccessLevel.View }
-            )
+            packetUnicastTxCount: Attribute(10, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View })
         }
     };
 

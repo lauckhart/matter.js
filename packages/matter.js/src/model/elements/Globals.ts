@@ -71,7 +71,6 @@ export const Globals = {
     bool:          bool      (0x10,   "bool",          "Boolean"),
     map8:          map       (0x18,   "map8",          "8-bit bitmap",                1),
     map16:         map       (0x19,   "map16",         "16-bit bitmap",               2),
-    map24:         map       (0x19,   "map24",         "16-bit bitmap",               2),
     map32:         map       (0x1b,   "map32",         "32-bit bitmap",               4),
     map64:         map       (0x1f,   "map64",         "64-bit bitmap",               8),
 
@@ -131,7 +130,8 @@ export const Globals = {
     eui64:         depInt    (0xf0,   "eui64",         "IEEE address",                Datatype.uint64),
     groupId:       extInt    (0xf1,   "group-id",      "Group ID",                    Datatype.uint16),
     endpointNo:    extInt    (0xe5,   "endpoint-no",   "Endpoint number",             Datatype.uint16),
-    vendorId:      extInt    (0xd3,   "vendor-id",     "Vendor ID",                   Datatype.uint16),
+    // Using CHIP type for vendor-id because spec specifies 0xd3 which conflicts with ipadr
+    vendorId:      extInt    (0xf1,   "vendor-id",     "Vendor ID",                   Datatype.uint16),
     deviceTypeId:  extInt    (0xed,   "devtype-id",    "Device type ID",              Datatype.uint32),
     clusterId:     extInt    (0xe8,   "cluster-id",    "Cluster ID",                  Datatype.uint32),
     attributeId:   extInt    (0xe9,   "attrib-id",     "Attribute ID",                Datatype.uint32),
@@ -152,7 +152,8 @@ export const Globals = {
     string:        string    (0x42,   "string",        "Character string"),
 
     // Composite address
-    ipadr:         extOctet  (0xd3,   "ipadr",         "IP Address",                  { min: 4, max: 16 }),
+    // Using CHIP type for ipadr because spec specifies 0xd3 which conflicts with vendor-id
+    ipadr:         extOctet  (0xfa,   "ipadr",         "IP Address",                  { min: 4, max: 16 }),
     ipv4adr:       extOctet  (0xd4,   "ipv4adr",       "IPv4 address",                4),
     ipv6adr:       extOctet  (0xd5,   "ipv6adr",       "IPv6 address",                16),
     ipv6pre:       extOctet  (0xd6,   "ipv6pre",       "IPv6 prefix",                 { min: 1, max: 17 }),

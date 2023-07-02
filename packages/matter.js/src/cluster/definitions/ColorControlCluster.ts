@@ -710,11 +710,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.1
              */
-            currentHue: Attribute(
-                0,
-                TlvUInt8.bound({ min: 0, max: 254 }),
-                { persistent: true, readAcl: AccessLevel.View }
-            ),
+            currentHue: Attribute(0, TlvUInt8.bound({ min: 0, max: 254 }), { persistent: true, readAcl: AccessLevel.View }),
 
             /**
              * The CurrentSaturation attribute holds the current saturation value of the light. It is updated as fast
@@ -812,11 +808,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.9
              */
-            colorMode: Attribute(
-                8,
-                TlvEnum<TlvColorMode>(),
-                { persistent: true, default: 1, readAcl: AccessLevel.View }
-            ),
+            colorMode: Attribute(8, TlvEnum<TlvColorMode>(), { persistent: true, default: 1, readAcl: AccessLevel.View }),
 
             /**
              * The Options attribute is meant to be changed only during commissioning. The Options attribute is a
@@ -1152,11 +1144,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.19
              */
-            colorTempPhysicalMinMireds: Attribute(
-                16395,
-                TlvUInt16.bound({ min: 0, max: 0 }),
-                { readAcl: AccessLevel.View }
-            ),
+            colorTempPhysicalMinMireds: Attribute(16395, TlvUInt16.bound({ min: 0, max: 0 }), { readAcl: AccessLevel.View }),
 
             /**
              * The ColorTempPhysicalMaxMireds attribute indicates the maximum mired value supported by the hardware.
@@ -1235,11 +1223,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.11
              */
-            enhancedCurrentHue: Attribute(
-                16384,
-                TlvUInt16,
-                { scene: true, persistent: true, readAcl: AccessLevel.View }
-            )
+            enhancedCurrentHue: Attribute(16384, TlvUInt16, { scene: true, persistent: true, readAcl: AccessLevel.View })
         },
 
         commands: {

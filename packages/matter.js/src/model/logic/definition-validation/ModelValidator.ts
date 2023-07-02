@@ -5,7 +5,7 @@
  */
 
 import { ElementTag } from "../../definitions/index.js";
-import { Model } from "../../models/index.js";
+import { CommandModel, Model } from "../../models/index.js";
 
 /**
  * Base class for all model validators.
@@ -107,7 +107,10 @@ export class ModelValidator<T extends Model> {
 
         for (const child of this.model.children) {
             function addIdentity(id: string | number) {
-                const identity = `${child.tag}:${id}:${(child as any).conformance}`;
+                if (child instanceof CommandModel) {
+                    id = `${id}:${child.direction}`
+                }
+                const identity = `${child.tag};${id};${(child as any).conformance}`;
                 if (identities[identity]) {
                     identities[identity]++;
                 } else {
@@ -124,7 +127,7 @@ export class ModelValidator<T extends Model> {
 
         for (const identity in identities) {
             if (identities[identity] > 1) {
-                const parts = identity.split(":");
+                const parts = identity.split(";");
                 this.error("DUPLICATE_CHILD", `Duplicate ${parts[0]} ${parts[1]}`);
             }
         }

@@ -421,11 +421,7 @@ export namespace PowerSourceCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.11
              */
-            activeWiredFaults: OptionalAttribute(
-                10,
-                TlvArray(TlvEnum<TlvWiredFaultEnum>()),
-                { readAcl: AccessLevel.View }
-            )
+            activeWiredFaults: OptionalAttribute(10, TlvArray(TlvEnum<TlvWiredFaultEnum>()), { readAcl: AccessLevel.View })
         },
 
         events: {
@@ -544,11 +540,7 @@ export namespace PowerSourceCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.20
              */
-            batReplacementDescription: FixedAttribute(
-                19,
-                TlvString.bound({ maxLength: 60 }),
-                { readAcl: AccessLevel.View }
-            ),
+            batReplacementDescription: FixedAttribute(19, TlvString.bound({ maxLength: 60 }), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL indicate the ID of the common or colloquial designation of the battery, as
@@ -580,11 +572,7 @@ export namespace PowerSourceCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.23
              */
-            batIecDesignation: OptionalFixedAttribute(
-                22,
-                TlvString.bound({ maxLength: 20 }),
-                { readAcl: AccessLevel.View }
-            ),
+            batIecDesignation: OptionalFixedAttribute(22, TlvString.bound({ maxLength: 20 }), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL indicate the ID of the preferred chemistry of the battery source as specified in

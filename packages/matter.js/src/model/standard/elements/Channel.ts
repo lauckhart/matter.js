@@ -58,14 +58,11 @@ Matter.children.push({
             direction: "request", response: "ChangeChannelResponse",
             details: "Change the channel to the channel case-insensitive exact matching the value passed as an argument.",
             xref: { document: "cluster", section: "6.6.4.1" },
-
-            children: [
-                {
-                    tag: "datatype", name: "Match", id: 0x0, type: "string", conformance: "M",
-                    details: "This SHALL contain a user-input string to match in order to identify the target channel.",
-                    xref: { document: "cluster", section: "6.6.4.1.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "Match", id: 0x0, type: "string", conformance: "M",
+                details: "This SHALL contain a user-input string to match in order to identify the target channel.",
+                xref: { document: "cluster", section: "6.6.4.1.1" }
+            } ]
         },
 
         {
@@ -117,14 +114,12 @@ Matter.children.push({
                      "size Count.",
             xref: { document: "cluster", section: "6.6.4.4" },
 
-            children: [
-                {
-                    tag: "datatype", name: "Count", id: 0x0, type: "int16", conformance: "M",
-                    details: "This SHALL indicate the number of steps to increase (Count is positive) or decrease (Count is " +
-                             "negative) the current channel.",
-                    xref: { document: "cluster", section: "6.6.4.4.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "Count", id: 0x0, type: "int16", conformance: "M",
+                details: "This SHALL indicate the number of steps to increase (Count is positive) or decrease (Count is " +
+                         "negative) the current channel.",
+                xref: { document: "cluster", section: "6.6.4.4.1" }
+            } ]
         },
 
         {

@@ -17,13 +17,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.4.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "SN", id: 0x0, description: "SceneNames",
-                    details: "The ability to store a name for a scene."
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "SN", id: 0x0, description: "SceneNames",
+                details: "The ability to store a name for a scene."
+            } ]
         },
 
         {
@@ -60,12 +57,8 @@ Matter.children.push({
                      "The most significant bit, bit 7, SHALL be equal to bit 0 of the FeatureMap attribute. All other " +
                      "bits SHALL be 0.",
             xref: { document: "cluster", section: "1.4.7.5" },
-
             children: [
-                {
-                    tag: "datatype", name: "SceneNames", id: 0x7,
-                    description: "The ability to store a name for a scene."
-                }
+                { tag: "datatype", name: "SceneNames", id: 0x7, description: "The ability to store a name for a scene." }
             ]
         },
 
@@ -260,10 +253,7 @@ Matter.children.push({
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                 { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "TransitionTime", id: 0x3, type: "uint16", conformance: "desc" },
-                {
-                    tag: "datatype", name: "SceneName", id: 0x4, type: "string", conformance: "desc",
-                    constraint: "max 16"
-                },
+                { tag: "datatype", name: "SceneName", id: 0x4, type: "string", conformance: "desc", constraint: "max 16" },
                 {
                     tag: "datatype", name: "ExtensionFieldSets", id: 0x5, type: "list", conformance: "desc",
                     children: [ { tag: "datatype", name: "entry", type: "ExtensionFieldSet" } ]

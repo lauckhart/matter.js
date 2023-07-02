@@ -608,7 +608,9 @@ Matter.children.push({
             details: "The ConnectionStatus Event SHALL indicate that a Node’s connection status to a Thread network has " +
                      "changed.",
             xref: { document: "core", section: "11.13.8.2" },
-            children: [ { tag: "datatype", name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" } ]
+            children: [
+                { tag: "datatype", name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" }
+            ]
         },
 
         {

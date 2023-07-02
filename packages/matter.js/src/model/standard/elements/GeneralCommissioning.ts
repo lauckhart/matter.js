@@ -64,12 +64,8 @@ Matter.children.push({
             response: "ArmFailSafeResponse",
             details: "The arguments for this command are as follows:",
             xref: { document: "core", section: "11.9.6.2" },
-
             children: [
-                {
-                    tag: "datatype", name: "ExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M",
-                    default: 900
-                },
+                { tag: "datatype", name: "ExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M", default: 900 },
                 { tag: "datatype", name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "M" }
             ]
         },

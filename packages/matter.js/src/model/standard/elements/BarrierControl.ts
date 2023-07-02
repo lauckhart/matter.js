@@ -16,30 +16,12 @@ Matter.children.push({
         { tag: "attribute", name: "BarrierMovingState", id: 0x1, type: "enum8", conformance: "M" },
         { tag: "attribute", name: "BarrierSafetyStatus", id: 0x2, type: "map16", conformance: "M" },
         { tag: "attribute", name: "BarrierCapabilities", id: 0x3, type: "map8", conformance: "M" },
-        {
-            tag: "attribute", name: "BarrierOpenEvents", id: 0x4, type: "uint16", access: "RW",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "BarrierCloseEvents", id: 0x5, type: "uint16", access: "RW",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "BarrierCommandOpenEvents", id: 0x6, type: "uint16", access: "RW",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "BarrierCommandCloseEvents", id: 0x7, type: "uint16", access: "RW",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "BarrierOpenPeriod", id: 0x8, type: "uint16", access: "RW",
-            conformance: "O"
-        },
-        {
-            tag: "attribute", name: "BarrierClosePeriod", id: 0x9, type: "uint16", access: "RW",
-            conformance: "O"
-        },
+        { tag: "attribute", name: "BarrierOpenEvents", id: 0x4, type: "uint16", access: "RW", conformance: "O" },
+        { tag: "attribute", name: "BarrierCloseEvents", id: 0x5, type: "uint16", access: "RW", conformance: "O" },
+        { tag: "attribute", name: "BarrierCommandOpenEvents", id: 0x6, type: "uint16", access: "RW", conformance: "O" },
+        { tag: "attribute", name: "BarrierCommandCloseEvents", id: 0x7, type: "uint16", access: "RW", conformance: "O" },
+        { tag: "attribute", name: "BarrierOpenPeriod", id: 0x8, type: "uint16", access: "RW", conformance: "O" },
+        { tag: "attribute", name: "BarrierClosePeriod", id: 0x9, type: "uint16", access: "RW", conformance: "O" },
         { tag: "attribute", name: "BarrierPosition", id: 0xa, type: "uint8", conformance: "M" },
         {
             tag: "command", name: "BarrierControlGoToPercent", id: 0x0, conformance: "M", direction: "request",

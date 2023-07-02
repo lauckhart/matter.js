@@ -15,10 +15,7 @@ Matter.children.push({
 
     children: [
         { tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 18 },
-        {
-            tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M",
-            default: 18
-        },
+        { tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M", default: 18 },
         { tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M" },
         {
             tag: "attribute", name: "ExpectedClients", id: 0x3, type: "list", conformance: "M",
@@ -43,16 +40,13 @@ Matter.children.push({
             ]
         },
 
-        {
-            tag: "command", name: "StayAwakeRequest", id: 0x2, access: "R M", conformance: "O",
-            direction: "request"
-        },
+        { tag: "command", name: "StayAwakeRequest", id: 0x2, access: "R M", conformance: "O", direction: "request" },
 
         {
             tag: "datatype", name: "MonitoringRegistration", type: "struct", access: "R F", conformance: "M",
             children: [
-                { tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M" },
-                { tag: "datatype", name: "ICid", type: "uint64", conformance: "M" }
+                { tag: "datatype", name: "ClientNodeId", id: 0x1, type: "node-id", conformance: "M" },
+                { tag: "datatype", name: "ICid", id: 0x2, type: "uint64", conformance: "M" }
             ]
         }
     ]

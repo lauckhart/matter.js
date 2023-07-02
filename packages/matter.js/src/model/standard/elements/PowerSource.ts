@@ -20,14 +20,8 @@ Matter.children.push({
             xref: { document: "core", section: "11.7.4" },
 
             children: [
-                {
-                    tag: "datatype", name: "WIRED", id: 0x0, description: "Wired",
-                    details: "A wired power source"
-                },
-                {
-                    tag: "datatype", name: "BAT", id: 0x1, description: "Battery",
-                    details: "A battery power source"
-                },
+                { tag: "datatype", name: "WIRED", id: 0x0, description: "Wired", details: "A wired power source" },
+                { tag: "datatype", name: "BAT", id: 0x1, description: "Battery", details: "A battery power source" },
                 {
                     tag: "datatype", name: "RECHG", id: 0x2, description: "Rechargeable",
                     details: "A rechargeable battery power source (requires Battery feature)"

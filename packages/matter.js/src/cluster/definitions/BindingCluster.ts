@@ -32,6 +32,14 @@ export const TlvTargetStruct = TlvObject({
     group: TlvOptionalField(2, TlvUInt16),
 
     /**
+     * This field is the remote endpoint that the local endpoint is bound to. If the Group field is present, this field
+     * SHALL NOT be present.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.3
+     */
+    endpoint: TlvOptionalField(3, TlvUInt16),
+
+    /**
      * This field is the cluster ID (client & server) on the local and target endpoint(s). If this field is present,
      * the client cluster SHALL also exist on this endpoint (with this Binding cluster). If this field is present, the
      * target SHALL be this cluster on the target endpoint(s).

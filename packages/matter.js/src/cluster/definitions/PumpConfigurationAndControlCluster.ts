@@ -475,11 +475,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.4
              */
-            minConstPressure: OptionalFixedAttribute(
-                3,
-                TlvNullable(TlvInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            minConstPressure: OptionalFixedAttribute(3, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the maximum pressure the pump can achieve when it is working with the
@@ -487,11 +483,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.5
              */
-            maxConstPressure: OptionalFixedAttribute(
-                4,
-                TlvNullable(TlvInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            maxConstPressure: OptionalFixedAttribute(4, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the minimum compensated pressure the pump can achieve when it is working with
@@ -499,11 +491,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.6
              */
-            minCompPressure: OptionalFixedAttribute(
-                5,
-                TlvNullable(TlvInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            minCompPressure: OptionalFixedAttribute(5, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the maximum compensated pressure the pump can achieve when it is working with
@@ -511,11 +499,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.7
              */
-            maxCompPressure: OptionalFixedAttribute(
-                6,
-                TlvNullable(TlvInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            maxCompPressure: OptionalFixedAttribute(6, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the minimum speed the pump can achieve when it is working with the ControlMode
@@ -523,11 +507,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
              */
-            minConstSpeed: OptionalFixedAttribute(
-                7,
-                TlvNullable(TlvUInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            minConstSpeed: OptionalFixedAttribute(7, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the maximum speed the pump can achieve when it is working with the ControlMode
@@ -535,22 +515,14 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
              */
-            maxConstSpeed: OptionalFixedAttribute(
-                8,
-                TlvNullable(TlvUInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            maxConstSpeed: OptionalFixedAttribute(8, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the minimum flow the pump can achieve when it is working with the Con
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
              */
-            minConstFlow: OptionalFixedAttribute(
-                9,
-                TlvNullable(TlvUInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            minConstFlow: OptionalFixedAttribute(9, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the maximum flow the pump can achieve when it is working with the ControlMode
@@ -558,11 +530,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
              */
-            maxConstFlow: OptionalFixedAttribute(
-                10,
-                TlvNullable(TlvUInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            maxConstFlow: OptionalFixedAttribute(10, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the minimum temperature the pump can maintain in the system when it is working
@@ -570,11 +538,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
              */
-            minConstTemp: OptionalFixedAttribute(
-                11,
-                TlvNullable(TlvInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            minConstTemp: OptionalFixedAttribute(11, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the maximum temperature the pump can maintain in the system when it is working
@@ -582,11 +546,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
              */
-            maxConstTemp: OptionalFixedAttribute(
-                12,
-                TlvNullable(TlvInt16),
-                { default: null, readAcl: AccessLevel.View }
-            )
+            maxConstTemp: OptionalFixedAttribute(12, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
         }
     };
 

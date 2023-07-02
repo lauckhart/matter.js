@@ -150,16 +150,14 @@ Matter.children.push({
             details: "This object defines inputs to a search for content for display or playback.",
             xref: { document: "cluster", section: "6.7.5.2" },
 
-            children: [
-                {
-                    tag: "datatype", name: "ParameterList", id: 0x0, type: "list", conformance: "M",
-                    details: "This SHALL indicate the list of parameters comprising the search. If multiple parameters are " +
-                             "provided, the search parameters SHALL be joined with 'AND' logic. e.g. action movies with Tom " +
-                             "Cruise will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]",
-                    xref: { document: "cluster", section: "6.7.5.2.1" },
-                    children: [ { tag: "datatype", name: "entry", type: "ParameterStruct" } ]
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "ParameterList", id: 0x0, type: "list", conformance: "M",
+                details: "This SHALL indicate the list of parameters comprising the search. If multiple parameters are " +
+                         "provided, the search parameters SHALL be joined with 'AND' logic. e.g. action movies with Tom " +
+                         "Cruise will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]",
+                xref: { document: "cluster", section: "6.7.5.2.1" },
+                children: [ { tag: "datatype", name: "entry", type: "ParameterStruct" } ]
+            } ]
         },
 
         {
