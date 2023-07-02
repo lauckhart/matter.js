@@ -19,8 +19,8 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
  */
 export const TlvMultiPressOngoingEvent = TlvObject({
-    newPosition: TlvField(0, TlvUInt8.bound({ min: 0, max: "NumberOfPositions1" })),
-    currentNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 2, max: "MultiPressMax" }))
+    newPosition: TlvField(0, TlvUInt8),
+    currentNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 2 }))
 });
 
 /**
@@ -31,8 +31,8 @@ export const TlvMultiPressOngoingEvent = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
  */
 export const TlvMultiPressCompleteEvent = TlvObject({
-    previousPosition: TlvField(0, TlvUInt8.bound({ min: 0, max: "NumberOfPositions1" })),
-    totalNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 1, max: "MultiPressMax" }))
+    previousPosition: TlvField(0, TlvUInt8),
+    totalNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 1 }))
 });
 
 /**
@@ -41,18 +41,14 @@ export const TlvMultiPressCompleteEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
  */
-export const TlvSwitchLatchedEvent = TlvObject({
-    newPosition: TlvField(0, TlvUInt8.bound({ min: 0, max: "NumberOfPositions1" }))
-});
+export const TlvSwitchLatchedEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
  * This event SHALL be generated, when the momentary switch starts to be pressed (after debouncing).
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
  */
-export const TlvInitialPressEvent = TlvObject({
-    newPosition: TlvField(0, TlvUInt8.bound({ min: 0, max: "NumberOfPositions1" }))
-});
+export const TlvInitialPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
  * This event SHALL be generated, when the momentary switch has been pressed for a "long" time (this time interval is
@@ -60,9 +56,7 @@ export const TlvInitialPressEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
  */
-export const TlvLongPressEvent = TlvObject({
-    newPosition: TlvField(0, TlvUInt8.bound({ min: 0, max: "NumberOfPositions1" }))
-});
+export const TlvLongPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
  * This event SHALL be generated, when the momentary switch has been released (after debouncing) and after having been
@@ -71,18 +65,14 @@ export const TlvLongPressEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
  */
-export const TlvLongReleaseEvent = TlvObject({
-    previousPosition: TlvField(0, TlvUInt8.bound({ min: 0, max: "NumberOfPositions1" }))
-});
+export const TlvLongReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8) });
 
 /**
  * This event SHALL be generated, when the momentary switch has been released (after debouncing).
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
  */
-export const TlvShortReleaseEvent = TlvObject({
-    previousPosition: TlvField(0, TlvUInt8.bound({ min: 0, max: "NumberOfPositions1" }))
-});
+export const TlvShortReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8) });
 
 export namespace SwitchCluster {
     export const id = 0x3b;
@@ -134,7 +124,7 @@ export namespace SwitchCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.2
              */
-            currentPosition: Attribute(1, TlvUInt8.bound({ min: 0, max: "NumberOfPositions1" }), { persistent: true })
+            currentPosition: Attribute(1, TlvUInt8, { persistent: true })
         }
     };
 

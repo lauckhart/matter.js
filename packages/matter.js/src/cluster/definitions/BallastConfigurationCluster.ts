@@ -119,7 +119,7 @@ export namespace BallastConfigurationCluster {
              */
             ballastFactorAdjustment: OptionalWritableAttribute(
                 21,
-                TlvNullable(TlvUInt8.bound({ min: 100, max: "Ms" })),
+                TlvNullable(TlvUInt8.bound({ min: 100 })),
                 { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 

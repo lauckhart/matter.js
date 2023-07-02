@@ -260,6 +260,21 @@ function translateFields(desc: string, fields?: HtmlReference) {
 
     records.forEach(r => {
         r.type = fixTypeError(r.type);
+
+        if (r.conformance == "Matter!Zigbee") {
+            delete r.conformance;
+        }
+
+        if (r.constraint) {
+            // Remove units and otherwise normalize constraint
+            r.constraint = r.constraint.replace(/ octets| entries| bytes| per node/i, "").replace(/ to(\d|max)/i, " to $1");
+
+            // Ignore window covering's bitmap constraints
+            if (r.constraint.match(/^[0x]{4} [0x]{4}$/)) {
+                delete r.constraint;
+            }
+        }
+
         if (typeof r.default == "string") {
             switch (r.default.toLowerCase()) {
                 case "desc": // See description

@@ -456,7 +456,7 @@ export namespace PowerSourceCluster {
              */
             batPercentRemaining: OptionalAttribute(
                 12,
-                TlvNullable(TlvUInt8.bound({ min: 0, max: 200 })),
+                TlvNullable(TlvUInt8.bound({ max: 200 })),
                 { omitChanges: true, readAcl: AccessLevel.View }
             ),
 

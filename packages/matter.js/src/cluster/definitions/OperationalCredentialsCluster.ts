@@ -107,7 +107,7 @@ export const TlvAttestationResponseRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2.1
      */
-    attestationElements: TlvField(0, TlvByteString.bound({ maxLength: "RespMax" })),
+    attestationElements: TlvField(0, TlvByteString),
 
     /**
      * This field shall contain the octet string of the necessary attestation_signature as described in Section
@@ -176,7 +176,7 @@ export const TlvCsrResponseRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.6.1
      */
-    nocsrElements: TlvField(0, TlvByteString.bound({ maxLength: "RespMax" })),
+    nocsrElements: TlvField(0, TlvByteString),
 
     attestationSignature: TlvField(1, TlvByteString.bound({ minLength: 64, maxLength: 64 }))
 });
@@ -347,11 +347,7 @@ export namespace OperationalCredentialsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.4
              */
-            commissionedFabrics: Attribute(
-                3,
-                TlvUInt8.bound({ max: "SupportedFabrics" }),
-                { persistent: true, readAcl: AccessLevel.View }
-            ),
+            commissionedFabrics: Attribute(3, TlvUInt8, { persistent: true, readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL contain a read-only list of Trusted Root CA Certificates installed on the Node, as

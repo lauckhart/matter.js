@@ -33,7 +33,7 @@ export const TlvOptions = TlvBitmap(TlvUInt8, TlvOptionsBits);
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.1
  */
 export const TlvMoveToLevelRequest = TlvObject({
-    level: TlvField(0, TlvUInt8.bound({ min: 0, max: 254 })),
+    level: TlvField(0, TlvUInt8.bound({ max: 254 })),
     transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
     optionsMask: TlvField(2, TlvUInt8),
     optionsOverride: TlvField(3, TlvUInt8)
@@ -144,7 +144,7 @@ export namespace PulseWidthModulationCluster {
              */
             currentLevel: Attribute(
                 0,
-                TlvNullable(TlvUInt8.bound({ min: "MinLevel", max: "MaxLevel" })),
+                TlvNullable(TlvUInt8),
                 { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }
             ),
 
@@ -160,11 +160,7 @@ export namespace PulseWidthModulationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.4
              */
-            maxLevel: OptionalAttribute(
-                3,
-                TlvUInt8.bound({ min: "MinLevel", max: 254 }),
-                { default: 254, readAcl: AccessLevel.View }
-            ),
+            maxLevel: OptionalAttribute(3, TlvUInt8.bound({ max: 254 }), { default: 254, readAcl: AccessLevel.View }),
 
             /**
              * The Options attribute is meant to be changed only during commissioning. The Options attribute is a
@@ -200,7 +196,7 @@ export namespace PulseWidthModulationCluster {
              */
             onLevel: WritableAttribute(
                 17,
-                TlvNullable(TlvUInt8.bound({ min: "MinLevel", max: "MaxLevel" })),
+                TlvNullable(TlvUInt8),
                 { default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
@@ -329,11 +325,7 @@ export namespace PulseWidthModulationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.5
              */
-            currentFrequency: Attribute(
-                4,
-                TlvUInt16.bound({ min: "MinFrequency", max: "MaxFrequency" }),
-                { scene: true, readAcl: AccessLevel.View }
-            ),
+            currentFrequency: Attribute(4, TlvUInt16, { scene: true, readAcl: AccessLevel.View }),
 
             /**
              * The MinFrequency attribute indicates the minimum value of CurrentFrequency that is capable of being
@@ -341,7 +333,7 @@ export namespace PulseWidthModulationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.6
              */
-            minFrequency: Attribute(5, TlvUInt16.bound({ min: 0, max: "MaxFrequency" }), { readAcl: AccessLevel.View }),
+            minFrequency: Attribute(5, TlvUInt16, { readAcl: AccessLevel.View }),
 
             /**
              * The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being
@@ -349,7 +341,7 @@ export namespace PulseWidthModulationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.7
              */
-            maxFrequency: Attribute(6, TlvUInt16.bound({ min: "MinFrequency" }), { readAcl: AccessLevel.View })
+            maxFrequency: Attribute(6, TlvUInt16, { readAcl: AccessLevel.View })
         },
 
         commands: {

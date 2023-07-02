@@ -147,8 +147,8 @@ Matter.children.push({
                      "sent for DST changes that are not accompanied by a time zone change.",
             xref: { document: "core", section: "11.16.10.3" },
             children: [
-                { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M" },
-                { tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O" }
+                { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "-43200 to 50400" },
+                { tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "0 to 64" }
             ]
         },
 
@@ -285,9 +285,11 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M",
+                    constraint: "-43200 to 50400",
                     details: "The time zone offset from UTC in seconds.",
                     xref: { document: "core", section: "11.16.6.3.1" }
                 },
+
                 {
                     tag: "datatype", name: "ValidAt", id: 0x1, type: "epoch-us", conformance: "M",
                     details: "The UTC time when the offset SHALL be applied.",

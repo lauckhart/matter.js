@@ -156,7 +156,7 @@ export const TlvRetrieveLogsResponseRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.2
      */
-    logContent: TlvField(1, TlvByteString),
+    logContent: TlvField(1, TlvByteString.bound({ minLength: 1024, maxLength: 1024 })),
 
     /**
      * This field SHOULD be included in the command if the Status field has a value of Success and the Node maintains a

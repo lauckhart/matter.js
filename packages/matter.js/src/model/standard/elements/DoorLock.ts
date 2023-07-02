@@ -257,7 +257,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "map8", access: "R V",
-            conformance: "USR", default: [ "Single" ], quality: "F",
+            conformance: "USR", default: { type: "flags", flags: [ "Single" ] }, quality: "F",
             details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.",
             xref: { document: "cluster", section: "5.2.3.19" },
             children: [
@@ -326,7 +326,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SupportedOperatingModes", id: 0x26, type: "map16", access: "R V",
-            conformance: "M", default: [ "Vacation", "Privacy", "Passage" ], quality: "F",
+            conformance: "M", default: { type: "flags", flags: [ "Vacation", "Privacy", "Passage" ] },
+            quality: "F",
             details: "This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All " +
                      "operating modes NOT supported by a lock SHALL be set to one. The value of the OperatingMode " +
                      "enumeration defines the related bit to be set, as shown below:",
@@ -468,7 +469,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AlarmMask", id: 0x40, type: "map16", access: "RW VA", conformance: "O",
-            default: [ "LockResetToFactoryDefaults", "Reserved", "TamperAlarmWrongCodeEntryLimit" ],
+            default: { type: "flags", flags: [ "LockResetToFactoryDefaults", "Reserved", "TamperAlarmWrongCodeEntryLimit" ] },
             quality: "P",
             details: "This attribute is only supported if the Alarms cluster is on the same endpoint. The alarm mask is " +
                      "used to turn on/off alarms for particular functions. Alarms for an alarm group are enabled if the " +
@@ -490,7 +491,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "KeypadOperationEventMask", id: 0x41, type: "map16", access: "RW VA",
             conformance: "[NOT & PIN]",
-            default: [ "LockSourceKeypad", "UnlockSourceKeypad", "LockSourceKeypadErrorInvalidSchedule" ],
+            default: { type: "flags", flags: [ "LockSourceKeypad", "UnlockSourceKeypad", "LockSourceKeypadErrorInvalidSchedule" ] },
             quality: "P",
             details: "Event mask used to turn on and off the transmission of keypad operation events. This mask DOES NOT " +
                      "apply to the storing of events in the event log. This mask only applies to the Operation Event " +
@@ -512,7 +513,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "RemoteOperationEventMask", id: 0x42, type: "map16", access: "RW VA",
             conformance: "[NOT]",
-            default: [ "LockSourceRemote", "UnlockSourceRemote", "LockSourceRemoteErrorInvalidSchedule" ],
+            default: { type: "flags", flags: [ "LockSourceRemote", "UnlockSourceRemote", "LockSourceRemoteErrorInvalidSchedule" ] },
             quality: "P",
             details: "Event mask used to turn on and off the transmission of remote operation events. This mask DOES NOT " +
                      "apply to the storing of events in the event log. This mask only applies to the Operation Event",
@@ -531,7 +532,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ManualOperationEventMask", id: 0x43, type: "map16", access: "RW VA",
-            conformance: "[NOT]", default: [ "ThumbturnLock", "ThumbturnUnlock", "KeyLock" ], quality: "P",
+            conformance: "[NOT]",
+            default: { type: "flags", flags: [ "ThumbturnLock", "ThumbturnUnlock", "KeyLock" ] }, quality: "P",
             details: "Event mask used to turn on and off manual operation events. This mask DOES NOT apply to the storing " +
                      "of events in the event log. This mask only applies to the Operation Event Notification Command.",
             xref: { document: "cluster", section: "5.2.3.42" },
@@ -554,7 +556,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "RfidOperationEventMask", id: 0x44, type: "map16", access: "RW VA",
             conformance: "[NOT & RID]",
-            default: [ "LockSourceRfid", "UnlockSourceRfid", "LockSourceRfidErrorInvalidSchedule" ],
+            default: { type: "flags", flags: [ "LockSourceRfid", "UnlockSourceRfid", "LockSourceRfidErrorInvalidSchedule" ] },
             quality: "P",
             details: "Event mask used to turn on and off RFID operation events. This mask DOES NOT apply to the storing " +
                      "of events in the event log. This mask only applies to the Operation Event Notification Command.",
@@ -574,7 +576,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "KeypadProgrammingEventMask", id: 0x45, type: "map16", access: "RW VA",
             conformance: "[NOT & PIN]",
-            default: [ "ProgrammingPinCodeChangedSourceKeypad", "PinAddedSourceKeypad", "PinChangedSourceKeypad" ],
+            default: { type: "flags", flags: [ "ProgrammingPinCodeChangedSourceKeypad", "PinAddedSourceKeypad", "PinChangedSourceKeypad" ] },
             quality: "P",
             details: "Event mask used to turn on and off keypad programming events. This mask DOES NOT apply to the " +
                      "storing of events in the event log. This mask only applies to the Programming Event Notification " +
@@ -592,7 +594,9 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RemoteProgrammingEventMask", id: 0x46, type: "map16", access: "RW VA",
-            conformance: "[NOT]", default: [ "PinAddedSourceRemote", "PinChangedSourceRemote" ], quality: "P",
+            conformance: "[NOT]",
+            default: { type: "flags", flags: [ "PinAddedSourceRemote", "PinChangedSourceRemote" ] },
+            quality: "P",
             details: "Event mask used to turn on and off remote programming events. This mask DOES NOT apply to the " +
                      "storing of events in the event log. This mask only applies to the Programming Event Notification " +
                      "Command.",

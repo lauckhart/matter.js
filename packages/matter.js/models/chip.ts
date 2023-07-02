@@ -1796,7 +1796,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "MinRfidCodeLength", id: 0x1a, type: "uint8", conformance: "O" },
                 {
                     tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "DlCredentialRuleMask",
-                    conformance: "O", default: [ "Single" ]
+                    conformance: "O", default: { type: "flags", flags: [ "Single" ] }
                 },
                 {
                     tag: "attribute", name: "NumCredentialsSupportedPerUser", id: 0x1c, type: "uint8", conformance: "O",
@@ -1824,7 +1824,7 @@ export const ChipMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "SupportedOperatingModes", id: 0x26, type: "DlSupportedOperatingModes",
-                    conformance: "M", default: [ "Vacation", "Privacy", "Passage" ]
+                    conformance: "M", default: { type: "flags", flags: [ "Vacation", "Privacy", "Passage" ] }
                 },
                 {
                     tag: "attribute", name: "DefaultConfigurationRegister", id: 0x27,
@@ -5072,7 +5072,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "OutdoorTemperature", id: 0x1, type: "int16", conformance: "O", quality: "X" },
                 {
                     tag: "attribute", name: "ThermostatOccupancy", id: 0x2, type: "map8", conformance: "O",
-                    default: [ "Occupied" ],
+                    default: { type: "flags", flags: [ "Occupied" ] },
                     children: [ { tag: "datatype", name: "Occupied", id: 0x1, conformance: "M" } ]
                 },
                 {
@@ -5961,7 +5961,7 @@ export const ChipMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "WcConfigStatus", id: 0x7, type: "ConfigStatus", conformance: "M",
-                    default: [ "Operational", "OnlineReserved" ]
+                    default: { type: "flags", flags: [ "Operational", "OnlineReserved" ] }
                 },
                 {
                     tag: "attribute", name: "WcCurrentPositionLiftPercentage", id: 0x8, type: "percent",

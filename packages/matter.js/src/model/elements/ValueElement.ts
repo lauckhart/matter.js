@@ -5,7 +5,7 @@
  */
 
 import { Access, Conformance, Constraint, Quality } from "../aspects/index.js";
-import { ElementTag } from "../definitions/index.js";
+import { ElementTag, FieldValue } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
 import { type AnyValueElement } from "./AnyValueElement.js";
 
@@ -50,7 +50,7 @@ export type ValueElement = BaseElement & {
     /**
      * The default value for the element.
      */
-    default?: any,
+    default?: FieldValue,
 
     /**
      * Nested structures that may have data elements include enums, structs and

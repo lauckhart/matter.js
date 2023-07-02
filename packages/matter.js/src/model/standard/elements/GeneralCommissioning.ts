@@ -34,7 +34,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RegulatoryConfig", id: 0x2, type: "RegulatoryLocationTypeEnum",
-            access: "R V", conformance: "M", default: { reference: "LocationCapability" },
+            access: "R V", conformance: "M", default: { type: "reference", name: "LocationCapability" },
             details: "This attribute SHALL indicate the regulatory configuration for the product.",
             xref: { document: "core", section: "11.9.5.3" }
         },

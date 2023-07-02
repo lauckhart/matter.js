@@ -5,8 +5,8 @@
  */
 
 import { InternalError } from "../../common/index.js";
-import { Datatype, ElementTag } from "../definitions/index.js";
-import { AnyElement } from "../elements/index.js";
+import { ElementTag, FieldValue } from "../definitions/index.js";
+import { AnyElement, Globals } from "../elements/index.js";
 import { type Model, type ValueModel, type DatatypeModel, CommandModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
@@ -85,22 +85,22 @@ export class ModelTraversal {
                 // If parented by enum or bitmap, infer type as uint of same size
                 if ((ancestor as any).metatype) {
                     switch (ancestor.name) {
-                        case Datatype.enum8:
-                        case Datatype.map8:
-                            result = Datatype.uint8;
+                        case Globals.enum8.name:
+                        case Globals.map8.name:
+                            result = Globals.uint8.name;
                             return false;
             
-                        case Datatype.enum16:
-                        case Datatype.map16:
-                            result = Datatype.uint16;
+                        case Globals.enum16.name:
+                        case Globals.map16.name:
+                            result = Globals.uint16.name;
                             return false;
             
-                        case Datatype.map32:
-                            result = Datatype.uint32;
+                        case Globals.map32.name:
+                            result = Globals.uint32.name;
                             return false;
             
-                        case Datatype.map64:
-                            result = Datatype.uint64;
+                        case Globals.map64.name:
+                            result = Globals.uint64.name;
                             return false;
                     }
                 }
@@ -311,8 +311,8 @@ export class ModelTraversal {
             // field
             if (model.isType) {
                 const defaultValue = (model as ValueModel).default;
-                if (typeof defaultValue == "object" && defaultValue.reference) {
-                    if (defaultValue.reference == type.name) {
+                if (FieldValue.is(defaultValue, FieldValue.reference)) {
+                    if ((defaultValue as FieldValue.Reference).name == type.name) {
                         references.push(model);
                     }
                 }

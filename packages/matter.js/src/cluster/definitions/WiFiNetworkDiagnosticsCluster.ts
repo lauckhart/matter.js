@@ -179,7 +179,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
              */
             rssi: Attribute(
                 4,
-                TlvNullable(TlvInt8.bound({ min: -120, max: 0 })),
+                TlvNullable(TlvInt8.bound({ min: -120 })),
                 { omitChanges: true, default: null, readAcl: AccessLevel.View }
             ),
 

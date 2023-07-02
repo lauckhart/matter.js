@@ -140,7 +140,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinConstTemp", id: 0xb, type: "int16", access: "R V",
-            conformance: "TEMP, [AUTO]", default: null, quality: "X F",
+            conformance: "TEMP, [AUTO]", constraint: "min -27315", default: null, quality: "X F",
             details: "This attribute specifies the minimum temperature the pump can maintain in the system when it is " +
                      "working with the ControlMode attribute set to ConstantTemperature.",
             xref: { document: "cluster", section: "4.2.7.12" }
@@ -148,7 +148,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxConstTemp", id: 0xc, type: "int16", access: "R V",
-            conformance: "TEMP, [AUTO]", default: null, quality: "X F",
+            conformance: "TEMP, [AUTO]", constraint: "min -27315", default: null, quality: "X F",
             details: "This attribute specifies the maximum temperature the pump can maintain in the system when it is " +
                      "working with the ControlMode attribute set to ConstantTemperature.",
             xref: { document: "cluster", section: "4.2.7.13" }

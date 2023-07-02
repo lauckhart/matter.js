@@ -378,8 +378,7 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "AttributeId", id: 0x0, type: "attrib-id", access: "RW",
-                    conformance: "Matter, !Zigbee",
+                    tag: "datatype", name: "AttributeId", id: 0x0, type: "attrib-id", access: "RW", conformance: "O",
                     details: "This field SHALL be present or not present, for all instances in the Scenes cluster. If this field " +
                              "is not present, then the data type of AttributeValue SHALL be determined by the order and data type " +
                              "defined in the cluster specification. Otherwise the data type of AttributeValue SHALL be the data " +

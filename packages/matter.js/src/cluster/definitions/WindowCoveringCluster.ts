@@ -280,7 +280,7 @@ export namespace WindowCoveringCluster {
                 TlvConfigStatus,
                 {
                     persistent: true,
-                    default: BitFlags(TlvConfigStatusBits, "Operational", "OnlineReserved"),
+                    default: BitFlags(TlvConfigStatusBits, "operational", "onlineReserved"),
                     readAcl: AccessLevel.View
                 }
             ),
@@ -372,7 +372,7 @@ export namespace WindowCoveringCluster {
              */
             currentPositionLift: OptionalAttribute(
                 3,
-                TlvNullable(TlvUInt16.bound({ min: "InstalledOpenLimitLift", max: "InstalledClosedLimitLift" })),
+                TlvNullable(TlvUInt16),
                 { persistent: true, default: null, readAcl: AccessLevel.View }
             ),
 
@@ -385,7 +385,7 @@ export namespace WindowCoveringCluster {
              */
             currentPositionLiftPercentage: OptionalAttribute(
                 8,
-                TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })),
+                TlvNullable(TlvUInt8.bound({ max: 100 })),
                 { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }
             )
         },
@@ -418,7 +418,7 @@ export namespace WindowCoveringCluster {
              */
             currentPositionTilt: OptionalAttribute(
                 4,
-                TlvNullable(TlvUInt16.bound({ min: "InstalledOpenLimitTilt", max: "InstalledClosedLimitTilt" })),
+                TlvNullable(TlvUInt16),
                 { persistent: true, default: null, readAcl: AccessLevel.View }
             ),
 
@@ -431,7 +431,7 @@ export namespace WindowCoveringCluster {
              */
             currentPositionTiltPercentage: OptionalAttribute(
                 9,
-                TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })),
+                TlvNullable(TlvUInt8.bound({ max: 100 })),
                 { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }
             )
         },
@@ -464,7 +464,7 @@ export namespace WindowCoveringCluster {
              */
             targetPositionLiftPercent100Ths: OptionalAttribute(
                 11,
-                TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
+                TlvNullable(TlvUInt16.bound({ max: 10000 })),
                 { scene: true, default: null, readAcl: AccessLevel.View }
             ),
 
@@ -476,7 +476,7 @@ export namespace WindowCoveringCluster {
              */
             currentPositionLiftPercent100Ths: OptionalAttribute(
                 14,
-                TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
+                TlvNullable(TlvUInt16.bound({ max: 10000 })),
                 { persistent: true, default: null, readAcl: AccessLevel.View }
             ),
 
@@ -488,7 +488,7 @@ export namespace WindowCoveringCluster {
              */
             installedOpenLimitLift: OptionalAttribute(
                 16,
-                TlvUInt16.bound({ min: 0, max: 65534 }),
+                TlvUInt16.bound({ max: 65534 }),
                 { persistent: true, readAcl: AccessLevel.View }
             ),
 
@@ -500,7 +500,7 @@ export namespace WindowCoveringCluster {
              */
             installedClosedLimitLift: OptionalAttribute(
                 17,
-                TlvUInt16.bound({ min: 0, max: 65534 }),
+                TlvUInt16.bound({ max: 65534 }),
                 { persistent: true, readAcl: AccessLevel.View }
             )
         },
@@ -533,7 +533,7 @@ export namespace WindowCoveringCluster {
              */
             targetPositionTiltPercent100Ths: OptionalAttribute(
                 12,
-                TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
+                TlvNullable(TlvUInt16.bound({ max: 10000 })),
                 { scene: true, default: null, readAcl: AccessLevel.View }
             ),
 
@@ -545,7 +545,7 @@ export namespace WindowCoveringCluster {
              */
             currentPositionTiltPercent100Ths: OptionalAttribute(
                 15,
-                TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
+                TlvNullable(TlvUInt16.bound({ max: 10000 })),
                 { persistent: true, default: null, readAcl: AccessLevel.View }
             ),
 
@@ -557,7 +557,7 @@ export namespace WindowCoveringCluster {
              */
             installedOpenLimitTilt: OptionalAttribute(
                 18,
-                TlvUInt16.bound({ min: 0, max: 65534 }),
+                TlvUInt16.bound({ max: 65534 }),
                 { persistent: true, readAcl: AccessLevel.View }
             ),
 
@@ -569,7 +569,7 @@ export namespace WindowCoveringCluster {
              */
             installedClosedLimitTilt: OptionalAttribute(
                 19,
-                TlvUInt16.bound({ min: 0, max: 65534 }),
+                TlvUInt16.bound({ max: 65534 }),
                 { persistent: true, readAcl: AccessLevel.View }
             )
         },

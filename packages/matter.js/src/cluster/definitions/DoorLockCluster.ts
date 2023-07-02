@@ -1324,7 +1324,7 @@ export namespace DoorLockCluster {
                 38,
                 TlvSupportedOperatingModes,
                 {
-                    default: BitFlags(TlvSupportedOperatingModesBits, "Vacation", "Privacy", "Passage"),
+                    default: BitFlags(TlvSupportedOperatingModesBits, "vacation", "privacy", "passage"),
                     readAcl: AccessLevel.View
                 }
             ),
@@ -1418,7 +1418,7 @@ export namespace DoorLockCluster {
                 64,
                 TlvAlarmMask,
                 {
-                    default: BitFlags(TlvAlarmMaskBits, "LockResetToFactoryDefaults", "Reserved", "TamperAlarmWrongCodeEntryLimit"),
+                    default: BitFlags(TlvAlarmMaskBits, "lockResetToFactoryDefaults", "reserved", "tamperAlarmWrongCodeEntryLimit"),
                     readAcl: AccessLevel.View,
                     writeAcl: AccessLevel.Administer
                 }
@@ -1574,7 +1574,7 @@ export namespace DoorLockCluster {
             credentialRulesSupport: FixedAttribute(
                 27,
                 TlvCredentialRulesSupport,
-                { default: BitFlags(TlvCredentialRulesSupportBits, "Single"), readAcl: AccessLevel.View }
+                { default: BitFlags(TlvCredentialRulesSupportBits, "single"), readAcl: AccessLevel.View }
             ),
 
             /**
@@ -1885,7 +1885,7 @@ export namespace DoorLockCluster {
                 65,
                 TlvKeypadOperationEventMask,
                 {
-                    default: BitFlags(TlvKeypadOperationEventMaskBits, "LockSourceKeypad", "UnlockSourceKeypad", "LockSourceKeypadErrorInvalidSchedule"),
+                    default: BitFlags(TlvKeypadOperationEventMaskBits, "lockSourceKeypad", "unlockSourceKeypad", "lockSourceKeypadErrorInvalidSchedule"),
                     readAcl: AccessLevel.View,
                     writeAcl: AccessLevel.Administer
                 }
@@ -1901,7 +1901,7 @@ export namespace DoorLockCluster {
                 69,
                 TlvKeypadProgrammingEventMask,
                 {
-                    default: BitFlags(TlvKeypadProgrammingEventMaskBits, "ProgrammingPinCodeChangedSourceKeypad", "PinAddedSourceKeypad", "PinChangedSourceKeypad"),
+                    default: BitFlags(TlvKeypadProgrammingEventMaskBits, "programmingPinCodeChangedSourceKeypad", "pinAddedSourceKeypad", "pinChangedSourceKeypad"),
                     readAcl: AccessLevel.View,
                     writeAcl: AccessLevel.Administer
                 }
@@ -1921,7 +1921,7 @@ export namespace DoorLockCluster {
                 66,
                 TlvRemoteOperationEventMask,
                 {
-                    default: BitFlags(TlvRemoteOperationEventMaskBits, "LockSourceRemote", "UnlockSourceRemote", "LockSourceRemoteErrorInvalidSchedule"),
+                    default: BitFlags(TlvRemoteOperationEventMaskBits, "lockSourceRemote", "unlockSourceRemote", "lockSourceRemoteErrorInvalidSchedule"),
                     readAcl: AccessLevel.View,
                     writeAcl: AccessLevel.Administer
                 }
@@ -1937,7 +1937,7 @@ export namespace DoorLockCluster {
                 67,
                 TlvManualOperationEventMask,
                 {
-                    default: BitFlags(TlvManualOperationEventMaskBits, "ThumbturnLock", "ThumbturnUnlock", "KeyLock"),
+                    default: BitFlags(TlvManualOperationEventMaskBits, "thumbturnLock", "thumbturnUnlock", "keyLock"),
                     readAcl: AccessLevel.View,
                     writeAcl: AccessLevel.Administer
                 }
@@ -1953,7 +1953,7 @@ export namespace DoorLockCluster {
                 70,
                 TlvRemoteProgrammingEventMask,
                 {
-                    default: BitFlags(TlvRemoteProgrammingEventMaskBits, "PinAddedSourceRemote", "PinChangedSourceRemote"),
+                    default: BitFlags(TlvRemoteProgrammingEventMaskBits, "pinAddedSourceRemote", "pinChangedSourceRemote"),
                     readAcl: AccessLevel.View,
                     writeAcl: AccessLevel.Administer
                 }
@@ -1985,7 +1985,7 @@ export namespace DoorLockCluster {
                 68,
                 TlvRfidOperationEventMask,
                 {
-                    default: BitFlags(TlvRfidOperationEventMaskBits, "LockSourceRfid", "UnlockSourceRfid", "LockSourceRfidErrorInvalidSchedule"),
+                    default: BitFlags(TlvRfidOperationEventMaskBits, "lockSourceRfid", "unlockSourceRfid", "lockSourceRfidErrorInvalidSchedule"),
                     readAcl: AccessLevel.View,
                     writeAcl: AccessLevel.Administer
                 }

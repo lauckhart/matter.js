@@ -131,11 +131,19 @@ export const TlvAccessControlEntryChangedEvent = TlvObject({
     adminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
 
     /**
+     * The Passcode ID of the Administrator that made the change, if the change occurred via a PASE session. Non-zero
+     * values are reserved for future use (see PasscodeId generation in PBKDFParamRequest).
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1.2
+     */
+    adminPasscodeId: TlvField(2, TlvNullable(TlvUInt16)),
+
+    /**
      * The type of change as appropriate.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1.3
      */
-    changeType: TlvField(3, TlvNullable(TlvEnum<TlvChangeTypeEnum>())),
+    changeType: TlvField(3, TlvEnum<TlvChangeTypeEnum>()),
 
     /**
      * The latest value of the changed entry.
@@ -153,7 +161,8 @@ export const TlvAccessControlEntryChangedEvent = TlvObject({
  */
 export const TlvAccessControlExtensionChangedEvent = TlvObject({
     adminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
-    changeType: TlvField(3, TlvNullable(TlvEnum<TlvChangeTypeEnum>())),
+    adminPasscodeId: TlvField(2, TlvNullable(TlvUInt16)),
+    changeType: TlvField(3, TlvEnum<TlvChangeTypeEnum>()),
     latestValue: TlvField(4, TlvNullable(TlvAccessControlExtensionStruct))
 });
 

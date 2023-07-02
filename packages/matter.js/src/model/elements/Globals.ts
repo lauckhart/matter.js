@@ -5,43 +5,52 @@
  */
 
 import { Conformance, Constraint } from "../aspects/index.js";
-import { Datatype, Metatype, StatusCode } from "../definitions/index.js";
+import { Metatype, StatusCode } from "../definitions/index.js";
 import { AttributeElement } from "./AttributeElement.js";
 import { ValueElement } from "./ValueElement.js";
 import { DatatypeElement } from "./DatatypeElement.js";
 import { EventElement } from "./EventElement.js";
 
+// Constants for all type names used more than once
+export const OCTSTR = "octstr";
+export const STRUCT = "struct"
+export const ENUM8 = "enum8";
+export const UINT8 = "uint8";
+export const UINT16 = "uint16";
+export const UINT32 = "uint32";
+export const UINT64 = "uint64";
+
 // Base type factories (types with metatypes)
-const bool = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.boolean });
-const map = (id: number, name: string, description: string, byteSize: ValueElement.BitmapSize) =>
-    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.bitmap });
-const int = (id: number, name: string, description: string, byteSize: ValueElement.Size) =>
-    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.integer });
-const float = (id: number, name: string, description: string, byteSize: ValueElement.Size) =>
-    DatatypeElement({ id, name, description, byteSize, metatype: Metatype.float });
-const octet = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.bytes });
-const string = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.string });
-const list = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.array });
-const struct = (id: number, name: string, description: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.object });
-const enumt = (id: number, name: string, description: string, type: string) =>
-    DatatypeElement({ id, name, description, metatype: Metatype.enum, type });
+const bool = (name: string, description: string) =>
+    DatatypeElement({ name, description, metatype: Metatype.boolean });
+const map = (name: string, description: string, byteSize: ValueElement.BitmapSize) =>
+    DatatypeElement({ name, description, byteSize, metatype: Metatype.bitmap });
+const int = (name: string, description: string, byteSize: ValueElement.Size) =>
+    DatatypeElement({ name, description, byteSize, metatype: Metatype.integer });
+const float = (name: string, description: string, byteSize: ValueElement.Size) =>
+    DatatypeElement({ name, description, byteSize, metatype: Metatype.float });
+const octet = (name: string, description: string) =>
+    DatatypeElement({ name, description, metatype: Metatype.bytes });
+const string = (name: string, description: string) =>
+    DatatypeElement({ name, description, metatype: Metatype.string });
+const list = (name: string, description: string) =>
+    DatatypeElement({ name, description, metatype: Metatype.array });
+const struct = (name: string, description: string) =>
+    DatatypeElement({ name, description, metatype: Metatype.object });
+const enumt = (name: string, description: string, type: string) =>
+    DatatypeElement({ name, description, metatype: Metatype.enum, type });
 
 // Derivative type factories (types that inherit metatypes)
-const extInt = (id: number, name: string, description: string, type: string) =>
-    DatatypeElement({ id, name, description, type });
-const depInt = (id: number, name: string, description: string, type: string) =>
-    DatatypeElement({ id, name, description, type, conformance: Conformance.Flag.Deprecated });
-const extOctet = (id: number, name: string, description: string, constraint?: Constraint.Definition) =>
-    DatatypeElement({ id, name, description, type: Datatype.octstr, constraint });
-const extEnum = (id: number, name: string, description: string, values: DatatypeElement.ValueMap) =>
-    DatatypeElement({ id, name, description, type: "enum8", children: DatatypeElement.ListValues(values) });
-const extStruct = (id: number, name: string, description: string, children: DatatypeElement[]) =>
-    DatatypeElement({ id, name, description, type: Datatype.struct, children });
+const extInt = (name: string, description: string, type: string) =>
+    DatatypeElement({ name, description, type });
+const depInt = (name: string, description: string, type: string) =>
+    DatatypeElement({ name, description, type, conformance: Conformance.Flag.Deprecated });
+const extOctet = (name: string, description: string, constraint?: Constraint.Definition) =>
+    DatatypeElement({ name, description, type: OCTSTR, constraint });
+const extEnum = (name: string, description: string, values: DatatypeElement.ValueMap) =>
+    DatatypeElement({ name, description, type: ENUM8, children: DatatypeElement.ListValues(values) });
+const extStruct = (name: string, description: string, children: DatatypeElement[]) =>
+    DatatypeElement({ name, description, type: STRUCT, children });
 
 const TodFields = [
     DatatypeElement({ type: "uint8", name: "hours" }),
@@ -68,96 +77,96 @@ const DateFields = [
  */
 export const Globals = {
     // Discrete
-    bool:          bool      (0x10,   "bool",          "Boolean"),
-    map8:          map       (0x18,   "map8",          "8-bit bitmap",                1),
-    map16:         map       (0x19,   "map16",         "16-bit bitmap",               2),
-    map32:         map       (0x1b,   "map32",         "32-bit bitmap",               4),
-    map64:         map       (0x1f,   "map64",         "64-bit bitmap",               8),
+    bool:          bool      ("bool",          "Boolean"),
+    map8:          map       ("map8",          "8-bit bitmap",                1),
+    map16:         map       ("map16",         "16-bit bitmap",               2),
+    map32:         map       ("map32",         "32-bit bitmap",               4),
+    map64:         map       ("map64",         "64-bit bitmap",               8),
 
     // Analog integer
-    uint8:         int       (0x20,   "uint8",         "Signed 8-bit integer",        1),
-    uint16:        int       (0x21,   "uint16",        "Signed 16-bit integer",       2),
-    uint24:        int       (0x22,   "uint24",        "Signed 24-bit integer",       3),
-    uint32:        int       (0x23,   "uint32",        "Signed 32-bit integer",       4),
-    uint40:        int       (0x24,   "uint40",        "Signed 40-bit integer",       5),
-    uint48:        int       (0x25,   "uint48",        "Signed 48-bit integer",       6),
-    uint56:        int       (0x26,   "uint56",        "Signed 56-bit integer",       7),
-    uint64:        int       (0x27,   "uint64",        "Signed 64-bit integer",       8),
-    int8:          int       (0x28,   "int8",          "Unsigned 8-bit integer",      1),
-    int16:         int       (0x29,   "int16",         "Unsigned 16-bit integer",     2),
-    int24:         int       (0x2a,   "int24",         "Unsigned 24-bit integer",     3),
-    int32:         int       (0x2b,   "int32",         "Unsigned 32-bit integer",     4),
-    int40:         int       (0x2c,   "int40",         "Unsigned 40-bit integer",     5),
-    int48:         int       (0x2d,   "int48",         "Unsigned 48-bit integer",     6),
-    int56:         int       (0x2e,   "int56",         "Unsigned 56-bit integer",     7),
-    int64:         int       (0x2f,   "int64",         "Unsigned 64-bit integer",     8),
+    uint8:         int       (UINT8,           "Signed 8-bit integer",        1),
+    uint16:        int       (UINT16,          "Signed 16-bit integer",       2),
+    uint24:        int       ("uint24",        "Signed 24-bit integer",       3),
+    uint32:        int       (UINT32,          "Signed 32-bit integer",       4),
+    uint40:        int       ("uint40",        "Signed 40-bit integer",       5),
+    uint48:        int       ("uint48",        "Signed 48-bit integer",       6),
+    uint56:        int       ("uint56",        "Signed 56-bit integer",       7),
+    uint64:        int       (UINT64,          "Signed 64-bit integer",       8),
+    int8:          int       ("int8",          "Unsigned 8-bit integer",      1),
+    int16:         int       ("int16",         "Unsigned 16-bit integer",     2),
+    int24:         int       ("int24",         "Unsigned 24-bit integer",     3),
+    int32:         int       ("int32",         "Unsigned 32-bit integer",     4),
+    int40:         int       ("int40",         "Unsigned 40-bit integer",     5),
+    int48:         int       ("int48",         "Unsigned 48-bit integer",     6),
+    int56:         int       ("int56",         "Unsigned 56-bit integer",     7),
+    int64:         int       ("int64",         "Unsigned 64-bit integer",     8),
 
     // Analog float
-    single:        float     (0x39,   "single",        "Single precision",            4),
-    double:        float     (0x3a,   "double",        "Double precision",            8),
+    single:        float     ("single",        "Single precision",            4),
+    double:        float     ("double",        "Double precision",            8),
 
     // Composite
-    octstr:        octet     (0x41,   "octstr",        "Octet string"),
-    list:          list      (0x48,   "list",          "List"),
-    struct:        struct    (0x4c,   "struct",        "Struct"),
+    octstr:        octet     (OCTSTR,          "Octet string"),
+    list:          list      ("list",          "List"),
+    struct:        struct    ("struct",        "Struct"),
 
     // Analog relative
-    percent:       extInt    (0x32,   "percent",       "Percentage units 1%",         Datatype.uint8),
-    percent100ths: extInt    (0x33,   "percent100ths", "Percentage units 0.01%",      Datatype.uint16),
+    percent:       extInt    ("percent",       "Percentage units 1%",         UINT8),
+    percent100ths: extInt    ("percent100ths", "Percentage units 0.01%",      UINT16),
 
     // Analog time
-    tod:           extStruct (0xe0,   "tod",           "Time of day",                 TodFields),
-    date:          extStruct (0xe1,   "date",          "Date",                        DateFields),
-    epochUs:       extInt    (0xe3,   "epoch-us",      "Epoch time in microseconds",  Datatype.uint64),
-    epochS:        extInt    (0xe2,   "epoch-s",       "Epoch time in seconds",       Datatype.uint32),
+    tod:           extStruct ("tod",           "Time of day",                 TodFields),
+    date:          extStruct ("date",          "Date",                        DateFields),
+    epochUs:       extInt    ("epoch-us",      "Epoch time in microseconds",  UINT64),
+    epochS:        extInt    ("epoch-s",       "Epoch time in seconds",       UINT32),
     /** @deprecated by Matter specification */
-    utc:           depInt    (0xe2,   "utc",           "UTC time",                    Datatype.uint32),
-    posixMs:       extInt    (0xf3,   "posix-ms",      "POSIX time in milliseconds",  Datatype.uint64),
-    systimeUs:     extInt    (0xe4,   "systime-us",    "Sytem time in microseconds",  Datatype.uint64),
-    systimeMs:     extInt    (0xf4,   "systime-ms",    "System time in milliseconds", Datatype.uint64),
+    utc:           depInt    ("utc",           "UTC time",                    UINT32),
+    posixMs:       extInt    ("posix-ms",      "POSIX time in milliseconds",  UINT64),
+    systimeUs:     extInt    ("systime-us",    "Sytem time in microseconds",  UINT64),
+    systimeMs:     extInt    ("systime-ms",    "System time in milliseconds", UINT64),
 
     // Discrete enumeration
-    enum8:         enumt     (0x30,   "enum8",         "8-bit enumeration",           Datatype.uint8),
-    enum16:        enumt     (0x31,   "enum16",        "16-bit enumeration",          Datatype.uint16),
-    priority:      extEnum   (0x34,   "priority",      "Priority",                    EventElement.PriorityId),
-    status:        extEnum   (0xe7,   "status",        "Status Code",                 StatusCode),
+    enum8:         enumt     (ENUM8,           "8-bit enumeration",           UINT8),
+    enum16:        enumt     ("enum16",        "16-bit enumeration",          UINT16),
+    priority:      extEnum   ("priority",      "Priority",                    EventElement.PriorityId),
+    status:        extEnum   ("status",        "Status Code",                 StatusCode),
 
     // Identifier
-    fabricId:      extInt    (0xd1,   "fabric-id",     "Fabric ID",                   Datatype.uint64),
-    fabricIdx:     extInt    (0xd2,   "fabric-idx",    "Fabric Index",                Datatype.uint8),
-    nodeId:        extInt    (0xf0,   "node-id",       "Node ID",                     Datatype.uint64),
+    fabricId:      extInt    ("fabric-id",     "Fabric ID",                   UINT64),
+    fabricIdx:     extInt    ("fabric-idx",    "Fabric Index",                UINT8),
+    nodeId:        extInt    ("node-id",       "Node ID",                     UINT64),
     /** @deprecated by Matter specification */
-    eui64:         depInt    (0xf0,   "eui64",         "IEEE address",                Datatype.uint64),
-    groupId:       extInt    (0xf1,   "group-id",      "Group ID",                    Datatype.uint16),
-    endpointNo:    extInt    (0xe5,   "endpoint-no",   "Endpoint number",             Datatype.uint16),
+    eui64:         depInt    ("eui64",         "IEEE address",                UINT64),
+    groupId:       extInt    ("group-id",      "Group ID",                    UINT16),
+    endpointNo:    extInt    ("endpoint-no",   "Endpoint number",             UINT16),
     // Using CHIP type for vendor-id because spec specifies 0xd3 which conflicts with ipadr
-    vendorId:      extInt    (0xf1,   "vendor-id",     "Vendor ID",                   Datatype.uint16),
-    deviceTypeId:  extInt    (0xed,   "devtype-id",    "Device type ID",              Datatype.uint32),
-    clusterId:     extInt    (0xe8,   "cluster-id",    "Cluster ID",                  Datatype.uint32),
-    attributeId:   extInt    (0xe9,   "attrib-id",     "Attribute ID",                Datatype.uint32),
-    fieldId:       extInt    (0xef,   "field-id",      "Field ID",                    Datatype.uint32),
-    eventId:       extInt    (0xee,   "event-id",      "Event ID",                    Datatype.uint32),
-    commandId:     extInt    (0xec,   "command-id",    "Command ID",                  Datatype.uint32),
-    actionId:      extInt    (0xea,   "action-id",     "Action ID",                   Datatype.uint8),
-    transactionId: extInt    (0xeb,   "trans-id",      "Transaction ID",              Datatype.uint32),
+    vendorId:      extInt    ("vendor-id",     "Vendor ID",                   UINT16),
+    deviceTypeId:  extInt    ("devtype-id",    "Device type ID",              UINT32),
+    clusterId:     extInt    ("cluster-id",    "Cluster ID",                  UINT32),
+    attributeId:   extInt    ("attrib-id",     "Attribute ID",                UINT32),
+    fieldId:       extInt    ("field-id",      "Field ID",                    UINT32),
+    eventId:       extInt    ("event-id",      "Event ID",                    UINT32),
+    commandId:     extInt    ("command-id",    "Command ID",                  UINT32),
+    actionId:      extInt    ("action-id",     "Action ID",                   UINT8),
+    transactionId: extInt    ("trans-id",      "Transaction ID",              UINT32),
 
     // Index
-    entryIdx:      extInt    (0xf2,   "entry-idx",     "Entry index",                 Datatype.uint16),
+    entryIdx:      extInt    ("entry-idx",     "Entry index",                 UINT16),
 
     // Counter
-    dataVer:       extInt    (0xd0,   "data-ver",      "Data version",                Datatype.uint32),
-    eventNo:       extInt    (0xe6,   "event-no",      "Event number",                Datatype.uint64),
+    dataVer:       extInt    ("data-ver",      "Data version",                UINT32),
+    eventNo:       extInt    ("event-no",      "Event number",                UINT64),
 
     // Composite string
-    string:        string    (0x42,   "string",        "Character string"),
+    string:        string    ("string",        "Character string"),
 
     // Composite address
     // Using CHIP type for ipadr because spec specifies 0xd3 which conflicts with vendor-id
-    ipadr:         extOctet  (0xfa,   "ipadr",         "IP Address",                  { min: 4, max: 16 }),
-    ipv4adr:       extOctet  (0xd4,   "ipv4adr",       "IPv4 address",                4),
-    ipv6adr:       extOctet  (0xd5,   "ipv6adr",       "IPv6 address",                16),
-    ipv6pre:       extOctet  (0xd6,   "ipv6pre",       "IPv6 prefix",                 { min: 1, max: 17 }),
-    hwadr:         extOctet  (0xd7,   "hwadr",         "Hardware address",            { min: 6, max: 8 }),
+    ipadr:         extOctet  ("ipadr",         "IP Address",                  { min: 4, max: 16 }),
+    ipv4adr:       extOctet  ("ipv4adr",       "IPv4 address",                4),
+    ipv6adr:       extOctet  ("ipv6adr",       "IPv6 address",                16),
+    ipv6pre:       extOctet  ("ipv6pre",       "IPv6 prefix",                 { min: 1, max: 17 }),
+    hwadr:         extOctet  ("hwadr",         "Hardware address",            { min: 6, max: 8 }),
 
     // Global elements
     ClusterRevision: AttributeElement({

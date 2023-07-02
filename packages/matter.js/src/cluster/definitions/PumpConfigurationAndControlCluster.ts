@@ -538,7 +538,11 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
              */
-            minConstTemp: OptionalFixedAttribute(11, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            minConstTemp: OptionalFixedAttribute(
+                11,
+                TlvNullable(TlvInt16.bound({ min: -27315 })),
+                { default: null, readAcl: AccessLevel.View }
+            ),
 
             /**
              * This attribute specifies the maximum temperature the pump can maintain in the system when it is working
@@ -546,7 +550,11 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
              */
-            maxConstTemp: OptionalFixedAttribute(12, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
+            maxConstTemp: OptionalFixedAttribute(
+                12,
+                TlvNullable(TlvInt16.bound({ min: -27315 })),
+                { default: null, readAcl: AccessLevel.View }
+            )
         }
     };
 
@@ -617,7 +625,11 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
              */
-            minConstTemp: FixedAttribute(11, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            minConstTemp: FixedAttribute(
+                11,
+                TlvNullable(TlvInt16.bound({ min: -27315 })),
+                { default: null, readAcl: AccessLevel.View }
+            ),
 
             /**
              * This attribute specifies the maximum temperature the pump can maintain in the system when it is working
@@ -625,7 +637,11 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
              */
-            maxConstTemp: FixedAttribute(12, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
+            maxConstTemp: FixedAttribute(
+                12,
+                TlvNullable(TlvInt16.bound({ min: -27315 })),
+                { default: null, readAcl: AccessLevel.View }
+            )
         }
     };
 

@@ -5,7 +5,7 @@
  */
 
 import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
-import { ElementTag, Metatype } from "../definitions/index.js";
+import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, ValueElement, DatatypeElement, Globals } from "../elements/index.js";
 import { Model } from "./Model.js";
 
@@ -26,7 +26,7 @@ const QUALITY: unique symbol = Symbol("quality");
  */
 export abstract class ValueModel extends Model implements ValueElement {
     byteSize?: ValueElement.Size;
-    default?: any;
+    default?: FieldValue;
     metatype?: Metatype;
     override isType? = true;
 

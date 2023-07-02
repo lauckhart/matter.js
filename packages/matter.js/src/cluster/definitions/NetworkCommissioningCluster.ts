@@ -158,7 +158,7 @@ export const TlvWiFiInterfaceScanResultStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.6
  */
 export const TlvThreadInterfaceScanResultStruct = TlvObject({
-    panId: TlvOptionalField(0, TlvUInt16.bound({ min: 0, max: 65534 })),
+    panId: TlvOptionalField(0, TlvUInt16.bound({ max: 65534 })),
     extendedPanId: TlvOptionalField(1, TlvUInt64),
     networkName: TlvOptionalField(2, TlvString.bound({ minLength: 1, maxLength: 16 })),
     channel: TlvOptionalField(3, TlvUInt16),

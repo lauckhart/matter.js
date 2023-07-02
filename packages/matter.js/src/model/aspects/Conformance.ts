@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { FieldValue } from "../definitions/index.js";
 import { Aspect } from "./Aspect.js";
 
 /**
@@ -81,7 +82,7 @@ export namespace Conformance {
 
     export namespace Ast {
         export type Name = string;
-        export type Value = string | number;
+        export type Value = FieldValue;
         export type Option = Ast;
         export type UnaryOperand = Ast;
         export type BinaryOperands = {
@@ -151,7 +152,7 @@ export namespace Conformance {
 
     export type ChoiceName = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z";
 
-    export type ReferenceResolver<T> = (type: Conformance.Special.Name | Conformance.Special.Value, name: string) => T;
+    export type ReferenceResolver<T> = (name: string) => T;
 
     /**
      * Supported ways of expressing conformance.
@@ -198,8 +199,7 @@ export namespace Conformance {
                 break;
 
             case Special.Name:
-            case Special.Value:
-                if (typeof ast.param == "string" && !resolver(ast.type, ast.param)) {
+                if (typeof ast.param == "string" && !resolver(ast.param)) {
                     conformance.error(`UNRESOLVED_CONFORMANCE_${ast.type.toUpperCase()}`, `Conformance ${ast.type} reference "${ast.param}" does not resolve`);
                 }
                 break;
@@ -252,7 +252,7 @@ export namespace Conformance {
             case Special.Name:
             case Special.Value:
                 // Name or value
-                return `${ast.param}`;
+                return FieldValue.serialize(ast.param as FieldValue)!;
 
             default:
                 // Flag
@@ -320,7 +320,7 @@ namespace Tokenizer {
 
         export type Number = {
             type: TokenType.Number,
-            value: number
+            value: FieldValue
         }
     }
 
@@ -393,13 +393,23 @@ namespace Tokenizer {
                 case "7":
                 case "8":
                 case "9":
-                    let num = 0;
+                    let num: FieldValue = 0;
                     while (true) {
                         num = num * 10 + current.value.charCodeAt(0) - "0".charCodeAt(0);
                         if (peeked.done || peeked.value < "0" || peeked.value > "9") {
                             break;
                         }
                         next();
+                    }
+                    if (peeked.value == "%") {
+                        next();
+                        num = FieldValue.Percent(num);
+                    } else if (peeked.value == "°") {
+                        next();
+                        if (peeked.value?.toLowerCase() == "C") {
+                            next();
+                        }
+                        num = FieldValue.Celsius(num);
                     }
                     yield({ type: TokenType.Number, value: num });
                     break;

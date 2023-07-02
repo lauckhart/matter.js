@@ -167,7 +167,7 @@ export namespace FanControlCluster {
              */
             percentSetting: WritableAttribute(
                 2,
-                TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })),
+                TlvNullable(TlvUInt8.bound({ max: 100 })),
                 { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
@@ -177,7 +177,7 @@ export namespace FanControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.4
              */
-            percentCurrent: Attribute(3, TlvUInt8.bound({ min: 0, max: 100 }), { readAcl: AccessLevel.View })
+            percentCurrent: Attribute(3, TlvUInt8.bound({ max: 100 }), { readAcl: AccessLevel.View })
         }
     };
 
@@ -201,7 +201,7 @@ export namespace FanControlCluster {
              */
             speedSetting: WritableAttribute(
                 5,
-                TlvNullable(TlvUInt8.bound({ min: 0, max: "SpeedMax" })),
+                TlvNullable(TlvUInt8),
                 { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
@@ -211,7 +211,7 @@ export namespace FanControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.7
              */
-            speedCurrent: Attribute(6, TlvUInt8.bound({ min: 0, max: "SpeedMax" }), { readAcl: AccessLevel.View })
+            speedCurrent: Attribute(6, TlvUInt8, { readAcl: AccessLevel.View })
         }
     };
 

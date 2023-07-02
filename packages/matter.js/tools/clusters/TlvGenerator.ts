@@ -5,7 +5,7 @@
  */
 
 import { InternalError } from "../../src/common/index.js";
-import { ClusterModel, CommandModel, Conformance, Datatype, DatatypeModel, EventModel, Globals, Metatype, Model, ValueModel } from "../../src/model/index.js";
+import { ClusterModel, CommandModel, Conformance, DatatypeModel, EventModel, FieldValue, Globals, Metatype, Model, ValueModel } from "../../src/model/index.js";
 import { camelize, serialize } from "../../src/util/index.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
@@ -101,15 +101,9 @@ export class TlvGenerator {
     
             case Metatype.bytes:
             case Metatype.string:
-                tlv = this.importTlv("tlv/TlvString", metabase.name == Datatype.octstr ? "TlvByteString" : "TlvString");
-                if (model.constraint.min != undefined || model.constraint.max != undefined) {
-                    const bounds = {} as any;
-                    if (model.constraint.min) {
-                        bounds.minLength = model.constraint.min;
-                    }
-                    if (model.constraint.max) {
-                        bounds.maxLength = model.constraint.max;
-                    }
+                tlv = this.importTlv("tlv/TlvString", metabase.name == Globals.octstr.name ? "TlvByteString" : "TlvString");
+                const bounds = this.createBounds(model, "minLength", "maxLength");
+                if (bounds) {
                     tlv = `${tlv}.bound(${serialize(bounds)})`;
                 }
                 break;
@@ -183,14 +177,8 @@ export class TlvGenerator {
         let tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
         this.importTlv("tlv/TlvNumber", tlv);
 
-        const bounds = {} as { min?: number, max?: number };
-        if (model.constraint.min != undefined) {
-            bounds.min = model.constraint.min;
-        }
-        if (model.constraint.max != undefined) {
-            bounds.max = model.constraint.max;
-        }
-        if (Object.keys(bounds).length) {
+        const bounds = this.createBounds(model, "min", "max");
+        if (bounds) {
             tlv = `${tlv}.bound(${serialize(bounds)})`;
         }
 
@@ -328,5 +316,24 @@ export class TlvGenerator {
         }
 
         return name;
+    }
+
+    private createBounds<MIN extends string, MAX extends string>(model: ValueModel, minKey: MIN, maxKey: MAX): { [ key in MIN | MAX ]: number } | undefined {
+        const bounds = {} as any;
+        
+        const min = FieldValue.numericValue(model.constraint.min, model.type);
+        const max = FieldValue.numericValue(model.constraint.max, model.type);
+        if (!(min || max)) {
+            return;
+        }
+
+        if (min) {
+            bounds[minKey] = min;
+        }
+        if (max) {
+            bounds[maxKey] = max;
+        }
+
+        return bounds;
     }
 }
