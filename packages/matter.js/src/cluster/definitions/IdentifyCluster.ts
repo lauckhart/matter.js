@@ -11,7 +11,8 @@ import { WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, Opti
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+import { BuildCluster, ClusterElements } from "../../cluster/ClusterBuilder.js";
+import { Properties } from "../../util/Type.js";
 
 /**
  * This attribute specifies how the identification state is presented to the user. This field SHALL contain one of the
@@ -168,7 +169,7 @@ export namespace IdentifyCluster {
         query: BitFlag(0)
     };
 
-    const Base = {
+    const Base = ClusterElements({
         attributes: {
             /**
              * This attribute specifies the remaining length of time, in seconds, that the endpoint will continue to
@@ -207,9 +208,9 @@ export namespace IdentifyCluster {
              */
             triggerEffect: OptionalCommand(64, TlvTriggerEffectRequest, 64, TlvNoResponse)
         }
-    };
+    });
 
-    const Query = {
+    const Query = ClusterElements({
         commands: {
             /**
              * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command,
@@ -227,14 +228,15 @@ export namespace IdentifyCluster {
              */
             identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponseRequest)
         }
-    };
+    });
 
-    export const Complete = BuildCluster({
+    export const Complete = BuildCluster(
         id,
         name,
         revision,
-        features: featureMap,
-        supportedFeatures: { query: true },
-        elements: [ Base, Query ]
-    });
+        featureMap,
+        { query: true },
+        Base,
+        Query
+    );
 };
