@@ -25,11 +25,7 @@ export namespace TemperatureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.1
              */
-            measuredValue: Attribute(
-                0,
-                TlvNullable(TlvInt16.bound({ min: "MinMeasuredValuetoMaxMeasuredValue", max: "MinMeasuredValuetoMaxMeasuredValue" })),
-                { readAcl: AccessLevel.View }
-            ),
+            measuredValue: Attribute(0, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
 
             /**
              * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of being
@@ -37,7 +33,11 @@ export namespace TemperatureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.2
              */
-            minMeasuredValue: Attribute(1, TlvNullable(TlvInt16), { default: 32768, readAcl: AccessLevel.View }),
+            minMeasuredValue: Attribute(
+                1,
+                TlvNullable(TlvInt16.bound({ min: -27315 })),
+                { default: 32768, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that is capable of being
@@ -47,7 +47,7 @@ export namespace TemperatureMeasurementCluster {
              */
             maxMeasuredValue: Attribute(
                 2,
-                TlvNullable(TlvInt16.bound({ min: "MinMeasuredValue1", max: 32767 })),
+                TlvNullable(TlvInt16.bound({ max: 32767 })),
                 { default: 32768, readAcl: AccessLevel.View }
             ),
 
@@ -56,7 +56,7 @@ export namespace TemperatureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { readAcl: AccessLevel.View })
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { readAcl: AccessLevel.View })
         }
     };
 

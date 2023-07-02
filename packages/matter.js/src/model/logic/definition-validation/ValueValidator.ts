@@ -5,7 +5,7 @@
  */
 
 import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
-import { DefinitionError, Metatype } from "../../definitions/index.js";
+import { DefinitionError, FieldValue, Metatype } from "../../definitions/index.js";
 import { CommandElement, DatatypeElement } from "../../elements/index.js";
 import { ClusterModel, ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
@@ -23,8 +23,9 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         this.validateProperty({ name: "quality", type: Quality });
         this.validateProperty({ name: "metatype", type: Metatype });
 
-        this.model.conformance.validateReferences((type, name) => {
-            if (type == "name") {
+        this.model.conformance.validateReferences((name) => {
+            // Features are all caps, other names are field references
+            if (name.match(/^[A-Z_$]+$/)) {
                 // Feature lookup
                 const cluster = this.model.owner(ClusterModel);
                 return !!cluster?.features.find(f => f.name == name);
@@ -76,11 +77,12 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             return;
         }
 
-        const metatype = this.model.effectiveMetatype;
-        if (metatype == undefined) {
+        const metabase = this.model.metabase;
+        if (metabase == undefined) {
             this.error("METATYPE_UNKNOWN", `No metatype for ${this.model.type}`);
             return;
         }
+        const metatype = metabase.metatype!;
 
         let def = this.model.default;
         if (def == undefined) {
@@ -92,11 +94,12 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         }
 
         // Convert value to proper type if possible
-        def = Metatype.cast(metatype, def);
-        if (def == Metatype.Invalid) {
+        const cast = Metatype.cast(metatype, def);
+        if (cast == FieldValue.Invalid) {
             this.error("INVALID_VALUE", `Value "${def}" is not a ${metatype}`);
             return;
         }
+        def = cast;
 
         // For bitmaps and enums, convert string name to numeric ID
         if (metatype == Metatype.bitmap || metatype == Metatype.enum) {
@@ -105,7 +108,8 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
                 // If the name didn't match, try case-insensitive search
                 if (!member) {
-                    member = this.model.member(model => model.name.toLowerCase() == def.toLowerCase());
+                    // Cast of def to string should be unnecessary here, TS bug?
+                    member = this.model.member(model => model.name.toLowerCase() == (def as string).toLowerCase());
                 }
 
                 if (member && member.effectiveId != undefined) {
@@ -137,7 +141,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             }
 
             if (flags.length) {
-                def = flags;
+                def = FieldValue.Flags(flags);
             }
         }
 
@@ -203,8 +207,8 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
     private validateSpecialDefault(metatype: Metatype, def: any) {
         // Special "reference" object referencing another field by name
-        if (typeof def == "object" && def.reference) {
-            const reference = def.reference;
+        if (typeof def == "object" && FieldValue.is(def, FieldValue.reference)) {
+            const reference = (def as FieldValue.Reference).name;
             const other = this.model.parent?.member(reference);
             if (!other) {
                 this.error("MEMBER_UNKNOWN", `Default value references unknown property ${reference}`);
@@ -217,7 +221,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         if (typeof def == "string") {
             const other = this.model.parent?.member(def);
             if (other) {
-                this.model.default = { reference: other.name };
+                this.model.default = FieldValue.Reference(other.name);
                 return true;
             }
         }

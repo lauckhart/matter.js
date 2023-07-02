@@ -65,7 +65,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PowerOnLevel", id: 0x12, type: "uint8", access: "RW VM", conformance: "D",
-            constraint: "1 to 254", default: { reference: "PhysicalMaxLevel" },
+            constraint: "1 to 254", default: { type: "reference", name: "PhysicalMaxLevel" },
             xref: { document: "cluster", section: "3.3.7" }
         },
         {

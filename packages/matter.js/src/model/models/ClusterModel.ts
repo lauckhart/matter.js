@@ -38,7 +38,7 @@ export class ClusterModel extends Model implements ClusterElement {
     get revision() {
         let revision = 1;
         const revisionAttr = this.get(AttributeModel, Globals.ClusterRevision.id);
-        if (revisionAttr?.default != undefined) {
+        if (typeof revisionAttr?.default == "number") {
             revision = revisionAttr.default;
         }
         return revision;

@@ -42,11 +42,7 @@ export namespace IlluminanceMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.2
              */
-            minMeasuredValue: Attribute(
-                1,
-                TlvNullable(TlvUInt16.bound({ min: 1, max: "MaxMeasuredValue1" })),
-                { readAcl: AccessLevel.View }
-            ),
+            minMeasuredValue: Attribute(1, TlvNullable(TlvUInt16.bound({ min: 1 })), { readAcl: AccessLevel.View }),
 
             /**
              * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. A
@@ -54,18 +50,14 @@ export namespace IlluminanceMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.3
              */
-            maxMeasuredValue: Attribute(
-                2,
-                TlvNullable(TlvUInt16.bound({ min: "MinMeasuredValue1", max: 65534 })),
-                { readAcl: AccessLevel.View }
-            ),
+            maxMeasuredValue: Attribute(2, TlvNullable(TlvUInt16.bound({ max: 65534 })), { readAcl: AccessLevel.View }),
 
             /**
              * See Measured Value.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { readAcl: AccessLevel.View }),
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { readAcl: AccessLevel.View }),
 
             /**
              * The LightSensorType attribute specifies the electronic type of the light sensor. This attribute shall be

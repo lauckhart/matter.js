@@ -156,7 +156,7 @@ export const TlvTimeZoneStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.3.1
      */
-    offset: TlvField(0, TlvInt32),
+    offset: TlvField(0, TlvInt32.bound({ min: -43200, max: 50400 })),
 
     /**
      * The UTC time when the offset SHALL be applied.
@@ -204,7 +204,10 @@ export const TlvDSTOffsetStruct = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.10.3
  */
-export const TlvTimeZoneStatusEvent = TlvObject({ offset: TlvField(0, TlvInt32), name: TlvOptionalField(1, TlvString) });
+export const TlvTimeZoneStatusEvent = TlvObject({
+    offset: TlvField(0, TlvInt32.bound({ min: -43200, max: 50400 })),
+    name: TlvOptionalField(1, TlvString.bound({ maxLength: 64 }))
+});
 
 export namespace TimeSyncCluster {
     export const id = 0x38;

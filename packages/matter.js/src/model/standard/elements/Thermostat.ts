@@ -69,7 +69,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "OCC",
-            constraint: "desc", default: [ "Occupied" ],
+            constraint: "desc", default: { type: "flags", flags: [ "Occupied" ] },
             details: "This attribute specifies whether the heated/cooled space is occupied or not, as measured locally or " +
                      "remotely (over the network). If bit 0 = 1, the space is occupied, else it is unoccupied. All other " +
                      "bits are reserved.",
@@ -111,7 +111,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PiCoolingDemand", id: 0x7, type: "uint8", access: "R V",
-            conformance: "[COOL]", quality: "P",
+            conformance: "[COOL]", constraint: "0 to 100", quality: "P",
             details: "This attribute specifies the level of cooling demanded by the PI (proportional integral) control " +
                      "loop in use by the thermostat (if any), in percent. This value is 0 when the thermostat is in “off” " +
                      "or “heating” mode.",
@@ -120,7 +120,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PiHeatingDemand", id: 0x8, type: "uint8", access: "R V",
-            conformance: "[HEAT]", quality: "P",
+            conformance: "[HEAT]", constraint: "0 to 100", quality: "P",
             details: "This attribute specifies the level of heating demanded by the PI loop in percent. This value is 0 " +
                      "when the thermostat is in “off” or “cooling” mode.",
             xref: { document: "cluster", section: "4.3.7.10" }
@@ -152,7 +152,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LocalTemperatureCalibration", id: 0x10, type: "temp-s8", access: "RW VM",
-            conformance: "[!LTNE]", constraint: "-2.5 to 2.5", quality: "N",
+            conformance: "[!LTNE]", constraint: "-2.5°C to 2.5°C", quality: "N",
             details: "This attribute specifies the offset the Thermostat server SHALL make to the measured temperature " +
                      "(locally or remotely) to adjust the LocalTemperature Value prior to using, displaying or reporting " +
                      "it.",
@@ -217,7 +217,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinSetpointDeadBand", id: 0x19, type: "temp-s8", access: "R[W] VM",
-            conformance: "AUTO", constraint: "0 to 2.5", default: 25, quality: "N",
+            conformance: "AUTO", constraint: "0°C to 2.5°C", default: 25, quality: "N",
             details: "On devices which support the AUTO feature, this attribute specifies the minimum difference between " +
                      "the Heat Setpoint and the Cool Setpoint.",
             xref: { document: "cluster", section: "4.3.7.21" }
@@ -509,7 +509,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OccupiedSetbackMax", id: 0x36, type: "temp-u8", access: "R V",
-            conformance: "SB", constraint: "OccupiedSetbackMin to 25.4", default: null, quality: "X F",
+            conformance: "SB", constraint: "OccupiedSetbackMin to 25.4°C", default: null, quality: "X F",
             details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
                      "OccupiedSetback attribute to be configured by a user.",
             xref: { document: "cluster", section: "4.3.7.39" }
@@ -537,7 +537,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedSetbackMax", id: 0x39, type: "temp-u8", access: "R V",
-            conformance: "SB & OCC", constraint: "UnoccupiedSetbackMin to 25.4", default: null, quality: "X F",
+            conformance: "SB & OCC", constraint: "UnoccupiedSetbackMin to 25.4°C", default: null,
+            quality: "X F",
             details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
                      "UnoccupiedSetback attribute to be configured by a user.",
             xref: { document: "cluster", section: "4.3.7.42" }
@@ -545,7 +546,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "EmergencyHeatDelta", id: 0x3a, type: "temp-u8", access: "RW VM",
-            conformance: "O", default: 2550, quality: "N",
+            conformance: "O", default: { type: "celsius", value: 25 }, quality: "N",
             details: "This attribute specifies the delta between the LocalTemperature Value and the " +
                      "OccupiedHeatingSetpoint or UnoccupiedHeatingSetpoint attributes at which the Thermostat server will " +
                      "operate in emergency heat mode.",

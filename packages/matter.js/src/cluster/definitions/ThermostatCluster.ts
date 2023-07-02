@@ -499,7 +499,7 @@ export const TlvThermostatScheduleTransition = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.9.5.1
      */
-    transitionTime: TlvField(0, TlvUInt16.bound({ min: 0, max: 1439 })),
+    transitionTime: TlvField(0, TlvUInt16.bound({ max: 1439 })),
 
     heatSetpoint: TlvField(1, TlvNullable(TlvInt16)),
     coolSetpoint: TlvField(2, TlvNullable(TlvInt16))
@@ -675,7 +675,7 @@ export namespace ThermostatCluster {
              */
             temperatureSetpointHoldDuration: OptionalWritableAttribute(
                 36,
-                TlvNullable(TlvUInt16.bound({ min: 0, max: 1440 })),
+                TlvNullable(TlvUInt16.bound({ max: 1440 })),
                 { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
@@ -740,7 +740,7 @@ export namespace ThermostatCluster {
             emergencyHeatDelta: OptionalWritableAttribute(
                 58,
                 TlvUInt8,
-                { persistent: true, default: 2550, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: 250, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -862,7 +862,7 @@ export namespace ThermostatCluster {
             occupancy: Attribute(
                 2,
                 TlvOccupancy,
-                { default: BitFlags(TlvOccupancyBits, "Occupied"), readAcl: AccessLevel.View }
+                { default: BitFlags(TlvOccupancyBits, "occupied"), readAcl: AccessLevel.View }
             )
         }
     };
@@ -891,7 +891,7 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.10
              */
-            piHeatingDemand: OptionalAttribute(8, TlvUInt8, { readAcl: AccessLevel.View }),
+            piHeatingDemand: OptionalAttribute(8, TlvUInt8.bound({ max: 100 }), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the heating mode setpoint when the room is occupied.
@@ -964,7 +964,7 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.9
              */
-            piCoolingDemand: OptionalAttribute(7, TlvUInt8, { readAcl: AccessLevel.View }),
+            piCoolingDemand: OptionalAttribute(7, TlvUInt8.bound({ max: 100 }), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the cooling mode setpoint when the room is occupied.
@@ -1022,7 +1022,7 @@ export namespace ThermostatCluster {
              */
             localTemperatureCalibration: OptionalWritableAttribute(
                 16,
-                TlvInt8.bound({ min: -2.5, max: 2.5 }),
+                TlvInt8.bound({ min: -25, max: 25 }),
                 { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         }
@@ -1038,7 +1038,7 @@ export namespace ThermostatCluster {
              */
             minSetpointDeadBand: WritableAttribute(
                 25,
-                TlvInt8.bound({ min: 0, max: 2.5 }),
+                TlvInt8.bound({ max: 25 }),
                 { persistent: true, default: 25, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
@@ -1110,7 +1110,7 @@ export namespace ThermostatCluster {
              */
             occupiedSetback: WritableAttribute(
                 52,
-                TlvNullable(TlvUInt8.bound({ min: "OccupiedSetbackMin", max: "OccupiedSetbackMax" })),
+                TlvNullable(TlvUInt8),
                 { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
@@ -1120,11 +1120,7 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.38
              */
-            occupiedSetbackMin: FixedAttribute(
-                53,
-                TlvNullable(TlvUInt8.bound({ min: 0, max: "OccupiedSetbackMax" })),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            occupiedSetbackMin: FixedAttribute(53, TlvNullable(TlvUInt8), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the maximum value that the Thermostat server will allow the OccupiedSetback
@@ -1134,7 +1130,7 @@ export namespace ThermostatCluster {
              */
             occupiedSetbackMax: FixedAttribute(
                 54,
-                TlvNullable(TlvUInt8.bound({ min: "OccupiedSetbackMin", max: 25.4 })),
+                TlvNullable(TlvUInt8.bound({ max: 254 })),
                 { default: null, readAcl: AccessLevel.View }
             ),
 
@@ -1149,7 +1145,7 @@ export namespace ThermostatCluster {
              */
             unoccupiedSetback: OptionalWritableAttribute(
                 55,
-                TlvNullable(TlvUInt8.bound({ min: "UnoccupiedSetbackMin", max: "UnoccupiedSetbackMax" })),
+                TlvNullable(TlvUInt8),
                 { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
@@ -1161,7 +1157,7 @@ export namespace ThermostatCluster {
              */
             unoccupiedSetbackMin: OptionalFixedAttribute(
                 56,
-                TlvNullable(TlvUInt8.bound({ min: 0, max: "UnoccupiedSetbackMax" })),
+                TlvNullable(TlvUInt8),
                 { default: null, readAcl: AccessLevel.View }
             ),
 
@@ -1173,7 +1169,7 @@ export namespace ThermostatCluster {
              */
             unoccupiedSetbackMax: OptionalFixedAttribute(
                 57,
-                TlvNullable(TlvUInt8.bound({ min: "UnoccupiedSetbackMin", max: 25.4 })),
+                TlvNullable(TlvUInt8.bound({ max: 254 })),
                 { default: null, readAcl: AccessLevel.View }
             )
         }

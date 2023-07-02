@@ -25,7 +25,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinMeasuredValue", id: 0x1, type: "int16", access: "R V", conformance: "M",
-            default: 32768, quality: "X",
+            constraint: "-27315 to MaxMeasuredValue1", default: 32768, quality: "X",
             details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of " +
                      "being measured. See Measured Value for more details.",
             xref: { document: "cluster", section: "2.3.4.2" }

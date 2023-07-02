@@ -35,11 +35,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.1
              */
-            measuredValue: Attribute(
-                0,
-                TlvNullable(TlvInt16.bound({ min: "MinMeasuredValue", max: "MaxMeasuredValue" })),
-                { readAcl: AccessLevel.View }
-            ),
+            measuredValue: Attribute(0, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute indicates the minimum value of MeasuredValue that can be measured. See Measured Value for
@@ -47,7 +43,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.2
              */
-            minMeasuredValue: Attribute(1, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            minMeasuredValue: Attribute(1, TlvNullable(TlvInt16.bound({ min: -32767 })), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute indicates the maximum value of MeasuredValue that can be measured. See Measured Value for
@@ -55,18 +51,14 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.3
              */
-            maxMeasuredValue: Attribute(
-                2,
-                TlvNullable(TlvInt16.bound({ min: "MinMeasuredValue1", max: 32767 })),
-                { readAcl: AccessLevel.View }
-            ),
+            maxMeasuredValue: Attribute(2, TlvNullable(TlvInt16.bound({ max: 32767 })), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute indicates the magnitude of the possible error that is associated with ScaledValue.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { readAcl: AccessLevel.View })
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { readAcl: AccessLevel.View })
         }
     };
 
@@ -77,11 +69,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.5
              */
-            scaledValue: Attribute(
-                16,
-                TlvNullable(TlvInt16.bound({ min: "MinScaledValue", max: "MaxScaledValue" })),
-                { readAcl: AccessLevel.View }
-            ),
+            scaledValue: Attribute(16, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
 
             /**
              * The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The null
@@ -89,7 +77,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.6
              */
-            minScaledValue: Attribute(17, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            minScaledValue: Attribute(17, TlvNullable(TlvInt16.bound({ min: -32767 })), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue SHALL be
@@ -97,11 +85,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.7
              */
-            maxScaledValue: Attribute(
-                18,
-                TlvNullable(TlvInt16.bound({ min: "MinScaledValue1", max: 32767 })),
-                { readAcl: AccessLevel.View }
-            ),
+            maxScaledValue: Attribute(18, TlvNullable(TlvInt16.bound({ max: 32767 })), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute indicates the magnitude of the possible error that is associated with ScaledValue. The
@@ -109,7 +93,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.8
              */
-            scaledTolerance: OptionalAttribute(19, TlvUInt16.bound({ min: 0, max: 2048 }), { readAcl: AccessLevel.View }),
+            scaledTolerance: OptionalAttribute(19, TlvUInt16.bound({ max: 2048 }), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue Attribute).

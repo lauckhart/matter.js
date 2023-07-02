@@ -68,7 +68,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "LogContent", id: 0x1, type: "octstr", conformance: "M",
+                    tag: "datatype", name: "LogContent", id: 0x1, type: "octstr", conformance: "M", constraint: "1024",
                     details: "This field SHALL be included in the command if the Status field has a value of Success or " +
                              "Exhausted. A Node SHOULD utilize this field to transfer the newest diagnostic log entries. This " +
                              "field SHALL be empty if BDX is requested and the Status field has a value of Success.",

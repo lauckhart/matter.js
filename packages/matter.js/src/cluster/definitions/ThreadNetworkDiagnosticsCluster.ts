@@ -78,7 +78,7 @@ export const TlvNeighborTableStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4.6
      */
-    lqi: TlvField(5, TlvUInt8.bound({ min: 0, max: 255 })),
+    lqi: TlvField(5, TlvUInt8.bound({ max: 255 })),
 
     /**
      * This field SHOULD specify the average RSSI across all received frames from the neighboring Node since the
@@ -86,7 +86,7 @@ export const TlvNeighborTableStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4.7
      */
-    averageRssi: TlvField(6, TlvNullable(TlvInt8.bound({ min: -128, max: 0 }))),
+    averageRssi: TlvField(6, TlvNullable(TlvInt8.bound({ min: -128 }))),
 
     /**
      * This field SHALL specify the RSSI of the most recently received frame from the neighboring Node. If there is no
@@ -95,7 +95,7 @@ export const TlvNeighborTableStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4.8
      */
-    lastRssi: TlvField(7, TlvNullable(TlvInt8.bound({ min: -128, max: 0 }))),
+    lastRssi: TlvField(7, TlvNullable(TlvInt8.bound({ min: -128 }))),
 
     /**
      * This field SHALL specify the percentage of received frames from the neighboring Node that have resulted in
@@ -103,7 +103,7 @@ export const TlvNeighborTableStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4.9
      */
-    frameErrorRate: TlvOptionalField(8, TlvUInt8.bound({ min: 0, max: 100 })),
+    frameErrorRate: TlvOptionalField(8, TlvUInt8.bound({ max: 100 })),
 
     /**
      * This field SHALL specify the percentage of received messages from the neighboring Node that have resulted in
@@ -111,7 +111,7 @@ export const TlvNeighborTableStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4.10
      */
-    messageErrorRate: TlvOptionalField(9, TlvUInt8.bound({ min: 0, max: 100 })),
+    messageErrorRate: TlvOptionalField(9, TlvUInt8.bound({ max: 100 })),
 
     /**
      * This field SHALL specify if the neighboring Node is capable of receiving frames while the Node is in an idle

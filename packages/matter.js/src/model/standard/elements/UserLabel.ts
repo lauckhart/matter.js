@@ -17,7 +17,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "RW VM", conformance: "M",
-            quality: "N",
+            constraint: "min 4", quality: "N",
             details: "An implementation SHALL support at least 4 list entries per node for all User Label cluster " +
                      "instances on the node.",
             xref: { document: "core", section: "9.9.4.1" },

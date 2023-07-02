@@ -4,7 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, AttributeModel, ClusterModel, CommandModel, ElementTag, ElementVariance, EventElement, EventModel, Metatype, Model } from "../../src/model/index.js";
+import {
+    Access,
+    AttributeModel,
+    ClusterModel,
+    CommandModel,
+    ElementTag,
+    ElementVariance,
+    EventElement,
+    EventModel,
+    FieldValue,
+    Metatype,
+    Model
+} from "../../src/model/index.js";
 import { serialize, camelize } from "../../src/util/String.js";
 import { Block } from "../util/TsFile.js";
 import { ClusterFile } from "./ClusterFile.js";
@@ -163,13 +175,26 @@ export class ClusterElementGenerator {
 
     private createDefaultValue(model: AttributeModel, tlvType: string) {
         let def = model.default;
+        if (def == undefined) {
+            return def;
+        }
 
         // TODO - don't currently have a way to express "this field should
         // default to the value of another field" as indicated by
         // model.default.reference
-        if (def !== undefined && !(def && def.reference)) {
-            if (model.effectiveMetatype == Metatype.bitmap) {
-                if (!Array.isArray(def)) {
+        if (FieldValue.is(def, FieldValue.reference)) {
+            return;
+        }
+
+        const metatype = model.effectiveMetatype;
+
+        switch (metatype) {
+            case Metatype.integer:
+            case Metatype.float:
+                return FieldValue.numericValue(def, model.type);
+
+            case Metatype.bitmap:
+                if (!FieldValue.is(def, FieldValue.flags)) {
                     // TLV doesn't understand anything other than an object
                     // as the default value.  To create said object we need
                     // named references
@@ -177,10 +202,12 @@ export class ClusterElementGenerator {
                 }
 
                 this.file.addImport("schema/BitmapSchema", "BitFlags");
-                def = serialize.asIs(`BitFlags(${tlvType}Bits, ${def.map(flag => serialize(flag)).join(", ")})`);
-            }
+                const flags = (def as FieldValue.Flags).flags.map(f => serialize(camelize(f, false)));
+                def = serialize.asIs(`BitFlags(${tlvType}Bits, ${flags.join(", ")})`);
 
-            return def;
+                break;
         }
+
+        return def;
     }
 }

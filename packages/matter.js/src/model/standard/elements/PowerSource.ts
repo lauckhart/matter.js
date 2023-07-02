@@ -123,7 +123,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ActiveWiredFaults", id: 0xa, type: "list", access: "R V",
-            conformance: "[WIRED]",
+            conformance: "[WIRED]", constraint: "8",
 
             details: "This attribute SHALL indicate the set of wired faults currently detected by the Node on this power " +
                      "source. This set is represented as a list of WiredFaultEnum. When the Node detects a fault has been " +
@@ -199,7 +199,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ActiveBatFaults", id: 0x12, type: "list", access: "R V",
-            conformance: "[BAT]",
+            conformance: "[BAT]", constraint: "8",
 
             details: "This attribute SHALL indicate the set of battery faults currently detected by the Node on this " +
                      "power source. This set is represented as a list of BatFaultEnum. When the Node detects a fault has " +
@@ -306,7 +306,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ActiveBatChargeFaults", id: 0x1e, type: "list", access: "R V",
-            conformance: "[RECHG]",
+            conformance: "[RECHG]", constraint: "16",
 
             details: "This attribute SHALL indicate the set of charge faults currently detected by the Node on this power " +
                      "source. This set is represented as a list of BatChargeFaultEnum. When the Node detects a fault has " +
