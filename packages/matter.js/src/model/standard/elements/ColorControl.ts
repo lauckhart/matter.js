@@ -28,14 +28,8 @@ Matter.children.push({
                     tag: "datatype", name: "EHUE", id: 0x1, description: "EnhancedHue",
                     details: "Enhanced hue is supported."
                 },
-                {
-                    tag: "datatype", name: "CL", id: 0x2, description: "ColorLoop",
-                    details: "Color loop is supported."
-                },
-                {
-                    tag: "datatype", name: "XY", id: 0x3, description: "Xy",
-                    details: "Supports color specification via XY."
-                },
+                { tag: "datatype", name: "CL", id: 0x2, description: "ColorLoop", details: "Color loop is supported." },
+                { tag: "datatype", name: "XY", id: 0x3, description: "Xy", details: "Supports color specification via XY." },
                 {
                     tag: "datatype", name: "CT", id: 0x4, description: "ColorTemperature",
                     details: "Supports specification of color temperature."
@@ -470,10 +464,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -502,10 +493,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -535,10 +523,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -549,19 +534,13 @@ Matter.children.push({
             xref: { document: "cluster", section: "3.2.11.7" },
 
             children: [
-                {
-                    tag: "datatype", name: "Saturation", id: 0x0, type: "uint8", conformance: "M",
-                    constraint: "0 to 254"
-                },
+                { tag: "datatype", name: "Saturation", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" },
                 {
                     tag: "datatype", name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M",
                     constraint: "0 to 65534"
                 },
                 { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -587,10 +566,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -620,10 +596,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -635,19 +608,13 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "Hue", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" },
-                {
-                    tag: "datatype", name: "Saturation", id: 0x1, type: "uint8", conformance: "M",
-                    constraint: "0 to 254"
-                },
+                { tag: "datatype", name: "Saturation", id: 0x1, type: "uint8", conformance: "M", constraint: "0 to 254" },
                 {
                     tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
                     constraint: "0 to 65534"
                 },
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -665,10 +632,7 @@ Matter.children.push({
                     constraint: "0 to 65534"
                 },
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -694,10 +658,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -720,10 +681,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -743,10 +701,7 @@ Matter.children.push({
                     constraint: "0 to 65534"
                 },
                 { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -781,10 +736,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -815,10 +767,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -854,10 +803,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -893,10 +839,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -937,7 +880,9 @@ Matter.children.push({
                             tag: "datatype", name: "ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField",
                             id: 0x1
                         },
-                        { tag: "datatype", name: "ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute", id: 0x2 }
+                        {
+                            tag: "datatype", name: "ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute", id: 0x2
+                        }
                     ]
                 },
 
@@ -962,10 +907,7 @@ Matter.children.push({
 
                 { tag: "datatype", name: "StartHue", id: 0x4, type: "uint16", conformance: "M" },
                 { tag: "datatype", name: "OptionsMask", id: 0x5, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -975,13 +917,9 @@ Matter.children.push({
             details: "The StopMoveStep command is provided to allow MoveTo and Step commands to be stopped. (Note this " +
                      "automatically provides symmetry to the Level Control cluster.)",
             xref: { document: "cluster", section: "3.2.11.20" },
-
             children: [
                 { tag: "datatype", name: "OptionsMask", id: 0x0, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -1028,10 +966,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x4, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x5, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x5, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -1085,10 +1020,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x5, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 

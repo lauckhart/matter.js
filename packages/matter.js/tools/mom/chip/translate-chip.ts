@@ -198,7 +198,8 @@ function createValueElement<T extends AnyValueElement>({
     let name = camelize(need(`${factory.Tag} name`, source.getAttribute("name") || source.getAttribute("define")), isClass);
     logger.debug(`${factory.Tag} ${name}`);
 
-    let id = int(source.getAttribute("code") || source.getAttribute("value") || source.getAttribute("mask"));
+    const attr = (name: string) => source.getAttribute(name);
+    let id = int(attr("code") || attr("value") || attr("mask") || attr("fieldId") || attr("id"));
     if (factory.Tag != DatatypeElement.Tag) {
         need(`${factory.Tag} id`, id);
     }

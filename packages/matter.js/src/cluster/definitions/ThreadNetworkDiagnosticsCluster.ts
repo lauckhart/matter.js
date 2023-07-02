@@ -831,11 +831,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.35
              */
-            txDirectMaxRetryExpiryCount: OptionalAttribute(
-                34,
-                TlvUInt32,
-                { omitChanges: true, readAcl: AccessLevel.View }
-            ),
+            txDirectMaxRetryExpiryCount: OptionalAttribute(34, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
 
             /**
              * The TxIndirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC transmission
@@ -986,11 +982,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.52
              */
-            rxErrUnknownNeighborCount: OptionalAttribute(
-                51,
-                TlvUInt32,
-                { omitChanges: true, readAcl: AccessLevel.View }
-            ),
+            rxErrUnknownNeighborCount: OptionalAttribute(51, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
 
             /**
              * The RxErrInvalidScrAddrCount attribute SHALL indicate the total number of received unique MAC frame

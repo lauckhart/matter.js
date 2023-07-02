@@ -173,10 +173,7 @@ Matter.children.push({
                 { tag: "datatype", name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" },
                 { tag: "datatype", name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -191,10 +188,7 @@ Matter.children.push({
                     tag: "datatype", name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
                     details: "The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field.",
                     xref: { document: "cluster", section: "1.6.6.2.1" },
-                    children: [
-                        { tag: "datatype", name: "Up", id: 0x0 },
-                        { tag: "datatype", name: "Down", id: 0x1 }
-                    ]
+                    children: [ { tag: "datatype", name: "Up", id: 0x0 }, { tag: "datatype", name: "Down", id: 0x1 } ]
                 },
 
                 {
@@ -211,10 +205,7 @@ Matter.children.push({
                 },
 
                 { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -229,10 +220,7 @@ Matter.children.push({
                 { tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 
@@ -241,13 +229,9 @@ Matter.children.push({
             response: "status",
             details: "The Stop command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.6.6.4" },
-
             children: [
                 { tag: "datatype", name: "OptionsMask", id: 0x0, type: "map8", conformance: "M", constraint: "desc" },
-                {
-                    tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M",
-                    constraint: "desc"
-                }
+                { tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M", constraint: "desc" }
             ]
         },
 

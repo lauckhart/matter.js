@@ -304,10 +304,7 @@ export const TlvStartActionWithDurationRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.5
  */
-export const TlvStopActionRequest = TlvObject({
-    actionId: TlvField(0, TlvUInt16),
-    invokeId: TlvOptionalField(1, TlvUInt32)
-});
+export const TlvStopActionRequest = TlvObject({ actionId: TlvField(0, TlvUInt16), invokeId: TlvOptionalField(1, TlvUInt32) });
 
 /**
  * This command SHALL have the following data fields:

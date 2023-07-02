@@ -242,11 +242,7 @@ export namespace TimeSyncCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.1
              */
-            utcTime: Attribute(
-                0,
-                TlvNullable(TlvUInt64),
-                { omitChanges: true, default: null, readAcl: AccessLevel.View }
-            ),
+            utcTime: Attribute(0, TlvNullable(TlvUInt64), { omitChanges: true, default: null, readAcl: AccessLevel.View }),
 
             /**
              * The granularity of the error that the server is willing to guarantee on the time synchronization. It is

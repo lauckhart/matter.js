@@ -19,14 +19,11 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.4.2" },
-
-            children: [
-                {
-                    tag: "datatype", name: "AP", id: 0x0, description: "ApplicationPlatform",
-                    details: "Support for attributes and commands required for endpoint to support launching any application " +
-                             "within the supported application catalogs"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "AP", id: 0x0, description: "ApplicationPlatform",
+                details: "Support for attributes and commands required for endpoint to support launching any application " +
+                         "within the supported application catalogs"
+            } ]
         },
 
         {
@@ -78,14 +75,12 @@ Matter.children.push({
                      "application SHALL be either",
             xref: { document: "cluster", section: "6.4.4.2" },
 
-            children: [
-                {
-                    tag: "datatype", name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP",
-                    constraint: "desc",
-                    details: "This field SHALL specify the Application to stop.",
-                    xref: { document: "cluster", section: "6.4.4.2.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP",
+                constraint: "desc",
+                details: "This field SHALL specify the Application to stop.",
+                xref: { document: "cluster", section: "6.4.4.2.1" }
+            } ]
         },
 
         {
@@ -94,14 +89,12 @@ Matter.children.push({
             details: "Upon receipt of this command, the server SHALL hide the application. The application SHALL be either",
             xref: { document: "cluster", section: "6.4.4.3" },
 
-            children: [
-                {
-                    tag: "datatype", name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP",
-                    constraint: "desc",
-                    details: "This field SHALL specify the Application to hide.",
-                    xref: { document: "cluster", section: "6.4.4.3.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP",
+                constraint: "desc",
+                details: "This field SHALL specify the Application to hide.",
+                xref: { document: "cluster", section: "6.4.4.3.1" }
+            } ]
         },
 
         {

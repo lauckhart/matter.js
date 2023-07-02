@@ -17,13 +17,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.3.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "GN", id: 0x0, description: "GroupNames",
-                    details: "The ability to store a name for a group."
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "GN", id: 0x0, description: "GroupNames",
+                details: "The ability to store a name for a group."
+            } ]
         },
 
         {
@@ -33,12 +30,8 @@ Matter.children.push({
                      "The most significant bit, bit 7, SHALL be equal to bit 0 of the FeatureMap attribute. All other " +
                      "bits SHALL be 0.",
             xref: { document: "cluster", section: "1.3.6.1" },
-
             children: [
-                {
-                    tag: "datatype", name: "GroupNames", id: 0x7,
-                    description: "The ability to store a name for a group."
-                }
+                { tag: "datatype", name: "GroupNames", id: 0x7, description: "The ability to store a name for a group." }
             ]
         },
 
@@ -60,7 +53,9 @@ Matter.children.push({
             details: "The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse " +
                      "command containing the name string for a particular group.",
             xref: { document: "cluster", section: "1.3.7.2" },
-            children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" } ]
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" }
+            ]
         },
 
         {
@@ -69,14 +64,11 @@ Matter.children.push({
             details: "The GetGroupMembership command allows a client to inquire about the group membership of the server " +
                      "endpoint, in a number of ways.",
             xref: { document: "cluster", section: "1.3.7.3" },
-
-            children: [
-                {
-                    tag: "datatype", name: "GroupList", id: 0x0, type: "list", conformance: "M",
-                    constraint: "all[min 1]",
-                    children: [ { tag: "datatype", name: "entry", type: "group-id" } ]
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "GroupList", id: 0x0, type: "list", conformance: "M",
+                constraint: "all[min 1]",
+                children: [ { tag: "datatype", name: "entry", type: "group-id" } ]
+            } ]
         },
 
         {
@@ -85,7 +77,9 @@ Matter.children.push({
             details: "The RemoveGroup command allows a client to request that the server removes the membership for the " +
                      "server endpoint, if any, in a particular group.",
             xref: { document: "cluster", section: "1.3.7.4" },
-            children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" } ]
+            children: [
+                { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" }
+            ]
         },
 
         {

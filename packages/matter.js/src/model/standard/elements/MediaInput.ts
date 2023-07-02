@@ -19,13 +19,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.9.2" },
-
-            children: [
-                {
-                    tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
-                    details: "Supports updates to the input names"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
+                details: "Supports updates to the input names"
+            } ]
         },
 
         {
@@ -48,14 +45,12 @@ Matter.children.push({
                      "the Input List.",
             xref: { document: "cluster", section: "6.9.4.1" },
 
-            children: [
-                {
-                    tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M",
-                    details: "This SHALL indicate the index field of the InputInfoStruct from the InputList attribute in which to " +
-                             "change to.",
-                    xref: { document: "cluster", section: "6.9.4.1.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M",
+                details: "This SHALL indicate the index field of the InputInfoStruct from the InputList attribute in which to " +
+                         "change to.",
+                xref: { document: "cluster", section: "6.9.4.1.1" }
+            } ]
         },
 
         {

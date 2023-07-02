@@ -17,13 +17,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.2.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "QRY", id: 0x0, description: "Query",
-                    details: "Multicast query for identification state"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "QRY", id: 0x0, description: "Query",
+                details: "Multicast query for identification state"
+            } ]
         },
 
         {
@@ -141,14 +138,12 @@ Matter.children.push({
                      "Command, in the case that the device is currently identifying itself.",
             xref: { document: "cluster", section: "1.2.6.4" },
 
-            children: [
-                {
-                    tag: "datatype", name: "Timeout", id: 0x0, type: "uint16", conformance: "M",
-                    details: "This field contains the current value of the IdentifyTime attribute, and specifies the length of " +
-                             "time, in seconds, that the device will continue to identify itself.",
-                    xref: { document: "cluster", section: "1.2.6.4.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "Timeout", id: 0x0, type: "uint16", conformance: "M",
+                details: "This field contains the current value of the IdentifyTime attribute, and specifies the length of " +
+                         "time, in seconds, that the device will continue to identify itself.",
+                xref: { document: "cluster", section: "1.2.6.4.1" }
+            } ]
         }
     ]
 });

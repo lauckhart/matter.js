@@ -393,7 +393,9 @@ Matter.children.push({
             direction: "request", response: "status",
             details: "The GoToLiftValue command SHALL have the following data fields:",
             xref: { document: "cluster", section: "5.3.6.4" },
-            children: [ { tag: "datatype", name: "LiftValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" } ]
+            children: [
+                { tag: "datatype", name: "LiftValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }
+            ]
         },
 
         {
@@ -419,7 +421,9 @@ Matter.children.push({
             direction: "request", response: "status",
             details: "The GoToTiltValue command SHALL have the following data fields:",
             xref: { document: "cluster", section: "5.3.6.6" },
-            children: [ { tag: "datatype", name: "TiltValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" } ]
+            children: [
+                { tag: "datatype", name: "TiltValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }
+            ]
         },
 
         {

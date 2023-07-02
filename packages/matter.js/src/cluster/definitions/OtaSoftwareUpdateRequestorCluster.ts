@@ -9,7 +9,7 @@
 import { WritableFabricScopedAttribute, AccessLevel, Attribute, OptionalCommand, TlvNoResponse, Event, EventPriority } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
-import { TlvUInt16, TlvUInt64, TlvEnum, TlvUInt8, TlvUInt32, TlvInt64 } from "../../tlv/TlvNumber.js";
+import { TlvUInt64, TlvUInt16, TlvEnum, TlvUInt8, TlvUInt32, TlvInt64 } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
@@ -21,8 +21,8 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.20
  */
 export const TlvProviderLocationStruct = TlvObject({
-    endpoint: TlvField(2, TlvUInt16),
-    providerNodeId: TlvField(1, TlvUInt64)
+    providerNodeId: TlvField(1, TlvUInt64),
+    endpoint: TlvField(2, TlvUInt16)
 });
 
 /**

@@ -71,12 +71,8 @@ Matter.children.push({
             details: "This command SHALL be generated to request the Attestation Information, in the form of an " +
                      "AttestationResponse Command. If the AttestationNonce that is provided in the command is malformed, a",
             xref: { document: "core", section: "11.17.6.1" },
-
             children: [
-                {
-                    tag: "datatype", name: "AttestationNonce", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "32"
-                }
+                { tag: "datatype", name: "AttestationNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32" }
             ]
         },
 
@@ -109,13 +105,10 @@ Matter.children.push({
             details: "If the CertificateType is not a valid value per CertificateChainTypeEnum then the command SHALL " +
                      "fail with a Status Code of INVALID_COMMAND.",
             xref: { document: "core", section: "11.17.6.3" },
-
-            children: [
-                {
-                    tag: "datatype", name: "CertificateType", id: 0x0, type: "CertificateChainTypeEnum",
-                    conformance: "M", constraint: "desc"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "CertificateType", id: 0x0, type: "CertificateChainTypeEnum",
+                conformance: "M", constraint: "desc"
+            } ]
         },
 
         {
@@ -123,15 +116,13 @@ Matter.children.push({
             details: "This command SHALL be generated in response to a CertificateChainRequest command.",
             xref: { document: "core", section: "11.17.6.4" },
 
-            children: [
-                {
-                    tag: "datatype", name: "Certificate", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "max 600",
-                    details: "This field SHALL be the DER encoded certificate corresponding to the CertificateType field in the " +
-                             "CertificateChainRequest command.",
-                    xref: { document: "core", section: "11.17.6.4.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "Certificate", id: 0x0, type: "octstr", conformance: "M",
+                constraint: "max 600",
+                details: "This field SHALL be the DER encoded certificate corresponding to the CertificateType field in the " +
+                         "CertificateChainRequest command.",
+                xref: { document: "core", section: "11.17.6.4.1" }
+            } ]
         },
 
         {
@@ -175,10 +166,7 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "NocValue", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" },
-                {
-                    tag: "datatype", name: "IcacValue", id: 0x1, type: "octstr", conformance: "O",
-                    constraint: "max 400"
-                },
+                { tag: "datatype", name: "IcacValue", id: 0x1, type: "octstr", conformance: "O", constraint: "max 400" },
 
                 {
                     tag: "datatype", name: "IpkValue", id: 0x2, type: "octstr", conformance: "M", constraint: "16",
@@ -261,13 +249,7 @@ Matter.children.push({
             details: "This command SHALL be used by an Administrator to set the user-visible Label field for a given " +
                      "Fabric, as reflected by entries in the Fabrics attribute.",
             xref: { document: "core", section: "11.17.6.11" },
-
-            children: [
-                {
-                    tag: "datatype", name: "Label", id: 0x0, type: "string", access: "F", conformance: "M",
-                    constraint: "max 32"
-                }
-            ]
+            children: [ { tag: "datatype", name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32" } ]
         },
 
         {
@@ -276,13 +258,7 @@ Matter.children.push({
             details: "This command is used by Administrators to remove a given Fabric and delete all associated " +
                      "fabric-scoped data.",
             xref: { document: "core", section: "11.17.6.12" },
-
-            children: [
-                {
-                    tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M",
-                    constraint: "1 to 254"
-                }
-            ]
+            children: [ { tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254" } ]
         },
 
         {
@@ -292,13 +268,7 @@ Matter.children.push({
                      "representation, to the TrustedRootCertificates Attribute list and SHALL ensure the next AddNOC " +
                      "command executed uses the provided certificate as its root of trust.",
             xref: { document: "core", section: "11.17.6.13" },
-
-            children: [
-                {
-                    tag: "datatype", name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "max 400"
-                }
-            ]
+            children: [ { tag: "datatype", name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" } ]
         },
 
         {
@@ -340,7 +310,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Noc", id: 0x1, type: "octstr", access: "S", conformance: "M",
-                    constraint: "max 400", quality: "X",
+                    constraint: "max 400",
                     details: "This field SHALL contain the NOC for the struct’s associated fabric, encoded using Matter " +
                              "Certificate Encoding.",
                     xref: { document: "core", section: "11.17.4.4.1" }
@@ -364,6 +334,16 @@ Matter.children.push({
 
             children: [
                 {
+                    tag: "datatype", name: "RootPublicKey", id: 0x1, type: "octstr", access: "F", conformance: "M",
+                    constraint: "65",
+                    details: "This field SHALL contain the public key for the trusted root that scopes the fabric referenced by " +
+                             "FabricIndex and its associated operational credential (see Section 6.4.5.3, “Trusted Root CA " +
+                             "Certificates”). The format for the key shall be the same as that used in the ec-pub-key field of " +
+                             "the Matter Certificate Encoding for the root in the operational certificate chain.",
+                    xref: { document: "core", section: "11.17.4.5.1" }
+                },
+
+                {
                     tag: "datatype", name: "VendorId", id: 0x2, type: "vendor-id", access: "F", conformance: "M",
                     constraint: "desc",
                     details: "This field SHALL contain the value of AdminVendorID provided in the AddNOC command that led to the " +
@@ -380,14 +360,20 @@ Matter.children.push({
                 },
 
                 {
+                    tag: "datatype", name: "NodeId", id: 0x4, type: "node-id", access: "F", conformance: "M",
+                    details: "This field SHALL contain the NodeID in use within the fabric referenced by FabricIndex. This field " +
+                             "SHALL match the value found in the matter-node-id field from the operational certificate providing " +
+                             "this operational identity.",
+                    xref: { document: "core", section: "11.17.4.5.4" }
+                },
+
+                {
                     tag: "datatype", name: "Label", id: 0x5, type: "string", access: "F", conformance: "M",
                     constraint: "max 32", default: "",
                     details: "This field SHALL contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
                              "label is set by the UpdateFabricLabel command.",
                     xref: { document: "core", section: "11.17.4.5.5" }
-                },
-
-                { tag: "datatype", name: "RootPublicKey", type: "octstr", conformance: "M" }
+                }
             ]
         }
     ]

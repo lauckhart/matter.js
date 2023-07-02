@@ -604,11 +604,7 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.3
              */
-            outdoorTemperature: OptionalAttribute(
-                1,
-                TlvNullable(TlvInt16),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            outdoorTemperature: OptionalAttribute(1, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * This attribute indicates when the local temperature, outdoor temperature and occupancy are being sensed
@@ -711,11 +707,7 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.34
              */
-            setpointChangeSource: OptionalAttribute(
-                48,
-                TlvEnum<TlvSetpointChangeSource>(),
-                { readAcl: AccessLevel.View }
-            ),
+            setpointChangeSource: OptionalAttribute(48, TlvEnum<TlvSetpointChangeSource>(), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the delta between the current active OccupiedCoolingSetpoint or
@@ -826,11 +818,7 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.50
              */
-            acCoilTemperature: OptionalAttribute(
-                70,
-                TlvNullable(TlvInt16),
-                { default: 32768, readAcl: AccessLevel.View }
-            ),
+            acCoilTemperature: OptionalAttribute(70, TlvNullable(TlvInt16), { default: 32768, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the format for the ACCapacity attribute.
@@ -913,14 +901,7 @@ export namespace ThermostatCluster {
             occupiedHeatingSetpoint: WritableAttribute(
                 18,
                 TlvInt16,
-
-                {
-                    scene: true,
-                    persistent: true,
-                    default: 2000,
-                    readAcl: AccessLevel.View,
-                    writeAcl: AccessLevel.Operate
-                }
+                { scene: true, persistent: true, default: 2000, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -993,14 +974,7 @@ export namespace ThermostatCluster {
             occupiedCoolingSetpoint: WritableAttribute(
                 17,
                 TlvInt16,
-
-                {
-                    scene: true,
-                    persistent: true,
-                    default: 2600,
-                    readAcl: AccessLevel.View,
-                    writeAcl: AccessLevel.Operate
-                }
+                { scene: true, persistent: true, default: 2600, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -1071,11 +1045,7 @@ export namespace ThermostatCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7
              */
-            thermostatRunningMode: OptionalAttribute(
-                30,
-                TlvEnum<TlvThermostatRunningMode>(),
-                { readAcl: AccessLevel.View }
-            )
+            thermostatRunningMode: OptionalAttribute(30, TlvEnum<TlvThermostatRunningMode>(), { readAcl: AccessLevel.View })
         }
     };
 

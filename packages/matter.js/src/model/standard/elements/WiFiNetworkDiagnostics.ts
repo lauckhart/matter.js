@@ -145,15 +145,13 @@ Matter.children.push({
                      "result of de-authenticated or dis-association and indicates the reason.",
             xref: { document: "core", section: "11.14.8.1" },
 
-            children: [
-                {
-                    tag: "datatype", name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M",
-                    details: "This field SHALL contain the Reason Code field value for the Disassociation or Deauthentication " +
-                             "event that caused the disconnection and the value SHALL align with Table 9-49 \"Reason codes\" of " +
-                             "IEEE 802.11-2020.",
-                    xref: { document: "core", section: "11.14.8.1.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M",
+                details: "This field SHALL contain the Reason Code field value for the Disassociation or Deauthentication " +
+                         "event that caused the disconnection and the value SHALL align with Table 9-49 \"Reason codes\" of " +
+                         "IEEE 802.11-2020.",
+                xref: { document: "core", section: "11.14.8.1.1" }
+            } ]
         },
 
         {
@@ -187,7 +185,9 @@ Matter.children.push({
                      "changed. Connected, in this context, SHALL mean that a Node acting as a Wi-Fi station is " +
                      "successfully associated to a Wi-Fi Access Point.",
             xref: { document: "core", section: "11.14.8.3" },
-            children: [ { tag: "datatype", name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" } ]
+            children: [
+                { tag: "datatype", name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" }
+            ]
         },
 
         {

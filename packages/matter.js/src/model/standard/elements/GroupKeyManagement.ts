@@ -18,13 +18,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.2.5" },
-
-            children: [
-                {
-                    tag: "datatype", name: "CS", id: 0x0, description: "CacheAndSync",
-                    details: "The ability to support CacheAndSync security policy and MCSP."
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "CS", id: 0x0, description: "CacheAndSync",
+                details: "The ability to support CacheAndSync security policy and MCSP."
+            } ]
         },
 
         {
@@ -114,13 +111,10 @@ Matter.children.push({
             details: "This command SHALL be generated in response to KeySetReadAllIndices and it SHALL contain the list " +
                      "of GroupKeySetID for all Group Key Sets associated with the scoped Fabric.",
             xref: { document: "core", section: "11.2.8.6" },
-
-            children: [
-                {
-                    tag: "datatype", name: "GroupKeySetIDs", id: 0x0, type: "list", conformance: "M",
-                    children: [ { tag: "datatype", name: "entry", type: "uint16" } ]
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "GroupKeySetIDs", id: 0x0, type: "list", conformance: "M",
+                children: [ { tag: "datatype", name: "entry", type: "uint16" } ]
+            } ]
         },
 
         {

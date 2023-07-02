@@ -38,9 +38,9 @@ export namespace FaultInjectionCluster {
     export const id = 0xfff1fc06;
     export const name = "FaultInjection";
     export const revision = 1;
-    const Base = {commands: {
-            failAtFault: Command(0, TlvFailAtFaultRequest, 0, TlvNoResponse),
-            failRandomlyAtFault: Command(1, TlvFailRandomlyAtFaultRequest, 1, TlvNoResponse)
-        }};
+    const Base = { commands: {
+        failAtFault: Command(0, TlvFailAtFaultRequest, 0, TlvNoResponse),
+        failRandomlyAtFault: Command(1, TlvFailRandomlyAtFaultRequest, 1, TlvNoResponse)
+    } };
     export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
 };

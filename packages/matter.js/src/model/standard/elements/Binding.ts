@@ -43,6 +43,13 @@ Matter.children.push({
                 },
 
                 {
+                    tag: "datatype", name: "Endpoint", id: 0x3, type: "endpoint-no", access: "F", conformance: "!Group",
+                    details: "This field is the remote endpoint that the local endpoint is bound to. If the Group field is " +
+                             "present, this field SHALL NOT be present.",
+                    xref: { document: "core", section: "9.6.5.1.3" }
+                },
+
+                {
                     tag: "datatype", name: "Cluster", id: 0x4, type: "cluster-id", access: "F", conformance: "O",
                     details: "This field is the cluster ID (client & server) on the local and target endpoint(s). If this field " +
                              "is present, the client cluster SHALL also exist on this endpoint (with this Binding cluster). If " +

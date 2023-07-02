@@ -45,11 +45,13 @@ export const ChipMatter: MatterElement = {
                     priority: "info",
 
                     children: [
-                        { tag: "datatype", name: "AdminNodeId", type: "node-id", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "AdminPasscodeId", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "ChangeType", type: "ChangeTypeEnum", conformance: "M" },
+                        { tag: "datatype", name: "AdminNodeId", id: 0x1, type: "node-id", conformance: "M", quality: "X" },
                         {
-                            tag: "datatype", name: "LatestValue", type: "AccessControlEntryStruct", conformance: "M",
+                            tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "uint16", conformance: "M", quality: "X"
+                        },
+                        { tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", conformance: "M" },
+                        {
+                            tag: "datatype", name: "LatestValue", id: 0x4, type: "AccessControlEntryStruct", conformance: "M",
                             quality: "X"
                         }
                     ]
@@ -60,12 +62,14 @@ export const ChipMatter: MatterElement = {
                     priority: "info",
 
                     children: [
-                        { tag: "datatype", name: "AdminNodeId", type: "node-id", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "AdminPasscodeId", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "ChangeType", type: "ChangeTypeEnum", conformance: "M" },
+                        { tag: "datatype", name: "AdminNodeId", id: 0x1, type: "node-id", conformance: "M", quality: "X" },
                         {
-                            tag: "datatype", name: "LatestValue", type: "AccessControlExtensionStruct", conformance: "M",
-                            quality: "X"
+                            tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "uint16", conformance: "M", quality: "X"
+                        },
+                        { tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", conformance: "M" },
+                        {
+                            tag: "datatype", name: "LatestValue", id: 0x4, type: "AccessControlExtensionStruct",
+                            conformance: "M", quality: "X"
                         }
                     ]
                 },
@@ -75,15 +79,21 @@ export const ChipMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "Privilege", type: "AccessControlEntryPrivilegeEnum", access: "R S",
+                            tag: "datatype", name: "Privilege", id: 0x1, type: "AccessControlEntryPrivilegeEnum", access: "R S",
                             conformance: "M"
                         },
                         {
-                            tag: "datatype", name: "AuthMode", type: "AccessControlEntryAuthModeEnum", access: "R S",
+                            tag: "datatype", name: "AuthMode", id: 0x2, type: "AccessControlEntryAuthModeEnum", access: "R S",
                             conformance: "M"
                         },
-                        { tag: "datatype", name: "Subjects", type: "uint64", access: "R S", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "Targets", type: "Target", access: "R S", conformance: "M", quality: "X" }
+                        {
+                            tag: "datatype", name: "Subjects", id: 0x3, type: "uint64", access: "R S", conformance: "M",
+                            quality: "X"
+                        },
+                        {
+                            tag: "datatype", name: "Targets", id: 0x4, type: "Target", access: "R S", conformance: "M",
+                            quality: "X"
+                        }
                     ]
                 },
 
@@ -111,16 +121,18 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "Target", type: "struct", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "Cluster", type: "cluster-id", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "DeviceType", type: "devtype-id", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "Cluster", id: 0x0, type: "cluster-id", conformance: "M", quality: "X" },
+                        { tag: "datatype", name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M", quality: "X" },
+                        { tag: "datatype", name: "DeviceType", id: 0x2, type: "devtype-id", conformance: "M", quality: "X" }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "AccessControlExtensionStruct", type: "struct", access: "R F",
                     conformance: "M",
-                    children: [ { tag: "datatype", name: "Data", type: "octstr", access: "R S", conformance: "M" } ]
+                    children: [
+                        { tag: "datatype", name: "Data", id: 0x1, type: "octstr", access: "R S", conformance: "M" }
+                    ]
                 },
 
                 {
@@ -285,9 +297,9 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "event", name: "StateChanged", id: 0x0, conformance: "M", priority: "info",
                     children: [
-                        { tag: "datatype", name: "ActionId", type: "uint16", conformance: "M" },
-                        { tag: "datatype", name: "InvokeId", type: "uint32", conformance: "M" },
-                        { tag: "datatype", name: "NewState", type: "ActionStateEnum", conformance: "M" }
+                        { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "M" },
+                        { tag: "datatype", name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M" }
                     ]
                 },
 
@@ -295,10 +307,10 @@ export const ChipMatter: MatterElement = {
                     tag: "event", name: "ActionFailed", id: 0x1, conformance: "M", priority: "info",
 
                     children: [
-                        { tag: "datatype", name: "ActionId", type: "uint16", conformance: "M" },
-                        { tag: "datatype", name: "InvokeId", type: "uint32", conformance: "M" },
-                        { tag: "datatype", name: "NewState", type: "ActionStateEnum", conformance: "M" },
-                        { tag: "datatype", name: "Error", type: "ActionErrorEnum", conformance: "M" }
+                        { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "M" },
+                        { tag: "datatype", name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M" },
+                        { tag: "datatype", name: "Error", id: 0x3, type: "ActionErrorEnum", conformance: "M" }
                     ]
                 },
 
@@ -683,31 +695,34 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct", conformance: "O" },
                 {
                     tag: "event", name: "StartUp", id: 0x0, conformance: "M", priority: "critical",
-                    children: [ { tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" } ]
                 },
                 { tag: "event", name: "ShutDown", id: 0x1, conformance: "O", priority: "critical" },
                 {
                     tag: "event", name: "Leave", id: 0x2, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M" } ]
                 },
                 {
                     tag: "event", name: "ReachableChanged", id: 0x3, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "ReachableNewValue", type: "bool", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M" } ]
                 },
 
                 {
                     tag: "datatype", name: "CapabilityMinimaStruct", type: "struct", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "CaseSessionsPerFabric", type: "uint16", conformance: "M" },
-                        { tag: "datatype", name: "SubscriptionsPerFabric", type: "uint16", conformance: "M" }
+                        { tag: "datatype", name: "CaseSessionsPerFabric", id: 0x0, type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "SubscriptionsPerFabric", id: 0x1, type: "uint16", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "ProductAppearanceStruct", type: "struct", conformance: "M",
+
                     children: [
-                        { tag: "datatype", name: "Finish", type: "ProductFinishEnum", conformance: "M" },
-                        { tag: "datatype", name: "PrimaryColor", type: "ColorEnum", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "Finish", id: 0x0, type: "ProductFinishEnum", conformance: "M" },
+                        {
+                            tag: "datatype", name: "PrimaryColor", id: 0x1, type: "ColorEnum", conformance: "M", quality: "X"
+                        }
                     ]
                 },
 
@@ -769,10 +784,10 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "TargetStruct", type: "struct", access: "R F", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "Node", type: "node-id", conformance: "O" },
-                        { tag: "datatype", name: "Group", type: "group-id", conformance: "O" },
-                        { tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "O" },
-                        { tag: "datatype", name: "Cluster", type: "cluster-id", conformance: "O" }
+                        { tag: "datatype", name: "Node", id: 0x1, type: "node-id", conformance: "O" },
+                        { tag: "datatype", name: "Group", id: 0x2, type: "group-id", conformance: "O" },
+                        { tag: "datatype", name: "Endpoint", id: 0x3, type: "endpoint-no", conformance: "O" },
+                        { tag: "datatype", name: "Cluster", id: 0x4, type: "cluster-id", conformance: "O" }
                     ]
                 }
             ]
@@ -786,7 +801,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "StateValue", id: 0x0, type: "bool", conformance: "M", quality: "P" },
                 {
                     tag: "event", name: "StateChange", id: 0x0, conformance: "M", priority: "info",
-                    children: [ { tag: "datatype", name: "StateValue", type: "bool", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "StateValue", id: 0x0, type: "bool", conformance: "M" } ]
                 }
             ]
         },
@@ -822,20 +837,23 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct", conformance: "O" },
                 {
                     tag: "event", name: "StartUp", id: 0x0, conformance: "O", priority: "critical",
-                    children: [ { tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" } ]
                 },
                 { tag: "event", name: "ShutDown", id: 0x1, conformance: "O", priority: "critical" },
                 { tag: "event", name: "Leave", id: 0x2, conformance: "O", priority: "info" },
                 {
                     tag: "event", name: "ReachableChanged", id: 0x3, conformance: "M", priority: "info",
-                    children: [ { tag: "datatype", name: "ReachableNewValue", type: "bool", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M" } ]
                 },
 
                 {
                     tag: "datatype", name: "ProductAppearanceStruct", type: "struct", conformance: "M",
+
                     children: [
-                        { tag: "datatype", name: "Finish", type: "ProductFinishEnum", conformance: "M" },
-                        { tag: "datatype", name: "PrimaryColor", type: "ColorEnum", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "Finish", id: 0x0, type: "ProductFinishEnum", conformance: "M" },
+                        {
+                            tag: "datatype", name: "PrimaryColor", id: 0x1, type: "ColorEnum", conformance: "M", quality: "X"
+                        }
                     ]
                 },
 
@@ -1091,18 +1109,21 @@ export const ChipMatter: MatterElement = {
                     tag: "event", name: "StateTransition", id: 0x0, conformance: "M", priority: "info",
 
                     children: [
-                        { tag: "datatype", name: "PreviousState", type: "OtaUpdateStateEnum", conformance: "M" },
-                        { tag: "datatype", name: "NewState", type: "OtaUpdateStateEnum", conformance: "M" },
-                        { tag: "datatype", name: "Reason", type: "OtaChangeReasonEnum", conformance: "M" },
-                        { tag: "datatype", name: "TargetSoftwareVersion", type: "uint32", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "PreviousState", id: 0x0, type: "OtaUpdateStateEnum", conformance: "M" },
+                        { tag: "datatype", name: "NewState", id: 0x1, type: "OtaUpdateStateEnum", conformance: "M" },
+                        { tag: "datatype", name: "Reason", id: 0x2, type: "OtaChangeReasonEnum", conformance: "M" },
+                        {
+                            tag: "datatype", name: "TargetSoftwareVersion", id: 0x3, type: "uint32", conformance: "M",
+                            quality: "X"
+                        }
                     ]
                 },
 
                 {
                     tag: "event", name: "VersionApplied", id: 0x1, conformance: "M", priority: "critical",
                     children: [
-                        { tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M" },
-                        { tag: "datatype", name: "ProductId", type: "uint16", conformance: "M" }
+                        { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" },
+                        { tag: "datatype", name: "ProductId", id: 0x1, type: "uint16", conformance: "M" }
                     ]
                 },
 
@@ -1110,18 +1131,18 @@ export const ChipMatter: MatterElement = {
                     tag: "event", name: "DownloadError", id: 0x2, conformance: "M", priority: "info",
 
                     children: [
-                        { tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M" },
-                        { tag: "datatype", name: "BytesDownloaded", type: "uint64", conformance: "M" },
-                        { tag: "datatype", name: "ProgressPercent", type: "uint8", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "PlatformCode", type: "int64", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" },
+                        { tag: "datatype", name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M" },
+                        { tag: "datatype", name: "ProgressPercent", id: 0x2, type: "uint8", conformance: "M", quality: "X" },
+                        { tag: "datatype", name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", quality: "X" }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "ProviderLocation", type: "struct", access: "R F", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "ProviderNodeId", type: "node-id", conformance: "M" },
-                        { tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "M" }
+                        { tag: "datatype", name: "ProviderNodeId", id: 0x1, type: "node-id", conformance: "M" },
+                        { tag: "datatype", name: "Endpoint", id: 0x2, type: "endpoint-no", conformance: "M" }
                     ]
                 },
 
@@ -1201,8 +1222,8 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "MonitoringRegistration", type: "struct", access: "R F", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "ClientNodeId", type: "node-id", conformance: "M" },
-                        { tag: "datatype", name: "ICid", type: "uint64", conformance: "M" }
+                        { tag: "datatype", name: "ClientNodeId", id: 0x1, type: "node-id", conformance: "M" },
+                        { tag: "datatype", name: "ICid", id: 0x2, type: "uint64", conformance: "M" }
                     ]
                 }
             ]
@@ -2099,23 +2120,31 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "event", name: "DoorLockAlarm", id: 0x0, conformance: "M", priority: "critical",
-                    children: [ { tag: "datatype", name: "AlarmCode", type: "AlarmCodeEnum", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "AlarmCode", id: 0x0, type: "AlarmCodeEnum", conformance: "M" } ]
                 },
                 {
                     tag: "event", name: "DoorStateChange", id: 0x1, conformance: "O", priority: "critical",
-                    children: [ { tag: "datatype", name: "DoorState", type: "DoorStateEnum", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "DoorState", id: 0x0, type: "DoorStateEnum", conformance: "M" } ]
                 },
 
                 {
                     tag: "event", name: "LockOperation", id: 0x2, conformance: "M", priority: "critical",
 
                     children: [
-                        { tag: "datatype", name: "LockOperationType", type: "LockOperationTypeEnum", conformance: "M" },
-                        { tag: "datatype", name: "OperationSource", type: "OperationSourceEnum", conformance: "M" },
-                        { tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "SourceNode", type: "node-id", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "O", quality: "X" }
+                        {
+                            tag: "datatype", name: "LockOperationType", id: 0x0, type: "LockOperationTypeEnum",
+                            conformance: "M"
+                        },
+                        { tag: "datatype", name: "OperationSource", id: 0x1, type: "OperationSourceEnum", conformance: "M" },
+                        { tag: "datatype", name: "UserIndex", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "FabricIndex", id: 0x3, type: "fabric-idx", conformance: "M", quality: "X"
+                        },
+                        { tag: "datatype", name: "SourceNode", id: 0x4, type: "node-id", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "Credentials", id: 0x5, type: "CredentialStruct", conformance: "O",
+                            quality: "X"
+                        }
                     ]
                 },
 
@@ -2123,13 +2152,21 @@ export const ChipMatter: MatterElement = {
                     tag: "event", name: "LockOperationError", id: 0x3, conformance: "M", priority: "critical",
 
                     children: [
-                        { tag: "datatype", name: "LockOperationType", type: "LockOperationTypeEnum", conformance: "M" },
-                        { tag: "datatype", name: "OperationSource", type: "OperationSourceEnum", conformance: "M" },
-                        { tag: "datatype", name: "OperationError", type: "OperationErrorEnum", conformance: "M" },
-                        { tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "SourceNode", type: "node-id", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "O", quality: "X" }
+                        {
+                            tag: "datatype", name: "LockOperationType", id: 0x0, type: "LockOperationTypeEnum",
+                            conformance: "M"
+                        },
+                        { tag: "datatype", name: "OperationSource", id: 0x1, type: "OperationSourceEnum", conformance: "M" },
+                        { tag: "datatype", name: "OperationError", id: 0x2, type: "OperationErrorEnum", conformance: "M" },
+                        { tag: "datatype", name: "UserIndex", id: 0x3, type: "uint16", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "FabricIndex", id: 0x4, type: "fabric-idx", conformance: "M", quality: "X"
+                        },
+                        { tag: "datatype", name: "SourceNode", id: 0x5, type: "node-id", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "Credentials", id: 0x6, type: "CredentialStruct", conformance: "O",
+                            quality: "X"
+                        }
                     ]
                 },
 
@@ -2137,13 +2174,18 @@ export const ChipMatter: MatterElement = {
                     tag: "event", name: "LockUserChange", id: 0x4, conformance: "M", priority: "info",
 
                     children: [
-                        { tag: "datatype", name: "LockDataType", type: "LockDataTypeEnum", conformance: "M" },
-                        { tag: "datatype", name: "DataOperationType", type: "DataOperationTypeEnum", conformance: "M" },
-                        { tag: "datatype", name: "OperationSource", type: "OperationSourceEnum", conformance: "M" },
-                        { tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "FabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "SourceNode", type: "node-id", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "DataIndex", type: "uint16", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "LockDataType", id: 0x0, type: "LockDataTypeEnum", conformance: "M" },
+                        {
+                            tag: "datatype", name: "DataOperationType", id: 0x1, type: "DataOperationTypeEnum",
+                            conformance: "M"
+                        },
+                        { tag: "datatype", name: "OperationSource", id: 0x2, type: "OperationSourceEnum", conformance: "M" },
+                        { tag: "datatype", name: "UserIndex", id: 0x3, type: "uint16", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "FabricIndex", id: 0x4, type: "fabric-idx", conformance: "M", quality: "X"
+                        },
+                        { tag: "datatype", name: "SourceNode", id: 0x5, type: "node-id", conformance: "M", quality: "X" },
+                        { tag: "datatype", name: "DataIndex", id: 0x6, type: "uint16", conformance: "M", quality: "X" }
                     ]
                 },
 
@@ -2656,8 +2698,8 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "BasicCommissioningInfo", type: "struct", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "FailSafeExpiryLengthSeconds", type: "uint16", conformance: "M" },
-                        { tag: "datatype", name: "MaxCumulativeFailsafeSeconds", type: "uint16", conformance: "M" }
+                        { tag: "datatype", name: "FailSafeExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "MaxCumulativeFailsafeSeconds", id: 0x1, type: "uint16", conformance: "M" }
                     ]
                 },
 
@@ -2725,30 +2767,30 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "event", name: "HardwareFaultChange", id: 0x0, conformance: "O", priority: "critical",
                     children: [
-                        { tag: "datatype", name: "Current", type: "HardwareFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", type: "HardwareFaultEnum", conformance: "M" }
+                        { tag: "datatype", name: "Current", id: 0x0, type: "HardwareFaultEnum", conformance: "M" },
+                        { tag: "datatype", name: "Previous", id: 0x1, type: "HardwareFaultEnum", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "event", name: "RadioFaultChange", id: 0x1, conformance: "O", priority: "critical",
                     children: [
-                        { tag: "datatype", name: "Current", type: "RadioFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", type: "RadioFaultEnum", conformance: "M" }
+                        { tag: "datatype", name: "Current", id: 0x0, type: "RadioFaultEnum", conformance: "M" },
+                        { tag: "datatype", name: "Previous", id: 0x1, type: "RadioFaultEnum", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "event", name: "NetworkFaultChange", id: 0x2, conformance: "O", priority: "critical",
                     children: [
-                        { tag: "datatype", name: "Current", type: "NetworkFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", type: "NetworkFaultEnum", conformance: "M" }
+                        { tag: "datatype", name: "Current", id: 0x0, type: "NetworkFaultEnum", conformance: "M" },
+                        { tag: "datatype", name: "Previous", id: 0x1, type: "NetworkFaultEnum", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "event", name: "BootReason", id: 0x3, conformance: "M", priority: "critical",
-                    children: [ { tag: "datatype", name: "BootReason", type: "BootReasonEnum", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M" } ]
                 },
 
                 {
@@ -2891,17 +2933,17 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "GroupKeyMapStruct", type: "struct", access: "R F", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
-                        { tag: "datatype", name: "GroupKeySetId", type: "uint16", conformance: "M" }
+                        { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
+                        { tag: "datatype", name: "GroupKeySetId", id: 0x2, type: "uint16", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "GroupInfoMapStruct", type: "struct", access: "R F", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
-                        { tag: "datatype", name: "Endpoints", type: "endpoint-no", conformance: "M" },
-                        { tag: "datatype", name: "GroupName", type: "string", conformance: "O" }
+                        { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
+                        { tag: "datatype", name: "Endpoints", id: 0x2, type: "endpoint-no", conformance: "M" },
+                        { tag: "datatype", name: "GroupName", id: 0x3, type: "string", conformance: "O" }
                     ]
                 },
 
@@ -2909,17 +2951,23 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "GroupKeySetStruct", type: "struct", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "GroupKeySetId", type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" },
                         {
-                            tag: "datatype", name: "GroupKeySecurityPolicy", type: "GroupKeySecurityPolicyEnum",
+                            tag: "datatype", name: "GroupKeySecurityPolicy", id: 0x1, type: "GroupKeySecurityPolicyEnum",
                             conformance: "M"
                         },
-                        { tag: "datatype", name: "EpochKey0", type: "octstr", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "EpochStartTime0", type: "epoch-us", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "EpochKey1", type: "octstr", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "EpochStartTime1", type: "epoch-us", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "EpochKey2", type: "octstr", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "EpochStartTime2", type: "epoch-us", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "EpochKey0", id: 0x2, type: "octstr", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "EpochStartTime0", id: 0x3, type: "epoch-us", conformance: "M", quality: "X"
+                        },
+                        { tag: "datatype", name: "EpochKey1", id: 0x4, type: "octstr", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "EpochStartTime1", id: 0x5, type: "epoch-us", conformance: "M", quality: "X"
+                        },
+                        { tag: "datatype", name: "EpochKey2", id: 0x6, type: "octstr", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "EpochStartTime2", id: 0x7, type: "epoch-us", conformance: "M", quality: "X"
+                        }
                     ]
                 },
 
@@ -4051,9 +4099,13 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "NocStruct", type: "struct", access: "R F", conformance: "M",
+
                     children: [
-                        { tag: "datatype", name: "Noc", type: "octstr", access: "R S", conformance: "M" },
-                        { tag: "datatype", name: "Icac", type: "octstr", access: "R S", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "Noc", id: 0x1, type: "octstr", access: "R S", conformance: "M" },
+                        {
+                            tag: "datatype", name: "Icac", id: 0x2, type: "octstr", access: "R S", conformance: "M",
+                            quality: "X"
+                        }
                     ]
                 },
 
@@ -4061,11 +4113,11 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "FabricDescriptorStruct", type: "struct", access: "R F", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "RootPublicKey", type: "octstr", conformance: "M" },
-                        { tag: "datatype", name: "VendorId", type: "vendor-id", conformance: "M" },
-                        { tag: "datatype", name: "FabricId", type: "fabric-id", conformance: "M" },
-                        { tag: "datatype", name: "NodeId", type: "node-id", conformance: "M" },
-                        { tag: "datatype", name: "Label", type: "string", conformance: "M" }
+                        { tag: "datatype", name: "RootPublicKey", id: 0x1, type: "octstr", conformance: "M" },
+                        { tag: "datatype", name: "VendorId", id: 0x2, type: "vendor-id", conformance: "M" },
+                        { tag: "datatype", name: "FabricId", id: 0x3, type: "fabric-id", conformance: "M" },
+                        { tag: "datatype", name: "NodeId", id: 0x4, type: "node-id", conformance: "M" },
+                        { tag: "datatype", name: "Label", id: 0x5, type: "string", conformance: "M" }
                     ]
                 },
 
@@ -4192,24 +4244,24 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "event", name: "WiredFaultChange", id: 0x0, conformance: "O", priority: "info",
                     children: [
-                        { tag: "datatype", name: "Current", type: "WiredFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", type: "WiredFaultEnum", conformance: "M" }
+                        { tag: "datatype", name: "Current", id: 0x0, type: "WiredFaultEnum", conformance: "M" },
+                        { tag: "datatype", name: "Previous", id: 0x1, type: "WiredFaultEnum", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "event", name: "BatFaultChange", id: 0x1, conformance: "O", priority: "info",
                     children: [
-                        { tag: "datatype", name: "Current", type: "BatFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", type: "BatFaultEnum", conformance: "M" }
+                        { tag: "datatype", name: "Current", id: 0x0, type: "BatFaultEnum", conformance: "M" },
+                        { tag: "datatype", name: "Previous", id: 0x1, type: "BatFaultEnum", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "event", name: "BatChargeFaultChange", id: 0x2, conformance: "O", priority: "info",
                     children: [
-                        { tag: "datatype", name: "Current", type: "BatChargeFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", type: "BatChargeFaultEnum", conformance: "M" }
+                        { tag: "datatype", name: "Current", id: 0x0, type: "BatChargeFaultEnum", conformance: "M" },
+                        { tag: "datatype", name: "Previous", id: 0x1, type: "BatChargeFaultEnum", conformance: "M" }
                     ]
                 },
 
@@ -4867,9 +4919,9 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "event", name: "SoftwareFault", id: 0x0, conformance: "O", priority: "info",
                     children: [
-                        { tag: "datatype", name: "Id", type: "uint64", conformance: "M" },
-                        { tag: "datatype", name: "Name", type: "string", conformance: "O" },
-                        { tag: "datatype", name: "FaultRecording", type: "octstr", conformance: "O" }
+                        { tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M" },
+                        { tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O" },
+                        { tag: "datatype", name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O" }
                     ]
                 },
 
@@ -4904,38 +4956,38 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "MultiPressMax", id: 0x2, type: "uint8", conformance: "O", default: 2 },
                 {
                     tag: "event", name: "SwitchLatched", id: 0x0, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "NewPosition", type: "uint8", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M" } ]
                 },
                 {
                     tag: "event", name: "InitialPress", id: 0x1, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "NewPosition", type: "uint8", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M" } ]
                 },
                 {
                     tag: "event", name: "LongPress", id: 0x2, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "NewPosition", type: "uint8", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M" } ]
                 },
                 {
                     tag: "event", name: "ShortRelease", id: 0x3, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "PreviousPosition", type: "uint8", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M" } ]
                 },
                 {
                     tag: "event", name: "LongRelease", id: 0x4, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "PreviousPosition", type: "uint8", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M" } ]
                 },
 
                 {
                     tag: "event", name: "MultiPressOngoing", id: 0x5, conformance: "O", priority: "info",
                     children: [
-                        { tag: "datatype", name: "NewPosition", type: "uint8", conformance: "M" },
-                        { tag: "datatype", name: "CurrentNumberOfPressesCounted", type: "uint8", conformance: "M" }
+                        { tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M" },
+                        { tag: "datatype", name: "CurrentNumberOfPressesCounted", id: 0x1, type: "uint8", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "event", name: "MultiPressComplete", id: 0x6, conformance: "O", priority: "info",
                     children: [
-                        { tag: "datatype", name: "PreviousPosition", type: "uint8", conformance: "M" },
-                        { tag: "datatype", name: "TotalNumberOfPressesCounted", type: "uint8", conformance: "M" }
+                        { tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M" },
+                        { tag: "datatype", name: "TotalNumberOfPressesCounted", id: 0x1, type: "uint8", conformance: "M" }
                     ]
                 }
             ]
@@ -5298,9 +5350,9 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "ThermostatScheduleTransition", type: "struct", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M" },
-                        { tag: "datatype", name: "HeatSetpoint", type: "int16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "CoolSetpoint", type: "int16", conformance: "M", quality: "X" }
+                        { tag: "datatype", name: "TransitionTime", id: 0x0, type: "uint16", conformance: "M" },
+                        { tag: "datatype", name: "HeatSetpoint", id: 0x1, type: "int16", conformance: "M", quality: "X" },
+                        { tag: "datatype", name: "CoolSetpoint", id: 0x2, type: "int16", conformance: "M", quality: "X" }
                     ]
                 }
             ]
@@ -5459,19 +5511,16 @@ export const ChipMatter: MatterElement = {
                     children: [ { tag: "datatype", name: "entry", type: "NetworkFault" } ]
                 },
                 { tag: "command", name: "ResetCounts", id: 0x0, conformance: "O", direction: "request" },
-
                 {
                     tag: "event", name: "ConnectionStatus", id: 0x0, conformance: "O", priority: "info",
-                    children: [
-                        { tag: "datatype", name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M" }
-                    ]
+                    children: [ { tag: "datatype", name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" } ]
                 },
 
                 {
                     tag: "event", name: "NetworkFaultChange", id: 0x1, conformance: "O", priority: "info",
                     children: [
-                        { tag: "datatype", name: "Current", type: "NetworkFault", conformance: "M" },
-                        { tag: "datatype", name: "Previous", type: "NetworkFault", conformance: "M" }
+                        { tag: "datatype", name: "Current", id: 0x0, type: "NetworkFault", conformance: "M" },
+                        { tag: "datatype", name: "Previous", id: 0x1, type: "NetworkFault", conformance: "M" }
                     ]
                 },
 
@@ -5702,18 +5751,18 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "TimeZoneStruct", type: "struct", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "Offset", type: "int32", conformance: "M" },
-                        { tag: "datatype", name: "ValidAt", type: "epoch-us", conformance: "M" },
-                        { tag: "datatype", name: "Name", type: "string", conformance: "O" }
+                        { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M" },
+                        { tag: "datatype", name: "ValidAt", id: 0x1, type: "epoch-us", conformance: "M" },
+                        { tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "O" }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "DstOffsetStruct", type: "struct", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "Offset", type: "int32", conformance: "M" },
-                        { tag: "datatype", name: "ValidStarting", type: "epoch-us", conformance: "M" },
-                        { tag: "datatype", name: "ValidUntil", type: "epoch-us", conformance: "M" }
+                        { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M" },
+                        { tag: "datatype", name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M" },
+                        { tag: "datatype", name: "ValidUntil", id: 0x2, type: "epoch-us", conformance: "M" }
                     ]
                 }
             ]
@@ -5819,7 +5868,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "command", name: "ResetCounts", id: 0x0, conformance: "O", direction: "request" },
                 {
                     tag: "event", name: "Disconnection", id: 0x0, conformance: "O", priority: "info",
-                    children: [ { tag: "datatype", name: "ReasonCode", type: "uint16", conformance: "M" } ]
+                    children: [ { tag: "datatype", name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M" } ]
                 },
 
                 {
@@ -5827,17 +5876,16 @@ export const ChipMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "AssociationFailure", type: "AssociationFailureCauseEnum", conformance: "M"
+                            tag: "datatype", name: "AssociationFailure", id: 0x0, type: "AssociationFailureCauseEnum",
+                            conformance: "M"
                         },
-                        { tag: "datatype", name: "Status", type: "uint16", conformance: "M" }
+                        { tag: "datatype", name: "Status", id: 0x1, type: "uint16", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "event", name: "ConnectionStatus", id: 0x2, conformance: "O", priority: "info",
-                    children: [
-                        { tag: "datatype", name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M" }
-                    ]
+                    children: [ { tag: "datatype", name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" } ]
                 },
 
                 {

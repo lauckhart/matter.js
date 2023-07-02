@@ -82,10 +82,7 @@ Matter.children.push({
                     tag: "datatype", name: "NotFullyLocked", id: 0x0, conformance: "M",
                     description: "Lock state is not fully locked"
                 },
-                {
-                    tag: "datatype", name: "Locked", id: 0x1, conformance: "M",
-                    description: "Lock state is fully locked"
-                },
+                { tag: "datatype", name: "Locked", id: 0x1, conformance: "M", description: "Lock state is fully locked" },
                 {
                     tag: "datatype", name: "Unlocked", id: 0x2, conformance: "M",
                     description: "Lock state is fully unlocked"
@@ -108,10 +105,7 @@ Matter.children.push({
                     tag: "datatype", name: "Magnetic", id: 0x1, conformance: "M",
                     description: "Physical lock type is magnetic"
                 },
-                {
-                    tag: "datatype", name: "Other", id: 0x2, conformance: "M",
-                    description: "Physical lock type is other"
-                },
+                { tag: "datatype", name: "Other", id: 0x2, conformance: "M", description: "Physical lock type is other" },
                 {
                     tag: "datatype", name: "Mortise", id: 0x3, conformance: "M",
                     description: "Physical lock type is mortise"
@@ -263,7 +257,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "map8", access: "R V",
-            conformance: "USR", default: [ "Dual" ], quality: "F",
+            conformance: "USR", default: [ "Single" ], quality: "F",
             details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.",
             xref: { document: "cluster", section: "5.2.3.19" },
             children: [
@@ -332,7 +326,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SupportedOperatingModes", id: 0x26, type: "map16", access: "R V",
-            conformance: "M", default: [ "Privacy", "Passage" ], quality: "F",
+            conformance: "M", default: [ "Vacation", "Privacy", "Passage" ], quality: "F",
             details: "This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All " +
                      "operating modes NOT supported by a lock SHALL be set to one. The value of the OperatingMode " +
                      "enumeration defines the related bit to be set, as shown below:",
@@ -626,14 +620,11 @@ Matter.children.push({
                      "the door lock. The alarms available for the door lock cluster are listed in the AlarmCodeEnum " +
                      "section below.",
             xref: { document: "cluster", section: "5.2.5.1" },
-
-            children: [
-                {
-                    tag: "datatype", name: "AlarmCode", id: 0x0, type: "AlarmCodeEnum", conformance: "M",
-                    details: "The alarm code of the event that has happened.",
-                    xref: { document: "cluster", section: "5.2.5.1.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "AlarmCode", id: 0x0, type: "AlarmCodeEnum", conformance: "M",
+                details: "The alarm code of the event that has happened.",
+                xref: { document: "cluster", section: "5.2.5.1.1" }
+            } ]
         },
 
         {
@@ -642,14 +633,11 @@ Matter.children.push({
             details: "The door lock server sends out a DoorStateChange event when the door lock door state changes. The " +
                      "data of this event SHALL contain the following information:",
             xref: { document: "cluster", section: "5.2.5.2" },
-
-            children: [
-                {
-                    tag: "datatype", name: "DoorState", id: 0x0, type: "DoorStateEnum", conformance: "M",
-                    details: "The new door state for this door event.",
-                    xref: { document: "cluster", section: "5.2.5.2.1" }
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "DoorState", id: 0x0, type: "DoorStateEnum", conformance: "M",
+                details: "The new door state for this door event.",
+                xref: { document: "cluster", section: "5.2.5.2.1" }
+            } ]
         },
 
         {
@@ -1126,10 +1114,7 @@ Matter.children.push({
                 { tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "CreatorFabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
-                {
-                    tag: "datatype", name: "LastModifiedFabricIndex", type: "fabric-idx", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "datatype", name: "LastModifiedFabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "NextUserIndex", type: "uint16", conformance: "M", quality: "X" }
             ]
         },
@@ -1193,10 +1178,7 @@ Matter.children.push({
                 { tag: "datatype", name: "CredentialExists", type: "bool", conformance: "M" },
                 { tag: "datatype", name: "UserIndex", type: "uint16", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "CreatorFabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
-                {
-                    tag: "datatype", name: "LastModifiedFabricIndex", type: "fabric-idx", conformance: "M",
-                    quality: "X"
-                },
+                { tag: "datatype", name: "LastModifiedFabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "NextCredentialIndex", type: "uint16", conformance: "M", quality: "X" }
             ]
         },
@@ -1214,10 +1196,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.6.1" },
 
             children: [
-                {
-                    tag: "datatype", name: "LockJammed", id: 0x0, conformance: "M",
-                    description: "Locking Mechanism Jammed"
-                },
+                { tag: "datatype", name: "LockJammed", id: 0x0, conformance: "M", description: "Locking Mechanism Jammed" },
                 {
                     tag: "datatype", name: "LockFactoryReset", id: 0x1, conformance: "O",
                     description: "Lock Reset to Factory Defaults"
@@ -1239,10 +1218,7 @@ Matter.children.push({
                     description: "Forced Door Open under Door Locked Condition"
                 },
                 { tag: "datatype", name: "DoorAjar", id: 0x7, conformance: "[DPS]", description: "Door ajar" },
-                {
-                    tag: "datatype", name: "ForcedUser", id: 0x8, conformance: "[USR]",
-                    description: "Force User SOS alarm"
-                }
+                { tag: "datatype", name: "ForcedUser", id: 0x8, conformance: "[USR]", description: "Force User SOS alarm" }
             ]
         },
 
@@ -1302,10 +1278,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.6.5" },
 
             children: [
-                {
-                    tag: "datatype", name: "Add", id: 0x0, conformance: "M",
-                    description: "Data is being added or was added"
-                },
+                { tag: "datatype", name: "Add", id: 0x0, conformance: "M", description: "Data is being added or was added" },
                 {
                     tag: "datatype", name: "Clear", id: 0x1, conformance: "M",
                     description: "Data is being cleared or was cleared"
@@ -1340,14 +1313,8 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "DoorOpen", id: 0x0, conformance: "DPS", description: "Door state is open" },
-                {
-                    tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "DPS",
-                    description: "Door state is closed"
-                },
-                {
-                    tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "[DPS]",
-                    description: "Door state is jammed"
-                },
+                { tag: "datatype", name: "DoorClosed", id: 0x1, conformance: "DPS", description: "Door state is closed" },
+                { tag: "datatype", name: "DoorJammed", id: 0x2, conformance: "[DPS]", description: "Door state is jammed" },
                 {
                     tag: "datatype", name: "DoorForcedOpen", id: 0x3, conformance: "[DPS]",
                     description: "Door state is currently forced open"

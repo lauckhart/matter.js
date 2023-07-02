@@ -75,8 +75,16 @@ Matter.children.push({
                 },
 
                 {
+                    tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M",
+                    constraint: "desc", quality: "X",
+                    details: "The Passcode ID of the Administrator that made the change, if the change occurred via a PASE " +
+                             "session. Non-zero values are reserved for future use (see PasscodeId generation in " +
+                             "PBKDFParamRequest).",
+                    xref: { document: "core", section: "9.10.7.1.2" }
+                },
+
+                {
                     tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                    quality: "X",
                     details: "The type of change as appropriate.",
                     xref: { document: "core", section: "9.10.7.1.3" }
                 },
@@ -103,9 +111,10 @@ Matter.children.push({
                     constraint: "desc", quality: "X"
                 },
                 {
-                    tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                    quality: "X"
+                    tag: "datatype", name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M",
+                    constraint: "desc", quality: "X"
                 },
+                { tag: "datatype", name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M" },
                 {
                     tag: "datatype", name: "LatestValue", id: 0x4, type: "AccessControlExtensionStruct", access: "S",
                     conformance: "M", quality: "X"
@@ -120,6 +129,31 @@ Matter.children.push({
                 { tag: "datatype", name: "Changed", id: 0x0, conformance: "M" },
                 { tag: "datatype", name: "Added", id: 0x1, conformance: "M" },
                 { tag: "datatype", name: "Removed", id: 0x2, conformance: "M" }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "AccessControlEntryPrivilegeEnum", type: "enum8", conformance: "M",
+            xref: { document: "core", section: "9.10.4.2" },
+
+            children: [
+                { tag: "datatype", name: "View", id: 0x1, conformance: "M" },
+                { tag: "datatype", name: "ProxyView", id: 0x2, conformance: "P, M" },
+                {
+                    tag: "datatype", name: "Operate", id: 0x3, conformance: "M",
+                    details: "This value implicitly grants View privileges",
+                    xref: { document: "core", section: "9.10.4.2.1" }
+                },
+                {
+                    tag: "datatype", name: "Manage", id: 0x4, conformance: "M",
+                    details: "This value implicitly grants Operate & View privileges",
+                    xref: { document: "core", section: "9.10.4.2.2" }
+                },
+                {
+                    tag: "datatype", name: "Administer", id: 0x5, conformance: "M",
+                    details: "This value implicitly grants Manage, Operate, Proxy View & View privileges",
+                    xref: { document: "core", section: "9.10.4.2.3" }
+                }
             ]
         },
 
@@ -149,10 +183,26 @@ Matter.children.push({
 
             children: [
                 {
+                    tag: "datatype", name: "Privilege", id: 0x1, type: "AccessControlEntryPrivilegeEnum", access: "S",
+                    conformance: "M",
+                    details: "The privilege field SHALL specify the level of privilege granted by this Access Control Entry.",
+                    xref: { document: "core", section: "9.10.4.5.1" }
+                },
+
+                {
                     tag: "datatype", name: "AuthMode", id: 0x2, type: "AccessControlEntryAuthModeEnum", access: "S",
-                    conformance: "M", quality: "X",
+                    conformance: "M",
                     details: "The AuthMode field SHALL specify the authentication mode required by this Access Control Entry.",
                     xref: { document: "core", section: "9.10.4.5.2" }
+                },
+
+                {
+                    tag: "datatype", name: "Subjects", id: 0x3, type: "list", access: "S", conformance: "M",
+                    constraint: "max SubjectsPerAccessControlEntry", quality: "X",
+                    details: "The subjects field SHALL specify a list of Subject IDs, to which this Access Control Entry grants " +
+                             "access.",
+                    xref: { document: "core", section: "9.10.4.5.3" },
+                    children: [ { tag: "datatype", name: "entry", type: "SubjectID" } ]
                 },
 
                 {
@@ -162,11 +212,6 @@ Matter.children.push({
                              "this Node to which this Access Control Entry grants access.",
                     xref: { document: "core", section: "9.10.4.5.4" },
                     children: [ { tag: "datatype", name: "entry", type: "AccessControlTargetStruct" } ]
-                },
-
-                {
-                    tag: "datatype", name: "Privilege", type: "AccessControlEntryPrivilegeEnum", access: "R S",
-                    conformance: "M"
                 }
             ]
         },
@@ -176,34 +221,20 @@ Matter.children.push({
             conformance: "M",
             xref: { document: "core", section: "9.10.4.6" },
 
-            children: [
-                {
-                    tag: "datatype", name: "Data", id: 0x1, type: "octstr", access: "S", conformance: "M",
-                    constraint: "max 128",
-                    details: "This field MAY be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s",
-                    xref: { document: "core", section: "9.10.4.6.1" }
-                }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "AccessControlEntryPrivilegeEnum", type: "enum8", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "View", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "ProxyView", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Operate", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Manage", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Administer", id: 0x5, conformance: "M" }
-            ]
+            children: [ {
+                tag: "datatype", name: "Data", id: 0x1, type: "octstr", access: "S", conformance: "M",
+                constraint: "max 128",
+                details: "This field MAY be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s",
+                xref: { document: "core", section: "9.10.4.6.1" }
+            } ]
         },
 
         {
             tag: "datatype", name: "Target", type: "struct", conformance: "M",
             children: [
-                { tag: "datatype", name: "Cluster", type: "cluster-id", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "Endpoint", type: "endpoint-no", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "DeviceType", type: "devtype-id", conformance: "M", quality: "X" }
+                { tag: "datatype", name: "Cluster", id: 0x0, type: "cluster-id", conformance: "M", quality: "X" },
+                { tag: "datatype", name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M", quality: "X" },
+                { tag: "datatype", name: "DeviceType", id: 0x2, type: "devtype-id", conformance: "M", quality: "X" }
             ]
         }
     ]

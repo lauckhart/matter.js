@@ -436,10 +436,7 @@ Matter.children.push({
                 { tag: "datatype", name: "Cool", id: 0x1, conformance: "M", description: "Cool State On" },
                 { tag: "datatype", name: "Fan", id: 0x2, conformance: "M", description: "Fan State On" },
                 { tag: "datatype", name: "HeatStage2", id: 0x3, description: "Heat 2nd Stage State On" },
-                {
-                    tag: "datatype", name: "CoolStage2", id: 0x4, conformance: "M",
-                    description: "Cool 2nd Stage State On"
-                },
+                { tag: "datatype", name: "CoolStage2", id: 0x4, conformance: "M", description: "Cool 2nd Stage State On" },
                 { tag: "datatype", name: "FanStage2", id: 0x5, description: "Fan 2nd Stage State On" },
                 { tag: "datatype", name: "FanStage3", id: 0x6, description: "Fan 3rd Stage Stage On" },
                 { tag: "datatype", name: "HeatSecondStageStateOn", id: 0x8, conformance: "M" },
@@ -564,18 +561,12 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "Unknown", id: 0x0, conformance: "O", description: "Unknown AC Type" },
-                {
-                    tag: "datatype", name: "CoolingFixed", id: 0x1, conformance: "O",
-                    description: "Cooling and Fixed Speed"
-                },
+                { tag: "datatype", name: "CoolingFixed", id: 0x1, conformance: "O", description: "Cooling and Fixed Speed" },
                 {
                     tag: "datatype", name: "HeatPumpFixed", id: 0x2, conformance: "O",
                     description: "Heat Pump and Fixed Speed"
                 },
-                {
-                    tag: "datatype", name: "CoolingInverter", id: 0x3, conformance: "O",
-                    description: "Cooling and Inverter"
-                },
+                { tag: "datatype", name: "CoolingInverter", id: 0x3, conformance: "O", description: "Cooling and Inverter" },
                 {
                     tag: "datatype", name: "HeatPumpInverter", id: 0x4, conformance: "O",
                     description: "Heat Pump and Inverter"
@@ -598,10 +589,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "4.3.7.46" },
 
             children: [
-                {
-                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "O",
-                    description: "Unknown Refrigerant Type"
-                },
+                { tag: "datatype", name: "Unknown", id: 0x0, conformance: "O", description: "Unknown Refrigerant Type" },
                 { tag: "datatype", name: "R22", id: 0x1, conformance: "O", description: "R22 Refrigerant" },
                 { tag: "datatype", name: "R410A", id: 0x2, conformance: "O", description: "R410a Refrigerant" },
                 { tag: "datatype", name: "R407C", id: 0x3, conformance: "O", description: "R407c Refrigerant" }
@@ -634,14 +622,8 @@ Matter.children.push({
                     description: "Compressor Failure or Refrigerant Leakage"
                 },
                 { tag: "datatype", name: "RoomSensorFail", id: 0x1, description: "Room Temperature Sensor Failure" },
-                {
-                    tag: "datatype", name: "OutdoorSensorFail", id: 0x2,
-                    description: "Outdoor Temperature Sensor Failure"
-                },
-                {
-                    tag: "datatype", name: "CoilSensorFail", id: 0x3,
-                    description: "Indoor Coil Temperature Sensor Failure"
-                },
+                { tag: "datatype", name: "OutdoorSensorFail", id: 0x2, description: "Outdoor Temperature Sensor Failure" },
+                { tag: "datatype", name: "CoilSensorFail", id: 0x3, description: "Indoor Coil Temperature Sensor Failure" },
                 { tag: "datatype", name: "FanFail", id: 0x4, description: "Fan Failure" }
             ]
         },
@@ -657,10 +639,7 @@ Matter.children.push({
                 { tag: "datatype", name: "Open", id: 0x2, conformance: "O", description: "Fully Open" },
                 { tag: "datatype", name: "Quarter", id: 0x3, conformance: "O", description: "Quarter Open" },
                 { tag: "datatype", name: "Half", id: 0x4, conformance: "O", description: "Half Open" },
-                {
-                    tag: "datatype", name: "ThreeQuarters", id: 0x5, conformance: "O",
-                    description: "Three Quarters Open"
-                }
+                { tag: "datatype", name: "ThreeQuarters", id: 0x5, conformance: "O", description: "Three Quarters Open" }
             ]
         },
 
@@ -677,12 +656,8 @@ Matter.children.push({
             conformance: "O", constraint: "desc", quality: "N",
             details: "This attribute specifies the format for the ACCapacity attribute.",
             xref: { document: "cluster", section: "4.3.7.51" },
-
             children: [
-                {
-                    tag: "datatype", name: "BtUh", id: 0x0, conformance: "O",
-                    description: "British Thermal Unit per Hour"
-                }
+                { tag: "datatype", name: "BtUh", id: 0x0, conformance: "O", description: "British Thermal Unit per Hour" }
             ]
         },
 

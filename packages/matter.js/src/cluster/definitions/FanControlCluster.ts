@@ -232,11 +232,7 @@ export namespace FanControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
              */
-            rockSetting: WritableAttribute(
-                8,
-                TlvRockSetting,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
-            )
+            rockSetting: WritableAttribute(8, TlvRockSetting, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate })
         }
     };
 
@@ -257,11 +253,7 @@ export namespace FanControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
              */
-            windSetting: WritableAttribute(
-                10,
-                TlvWindSetting,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
-            )
+            windSetting: WritableAttribute(10, TlvWindSetting, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate })
         }
     };
 

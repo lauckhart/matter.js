@@ -1323,7 +1323,10 @@ export namespace DoorLockCluster {
             supportedOperatingModes: FixedAttribute(
                 38,
                 TlvSupportedOperatingModes,
-                { default: BitFlags(TlvSupportedOperatingModesBits, "Privacy", "Passage"), readAcl: AccessLevel.View }
+                {
+                    default: BitFlags(TlvSupportedOperatingModesBits, "Vacation", "Privacy", "Passage"),
+                    readAcl: AccessLevel.View
+                }
             ),
 
             /**
@@ -1503,11 +1506,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.7
              */
-            openPeriod: OptionalWritableAttribute(
-                6,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            )
+            openPeriod: OptionalWritableAttribute(6, TlvUInt16, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage })
         },
 
         events: {
@@ -1575,7 +1574,7 @@ export namespace DoorLockCluster {
             credentialRulesSupport: FixedAttribute(
                 27,
                 TlvCredentialRulesSupport,
-                { default: BitFlags(TlvCredentialRulesSupportBits, "Dual"), readAcl: AccessLevel.View }
+                { default: BitFlags(TlvCredentialRulesSupportBits, "Single"), readAcl: AccessLevel.View }
             ),
 
             /**
