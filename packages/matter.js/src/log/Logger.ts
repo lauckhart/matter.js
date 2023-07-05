@@ -87,14 +87,26 @@ const ANSI_CODES = {
 function ansiLogFormatter(now: Date, level: Level, facility: string, values: any[]) {
     const levelCode = (<any>ANSI_CODES)[`LEVEL_${Level[level]}`];
 
-    const formattedValues = formatValues(values,
+    const formattedPrefix = `${ANSI_CODES.PREFIX}${formatTime(now)} ${Level[level].padEnd(5)}${ANSI_CODES.NONE}`;
+
+    let formattedFacility = facility.length > 20 ? `${facility.slice(0, 10)}~${facility.slice(facility.length - 9)}` : facility.padEnd(20);
+    formattedFacility = `${ANSI_CODES.FACILITY}${formattedFacility}${ANSI_CODES.NONE}`;
+
+    let formattedValues = formatValues(values,
         (key) => `${ANSI_CODES.KEY}${key}:${levelCode} `,
         (value) => value
             .replace(/([✓✔])/g, `${ANSI_CODES.LEVEL_INFO}$1${levelCode}`)
             .replace(/([✗✘])/g, `${ANSI_CODES.LEVEL_ERROR}$1${levelCode}`));
-    const formattedFacility = facility.length > 20 ? `${facility.slice(0, 10)}~${facility.slice(facility.length - 9)}` : facility.padEnd(20);
+    formattedValues = `${nestingPrefix()}${formattedValues}`;
+    const prefixedMatch = formattedValues.match(/^(⎸? *\d+)(.*)$/);
+    if (prefixedMatch) {
+        // Use prefix color for nesting and/or line number prefixes in the message
+        formattedValues = `${ANSI_CODES.PREFIX}${prefixedMatch[1]}${ANSI_CODES.NONE}${levelCode}${prefixedMatch[2]}${ANSI_CODES.NONE}`;
+    } else {
+        formattedValues = `${levelCode}${formattedValues}${ANSI_CODES.NONE}`
+    }
 
-    return `${ANSI_CODES.PREFIX}${formatTime(now)} ${Level[level].padEnd(5)}${ANSI_CODES.NONE} ${ANSI_CODES.FACILITY}${formattedFacility}${ANSI_CODES.NONE} ${nestingPrefix()}${levelCode}${formattedValues}${ANSI_CODES.NONE}`;
+    return `${formattedPrefix} ${formattedFacility} ${formattedValues}`;
 }
 
 function htmlSpan(type: string, value: string) {

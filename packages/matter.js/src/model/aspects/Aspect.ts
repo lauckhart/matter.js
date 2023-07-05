@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { serialize } from "../../util/index.js";
+import { serialize } from "../../util/String.js";
 import { DefinitionError } from "../definitions/DefinitionError.js";
 
 /**
@@ -26,7 +26,7 @@ export class Aspect<D> {
 
     get empty() {
         for (const [ k, v ] of Object.entries(this)) {
-            if (k != "definition" && k != "errors" && v !== undefined) {
+            if (k !== "definition" && k !== "errors" && v !== undefined) {
                 return false;
             }
         }

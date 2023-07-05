@@ -25,12 +25,12 @@ export class DatatypeModel extends ValueModel implements DatatypeElement {
      * directly under the cluster the name is the canonical key.
      */
     override get effectiveId() {
-        if (this.id != undefined) {
+        if (this.id !== undefined) {
             return this.id;
         }
         if (this.parent instanceof ValueModel) {
             const index = this.parent.children.indexOf(this);
-            if (index != -1) {
+            if (index !== -1) {
                 return index;
             }
         }

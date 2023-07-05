@@ -4,17 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Endpoint } from "../../device/index.js";
-import {
-    AttributeServer, CommandServer, FabricScopedAttributeServer, FixedAttributeServer
-} from "../../cluster/index.js";
+import { Endpoint } from "../../device/Endpoint.js";
 import { EventServer } from "../../cluster/server/EventServer.js";
-import { TypeFromSchema } from "../../tlv/index.js";
+import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 import { TlvAttributePath, TlvCommandPath, TlvEventPath } from "./InteractionProtocol.js";
 import {
     AttributePath, attributePathToId, AttributeWithPath, CommandPath, commandPathToId, CommandWithPath, EventPath,
     eventPathToId, EventWithPath, genericElementPathToId
 } from "./InteractionServer.js";
+import { AttributeServer, FabricScopedAttributeServer, FixedAttributeServer } from "../../cluster/server/AttributeServer.js";
+import { CommandServer } from "../../cluster/server/CommandServer.js";
 
 export class InteractionEndpointStructure {
     endpoints = new Map<number, Endpoint>();

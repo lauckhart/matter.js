@@ -47,7 +47,7 @@ export function camelize(name: string, upperFirst = true) {
 
         addPiece(i);
 
-        if ((name[i] >= "0" && name[i] <= "9") || name[i] == "$") {
+        if ((name[i] >= "0" && name[i] <= "9") || name[i] === "$") {
             pieces.push(name[i])
         }
 
@@ -86,25 +86,25 @@ export function serialize(value: any) {
         if (value === undefined) {
             return;
         }
-        if (value == null) {
+        if (value === null) {
             return "null";
         }
         if (value[serialize.SERIALIZE]) {
             return value[serialize.SERIALIZE]();
         }
-        if (typeof value == "function") {
+        if (typeof value === "function") {
             return;
         }
-        if (typeof value == "bigint" || value instanceof BigInt) {
+        if (typeof value === "bigint" || value instanceof BigInt) {
             return value.toString();
         }
-        if (typeof value == "number" || value instanceof Number) {
+        if (typeof value === "number" || value instanceof Number) {
             return value.toString();
         }
-        if (typeof value == "string") {
+        if (typeof value === "string") {
             return JSON.stringify(value);
         }
-        if (typeof value == "boolean") {
+        if (typeof value === "boolean") {
             return value ? "true" : "false";
         }
         if (ArrayBuffer.isView(value)) {
@@ -163,10 +163,10 @@ export namespace serialize {
      * representation.
      */
     export function asIs(value: any) {
-        if (typeof value == "string") {
+        if (typeof value === "string") {
             value = new String(value);
         }
-        if (value != undefined) {
+        if (value !== undefined && value !== null) {
             value[SERIALIZE] = function() { return this.toString(); };
         }
         return value;
@@ -177,7 +177,8 @@ export namespace serialize {
      */
     export function isPrimitive(value: any) {
         if (
-            value == undefined
+            value === undefined
+            || value === null
             || value instanceof Date
             || ArrayBuffer.isView(value)
             || value[SERIALIZE]
@@ -189,6 +190,6 @@ export namespace serialize {
             return false;
         }
 
-        return typeof value != "object";
+        return typeof value !== "object";
     }
 }

@@ -35,7 +35,7 @@ export let paths: string[];
 try {
     paths = readdirSync(SPECIFICATION_PATH).filter(filename => filename.endsWith(".html"));
 } catch (e) {
-    if ((e as any).code == "ENOENT") {
+    if ((e as any).code === "ENOENT") {
         throw new Error(`Path ${SPECIFICATION_PATH} does not exist, do you need to set MATTER_SPECIFICATION_PATH?`);
     } else {
         throw e;

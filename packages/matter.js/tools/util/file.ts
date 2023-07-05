@@ -34,7 +34,7 @@ export function clean(target: string, suffix: string = "") {
             }
         });
     } catch (e) {
-        if ((e as any).code == "ENOENT") {
+        if ((e as any).code === "ENOENT") {
             return;
         }
         throw e;

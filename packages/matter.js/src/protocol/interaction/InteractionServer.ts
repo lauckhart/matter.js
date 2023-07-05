@@ -43,7 +43,7 @@ import { AttributeId } from "../../datatype/AttributeId.js";
 import { CommandId } from "../../datatype/CommandId.js";
 import { TlvAttributeValuePair } from "../../cluster/ScenesCluster.js";
 import { Fabric } from "../../fabric/Fabric.js";
-import { EventId } from "../../datatype/index.js";
+import { EventId } from "../../datatype/EventId.js";
 import { EventServer } from "../../cluster/server/EventServer.js";
 import { EventData, EventHandler } from "../../protocol/interaction/EventHandler.js";
 import { InteractionEndpointStructure } from "./InteractionEndpointStructure.js";

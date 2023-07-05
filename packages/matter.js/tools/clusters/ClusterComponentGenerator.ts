@@ -10,29 +10,35 @@ import {
     ClusterModel,
     CommandModel,
     ElementTag,
-    ElementVariance,
     EventElement,
     EventModel,
     FieldValue,
     Metatype,
-    Model
+    Model,
+    ValueModel
 } from "../../src/model/index.js";
+import { NamedComponent } from "../../src/model/logic/cluster-variance/NamedComponents.js";
 import { serialize, camelize } from "../../src/util/String.js";
 import { Block } from "../util/TsFile.js";
 import { ClusterFile } from "./ClusterFile.js";
 import { TlvGenerator } from "./TlvGenerator.js";
 
 /** Generates cluster attributes, commands and events */
-export class ClusterElementGenerator {
+export class ClusterComponentGenerator {
     private tlv: TlvGenerator;
 
     constructor(private file: ClusterFile, private cluster: ClusterModel) {
         this.tlv = new TlvGenerator(this.file, cluster);
     }
 
-    defineElements(name: string, elements: ElementVariance) {
-        const block = this.file.definitions.expressions(`const ${name} = {`, `}`);
-        const mandatory = new Set(elements.mandatory);
+    defineComponent(component: NamedComponent): Block {
+        this.file.addImport("cluster/ClusterBuilder", "ClusterComponent");
+        const block = this.file.expressions(`export const ${component.name}Component = ClusterComponent({`, `})`)
+            .document(component.documentation);
+        const mandatory = new Set(component.mandatory);
+
+        const elements = [ ...component.optional, ...component.mandatory ]
+            .sort((a, b) => a.id! - b.id!);
 
         this.defineTypedElements(AttributeModel, elements, block, (model, add) => {
             if (model.base instanceof AttributeModel && model.base.global) {
@@ -114,7 +120,7 @@ export class ClusterElementGenerator {
             // but there's currently only a single place in the specification where
             // it makes a difference and neither we nor CHIP implement it yet
             let responseModel;
-            if (model.response && model.response != "status") {
+            if (model.response && model.response !== "status") {
                 responseModel = this.cluster.get(CommandModel, model.response);
             }
             if (responseModel) {
@@ -144,6 +150,8 @@ export class ClusterElementGenerator {
             block.atom(`EventPriority.${priority}`);
             block.atom(this.tlv.reference(model));
         });
+
+        return block;
     }
 
     private mapPrivilege(privilege: Access.Privilege) {
@@ -153,13 +161,11 @@ export class ClusterElementGenerator {
 
     private defineTypedElements<T extends (new(...args: any[]) => Model) & { Tag: ElementTag }>(
         type: T,
-        elements: ElementVariance,
+        elements: ValueModel[],
         target: Block,
         define: (model: InstanceType<T>, add: (factory: string) => Block) => void
     ) {
-        const typed = [ ...elements.optional, ...elements.mandatory ]
-            .filter(e => e instanceof type && !e.deprecated)
-            .sort((a, b) => a.id! - b.id!)
+        const typed = elements.filter(e => e instanceof type && !e.deprecated);
 
         const definitions = target.expressions(`${type.Tag}s: {`, "}");
         for (const model of typed) {
@@ -174,8 +180,8 @@ export class ClusterElementGenerator {
     }
 
     private createDefaultValue(model: AttributeModel, tlvType: string) {
-        let def = model.default;
-        if (def == undefined) {
+        let def = model.effectiveDefault;
+        if (def === undefined || def === null) {
             return def;
         }
 

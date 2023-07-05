@@ -20,7 +20,7 @@ function convertTable(el: HTMLTableElement) {
     for (const tr of el.querySelectorAll("tr")) {
         const cells = tr.querySelectorAll("td, th");
 
-        if (cells.length == 1) {
+        if (cells.length === 1) {
             table.notes.push(cells[0] as HTMLElement);
             continue;
         }
@@ -49,15 +49,15 @@ function convertTable(el: HTMLTableElement) {
     // Detect this case and correct by concatenating the contents of rows onto
     // the first row
     const col1 = table.fields[0];
-    if (col1 != undefined) {
+    if (col1 !== undefined) {
         // Scan the table.  We treat as broken if there are multiple rows but
         // the first column is empty except on the first row
         const looksBorked = table.rows.length > 1 && table.rows.every((row, i) => {
             let text = row[col1]?.textContent?.trim();
-            if (text == "") {
+            if (text === "") {
                 text = undefined;
             }
-            return (!i && text != undefined) || (i && text == undefined);
+            return (!i && text !== undefined) || (i && text === undefined);
         });
 
         // If above test succeeds, concatenate all cells in column into first
@@ -235,7 +235,7 @@ export function* scanSection(ref: HtmlReference) {
                     const other = currentRef.table;
                     if (other) {
                         if (table.rows.length) {
-                            if (!other.rows.length || Object.keys(other.rows[0]).join("/") == Object.keys(table.rows[0]).join("/")) {
+                            if (!other.rows.length || Object.keys(other.rows[0]).join("/") === Object.keys(table.rows[0]).join("/")) {
                                 // Merge tables
                                 other.notes.push(...table.notes)
                                 other.rows.push(...table.rows);

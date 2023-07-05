@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
 import { Attribute, AccessLevel, OptionalEvent, EventPriority } from "../../cluster/Cluster.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * This event SHALL be generated when the StateValue attribute changes.
@@ -18,30 +19,37 @@ import { BuildCluster } from "../../cluster/ClusterBuilder.js";
  */
 export const TlvStateChangeEvent = TlvObject({ stateValue: TlvField(0, TlvBoolean) });
 
-export namespace BooleanStateCluster {
-    export const id = 0x45;
-    export const name = "BooleanState";
-    export const revision = 1;
+/**
+ * Standard BooleanState cluster properties.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7
+ */
+const BooleanStateMetadata = ClusterMetadata({ id: 0x45, name: "BooleanState", revision: 1 });
 
-    const Base = {
-        attributes: {
-            /**
-             * This represents a Boolean state.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.4.1
-             */
-            stateValue: Attribute(0, TlvBoolean, { readAcl: AccessLevel.View })
-        },
+/**
+ * A BooleanStateCluster supports these elements for all feature combinations.
+ */
+export const BaseComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This represents a Boolean state.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.4.1
+         */
+        stateValue: Attribute(0, TlvBoolean, { readAcl: AccessLevel.View })
+    },
 
-        events: {
-            /**
-             * This event SHALL be generated when the StateValue attribute changes.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.5.1
-             */
-            stateChange: OptionalEvent(0, EventPriority.Info, TlvStateChangeEvent)
-        }
-    };
+    events: {
+        /**
+         * This event SHALL be generated when the StateValue attribute changes.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.5.1
+         */
+        stateChange: OptionalEvent(0, EventPriority.Info, TlvStateChangeEvent)
+    }
+});
 
-    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
-};
+/**
+ * Use BooleanStateCluster() to obtain a Cluster instance.
+ */
+const BooleanStateCluster = ClusterFactory();

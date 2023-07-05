@@ -38,7 +38,7 @@ abstract class Entry {
 
     /** Add a TsDoc style comment */
     document(content: string | Documentation, extra?: string) {
-        if (typeof content == "string") {
+        if (typeof content === "string") {
             this.documentation = { details: content };
         } else {
             this.documentation = content;
@@ -113,7 +113,7 @@ class Raw extends Entry {
     }
 
     serialize(linePrefix: string) {
-        if (this.text == undefined) {
+        if (this.text === undefined) {
             return "";
         }
         return this.text.split("\n").map(l => `${linePrefix}${l}`).join("\n");
@@ -122,7 +122,7 @@ class Raw extends Entry {
 
 class Atom extends Raw {
     constructor(parentBlock: Block, labelOrText: {}, text?: any) {
-        if (text == undefined) {
+        if (text === undefined) {
             text = labelOrText.toString();
         } else {
             text = `${asObjectKey(labelOrText)}: ${text}`;
@@ -192,7 +192,7 @@ export class Block extends Entry {
     remove() {
         if (this.parentBlock) {
             const index = this.parentBlock.indexOf(this);
-            if (index != -1) this.parentBlock.splice(index, 1);
+            if (index !== -1) this.parentBlock.splice(index, 1);
         }
     }
 
@@ -200,7 +200,7 @@ export class Block extends Entry {
     add(...entries: Entry[]) {
         if (this.addBefore) {
             const index = this.entries.indexOf(this.addBefore);
-            if (index != -1) {
+            if (index !== -1) {
                 this.entries.splice(index, 0, ...entries);
                 return this;
             }
@@ -261,7 +261,7 @@ export class Block extends Entry {
 
         if (serialize.isPrimitive(value)) {
             const serialized = serialize(value);
-            if (serialized == undefined) {
+            if (serialized === undefined) {
                 return;
             }
             return this.atom(`${prefix}${serialized}${suffix}`);
@@ -367,7 +367,7 @@ enum ExpressionLayout {
 function chooseExpressionLayout(lineLength: number, serializedEntries: string[]) {
     let currentLayout = ExpressionLayout.None;
     for (const entry of serializedEntries) {
-        const multiline = entry.indexOf("\n") != -1;
+        const multiline = entry.indexOf("\n") !== -1;
 
         // Any comment or assignment automatically forces verbose layout mode
         if (entry.match(/(?:\/\*|\/\/| = )/)) {
@@ -494,7 +494,7 @@ export class TsFile extends Block {
             this.imports.set(file, list);
         }
         if (name) {
-            if (list.indexOf(name) == -1) list.push(name);
+            if (list.indexOf(name) === -1) list.push(name);
         }
         return this;
     }

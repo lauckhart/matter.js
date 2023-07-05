@@ -7,13 +7,14 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
+import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
 import { FixedAttribute, AccessLevel, Attribute, OptionalWritableAttribute, Command, TlvNoResponse, WritableAttribute } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * A Semantic Tag is meant to be interpreted by the client for the purpose the cluster serves.
@@ -83,10 +84,15 @@ export const TlvModeOptionStruct = TlvObject({
  */
 export const TlvChangeToModeRequest = TlvObject({ newMode: TlvField(0, TlvUInt8) });
 
-export namespace ModeSelectCluster {
-    export const id = 0x50;
-    export const name = "ModeSelect";
-    export const revision = 1;
+/**
+ * Standard ModeSelect cluster properties.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8
+ */
+const ModeSelectMetadata = ClusterMetadata({
+    id: 0x50,
+    name: "ModeSelect",
+    revision: 1,
 
     export const featureMap = {
         /**
@@ -95,92 +101,95 @@ export namespace ModeSelectCluster {
          * Dependency with the On/Off cluster
          */
         onOff: BitFlag(0)
-    };
+    }
+});
 
-    const Base = {
-        attributes: {
-            /**
-             * This attribute describes the purpose of the server, in readable text.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.1
-             */
-            description: FixedAttribute(0, TlvString.bound({ maxLength: 64 }), { readAcl: AccessLevel.View }),
+/**
+ * A ModeSelectCluster supports these elements for all feature combinations.
+ */
+export const BaseComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute describes the purpose of the server, in readable text.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.1
+         */
+        description: FixedAttribute(0, TlvString.bound({ maxLength: 64 }), { readAcl: AccessLevel.View }),
 
-            /**
-             * This attribute, when not null, SHALL indicate a single standard namespace for any standard semantic tag
-             * value supported in this or any other cluster instance with the same value of this attribute. A null
-             * value indicates no standard namespace, and therefore, no standard semantic tags are provided in this
-             * cluster instance. Each standard namespace and corresponding values and value meanings SHALL be defined
-             * in another document.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.2
-             */
-            standardNamespace: FixedAttribute(1, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+        /**
+         * This attribute, when not null, SHALL indicate a single standard namespace for any standard semantic tag
+         * value supported in this or any other cluster instance with the same value of this attribute. A null value
+         * indicates no standard namespace, and therefore, no standard semantic tags are provided in this cluster
+         * instance. Each standard namespace and corresponding values and value meanings SHALL be defined in another
+         * document.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.2
+         */
+        standardNamespace: FixedAttribute(1, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
 
-            /**
-             * This attribute is the list of supported modes that may be selected for the CurrentMode attribute. Each
-             * item in this list represents a unique mode as indicated by the Mode field of the ModeOptionStruct. Each
-             * entry in this list SHALL have a unique value for the Mode field.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.3
-             */
-            supportedModes: FixedAttribute(2, TlvArray(TlvModeOptionStruct), { readAcl: AccessLevel.View }),
+        /**
+         * This attribute is the list of supported modes that may be selected for the CurrentMode attribute. Each item
+         * in this list represents a unique mode as indicated by the Mode field of the ModeOptionStruct. Each entry in
+         * this list SHALL have a unique value for the Mode field.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.3
+         */
+        supportedModes: FixedAttribute(2, TlvArray(TlvModeOptionStruct), { readAcl: AccessLevel.View }),
 
-            /**
-             * This attribute represents the current mode of the server.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.4
-             */
-            currentMode: Attribute(3, TlvUInt8, { scene: true, persistent: true, readAcl: AccessLevel.View }),
+        /**
+         * This attribute represents the current mode of the server.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.4
+         */
+        currentMode: Attribute(3, TlvUInt8, { scene: true, persistent: true, readAcl: AccessLevel.View }),
 
-            /**
-             * The StartUpMode attribute value indicates the desired startup mode for the server when it is supplied
-             * with power.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.5
-             */
-            startUpMode: OptionalWritableAttribute(
-                4,
-                TlvNullable(TlvUInt8),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
-            )
-        },
+        /**
+         * The StartUpMode attribute value indicates the desired startup mode for the server when it is supplied with
+         * power.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.5
+         */
+        startUpMode: OptionalWritableAttribute(
+            4,
+            TlvNullable(TlvUInt8),
+            { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+        )
+    },
 
-        commands: {
-            /**
-             * On receipt of this command, if the NewMode field indicates a valid mode transition within the supported
-             * list, the server SHALL set the CurrentMode attribute to the NewMode value, otherwise, the
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.6.1
-             */
-            changeToMode: Command(0, TlvChangeToModeRequest, 0, TlvNoResponse)
-        }
-    };
+    commands: {
+        /**
+         * On receipt of this command, if the NewMode field indicates a valid mode transition within the supported
+         * list, the server SHALL set the CurrentMode attribute to the NewMode value, otherwise, the
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.6.1
+         */
+        changeToMode: Command(0, TlvChangeToModeRequest, 0, TlvNoResponse)
+    }
+});
 
-    const OnOff = {
-        attributes: {
-            /**
-             * This attribute SHALL indicate the value of CurrentMode that depends on the state of the On/Off cluster
-             * on the same endpoint. If this attribute is not present or is set to null, it SHALL NOT have an effect,
-             * otherwise the CurrentMode attribute SHALL depend on the OnOff attribute of the On/Off cluster as
-             * described in the table below:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.6
-             */
-            onMode: WritableAttribute(
-                5,
-                TlvNullable(TlvUInt8),
-                { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
-            )
-        }
-    };
+/**
+ * A ModeSelectCluster supports these elements if it supports feature OnOff.
+ */
+export const OnOffComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute SHALL indicate the value of CurrentMode that depends on the state of the On/Off cluster on
+         * the same endpoint. If this attribute is not present or is set to null, it SHALL NOT have an effect,
+         * otherwise the CurrentMode attribute SHALL depend on the OnOff attribute of the On/Off cluster as described
+         * in the table below:
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.6
+         */
+        onMode: WritableAttribute(
+            5,
+            TlvNullable(TlvUInt8),
+            { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+        )
+    }
+});
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        features: featureMap,
-        supportedFeatures: { onOff: true },
-        elements: [ Base, OnOff ]
-    });
-};
+/**
+ * Use ModeSelectCluster to obtain a Cluster instance for a specific feature set.  ModeSelectCluster only returns
+ * clusters for feature combinations supported by the Matter specification.
+ */
+const ModeSelectCluster = ClusterFactory();

@@ -6,27 +6,35 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 
 
-export namespace LowPowerCluster {
-    export const id = 0x508;
-    export const name = "LowPower";
-    export const revision = 1;
+/**
+ * Standard LowPower cluster properties.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
+ */
+const LowPowerMetadata = ClusterMetadata({ id: 0x508, name: "LowPower", revision: 1 });
 
-    const Base = {
-        commands: {
-            /**
-             * This command shall put the device into low power mode.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9.3.1
-             */
-            sleep: Command(0, TlvNoArguments, 0, TlvNoResponse)
-        }
-    };
+/**
+ * A LowPowerCluster supports these elements for all feature combinations.
+ */
+export const BaseComponent = ClusterComponent({
+    commands: {
+        /**
+         * This command shall put the device into low power mode.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9.3.1
+         */
+        sleep: Command(0, TlvNoArguments, 0, TlvNoResponse)
+    }
+});
 
-    export const Complete = BuildCluster({ id, name, revision, elements: [ Base ] });
-};
+/**
+ * Use LowPowerCluster() to obtain a Cluster instance.
+ */
+const LowPowerCluster = ClusterFactory();

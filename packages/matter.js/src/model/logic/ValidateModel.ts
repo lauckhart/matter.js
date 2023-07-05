@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../log/index.js";
+import { Logger } from "../../log/Logger.js";
 import { DefinitionError } from "../definitions/index.js";
 import { Model } from "../models/index.js";
 import { ModelValidator } from "./definition-validation/ModelValidator.js";
@@ -105,12 +105,12 @@ export namespace ValidateModel {
                     }
                 });
         
-                logger.error(`*** Total ${this.errors.length} validation error${this.errors.length == 1 ? "" : "s"} ***`);
-                logger.error(`*** Total ${this.invalidElementCount} invalid element${this.invalidElementCount == 1 ? "" : "s"} (${this.invalidElementPercent}%) ***`);
+                logger.error(`*** Total ${this.errors.length} validation error${this.errors.length === 1 ? "" : "s"} ***`);
+                logger.error(`*** Total ${this.invalidElementCount} invalid element${this.invalidElementCount === 1 ? "" : "s"} (${this.invalidElementPercent}%) ***`);
             } else {
                 logger.info(`*** Validation successful ***`)
             }
-            logger.debug(`*** Total ${this.elementCount} element${this.elementCount == 1 ? "" : "s"} ***`)
+            logger.debug(`*** Total ${this.elementCount} element${this.elementCount === 1 ? "" : "s"} ***`)
         }
     }
 }

@@ -7,13 +7,14 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
+import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
 import { Attribute, AccessLevel, Command, TlvNoResponse, WritableAttribute } from "../../cluster/Cluster.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.5.1
@@ -109,10 +110,15 @@ export const TlvOnWithTimedOffRequest = TlvObject({
     offWaitTime: TlvField(2, TlvNullable(TlvUInt16))
 });
 
-export namespace OnOffCluster {
-    export const id = 0x6;
-    export const name = "OnOff";
-    export const revision = 1;
+/**
+ * Standard OnOff cluster properties.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5
+ */
+const OnOffMetadata = ClusterMetadata({
+    id: 0x6,
+    name: "OnOff",
+    revision: 1,
 
     export const featureMap = {
         /**
@@ -121,133 +127,135 @@ export namespace OnOffCluster {
          * Behavior that supports lighting applications.
          */
         levelControlForLighting: BitFlag(0)
-    };
+    }
+});
 
-    const Base = {
-        attributes: {
-            /**
-             * The OnOff attribute indicates whether the device type implemented on the endpoint is turned off or
-             * turned on, in these cases the value of the OnOff attribute equals FALSE, or TRUE respectively.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.1
-             */
-            onOff: Attribute(0, TlvBoolean, { scene: true, persistent: true, default: true, readAcl: AccessLevel.View })
-        },
+/**
+ * A OnOffCluster supports these elements for all feature combinations.
+ */
+export const BaseComponent = ClusterComponent({
+    attributes: {
+        /**
+         * The OnOff attribute indicates whether the device type implemented on the endpoint is turned off or turned
+         * on, in these cases the value of the OnOff attribute equals FALSE, or TRUE respectively.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.1
+         */
+        onOff: Attribute(0, TlvBoolean, { scene: true, persistent: true, default: true, readAcl: AccessLevel.View })
+    },
 
-        commands: {
-            /**
-             * This command does not have any data fields.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.1
-             */
-            off: Command(0, TlvNoArguments, 0, TlvNoResponse),
+    commands: {
+        /**
+         * This command does not have any data fields.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.1
+         */
+        off: Command(0, TlvNoArguments, 0, TlvNoResponse),
 
-            /**
-             * This command does not have any data fields.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.2
-             */
-            on: Command(1, TlvNoArguments, 1, TlvNoResponse),
+        /**
+         * This command does not have any data fields.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.2
+         */
+        on: Command(1, TlvNoArguments, 1, TlvNoResponse),
 
-            /**
-             * This command does not have any data fields.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.3
-             */
-            toggle: Command(2, TlvNoArguments, 2, TlvNoResponse)
-        }
-    };
+        /**
+         * This command does not have any data fields.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.3
+         */
+        toggle: Command(2, TlvNoArguments, 2, TlvNoResponse)
+    }
+});
 
-    const LevelControlForLighting = {
-        attributes: {
-            /**
-             * In order to support the use case where the user gets back the last setting of a set of devices (e.g.
-             * level settings for lights), a global scene is introduced which is stored when the devices are turned off
-             * and recalled when the devices are turned on. The global scene is defined as the scene that is stored
-             * with group identifier 0 and scene identifier 0.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.2
-             */
-            globalSceneControl: Attribute(16384, TlvBoolean, { default: true, readAcl: AccessLevel.View }),
+/**
+ * A OnOffCluster supports these elements if it supports feature LevelControlForLighting.
+ */
+export const LevelControlForLightingComponent = ClusterComponent({
+    attributes: {
+        /**
+         * In order to support the use case where the user gets back the last setting of a set of devices (e.g. level
+         * settings for lights), a global scene is introduced which is stored when the devices are turned off and
+         * recalled when the devices are turned on. The global scene is defined as the scene that is stored with group
+         * identifier 0 and scene identifier 0.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.2
+         */
+        globalSceneControl: Attribute(16384, TlvBoolean, { default: true, readAcl: AccessLevel.View }),
 
-            /**
-             * The OnTime attribute specifies the length of time (in 1/10ths second) that the ‘On’ state SHALL be
-             * maintained before automatically transitioning to the ‘Off’ state when using the OnWithTimedOff command.
-             * This attribute can be written at any time, but writing a value only has effect when in the ‘Timed On’
-             * state. See OnWithTimedOff Command for more details.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.3
-             */
-            onTime: WritableAttribute(
-                16385,
-                TlvNullable(TlvUInt16),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
-            ),
+        /**
+         * The OnTime attribute specifies the length of time (in 1/10ths second) that the ‘On’ state SHALL be
+         * maintained before automatically transitioning to the ‘Off’ state when using the OnWithTimedOff command. This
+         * attribute can be written at any time, but writing a value only has effect when in the ‘Timed On’ state. See
+         * OnWithTimedOff Command for more details.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.3
+         */
+        onTime: WritableAttribute(
+            16385,
+            TlvNullable(TlvUInt16),
+            { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+        ),
 
-            /**
-             * The OffWaitTime attribute specifies the length of time (in 1/10ths second) that the ‘Off’ state SHALL be
-             * guarded to prevent another OnWithTimedOff command turning the server back to its ‘On’ state (e.g., when
-             * leaving a room, the lights are turned off but an occupancy sensor detects the leaving person and
-             * attempts to turn the lights back on). This attribute can be written at any time, but writing a value
-             * only has an effect when in the ‘Timed On’ state followed by a transition to the ‘Delayed Off' state, or
-             * in the ‘Delayed Off’ state. See OnWithTimedOff Command for more details.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.4
-             */
-            offWaitTime: WritableAttribute(
-                16386,
-                TlvNullable(TlvUInt16),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
-            ),
+        /**
+         * The OffWaitTime attribute specifies the length of time (in 1/10ths second) that the ‘Off’ state SHALL be
+         * guarded to prevent another OnWithTimedOff command turning the server back to its ‘On’ state (e.g., when
+         * leaving a room, the lights are turned off but an occupancy sensor detects the leaving person and attempts to
+         * turn the lights back on). This attribute can be written at any time, but writing a value only has an effect
+         * when in the ‘Timed On’ state followed by a transition to the ‘Delayed Off' state, or in the ‘Delayed Off’
+         * state. See OnWithTimedOff Command for more details.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.4
+         */
+        offWaitTime: WritableAttribute(
+            16386,
+            TlvNullable(TlvUInt16),
+            { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+        ),
 
-            /**
-             * The StartUpOnOff attribute SHALL define the desired startup behavior of a device when it is supplied
-             * with power and this state SHALL be reflected in the OnOff attribute. If the value is null, the OnOff
-             * attribute is set to its previous value. Otherwise, the behavior is defined in the table defining
-             * StartUpOnOffEnum.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.5
-             */
-            startUpOnOff: WritableAttribute(
-                16387,
-                TlvNullable(TlvEnum<TlvStartUpOnOffEnum>()),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            )
-        },
+        /**
+         * The StartUpOnOff attribute SHALL define the desired startup behavior of a device when it is supplied with
+         * power and this state SHALL be reflected in the OnOff attribute. If the value is null, the OnOff attribute is
+         * set to its previous value. Otherwise, the behavior is defined in the table defining StartUpOnOffEnum.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.5
+         */
+        startUpOnOff: WritableAttribute(
+            16387,
+            TlvNullable(TlvEnum<TlvStartUpOnOffEnum>()),
+            { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+        )
+    },
 
-        commands: {
-            /**
-             * The OffWithEffect command allows devices to be turned off using enhanced ways of fading. The
-             * OffWithEffect command SHALL have the following data fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.4
-             */
-            offWithEffect: Command(64, TlvOffWithEffectRequest, 64, TlvNoResponse),
+    commands: {
+        /**
+         * The OffWithEffect command allows devices to be turned off using enhanced ways of fading. The OffWithEffect
+         * command SHALL have the following data fields:
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.4
+         */
+        offWithEffect: Command(64, TlvOffWithEffectRequest, 64, TlvNoResponse),
 
-            /**
-             * The OnWithRecallGlobalScene command allows the recall of the settings when the device was turned off.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.5
-             */
-            onWithRecallGlobalScene: Command(65, TlvNoArguments, 65, TlvNoResponse),
+        /**
+         * The OnWithRecallGlobalScene command allows the recall of the settings when the device was turned off.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.5
+         */
+        onWithRecallGlobalScene: Command(65, TlvNoArguments, 65, TlvNoResponse),
 
-            /**
-             * The OnWithTimedOff command allows devices to be turned on for a specific duration with a guarded off
-             * duration so that SHOULD the device be subsequently turned off, further OnWithTimedOff commands, received
-             * during this time, are prevented from turning the devices back on. Further
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6
-             */
-            onWithTimedOff: Command(66, TlvOnWithTimedOffRequest, 66, TlvNoResponse)
-        }
-    };
+        /**
+         * The OnWithTimedOff command allows devices to be turned on for a specific duration with a guarded off
+         * duration so that SHOULD the device be subsequently turned off, further OnWithTimedOff commands, received
+         * during this time, are prevented from turning the devices back on. Further
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6
+         */
+        onWithTimedOff: Command(66, TlvOnWithTimedOffRequest, 66, TlvNoResponse)
+    }
+});
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        features: featureMap,
-        supportedFeatures: { levelControlForLighting: true },
-        elements: [ Base, LevelControlForLighting ]
-    });
-};
+/**
+ * Use OnOffCluster to obtain a Cluster instance for a specific feature set.  OnOffCluster only returns clusters for
+ * feature combinations supported by the Matter specification.
+ */
+const OnOffCluster = ClusterFactory();
