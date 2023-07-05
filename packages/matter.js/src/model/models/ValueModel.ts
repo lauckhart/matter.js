@@ -86,14 +86,14 @@ export abstract class ValueModel extends Model implements ValueElement {
         }
 
         // Enum is a derived type so we can just return its base
-        if (metabase.metatype == Metatype.enum) {
+        if (metabase.metatype === Metatype.enum) {
             return metabase.base;
         }
 
         // Bitmaps are not derived types so we have to map manually
-        if (metabase.metatype == Metatype.bitmap) {
+        if (metabase.metatype === Metatype.bitmap) {
             const primitiveName = metabase.name.replace("map", "uint");
-            return metabase.parent?.children.find(c => c.name == primitiveName) as ValueModel | undefined;
+            return metabase.parent?.children.find(c => c.name === primitiveName) as ValueModel | undefined;
         }
         
         return metabase;
@@ -118,6 +118,16 @@ export abstract class ValueModel extends Model implements ValueElement {
         if (metaBase) {
             return metaBase.metatype;
         }
+    }
+
+    /**
+     * The value to use as a default.
+     */
+    get effectiveDefault(): FieldValue | undefined {
+        if (this.default === undefined && !this.nullable && this.effectiveMetatype === Metatype.array) {
+            return [];
+        }
+        return this.default;
     }
 
     /**
@@ -155,7 +165,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Datatype models.
      */
     override get allowedBaseTags() {
-        if (this.tag == ElementTag.Datatype) {
+        if (this.tag === ElementTag.Datatype) {
             return [ ElementTag.Datatype ];
         }
         return [ this.tag, ElementTag.Datatype ];
@@ -171,7 +181,7 @@ export abstract class ValueModel extends Model implements ValueElement {
             if (model instanceof ValueModel) {
                 if (
                     !model.conformance.empty
-                    && model.conformance.type != Conformance.Special.Desc
+                    && model.conformance.type !== Conformance.Special.Desc
                 ) {
                     aspects.push(model.conformance);
                 }
@@ -191,7 +201,14 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Is this model deprecated?
      */
     get deprecated() {
-        return this.conformance.type == Conformance.Flag.Deprecated;
+        return this.conformance.type === Conformance.Flag.Deprecated;
+    }
+
+    /**
+     * Can this model be omitted?
+     */
+    get nullable() {
+        return !!this.quality.nullable;
     }
 
     override valueOf() {

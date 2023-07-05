@@ -6,7 +6,7 @@
 
 import { Logger } from "../../../src/log/Logger.js";
 import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementTag, EventElement, AnyValueElement } from "../../../src/model/index.js";
-import { camelize } from "../../../src/util/index.js";
+import { camelize } from "../../../src/util/String.js";
 import { TypeMap } from "./type-map.js";
 
 const logger = Logger.get("translate-chip");
@@ -14,7 +14,7 @@ const logger = Logger.get("translate-chip");
 export function translateChip(rootEl: Element) {
     const result = Array<AnyElement>();
     for (const node of rootEl.childNodes) {
-        if (node.nodeType == 1 /* element */) {
+        if (node.nodeType === 1 /* element */) {
             const translated = translate(node as Element);
             if (translated) {
                 result.push(translated);
@@ -29,7 +29,7 @@ type MaybeStr = Element | string | null | undefined;
 
 // Reject empty values
 function need<T>(what: string, value: T | null | undefined): T {
-    if (value == undefined || value === "" || Number.isNaN(value)) {
+    if (value === undefined || value === null || value === "" || Number.isNaN(value)) {
         throw Error(`missing ${what}`);
     }
     return value;
@@ -37,7 +37,7 @@ function need<T>(what: string, value: T | null | undefined): T {
 
 // Convert XML string to JS
 function str(src?: MaybeStr) {
-    if (typeof src != "string") {
+    if (typeof src !== "string") {
         src = src?.textContent;
     }
     src = src?.trim().replace(/\s+/g, " ");
@@ -47,7 +47,7 @@ function str(src?: MaybeStr) {
 // Convert XML string to JS integer
 function int(src?: MaybeStr) {
     src = str(src);
-    if (typeof src == "string") {
+    if (typeof src === "string") {
         const value = Number.parseInt(src);
         if (Number.isNaN(value)) {
             throw new Error("Invalid numeric value");
@@ -58,7 +58,7 @@ function int(src?: MaybeStr) {
 
 // Convert XML string to JS boolean
 function bool(src?: MaybeStr) {
-    return str(src)?.toLowerCase() == "true";
+    return str(src)?.toLowerCase() === "true";
 }
 
 // Get first direct descendant with specified tag name
@@ -92,7 +92,7 @@ function setAccessPrivileges(src: Element, target: Access.Ast) {
             "access op",
             str(accessEl.getAttribute("op"))
         ) as keyof typeof srcAccess;
-        if (Object.keys(srcAccess).indexOf(op) == -1) {
+        if (Object.keys(srcAccess).indexOf(op) === -1) {
             throw new Error(`Unknown access op "${op}"`);
         }
 
@@ -200,7 +200,7 @@ function createValueElement<T extends AnyValueElement>({
 
     const attr = (name: string) => source.getAttribute(name);
     let id = int(attr("code") || attr("value") || attr("mask") || attr("fieldId") || attr("id"));
-    if (factory.Tag != DatatypeElement.Tag) {
+    if (factory.Tag !== DatatypeElement.Tag) {
         need(`${factory.Tag} id`, id);
     }
 
@@ -209,8 +209,8 @@ function createValueElement<T extends AnyValueElement>({
     const element = factory({ id: id, name: name, type: type } as T);
 
     let value = str(source.getAttribute("default"));
-    if (value != undefined) {
-        if (element.type?.match(/struct$/i) && value == "0x0") {
+    if (value !== undefined) {
+        if (element.type?.match(/struct$/i) && value === "0x0") {
             value = "null";
         }
         element.default = value;
@@ -279,9 +279,9 @@ const translators: { [name: string]: Translator } = {
         if (response) command.response = camelize(response);
 
         const src = str(source.getAttribute("source"));
-        if (src == "client") {
+        if (src === "client") {
             command.direction = CommandElement.Direction.Request;
-        } else if (src == "server") {
+        } else if (src === "server") {
             command.direction = CommandElement.Direction.Response;
         } else {
             throw new Error(`Illegal source ${src}`);
@@ -337,11 +337,11 @@ const translators: { [name: string]: Translator } = {
         }
 
         for (const n of source.childNodes) {
-            if (n.nodeType != source.ownerDocument.ELEMENT_NODE) {
+            if (n.nodeType !== source.ownerDocument.ELEMENT_NODE) {
                 continue;
             }
             const childEl = n as Element;
-            if (childEl.tagName != "name" && childEl.tagName != "description") {
+            if (childEl.tagName !== "name" && childEl.tagName !== "description") {
                 const element = translate(childEl);
                 if (element) {
                     if (!cluster.children) {

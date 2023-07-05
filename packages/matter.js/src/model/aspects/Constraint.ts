@@ -121,7 +121,7 @@ export namespace Constraint {
                         return {};
                 }
                 const value = parseValue(words[0]);
-                if (value == undefined) {
+                if (value === undefined || value === null) {
                     return;
                 }
                 return { min: value, max: value };
@@ -130,14 +130,14 @@ export namespace Constraint {
                 switch (words[0].toLowerCase()) {
                     case "min":
                         const min = parseValue(words[1]);
-                        if (min == undefined) {
+                        if (min === undefined || min === null) {
                             return;
                         }
                         return { min: min };
 
                     case "max":
                         const max = parseValue(words[1]);
-                        if (max == undefined) {
+                        if (max === undefined || max === null) {
                             return;
                         }
                         return { max: max };
@@ -148,9 +148,9 @@ export namespace Constraint {
                 return;
 
             case 3:
-                if (words[1].toLowerCase() == "to") {
+                if (words[1].toLowerCase() === "to") {
                     function parseBound(name: string, pos: number) {
-                        if (words[pos].toLowerCase() == name) {
+                        if (words[pos].toLowerCase() === name) {
                             return undefined;
                         }
                         return parseValue(words[pos]);
@@ -159,16 +159,16 @@ export namespace Constraint {
                     const ast: Ast = {};
                     
                     const min = parseBound("min", 0);
-                    if (min != undefined) {
+                    if (min !== undefined && min !== null) {
                         ast.min = min;
                     }
 
                     const max = parseBound("max", 2);
-                    if (max != undefined) {
+                    if (max !== undefined && max !== null) {
                         ast.max = max;
                     }
                     
-                    if (ast.min != undefined || ast.max != undefined) {
+                    if ((ast.min !== undefined && ast.min !== null) || (ast.max !== undefined && ast.max !== null)) {
                         return ast;
                     }
                 }
@@ -188,7 +188,7 @@ export namespace Constraint {
 
         function next() {
             current = peeked;
-            if (pos == definition.length) {
+            if (pos === definition.length) {
                 peeked = undefined;
             } else {
                 peeked = definition[pos];
@@ -214,12 +214,12 @@ export namespace Constraint {
 
             function emit() {
                 const atom = parseWords();
-                if (atom != undefined) {
+                if (atom !== undefined) {
                     parts.push(atom);
                 }
             }
 
-            while (current != undefined) {
+            while (current !== undefined) {
                 switch (current) {
                     case " ":
                     case "\t":
@@ -292,14 +292,14 @@ export namespace Constraint {
             return "desc";
         }
 
-        if (ast.min != undefined) {
-            if (ast.max == undefined) {
+        if (ast.min !== undefined && ast.min !== null) {
+            if (ast.max === undefined || ast.max === null) {
                 return `min ${FieldValue.serialize(ast.min)}`;
-            } else if (ast.min == ast.max) {
+            } else if (ast.min === ast.max) {
                 return `${FieldValue.serialize(ast.min)}`;
             }
             return `${FieldValue.serialize(ast.min)} to ${FieldValue.serialize(ast.max)}`;
-        } else if (ast.max != undefined) {
+        } else if (ast.max !== undefined && ast.max !== null) {
             return `max ${FieldValue.serialize(ast.max)}`;
         }
 

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../common/index.js";
-import { Logger } from "../../log/index.js";
+import { InternalError } from "../../common/InternalError.js";
+import { Logger } from "../../log/Logger.js";
 import { ElementTag } from "../definitions/index.js";
 import { AnyElement } from "../elements/index.js";
 import { CommandModel, Model } from "../models/index.js";
@@ -111,7 +111,7 @@ export abstract class ModelVariantTraversal<S = void> {
     protected getCanonicalName(model: Model) {
         if (this.clusterState) {
             const name = this.clusterState.canonicalNames.get(model);
-            if (name != undefined) {
+            if (name !== undefined) {
                 return name;
             }
         }
@@ -122,7 +122,7 @@ export abstract class ModelVariantTraversal<S = void> {
      * Determine if we are entering a cluster and install cluster state if so.
      */
     protected enterCluster(variants: VariantDetail) {
-        if (variants.tag == ElementTag.Cluster) {
+        if (variants.tag === ElementTag.Cluster) {
             this.clusterState = {
                 canonicalNames: computeCanonicalNames(this.sourceNames, variants)
             };
@@ -196,7 +196,7 @@ export abstract class ModelVariantTraversal<S = void> {
 
                 let slot;
                 let idStr: string | undefined;
-                if (childId != undefined) {
+                if (childId !== undefined) {
                     idStr = childId.toString();
 
                     // Commands may re-use the ID for request and response
@@ -210,18 +210,18 @@ export abstract class ModelVariantTraversal<S = void> {
                 }
 
                 // Find existing slot by name
-                if (slot == undefined) {
+                if (slot === undefined) {
                     slot = mapping.nameToSlot[childName];
                 }
 
                 // Create a new slot if necessary
-                if (slot == undefined) {
+                if (slot === undefined) {
                     slot = mapping.slots.length;
                     mapping.slots.push({});
                 }
 
                 // Map the child's ID to the slot
-                if (idStr != undefined) {
+                if (idStr !== undefined) {
                     if (mapping.idToSlot[idStr] === undefined) {
                         mapping.idToSlot[idStr] = slot;
                     }
@@ -255,7 +255,7 @@ export abstract class ModelVariantTraversal<S = void> {
             if (variant) {
                 if (!tag) {
                     tag = variant.tag;
-                } else if (tag != variant.tag) {
+                } else if (tag !== variant.tag) {
                     // Sanity check
                     throw new InternalError(`Variant tag mismatch; previous variant identified as ${tag} but ${sourceName} identifies as ${tag}`);
                 }
@@ -346,7 +346,7 @@ function inferEquivalentDatatypes(
                 // interest.  Global types we map manually so they should be
                 // correct
                 const base = variant?.base;
-                if (!base || base.parent?.tag != ElementTag.Cluster) {
+                if (!base || base.parent?.tag !== ElementTag.Cluster) {
                     continue;
                 }
 
@@ -369,7 +369,7 @@ function inferEquivalentDatatypes(
                 if (existingEntry) {
                     if (existingEntry.priority > mapEntry.priority) {
                         nameVariants.set(base, mapEntry);
-                    } else if (existingEntry.priority == mapEntry.priority && existingEntry.mapTo != mapEntry.mapTo) {
+                    } else if (existingEntry.priority === mapEntry.priority && existingEntry.mapTo !== mapEntry.mapTo) {
                         logger.warn(`Mapping ${sourceName} ${base.tag} ${base.name} to ${existingEntry.mapTo} but it also maps to ${mapEntry.mapTo}`);
                     }
                 } else {
@@ -390,7 +390,7 @@ function inferEquivalentDatatypes(
     // Convert the internal structure to NameMappings
     const result = new Map<Model, string>();
     for (const [model, mapEntry] of nameVariants) {
-        if (mapEntry.mapTo && mapEntry.mapTo != model.name) {
+        if (mapEntry.mapTo && mapEntry.mapTo !== model.name) {
             result.set(model, mapEntry.mapTo);
         }
     }
@@ -416,7 +416,7 @@ function chooseCanonicalNames(
 
                 // We give absolute priority to the highest priority element.
                 // This is presumably an editorial decision made by a human
-                if (!i && name != undefined) {
+                if (!i && name !== undefined) {
                     break;
                 }
 
@@ -439,8 +439,8 @@ function chooseCanonicalNames(
                 // with more capital letters.  This corrects for case issues
                 // that can arise from automatic camelization in our spec
                 // scraper
-                if (canonicalName?.toLowerCase() == name?.toLowerCase()) {
-                    if (canonicalName == name) {
+                if (canonicalName?.toLowerCase() === name?.toLowerCase()) {
+                    if (canonicalName === name) {
                         continue;
                     }
 
@@ -461,7 +461,7 @@ function chooseCanonicalNames(
             // name
             for (const sourceName in variants.map) {
                 const variant = variants.map[sourceName];
-                if (variant.name != canonicalName) {
+                if (variant.name !== canonicalName) {
                     canonicalNames.set(variant, canonicalName);
                 }
             }
@@ -472,7 +472,7 @@ function chooseCanonicalNames(
         override enterCluster(variants: VariantDetail) {
             // Disable default logic, just ensure our datatype names are always
             // installed so datatypes match up correctly
-            if (variants.tag == ElementTag.Cluster) {
+            if (variants.tag === ElementTag.Cluster) {
                 this.clusterState = { canonicalNames: datatypeMapping };
                 return true;
             }

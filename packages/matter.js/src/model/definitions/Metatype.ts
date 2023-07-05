@@ -81,16 +81,16 @@ export namespace Metatype {
      * @returns the cast value or FieldValue.Invalid if cast is not possible
      */
     export function cast(type: Metatype, value: FieldValue): FieldValue | FieldValue.Invalid | undefined {
-        if (value == undefined || type == Metatype.any) {
+        if (value === undefined || value === null || type === Metatype.any) {
             return value;
         }
 
-        if (value == "null") {
+        if (value === "null") {
             return null;
         }
 
-        if (value == "") {
-            if (type == Metatype.string) {
+        if (value === "") {
+            if (type === Metatype.string) {
                 return "";
             }
             return undefined;
@@ -105,10 +105,10 @@ export namespace Metatype {
                 return value.toString();
 
             case Metatype.boolean:
-                if (typeof value == "string") {
+                if (typeof value === "string") {
                     value = value.trim().toLowerCase();
                 }
-                return value == "false" || value == "no" || !!value;
+                return value === "false" || value === "no" || !!value;
 
             case Metatype.bitmap:
             case Metatype.enum:
@@ -125,7 +125,7 @@ export namespace Metatype {
                 return id;
             
             case Metatype.integer:
-                if (typeof value == "string") {
+                if (typeof value === "string") {
                     // Specialized support for percentages and temperatures
                     let type: FieldValue.celsius | FieldValue.percent | undefined;
                     if (value.endsWith("°C")) {
@@ -165,7 +165,7 @@ export namespace Metatype {
                     }
                     const i = BigInt(value);
                     const n = Number(i);
-                    if (BigInt(n) == i) {
+                    if (BigInt(n) === i) {
                         return n;
                     }
                     return i;
@@ -187,7 +187,7 @@ export namespace Metatype {
                 if (value instanceof Date) {
                     return value;
                 }
-                if (typeof value != "string") {
+                if (typeof value !== "string") {
                     return FieldValue.Invalid;
                 }
                 value = new Date(value);
@@ -197,10 +197,10 @@ export namespace Metatype {
                 return value;
 
             case Metatype.object:
-                if (value == "null") {
+                if (value === "null") {
                     return null;
                 }
-                if (typeof value != "object") {
+                if (typeof value !== "object") {
                     return FieldValue.Invalid;
                 }
 
@@ -208,7 +208,7 @@ export namespace Metatype {
                 return FieldValue.Invalid;
 
             case Metatype.bytes:
-                if (value == "empty") {
+                if (value === "empty") {
                     return undefined;
                 }
                 if (!(value instanceof Uint8Array)) {
@@ -218,10 +218,10 @@ export namespace Metatype {
 
             case Metatype.array:
                 // Eject garbage we've seen in the spec
-                if (value == "0" || value == "{0,0}") {
+                if (value === "0" || value === "{0,0}") {
                     return;
                 }
-                if (value == "empty" || value == "[]" || value == "{}") {
+                if (value === "empty" || value === "[]" || value === "{}") {
                     return [];
                 }
 

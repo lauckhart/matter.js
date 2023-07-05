@@ -62,12 +62,12 @@ export type ValueElement = BaseElement & {
 export function ValueElement(tag: ElementTag, definition: ValueElement) {
     definition = { ...definition };
     
-    if (definition.constraint?.toString().toLowerCase() == "all") {
+    if (definition.constraint?.toString().toLowerCase() === "all") {
         delete definition.constraint;
     }
 
     for (const k of [ "conformance", "quality", "access", "quality" ]) {
-        if ((definition as any)[k] == "") {
+        if ((definition as any)[k] === "") {
             delete (definition as any)[k];
         }
     }

@@ -21,15 +21,15 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
     timed?: boolean;
 
     get readable() {
-        return !this.rw || this.rw != Access.Rw.Write;
+        return !this.rw || this.rw !== Access.Rw.Write;
     }
 
     get writable() {
-        return !!this.rw && this.rw != Access.Rw.Read;
+        return !!this.rw && this.rw !== Access.Rw.Read;
     }
 
     override get empty() {
-        return (!this.rw || this.rw == Access.Rw.Read) &&
+        return (!this.rw || this.rw === Access.Rw.Read) &&
             !this.fabric && !this.readPriv && !this.writePriv && !this.timed;
     }
 
@@ -42,9 +42,9 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
         
         if (Array.isArray(definition)) {
             this.set(definition.flat());
-        } else if (typeof definition == "object") {
+        } else if (typeof definition === "object") {
             Object.assign(this, definition);
-        } else if (definition != undefined) {
+        } else if (definition !== undefined) {
             this.set(Array.from(Access.parse(this, definition)));
         }
     }
@@ -55,7 +55,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
      */
     static parse(access: Access, definition: string) {
         definition = definition.toUpperCase();
-        if (definition == "DERIVED") {
+        if (definition === "DERIVED") {
             return [];
         }
 
@@ -75,7 +75,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                 case '[':
                     // Optional write syntax.  Note only R[W] is legal but we
                     // allow for bare [W]
-                    if (i < definition.length - 2 && definition[i + 1] == "W" && definition[i + 2] == "]") {
+                    if (i < definition.length - 2 && definition[i + 1] === "W" && definition[i + 2] === "]") {
                         flags.push(Access.Rw.ReadWriteOption);
                         i += 2;
                     }
@@ -84,7 +84,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                 case '*':
                     // Deprecated syntax, again allow for *W when only R*W is
                     // legal
-                    if (i < definition.length - 1 && definition[i + 1] == "W") {
+                    if (i < definition.length - 1 && definition[i + 1] === "W") {
                         flags.push(Access.Rw.ReadWriteOption);
                         i++;
                     }
@@ -121,8 +121,8 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
             parts.push(this.fabric);
         }
 
-        if (this.readPriv == this.writePriv) {
-            if (this.readPriv != undefined) {
+        if (this.readPriv === this.writePriv) {
+            if (this.readPriv !== undefined) {
                 parts.push(this.readPriv);
             }
         } else if (this.readPriv) {
@@ -154,13 +154,13 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                 case Access.Rw.Write:
                     if (!this.rw) {
                         this.rw = f;
-                    } else if (this.rw == Access.Rw.Read) {
+                    } else if (this.rw === Access.Rw.Read) {
                         this.rw = Access.Rw.ReadWrite;
                     }
                     break;
 
                 case Access.Rw.ReadWrite:
-                    if (this.rw != Access.Rw.ReadWriteOption) {
+                    if (this.rw !== Access.Rw.ReadWriteOption) {
                         this.rw = f;
                     }
                     break;
@@ -170,7 +170,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                     break;
 
                 case Access.Fabric.Scoped:
-                    if (this.fabric != Access.Fabric.Sensitive) {
+                    if (this.fabric !== Access.Fabric.Sensitive) {
                         this.fabric = f;
                     }
                     break;

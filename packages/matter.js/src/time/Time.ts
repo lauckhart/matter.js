@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../common/index.js";
+import { InternalError } from "../common/InternalError.js";
 
 export type TimerCallback = () => Promise<any> | any;
 

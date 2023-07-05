@@ -10,6 +10,6 @@ import { type ValidatorBuilder } from "./ValidatorBuilder.js";
 
 export function addQuality(builder: ValidatorBuilder, child: ValueModel, quality: Quality) {
     if (!quality.nullable) {
-        builder.addTest(`v == null`, "NOT_NULLABLE_IS_NULL", child, "Field is null");
+        builder.addTest(`v === null`, "NOT_NULLABLE_IS_NULL", child, "Field is null");
     }
 }

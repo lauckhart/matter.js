@@ -18,20 +18,20 @@ type SubsectionCollector = {
 }
 
 function isCluster(ref: HtmlReference, document: Specification, name: string) {
-    return ref.xref.document == document && ref.name == name;
+    return ref.xref.document === document && ref.name === name;
 }
 
 function isSection(ref: HtmlReference, ...sections: string[]) {
-    return !!sections.find(section => ref.xref.section == section);
+    return !!sections.find(section => ref.xref.section === section);
 }
 
 // Modify incoming stream to workaround specific spec issues
 function applyPatches(subref: HtmlReference, clusterRef: HtmlReference) {
     if (isCluster(clusterRef, Specification.Core, "General Commissioning")) {
-        if (isSection(subref, "11.9.6") && subref.name == "Commands" && !subref.table) {
+        if (isSection(subref, "11.9.6") && subref.name === "Commands" && !subref.table) {
             // In 1.1 spec, command table is not here...
             subref.name = "Ignored";
-        } else if (isSection(subref, "11.9.6.1") && subref.name == "Common fields in General Commissioning cluster responses" && subref.table) {
+        } else if (isSection(subref, "11.9.6.1") && subref.name === "Common fields in General Commissioning cluster responses" && subref.table) {
             // ...but here
             subref.name = "Commands";
             subref.detailSection = "11.9.6";
@@ -104,7 +104,7 @@ export function loadCluster(clusterRef: HtmlReference) {
             collectors.pop();
         }
 
-        if (subref.xref.section == clusterRef.xref.section) {
+        if (subref.xref.section === clusterRef.xref.section) {
             definition.firstParagraph = clusterRef.firstParagraph;
         }
 

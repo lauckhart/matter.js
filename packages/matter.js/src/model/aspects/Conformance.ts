@@ -33,18 +33,18 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
         super(definition);
 
         let ast: Conformance.Ast;
-        if (definition == undefined) {
+        if (definition === undefined) {
             this.type = Conformance.Special.Empty;
             return;
-        } else if (typeof definition == "string") {
-            if (definition.toLowerCase() == "desc") {
+        } else if (typeof definition === "string") {
+            if (definition.toLowerCase() === "desc") {
                 this.type = Conformance.Special.Desc;
                 return;
             }
             ast = new Parser(this, definition).ast;
         } else if (Array.isArray(definition)) {
             const asts = definition.map((def) => new Parser(this, def).ast);
-            if (asts.length == 1) {
+            if (asts.length === 1) {
                 ast = asts[0];
             } else {
                 ast = {
@@ -166,7 +166,7 @@ export namespace Conformance {
     // Serialize with parenthesis if necessary to make the expression atomic
     function serializeAtomic(ast: Ast, operators = BinaryOperators) {
         const serialized = serialize(ast);
-        if (ast.type == Conformance.Special.Group || operators.has(ast.type as Operator)) {
+        if (ast.type === Conformance.Special.Group || operators.has(ast.type as Operator)) {
             return `(${serialized})`;
         }
         return serialized;
@@ -199,7 +199,7 @@ export namespace Conformance {
                 break;
 
             case Special.Name:
-                if (typeof ast.param == "string" && !resolver(ast.param)) {
+                if (typeof ast.param === "string" && !resolver(ast.param)) {
                     conformance.error(`UNRESOLVED_CONFORMANCE_${ast.type.toUpperCase()}`, `Conformance ${ast.type} reference "${ast.param}" does not resolve`);
                 }
                 break;
@@ -265,7 +265,7 @@ function isNameChar(c: string) {
     return (c >= "A" && c <= "Z")
         || (c >= "a" && c <= "z")
         || (c >= "0" && c <= "9")
-        || c == "_";
+        || c === "_";
 }
 
 namespace Tokenizer {
@@ -401,12 +401,12 @@ namespace Tokenizer {
                         }
                         next();
                     }
-                    if (peeked.value == "%") {
+                    if (peeked.value === "%") {
                         next();
                         num = FieldValue.Percent(num);
-                    } else if (peeked.value == "°") {
+                    } else if (peeked.value === "°") {
                         next();
-                        if (peeked.value?.toLowerCase() == "C") {
+                        if (peeked.value?.toLowerCase() === "C") {
                             next();
                         }
                         num = FieldValue.Celsius(num);
@@ -419,7 +419,7 @@ namespace Tokenizer {
                 case "<":
                     {
                         const base = current.value;
-                        if (peeked.value == "=") {
+                        if (peeked.value === "=") {
                             next();
                             yield { type: TokenType.Special, value: `${base}${peeked.value}` as Special };
                         } else {
@@ -429,7 +429,7 @@ namespace Tokenizer {
                     break;
 
                 case "=":
-                    if (peeked.value == "=") {
+                    if (peeked.value === "=") {
                         next();
                     } else {
                         conformance.error("BAD_EQUAL", `"=" must be followed by another "="`);
@@ -505,7 +505,7 @@ class Parser {
         const group = [] as Conformance.Ast[];
 
         function groupAsAst() {
-            if (group.length == 1) {
+            if (group.length === 1) {
                 return group[0];
             }
 
@@ -551,8 +551,8 @@ class Parser {
 
     private atSpecial(special: Tokenizer.Special) {
         return this.token
-            && this.token.type == Tokenizer.TokenType.Special
-            && this.token.value == special;
+            && this.token.type === Tokenizer.TokenType.Special
+            && this.token.value === special;
     }
 
     private parseExpression() {
@@ -564,7 +564,7 @@ class Parser {
         if (expr) {
             elements.push(expr);
         }
-        while (this.token && this.token.type == Tokenizer.TokenType.Special && Parser.BinaryOperators.has(this.token.value)) {
+        while (this.token && this.token.type === Tokenizer.TokenType.Special && Parser.BinaryOperators.has(this.token.value)) {
             elements.push(this.token.value);
             this.next();
             expr = this.parseAtomicExpression();
@@ -576,7 +576,7 @@ class Parser {
         // Convert binary operators into AST nodes in order of precedence
         Parser.BinaryOperatorPrecedence.forEach(operators => {
             for (let i = 0; i < elements.length; i++) {
-                if (operators.indexOf(elements[i + 1] as Tokenizer.Special) != -1) {
+                if (operators.indexOf(elements[i + 1] as Tokenizer.Special) !== -1) {
                     const [ lhs, op, rhs ] = elements.splice(i, 3);
                     elements.splice(i, 0, {
                         type: op as Conformance.AstType,
@@ -596,7 +596,7 @@ class Parser {
         if (this.atSpecial(Tokenizer.Special.Dot)) {
             this.next();
 
-            if ((this.token as any)?.type != Tokenizer.TokenType.Choice) {
+            if ((this.token as any)?.type !== Tokenizer.TokenType.Choice) {
                 this.conformance.error("INVALID_CHOICE", 'Choice indicator (".") must be followed by a single lowercase letter');
             }
             const choice = {
@@ -605,7 +605,7 @@ class Parser {
                 num: 1
             } as Conformance.Ast.Choice;
             this.next();
-            if ((this.token as any)?.type == Tokenizer.TokenType.Number) {
+            if ((this.token as any)?.type === Tokenizer.TokenType.Number) {
                 choice.num = this.token?.value as number;
                 this.next();
             }
@@ -629,19 +629,19 @@ class Parser {
             return;
         }
 
-        if (this.token.type == Tokenizer.TokenType.Flag) {
+        if (this.token.type === Tokenizer.TokenType.Flag) {
             const value = this.token.value;
             this.next();
             return { type: value };
         }
 
-        if (this.token.type == Tokenizer.TokenType.Name) {
+        if (this.token.type === Tokenizer.TokenType.Name) {
             const name = this.token.value;
             this.next();
             return { type: Conformance.Special.Name, param: name };
         }
 
-        if (this.token.type == Tokenizer.TokenType.Number) {
+        if (this.token.type === Tokenizer.TokenType.Number) {
             const value = this.token.value;
             this.next();
             return { type: Conformance.Special.Value, param: value };

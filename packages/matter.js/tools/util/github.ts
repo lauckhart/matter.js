@@ -70,7 +70,7 @@ export class Directory {
             if (this.auth) options.headers.Authorization = `Bearer ${this.auth.trim()}`
 
             const result = await fetch(url, options);
-            if (result.status != 200) {
+            if (result.status !== 200) {
                 throw new Error(`HTTP error ${result.statusText} (${result.status}) from ${url}`);
             }
 

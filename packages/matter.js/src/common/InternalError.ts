@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "./index.js";
+import { MatterError } from "./MatterError.js";
 
 /** Error base class for all errors thrown by this library. */
 export class InternalError extends MatterError {}

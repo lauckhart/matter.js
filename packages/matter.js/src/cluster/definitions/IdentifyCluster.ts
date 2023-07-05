@@ -7,12 +7,12 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { BitFlag } from "../../schema/BitmapSchema.js";
+import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
 import { WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { BuildCluster, ClusterElements } from "../../cluster/ClusterBuilder.js";
-import { Properties } from "../../util/Type.js";
+import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * This attribute specifies how the identification state is presented to the user. This field SHALL contain one of the
@@ -155,10 +155,15 @@ export const TlvIdentifyQueryResponseRequest = TlvObject({
     timeout: TlvField(0, TlvUInt16)
 });
 
-export namespace IdentifyCluster {
-    export const id = 0x3;
-    export const name = "Identify";
-    export const revision = 1;
+/**
+ * Standard Identify cluster properties.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2
+ */
+const IdentifyMetadata = ClusterMetadata({
+    id: 0x3,
+    name: "Identify",
+    revision: 1,
 
     export const featureMap = {
         /**
@@ -167,76 +172,78 @@ export namespace IdentifyCluster {
          * Multicast query for identification state
          */
         query: BitFlag(0)
-    };
+    }
+});
 
-    const Base = ClusterElements({
-        attributes: {
-            /**
-             * This attribute specifies the remaining length of time, in seconds, that the endpoint will continue to
-             * identify itself.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
-             */
-            identifyTime: WritableAttribute(0, TlvUInt16, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }),
+/**
+ * A IdentifyCluster supports these elements for all feature combinations.
+ */
+export const BaseComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute specifies the remaining length of time, in seconds, that the endpoint will continue to
+         * identify itself.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
+         */
+        identifyTime: WritableAttribute(0, TlvUInt16, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }),
 
-            /**
-             * This attribute specifies how the identification state is presented to the user. This field SHALL contain
-             * one of the values listed below:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
-             */
-            identifyType: Attribute(1, TlvEnum<TlvIdentifyType>(), { readAcl: AccessLevel.View })
-        },
+        /**
+         * This attribute specifies how the identification state is presented to the user. This field SHALL contain one
+         * of the values listed below:
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
+         */
+        identifyType: Attribute(1, TlvEnum<TlvIdentifyType>(), { readAcl: AccessLevel.View })
+    },
 
-        commands: {
-            /**
-             * This command starts or stops the receiving device identifying itself. This command SHALL have the
-             * following data fields:
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
-             */
-            identify: Command(0, TlvIdentifyRequest, 0, TlvNoResponse),
+    commands: {
+        /**
+         * This command starts or stops the receiving device identifying itself. This command SHALL have the following
+         * data fields:
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
+         */
+        identify: Command(0, TlvIdentifyRequest, 0, TlvNoResponse),
 
-            /**
-             * This command allows the support of feedback to the user, such as a certain light effect. It is used to
-             * allow an implementation to provide visual feedback to the user under certain circumstances such as a
-             * color light turning green when it has successfully connected to a network. The use of this command and
-             * the effects themselves are entirely up to the implementer to use whenever a visual feedback is useful
-             * but it is not the same as and does not replace the identify mechanism used during commissioning.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
-             */
-            triggerEffect: OptionalCommand(64, TlvTriggerEffectRequest, 64, TlvNoResponse)
-        }
-    });
+        /**
+         * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow
+         * an implementation to provide visual feedback to the user under certain circumstances such as a color light
+         * turning green when it has successfully connected to a network. The use of this command and the effects
+         * themselves are entirely up to the implementer to use whenever a visual feedback is useful but it is not the
+         * same as and does not replace the identify mechanism used during commissioning.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
+         */
+        triggerEffect: OptionalCommand(64, TlvTriggerEffectRequest, 64, TlvNoResponse)
+    }
+});
 
-    const Query = ClusterElements({
-        commands: {
-            /**
-             * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command,
-             * in the case that the device is currently identifying itself.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
-             */
-            identifyQueryResponse: Command(0, TlvIdentifyQueryResponseRequest, 0, TlvNoResponse),
+/**
+ * A IdentifyCluster supports these elements if it supports feature Query.
+ */
+export const QueryComponent = ClusterComponent({
+    commands: {
+        /**
+         * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command, in
+         * the case that the device is currently identifying itself.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
+         */
+        identifyQueryResponse: Command(0, TlvIdentifyQueryResponseRequest, 0, TlvNoResponse),
 
-            /**
-             * This command allows the sending device to request the target or targets to respond if they are currently
-             * identifying themselves.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
-             */
-            identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponseRequest)
-        }
-    });
+        /**
+         * This command allows the sending device to request the target or targets to respond if they are currently
+         * identifying themselves.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
+         */
+        identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponseRequest)
+    }
+});
 
-    export const Complete = BuildCluster(
-        id,
-        name,
-        revision,
-        featureMap,
-        { query: true },
-        Base,
-        Query
-    );
-};
+/**
+ * Use IdentifyCluster to obtain a Cluster instance for a specific feature set.  IdentifyCluster only returns clusters
+ * for feature combinations supported by the Matter specification.
+ */
+const IdentifyCluster = ClusterFactory();

@@ -40,3 +40,21 @@ export function asObjectKey(label: {}) {
     }
     return label;
 }
+
+export function describeList(setType: "and" | "or", ...entries: string[]) {
+    const text = Array<string>();
+
+    if (entries.length === 1) {
+        return entries[0];
+    }
+
+    for (let i = 0; i < entries.length; i++) {
+        if (i === entries.length - 1) {
+            text.push(setType, entries[i]);
+        } else {
+            text.push(`${entries[i]},`);
+        }
+    }
+
+    return text.join(" ");
+}

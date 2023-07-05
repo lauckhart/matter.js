@@ -4,26 +4,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../../log/index.js";
+import { Logger } from "../../../log/Logger.js";
 import { Conformance } from "../../aspects/index.js";
 import { ValueModel } from "../../models/index.js";
 import { type ValidatorBuilder } from "./ValidatorBuilder.js";
 
 const logger = Logger.get("conformance-validation");
 
+const BinaryOperatorMap = {
+    [Conformance.Operator.AND]: "&&",
+    [Conformance.Operator.EQ]: "==",
+    [Conformance.Operator.NE]: "!=",
+    [Conformance.Operator.OR]: "||",
+    [Conformance.Operator.GT]: ">",
+    [Conformance.Operator.LT]: "<",
+    [Conformance.Operator.GTE]: ">=",
+    [Conformance.Operator.LTE]: "<="
+}
+
 export function addConformance(builder: ValidatorBuilder, model: ValueModel, conformance: Conformance) {
     builder.addTest(expr(conformance, builder), "CONFORMANCE_VIOLATION", model, "Value disallowed by conformance");
-
-    const BinaryOperatorMap = {
-        [Conformance.Operator.AND]: "&&",
-        [Conformance.Operator.EQ]: "==",
-        [Conformance.Operator.NE]: "!=",
-        [Conformance.Operator.OR]: "||",
-        [Conformance.Operator.GT]: ">",
-        [Conformance.Operator.LT]: "<",
-        [Conformance.Operator.GTE]: ">=",
-        [Conformance.Operator.LTE]: "<="
-    }
 
     // This generates JS expressions that test conformance.  The result of each
     // expression is a tri-state value:
@@ -34,7 +34,7 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
     //
     // If a null makes it to the top level it is cast to false.
     function expr(ast: Conformance.Ast | undefined, fn: ValidatorBuilder): string {
-        if (ast == undefined) {
+        if (!ast) {
             logger.error("Undefined conformance AST type");
             return "true";
         }

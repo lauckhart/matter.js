@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../src/log/index.js";
+import { Logger } from "../../src/log/Logger.js";
 import { ClusterModel, DatatypeModel, MatterModel, Metatype, ValidateModel, ValueModel } from "../../src/model/index.js";
-import { isDeepEqual } from "../../src/util/index.js";
+import { isDeepEqual } from "../../src/util/DeepEqual.js";
 
 const logger = Logger.get("create-model");
 
@@ -43,7 +43,7 @@ function patchClusterTypes(cluster: ClusterModel) {
             }
             
             const existing = datatypes[model.name];
-            if (!existing || (existing.parent != cluster && model.parent == cluster)) {
+            if (!existing || (existing.parent !== cluster && model.parent === cluster)) {
                 datatypes[model.name] = model;
             }
         }
@@ -58,12 +58,12 @@ function patchClusterTypes(cluster: ClusterModel) {
         }
 
         const datatype = datatypes[model.name];
-        if (!datatype || datatype == model) {
+        if (!datatype || datatype === model) {
             return;
         }
 
         const metabase = datatype.metabase;
-        if (!metabase || model.metabase != metabase) {
+        if (!metabase || model.metabase !== metabase) {
             return;
         }
 
@@ -81,11 +81,11 @@ function patchClusterTypes(cluster: ClusterModel) {
 
     // Ensure that any referenced datatypes are top-level named datatypes
     promote.forEach(model => {
-        if (model.parent == cluster) {
+        if (model.parent === cluster) {
             return;
         }
 
-        if (model.owner(ClusterModel) != cluster) {
+        if (model.owner(ClusterModel) !== cluster) {
             return;
         }
 

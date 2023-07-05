@@ -24,7 +24,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
         `tag: ${serialize(element.tag)}`,
         `name: ${serialize(element.name)}`
     );
-    if (element.id != undefined) {
+    if (element.id !== undefined) {
         const idStr = element.id < 0
             ? `${element.id}`
             : `0x${element.id.toString(16)}`;
@@ -69,7 +69,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
                 ? "         "
                 : "details: ";
             const suffix = i < lines.length - 1 ? " +" : "";
-            lines[i] = `${prefix}${serialize(lines[i] == "" ? "\n" : lines[i])}${suffix}`;
+            lines[i] = `${prefix}${serialize(lines[i] === "" ? "\n" : lines[i])}${suffix}`;
         }
         const text = lines.join("\n");
         if (text) {

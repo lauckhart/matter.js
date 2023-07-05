@@ -23,28 +23,31 @@ export function Merge<
 export type ClassExtends<C> = { new(...args: any[]): C };
 
 /** Merge an array of objects into one.  Currently assumes unique elements */
-export type MergeAll<T> = T extends [ infer O extends Properties, ...infer R ]
-    ? O & MergeAll<R>
+export type MergeAll<T> = T extends [ infer O extends Properties | undefined, ...infer R ]
+    ? O extends undefined ? MergeAll<R> : O & MergeAll<R>
     : T extends []
     ? {}
     : never;
 
-export function MergeAll<T extends Properties[]>(...objects: [...T]): MergeAll<T> {
+export function MergeAll<T extends (Properties | undefined)[]>(...objects: readonly [...T]): MergeAll<T> {
     return Object.assign({}, ...objects);
 }
 
 /** Pluck an item from an array of objects if present */
-export type FilteredPluck<K extends string, T extends readonly [ ...any ]>
+export type Pluck<K, T extends readonly [ ...any ]>
     = T extends [ infer O, ...infer R ]
     ? K extends keyof O
-        ? [ O[K], ...FilteredPluck<K, R> ]
-        : FilteredPluck<K, R>
+        ? [ O[K], ...Pluck<K, R> ]
+        : Pluck<K, R>
     : T extends []
     ? T
-    : T extends undefined
-    ? []
     : never;
 
-export function FilteredPluck<K extends string, T extends Properties[]>(key: K, ...objects: readonly [...T]): FilteredPluck<K, T> {
+export function Pluck<T extends Properties[], K extends keyof T[number]>(key: K, ...objects: readonly [...T]): Pluck<K, T> {
     return objects.map(o => (o as any)[key]).filter(o => o !== undefined) as any;
+}
+
+/** Same as "a == undefined" but keeps the kids happy */
+export function isNullish(a: any) {
+    return a === undefined || a === null;
 }

@@ -30,7 +30,7 @@ export function addConstraint(builder: ValidatorBuilder, model: ValueModel, cons
                 return generateRangeTest("v.length", ast, "v instanceof Uint8Array");
 
             case Metatype.string:
-                return generateRangeTest("v.length", ast, "typeof v == 'string'");
+                return generateRangeTest("v.length", ast, "typeof v === 'string'");
         }
 
         return generateRangeTest("v", ast);

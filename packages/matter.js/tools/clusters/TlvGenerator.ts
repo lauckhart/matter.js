@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../src/common/index.js";
+import { InternalError } from "../../src/common/InternalError.js";
 import { ClusterModel, CommandModel, Conformance, DatatypeModel, EventModel, FieldValue, Globals, Metatype, Model, ValueModel } from "../../src/model/index.js";
-import { camelize, serialize } from "../../src/util/index.js";
+import { camelize, serialize } from "../../src/util/String.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
 
@@ -27,7 +27,6 @@ const IntegerGlobalMap: { [name: string]: [ string, string ]} = {
 /** Adds TLV structures for ValueModels to a ClusterFile */
 export class TlvGenerator {
     private definedDatatypes = new Set<Model>();
-    private definedNames = new Set<string>();
     private scopedNames = new Set<string>();
 
     constructor(private file: ClusterFile, cluster: ClusterModel) {
@@ -56,9 +55,9 @@ export class TlvGenerator {
      * Import TLV type with automatic file naming.  Returns the name.
      */
     importTlv(fileOrDirectory: string, name: string) {
-        if (fileOrDirectory == "datatype") {
+        if (fileOrDirectory === "datatype") {
             fileOrDirectory = `${fileOrDirectory}/${name.replace(/^Tlv/, "")}`;
-        } else if (fileOrDirectory == "tlv") {
+        } else if (fileOrDirectory === "tlv") {
             fileOrDirectory = `${fileOrDirectory}/${name}`;
         }
         this.file.addImport(fileOrDirectory, name);
@@ -83,7 +82,7 @@ export class TlvGenerator {
                 break;
 
             case Metatype.float:
-                if (metabase.name == "single") {
+                if (metabase.name === "single") {
                     tlv = "TlvFloat";
                 } else {
                     tlv = "TlvDouble";
@@ -101,7 +100,7 @@ export class TlvGenerator {
     
             case Metatype.bytes:
             case Metatype.string:
-                tlv = this.importTlv("tlv/TlvString", metabase.name == Globals.octstr.name ? "TlvByteString" : "TlvString");
+                tlv = this.importTlv("tlv/TlvString", metabase.name === Globals.octstr.name ? "TlvByteString" : "TlvString");
                 const bounds = this.createBounds(model, "minLength", "maxLength");
                 if (bounds) {
                     tlv = `${tlv}.bound(${serialize(bounds)})`;
@@ -211,7 +210,7 @@ export class TlvGenerator {
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(field => {
                 let tlv: string;
-                if (field.conformance.type == Conformance.Flag.Mandatory) {
+                if (field.conformance.type === Conformance.Flag.Mandatory) {
                     tlv = "TlvField";
                 } else {
                     tlv = "TlvOptionalField"
@@ -293,10 +292,7 @@ export class TlvGenerator {
         }
 
         this.definedDatatypes.add(model);
-        if (this.definedNames.has(name)) {
-            throw new InternalError(`Duplicate definitions of module-scope "${name}"`);
-        }
-        this.definedNames.add(name);
+        this.file.nameDefined(name);
 
         switch (model.effectiveMetatype) {
             case Metatype.enum:

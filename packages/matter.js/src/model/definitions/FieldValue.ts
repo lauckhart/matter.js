@@ -48,7 +48,7 @@ export namespace FieldValue {
      * Test for one of the special placeholder types.
      */
     export function is(value: FieldValue | undefined, type: Type) {
-        return value && (value as any).type == type;
+        return value && (value as any).type === type;
     }
 
     /**
@@ -113,7 +113,7 @@ export namespace FieldValue {
         if (value === undefined) {
             return value;
         }
-        if (value == null) {
+        if (value === null) {
             return "null";
         }
         if (is(value, reference)) {
@@ -136,7 +136,7 @@ export namespace FieldValue {
      * number.
      */
     export function numericValue(value: FieldValue | undefined, typeName: string | undefined) {
-        if (typeof value == "number") {
+        if (typeof value === "number") {
             return value;
         }
 

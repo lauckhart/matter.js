@@ -23,7 +23,7 @@ const TYPE_ERRORS: { [badType: string]: string} = {
 }
 
 function fixTypeError(type: string | undefined) {
-    if (type != undefined && TYPE_ERRORS[type]) {
+    if (type !== undefined && TYPE_ERRORS[type]) {
         return TYPE_ERRORS[type];
     }
     return type;
@@ -42,7 +42,7 @@ export function* translateCluster(definition: ClusterReference) {
     translateDatatypes(definition, children);
 
     for (const [id, name] of metadata.ids.entries()) {
-        const idStr = id == undefined ? "(no ID)" : `0x${id.toString(16)}`;
+        const idStr = id === undefined ? "(no ID)" : `0x${id.toString(16)}`;
         logger.debug(`0x${idStr} ${name}`, Logger.dict({ rev: metadata.revision, cls: metadata.classification }));
         const cluster = ClusterElement({
             id: id,
@@ -95,7 +95,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         for (const record of ids) {
             let idStr = record.id.trim().toLowerCase();
             let id;
-            if (idStr == "n/a") {
+            if (idStr === "n/a") {
                 // Base cluster
                 id = undefined;
             } else {
@@ -106,7 +106,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
                 }
             }
 
-            if (id == 0x8) {
+            if (id === 0x8) {
                 // Level control table is just kind of fubar
                 uniqueIds.set(id, "LevelControl");
             } else {
@@ -129,8 +129,8 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         });
     
         let classification: ClusterElement.Classification;
-        if (classifications[0]?.role == "utility") {
-            if (classifications[0]?.scope == "node") {
+        if (classifications[0]?.role === "utility") {
+            if (classifications[0]?.scope === "node") {
                 classification = ClusterElement.Classification.NodeUtility;
             } else {
                 classification = ClusterElement.Classification.EndpointUtility;
@@ -143,7 +143,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         if (derivesFrom) {
             derivesFrom = derivesFrom.replace(/^derive[sd] from /i, "");
             derivesFrom = camelize(derivesFrom);
-            if (derivesFrom == "Base") {
+            if (derivesFrom === "Base") {
                 derivesFrom = undefined;
             }
         }
@@ -157,7 +157,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         });
     
         let revision = revisions[revisions.length - 1]?.revision;
-        if (revision == undefined) {
+        if (revision === undefined) {
             logger.warn(`no revisions for ${definition.name}, assuming "1"`);
             revision = 1;
         }
@@ -261,7 +261,7 @@ function translateFields(desc: string, fields?: HtmlReference) {
     records.forEach(r => {
         r.type = fixTypeError(r.type);
 
-        if (r.conformance == "Matter!Zigbee") {
+        if (r.conformance === "Matter!Zigbee") {
             delete r.conformance;
         }
 
@@ -275,7 +275,7 @@ function translateFields(desc: string, fields?: HtmlReference) {
             }
         }
 
-        if (typeof r.default == "string") {
+        if (typeof r.default === "string") {
             switch (r.default.toLowerCase()) {
                 case "desc": // See description
                 case "n/a": // Not available
@@ -316,7 +316,7 @@ function translateFields(desc: string, fields?: HtmlReference) {
 
 function hasColumn(definition: HtmlReference, ...names: string[]) {
     for (const name of names) {
-        if (definition.table?.rows[0]?.[name] != undefined) {
+        if (definition.table?.rows[0]?.[name] !== undefined) {
             return true;
         }
     }
@@ -327,7 +327,7 @@ function hasColumn(definition: HtmlReference, ...names: string[]) {
 // events.  If "parent" is none of these, returns undefined
 function translateValueChildren(tag: string, parent: undefined | { type?: string }, definition: HtmlReference): DatatypeElement[] | undefined {
     let type = parent?.type;
-    if (type == undefined) {
+    if (type === undefined) {
         switch (tag) {
             case "command":
             case "event":
@@ -365,7 +365,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
                 meaning: Optional(Str)
             });
 
-            records = records.filter(r => r.name != "Reserved");
+            records = records.filter(r => r.name !== "Reserved");
 
             return translateRecordsToMatter("value", records, DatatypeElement);
         }
@@ -559,7 +559,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
                 type = type.slice(3);
             }
         } else if (name.match(/struct$/i)
-            || type == "struct"
+            || type === "struct"
             || (definition.table?.rows[0].type)
         ) {
             if (!type) {
@@ -608,7 +608,7 @@ function addDetails(element: AnyElement, definition: HtmlReference) {
     while (!details && p) {
         // These are useless as documentation.  Use the next paragraph or
         // simply leave undocumented
-        if ((p.nextSibling as any)?.tagName == "P") {
+        if ((p.nextSibling as any)?.tagName === "P") {
             p = p?.nextSibling as HTMLParagraphElement;
             details = extractUsefulDocumentation(p);
         } else {

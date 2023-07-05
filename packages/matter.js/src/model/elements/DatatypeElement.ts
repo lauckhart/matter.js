@@ -51,7 +51,7 @@ export namespace DatatypeElement {
         const result = Array<DatatypeElement>();
 
         for (const [k, v] of Object.entries(values)) {
-            if (typeof v == "number") {
+            if (typeof v === "number") {
                 result.push(DatatypeElement({
                     id: v,
                     name: k,

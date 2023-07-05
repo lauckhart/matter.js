@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../common/index.js";
+import { InternalError } from "../../common/InternalError.js";
 import { ElementTag, Metatype } from "../definitions/index.js";
 import { AnyElement } from "../elements/index.js";
 import { Model, ValueModel } from "../models/index.js";
@@ -21,7 +21,7 @@ export function MergeModels(
     const visitor = new MergeTraversal<Model>(priority, (variants, recurse) => {
         const merged = merge(variants);
 
-        if (variants.tag == ElementTag.Cluster) {
+        if (variants.tag === ElementTag.Cluster) {
             reparentToCanonicalParent(priority, variants);
         }
 
@@ -49,7 +49,7 @@ export function MergeModels(
         // Specialized support for type
         if (properties.type) {
             const type = visitor.chooseType(variants);
-            if (type?.type != undefined) {
+            if (type?.type !== undefined && type?.type !== null) {
                 properties.type = type.type;
             }
         }
@@ -130,9 +130,9 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
                     // useful
                     overridePriority = true;
                 }
-            } else if (metatype == Metatype.integer) {
+            } else if (metatype === Metatype.integer) {
                 const variantMetatype = variant.effectiveMetatype;
-                if (variantMetatype == Metatype.enum || variantMetatype == Metatype.bitmap) {
+                if (variantMetatype === Metatype.enum || variantMetatype === Metatype.bitmap) {
                     // Even though this is not the highest priority type, it's
                     // more specific
                     overridePriority = true;
@@ -216,14 +216,14 @@ function reparentToCanonicalParent(priority: PriorityHandler, variants: VariantD
                 // Skip if this is the canonical variant or this variant
                 // already has children
                 const variant = variants.map[variantName];
-                if (variant == type || variant.children.length) {
+                if (variant === type || variant.children.length) {
                     continue;
                 }
 
                 // Skip if the base type is not local to the cluster or doesn't
                 // have children
                 const base = variant.base;
-                if (!(base instanceof ValueModel) || base.parent?.tag != ElementTag.Cluster || !base.children.length) {
+                if (!(base instanceof ValueModel) || base.parent?.tag !== ElementTag.Cluster || !base.children.length) {
                     continue;
                 }
 

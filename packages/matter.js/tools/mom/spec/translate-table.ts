@@ -109,7 +109,7 @@ export const Identifier = (el: HTMLElement) => {
 
     // If there are multiple paragraphs, only use the first if there is space
     // in the string
-    if (str.indexOf(" ") != -1 && el.childNodes.length > 1) {
+    if (str.indexOf(" ") !== -1 && el.childNodes.length > 1) {
         const limited = Str(el.firstChild as HTMLElement);
         if (limited.length) {
             str = limited;
@@ -196,7 +196,7 @@ export function translateTable<T extends TableSchema>(
     let childTranslator: ChildTranslator | undefined;
 
     nextField: for (let [ k, v ] of Object.entries(schema)) {
-        while (typeof v == "object") {
+        while (typeof v === "object") {
             switch (v.option) {
                 case "optional":
                     optional.add(k);
@@ -241,10 +241,10 @@ export function translateTable<T extends TableSchema>(
         // Translate each field
         for (const [name, translator] of translators) {
             const el = source[name];
-            const value = el == undefined ? undefined : translator(el);
+            const value = el === undefined ? undefined : translator(el);
 
             // Ignore the row if required values are missing
-            const empty = value == undefined || value === "" || Number.isNaN(value);
+            const empty = value === undefined || value === null || value === "" || Number.isNaN(value);
             if (empty && !optional.has(name)) {
                 missing.add(name);
                 continue nextRow;
@@ -263,7 +263,7 @@ export function translateTable<T extends TableSchema>(
         logger.error(`keys present are: ${Object.keys(definition.table.rows[0]).join(', ')}`);
     }
 
-    if (definition.details != undefined) {
+    if (definition.details) {
         installPreciseDetails(tag, definition.details, result, childTranslator);
     }
 
@@ -318,7 +318,7 @@ function installPreciseDetails(
             r.xref = detail.xref;
             detail.firstParagraph && (r.details = Str(detail.firstParagraph));
 
-            if (r.details && r.details.indexOf("SHALL indicate the of the") != -1) {
+            if (r.details && r.details.indexOf("SHALL indicate the of the") !== -1) {
                 // Goofballs copy & pasted this typo a couple times
                 r.details = r.details.replace("the of the", "the status of the");
             }
@@ -354,7 +354,7 @@ function inferFieldType(definition: HtmlReference, name: string): InferredFieldT
             return InferredFieldType.Unknown;
         }
         const str = Str(value);
-        if (str == "") {
+        if (str === "") {
             return InferredFieldType.Unknown;
         }
 
@@ -367,13 +367,13 @@ function inferFieldType(definition: HtmlReference, name: string): InferredFieldT
         // Update state based on the shape of the field
         if (str.match(/^\d+/)) {
             // Could be the ID.  Note we allow garbage after the ID
-            if (inferredType == InferredFieldType.UniqueStrings) {
+            if (inferredType === InferredFieldType.UniqueStrings) {
                 return InferredFieldType.Unknown;
             }
             inferredType = InferredFieldType.UniqueNumbers;
         } else {
             // Could be the name
-            if (inferredType == InferredFieldType.UniqueNumbers) {
+            if (inferredType === InferredFieldType.UniqueNumbers) {
                 return InferredFieldType.Unknown;
             }
             inferredType = InferredFieldType.UniqueStrings;
@@ -395,7 +395,7 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
         // Use the first preferred ID that is present
         for (const id of preferredIds) {
             idIndex = fields.indexOf(id);
-            if (idIndex != -1) {
+            if (idIndex !== -1) {
                 break;
             }
         }
@@ -403,15 +403,15 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
         // Use the first preferred name that is present
         for (const name of preferredNames) {
             nameIndex = fields.indexOf(name);
-            if (nameIndex != -1) {
+            if (nameIndex !== -1) {
                 break;
             }
         }
 
         // If we didn't find a preferred ID, use the first IDish column
-        if (idIndex == -1) {
+        if (idIndex === -1) {
             for (let i = 0; i < fields.length; i++) {
-                if (inferFieldType(definition, fields[i]) == InferredFieldType.UniqueNumbers) {
+                if (inferFieldType(definition, fields[i]) === InferredFieldType.UniqueNumbers) {
                     idIndex = i;
                     break;
                 }
@@ -419,15 +419,15 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
         }
 
         // If we found the ID, set the alias
-        if (idIndex != -1) {
+        if (idIndex !== -1) {
             ids = [ fields[idIndex] ];
         }
 
         // If we didn't find a preferred name, use the first namish column
         // following the ID
-        if (nameIndex == -1) {
-            for (let i = idIndex == -1 ? 0 : idIndex; i < fields.length; i++) {
-                if (inferFieldType(definition, fields[i]) == InferredFieldType.UniqueStrings) {
+        if (nameIndex === -1) {
+            for (let i = idIndex === -1 ? 0 : idIndex; i < fields.length; i++) {
+                if (inferFieldType(definition, fields[i]) === InferredFieldType.UniqueStrings) {
                     nameIndex = i;
                     break;
                 }
@@ -435,7 +435,7 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
         }
 
         // If we found the name, set the alias
-        if (nameIndex != -1) {
+        if (nameIndex !== -1) {
             names = [ fields[nameIndex] ];
         }
     }

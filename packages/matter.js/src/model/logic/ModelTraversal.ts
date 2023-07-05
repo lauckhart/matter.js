@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../common/index.js";
+import { InternalError } from "../../common/InternalError.js";
 import { ElementTag, FieldValue } from "../definitions/index.js";
 import { AnyElement, Globals } from "../elements/index.js";
 import { type Model, type ValueModel, type DatatypeModel, CommandModel } from "../models/index.js";
@@ -75,7 +75,7 @@ export class ModelTraversal {
             }
 
             // Commands and events always represent structs
-            if (model.tag == ElementTag.Command || model.tag == ElementTag.Event) {
+            if (model.tag === ElementTag.Command || model.tag === ElementTag.Event) {
                 return "struct";
             }
 
@@ -140,7 +140,7 @@ export class ModelTraversal {
                 return;
             }
             let type = this.getTypeName(model);
-            if (type != undefined) {
+            if (type !== undefined) {
                 return this.findType(model.parent, type, model.allowedBaseTags);
             }
         });
@@ -172,13 +172,13 @@ export class ModelTraversal {
         if (!model || !other) {
             return false;
         }
-        if (model == other) {
+        if (model === other) {
             return true;
         }
         let result = false;
 
         this.visitInheritance(model, (model) => {
-            if (model.name == other.name && model.global == other.global) {
+            if (model.name === other.name && model.global === other.global) {
                 result = true;
                 return false;
             }
@@ -280,7 +280,7 @@ export class ModelTraversal {
      * Find the response model for a command.
      */
     findResponse(command: CommandModel) {
-        if (command.response && command.response != "status") {
+        if (command.response && command.response !== "status") {
             return new ModelTraversal().findType(command, command.response, [ ElementTag.Command ]);
         }
     }
@@ -296,13 +296,13 @@ export class ModelTraversal {
         const references = Array<Model>();
         this.visit(scope, model => {
             // This is the most common method for referencing
-            if (this.findBase(model) == type) {
+            if (this.findBase(model) === type) {
                 references.push(model);
                 return;
             }
 
             // A command can reference its response
-            if (model instanceof CommandModel && this.findResponse(model) == type) {
+            if (model instanceof CommandModel && this.findResponse(model) === type) {
                 references.push(model);
                 return;
             }
@@ -312,7 +312,7 @@ export class ModelTraversal {
             if (model.isType) {
                 const defaultValue = (model as ValueModel).default;
                 if (FieldValue.is(defaultValue, FieldValue.reference)) {
-                    if ((defaultValue as FieldValue.Reference).name == type.name) {
+                    if ((defaultValue as FieldValue.Reference).name === type.name) {
                         references.push(model);
                     }
                 }
@@ -388,7 +388,7 @@ export class ModelTraversal {
      */
     private findLocal(scope: Model, key: ModelTraversal.ElementSelector, allowedTags: ElementTag[]) {
         for (const c of scope.children) {
-            if (c.is(key) && allowedTags.indexOf(c.tag) != -1 && !this.dismissed?.has(c)) {
+            if (c.is(key) && allowedTags.indexOf(c.tag) !== -1 && !this.dismissed?.has(c)) {
                 return c;
             }
         }

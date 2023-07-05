@@ -47,7 +47,7 @@ function installDatatypes(elements: AnyElement[]) {
 
     const datatypes = {} as { [ name: string ]: DatatypeElement }
     elements.forEach(e => {
-        if (e.tag == DatatypeElement.Tag) {
+        if (e.tag === DatatypeElement.Tag) {
             datatypes[e.name] = e;
         }
     });
@@ -104,7 +104,7 @@ function installDatatypes(elements: AnyElement[]) {
         });
     }
 
-    const clusters = elements.filter(e => e.tag == ClusterElement.Tag) as ClusterElement[];
+    const clusters = elements.filter(e => e.tag === ClusterElement.Tag) as ClusterElement[];
     clusters.forEach(c => install(c, c, new Set<string>()));
 
     return clusters;
@@ -115,7 +115,7 @@ async function loadDirectory(from: string, path: Directory, elements: AnyElement
 
     for (const filename of await path.ls()) {
         if (!filename.endsWith(".xml")) continue;
-        if (filename == "test-cluster.xml") continue;
+        if (filename === "test-cluster.xml") continue;
 
         logger.info(`file ${filename}`);
         await Logger.nestAsync(async () => {
