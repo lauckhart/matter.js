@@ -20,7 +20,7 @@ export class ValidatorBuilder extends Array<string> {
 
     constructor(fields: ValueModel[]) {
         super(
-            "this.result = {}",
+            "this.result = { valid: true }",
             "let v"
         );
 
@@ -34,8 +34,8 @@ export class ValidatorBuilder extends Array<string> {
                 continue;
             }
     
-            this.push(`v = record[JSON.stringify(${child.name})]`);
-            this.push("if (v !== undefined) {");
+            this.push(`v = record[${JSON.stringify(child.name)}]`);
+
             for (const aspect of aspects) {
                 if (aspect instanceof Constraint) {
                     addConstraint(this, child, aspect);
@@ -46,8 +46,6 @@ export class ValidatorBuilder extends Array<string> {
                 }
                 addType(this, child);
             }
-
-            this.push("}");
         }
         
         if (this.hasChoices) {
@@ -55,9 +53,13 @@ export class ValidatorBuilder extends Array<string> {
             this.push("this.checkChoices()");
         }
         this.push("return this.result");
+        this.logInternalEvaluationError("No error", {});
     }
 
     addTest(test: string, code: string, source: ValueModel, message: string) {
+        if (test == "true") {
+            return;
+        }
         this.push(`if (!(${test})) { this.error(${JSON.stringify(code)}, ${JSON.stringify(source.path)}, ${JSON.stringify(message)}) }`);
     }
 
@@ -80,7 +82,7 @@ export class ValidatorBuilder extends Array<string> {
             ) as Validator["validate"];
             return (record: { [name: string]: any }) => {
                 try {
-                    return fn(record);
+                    return fn.call(this, record);
                 } catch (e) {
                     this.logInternalEvaluationError(`Record validator evaluation failed`, e);
                     throw e;

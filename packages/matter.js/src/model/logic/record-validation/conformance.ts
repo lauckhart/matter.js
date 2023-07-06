@@ -13,8 +13,8 @@ const logger = Logger.get("conformance-validation");
 
 const BinaryOperatorMap = {
     [Conformance.Operator.AND]: "&&",
-    [Conformance.Operator.EQ]: "==",
-    [Conformance.Operator.NE]: "!=",
+    [Conformance.Operator.EQ]: "===",
+    [Conformance.Operator.NE]: "!==",
     [Conformance.Operator.OR]: "||",
     [Conformance.Operator.GT]: ">",
     [Conformance.Operator.LT]: "<",
@@ -68,7 +68,7 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
                 return `(this.features.has(${JSON.stringify(ast.param)}) || values[${JSON.stringify(ast.param)}] || null)`;
     
             case Conformance.Special.OptionalIf:
-                return `(${expr(ast.param as Conformance.Ast.Option, fn)} || !presence)`;
+                return `(${expr(ast.param as Conformance.Ast.Option, fn)} || v === undefined || v === null)`;
     
             case Conformance.Special.Value:
                 return `values[${JSON.stringify(ast.param)}]`;
@@ -77,7 +77,7 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
                 return "false";
     
             case Conformance.Flag.Mandatory:
-                return "!!presence";
+                return "!(v === undefined || v === null)";
     
             case Conformance.Operator.AND:
             case Conformance.Operator.EQ:

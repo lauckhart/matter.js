@@ -25,10 +25,6 @@ export class AttributeModel extends ValueModel implements AttributeElement {
         return !!this.quality.fixed;
     }
 
-    get nullable() {
-        return !!this.quality.nullable;
-    }
-
     constructor(definition: AttributeElement.Properties) {
         super(definition);
     }
