@@ -134,7 +134,7 @@ export const BaseComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.3
          */
-        supportedModes: FixedAttribute(2, TlvArray(TlvModeOptionStruct), { readAcl: AccessLevel.View }),
+        supportedModes: FixedAttribute(2, TlvArray(TlvModeOptionStruct), { default: [], readAcl: AccessLevel.View }),
 
         /**
          * This attribute represents the current mode of the server.

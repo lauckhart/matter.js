@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Properties } from "../../../util/Type.js";
 import { FeatureSet } from "../../definitions/FeatureSet.js";
 import { ValueModel } from "../../models/index.js";
 import { ValidationResult, Validator } from "./Validator.js";
@@ -22,7 +23,7 @@ type ChoiceState = {
  * portions exposed as utility methods on this class.
  */
 export class ValidatorImplementation implements Validator {
-    validate: (record: { [name: string]: any }) => ValidationResult;
+    validate: (record: Properties) => ValidationResult;
 
     choices?: { [name: string]: ChoiceState };
     result?: ValidationResult;
@@ -81,6 +82,7 @@ export class ValidatorImplementation implements Validator {
     // Compiled validator calls to add a validation error
     error(code: string, source: string, message: string) {
         if (!this.result!.errors) {
+            this.result!.valid = false;
             this.result!.errors = [];
         }
         this.result!.errors.push({ code, source, message });
