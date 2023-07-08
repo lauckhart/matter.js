@@ -6,45 +6,56 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Attribute, AccessLevel } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
-
-export const TlvLabelStruct = TlvObject({ label: TlvField(0, TlvString), value: TlvField(1, TlvString) });
 
 /**
- * Standard FixedLabel cluster properties.
+ * Fixed Label
+ *
+ * The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read only labels.
+ *
+ * This function creates a FixedLabel cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.8
  */
-export const FixedLabelMetadata = ClusterMetadata({ id: 0x40, name: "FixedLabel", revision: 1 });
+export function FixedLabelCluster() {
+    const cluster = { ...FixedLabelCluster.Metadata, ...FixedLabelCluster.BaseComponent };
+    return cluster as unknown as FixedLabelCluster.Type;
+};
 
-/**
- * A FixedLabelCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
-         */
-        labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, default: [], readAcl: AccessLevel.View })
-    }
-});
+export const TlvLabelStruct = TlvObject({ label: TlvField(0, TlvString), value: TlvField(1, TlvString) });
 
-export type FixedLabelCluster<T extends TypeFromPartialBitSchema<typeof FixedLabelMetadata.features>> = 
-    typeof FixedLabelMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+export namespace FixedLabelCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-export function FixedLabelCluster<T extends (keyof typeof FixedLabelMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...FixedLabelMetadata,
-        supportedFeatures: BitFlags(FixedLabelMetadata.features, ...features),
-        ...BaseComponent
-    };
-    
-    return cluster as unknown as FixedLabelCluster<BitFlags<typeof FixedLabelMetadata.features, T>>;
+    /**
+     * FixedLabel cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.8
+     */
+    export const Metadata = ClusterMetadata({ id: 0x40, name: "FixedLabel", revision: 1 });
+
+    /**
+     * A FixedLabelCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
+             */
+            labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, default: [], readAcl: AccessLevel.View })
+        }
+    });
+
+    /**
+     * This cluster supports all FixedLabel features.
+     */
+    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
 };

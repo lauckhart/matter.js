@@ -6,6 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { WritableFabricScopedAttribute, AccessLevel, Attribute, OptionalCommand, TlvNoResponse, Event, EventPriority } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -14,7 +16,20 @@ import { TlvUInt64, TlvUInt16, TlvEnum, TlvUInt8, TlvUInt32, TlvInt64 } from "..
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * OTA Software Update Requestor
+ *
+ * Provides an interface for downloading and applying OTA software updates
+ *
+ * This function creates a OtaSoftwareUpdateRequestor cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.19.7
+ */
+export function OtaSoftwareUpdateRequestorCluster() {
+    const cluster = { ...OtaSoftwareUpdateRequestorCluster.Metadata, ...OtaSoftwareUpdateRequestorCluster.BaseComponent };
+    return cluster as unknown as OtaSoftwareUpdateRequestorCluster.Type;
+};
 
 /**
  * This structure encodes a fabric-scoped location of an OTA provider on a given fabric.
@@ -110,113 +125,110 @@ export const TlvDownloadErrorEvent = TlvObject({
     platformCode: TlvField(3, TlvNullable(TlvInt64))
 });
 
-/**
- * Standard OtaSoftwareUpdateRequestor cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.19.7
- */
-export const OtaSoftwareUpdateRequestorMetadata = ClusterMetadata({
-    id: 0x2a,
-    name: "OtaSoftwareUpdateRequestor",
-    revision: 1
-});
+export namespace OtaSoftwareUpdateRequestorCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A OtaSoftwareUpdateRequestorCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * This field is a list of ProviderLocationStruct whose entries SHALL be set by Administrators, either during
-         * Commissioning or at a later time, to set the Provider Location for the default OTA Provider Node to use for
-         * software updates on a given Fabric.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.1
-         */
-        defaultOtaProviders: WritableFabricScopedAttribute(
-            0,
-            TlvArray(TlvProviderLocationStruct),
-            { default: [], readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }
-        ),
+    /**
+     * OtaSoftwareUpdateRequestor cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.19.7
+     */
+    export const Metadata = ClusterMetadata({ id: 0x2a, name: "OtaSoftwareUpdateRequestor", revision: 1 });
 
-        /**
-         * This field SHALL be set to True if the OTA Requestor is currently able to be updated. Otherwise, it SHALL be
-         * set to False in case of any condition preventing update being possible, such as insufficient capacity of an
-         * internal battery. This field is merely informational for diagnostics purposes and SHALL NOT affect the
-         * responses provided by an OTA Provider to an OTA Requestor.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.2
-         */
-        updatePossible: Attribute(1, TlvBoolean, { default: true, readAcl: AccessLevel.View }),
+    /**
+     * A OtaSoftwareUpdateRequestorCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * This field is a list of ProviderLocationStruct whose entries SHALL be set by Administrators, either
+             * during Commissioning or at a later time, to set the Provider Location for the default OTA Provider Node
+             * to use for software updates on a given Fabric.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.1
+             */
+            defaultOtaProviders: WritableFabricScopedAttribute(
+                0,
+                TlvArray(TlvProviderLocationStruct),
+                { default: [], readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }
+            ),
 
-        /**
-         * This field SHALL reflect the current state of the OTA Requestor with regards to obtaining software updates.
-         * See Section 11.19.7.4.2, “UpdateStateEnum” for possible values.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.3
-         */
-        updateState: Attribute(2, TlvEnum<TlvUpdateStateEnum>(), { readAcl: AccessLevel.View }),
+            /**
+             * This field SHALL be set to True if the OTA Requestor is currently able to be updated. Otherwise, it
+             * SHALL be set to False in case of any condition preventing update being possible, such as insufficient
+             * capacity of an internal battery. This field is merely informational for diagnostics purposes and SHALL
+             * NOT affect the responses provided by an OTA Provider to an OTA Requestor.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.2
+             */
+            updatePossible: Attribute(1, TlvBoolean, { default: true, readAcl: AccessLevel.View }),
 
-        /**
-         * This field SHALL reflect the percentage value of progress, relative to the current UpdateState, if
-         * applicable to the state.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.4
-         */
-        updateStateProgress: Attribute(
-            3,
-            TlvNullable(TlvUInt8.bound({ max: 100 })),
-            { default: null, readAcl: AccessLevel.View }
-        )
-    },
+            /**
+             * This field SHALL reflect the current state of the OTA Requestor with regards to obtaining software
+             * updates. See Section 11.19.7.4.2, “UpdateStateEnum” for possible values.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.3
+             */
+            updateState: Attribute(2, TlvEnum<TlvUpdateStateEnum>(), { readAcl: AccessLevel.View }),
 
-    commands: {
-        /**
-         * This command MAY be invoked by Administrators to announce the presence of a particular OTA Provider.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.6.1
-         */
-        announceOtaProvider: OptionalCommand(0, TlvAnnounceOtaProviderRequest, 0, TlvNoResponse)
-    },
+            /**
+             * This field SHALL reflect the percentage value of progress, relative to the current UpdateState, if
+             * applicable to the state.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.4
+             */
+            updateStateProgress: Attribute(
+                3,
+                TlvNullable(TlvUInt8.bound({ max: 100 })),
+                { default: null, readAcl: AccessLevel.View }
+            )
+        },
 
-    events: {
-        /**
-         * This event SHALL be generated when a change of the UpdateState attribute occurs due to an OTA Requestor
-         * moving through the states necessary to query for updates.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.1
-         */
-        stateTransition: Event(0, EventPriority.Info, TlvStateTransitionEvent),
+        commands: {
+            /**
+             * This command MAY be invoked by Administrators to announce the presence of a particular OTA Provider.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.6.1
+             */
+            announceOtaProvider: OptionalCommand(0, TlvAnnounceOtaProviderRequest, 0, TlvNoResponse)
+        },
 
-        /**
-         * This event SHALL be generated whenever a new version starts executing after being applied due to a software
-         * update. This event SHOULD be generated even if a software update was done using means outside of this
-         * cluster.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.6
-         */
-        versionApplied: Event(1, EventPriority.Critical, TlvVersionAppliedEvent),
+        events: {
+            /**
+             * This event SHALL be generated when a change of the UpdateState attribute occurs due to an OTA Requestor
+             * moving through the states necessary to query for updates.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.1
+             */
+            stateTransition: Event(0, EventPriority.Info, TlvStateTransitionEvent),
 
-        /**
-         * This event SHALL be generated whenever an error occurs during OTA Requestor download operation.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.9
-         */
-        downloadError: Event(2, EventPriority.Info, TlvDownloadErrorEvent)
-    }
-});
+            /**
+             * This event SHALL be generated whenever a new version starts executing after being applied due to a
+             * software update. This event SHOULD be generated even if a software update was done using means outside
+             * of this cluster.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.6
+             */
+            versionApplied: Event(1, EventPriority.Critical, TlvVersionAppliedEvent),
 
-export type OtaSoftwareUpdateRequestorCluster<T extends TypeFromPartialBitSchema<typeof OtaSoftwareUpdateRequestorMetadata.features>> = 
-    typeof OtaSoftwareUpdateRequestorMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+            /**
+             * This event SHALL be generated whenever an error occurs during OTA Requestor download operation.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.9
+             */
+            downloadError: Event(2, EventPriority.Info, TlvDownloadErrorEvent)
+        }
+    });
 
-export function OtaSoftwareUpdateRequestorCluster<T extends (keyof typeof OtaSoftwareUpdateRequestorMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...OtaSoftwareUpdateRequestorMetadata,
-        supportedFeatures: BitFlags(OtaSoftwareUpdateRequestorMetadata.features, ...features),
-        ...BaseComponent
+    /**
+     * This cluster supports all OtaSoftwareUpdateRequestor features.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands },
+        events: { ...BaseComponent.events }
     };
-    
-    return cluster as unknown as OtaSoftwareUpdateRequestorCluster<BitFlags<typeof OtaSoftwareUpdateRequestorMetadata.features, T>>;
 };

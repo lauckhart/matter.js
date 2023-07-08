@@ -6,45 +6,54 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
-
-
 
 /**
- * Standard LowPower cluster properties.
+ * Low Power
+ *
+ * This cluster provides an interface for managing low power mode on a device.
+ *
+ * This function creates a LowPower cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
  */
-export const LowPowerMetadata = ClusterMetadata({ id: 0x508, name: "LowPower", revision: 1 });
+export function LowPowerCluster() {
+    const cluster = { ...LowPowerCluster.Metadata, ...LowPowerCluster.BaseComponent };
+    return cluster as unknown as LowPowerCluster.Type;
+};
 
-/**
- * A LowPowerCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    commands: {
-        /**
-         * This command shall put the device into low power mode.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9.3.1
-         */
-        sleep: Command(0, TlvNoArguments, 0, TlvNoResponse)
-    }
-});
+export namespace LowPowerCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-export type LowPowerCluster<T extends TypeFromPartialBitSchema<typeof LowPowerMetadata.features>> = 
-    typeof LowPowerMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+    /**
+     * LowPower cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
+     */
+    export const Metadata = ClusterMetadata({ id: 0x508, name: "LowPower", revision: 1 });
 
-export function LowPowerCluster<T extends (keyof typeof LowPowerMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...LowPowerMetadata,
-        supportedFeatures: BitFlags(LowPowerMetadata.features, ...features),
-        ...BaseComponent
-    };
-    
-    return cluster as unknown as LowPowerCluster<BitFlags<typeof LowPowerMetadata.features, T>>;
+    /**
+     * A LowPowerCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        commands: {
+            /**
+             * This command shall put the device into low power mode.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9.3.1
+             */
+            sleep: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        }
+    });
+
+    /**
+     * This cluster supports all LowPower features.
+     */
+    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
 };

@@ -26,6 +26,19 @@ type Documentation = {
     xref?: Specification.CrossReference
 }
 
+function mapSpec(xref?: Specification.CrossReference) {
+    switch (xref?.document) {
+        case "core":
+            return "MatterCoreSpecificationV1_1";
+
+        case "cluster":
+            return "MatterApplicationClusterSpecificationV1_1";
+
+        case "device":
+            return "MatterDeviceLibrarySpecificationV1_1";
+    }
+}
+
 abstract class Entry {
     private documentation?: Documentation;
     private docText?: string;
@@ -44,6 +57,10 @@ abstract class Entry {
             this.documentation = content;
         }
         this.docText = extra;
+        const spec = mapSpec(this.documentation.xref);
+        if (spec) {
+            this.parentBlock!.file.addImport("spec/Specifications", spec);
+        }
         return this;
     }
 
@@ -71,32 +88,22 @@ abstract class Entry {
         const lines = wordWrap(paragraphs.join("\n"), WRAP_WIDTH - 3 - linePrefix.length);
 
         // Add xref after wrapping so we can ensure it never wraps
-        const xref = this.documentation?.xref;
-        if (xref) {
-            let spec;
-            switch (xref.document) {
-                case "core":
-                    spec = "MatterCoreSpecificationV1_1";
-                    break;
-
-                case "cluster":
-                    spec = "MatterApplicationClusterSpecificationV1_1";
-                    break;
-
-                case "device":
-                    spec = "MatterDeviceLibrarySpecificationV1_1";
-                    break;
+        const spec = mapSpec(this.documentation?.xref);
+        if (spec) {
+            if (lines.length) {
+                lines.push("");
             }
-            if (spec) {
-                if (lines.length) {
-                    lines.push("");
-                }
-                this.parentBlock!.file.addImport("spec/Specifications", spec);
-                lines.push(`@see {@link ${spec}} § ${xref.section}`);
-            }
+            lines.push(`@see {@link ${spec}} § ${this.documentation!.xref!.section}`);
         }
 
         if (lines.length) {
+            // Remove blank lines between jsdoc directies except for @see
+            for (let i = 0; i < lines.length - 1; i++) {
+                if (lines[i][0] == "@" && lines[i + 1] == "" && lines[i + 2][0] == "@" && !lines[i + 2].startsWith("@see")) {
+                    lines.splice(i + 1, 1);
+                }
+            }
+
             return `${linePrefix}/**\n${lines.map(l => `${linePrefix} * ${l}`.trimEnd()).join("\n")}\n${linePrefix} */\n`
         }
 
@@ -512,7 +519,12 @@ export class TsFile extends Block {
             });
         }
 
-        writeMatterFile(`${this.name}.ts`, this);
+        let body = this.toString();
+        if (body[body.length - 1] !== "\n") {
+            body += "\n";
+        }
+
+        writeMatterFile(`${this.name}.ts`, body);
         return this;
     }
 }

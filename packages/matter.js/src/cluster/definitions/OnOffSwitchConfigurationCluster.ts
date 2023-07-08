@@ -6,10 +6,22 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Attribute, WritableAttribute } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * On/off Switch Configuration
+ *
+ * Attributes and commands for configuring On/Off switching devices.
+ *
+ * This function creates a OnOffSwitchConfiguration cluster.
+ */
+export function OnOffSwitchConfigurationCluster() {
+    const cluster = { ...OnOffSwitchConfigurationCluster.Metadata, ...OnOffSwitchConfigurationCluster.BaseComponent };
+    return cluster as unknown as OnOffSwitchConfigurationCluster.Type;
+};
 
 export const enum TlvSwitchType {
     Toggle = 0,
@@ -23,30 +35,26 @@ export const enum TlvSwitchActions {
     Toggle = 2
 };
 
-/**
- * Standard OnOffSwitchConfiguration cluster properties.
- */
-export const OnOffSwitchConfigurationMetadata = ClusterMetadata({ id: 0x7, name: "OnOffSwitchConfiguration", revision: 1 });
+export namespace OnOffSwitchConfigurationCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A OnOffSwitchConfigurationCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({ attributes: {
-    switchType: Attribute(0, TlvEnum<TlvSwitchType>()),
-    switchActions: WritableAttribute(16, TlvEnum<TlvSwitchActions>())
-} });
+    /**
+     * OnOffSwitchConfiguration cluster metadata.
+     */
+    export const Metadata = ClusterMetadata({ id: 0x7, name: "OnOffSwitchConfiguration", revision: 1 });
 
-export type OnOffSwitchConfigurationCluster<T extends TypeFromPartialBitSchema<typeof OnOffSwitchConfigurationMetadata.features>> = 
-    typeof OnOffSwitchConfigurationMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+    /**
+     * A OnOffSwitchConfigurationCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({ attributes: {
+        switchType: Attribute(0, TlvEnum<TlvSwitchType>()),
+        switchActions: WritableAttribute(16, TlvEnum<TlvSwitchActions>())
+    } });
 
-export function OnOffSwitchConfigurationCluster<T extends (keyof typeof OnOffSwitchConfigurationMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...OnOffSwitchConfigurationMetadata,
-        supportedFeatures: BitFlags(OnOffSwitchConfigurationMetadata.features, ...features),
-        ...BaseComponent
-    };
-    
-    return cluster as unknown as OnOffSwitchConfigurationCluster<BitFlags<typeof OnOffSwitchConfigurationMetadata.features, T>>;
+    /**
+     * This cluster supports all OnOffSwitchConfiguration features.
+     */
+    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
 };

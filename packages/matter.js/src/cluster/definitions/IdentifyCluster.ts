@@ -6,12 +6,37 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+
+/**
+ * Identify
+ *
+ * Attributes and commands for putting a device into Identification mode (e.g. flashing a light).
+ *
+ * This function creates a Identify cluster supporting a specific set of features.  Include each
+ * {@link IdentifyCluster.Feature} you wish to support.
+ *
+ * @param features a list of {@link IdentifyCluster.Feature} to support
+ * @returns a Identify cluster with specified features enabled
+ * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2
+ */
+export function IdentifyCluster<T extends IdentifyCluster.Feature[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...IdentifyCluster.Metadata,
+        supportedFeatures: BitFlags(IdentifyCluster.Metadata.features, ...features),
+        ...IdentifyCluster.BaseComponent
+    };
+    extendCluster(cluster, IdentifyCluster.QueryComponent, { query: true });
+    return cluster as unknown as IdentifyCluster.Type<BitFlags<typeof IdentifyCluster.Metadata.features, T>>;
+};
 
 /**
  * This attribute specifies how the identification state is presented to the user. This field SHALL contain one of the
@@ -154,106 +179,123 @@ export const TlvIdentifyQueryResponseRequest = TlvObject({
     timeout: TlvField(0, TlvUInt16)
 });
 
-/**
- * Standard Identify cluster properties.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2
- */
-export const IdentifyMetadata = ClusterMetadata({
-    id: 0x3,
-    name: "Identify",
-    revision: 1,
-
-    features: {
+export namespace IdentifyCluster {
+    /**
+     * These are optional features supported by IdentifyCluster.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.4
+     */
+    export enum Feature {
         /**
          * Query
          *
          * Multicast query for identification state
          */
-        query: BitFlag(0)
-    }
-});
-
-/**
- * A IdentifyCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * This attribute specifies the remaining length of time, in seconds, that the endpoint will continue to
-         * identify itself.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
-         */
-        identifyTime: WritableAttribute(0, TlvUInt16, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }),
-
-        /**
-         * This attribute specifies how the identification state is presented to the user. This field SHALL contain one
-         * of the values listed below:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
-         */
-        identifyType: Attribute(1, TlvEnum<TlvIdentifyType>(), { readAcl: AccessLevel.View })
-    },
-
-    commands: {
-        /**
-         * This command starts or stops the receiving device identifying itself. This command SHALL have the following
-         * data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
-         */
-        identify: Command(0, TlvIdentifyRequest, 0, TlvNoResponse),
-
-        /**
-         * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow
-         * an implementation to provide visual feedback to the user under certain circumstances such as a color light
-         * turning green when it has successfully connected to a network. The use of this command and the effects
-         * themselves are entirely up to the implementer to use whenever a visual feedback is useful but it is not the
-         * same as and does not replace the identify mechanism used during commissioning.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
-         */
-        triggerEffect: OptionalCommand(64, TlvTriggerEffectRequest, 64, TlvNoResponse)
-    }
-});
-
-/**
- * A IdentifyCluster supports these elements if it supports feature Query.
- */
-export const QueryComponent = ClusterComponent({
-    commands: {
-        /**
-         * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command, in
-         * the case that the device is currently identifying itself.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
-         */
-        identifyQueryResponse: Command(0, TlvIdentifyQueryResponseRequest, 0, TlvNoResponse),
-
-        /**
-         * This command allows the sending device to request the target or targets to respond if they are currently
-         * identifying themselves.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
-         */
-        identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponseRequest)
-    }
-});
-
-export type IdentifyCluster<T extends TypeFromPartialBitSchema<typeof IdentifyMetadata.features>> = 
-    typeof IdentifyMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent
-    & (T extends { query: true } ? typeof QueryComponent : {});
-
-export function IdentifyCluster<T extends (keyof typeof IdentifyMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...IdentifyMetadata,
-        supportedFeatures: BitFlags(IdentifyMetadata.features, ...features),
-        ...BaseComponent
+        Query = "Query"
     };
-    extendCluster(cluster, QueryComponent, { query: true });
-    
-    return cluster as unknown as IdentifyCluster<BitFlags<typeof IdentifyMetadata.features, T>>;
+
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+        typeof Metadata
+        & { supportedFeatures: T }
+        & typeof BaseComponent
+        & (T extends { query: true } ? typeof QueryComponent : {});
+
+    /**
+     * Identify cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x3,
+        name: "Identify",
+        revision: 1,
+
+        features: {
+            /**
+             * Query
+             *
+             * Multicast query for identification state
+             */
+            query: BitFlag(0)
+        }
+    });
+
+    /**
+     * A IdentifyCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * This attribute specifies the remaining length of time, in seconds, that the endpoint will continue to
+             * identify itself.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
+             */
+            identifyTime: WritableAttribute(0, TlvUInt16, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }),
+
+            /**
+             * This attribute specifies how the identification state is presented to the user. This field SHALL contain
+             * one of the values listed below:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
+             */
+            identifyType: Attribute(1, TlvEnum<TlvIdentifyType>(), { readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * This command starts or stops the receiving device identifying itself. This command SHALL have the
+             * following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
+             */
+            identify: Command(0, TlvIdentifyRequest, 0, TlvNoResponse),
+
+            /**
+             * This command allows the support of feedback to the user, such as a certain light effect. It is used to
+             * allow an implementation to provide visual feedback to the user under certain circumstances such as a
+             * color light turning green when it has successfully connected to a network. The use of this command and
+             * the effects themselves are entirely up to the implementer to use whenever a visual feedback is useful
+             * but it is not the same as and does not replace the identify mechanism used during commissioning.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
+             */
+            triggerEffect: OptionalCommand(64, TlvTriggerEffectRequest, 64, TlvNoResponse)
+        }
+    });
+
+    /**
+     * A IdentifyCluster supports these elements if it supports feature Query.
+     */
+    export const QueryComponent = ClusterComponent({
+        commands: {
+            /**
+             * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command,
+             * in the case that the device is currently identifying itself.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
+             */
+            identifyQueryResponse: Command(0, TlvIdentifyQueryResponseRequest, 0, TlvNoResponse),
+
+            /**
+             * This command allows the sending device to request the target or targets to respond if they are currently
+             * identifying themselves.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
+             */
+            identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponseRequest)
+        }
+    });
+
+    /**
+     * This cluster supports all Identify features.  It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands, ...QueryComponent.commands }
+    };
 };

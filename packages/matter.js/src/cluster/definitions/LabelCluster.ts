@@ -6,12 +6,23 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Attribute } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * This function creates a Label cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 9.7
+ */
+export function LabelCluster() {
+    const cluster = { ...LabelCluster.Metadata, ...LabelCluster.BaseComponent };
+    return cluster as unknown as LabelCluster.Type;
+};
 
 /**
  * This is a string tuple with strings that are user defined.
@@ -35,34 +46,34 @@ export const TlvLabelStruct = TlvObject({
     value: TlvField(1, TlvString.bound({ maxLength: 16 }))
 });
 
-/**
- * Standard Label cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 9.7
- */
-export const LabelMetadata = ClusterMetadata({ name: "Label", revision: 1 });
+export namespace LabelCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A LabelCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * This is a list of string tuples. Each entry is a LabelStruct.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.7.5.1
-         */
-        labelList: Attribute(0, TlvArray(TlvLabelStruct), { default: [] })
-    }
-});
+    /**
+     * Label cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.7
+     */
+    export const Metadata = ClusterMetadata({ name: "Label", revision: 1 });
 
-export type LabelCluster<T extends TypeFromPartialBitSchema<typeof LabelMetadata.features>> = 
-    typeof LabelMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+    /**
+     * A LabelCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * This is a list of string tuples. Each entry is a LabelStruct.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.7.5.1
+             */
+            labelList: Attribute(0, TlvArray(TlvLabelStruct), { default: [] })
+        }
+    });
 
-export function LabelCluster<T extends (keyof typeof LabelMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = { ...LabelMetadata, supportedFeatures: BitFlags(LabelMetadata.features, ...features), ...BaseComponent };
-    
-    return cluster as unknown as LabelCluster<BitFlags<typeof LabelMetadata.features, T>>;
+    /**
+     * This cluster supports all Label features.
+     */
+    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
 };

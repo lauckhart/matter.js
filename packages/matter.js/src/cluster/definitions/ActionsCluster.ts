@@ -6,13 +6,29 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Attribute, AccessLevel, OptionalAttribute, OptionalCommand, TlvNoResponse, Event, EventPriority } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum, TlvBitmap, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
-import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * Actions
+ *
+ * This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to expose action
+ * information.
+ *
+ * This function creates a Actions cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 9.14
+ */
+export function ActionsCluster() {
+    const cluster = { ...ActionsCluster.Metadata, ...ActionsCluster.BaseComponent };
+    return cluster as unknown as ActionsCluster.Type;
+};
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2
@@ -430,159 +446,165 @@ export const TlvActionFailedEvent = TlvObject({
     error: TlvField(3, TlvEnum<TlvActionErrorEnum>())
 });
 
-/**
- * Standard Actions cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 9.14
- */
-export const ActionsMetadata = ClusterMetadata({ id: 0x25, name: "Actions", revision: 1 });
+export namespace ActionsCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A ActionsCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The ActionList attribute holds the list of actions. Each entry SHALL have an unique ActionID, and its
-         * EndpointListID SHALL exist in the EndpointLists attribute.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.1
-         */
-        actionList: Attribute(0, TlvArray(TlvActionStruct), { default: [], readAcl: AccessLevel.View }),
+    /**
+     * Actions cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.14
+     */
+    export const Metadata = ClusterMetadata({ id: 0x25, name: "Actions", revision: 1 });
 
-        /**
-         * The EndpointLists attribute holds the list of endpoint lists. Each entry SHALL have an unique EndpointListID.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.2
-         */
-        endpointLists: Attribute(1, TlvArray(TlvEndpointListStruct), { default: [], readAcl: AccessLevel.View }),
+    /**
+     * A ActionsCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The ActionList attribute holds the list of actions. Each entry SHALL have an unique ActionID, and its
+             * EndpointListID SHALL exist in the EndpointLists attribute.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.1
+             */
+            actionList: Attribute(0, TlvArray(TlvActionStruct), { default: [], readAcl: AccessLevel.View }),
 
-        /**
-         * The SetupURL attribute (when provided) SHALL indicate a URL; its syntax SHALL follow the syntax as specified
-         * in RFC 3986, max. 512 ASCII characters. The location referenced by this URL SHALL provide additional
-         * information for the actions provided:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.3
-         */
-        setupUrl: OptionalAttribute(2, TlvString.bound({ maxLength: 512 }), { default: "empty", readAcl: AccessLevel.View })
-    },
+            /**
+             * The EndpointLists attribute holds the list of endpoint lists. Each entry SHALL have an unique
+             * EndpointListID.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.2
+             */
+            endpointLists: Attribute(1, TlvArray(TlvEndpointListStruct), { default: [], readAcl: AccessLevel.View }),
 
-    commands: {
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.1
-         */
-        instantAction: OptionalCommand(0, TlvInstantActionRequest, 0, TlvNoResponse),
+            /**
+             * The SetupURL attribute (when provided) SHALL indicate a URL; its syntax SHALL follow the syntax as
+             * specified in RFC 3986, max. 512 ASCII characters. The location referenced by this URL SHALL provide
+             * additional information for the actions provided:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.3
+             */
+            setupUrl: OptionalAttribute(
+                2,
+                TlvString.bound({ maxLength: 512 }),
+                { default: "empty", readAcl: AccessLevel.View }
+            )
+        },
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.2
-         */
-        instantActionWithTransition: OptionalCommand(1, TlvInstantActionWithTransitionRequest, 1, TlvNoResponse),
+        commands: {
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.1
+             */
+            instantAction: OptionalCommand(0, TlvInstantActionRequest, 0, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.3
-         */
-        startAction: OptionalCommand(2, TlvStartActionRequest, 2, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.2
+             */
+            instantActionWithTransition: OptionalCommand(1, TlvInstantActionWithTransitionRequest, 1, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.4
-         */
-        startActionWithDuration: OptionalCommand(3, TlvStartActionWithDurationRequest, 3, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.3
+             */
+            startAction: OptionalCommand(2, TlvStartActionRequest, 2, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.5
-         */
-        stopAction: OptionalCommand(4, TlvStopActionRequest, 4, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.4
+             */
+            startActionWithDuration: OptionalCommand(3, TlvStartActionWithDurationRequest, 3, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.6
-         */
-        pauseAction: OptionalCommand(5, TlvPauseActionRequest, 5, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.5
+             */
+            stopAction: OptionalCommand(4, TlvStopActionRequest, 4, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.7
-         */
-        pauseActionWithDuration: OptionalCommand(6, TlvPauseActionWithDurationRequest, 6, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.6
+             */
+            pauseAction: OptionalCommand(5, TlvPauseActionRequest, 5, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.8
-         */
-        resumeAction: OptionalCommand(7, TlvResumeActionRequest, 7, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.7
+             */
+            pauseActionWithDuration: OptionalCommand(6, TlvPauseActionWithDurationRequest, 6, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.9
-         */
-        enableAction: OptionalCommand(8, TlvEnableActionRequest, 8, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.8
+             */
+            resumeAction: OptionalCommand(7, TlvResumeActionRequest, 7, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.10
-         */
-        enableActionWithDuration: OptionalCommand(9, TlvEnableActionWithDurationRequest, 9, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.9
+             */
+            enableAction: OptionalCommand(8, TlvEnableActionRequest, 8, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.11
-         */
-        disableAction: OptionalCommand(10, TlvDisableActionRequest, 10, TlvNoResponse),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.10
+             */
+            enableActionWithDuration: OptionalCommand(9, TlvEnableActionWithDurationRequest, 9, TlvNoResponse),
 
-        /**
-         * This command SHALL have the following data fields:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.12
-         */
-        disableActionWithDuration: OptionalCommand(11, TlvDisableActionWithDurationRequest, 11, TlvNoResponse)
-    },
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.11
+             */
+            disableAction: OptionalCommand(10, TlvDisableActionRequest, 10, TlvNoResponse),
 
-    events: {
-        /**
-         * This event SHALL be generated when there is a change in the State of an ActionID during the execution of an
-         * action and the most recent command using that ActionID used an InvokeID data field.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.1
-         */
-        stateChanged: Event(0, EventPriority.Info, TlvStateChangedEvent),
+            /**
+             * This command SHALL have the following data fields:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.12
+             */
+            disableActionWithDuration: OptionalCommand(11, TlvDisableActionWithDurationRequest, 11, TlvNoResponse)
+        },
 
-        /**
-         * This event SHALL be generated when there is some error which prevents the action from its normal planned
-         * execution and the most recent command using that ActionID used an InvokeID data field.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.2
-         */
-        actionFailed: Event(1, EventPriority.Info, TlvActionFailedEvent)
-    }
-});
+        events: {
+            /**
+             * This event SHALL be generated when there is a change in the State of an ActionID during the execution of
+             * an action and the most recent command using that ActionID used an InvokeID data field.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.1
+             */
+            stateChanged: Event(0, EventPriority.Info, TlvStateChangedEvent),
 
-export type ActionsCluster<T extends TypeFromPartialBitSchema<typeof ActionsMetadata.features>> = 
-    typeof ActionsMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+            /**
+             * This event SHALL be generated when there is some error which prevents the action from its normal planned
+             * execution and the most recent command using that ActionID used an InvokeID data field.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.2
+             */
+            actionFailed: Event(1, EventPriority.Info, TlvActionFailedEvent)
+        }
+    });
 
-export function ActionsCluster<T extends (keyof typeof ActionsMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...ActionsMetadata,
-        supportedFeatures: BitFlags(ActionsMetadata.features, ...features),
-        ...BaseComponent
+    /**
+     * This cluster supports all Actions features.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands },
+        events: { ...BaseComponent.events }
     };
-    
-    return cluster as unknown as ActionsCluster<BitFlags<typeof ActionsMetadata.features, T>>;
 };

@@ -7,16 +7,7 @@
 import { InternalError } from "../../../common/InternalError.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { AttributeModel, ClusterModel, ValueModel } from "../../models/index.js";
-
-/**
- * The condition for supported patterns of complex variance on Cluster
- * Attributes, Commands and Events.
- */
-export type VarianceCondition = {
-    anyOf?: string[],
-    allOf?: string[],
-    not?: string
-}
+import { VarianceCondition } from "./VarianceCondition.js";
 
 /**
  * Lists mandatory and optional elements for a specific context.

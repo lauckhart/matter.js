@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export function capitalize(text: string) {
-    return text[0].toUpperCase() + text.slice(1);
+export function capitalize<T extends string>(text: T) {
+    return text[0].toUpperCase() + text.slice(1) as Capitalize<T>;
 }
 
 /**

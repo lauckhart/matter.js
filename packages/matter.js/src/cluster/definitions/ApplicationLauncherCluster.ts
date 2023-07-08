@@ -6,14 +6,39 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
+
+/**
+ * Application Launcher
+ *
+ * This cluster provides an interface for launching content on a media player device such as a TV or Speaker.
+ *
+ * This function creates a ApplicationLauncher cluster supporting a specific set of features.  Include each
+ * {@link ApplicationLauncherCluster.Feature} you wish to support.
+ *
+ * @param features a list of {@link ApplicationLauncherCluster.Feature} to support
+ * @returns a ApplicationLauncher cluster with specified features enabled
+ * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4
+ */
+export function ApplicationLauncherCluster<T extends ApplicationLauncherCluster.Feature[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...ApplicationLauncherCluster.Metadata,
+        supportedFeatures: BitFlags(ApplicationLauncherCluster.Metadata.features, ...features),
+        ...ApplicationLauncherCluster.BaseComponent
+    };
+    extendCluster(cluster, ApplicationLauncherCluster.ApplicationPlatformComponent, { applicationPlatform: true });
+    return cluster as unknown as ApplicationLauncherCluster.Type<BitFlags<typeof ApplicationLauncherCluster.Metadata.features, T>>;
+};
 
 /**
  * This indicates a global identifier for an Application given a catalog.
@@ -138,103 +163,125 @@ export const TlvHideAppRequest = TlvObject({
     application: TlvOptionalField(0, TlvApplicationStruct)
 });
 
-/**
- * Standard ApplicationLauncher cluster properties.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4
- */
-export const ApplicationLauncherMetadata = ClusterMetadata({
-    id: 0x50c,
-    name: "ApplicationLauncher",
-    revision: 1,
-
-    features: {
+export namespace ApplicationLauncherCluster {
+    /**
+     * These are optional features supported by ApplicationLauncherCluster.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.2
+     */
+    export enum Feature {
         /**
          * ApplicationPlatform
          *
          * Support for attributes and commands required for endpoint to support launching any application within the
          * supported application catalogs
          */
-        applicationPlatform: BitFlag(0)
-    }
-});
-
-/**
- * A ApplicationLauncherCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * This attribute SHALL specify the current in-focus application, identified using an Application ID, catalog
-         * vendor ID and the corresponding endpoint number when the application is represented by a Content App
-         * endpoint. A null SHALL be used to indicate there is no current in-focus application.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.2
-         */
-        currentApp: OptionalAttribute(1, TlvNullable(TlvApplicationEPStruct), { default: null, readAcl: AccessLevel.View })
-    },
-
-    commands: {
-        /**
-         * Upon receipt of this command, the server SHALL launch the application with optional data. The application
-         * SHALL be either
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1
-         */
-        launchApp: Command(0, TlvLaunchAppRequest, 3, TlvLauncherResponseRequest),
-
-        /**
-         * Upon receipt of this command, the server SHALL stop the application if it is running. The application SHALL
-         * be either
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.2
-         */
-        stopApp: Command(1, TlvStopAppRequest, 3, TlvLauncherResponseRequest),
-
-        /**
-         * Upon receipt of this command, the server SHALL hide the application. The application SHALL be either
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3
-         */
-        hideApp: Command(2, TlvHideAppRequest, 3, TlvLauncherResponseRequest),
-
-        /**
-         * This command SHALL be generated in response to LaunchApp/StopApp/HideApp commands.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4
-         */
-        launcherResponse: Command(3, TlvLauncherResponseRequest, 3, TlvNoResponse)
-    }
-});
-
-/**
- * A ApplicationLauncherCluster supports these elements if it supports feature ApplicationPlatform.
- */
-export const ApplicationPlatformComponent = ClusterComponent({
-    attributes: {
-        /**
-         * This attribute SHALL specify the list of supported application catalogs, where each entry in the list is the
-         * CSA-issued vendor ID for the catalog. The DIAL registry (see [DIAL Registry]) SHALL use value 0x0000.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
-         */
-        catalogList: Attribute(0, TlvArray(TlvUInt16), { persistent: true, default: [], readAcl: AccessLevel.View })
-    }
-});
-
-export type ApplicationLauncherCluster<T extends TypeFromPartialBitSchema<typeof ApplicationLauncherMetadata.features>> = 
-    typeof ApplicationLauncherMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent
-    & (T extends { applicationPlatform: true } ? typeof ApplicationPlatformComponent : {});
-
-export function ApplicationLauncherCluster<T extends (keyof typeof ApplicationLauncherMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...ApplicationLauncherMetadata,
-        supportedFeatures: BitFlags(ApplicationLauncherMetadata.features, ...features),
-        ...BaseComponent
+        ApplicationPlatform = "ApplicationPlatform"
     };
-    extendCluster(cluster, ApplicationPlatformComponent, { applicationPlatform: true });
-    
-    return cluster as unknown as ApplicationLauncherCluster<BitFlags<typeof ApplicationLauncherMetadata.features, T>>;
+
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+        typeof Metadata
+        & { supportedFeatures: T }
+        & typeof BaseComponent
+        & (T extends { applicationPlatform: true } ? typeof ApplicationPlatformComponent : {});
+
+    /**
+     * ApplicationLauncher cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x50c,
+        name: "ApplicationLauncher",
+        revision: 1,
+
+        features: {
+            /**
+             * ApplicationPlatform
+             *
+             * Support for attributes and commands required for endpoint to support launching any application within
+             * the supported application catalogs
+             */
+            applicationPlatform: BitFlag(0)
+        }
+    });
+
+    /**
+     * A ApplicationLauncherCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * This attribute SHALL specify the current in-focus application, identified using an Application ID,
+             * catalog vendor ID and the corresponding endpoint number when the application is represented by a Content
+             * App endpoint. A null SHALL be used to indicate there is no current in-focus application.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.2
+             */
+            currentApp: OptionalAttribute(
+                1,
+                TlvNullable(TlvApplicationEPStruct),
+                { default: null, readAcl: AccessLevel.View }
+            )
+        },
+
+        commands: {
+            /**
+             * Upon receipt of this command, the server SHALL launch the application with optional data. The
+             * application SHALL be either
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1
+             */
+            launchApp: Command(0, TlvLaunchAppRequest, 3, TlvLauncherResponseRequest),
+
+            /**
+             * Upon receipt of this command, the server SHALL stop the application if it is running. The application
+             * SHALL be either
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.2
+             */
+            stopApp: Command(1, TlvStopAppRequest, 3, TlvLauncherResponseRequest),
+
+            /**
+             * Upon receipt of this command, the server SHALL hide the application. The application SHALL be either
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3
+             */
+            hideApp: Command(2, TlvHideAppRequest, 3, TlvLauncherResponseRequest),
+
+            /**
+             * This command SHALL be generated in response to LaunchApp/StopApp/HideApp commands.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4
+             */
+            launcherResponse: Command(3, TlvLauncherResponseRequest, 3, TlvNoResponse)
+        }
+    });
+
+    /**
+     * A ApplicationLauncherCluster supports these elements if it supports feature ApplicationPlatform.
+     */
+    export const ApplicationPlatformComponent = ClusterComponent({
+        attributes: {
+            /**
+             * This attribute SHALL specify the list of supported application catalogs, where each entry in the list is
+             * the CSA-issued vendor ID for the catalog. The DIAL registry (see [DIAL Registry]) SHALL use value 0x0000.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
+             */
+            catalogList: Attribute(0, TlvArray(TlvUInt16), { persistent: true, default: [], readAcl: AccessLevel.View })
+        }
+    });
+
+    /**
+     * This cluster supports all ApplicationLauncher features.  It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes, ...ApplicationPlatformComponent.attributes },
+        commands: { ...BaseComponent.commands }
+    };
 };

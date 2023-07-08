@@ -6,14 +6,48 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Attribute, AccessLevel, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvUInt32, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
+
+/**
+ * Content Launcher
+ *
+ * This cluster provides an interface for launching content on a media player device such as a TV or Speaker.
+ *
+ * This function creates a ContentLauncher cluster supporting a specific set of features.  Include each
+ * {@link ContentLauncherCluster.Feature} you wish to support.
+ *
+ * @param features a list of {@link ContentLauncherCluster.Feature} to support
+ * @returns a ContentLauncher cluster with specified features enabled
+ * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7
+ */
+export function ContentLauncherCluster<T extends ContentLauncherCluster.Feature[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...ContentLauncherCluster.Metadata,
+        supportedFeatures: BitFlags(ContentLauncherCluster.Metadata.features, ...features),
+        ...ContentLauncherCluster.BaseComponent
+    };
+    extendCluster(cluster, ContentLauncherCluster.UrlPlaybackComponent, { urlPlayback: true });
+    extendCluster(cluster, ContentLauncherCluster.ContentSearchComponent, { contentSearch: true });
+
+    extendCluster(
+        cluster,
+        ContentLauncherCluster.ContentSearchOrUrlPlaybackComponent,
+        { contentSearch: true },
+        { urlPlayback: true }
+    );
+
+    return cluster as unknown as ContentLauncherCluster.Type<BitFlags<typeof ContentLauncherCluster.Metadata.features, T>>;
+};
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9
@@ -400,115 +434,141 @@ export const TlvLaunchContentRequest = TlvObject({
     data: TlvOptionalField(2, TlvByteString)
 });
 
-/**
- * Standard ContentLauncher cluster properties.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7
- */
-export const ContentLauncherMetadata = ClusterMetadata({
-    id: 0x50a,
-    name: "ContentLauncher",
-    revision: 1,
-
-    features: {
+export namespace ContentLauncherCluster {
+    /**
+     * These are optional features supported by ContentLauncherCluster.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.2
+     */
+    export enum Feature {
         /**
          * ContentSearch
          *
          * Device supports content search (non-app specific)
          */
-        contentSearch: BitFlag(0),
+        ContentSearch = "ContentSearch",
 
         /**
          * UrlPlayback
          *
          * Device supports basic URL-based file playback
          */
-        urlPlayback: BitFlag(1)
-    }
-});
-
-/**
- * A ContentLauncherCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({});
-
-/**
- * A ContentLauncherCluster supports these elements if it supports feature UrlPlayback.
- */
-export const UrlPlaybackComponent = ClusterComponent({
-    attributes: {
-        /**
-         * This list provides list of content types supported by the Video Player or Content App in the form of entries
-         * in the HTTP "Accept" request header.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.1
-         */
-        acceptHeader: Attribute(0, TlvArray(TlvString), { persistent: true, default: [], readAcl: AccessLevel.View }),
-
-        /**
-         * This attribute provides information about supported streaming protocols.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2
-         */
-        supportedStreamingProtocols: Attribute(1, TlvUInt32, { persistent: true, readAcl: AccessLevel.View })
-    },
-
-    commands: {
-        /**
-         * Upon receipt, this SHALL launch content from the specified URL.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2
-         */
-        launchUrl: Command(1, TlvLaunchUrlRequest, 2, TlvLauncherResponseRequest)
-    }
-});
-
-/**
- * A ContentLauncherCluster supports these elements if it supports feature ContentSearch.
- */
-export const ContentSearchComponent = ClusterComponent({
-    commands: {
-        /**
-         * Upon receipt, this SHALL launch the specified content with optional search criteria. This command returns a
-         * Launch Response.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1
-         */
-        launchContent: Command(0, TlvLaunchContentRequest, 2, TlvLauncherResponseRequest)
-    }
-});
-
-/**
- * A ContentLauncherCluster supports these elements if it supports features ContentSearch, or UrlPlayback.
- */
-export const ContentSearchOrUrlPlaybackComponent = ClusterComponent({
-    commands: {
-        /**
-         * This command SHALL be generated in response to LaunchContent and LaunchURL commands.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3
-         */
-        launcherResponse: Command(2, TlvLauncherResponseRequest, 2, TlvNoResponse)
-    }
-});
-
-export type ContentLauncherCluster<T extends TypeFromPartialBitSchema<typeof ContentLauncherMetadata.features>> = 
-    typeof ContentLauncherMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent
-    & (T extends { urlPlayback: true } ? typeof UrlPlaybackComponent : {})
-    & (T extends { contentSearch: true } ? typeof ContentSearchComponent : {})
-    & (T extends { contentSearch: true } | { urlPlayback: true } ? typeof ContentSearchOrUrlPlaybackComponent : {});
-
-export function ContentLauncherCluster<T extends (keyof typeof ContentLauncherMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...ContentLauncherMetadata,
-        supportedFeatures: BitFlags(ContentLauncherMetadata.features, ...features),
-        ...BaseComponent
+        UrlPlayback = "UrlPlayback"
     };
-    extendCluster(cluster, UrlPlaybackComponent, { urlPlayback: true });
-    extendCluster(cluster, ContentSearchComponent, { contentSearch: true });
-    extendCluster(cluster, ContentSearchOrUrlPlaybackComponent, { contentSearch: true }, { urlPlayback: true });
-    
-    return cluster as unknown as ContentLauncherCluster<BitFlags<typeof ContentLauncherMetadata.features, T>>;
+
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+        typeof Metadata
+        & { supportedFeatures: T }
+        & typeof BaseComponent
+        & (T extends { urlPlayback: true } ? typeof UrlPlaybackComponent : {})
+        & (T extends { contentSearch: true } ? typeof ContentSearchComponent : {})
+        & (T extends { contentSearch: true } | { urlPlayback: true } ? typeof ContentSearchOrUrlPlaybackComponent : {});
+
+    /**
+     * ContentLauncher cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x50a,
+        name: "ContentLauncher",
+        revision: 1,
+
+        features: {
+            /**
+             * ContentSearch
+             *
+             * Device supports content search (non-app specific)
+             */
+            contentSearch: BitFlag(0),
+
+            /**
+             * UrlPlayback
+             *
+             * Device supports basic URL-based file playback
+             */
+            urlPlayback: BitFlag(1)
+        }
+    });
+
+    /**
+     * A ContentLauncherCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({});
+
+    /**
+     * A ContentLauncherCluster supports these elements if it supports feature UrlPlayback.
+     */
+    export const UrlPlaybackComponent = ClusterComponent({
+        attributes: {
+            /**
+             * This list provides list of content types supported by the Video Player or Content App in the form of
+             * entries in the HTTP "Accept" request header.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.1
+             */
+            acceptHeader: Attribute(0, TlvArray(TlvString), { persistent: true, default: [], readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute provides information about supported streaming protocols.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2
+             */
+            supportedStreamingProtocols: Attribute(1, TlvUInt32, { persistent: true, readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * Upon receipt, this SHALL launch content from the specified URL.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2
+             */
+            launchUrl: Command(1, TlvLaunchUrlRequest, 2, TlvLauncherResponseRequest)
+        }
+    });
+
+    /**
+     * A ContentLauncherCluster supports these elements if it supports feature ContentSearch.
+     */
+    export const ContentSearchComponent = ClusterComponent({
+        commands: {
+            /**
+             * Upon receipt, this SHALL launch the specified content with optional search criteria. This command
+             * returns a Launch Response.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1
+             */
+            launchContent: Command(0, TlvLaunchContentRequest, 2, TlvLauncherResponseRequest)
+        }
+    });
+
+    /**
+     * A ContentLauncherCluster supports these elements if it supports features ContentSearch, or UrlPlayback.
+     */
+    export const ContentSearchOrUrlPlaybackComponent = ClusterComponent({
+        commands: {
+            /**
+             * This command SHALL be generated in response to LaunchContent and LaunchURL commands.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3
+             */
+            launcherResponse: Command(2, TlvLauncherResponseRequest, 2, TlvNoResponse)
+        }
+    });
+
+    /**
+     * This cluster supports all ContentLauncher features.  It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...UrlPlaybackComponent.attributes },
+        commands: {
+            ...UrlPlaybackComponent.commands,
+            ...ContentSearchComponent.commands,
+            ...ContentSearchOrUrlPlaybackComponent.commands
+        }
+    };
 };

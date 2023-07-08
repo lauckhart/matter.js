@@ -4,8 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MatterError } from "../common/MatterError.js";
 import { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
+import { serialize } from "../util/String.js";
 import { Attributes, Cluster, Commands, Events } from "./Cluster.js";
+
+export class IllegalClusterError extends MatterError {}
 
 export type ClusterComponent<A extends Attributes, C extends Commands, E extends Events> = {
     readonly attributes: A,
@@ -60,69 +64,41 @@ export function extendCluster<F extends BitSchema>(
         return;
     }
 
-    Object.assign(cluster.attributes, component.attributes);
-    Object.assign(cluster.commands, component.commands);
-    Object.assign(cluster.events, component.events);
+    if (component.attributes) {
+        if (cluster.attributes) {
+            cluster.attributes = { ...cluster.attributes, ...component.attributes };
+        } else {
+            cluster.attributes = component.attributes;
+        }
+    }
+
+    if (component.commands) {
+        if (cluster.commands) {
+            cluster.commands = { ...cluster.commands, ...component.commands };
+        } else {
+            cluster.commands = component.commands;
+        }
+    }
+
+    if (component.events) {
+        if (cluster.events) {
+            cluster.events = { ...cluster.events, ...component.events };
+        } else {
+            cluster.events = component.events;
+        }
+    }
 }
 
-// export type ClusterComponents = {
-//     [ name in Exclude<string, "id" | "name" | "string" | "featureMap"> ]: ClusterComponent<any, any, any>
-// }
-
-// export type BuildCluster<
-//     F extends BitSchema,
-//     SF extends TypeFromPartialBitSchema<F>,
-//     EL extends readonly ClusterComponent<any, any, any>[]
-// > = Cluster<
-//     F,
-//     SF,
-//     MergeAll<Pluck<"attributes", EL>>,
-//     MergeAll<Pluck<"commands", EL>>,
-//     MergeAll<Pluck<"events", EL>>
-// >;
-
-// export function BuildCluster<
-//     F extends BitSchema,
-//     SF extends TypeFromPartialBitSchema<F>,
-//     CMP extends readonly ClusterComponent<any, any, any>[]
-// >({ id, name, revision, features }: ClusterMetadata<F>, supportedFeatures: SF, ...components: [ ...CMP ]): BuildCluster<F, SF, CMP> {
-//     return Cluster({
-//         id,
-//         name,
-//         revision,
-//         features,
-//         supportedFeatures,
-//         attributes: MergeAll(Pluck("attributes", ...components)),
-//         commands: MergeAll(Pluck("commands", ...components)),
-//         events: MergeAll(Pluck("events", ...components))
-//     });
-// }
-
-// type FindCluster<F extends BitSchema, SF extends TypeFromPartialBitSchema<F>, CL extends Cluster<F, any, any, any, any>[]>
-//     = CL extends [ infer C, ...infer R extends Cluster<F, any, any, any, any>[] ]
-//     ? C extends Cluster<F, SF, any, any, any>
-//         ? C
-//         : FindCluster<F, SF, R>
-//     : undefined;
-
-// export type ClusterFactory<F extends BitSchema, C extends Cluster<F, any, any, any, any>[]> = {
-//     <FLAGS extends Extract<keyof F, string>[]>(...features: [ ...FLAGS ]): FindCluster<F, BitFlags<F, FLAGS>, C> | undefined
-// }
-
-// export function ClusterFactory<
-//     F extends BitSchema,
-//     C extends Cluster<F, any, any, any, any>[]
-// >(...clusters: [ ...C ]): ClusterFactory<F, C> {
-//     return <FLAGS extends Extract<keyof F, string>[]>(...features: [ ...FLAGS ]) => {
-//         const lookup = new Set<string>(features);
-//         clusters: for (const c of clusters) {
-//             for (const k in c.supportedFeatures) {
-//                 if (c.supportedFeatures[k] !== lookup.has(k)) {
-//                     continue clusters;
-//                 }
-//             }
-//             return c as any;
-//         }
-//         return undefined;
-//     }
-// }
+export function preventCluster<F extends BitSchema>(
+    cluster: Cluster<F, any, any, any, any>,
+    ...illegalFeatureCombinations: TypeFromPartialBitSchema<F>[]
+) {
+    pool: for (const bitmap of illegalFeatureCombinations) {
+        for (const k in bitmap) {
+            if (cluster.supportedFeatures[k] !== bitmap[k]) {
+                continue pool;
+            }
+        }
+        throw new IllegalClusterError(`Feature combination ${serialize(bitmap)} is disallowed by the Matter specification`);
+    }
+}
