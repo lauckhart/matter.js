@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, Attribute, FixedAttribute } from "../../cluster/Cluster.js";
+import { WritableAttribute, AccessLevel, Attribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -18,7 +18,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * An interface for controlling a fan in a heating/cooling system.
  *
- * This function creates a FanControl cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a FanControl cluster supporting a specific set of features.  Include each
  * {@link FanControlCluster.Feature} you wish to support.
  *
  * @param features a list of {@link FanControlCluster.Feature} to support
@@ -352,7 +352,7 @@ export namespace FanControlCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
 
         attributes: {
@@ -361,5 +361,5 @@ export namespace FanControlCluster {
             ...RockingComponent.attributes,
             ...WindComponent.attributes
         }
-    };
+    });
 };

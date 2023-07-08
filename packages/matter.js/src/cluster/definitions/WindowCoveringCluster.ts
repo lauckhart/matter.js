@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand } from "../../cluster/Cluster.js";
+import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -20,7 +20,7 @@ import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
  *
  * Provides an interface for controlling and adjusting automatic window coverings.
  *
- * This function creates a WindowCovering cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a WindowCovering cluster supporting a specific set of features.  Include each
  * {@link WindowCoveringCluster.Feature} you wish to support.
  *
  * @param features a list of {@link WindowCoveringCluster.Feature} to support
@@ -459,7 +459,7 @@ export namespace WindowCoveringCluster {
     });
 
     /**
-     * A WindowCoveringCluster supports these elements if it supports features Lift, and PositionAwareLift.
+     * A WindowCoveringCluster supports these elements if it supports features Lift and PositionAwareLift.
      */
     export const LiftAndPositionAwareLiftComponent = ClusterComponent({
         attributes: {
@@ -508,7 +508,7 @@ export namespace WindowCoveringCluster {
     });
 
     /**
-     * A WindowCoveringCluster supports these elements if it supports features Tilt, and PositionAwareTilt.
+     * A WindowCoveringCluster supports these elements if it supports features Tilt and PositionAwareTilt.
      */
     export const TiltAndPositionAwareTiltComponent = ClusterComponent({
         attributes: {
@@ -701,7 +701,7 @@ export namespace WindowCoveringCluster {
     });
 
     /**
-     * A WindowCoveringCluster supports these elements if it supports features Lift, and AbsolutePosition.
+     * A WindowCoveringCluster supports these elements if it supports features Lift and AbsolutePosition.
      */
     export const LiftAndAbsolutePositionComponent = ClusterComponent({
         commands: {
@@ -715,7 +715,7 @@ export namespace WindowCoveringCluster {
     });
 
     /**
-     * A WindowCoveringCluster supports these elements if it supports features Tilt, and AbsolutePosition.
+     * A WindowCoveringCluster supports these elements if it supports features Tilt and AbsolutePosition.
      */
     export const TiltAndAbsolutePositionComponent = ClusterComponent({
         commands: {
@@ -734,7 +734,7 @@ export namespace WindowCoveringCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
 
         attributes: {
@@ -754,5 +754,5 @@ export namespace WindowCoveringCluster {
             ...LiftAndAbsolutePositionComponent.commands,
             ...TiltAndAbsolutePositionComponent.commands
         }
-    };
+    });
 };

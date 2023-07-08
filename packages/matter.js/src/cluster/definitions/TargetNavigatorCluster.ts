@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -124,7 +123,7 @@ export namespace TargetNavigatorCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
      */
-    export const Metadata = ClusterMetadata({ id: 0x505, name: "TargetNavigator", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x505, name: "TargetNavigator", revision: 1, features: {} });
 
     /**
      * A TargetNavigatorCluster supports these elements for all feature combinations.
@@ -170,9 +169,9 @@ export namespace TargetNavigatorCluster {
     /**
      * This cluster supports all TargetNavigator features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
-    };
+    });
 };

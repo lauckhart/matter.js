@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalFixedAttribute, AccessLevel } from "../../cluster/Cluster.js";
+import { OptionalFixedAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
 
 /**
@@ -36,7 +35,7 @@ export namespace WakeOnLanCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.10
      */
-    export const Metadata = ClusterMetadata({ id: 0x503, name: "WakeOnLan", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x503, name: "WakeOnLan", revision: 1, features: {} });
 
     /**
      * A WakeOnLanCluster supports these elements for all feature combinations.
@@ -64,5 +63,5 @@ export namespace WakeOnLanCluster {
     /**
      * This cluster supports all WakeOnLan features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, OptionalEvent, EventPriority, Attribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { OptionalAttribute, AccessLevel, OptionalEvent, EventPriority, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
@@ -22,8 +22,8 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used by a
  * Node to assist a user or Administrative Node in diagnosing potential problems.
  *
- * This function creates a SoftwareDiagnostics cluster supporting a specific set of features.  Include each
- * {@link SoftwareDiagnosticsCluster.Feature} you wish to support.
+ * Use this factory function to create a SoftwareDiagnostics cluster supporting a specific set of features.  Include
+ * each {@link SoftwareDiagnosticsCluster.Feature} you wish to support.
  *
  * @param features a list of {@link SoftwareDiagnosticsCluster.Feature} to support
  * @returns a SoftwareDiagnostics cluster with specified features enabled
@@ -223,10 +223,10 @@ export namespace SoftwareDiagnosticsCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...WatermarksComponent.attributes },
         events: { ...BaseComponent.events },
         commands: { ...WatermarksComponent.commands }
-    };
+    });
 };

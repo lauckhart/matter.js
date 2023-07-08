@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalWritableAttribute, WritableAttribute, FixedAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Event, EventPriority } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalWritableAttribute, WritableAttribute, FixedAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvBitmap, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -23,7 +23,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * An interface to a generic way to secure a door
  *
- * This function creates a DoorLock cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a DoorLock cluster supporting a specific set of features.  Include each
  * {@link DoorLockCluster.Feature} you wish to support.
  *
  * @param features a list of {@link DoorLockCluster.Feature} to support
@@ -2032,7 +2032,7 @@ export namespace DoorLockCluster {
     });
 
     /**
-     * A DoorLockCluster supports these elements if it supports features PinCredential, or RfidCredential.
+     * A DoorLockCluster supports these elements if it supports features PinCredential or RfidCredential.
      */
     export const PinCredentialOrRfidCredentialComponent = ClusterComponent({
         attributes: {
@@ -2088,7 +2088,7 @@ export namespace DoorLockCluster {
     });
 
     /**
-     * A DoorLockCluster supports these elements if it supports features Notification, and PinCredential.
+     * A DoorLockCluster supports these elements if it supports features Notification and PinCredential.
      */
     export const NotificationAndPinCredentialComponent = ClusterComponent({
         attributes: {
@@ -2195,7 +2195,7 @@ export namespace DoorLockCluster {
     });
 
     /**
-     * A DoorLockCluster supports these elements if it supports features Notification, and RfidCredential.
+     * A DoorLockCluster supports these elements if it supports features Notification and RfidCredential.
      */
     export const NotificationAndRfidCredentialComponent = ClusterComponent({
         attributes: {
@@ -2260,7 +2260,7 @@ export namespace DoorLockCluster {
     });
 
     /**
-     * A DoorLockCluster supports these elements if it supports features PinCredential, and RfidCredential and it
+     * A DoorLockCluster supports these elements if it supports features PinCredential and RfidCredential and it
      * doesn't support feature USR.
      */
     export const PinCredentialAndRfidCredentialNotUserComponent = ClusterComponent({
@@ -2343,7 +2343,7 @@ export namespace DoorLockCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
 
         attributes: {
@@ -2378,5 +2378,5 @@ export namespace DoorLockCluster {
         },
 
         events: { ...BaseComponent.events, ...DoorPositionSensorComponent.events, ...UserComponent.events }
-    };
+    });
 };

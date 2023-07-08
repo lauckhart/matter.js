@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
@@ -36,7 +35,7 @@ export namespace ProxyDiscoveryCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.15.13
      */
-    export const Metadata = ClusterMetadata({ id: 0x43, name: "ProxyDiscovery", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x43, name: "ProxyDiscovery", revision: 1, features: {} });
 
     /**
      * A ProxyDiscoveryCluster supports these elements for all feature combinations.
@@ -58,5 +57,5 @@ export namespace ProxyDiscoveryCluster {
     /**
      * This cluster supports all ProxyDiscovery features.
      */
-    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
 };

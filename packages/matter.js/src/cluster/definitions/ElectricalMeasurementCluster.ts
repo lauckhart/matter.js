@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse } from "../../cluster/Cluster.js";
+import { OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt32, TlvInt16, TlvUInt16, TlvInt32, TlvInt8, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -57,7 +56,7 @@ export namespace ElectricalMeasurementCluster {
     /**
      * ElectricalMeasurement cluster metadata.
      */
-    export const Metadata = ClusterMetadata({ id: 0xb04, name: "ElectricalMeasurement", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0xb04, name: "ElectricalMeasurement", revision: 1, features: {} });
 
     /**
      * A ElectricalMeasurementCluster supports these elements for all feature combinations.
@@ -212,9 +211,9 @@ export namespace ElectricalMeasurementCluster {
     /**
      * This cluster supports all ElectricalMeasurement features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
-    };
+    });
 };

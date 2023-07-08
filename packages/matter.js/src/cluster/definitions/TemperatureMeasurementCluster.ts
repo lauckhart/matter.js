@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -37,7 +36,7 @@ export namespace TemperatureMeasurementCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3
      */
-    export const Metadata = ClusterMetadata({ id: 0x402, name: "TemperatureMeasurement", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x402, name: "TemperatureMeasurement", revision: 1, features: {} });
 
     /**
      * A TemperatureMeasurementCluster supports these elements for all feature combinations.
@@ -87,5 +86,5 @@ export namespace TemperatureMeasurementCluster {
     /**
      * This cluster supports all TemperatureMeasurement features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

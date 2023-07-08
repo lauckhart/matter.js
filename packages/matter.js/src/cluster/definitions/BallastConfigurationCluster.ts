@@ -6,11 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt24 } from "../../tlv/TlvNumber.js";
+import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvString } from "../../tlv/TlvString.js";
 
@@ -64,7 +64,7 @@ export namespace BallastConfigurationCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3
      */
-    export const Metadata = ClusterMetadata({ id: 0x301, name: "BallastConfiguration", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x301, name: "BallastConfiguration", revision: 1, features: {} });
 
     /**
      * A BallastConfigurationCluster supports these elements for all feature combinations.
@@ -233,5 +233,5 @@ export namespace BallastConfigurationCluster {
     /**
      * This cluster supports all BallastConfiguration features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

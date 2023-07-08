@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -19,7 +19,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * Attributes and commands for controlling devices that can be set to a level between fully 'On' and fully 'Off.'
  *
- * This function creates a LevelControl cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a LevelControl cluster supporting a specific set of features.  Include each
  * {@link LevelControlCluster.Feature} you wish to support.
  *
  * @param features a list of {@link LevelControlCluster.Feature} to support
@@ -476,9 +476,9 @@ export namespace LevelControlCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...LightingComponent.attributes, ...FrequencyComponent.attributes },
         commands: { ...BaseComponent.commands, ...FrequencyComponent.commands }
-    };
+    });
 };

@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalWritableAttribute, WritableAttribute, OptionalAttribute, Attribute } from "../../cluster/Cluster.js";
+import { OptionalWritableAttribute, WritableAttribute, OptionalAttribute, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvUInt8, TlvUInt32 } from "../../tlv/TlvNumber.js";
@@ -33,7 +32,7 @@ export namespace BinaryInputBasicCluster {
     /**
      * BinaryInputBasic cluster metadata.
      */
-    export const Metadata = ClusterMetadata({ id: 0xf, name: "BinaryInputBasic", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0xf, name: "BinaryInputBasic", revision: 1, features: {} });
 
     /**
      * A BinaryInputBasicCluster supports these elements for all feature combinations.
@@ -53,5 +52,5 @@ export namespace BinaryInputBasicCluster {
     /**
      * This cluster supports all BinaryInputBasic features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

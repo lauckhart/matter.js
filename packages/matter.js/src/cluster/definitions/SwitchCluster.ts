@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, Attribute, Event, EventPriority } from "../../cluster/Cluster.js";
+import { FixedAttribute, Attribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 
@@ -23,7 +23,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * attributes/events and thus be informed of the interactions, and can perform actions based on this, for example by
  * sending commands to perform an action such as controlling a light or a window shade.
  *
- * This function creates a Switch cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a Switch cluster supporting a specific set of features.  Include each
  * {@link SwitchCluster.Feature} you wish to support.
  *
  * @param features a list of {@link SwitchCluster.Feature} to support
@@ -343,7 +343,7 @@ export namespace SwitchCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...MomentarySwitchMultiPressComponent.attributes },
 
@@ -354,5 +354,5 @@ export namespace SwitchCluster {
             ...MomentarySwitchLongPressComponent.events,
             ...MomentarySwitchReleaseComponent.events
         }
-    };
+    });
 };

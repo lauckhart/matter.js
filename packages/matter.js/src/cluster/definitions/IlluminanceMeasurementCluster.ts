@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -48,7 +47,7 @@ export namespace IlluminanceMeasurementCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2
      */
-    export const Metadata = ClusterMetadata({ id: 0x400, name: "IlluminanceMeasurement", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x400, name: "IlluminanceMeasurement", revision: 1, features: {} });
 
     /**
      * A IlluminanceMeasurementCluster supports these elements for all feature combinations.
@@ -102,5 +101,5 @@ export namespace IlluminanceMeasurementCluster {
     /**
      * This cluster supports all IlluminanceMeasurement features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

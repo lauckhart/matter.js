@@ -6,11 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalWritableAttribute } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalWritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
 /**
@@ -76,7 +76,7 @@ export namespace OccupancySensingCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7
      */
-    export const Metadata = ClusterMetadata({ id: 0x406, name: "OccupancySensing", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x406, name: "OccupancySensing", revision: 1, features: {} });
 
     /**
      * A OccupancySensingCluster supports these elements for all feature combinations.
@@ -227,5 +227,5 @@ export namespace OccupancySensingCluster {
     /**
      * This cluster supports all OccupancySensing features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

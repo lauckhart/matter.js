@@ -64,15 +64,13 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
 }
 
 function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
-    file.addImport("schema/BitmapSchema", "BitFlags");
-
     let factoryFunction;
     if (variance.componentized) {
         factoryFunction = file.types.statements(`export function ${file.clusterName}<T extends ${file.clusterName}.Feature[]>(...features: [ ...T ]) {`, "}")
             .document(
                 cluster,
                 [
-                    `This function creates a ${cluster.name} cluster supporting a specific set of features.  Include each {@link ${file.clusterName}.Feature} you wish to support.`,
+                    `Use this factory function to create a ${cluster.name} cluster supporting a specific set of features.  Include each {@link ${file.clusterName}.Feature} you wish to support.`,
                     `@param features a list of {@link ${file.clusterName}.Feature} to support`,
                     `@returns a ${cluster.name} cluster with specified features enabled`,
                     "@throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification"
@@ -86,6 +84,7 @@ function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: Clu
     const base = factoryFunction.expressions(`const cluster = {`, "}");
     base.atom(`...${file.clusterName}.Metadata`);
     if (variance.componentized) {
+        file.addImport("schema/BitmapSchema", "BitFlags");
         base.atom(`supportedFeatures: BitFlags(${file.clusterName}.Metadata.features, ...features)`);
     }
     base.atom(`...${file.clusterName}.BaseComponent`);
@@ -120,10 +119,10 @@ function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: Clu
 }
 
 function generateType(ns: Block, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
-    ns.file.addImport("schema/BitmapSchema", "TypeFromPartialBitSchema");
     let factoryType;
 
     if (variance.componentized) {
+        ns.file.addImport("schema/BitmapSchema", "TypeFromPartialBitSchema");
         factoryType = Array<string>(
             "export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = ",
             "    typeof Metadata",
@@ -163,10 +162,10 @@ function generateMetadata(ns: Block, cluster: ClusterModel) {
     metadata.atom("name", `${JSON.stringify(cluster.name)}`);
     metadata.atom("revision", `${JSON.stringify(cluster.revision)}`);
 
+    const featureBlock = metadata.expressions("features: {", "}");
     const features = cluster.features;
     if (features.length) {
         ns.file.addImport("schema/BitmapSchema", "BitFlag");
-        const featureBlock = metadata.expressions("features: {", "}");
         features.forEach(feature => {
             const name = camelize(feature.description || feature.name, false);
             featureBlock.atom(name, `BitFlag(${feature.effectiveId})`)
@@ -176,7 +175,8 @@ function generateMetadata(ns: Block, cluster: ClusterModel) {
 }
 
 function generateExhaustive(ns: Block, cluster: ClusterModel, variance: ClusterVariance) {
-    const complete = ns.expressions("export const Complete = {", "}");
+    ns.file.addImport("cluster/Cluster", "Cluster");
+    const complete = ns.expressions("export const Complete = Cluster({", "})");
 
     if (variance.componentized) {
         complete.document(`This cluster supports all ${cluster.name} features.  It may support illegal feature combinations.\n` +

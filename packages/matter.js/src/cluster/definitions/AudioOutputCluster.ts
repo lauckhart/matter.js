@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -20,7 +20,7 @@ import { TlvString } from "../../tlv/TlvString.js";
  *
  * This cluster provides an interface for controlling the Output on a media device such as a TV.
  *
- * This function creates a AudioOutput cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a AudioOutput cluster supporting a specific set of features.  Include each
  * {@link AudioOutputCluster.Feature} you wish to support.
  *
  * @param features a list of {@link AudioOutputCluster.Feature} to support
@@ -187,9 +187,9 @@ export namespace AudioOutputCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands, ...NameUpdatesComponent.commands }
-    };
+    });
 };

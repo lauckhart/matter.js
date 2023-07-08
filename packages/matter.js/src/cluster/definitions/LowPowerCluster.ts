@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
@@ -36,7 +35,7 @@ export namespace LowPowerCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
      */
-    export const Metadata = ClusterMetadata({ id: 0x508, name: "LowPower", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x508, name: "LowPower", revision: 1, features: {} });
 
     /**
      * A LowPowerCluster supports these elements for all feature combinations.
@@ -55,5 +54,5 @@ export namespace LowPowerCluster {
     /**
      * This cluster supports all LowPower features.
      */
-    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
 };

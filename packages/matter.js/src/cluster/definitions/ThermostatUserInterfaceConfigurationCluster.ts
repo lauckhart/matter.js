@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, OptionalWritableAttribute } from "../../cluster/Cluster.js";
+import { WritableAttribute, AccessLevel, OptionalWritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 
 /**
@@ -112,7 +111,12 @@ export namespace ThermostatUserInterfaceConfigurationCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5
      */
-    export const Metadata = ClusterMetadata({ id: 0x204, name: "ThermostatUserInterfaceConfiguration", revision: 1 });
+    export const Metadata = ClusterMetadata({
+        id: 0x204,
+        name: "ThermostatUserInterfaceConfiguration",
+        revision: 1,
+        features: {}
+    });
 
     /**
      * A ThermostatUserInterfaceConfigurationCluster supports these elements for all feature combinations.
@@ -162,5 +166,5 @@ export namespace ThermostatUserInterfaceConfigurationCluster {
     /**
      * This cluster supports all ThermostatUserInterfaceConfiguration features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

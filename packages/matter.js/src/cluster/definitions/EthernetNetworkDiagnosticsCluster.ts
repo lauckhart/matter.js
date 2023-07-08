@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, Attribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { OptionalAttribute, AccessLevel, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -21,8 +21,8 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be
  * used by a Node to assist a user or Administrative Node in diagnosing potential problems.
  *
- * This function creates a EthernetNetworkDiagnostics cluster supporting a specific set of features.  Include each
- * {@link EthernetNetworkDiagnosticsCluster.Feature} you wish to support.
+ * Use this factory function to create a EthernetNetworkDiagnostics cluster supporting a specific set of features.
+ * Include each {@link EthernetNetworkDiagnosticsCluster.Feature} you wish to support.
  *
  * @param features a list of {@link EthernetNetworkDiagnosticsCluster.Feature} to support
  * @returns a EthernetNetworkDiagnostics cluster with specified features enabled
@@ -229,7 +229,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
     });
 
     /**
-     * A EthernetNetworkDiagnosticsCluster supports these elements if it supports features PacketCounts, or ErrorCounts.
+     * A EthernetNetworkDiagnosticsCluster supports these elements if it supports features PacketCounts or ErrorCounts.
      */
     export const PacketCountsOrErrorCountsComponent = ClusterComponent({
         commands: {
@@ -248,9 +248,9 @@ export namespace EthernetNetworkDiagnosticsCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...PacketCountsComponent.attributes, ...ErrorCountsComponent.attributes },
         commands: { ...PacketCountsOrErrorCountsComponent.commands }
-    };
+    });
 };

@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { OptionalAttribute, AccessLevel, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap, TlvInt16 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -20,7 +20,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * Attributes and commands for controlling the color properties of a color-capable light.
  *
- * This function creates a ColorControl cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a ColorControl cluster supporting a specific set of features.  Include each
  * {@link ColorControlCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ColorControlCluster.Feature} to support
@@ -1405,7 +1405,7 @@ export namespace ColorControlCluster {
     });
 
     /**
-     * A ColorControlCluster supports these elements if it supports features HueSaturation, or Xy.
+     * A ColorControlCluster supports these elements if it supports features HueSaturation or Xy.
      */
     export const HueSaturationOrXyComponent = ClusterComponent({
         commands: {
@@ -1425,7 +1425,7 @@ export namespace ColorControlCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
 
         attributes: {
@@ -1445,5 +1445,5 @@ export namespace ColorControlCluster {
             ...ColorLoopComponent.commands,
             ...HueSaturationOrXyComponent.commands
         }
-    };
+    });
 };

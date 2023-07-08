@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute } from "../../cluster/Cluster.js";
+import { OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -21,8 +21,8 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  *
  * This cluster provides an interface for launching content on a media player device such as a TV or Speaker.
  *
- * This function creates a ApplicationLauncher cluster supporting a specific set of features.  Include each
- * {@link ApplicationLauncherCluster.Feature} you wish to support.
+ * Use this factory function to create a ApplicationLauncher cluster supporting a specific set of features.  Include
+ * each {@link ApplicationLauncherCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ApplicationLauncherCluster.Feature} to support
  * @returns a ApplicationLauncher cluster with specified features enabled
@@ -279,9 +279,9 @@ export namespace ApplicationLauncherCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...ApplicationPlatformComponent.attributes },
         commands: { ...BaseComponent.commands }
-    };
+    });
 };

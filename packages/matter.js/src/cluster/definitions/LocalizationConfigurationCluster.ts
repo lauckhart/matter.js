@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, FixedAttribute } from "../../cluster/Cluster.js";
+import { WritableAttribute, AccessLevel, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 
@@ -39,7 +38,7 @@ export namespace LocalizationConfigurationCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.3
      */
-    export const Metadata = ClusterMetadata({ id: 0x2b, name: "LocalizationConfiguration", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x2b, name: "LocalizationConfiguration", revision: 1, features: {} });
 
     /**
      * A LocalizationConfigurationCluster supports these elements for all feature combinations.
@@ -74,5 +73,5 @@ export namespace LocalizationConfigurationCluster {
     /**
      * This cluster supports all LocalizationConfiguration features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

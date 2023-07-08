@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse, WritableAttribute } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, Command, TlvNoResponse, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
@@ -21,7 +21,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * Attributes and commands for switching devices between 'On' and 'Off' states.
  *
- * This function creates a OnOff cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a OnOff cluster supporting a specific set of features.  Include each
  * {@link OnOffCluster.Feature} you wish to support.
  *
  * @param features a list of {@link OnOffCluster.Feature} to support
@@ -306,9 +306,9 @@ export namespace OnOffCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...LevelControlForLightingComponent.attributes },
         commands: { ...BaseComponent.commands, ...LevelControlForLightingComponent.commands }
-    };
+    });
 };

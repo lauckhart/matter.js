@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, OptionalAttribute, Attribute, OptionalWritableAttribute, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute } from "../../cluster/Cluster.js";
+import { FixedAttribute, AccessLevel, OptionalAttribute, Attribute, OptionalWritableAttribute, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvBitmap, TlvEnum, TlvUInt24, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -19,8 +19,8 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * An interface for configuring and controlling pumps.
  *
- * This function creates a PumpConfigurationAndControl cluster supporting a specific set of features.  Include each
- * {@link PumpConfigurationAndControlCluster.Feature} you wish to support.
+ * Use this factory function to create a PumpConfigurationAndControl cluster supporting a specific set of features.
+ * Include each {@link PumpConfigurationAndControlCluster.Feature} you wish to support.
  *
  * @param features a list of {@link PumpConfigurationAndControlCluster.Feature} to support
  * @returns a PumpConfigurationAndControl cluster with specified features enabled
@@ -790,7 +790,7 @@ export namespace PumpConfigurationAndControlCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
 
         attributes: {
@@ -804,5 +804,5 @@ export namespace PumpConfigurationAndControlCluster {
         },
 
         events: { ...BaseComponent.events }
-    };
+    });
 };

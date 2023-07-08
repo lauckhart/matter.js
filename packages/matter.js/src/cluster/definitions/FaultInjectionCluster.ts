@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt32, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -56,7 +55,7 @@ export namespace FaultInjectionCluster {
     /**
      * FaultInjection cluster metadata.
      */
-    export const Metadata = ClusterMetadata({ id: 0xfff1fc06, name: "FaultInjection", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0xfff1fc06, name: "FaultInjection", revision: 1, features: {} });
 
     /**
      * A FaultInjectionCluster supports these elements for all feature combinations.
@@ -69,5 +68,5 @@ export namespace FaultInjectionCluster {
     /**
      * This cluster supports all FaultInjection features.
      */
-    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
 };

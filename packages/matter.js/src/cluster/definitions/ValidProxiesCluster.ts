@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableFixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { WritableFixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt64 } from "../../tlv/TlvNumber.js";
@@ -46,7 +45,7 @@ export namespace ValidProxiesCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.15.15
      */
-    export const Metadata = ClusterMetadata({ id: 0x44, name: "ValidProxies", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x44, name: "ValidProxies", revision: 1, features: {} });
 
     /**
      * A ValidProxiesCluster supports these elements for all feature combinations.
@@ -77,9 +76,9 @@ export namespace ValidProxiesCluster {
     /**
      * This cluster supports all ValidProxies features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
-    };
+    });
 };

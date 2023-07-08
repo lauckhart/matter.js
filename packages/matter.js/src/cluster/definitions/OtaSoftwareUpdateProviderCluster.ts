@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -137,7 +136,7 @@ export namespace OtaSoftwareUpdateProviderCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
      */
-    export const Metadata = ClusterMetadata({ id: 0x29, name: "OtaSoftwareUpdateProvider", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x29, name: "OtaSoftwareUpdateProvider", revision: 1, features: {} });
 
     /**
      * A OtaSoftwareUpdateProviderCluster supports these elements for all feature combinations.
@@ -185,5 +184,5 @@ export namespace OtaSoftwareUpdateProviderCluster {
     /**
      * This cluster supports all OtaSoftwareUpdateProvider features.
      */
-    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
 };

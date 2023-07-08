@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, Attribute, OptionalWritableAttribute, Command, TlvNoResponse, WritableAttribute } from "../../cluster/Cluster.js";
+import { FixedAttribute, AccessLevel, Attribute, OptionalWritableAttribute, Command, TlvNoResponse, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -21,7 +21,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * Attributes and commands for selecting a mode from a list of supported options.
  *
- * This function creates a ModeSelect cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a ModeSelect cluster supporting a specific set of features.  Include each
  * {@link ModeSelectCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ModeSelectCluster.Feature} to support
@@ -239,9 +239,9 @@ export namespace ModeSelectCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...OnOffComponent.attributes },
         commands: { ...BaseComponent.commands }
-    };
+    });
 };
