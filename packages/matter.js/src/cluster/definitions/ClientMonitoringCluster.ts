@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
+import { Attribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt32, TlvUInt16, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -46,7 +45,7 @@ export namespace ClientMonitoringCluster {
     /**
      * ClientMonitoring cluster metadata.
      */
-    export const Metadata = ClusterMetadata({ id: 0x1046, name: "ClientMonitoring", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x1046, name: "ClientMonitoring", revision: 1, features: {} });
 
     /**
      * A ClientMonitoringCluster supports these elements for all feature combinations.
@@ -69,9 +68,9 @@ export namespace ClientMonitoringCluster {
     /**
      * This cluster supports all ClientMonitoring features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
-    };
+    });
 };

@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute } from "../../cluster/Cluster.js";
+import { OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -21,7 +21,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  *
  * This cluster provides an interface for controlling the current Channel on a device.
  *
- * This function creates a Channel cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a Channel cluster supporting a specific set of features.  Include each
  * {@link ChannelCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ChannelCluster.Feature} to support
@@ -340,7 +340,7 @@ export namespace ChannelCluster {
     });
 
     /**
-     * A ChannelCluster supports these elements if it supports features ChannelList, or LineupInfo.
+     * A ChannelCluster supports these elements if it supports features ChannelList or LineupInfo.
      */
     export const ChannelListOrLineupInfoComponent = ClusterComponent({
         commands: {
@@ -367,9 +367,9 @@ export namespace ChannelCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...ChannelListComponent.attributes, ...LineupInfoComponent.attributes },
         commands: { ...BaseComponent.commands, ...ChannelListOrLineupInfoComponent.commands }
-    };
+    });
 };

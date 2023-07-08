@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, OptionalEvent, EventPriority, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, OptionalEvent, EventPriority, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum, TlvUInt64, TlvUInt32, TlvUInt8, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -24,8 +24,8 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used
  * by a Node to assist a user or Administrative Node in diagnosing potential problems
  *
- * This function creates a ThreadNetworkDiagnostics cluster supporting a specific set of features.  Include each
- * {@link ThreadNetworkDiagnosticsCluster.Feature} you wish to support.
+ * Use this factory function to create a ThreadNetworkDiagnostics cluster supporting a specific set of features.
+ * Include each {@link ThreadNetworkDiagnosticsCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ThreadNetworkDiagnosticsCluster.Feature} to support
  * @returns a ThreadNetworkDiagnostics cluster with specified features enabled
@@ -1123,7 +1123,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
 
         attributes: {
@@ -1135,5 +1135,5 @@ export namespace ThreadNetworkDiagnosticsCluster {
 
         events: { ...BaseComponent.events },
         commands: { ...ErrorCountsComponent.commands }
-    };
+    });
 };

@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, WritableAttribute } from "../../cluster/Cluster.js";
+import { Attribute, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 
 /**
@@ -43,7 +42,7 @@ export namespace OnOffSwitchConfigurationCluster {
     /**
      * OnOffSwitchConfiguration cluster metadata.
      */
-    export const Metadata = ClusterMetadata({ id: 0x7, name: "OnOffSwitchConfiguration", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x7, name: "OnOffSwitchConfiguration", revision: 1, features: {} });
 
     /**
      * A OnOffSwitchConfigurationCluster supports these elements for all feature combinations.
@@ -56,5 +55,5 @@ export namespace OnOffSwitchConfigurationCluster {
     /**
      * This cluster supports all OnOffSwitchConfiguration features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

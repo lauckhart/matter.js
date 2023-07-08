@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, OptionalWritableAttribute, Attribute, OptionalEvent, EventPriority, Event } from "../../cluster/Cluster.js";
+import { OptionalAttribute, OptionalWritableAttribute, Attribute, OptionalEvent, EventPriority, Event, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -99,7 +98,7 @@ export namespace BridgedDeviceBasicInformationCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.13
      */
-    export const Metadata = ClusterMetadata({ id: 0x39, name: "BridgedDeviceBasicInformation", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x39, name: "BridgedDeviceBasicInformation", revision: 1, features: {} });
 
     /**
      * A BridgedDeviceBasicInformationCluster supports these elements for all feature combinations.
@@ -214,9 +213,9 @@ export namespace BridgedDeviceBasicInformationCluster {
     /**
      * This cluster supports all BridgedDeviceBasicInformation features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         events: { ...BaseComponent.events }
-    };
+    });
 };

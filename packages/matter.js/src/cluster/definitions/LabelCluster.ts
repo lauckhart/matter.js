@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute } from "../../cluster/Cluster.js";
+import { Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
@@ -56,7 +55,7 @@ export namespace LabelCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.7
      */
-    export const Metadata = ClusterMetadata({ name: "Label", revision: 1 });
+    export const Metadata = ClusterMetadata({ name: "Label", revision: 1, features: {} });
 
     /**
      * A LabelCluster supports these elements for all feature combinations.
@@ -75,5 +74,5 @@ export namespace LabelCluster {
     /**
      * This cluster supports all Label features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

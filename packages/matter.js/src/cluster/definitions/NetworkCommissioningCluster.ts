@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvEnum, TlvInt32, TlvUInt64, TlvBitmap, TlvUInt16, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -22,8 +22,8 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * Functionality to configure, enable, disable network credentials and access on a Matter device.
  *
- * This function creates a NetworkCommissioning cluster supporting a specific set of features.  Include each
- * {@link NetworkCommissioningCluster.Feature} you wish to support.
+ * Use this factory function to create a NetworkCommissioning cluster supporting a specific set of features.  Include
+ * each {@link NetworkCommissioningCluster.Feature} you wish to support.
  *
  * @param features a list of {@link NetworkCommissioningCluster.Feature} to support
  * @returns a NetworkCommissioning cluster with specified features enabled
@@ -527,7 +527,7 @@ export namespace NetworkCommissioningCluster {
     });
 
     /**
-     * A NetworkCommissioningCluster supports these elements if it supports features WiFiNetworkInterface, or
+     * A NetworkCommissioningCluster supports these elements if it supports features WiFiNetworkInterface or
      * ThreadNetworkInterface.
      */
     export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComponent({
@@ -644,7 +644,7 @@ export namespace NetworkCommissioningCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent.attributes },
         commands: {
@@ -652,5 +652,5 @@ export namespace NetworkCommissioningCluster {
             ...WiFiNetworkInterfaceComponent.commands,
             ...ThreadNetworkInterfaceComponent.commands
         }
-    };
+    });
 };

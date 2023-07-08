@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableFabricScopedAttribute, AccessLevel, Attribute, OptionalCommand, TlvNoResponse, Event, EventPriority } from "../../cluster/Cluster.js";
+import { WritableFabricScopedAttribute, AccessLevel, Attribute, OptionalCommand, TlvNoResponse, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt64, TlvUInt16, TlvEnum, TlvUInt8, TlvUInt32, TlvInt64 } from "../../tlv/TlvNumber.js";
@@ -135,7 +134,7 @@ export namespace OtaSoftwareUpdateRequestorCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.19.7
      */
-    export const Metadata = ClusterMetadata({ id: 0x2a, name: "OtaSoftwareUpdateRequestor", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x2a, name: "OtaSoftwareUpdateRequestor", revision: 1, features: {} });
 
     /**
      * A OtaSoftwareUpdateRequestorCluster supports these elements for all feature combinations.
@@ -225,10 +224,10 @@ export namespace OtaSoftwareUpdateRequestorCluster {
     /**
      * This cluster supports all OtaSoftwareUpdateRequestor features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands },
         events: { ...BaseComponent.events }
-    };
+    });
 };

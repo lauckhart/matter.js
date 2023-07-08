@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, Command, TlvNoResponse, FixedAttribute, Event, EventPriority } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, Command, TlvNoResponse, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt64, TlvEnum, TlvInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -23,7 +23,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * Accurate time is required for a number of reasons, including scheduling, display and validating security materials.
  *
- * This function creates a TimeSync cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a TimeSync cluster supporting a specific set of features.  Include each
  * {@link TimeSyncCluster.Feature} you wish to support.
  *
  * @param features a list of {@link TimeSyncCluster.Feature} to support
@@ -482,7 +482,7 @@ export namespace TimeSyncCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
 
         attributes: {
@@ -494,5 +494,5 @@ export namespace TimeSyncCluster {
 
         commands: { ...BaseComponent.commands },
         events: { ...TimeZoneComponent.events }
-    };
+    });
 };

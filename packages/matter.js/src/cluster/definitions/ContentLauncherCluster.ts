@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvUInt32, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -21,7 +21,7 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  *
  * This cluster provides an interface for launching content on a media player device such as a TV or Speaker.
  *
- * This function creates a ContentLauncher cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a ContentLauncher cluster supporting a specific set of features.  Include each
  * {@link ContentLauncherCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ContentLauncherCluster.Feature} to support
@@ -543,7 +543,7 @@ export namespace ContentLauncherCluster {
     });
 
     /**
-     * A ContentLauncherCluster supports these elements if it supports features ContentSearch, or UrlPlayback.
+     * A ContentLauncherCluster supports these elements if it supports features ContentSearch or UrlPlayback.
      */
     export const ContentSearchOrUrlPlaybackComponent = ClusterComponent({
         commands: {
@@ -562,7 +562,7 @@ export namespace ContentLauncherCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...UrlPlaybackComponent.attributes },
         commands: {
@@ -570,5 +570,5 @@ export namespace ContentLauncherCluster {
             ...ContentSearchComponent.commands,
             ...ContentSearchOrUrlPlaybackComponent.commands
         }
-    };
+    });
 };

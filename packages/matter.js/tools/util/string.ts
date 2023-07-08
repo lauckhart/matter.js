@@ -55,6 +55,8 @@ export function describeList(setType: "and" | "or", ...entries: string[]) {
     for (let i = 0; i < entries.length; i++) {
         if (i === entries.length - 1) {
             text.push(setType, entries[i]);
+        } else if (i === entries.length - 2) {
+            text.push(entries[i]);
         } else {
             text.push(`${entries[i]},`);
         }

@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute } from "../../cluster/Cluster.js";
+import { WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -49,7 +48,7 @@ export namespace ProxyConfigurationCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.15.14
      */
-    export const Metadata = ClusterMetadata({ id: 0x42, name: "ProxyConfiguration", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x42, name: "ProxyConfiguration", revision: 1, features: {} });
 
     /**
      * A ProxyConfigurationCluster supports these elements for all feature combinations.
@@ -68,5 +67,5 @@ export namespace ProxyConfigurationCluster {
     /**
      * This cluster supports all ProxyConfiguration features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

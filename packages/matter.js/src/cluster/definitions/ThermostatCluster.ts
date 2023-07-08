@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, OptionalWritableAttribute, WritableAttribute, Command, TlvNoResponse, OptionalCommand, OptionalFixedAttribute, FixedAttribute } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, OptionalWritableAttribute, WritableAttribute, Command, TlvNoResponse, OptionalCommand, OptionalFixedAttribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16, TlvUInt32, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -20,7 +20,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * An interface for configuring and controlling the functionality of a thermostat.
  *
- * This function creates a Thermostat cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a Thermostat cluster supporting a specific set of features.  Include each
  * {@link ThermostatCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ThermostatCluster.Feature} to support
@@ -1322,7 +1322,7 @@ export namespace ThermostatCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
 
         attributes: {
@@ -1337,5 +1337,5 @@ export namespace ThermostatCluster {
         },
 
         commands: { ...BaseComponent.commands, ...ScheduleConfigurationComponent.commands }
-    };
+    });
 };

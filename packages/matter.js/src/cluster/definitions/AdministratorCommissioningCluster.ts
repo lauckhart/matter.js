@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -21,8 +21,8 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * Commands to trigger a Node to allow a new Administrator to commission it.
  *
- * This function creates a AdministratorCommissioning cluster supporting a specific set of features.  Include each
- * {@link AdministratorCommissioningCluster.Feature} you wish to support.
+ * Use this factory function to create a AdministratorCommissioning cluster supporting a specific set of features.
+ * Include each {@link AdministratorCommissioningCluster.Feature} you wish to support.
  *
  * @param features a list of {@link AdministratorCommissioningCluster.Feature} to support
  * @returns a AdministratorCommissioning cluster with specified features enabled
@@ -177,9 +177,9 @@ export namespace AdministratorCommissioningCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands, ...BasicComponent.commands }
-    };
+    });
 };

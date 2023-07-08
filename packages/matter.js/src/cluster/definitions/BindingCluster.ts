@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableFabricScopedAttribute, AccessLevel } from "../../cluster/Cluster.js";
+import { WritableFabricScopedAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt64, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
@@ -76,7 +75,7 @@ export namespace BindingCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6
      */
-    export const Metadata = ClusterMetadata({ id: 0x1e, name: "Binding", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x1e, name: "Binding", revision: 1, features: {} });
 
     /**
      * A BindingCluster supports these elements for all feature combinations.
@@ -99,5 +98,5 @@ export namespace BindingCluster {
     /**
      * This cluster supports all Binding features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

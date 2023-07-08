@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalFixedAttribute, AccessLevel, FixedAttribute, Attribute } from "../../cluster/Cluster.js";
+import { OptionalFixedAttribute, AccessLevel, FixedAttribute, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -88,7 +87,7 @@ export namespace ApplicationBasicCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3
      */
-    export const Metadata = ClusterMetadata({ id: 0x50d, name: "ApplicationBasic", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x50d, name: "ApplicationBasic", revision: 1, features: {} });
 
     /**
      * A ApplicationBasicCluster supports these elements for all feature combinations.
@@ -170,5 +169,5 @@ export namespace ApplicationBasicCluster {
     /**
      * This cluster supports all ApplicationBasic features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

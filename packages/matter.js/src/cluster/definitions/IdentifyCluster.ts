@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
+import { WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -19,7 +19,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * Attributes and commands for putting a device into Identification mode (e.g. flashing a light).
  *
- * This function creates a Identify cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a Identify cluster supporting a specific set of features.  Include each
  * {@link IdentifyCluster.Feature} you wish to support.
  *
  * @param features a list of {@link IdentifyCluster.Feature} to support
@@ -293,9 +293,9 @@ export namespace IdentifyCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands, ...QueryComponent.commands }
-    };
+    });
 };

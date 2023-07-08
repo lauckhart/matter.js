@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, OptionalCommand, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, Command, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt64, TlvFloat } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -22,7 +22,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media device such as a TV
  * or Speaker.
  *
- * This function creates a MediaPlayback cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a MediaPlayback cluster supporting a specific set of features.  Include each
  * {@link MediaPlaybackCluster.Feature} you wish to support.
  *
  * @param features a list of {@link MediaPlaybackCluster.Feature} to support
@@ -458,9 +458,9 @@ export namespace MediaPlaybackCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...AdvancedSeekComponent.attributes },
         commands: { ...BaseComponent.commands, ...AdvancedSeekComponent.commands, ...VariableSpeedComponent.commands }
-    };
+    });
 };

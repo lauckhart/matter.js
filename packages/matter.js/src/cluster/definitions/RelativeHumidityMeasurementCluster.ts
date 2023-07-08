@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -38,7 +37,7 @@ export namespace RelativeHumidityMeasurementCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.6
      */
-    export const Metadata = ClusterMetadata({ id: 0x405, name: "RelativeHumidityMeasurement", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x405, name: "RelativeHumidityMeasurement", revision: 1, features: {} });
 
     /**
      * A RelativeHumidityMeasurementCluster supports these elements for all feature combinations.
@@ -80,5 +79,5 @@ export namespace RelativeHumidityMeasurementCluster {
     /**
      * This cluster supports all RelativeHumidityMeasurement features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

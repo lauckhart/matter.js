@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -204,7 +203,7 @@ export namespace DiagnosticLogsCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10
      */
-    export const Metadata = ClusterMetadata({ id: 0x32, name: "DiagnosticLogs", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x32, name: "DiagnosticLogs", revision: 1, features: {} });
 
     /**
      * A DiagnosticLogsCluster supports these elements for all feature combinations.
@@ -232,5 +231,5 @@ export namespace DiagnosticLogsCluster {
     /**
      * This cluster supports all DiagnosticLogs features.
      */
-    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
 };

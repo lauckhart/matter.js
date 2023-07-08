@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, FixedAttribute, Attribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { WritableAttribute, AccessLevel, FixedAttribute, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt64, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -151,7 +150,7 @@ export namespace GeneralCommissioningCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.9
      */
-    export const Metadata = ClusterMetadata({ id: 0x30, name: "GeneralCommissioning", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x30, name: "GeneralCommissioning", revision: 1, features: {} });
 
     /**
      * A GeneralCommissioningCluster supports these elements for all feature combinations.
@@ -255,9 +254,9 @@ export namespace GeneralCommissioningCluster {
     /**
      * This cluster supports all GeneralCommissioning features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
-    };
+    });
 };

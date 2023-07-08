@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, Attribute } from "../../cluster/Cluster.js";
+import { FixedAttribute, AccessLevel, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
@@ -63,7 +62,7 @@ export namespace DescriptorCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.5
      */
-    export const Metadata = ClusterMetadata({ id: 0x1d, name: "Descriptor", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x1d, name: "Descriptor", revision: 1, features: {} });
 
     /**
      * A DescriptorCluster supports these elements for all feature combinations.
@@ -106,5 +105,5 @@ export namespace DescriptorCluster {
     /**
      * This cluster supports all Descriptor features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

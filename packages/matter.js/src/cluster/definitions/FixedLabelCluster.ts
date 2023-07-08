@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
@@ -40,7 +39,7 @@ export namespace FixedLabelCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.8
      */
-    export const Metadata = ClusterMetadata({ id: 0x40, name: "FixedLabel", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x40, name: "FixedLabel", revision: 1, features: {} });
 
     /**
      * A FixedLabelCluster supports these elements for all feature combinations.
@@ -57,5 +56,5 @@ export namespace FixedLabelCluster {
     /**
      * This cluster supports all FixedLabel features.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
 };

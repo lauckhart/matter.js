@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Attribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -35,7 +34,7 @@ export namespace BarrierControlCluster {
     /**
      * BarrierControl cluster metadata.
      */
-    export const Metadata = ClusterMetadata({ id: 0x103, name: "BarrierControl", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x103, name: "BarrierControl", revision: 1, features: {} });
 
     /**
      * A BarrierControlCluster supports these elements for all feature combinations.
@@ -63,9 +62,9 @@ export namespace BarrierControlCluster {
     /**
      * This cluster supports all BarrierControl features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
-    };
+    });
 };

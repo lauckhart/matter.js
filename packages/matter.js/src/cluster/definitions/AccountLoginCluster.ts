@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -96,7 +95,7 @@ export namespace AccountLoginCluster {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2
      */
-    export const Metadata = ClusterMetadata({ id: 0x50e, name: "AccountLogin", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x50e, name: "AccountLogin", revision: 1, features: {} });
 
     /**
      * A AccountLoginCluster supports these elements for all feature combinations.
@@ -141,5 +140,5 @@ export namespace AccountLoginCluster {
     /**
      * This cluster supports all AccountLogin features.
      */
-    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
 };

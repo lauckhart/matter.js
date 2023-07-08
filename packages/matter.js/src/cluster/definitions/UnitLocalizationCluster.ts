@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel } from "../../cluster/Cluster.js";
+import { WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -21,7 +21,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * audibly convey measurable values to the user need a mechanism by which they can be configured to use a user’s
  * preferred unit.
  *
- * This function creates a UnitLocalization cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a UnitLocalization cluster supporting a specific set of features.  Include each
  * {@link UnitLocalizationCluster.Feature} you wish to support.
  *
  * @param features a list of {@link UnitLocalizationCluster.Feature} to support
@@ -121,5 +121,5 @@ export namespace UnitLocalizationCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = { ...Metadata, attributes: { ...TemperatureUnitComponent.attributes } };
+    export const Complete = Cluster({ ...Metadata, attributes: { ...TemperatureUnitComponent.attributes } });
 };

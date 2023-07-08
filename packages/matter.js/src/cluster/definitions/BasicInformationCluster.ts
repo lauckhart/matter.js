@@ -6,10 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, WritableAttribute, OptionalFixedAttribute, OptionalWritableAttribute, OptionalAttribute, Event, EventPriority, OptionalEvent } from "../../cluster/Cluster.js";
+import { FixedAttribute, AccessLevel, WritableAttribute, OptionalFixedAttribute, OptionalWritableAttribute, OptionalAttribute, Event, EventPriority, OptionalEvent, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvUInt32, TlvEnum, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -151,7 +150,7 @@ export namespace BasicInformationCluster {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.1
      */
-    export const Metadata = ClusterMetadata({ id: 0x28, name: "BasicInformation", revision: 1 });
+    export const Metadata = ClusterMetadata({ id: 0x28, name: "BasicInformation", revision: 1, features: {} });
 
     /**
      * A BasicInformationCluster supports these elements for all feature combinations.
@@ -408,9 +407,9 @@ export namespace BasicInformationCluster {
     /**
      * This cluster supports all BasicInformation features.
      */
-    export const Complete = {
+    export const Complete = Cluster({
         ...Metadata,
         attributes: { ...BaseComponent.attributes },
         events: { ...BaseComponent.events }
-    };
+    });
 };

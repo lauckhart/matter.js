@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute } from "../../cluster/Cluster.js";
+import { Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -18,8 +18,8 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * Attributes and commands for configuring the measurement of pressure, and reporting pressure measurements.
  *
- * This function creates a PressureMeasurement cluster supporting a specific set of features.  Include each
- * {@link PressureMeasurementCluster.Feature} you wish to support.
+ * Use this factory function to create a PressureMeasurement cluster supporting a specific set of features.  Include
+ * each {@link PressureMeasurementCluster.Feature} you wish to support.
  *
  * @param features a list of {@link PressureMeasurementCluster.Feature} to support
  * @returns a PressureMeasurement cluster with specified features enabled
@@ -166,5 +166,8 @@ export namespace PressureMeasurementCluster {
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
      */
-    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes, ...ExtendedComponent.attributes } };
+    export const Complete = Cluster({
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes, ...ExtendedComponent.attributes }
+    });
 };
