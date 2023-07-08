@@ -7,7 +7,7 @@
 import { Properties } from "../../../util/Type.js";
 import { FeatureSet } from "../../definitions/FeatureSet.js";
 import { ValueModel } from "../../models/index.js";
-import { ValidationResult, Validator } from "./Validator.js";
+import { RecordValidationResult, RecordValidator } from "./RecordValidatorInterface.js";
 import { ValidatorBuilder } from "./ValidatorBuilder.js";
 
 type ChoiceState = {
@@ -22,15 +22,17 @@ type ChoiceState = {
  * Actual validation occurs in a the generated "validate" method except for
  * portions exposed as utility methods on this class.
  */
-export class ValidatorImplementation implements Validator {
-    validate: (record: Properties) => ValidationResult;
+export class ValidatorImplementation implements RecordValidator {
+    validate: (record: Properties) => RecordValidationResult;
+    logFailure: () => void;
 
     choices?: { [name: string]: ChoiceState };
-    result?: ValidationResult;
+    result?: RecordValidationResult;
 
-    constructor(public fields: ValueModel[], public features: FeatureSet) {
-        const builder = new ValidatorBuilder(fields);
+    constructor(public fields: ValueModel[], definedFeatures: FeatureSet, public enabledFeatures: FeatureSet) {
+        const builder = new ValidatorBuilder(fields, definedFeatures, enabledFeatures);
         this.validate = builder.compile();
+        this.logFailure = () => builder.logFailure();
     }
 
     // Compiled validator invokes to test group values
@@ -39,7 +41,7 @@ export class ValidatorImplementation implements Validator {
             if (a === true) {
                 return true;
             }
-            if (a === false) {
+            if (a === null) {
                 return false;
             }
         }
@@ -49,22 +51,24 @@ export class ValidatorImplementation implements Validator {
     // Compiled validator invokes to record active choice.  A counter is kept
     // using a key of the form ".a" in values.  After conformance is tested on
     // each field, choices must be reexamined to ensure choices are correct
-    testChoice(name: string, value: boolean, num: number, orMore: boolean) {
+    testChoice(name: string, result: any, hasValue: boolean, num: number, orMore: boolean) {
         if (!this.choices) {
             this.choices = {};
         }
-        const choice = this.choices[name];
+        let choice = this.choices[name];
         if (!choice) {
-            this.choices[name] = {
+            choice = this.choices[name] = {
                 count: 0,
                 num: num,
                 orMore: orMore
             }
         }
-        if (value) {
+        if (hasValue) {
             choice.count++;
         }
-        return value;
+
+        // Just pass result through.  Error handling occurs in checkChoices
+        return result;
     }
 
     // Compiled validator invokes to check choices

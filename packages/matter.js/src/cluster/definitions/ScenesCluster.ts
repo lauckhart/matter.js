@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
+import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvUInt16, TlvBitmap, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -16,7 +16,6 @@ import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvAny } from "../../tlv/TlvAny.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * This attribute provides legacy, read-only access to whether the Scene Names feature is supported. The most
@@ -347,12 +346,12 @@ export const TlvCopySceneResponseRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4
  */
-const ScenesMetadata = ClusterMetadata({
+export const ScenesMetadata = ClusterMetadata({
     id: 0x5,
     name: "Scenes",
     revision: 1,
 
-    export const featureMap = {
+    features: {
         /**
          * SceneNames
          *
@@ -559,7 +558,17 @@ export const BaseComponent = ClusterComponent({
     }
 });
 
-/**
- * Use ScenesCluster() to obtain a Cluster instance.
- */
-const ScenesCluster = ClusterFactory();
+export type ScenesCluster<T extends TypeFromPartialBitSchema<typeof ScenesMetadata.features>> = 
+    typeof ScenesMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent;
+
+export function ScenesCluster<T extends (keyof typeof ScenesMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...ScenesMetadata,
+        supportedFeatures: BitFlags(ScenesMetadata.features, ...features),
+        ...BaseComponent
+    };
+    
+    return cluster as unknown as ScenesCluster<BitFlags<typeof ScenesMetadata.features, T>>;
+};

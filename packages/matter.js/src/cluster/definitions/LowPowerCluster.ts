@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
+import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 
 
 
@@ -18,7 +18,7 @@ import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
  */
-const LowPowerMetadata = ClusterMetadata({ id: 0x508, name: "LowPower", revision: 1 });
+export const LowPowerMetadata = ClusterMetadata({ id: 0x508, name: "LowPower", revision: 1 });
 
 /**
  * A LowPowerCluster supports these elements for all feature combinations.
@@ -34,7 +34,17 @@ export const BaseComponent = ClusterComponent({
     }
 });
 
-/**
- * Use LowPowerCluster() to obtain a Cluster instance.
- */
-const LowPowerCluster = ClusterFactory();
+export type LowPowerCluster<T extends TypeFromPartialBitSchema<typeof LowPowerMetadata.features>> = 
+    typeof LowPowerMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent;
+
+export function LowPowerCluster<T extends (keyof typeof LowPowerMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...LowPowerMetadata,
+        supportedFeatures: BitFlags(LowPowerMetadata.features, ...features),
+        ...BaseComponent
+    };
+    
+    return cluster as unknown as LowPowerCluster<BitFlags<typeof LowPowerMetadata.features, T>>;
+};

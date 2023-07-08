@@ -6,15 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, AccessLevel, Attribute, OptionalWritableAttribute, Command, TlvNoResponse, WritableAttribute } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * A Semantic Tag is meant to be interpreted by the client for the purpose the cluster serves.
@@ -89,12 +88,12 @@ export const TlvChangeToModeRequest = TlvObject({ newMode: TlvField(0, TlvUInt8)
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8
  */
-const ModeSelectMetadata = ClusterMetadata({
+export const ModeSelectMetadata = ClusterMetadata({
     id: 0x50,
     name: "ModeSelect",
     revision: 1,
 
-    export const featureMap = {
+    features: {
         /**
          * OnOff
          *
@@ -188,8 +187,19 @@ export const OnOffComponent = ClusterComponent({
     }
 });
 
-/**
- * Use ModeSelectCluster to obtain a Cluster instance for a specific feature set.  ModeSelectCluster only returns
- * clusters for feature combinations supported by the Matter specification.
- */
-const ModeSelectCluster = ClusterFactory();
+export type ModeSelectCluster<T extends TypeFromPartialBitSchema<typeof ModeSelectMetadata.features>> = 
+    typeof ModeSelectMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent
+    & (T extends { onOff: true } ? typeof OnOffComponent : {});
+
+export function ModeSelectCluster<T extends (keyof typeof ModeSelectMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...ModeSelectMetadata,
+        supportedFeatures: BitFlags(ModeSelectMetadata.features, ...features),
+        ...BaseComponent
+    };
+    extendCluster(cluster, OnOffComponent, { onOff: true });
+    
+    return cluster as unknown as ModeSelectCluster<BitFlags<typeof ModeSelectMetadata.features, T>>;
+};

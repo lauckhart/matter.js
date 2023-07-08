@@ -11,27 +11,27 @@ import {
     Conformance,
     Globals,
     MatterModel,
-    VarianceCondition
+    VarianceCondition,
 } from "../../../src/model/index.js"
 
 describe("ClusterVariance", () => {
     describe("invariant", () => {
         it("classifies mandatory", () => {
-            expectVariance(
+            expectComponents(
                 attrs({ name: "attr", conformance: "M" }),
                 { mandatory: [ "attr" ] }
             )
         })
 
         it("classifies optional", () => {
-            expectVariance(
+            expectComponents(
                 attrs({ name: "attr", conformance: "O" }),
                 { optional: [ "attr" ] }
             )
         })
 
         it("classifies mandatory and optional", () => {
-            expectVariance(
+            expectComponents(
                 attrs(
                     { name: "attr1", conformance: "M" },
                     { name: "attr2", conformance: "O" }
@@ -44,14 +44,14 @@ describe("ClusterVariance", () => {
         })
 
         it("ignores deprecation", () => {
-            expectVariance(
+            expectComponents(
                 attrs({ name: "attr", conformance: "D" }),
                 { optional: [ "attr" ] }
             )
         })
 
         it("ignores provisional", () => {
-            expectVariance(
+            expectComponents(
                 attrs({ name: "attr", conformance: "P, M" }),
                 { mandatory: [ "attr" ] }
             )
@@ -60,7 +60,7 @@ describe("ClusterVariance", () => {
 
     describe("simple variance", () => {
         it("classifies mandatory by feature", () => {
-            expectVariance(
+            expectComponents(
                 attrs(
                     [ "FOO" ],
                     { name: "attr", conformance: "FOO" }
@@ -70,7 +70,7 @@ describe("ClusterVariance", () => {
         })
 
         it("classifies optional by feature", () => {
-            expectVariance(
+            expectComponents(
                 attrs(
                     [ "FOO" ],
                     { name: "attr", conformance: "[FOO]" }
@@ -80,7 +80,7 @@ describe("ClusterVariance", () => {
         })
 
         it("classifies by multiple features with mandatory and optional", () => {
-            expectVariance(
+            expectComponents(
                 attrs(
                     [ "FOO", "BAR", "NOPE" ],
                     { name: "attr1", conformance: "M" },
@@ -109,7 +109,7 @@ describe("ClusterVariance", () => {
 
     describe("complex variance", () => {
         it("parses FOO | BAR", () => {
-            expectVariance(
+            expectComponents(
                 attrs([ "FOO", "BAR" ], { name: "attr", conformance: "FOO | BAR" }),
                 {
                     mandatory: [ "attr" ],
@@ -164,7 +164,7 @@ type ExpectedElementVariance = {
 }
 
 function actualToExpected(actual: ClusterVariance) {
-    return actual.map(a => {
+    return actual.components.map(a => {
         const e = {} as ExpectedElementVariance;
         if (a.mandatory.length) {
             e.mandatory = a.mandatory.map(a => a.name);
@@ -179,7 +179,7 @@ function actualToExpected(actual: ClusterVariance) {
     })
 }
 
-function expectVariance(children: ClusterElement.Child[], ...expected: ExpectedElementVariance[]) {
+function expectComponents(children: ClusterElement.Child[], ...expected: ExpectedElementVariance[]) {
     const variance = analyze(children);
     const actual = actualToExpected(variance);
     expect(actual).toStrictEqual(expected);

@@ -6,14 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap that
@@ -111,12 +110,12 @@ export const TlvMoveToClosestFrequencyRequest = TlvObject({ frequency: TlvField(
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
  */
-const PulseWidthModulationMetadata = ClusterMetadata({
+export const PulseWidthModulationMetadata = ClusterMetadata({
     id: 0x1c,
     name: "PulseWidthModulation",
     revision: 1,
 
-    export const featureMap = {
+    features: {
         /**
          * OnOff
          *
@@ -369,8 +368,21 @@ export const FrequencyComponent = ClusterComponent({
     }
 });
 
-/**
- * Use PulseWidthModulationCluster to obtain a Cluster instance for a specific feature set.
- * PulseWidthModulationCluster only returns clusters for feature combinations supported by the Matter specification.
- */
-const PulseWidthModulationCluster = ClusterFactory();
+export type PulseWidthModulationCluster<T extends TypeFromPartialBitSchema<typeof PulseWidthModulationMetadata.features>> = 
+    typeof PulseWidthModulationMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent
+    & (T extends { lighting: true } ? typeof LightingComponent : {})
+    & (T extends { frequency: true } ? typeof FrequencyComponent : {});
+
+export function PulseWidthModulationCluster<T extends (keyof typeof PulseWidthModulationMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...PulseWidthModulationMetadata,
+        supportedFeatures: BitFlags(PulseWidthModulationMetadata.features, ...features),
+        ...BaseComponent
+    };
+    extendCluster(cluster, LightingComponent, { lighting: true });
+    extendCluster(cluster, FrequencyComponent, { frequency: true });
+    
+    return cluster as unknown as PulseWidthModulationCluster<BitFlags<typeof PulseWidthModulationMetadata.features, T>>;
+};
