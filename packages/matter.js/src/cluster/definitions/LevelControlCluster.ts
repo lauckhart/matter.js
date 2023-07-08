@@ -6,13 +6,12 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap that
@@ -153,12 +152,12 @@ export const TlvMoveToClosestFrequencyRequest = TlvObject({ frequency: TlvField(
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
  */
-const LevelControlMetadata = ClusterMetadata({
+export const LevelControlMetadata = ClusterMetadata({
     id: 0x8,
     name: "LevelControl",
     revision: 1,
 
-    export const featureMap = {
+    features: {
         /**
          * OnOff
          *
@@ -407,8 +406,21 @@ export const FrequencyComponent = ClusterComponent({
     }
 });
 
-/**
- * Use LevelControlCluster to obtain a Cluster instance for a specific feature set.  LevelControlCluster only returns
- * clusters for feature combinations supported by the Matter specification.
- */
-const LevelControlCluster = ClusterFactory();
+export type LevelControlCluster<T extends TypeFromPartialBitSchema<typeof LevelControlMetadata.features>> = 
+    typeof LevelControlMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent
+    & (T extends { lighting: true } ? typeof LightingComponent : {})
+    & (T extends { frequency: true } ? typeof FrequencyComponent : {});
+
+export function LevelControlCluster<T extends (keyof typeof LevelControlMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...LevelControlMetadata,
+        supportedFeatures: BitFlags(LevelControlMetadata.features, ...features),
+        ...BaseComponent
+    };
+    extendCluster(cluster, LightingComponent, { lighting: true });
+    extendCluster(cluster, FrequencyComponent, { frequency: true });
+    
+    return cluster as unknown as LevelControlCluster<BitFlags<typeof LevelControlMetadata.features, T>>;
+};

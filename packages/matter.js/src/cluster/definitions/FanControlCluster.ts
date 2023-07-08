@@ -1,0 +1,296 @@
+/**
+ * @license
+ * Copyright 2022-2023 Project CHIP Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*** THIS FILE IS GENERATED, DO NOT EDIT ***/
+
+import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+import { WritableAttribute, AccessLevel, Attribute, FixedAttribute } from "../../cluster/Cluster.js";
+import { TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
+import { TlvNullable } from "../../tlv/TlvNullable.js";
+
+/**
+ * This attribute SHALL indicate the current speed mode of the fan. This attribute MAY be written by the client to
+ * indicate a new speed mode of the fan. This attribute SHALL be set to one of the values in the table below.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.1
+ */
+export const enum TlvFanMode {
+    /**
+     * Setting the attribute value to Off SHALL set the values of these attributes to 0 (zero):
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.1.1
+     */
+    Off = 0,
+
+    Low = 1,
+    Medium = 2,
+    High = 3,
+    On = 4,
+
+    /**
+     * Setting the attribute value to Auto SHALL set the values of these attributes to null:
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.1.3
+     */
+    Auto = 5,
+
+    Smart = 6
+};
+
+/**
+ * This indicates the fan speed ranges that SHALL be supported.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.2
+ */
+export const enum TlvFanModeSequence {
+    OffLowMedHigh = 0,
+    OffLowHigh = 1,
+    OffLowMedHighAuto = 2,
+    OffLowHighAuto = 3,
+    OffOnAuto = 4,
+    OffOn = 5
+};
+
+/**
+ * This attribute is a bitmap that indicates what rocking motions the server supports. The bitmap is shown in the table
+ * below.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.8
+ */
+export const TlvRockSupportBits = { rockLeftRight: BitFlag(0), rockUpDown: BitFlag(1), rockRound: BitFlag(2) };
+
+export const TlvRockSupport = TlvBitmap(TlvUInt8, TlvRockSupportBits);
+
+/**
+ * This attribute is a bitmap that indicates the current active fan rocking motion settings. Each bit SHALL only be set
+ * to 1, if the corresponding bit in the RockSupport attribute is set to 1, otherwise a status code of CONSTRAINT_ERROR
+ * SHALL be returned.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
+ */
+export const TlvRockSettingBits = { rockLeftRight: BitFlag(0), rockUpDown: BitFlag(1), rockRound: BitFlag(2) };
+
+export const TlvRockSetting = TlvBitmap(TlvUInt8, TlvRockSettingBits);
+
+/**
+ * This attribute is a bitmap that indicates what wind modes the server supports. At least one wind mode bit SHALL be
+ * set. The bitmap is shown in the table below.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.10
+ */
+export const TlvWindSupportBits = { sleepWind: BitFlag(0), naturalWind: BitFlag(1) };
+
+export const TlvWindSupport = TlvBitmap(TlvUInt8, TlvWindSupportBits);
+
+/**
+ * This attribute is a bitmap that indicates the current active fan wind feature settings. Each bit SHALL only be set
+ * to 1, if the corresponding bit in the WindSupport attribute is set to 1, otherwise a status code of CONSTRAINT_ERROR
+ * SHALL be returned.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
+ */
+export const TlvWindSettingBits = { sleepWind: BitFlag(0), naturalWind: BitFlag(1) };
+
+export const TlvWindSetting = TlvBitmap(TlvUInt8, TlvWindSettingBits);
+
+/**
+ * Standard FanControl cluster properties.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4
+ */
+export const FanControlMetadata = ClusterMetadata({
+    id: 0x202,
+    name: "FanControl",
+    revision: 1,
+
+    features: {
+        /**
+         * MultiSpeed
+         *
+         * 1-100 speeds
+         */
+        multiSpeed: BitFlag(0),
+
+        /**
+         * Auto
+         *
+         * Automatic mode supported for fan speed
+         */
+        auto: BitFlag(1),
+
+        /**
+         * Rocking
+         *
+         * Rocking movement supported
+         */
+        rocking: BitFlag(2),
+
+        /**
+         * Wind
+         *
+         * Wind emulation supported
+         */
+        wind: BitFlag(3)
+    }
+});
+
+/**
+ * A FanControlCluster supports these elements for all feature combinations.
+ */
+export const BaseComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute SHALL indicate the current speed mode of the fan. This attribute MAY be written by the client
+         * to indicate a new speed mode of the fan. This attribute SHALL be set to one of the values in the table below.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.1
+         */
+        fanMode: WritableAttribute(
+            0,
+            TlvEnum<TlvFanMode>(),
+            { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+        ),
+
+        /**
+         * This indicates the fan speed ranges that SHALL be supported.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.2
+         */
+        fanModeSequence: WritableAttribute(
+            1,
+            TlvEnum<TlvFanModeSequence>(),
+            { persistent: true, default: 2, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+        ),
+
+        /**
+         * This attribute SHALL indicate the speed setting for the fan. This attribute MAY be written by the client to
+         * indicate a new fan speed. If the client writes null to this attribute, the attribute value SHALL NOT change.
+         * If this is set to 0, the server SHALL set the FanMode attribute value to Off.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.3
+         */
+        percentSetting: WritableAttribute(
+            2,
+            TlvNullable(TlvUInt8.bound({ max: 100 })),
+            { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+        ),
+
+        /**
+         * This attribute SHALL indicate the actual currently operating fan speed, or zero to indicate that the fan is
+         * off. See Section 4.4.6.3.1 for more details.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.4
+         */
+        percentCurrent: Attribute(3, TlvUInt8.bound({ max: 100 }), { readAcl: AccessLevel.View })
+    }
+});
+
+/**
+ * A FanControlCluster supports these elements if it supports feature MultiSpeed.
+ */
+export const MultiSpeedComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute SHALL indicate that the fan has one speed (value of 1) or the maximum speed, if the fan is
+         * capable of multiple speeds.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.5
+         */
+        speedMax: FixedAttribute(4, TlvUInt8.bound({ min: 1, max: 100 }), { default: 1, readAcl: AccessLevel.View }),
+
+        /**
+         * This attribute SHALL indicate the speed setting for the fan. This attribute MAY be written by the client to
+         * indicate a new fan speed. If the client writes null to this attribute, the attribute value SHALL NOT change.
+         * If this is set to 0, the server SHALL set the FanMode attribute value to Off. Please see the Section
+         * 4.4.6.6.1 for details on other values.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.6
+         */
+        speedSetting: WritableAttribute(
+            5,
+            TlvNullable(TlvUInt8),
+            { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+        ),
+
+        /**
+         * This attribute SHALL indicate the actual currently operating fan speed, or zero to indicate that the fan is
+         * off.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.7
+         */
+        speedCurrent: Attribute(6, TlvUInt8, { readAcl: AccessLevel.View })
+    }
+});
+
+/**
+ * A FanControlCluster supports these elements if it supports feature Rocking.
+ */
+export const RockingComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute is a bitmap that indicates what rocking motions the server supports. The bitmap is shown in
+         * the table below.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.8
+         */
+        rockSupport: FixedAttribute(7, TlvRockSupport, { readAcl: AccessLevel.View }),
+
+        /**
+         * This attribute is a bitmap that indicates the current active fan rocking motion settings. Each bit SHALL
+         * only be set to 1, if the corresponding bit in the RockSupport attribute is set to 1, otherwise a status code
+         * of CONSTRAINT_ERROR SHALL be returned.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
+         */
+        rockSetting: WritableAttribute(8, TlvRockSetting, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate })
+    }
+});
+
+/**
+ * A FanControlCluster supports these elements if it supports feature Wind.
+ */
+export const WindComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute is a bitmap that indicates what wind modes the server supports. At least one wind mode bit
+         * SHALL be set. The bitmap is shown in the table below.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.10
+         */
+        windSupport: FixedAttribute(9, TlvWindSupport, { readAcl: AccessLevel.View }),
+
+        /**
+         * This attribute is a bitmap that indicates the current active fan wind feature settings. Each bit SHALL only
+         * be set to 1, if the corresponding bit in the WindSupport attribute is set to 1, otherwise a status code of
+         * CONSTRAINT_ERROR SHALL be returned.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
+         */
+        windSetting: WritableAttribute(10, TlvWindSetting, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate })
+    }
+});
+
+export type FanControlCluster<T extends TypeFromPartialBitSchema<typeof FanControlMetadata.features>> = 
+    typeof FanControlMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent
+    & (T extends { multiSpeed: true } ? typeof MultiSpeedComponent : {})
+    & (T extends { rocking: true } ? typeof RockingComponent : {})
+    & (T extends { wind: true } ? typeof WindComponent : {});
+
+export function FanControlCluster<T extends (keyof typeof FanControlMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...FanControlMetadata,
+        supportedFeatures: BitFlags(FanControlMetadata.features, ...features),
+        ...BaseComponent
+    };
+    extendCluster(cluster, MultiSpeedComponent, { multiSpeed: true });
+    extendCluster(cluster, RockingComponent, { rocking: true });
+    extendCluster(cluster, WindComponent, { wind: true });
+    
+    return cluster as unknown as FanControlCluster<BitFlags<typeof FanControlMetadata.features, T>>;
+};

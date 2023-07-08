@@ -6,13 +6,12 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * This attribute specifies how the identification state is presented to the user. This field SHALL contain one of the
@@ -160,12 +159,12 @@ export const TlvIdentifyQueryResponseRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2
  */
-const IdentifyMetadata = ClusterMetadata({
+export const IdentifyMetadata = ClusterMetadata({
     id: 0x3,
     name: "Identify",
     revision: 1,
 
-    export const featureMap = {
+    features: {
         /**
          * Query
          *
@@ -242,8 +241,19 @@ export const QueryComponent = ClusterComponent({
     }
 });
 
-/**
- * Use IdentifyCluster to obtain a Cluster instance for a specific feature set.  IdentifyCluster only returns clusters
- * for feature combinations supported by the Matter specification.
- */
-const IdentifyCluster = ClusterFactory();
+export type IdentifyCluster<T extends TypeFromPartialBitSchema<typeof IdentifyMetadata.features>> = 
+    typeof IdentifyMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent
+    & (T extends { query: true } ? typeof QueryComponent : {});
+
+export function IdentifyCluster<T extends (keyof typeof IdentifyMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...IdentifyMetadata,
+        supportedFeatures: BitFlags(IdentifyMetadata.features, ...features),
+        ...BaseComponent
+    };
+    extendCluster(cluster, QueryComponent, { query: true });
+    
+    return cluster as unknown as IdentifyCluster<BitFlags<typeof IdentifyMetadata.features, T>>;
+};

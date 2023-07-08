@@ -32,7 +32,7 @@ export class ClusterComponentGenerator {
     }
 
     defineComponent(component: NamedComponent): Block {
-        this.file.addImport("cluster/ClusterBuilder", "ClusterComponent");
+        this.file.addImport("cluster/ClusterFactory", "ClusterComponent");
         const block = this.file.expressions(`export const ${component.name}Component = ClusterComponent({`, `})`)
             .document(component.documentation);
         const mandatory = new Set(component.mandatory);

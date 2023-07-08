@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
+import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, AccessLevel, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -15,7 +15,6 @@ import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * This attribute provides legacy, read-only access to whether the Group Names feature is supported. The most
@@ -126,12 +125,12 @@ export const TlvAddGroupIfIdentifyingRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3
  */
-const GroupsMetadata = ClusterMetadata({
+export const GroupsMetadata = ClusterMetadata({
     id: 0x4,
     name: "Groups",
     revision: 1,
 
-    export const featureMap = {
+    features: {
         /**
          * GroupNames
          *
@@ -237,7 +236,17 @@ export const BaseComponent = ClusterComponent({
     }
 });
 
-/**
- * Use GroupsCluster() to obtain a Cluster instance.
- */
-const GroupsCluster = ClusterFactory();
+export type GroupsCluster<T extends TypeFromPartialBitSchema<typeof GroupsMetadata.features>> = 
+    typeof GroupsMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent;
+
+export function GroupsCluster<T extends (keyof typeof GroupsMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...GroupsMetadata,
+        supportedFeatures: BitFlags(GroupsMetadata.features, ...features),
+        ...BaseComponent
+    };
+    
+    return cluster as unknown as GroupsCluster<BitFlags<typeof GroupsMetadata.features, T>>;
+};

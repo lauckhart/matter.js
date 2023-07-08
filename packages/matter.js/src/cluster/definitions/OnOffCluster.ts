@@ -6,15 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { Attribute, AccessLevel, Command, TlvNoResponse, WritableAttribute } from "../../cluster/Cluster.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.5.1
@@ -115,12 +114,12 @@ export const TlvOnWithTimedOffRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5
  */
-const OnOffMetadata = ClusterMetadata({
+export const OnOffMetadata = ClusterMetadata({
     id: 0x6,
     name: "OnOff",
     revision: 1,
 
-    export const featureMap = {
+    features: {
         /**
          * LevelControlForLighting
          *
@@ -254,8 +253,15 @@ export const LevelControlForLightingComponent = ClusterComponent({
     }
 });
 
-/**
- * Use OnOffCluster to obtain a Cluster instance for a specific feature set.  OnOffCluster only returns clusters for
- * feature combinations supported by the Matter specification.
- */
-const OnOffCluster = ClusterFactory();
+export type OnOffCluster<T extends TypeFromPartialBitSchema<typeof OnOffMetadata.features>> = 
+    typeof OnOffMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent
+    & (T extends { levelControlForLighting: true } ? typeof LevelControlForLightingComponent : {});
+
+export function OnOffCluster<T extends (keyof typeof OnOffMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = { ...OnOffMetadata, supportedFeatures: BitFlags(OnOffMetadata.features, ...features), ...BaseComponent };
+    extendCluster(cluster, LevelControlForLightingComponent, { levelControlForLighting: true });
+    
+    return cluster as unknown as OnOffCluster<BitFlags<typeof OnOffMetadata.features, T>>;
+};

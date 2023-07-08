@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterComponent } from "../../cluster/ClusterBuilder.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { OptionalFixedAttribute, AccessLevel } from "../../cluster/Cluster.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
-import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
+import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 
 
 
@@ -18,7 +18,7 @@ import { ClusterFactory, BuildCluster } from "../../cluster/ClusterFactory.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.10
  */
-const WakeOnLanMetadata = ClusterMetadata({ id: 0x503, name: "WakeOnLan", revision: 1 });
+export const WakeOnLanMetadata = ClusterMetadata({ id: 0x503, name: "WakeOnLan", revision: 1 });
 
 /**
  * A WakeOnLanCluster supports these elements for all feature combinations.
@@ -43,7 +43,17 @@ export const BaseComponent = ClusterComponent({
     }
 });
 
-/**
- * Use WakeOnLanCluster() to obtain a Cluster instance.
- */
-const WakeOnLanCluster = ClusterFactory();
+export type WakeOnLanCluster<T extends TypeFromPartialBitSchema<typeof WakeOnLanMetadata.features>> = 
+    typeof WakeOnLanMetadata
+    & { supportedFeatures: T }
+    & typeof BaseComponent;
+
+export function WakeOnLanCluster<T extends (keyof typeof WakeOnLanMetadata.features)[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...WakeOnLanMetadata,
+        supportedFeatures: BitFlags(WakeOnLanMetadata.features, ...features),
+        ...BaseComponent
+    };
+    
+    return cluster as unknown as WakeOnLanCluster<BitFlags<typeof WakeOnLanMetadata.features, T>>;
+};
