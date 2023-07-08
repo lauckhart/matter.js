@@ -6,6 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { FabricScopedAttribute, AccessLevel, FixedAttribute, Attribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -14,7 +16,21 @@ import { TlvByteString, TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvUInt16, TlvUInt64, TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * Operational Credentials
+ *
+ * This cluster is used to add or remove Operational Credentials on a Commissionee or Node, as well as manage the
+ * associated Fabrics.
+ *
+ * This function creates a OperationalCredentials cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.17
+ */
+export function OperationalCredentialsCluster() {
+    const cluster = { ...OperationalCredentialsCluster.Metadata, ...OperationalCredentialsCluster.BaseComponent };
+    return cluster as unknown as OperationalCredentialsCluster.Type;
+};
 
 /**
  * This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a given Node.
@@ -304,191 +320,192 @@ export const TlvAddTrustedRootCertificateRequest = TlvObject({
     rootCaCertificate: TlvField(0, TlvByteString.bound({ maxLength: 400 }))
 });
 
-/**
- * Standard OperationalCredentials cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.17
- */
-export const OperationalCredentialsMetadata = ClusterMetadata({ id: 0x3e, name: "OperationalCredentials", revision: 1 });
+export namespace OperationalCredentialsCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A OperationalCredentialsCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.1
-         */
-        noCs: FabricScopedAttribute(
-            0,
-            TlvArray(TlvNOCStruct),
+    /**
+     * OperationalCredentials cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.17
+     */
+    export const Metadata = ClusterMetadata({ id: 0x3e, name: "OperationalCredentials", revision: 1 });
 
-            {
-                persistent: true,
-                omitChanges: true,
-                default: [],
-                readAcl: AccessLevel.Administer,
-                writeAcl: AccessLevel.Administer
-            }
-        ),
+    /**
+     * A OperationalCredentialsCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.1
+             */
+            noCs: FabricScopedAttribute(
+                0,
+                TlvArray(TlvNOCStruct),
 
-        /**
-         * This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only list of
-         * FabricDescriptorStruct. This information MAY be computed directly from the NOCs attribute.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.2
-         */
-        fabrics: FabricScopedAttribute(
-            1,
-            TlvArray(TlvFabricDescriptorStruct),
-            { persistent: true, default: [], readAcl: AccessLevel.View }
-        ),
+                {
+                    persistent: true,
+                    omitChanges: true,
+                    default: [],
+                    readAcl: AccessLevel.Administer,
+                    writeAcl: AccessLevel.Administer
+                }
+            ),
 
-        /**
-         * This attribute contains the number of Fabrics that are supported by the device. This value is fixed for a
-         * particular device.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.3
-         */
-        supportedFabrics: FixedAttribute(2, TlvUInt8.bound({ min: 5, max: 254 }), { readAcl: AccessLevel.View }),
+            /**
+             * This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only list of
+             * FabricDescriptorStruct. This information MAY be computed directly from the NOCs attribute.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.2
+             */
+            fabrics: FabricScopedAttribute(
+                1,
+                TlvArray(TlvFabricDescriptorStruct),
+                { persistent: true, default: [], readAcl: AccessLevel.View }
+            ),
 
-        /**
-         * This attribute contains the number of Fabrics to which the device is currently commissioned. This attribute
-         * SHALL be equal to the following:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.4
-         */
-        commissionedFabrics: Attribute(3, TlvUInt8, { persistent: true, readAcl: AccessLevel.View }),
+            /**
+             * This attribute contains the number of Fabrics that are supported by the device. This value is fixed for
+             * a particular device.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.3
+             */
+            supportedFabrics: FixedAttribute(2, TlvUInt8.bound({ min: 5, max: 254 }), { readAcl: AccessLevel.View }),
 
-        /**
-         * This attribute SHALL contain a read-only list of Trusted Root CA Certificates installed on the Node, as
-         * octet strings containing their Matter Certificate Encoding representation.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.5
-         */
-        trustedRootCertificates: Attribute(
-            4,
-            TlvArray(TlvByteString),
-            { persistent: true, omitChanges: true, default: [], readAcl: AccessLevel.View }
-        ),
+            /**
+             * This attribute contains the number of Fabrics to which the device is currently commissioned. This
+             * attribute SHALL be equal to the following:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.4
+             */
+            commissionedFabrics: Attribute(3, TlvUInt8, { persistent: true, readAcl: AccessLevel.View }),
 
-        /**
-         * This attribute SHALL contain accessing fabric index.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.6
-         */
-        currentFabricIndex: Attribute(5, TlvUInt8, { readAcl: AccessLevel.View })
-    },
+            /**
+             * This attribute SHALL contain a read-only list of Trusted Root CA Certificates installed on the Node, as
+             * octet strings containing their Matter Certificate Encoding representation.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.5
+             */
+            trustedRootCertificates: Attribute(
+                4,
+                TlvArray(TlvByteString),
+                { persistent: true, omitChanges: true, default: [], readAcl: AccessLevel.View }
+            ),
 
-    commands: {
-        /**
-         * This command SHALL be generated to request the Attestation Information, in the form of an
-         * AttestationResponse Command. If the AttestationNonce that is provided in the command is malformed, a
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
-         */
-        attestationRequest: Command(0, TlvAttestationRequestRequest, 1, TlvAttestationResponseRequest),
+            /**
+             * This attribute SHALL contain accessing fabric index.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.6
+             */
+            currentFabricIndex: Attribute(5, TlvUInt8, { readAcl: AccessLevel.View })
+        },
 
-        /**
-         * This command SHALL be generated in response to an Attestation Request command.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2
-         */
-        attestationResponse: Command(1, TlvAttestationResponseRequest, 1, TlvNoResponse),
+        commands: {
+            /**
+             * This command SHALL be generated to request the Attestation Information, in the form of an
+             * AttestationResponse Command. If the AttestationNonce that is provided in the command is malformed, a
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
+             */
+            attestationRequest: Command(0, TlvAttestationRequestRequest, 1, TlvAttestationResponseRequest),
 
-        /**
-         * If the CertificateType is not a valid value per CertificateChainTypeEnum then the command SHALL fail with a
-         * Status Code of INVALID_COMMAND.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
-         */
-        certificateChainRequest: Command(2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponseRequest),
+            /**
+             * This command SHALL be generated in response to an Attestation Request command.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2
+             */
+            attestationResponse: Command(1, TlvAttestationResponseRequest, 1, TlvNoResponse),
 
-        /**
-         * This command SHALL be generated in response to a CertificateChainRequest command.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.4
-         */
-        certificateChainResponse: Command(3, TlvCertificateChainResponseRequest, 3, TlvNoResponse),
+            /**
+             * If the CertificateType is not a valid value per CertificateChainTypeEnum then the command SHALL fail
+             * with a Status Code of INVALID_COMMAND.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
+             */
+            certificateChainRequest: Command(2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponseRequest),
 
-        /**
-         * This command SHALL be generated to execute the Node Operational CSR Procedure and subsequently return the
-         * NOCSR Information, in the form of a CSRResponse Command.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
-         */
-        csrRequest: Command(4, TlvCsrRequestRequest, 5, TlvCsrResponseRequest),
+            /**
+             * This command SHALL be generated in response to a CertificateChainRequest command.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.4
+             */
+            certificateChainResponse: Command(3, TlvCertificateChainResponseRequest, 3, TlvNoResponse),
 
-        /**
-         * This command SHALL be generated in response to a CSRRequest Command.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.6
-         */
-        csrResponse: Command(5, TlvCsrResponseRequest, 5, TlvNoResponse),
+            /**
+             * This command SHALL be generated to execute the Node Operational CSR Procedure and subsequently return
+             * the NOCSR Information, in the form of a CSRResponse Command.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
+             */
+            csrRequest: Command(4, TlvCsrRequestRequest, 5, TlvCsrResponseRequest),
 
-        /**
-         * This command SHALL add a new NOC chain to the device and commission a new Fabric association upon successful
-         * validation of all arguments and preconditions.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8
-         */
-        addNoc: Command(6, TlvAddNocRequest, 8, TlvNocResponseRequest),
+            /**
+             * This command SHALL be generated in response to a CSRRequest Command.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.6
+             */
+            csrResponse: Command(5, TlvCsrResponseRequest, 5, TlvNoResponse),
 
-        /**
-         * This command SHALL replace the NOC and optional associated ICAC (if present) scoped under the accessing
-         * fabric upon successful validation of all arguments and preconditions. The new value SHALL immediately be
-         * reflected in the NOCs list attribute.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.9
-         */
-        updateNoc: Command(7, TlvUpdateNocRequest, 8, TlvNocResponseRequest),
+            /**
+             * This command SHALL add a new NOC chain to the device and commission a new Fabric association upon
+             * successful validation of all arguments and preconditions.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8
+             */
+            addNoc: Command(6, TlvAddNocRequest, 8, TlvNocResponseRequest),
 
-        /**
-         * This command SHALL be generated in response to the following commands:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10
-         */
-        nocResponse: Command(8, TlvNocResponseRequest, 8, TlvNoResponse),
+            /**
+             * This command SHALL replace the NOC and optional associated ICAC (if present) scoped under the accessing
+             * fabric upon successful validation of all arguments and preconditions. The new value SHALL immediately be
+             * reflected in the NOCs list attribute.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.9
+             */
+            updateNoc: Command(7, TlvUpdateNocRequest, 8, TlvNocResponseRequest),
 
-        /**
-         * This command SHALL be used by an Administrator to set the user-visible Label field for a given Fabric, as
-         * reflected by entries in the Fabrics attribute.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.11
-         */
-        updateFabricLabel: Command(9, TlvUpdateFabricLabelRequest, 8, TlvNocResponseRequest),
+            /**
+             * This command SHALL be generated in response to the following commands:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10
+             */
+            nocResponse: Command(8, TlvNocResponseRequest, 8, TlvNoResponse),
 
-        /**
-         * This command is used by Administrators to remove a given Fabric and delete all associated fabric-scoped data.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.12
-         */
-        removeFabric: Command(10, TlvRemoveFabricRequest, 8, TlvNocResponseRequest),
+            /**
+             * This command SHALL be used by an Administrator to set the user-visible Label field for a given Fabric,
+             * as reflected by entries in the Fabrics attribute.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.11
+             */
+            updateFabricLabel: Command(9, TlvUpdateFabricLabelRequest, 8, TlvNocResponseRequest),
 
-        /**
-         * This command SHALL add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding
-         * representation, to the TrustedRootCertificates Attribute list and SHALL ensure the next AddNOC command
-         * executed uses the provided certificate as its root of trust.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.13
-         */
-        addTrustedRootCertificate: Command(11, TlvAddTrustedRootCertificateRequest, 11, TlvNoResponse)
-    }
-});
+            /**
+             * This command is used by Administrators to remove a given Fabric and delete all associated fabric-scoped
+             * data.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.12
+             */
+            removeFabric: Command(10, TlvRemoveFabricRequest, 8, TlvNocResponseRequest),
 
-export type OperationalCredentialsCluster<T extends TypeFromPartialBitSchema<typeof OperationalCredentialsMetadata.features>> = 
-    typeof OperationalCredentialsMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+            /**
+             * This command SHALL add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding
+             * representation, to the TrustedRootCertificates Attribute list and SHALL ensure the next AddNOC command
+             * executed uses the provided certificate as its root of trust.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.13
+             */
+            addTrustedRootCertificate: Command(11, TlvAddTrustedRootCertificateRequest, 11, TlvNoResponse)
+        }
+    });
 
-export function OperationalCredentialsCluster<T extends (keyof typeof OperationalCredentialsMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...OperationalCredentialsMetadata,
-        supportedFeatures: BitFlags(OperationalCredentialsMetadata.features, ...features),
-        ...BaseComponent
+    /**
+     * This cluster supports all OperationalCredentials features.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands }
     };
-    
-    return cluster as unknown as OperationalCredentialsCluster<BitFlags<typeof OperationalCredentialsMetadata.features, T>>;
 };

@@ -6,13 +6,51 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
+
+/**
+ * Window Covering
+ *
+ * Provides an interface for controlling and adjusting automatic window coverings.
+ *
+ * This function creates a WindowCovering cluster supporting a specific set of features.  Include each
+ * {@link WindowCoveringCluster.Feature} you wish to support.
+ *
+ * @param features a list of {@link WindowCoveringCluster.Feature} to support
+ * @returns a WindowCovering cluster with specified features enabled
+ * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3
+ */
+export function WindowCoveringCluster<T extends WindowCoveringCluster.Feature[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...WindowCoveringCluster.Metadata,
+        supportedFeatures: BitFlags(WindowCoveringCluster.Metadata.features, ...features),
+        ...WindowCoveringCluster.BaseComponent
+    };
+    extendCluster(cluster, WindowCoveringCluster.LiftAndPositionAwareLiftComponent, { lift: true, positionAwareLift: true });
+    extendCluster(cluster, WindowCoveringCluster.TiltAndPositionAwareTiltComponent, { tilt: true, positionAwareTilt: true });
+    extendCluster(cluster, WindowCoveringCluster.LiftComponent, { lift: true });
+    extendCluster(cluster, WindowCoveringCluster.TiltComponent, { tilt: true });
+    extendCluster(cluster, WindowCoveringCluster.LiftAndAbsolutePositionComponent, { lift: true, absolutePosition: true });
+    extendCluster(cluster, WindowCoveringCluster.TiltAndAbsolutePositionComponent, { tilt: true, absolutePosition: true });
+
+    preventCluster(
+        cluster,
+        { positionAwareLift: true, lift: false },
+        { positionAwareTilt: true, tilt: false },
+        { lift: false, tilt: false }
+    );
+
+    return cluster as unknown as WindowCoveringCluster.Type<BitFlags<typeof WindowCoveringCluster.Metadata.features, T>>;
+};
 
 /**
  * The Type attribute identifies the type of window covering being controlled by this endpoint and SHALL be set to one
@@ -216,440 +254,505 @@ export const TlvGoToLiftValueRequest = TlvObject({ liftValue: TlvField(0, TlvUIn
  */
 export const TlvGoToTiltValueRequest = TlvObject({ tiltValue: TlvField(0, TlvUInt16) });
 
-/**
- * Standard WindowCovering cluster properties.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3
- */
-export const WindowCoveringMetadata = ClusterMetadata({
-    id: 0x102,
-    name: "WindowCovering",
-    revision: 1,
-
-    features: {
+export namespace WindowCoveringCluster {
+    /**
+     * These are optional features supported by WindowCoveringCluster.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.4
+     */
+    export enum Feature {
         /**
          * Lift
          *
          * Lift Control and behavior for lifting/sliding window coverings
          */
-        lift: BitFlag(0),
+        Lift = "Lift",
 
         /**
          * Tilt
          *
          * Tilt Control and behavior for tilting window coverings
          */
-        tilt: BitFlag(1),
+        Tilt = "Tilt",
 
         /**
          * PositionAwareLift
          *
          * Position Aware lift control is supported.
          */
-        positionAwareLift: BitFlag(2),
+        PositionAwareLift = "PositionAwareLift",
 
         /**
          * AbsolutePosition
          *
          * Absolute positioning is supported.
          */
-        absolutePosition: BitFlag(3),
+        AbsolutePosition = "AbsolutePosition",
 
         /**
          * PositionAwareTilt
          *
          * Position Aware tilt control is supported.
          */
-        positionAwareTilt: BitFlag(4)
-    }
-});
-
-/**
- * A WindowCoveringCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The Type attribute identifies the type of window covering being controlled by this endpoint and SHALL be set
-         * to one of the non-reserved values in the table below.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.1
-         */
-        type: FixedAttribute(0, TlvEnum<TlvType>(), { readAcl: AccessLevel.View }),
-
-        /**
-         * The ConfigStatus attribute makes configuration and status information available. To change settings, devices
-         * SHALL write to the Mode attribute of the Window Covering Settings Attribute Set. The behavior causing the
-         * setting or clearing of each bit is vendor specific. See table below for details on each bit.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
-         */
-        configStatus: Attribute(
-            7,
-            TlvConfigStatus,
-            {
-                persistent: true,
-                default: BitFlags(TlvConfigStatusBits, "operational", "onlineReserved"),
-                readAcl: AccessLevel.View
-            }
-        ),
-
-        /**
-         * The OperationalStatus attribute keeps track of currently ongoing operations and applies to all type of
-         * devices. See below for details about the meaning of individual bits.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
-         */
-        operationalStatus: Attribute(10, TlvOperationalStatus, { readAcl: AccessLevel.View }),
-
-        /**
-         * The EndProductType attribute identifies the product type in complement of the main category indicated by the
-         * Type attribute. The window covering SHALL set this value to one of the values in the table below.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.16
-         */
-        endProductType: FixedAttribute(13, TlvEnum<TlvEndProductType>(), { readAcl: AccessLevel.View }),
-
-        /**
-         * The Mode attribute allows configuration of the Window Covering, such as: reversing the motor direction,
-         * placing the Window Covering into calibration mode, placing the motor into maintenance mode, disabling the
-         * network, and disabling status LEDs. See below for details.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
-         */
-        mode: WritableAttribute(23, TlvMode, { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }),
-
-        /**
-         * The SafetyStatus attribute reflects the state of the safety sensors and the common issues preventing
-         * movements. By default for nominal operation all flags are cleared (0). A device might support none, one or
-         * several bit flags from this attribute (all optional). See below for details about the meaning of individual
-         * bits.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
-         */
-        safetyStatus: OptionalAttribute(26, TlvSafetyStatus, { readAcl: AccessLevel.View })
-    },
-
-    commands: {
-        /**
-         * Upon receipt of this command, the Window Covering will adjust its position so the physical lift/slide and
-         * tilt is at the maximum open/up position. This will happen as fast as possible. The server attributes SHALL
-         * be updated as follows:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.1
-         */
-        upOrOpen: Command(0, TlvNoArguments, 0, TlvNoResponse),
-
-        /**
-         * Upon receipt of this command, the Window Covering will adjust its position so the physical lift/slide and
-         * tilt is at the maximum closed/down position. This will happen as fast as possible. The server attributes
-         * supported SHALL be updated as follows:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.2
-         */
-        downOrClose: Command(1, TlvNoArguments, 1, TlvNoResponse),
-
-        /**
-         * Upon receipt of this command, the Window Covering will stop any adjusting to the physical tilt and
-         * lift/slide that is currently occurring. The server attributes supported SHALL be updated as follows:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.3
-         */
-        stopMotion: Command(2, TlvNoArguments, 2, TlvNoResponse)
-    }
-});
-
-/**
- * A WindowCoveringCluster supports these elements if it supports features Lift, and PositionAwareLift.
- */
-export const LiftAndPositionAwareLiftComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The PhysicalClosedLimitLift attribute identifies the maximum possible encoder position possible (in
-         * centimeters) to position the height of the window covering Lift.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.2
-         */
-        physicalClosedLimitLift: OptionalFixedAttribute(1, TlvUInt16, { readAcl: AccessLevel.View }),
-
-        /**
-         * The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the window
-         * covering from the fully-open position.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.4
-         */
-        currentPositionLift: OptionalAttribute(
-            3,
-            TlvNullable(TlvUInt16),
-            { persistent: true, default: null, readAcl: AccessLevel.View }
-        ),
-
-        /**
-         * The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% to 100%
-         * with 1% default step. This attribute is equal to CurrentPositionLiftPercent100ths attribute divided by 100.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.11
-         */
-        currentPositionLiftPercentage: OptionalAttribute(
-            8,
-            TlvNullable(TlvUInt8.bound({ max: 100 })),
-            { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }
-        )
-    },
-
-    commands: {
-        /**
-         * The GoToLiftPercentage command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
-         */
-        goToLiftPercentage: Command(5, TlvGoToLiftPercentageRequest, 5, TlvNoResponse)
-    }
-});
-
-/**
- * A WindowCoveringCluster supports these elements if it supports features Tilt, and PositionAwareTilt.
- */
-export const TiltAndPositionAwareTiltComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The PhysicalClosedLimitTilt attribute identifies the maximum possible encoder position possible (tenth of a
-         * degrees) to position the angle of the window covering Tilt.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.3
-         */
-        physicalClosedLimitTilt: OptionalFixedAttribute(2, TlvUInt16, { readAcl: AccessLevel.View }),
-
-        /**
-         * The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of the window
-         * covering from the fully-open position.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.5
-         */
-        currentPositionTilt: OptionalAttribute(
-            4,
-            TlvNullable(TlvUInt16),
-            { persistent: true, default: null, readAcl: AccessLevel.View }
-        ),
-
-        /**
-         * The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% to 100%
-         * with 1% default step. This attribute is equal to CurrentPositionTiltPercent100ths attribute divided by 100.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.12
-         */
-        currentPositionTiltPercentage: OptionalAttribute(
-            9,
-            TlvNullable(TlvUInt8.bound({ max: 100 })),
-            { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }
-        )
-    },
-
-    commands: {
-        /**
-         * The GoToTiltPercentage command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
-         */
-        goToTiltPercentage: Command(8, TlvGoToTiltPercentageRequest, 8, TlvNoResponse)
-    }
-});
-
-/**
- * A WindowCoveringCluster supports these elements if it supports feature Lift.
- */
-export const LiftComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The NumberOfActuationsLift attribute identifies the total number of lift/slide actuations applied to the
-         * Window Covering since the device was installed.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.6
-         */
-        numberOfActuationsLift: OptionalAttribute(5, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
-
-        /**
-         * The TargetPositionLiftPercent100ths attribute identifies the position where the Window Covering Lift will go
-         * or is moving to as a percentage.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.13
-         */
-        targetPositionLiftPercent100Ths: OptionalAttribute(
-            11,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
-            { scene: true, default: null, readAcl: AccessLevel.View }
-        ),
-
-        /**
-         * The CurrentPositionLiftPercent100ths attribute identifies the actual position as a percentage with a minimal
-         * step of 0.01%. E.g Max 10000 equals 100.00%.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.9
-         */
-        currentPositionLiftPercent100Ths: OptionalAttribute(
-            14,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
-            { persistent: true, default: null, readAcl: AccessLevel.View }
-        ),
-
-        /**
-         * The InstalledOpenLimitLift attribute identifies the Open Limit for Lifting the Window Covering whether
-         * position (in centimeters) is encoded or timed.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.17
-         */
-        installedOpenLimitLift: OptionalAttribute(
-            16,
-            TlvUInt16.bound({ max: 65534 }),
-            { persistent: true, readAcl: AccessLevel.View }
-        ),
-
-        /**
-         * The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering whether
-         * position (in centimeters) is encoded or timed.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.18
-         */
-        installedClosedLimitLift: OptionalAttribute(
-            17,
-            TlvUInt16.bound({ max: 65534 }),
-            { persistent: true, readAcl: AccessLevel.View }
-        )
-    },
-
-    commands: {
-        /**
-         * The GoToLiftPercentage command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
-         */
-        goToLiftPercentage: OptionalCommand(5, TlvGoToLiftPercentageRequest, 5, TlvNoResponse)
-    }
-});
-
-/**
- * A WindowCoveringCluster supports these elements if it supports feature Tilt.
- */
-export const TiltComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The NumberOfActuationsTilt attribute identifies the total number of tilt actuations applied to the Window
-         * Covering since the device was installed.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.7
-         */
-        numberOfActuationsTilt: OptionalAttribute(6, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
-
-        /**
-         * The TargetPositionTiltPercent100ths attribute identifies the position where the Window Covering Tilt will go
-         * or is moving to as a percentage.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.14
-         */
-        targetPositionTiltPercent100Ths: OptionalAttribute(
-            12,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
-            { scene: true, default: null, readAcl: AccessLevel.View }
-        ),
-
-        /**
-         * The CurrentPositionTiltPercent100ths attribute identifies the actual position as a percentage with a minimal
-         * step of 0.01%. E.g Max 10000 equals 100.00%.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.10
-         */
-        currentPositionTiltPercent100Ths: OptionalAttribute(
-            15,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
-            { persistent: true, default: null, readAcl: AccessLevel.View }
-        ),
-
-        /**
-         * The InstalledOpenLimitTilt attribute identifies the Open Limit for Tilting the Window Covering whether
-         * position (in tenth of a degree) is encoded or timed.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.19
-         */
-        installedOpenLimitTilt: OptionalAttribute(
-            18,
-            TlvUInt16.bound({ max: 65534 }),
-            { persistent: true, readAcl: AccessLevel.View }
-        ),
-
-        /**
-         * The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering whether
-         * position (in tenth of a degree) is encoded or timed.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.20
-         */
-        installedClosedLimitTilt: OptionalAttribute(
-            19,
-            TlvUInt16.bound({ max: 65534 }),
-            { persistent: true, readAcl: AccessLevel.View }
-        )
-    },
-
-    commands: {
-        /**
-         * The GoToTiltPercentage command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
-         */
-        goToTiltPercentage: OptionalCommand(8, TlvGoToTiltPercentageRequest, 8, TlvNoResponse)
-    }
-});
-
-/**
- * A WindowCoveringCluster supports these elements if it supports features Lift, and AbsolutePosition.
- */
-export const LiftAndAbsolutePositionComponent = ClusterComponent({
-    commands: {
-        /**
-         * The GoToLiftValue command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.4
-         */
-        goToLiftValue: OptionalCommand(4, TlvGoToLiftValueRequest, 4, TlvNoResponse)
-    }
-});
-
-/**
- * A WindowCoveringCluster supports these elements if it supports features Tilt, and AbsolutePosition.
- */
-export const TiltAndAbsolutePositionComponent = ClusterComponent({
-    commands: {
-        /**
-         * The GoToTiltValue command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.6
-         */
-        goToTiltValue: OptionalCommand(7, TlvGoToTiltValueRequest, 7, TlvNoResponse)
-    }
-});
-
-export type WindowCoveringCluster<T extends TypeFromPartialBitSchema<typeof WindowCoveringMetadata.features>> = 
-    typeof WindowCoveringMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent
-    & (T extends { lift: true, positionAwareLift: true } ? typeof LiftAndPositionAwareLiftComponent : {})
-    & (T extends { tilt: true, positionAwareTilt: true } ? typeof TiltAndPositionAwareTiltComponent : {})
-    & (T extends { lift: true } ? typeof LiftComponent : {})
-    & (T extends { tilt: true } ? typeof TiltComponent : {})
-    & (T extends { lift: true, absolutePosition: true } ? typeof LiftAndAbsolutePositionComponent : {})
-    & (T extends { tilt: true, absolutePosition: true } ? typeof TiltAndAbsolutePositionComponent : {});
-
-export function WindowCoveringCluster<T extends (keyof typeof WindowCoveringMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...WindowCoveringMetadata,
-        supportedFeatures: BitFlags(WindowCoveringMetadata.features, ...features),
-        ...BaseComponent
+        PositionAwareTilt = "PositionAwareTilt"
     };
-    extendCluster(cluster, LiftAndPositionAwareLiftComponent, { lift: true, positionAwareLift: true });
-    extendCluster(cluster, TiltAndPositionAwareTiltComponent, { tilt: true, positionAwareTilt: true });
-    extendCluster(cluster, LiftComponent, { lift: true });
-    extendCluster(cluster, TiltComponent, { tilt: true });
-    extendCluster(cluster, LiftAndAbsolutePositionComponent, { lift: true, absolutePosition: true });
-    extendCluster(cluster, TiltAndAbsolutePositionComponent, { tilt: true, absolutePosition: true });
-    
-    return cluster as unknown as WindowCoveringCluster<BitFlags<typeof WindowCoveringMetadata.features, T>>;
+
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+        typeof Metadata
+        & { supportedFeatures: T }
+        & typeof BaseComponent
+        & (T extends { lift: true, positionAwareLift: true } ? typeof LiftAndPositionAwareLiftComponent : {})
+        & (T extends { tilt: true, positionAwareTilt: true } ? typeof TiltAndPositionAwareTiltComponent : {})
+        & (T extends { lift: true } ? typeof LiftComponent : {})
+        & (T extends { tilt: true } ? typeof TiltComponent : {})
+        & (T extends { lift: true, absolutePosition: true } ? typeof LiftAndAbsolutePositionComponent : {})
+        & (T extends { tilt: true, absolutePosition: true } ? typeof TiltAndAbsolutePositionComponent : {})
+        & (T extends { positionAwareLift: true, lift: false } ? never : {})
+        & (T extends { positionAwareTilt: true, tilt: false } ? never : {})
+        & (T extends { lift: false, tilt: false } ? never : {});
+
+    /**
+     * WindowCovering cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x102,
+        name: "WindowCovering",
+        revision: 1,
+
+        features: {
+            /**
+             * Lift
+             *
+             * Lift Control and behavior for lifting/sliding window coverings
+             */
+            lift: BitFlag(0),
+
+            /**
+             * Tilt
+             *
+             * Tilt Control and behavior for tilting window coverings
+             */
+            tilt: BitFlag(1),
+
+            /**
+             * PositionAwareLift
+             *
+             * Position Aware lift control is supported.
+             */
+            positionAwareLift: BitFlag(2),
+
+            /**
+             * AbsolutePosition
+             *
+             * Absolute positioning is supported.
+             */
+            absolutePosition: BitFlag(3),
+
+            /**
+             * PositionAwareTilt
+             *
+             * Position Aware tilt control is supported.
+             */
+            positionAwareTilt: BitFlag(4)
+        }
+    });
+
+    /**
+     * A WindowCoveringCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The Type attribute identifies the type of window covering being controlled by this endpoint and SHALL be
+             * set to one of the non-reserved values in the table below.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.1
+             */
+            type: FixedAttribute(0, TlvEnum<TlvType>(), { readAcl: AccessLevel.View }),
+
+            /**
+             * The ConfigStatus attribute makes configuration and status information available. To change settings,
+             * devices SHALL write to the Mode attribute of the Window Covering Settings Attribute Set. The behavior
+             * causing the setting or clearing of each bit is vendor specific. See table below for details on each bit.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
+             */
+            configStatus: Attribute(
+                7,
+                TlvConfigStatus,
+                {
+                    persistent: true,
+                    default: BitFlags(TlvConfigStatusBits, "Operational", "OnlineReserved"),
+                    readAcl: AccessLevel.View
+                }
+            ),
+
+            /**
+             * The OperationalStatus attribute keeps track of currently ongoing operations and applies to all type of
+             * devices. See below for details about the meaning of individual bits.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
+             */
+            operationalStatus: Attribute(10, TlvOperationalStatus, { readAcl: AccessLevel.View }),
+
+            /**
+             * The EndProductType attribute identifies the product type in complement of the main category indicated by
+             * the Type attribute. The window covering SHALL set this value to one of the values in the table below.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.16
+             */
+            endProductType: FixedAttribute(13, TlvEnum<TlvEndProductType>(), { readAcl: AccessLevel.View }),
+
+            /**
+             * The Mode attribute allows configuration of the Window Covering, such as: reversing the motor direction,
+             * placing the Window Covering into calibration mode, placing the motor into maintenance mode, disabling
+             * the network, and disabling status LEDs. See below for details.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
+             */
+            mode: WritableAttribute(
+                23,
+                TlvMode,
+                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            ),
+
+            /**
+             * The SafetyStatus attribute reflects the state of the safety sensors and the common issues preventing
+             * movements. By default for nominal operation all flags are cleared (0). A device might support none, one
+             * or several bit flags from this attribute (all optional). See below for details about the meaning of
+             * individual bits.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
+             */
+            safetyStatus: OptionalAttribute(26, TlvSafetyStatus, { readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * Upon receipt of this command, the Window Covering will adjust its position so the physical lift/slide
+             * and tilt is at the maximum open/up position. This will happen as fast as possible. The server attributes
+             * SHALL be updated as follows:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.1
+             */
+            upOrOpen: Command(0, TlvNoArguments, 0, TlvNoResponse),
+
+            /**
+             * Upon receipt of this command, the Window Covering will adjust its position so the physical lift/slide
+             * and tilt is at the maximum closed/down position. This will happen as fast as possible. The server
+             * attributes supported SHALL be updated as follows:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.2
+             */
+            downOrClose: Command(1, TlvNoArguments, 1, TlvNoResponse),
+
+            /**
+             * Upon receipt of this command, the Window Covering will stop any adjusting to the physical tilt and
+             * lift/slide that is currently occurring. The server attributes supported SHALL be updated as follows:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.3
+             */
+            stopMotion: Command(2, TlvNoArguments, 2, TlvNoResponse)
+        }
+    });
+
+    /**
+     * A WindowCoveringCluster supports these elements if it supports features Lift, and PositionAwareLift.
+     */
+    export const LiftAndPositionAwareLiftComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The PhysicalClosedLimitLift attribute identifies the maximum possible encoder position possible (in
+             * centimeters) to position the height of the window covering Lift.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.2
+             */
+            physicalClosedLimitLift: OptionalFixedAttribute(1, TlvUInt16, { readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the window
+             * covering from the fully-open position.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.4
+             */
+            currentPositionLift: OptionalAttribute(
+                3,
+                TlvNullable(TlvUInt16),
+                { persistent: true, default: null, readAcl: AccessLevel.View }
+            ),
+
+            /**
+             * The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% to
+             * 100% with 1% default step. This attribute is equal to CurrentPositionLiftPercent100ths attribute divided
+             * by 100.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.11
+             */
+            currentPositionLiftPercentage: OptionalAttribute(
+                8,
+                TlvNullable(TlvUInt8.bound({ max: 100 })),
+                { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }
+            )
+        },
+
+        commands: {
+            /**
+             * The GoToLiftPercentage command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
+             */
+            goToLiftPercentage: Command(5, TlvGoToLiftPercentageRequest, 5, TlvNoResponse)
+        }
+    });
+
+    /**
+     * A WindowCoveringCluster supports these elements if it supports features Tilt, and PositionAwareTilt.
+     */
+    export const TiltAndPositionAwareTiltComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The PhysicalClosedLimitTilt attribute identifies the maximum possible encoder position possible (tenth
+             * of a degrees) to position the angle of the window covering Tilt.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.3
+             */
+            physicalClosedLimitTilt: OptionalFixedAttribute(2, TlvUInt16, { readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of the
+             * window covering from the fully-open position.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.5
+             */
+            currentPositionTilt: OptionalAttribute(
+                4,
+                TlvNullable(TlvUInt16),
+                { persistent: true, default: null, readAcl: AccessLevel.View }
+            ),
+
+            /**
+             * The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% to
+             * 100% with 1% default step. This attribute is equal to CurrentPositionTiltPercent100ths attribute divided
+             * by 100.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.12
+             */
+            currentPositionTiltPercentage: OptionalAttribute(
+                9,
+                TlvNullable(TlvUInt8.bound({ max: 100 })),
+                { scene: true, persistent: true, default: null, readAcl: AccessLevel.View }
+            )
+        },
+
+        commands: {
+            /**
+             * The GoToTiltPercentage command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
+             */
+            goToTiltPercentage: Command(8, TlvGoToTiltPercentageRequest, 8, TlvNoResponse)
+        }
+    });
+
+    /**
+     * A WindowCoveringCluster supports these elements if it supports feature Lift.
+     */
+    export const LiftComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The NumberOfActuationsLift attribute identifies the total number of lift/slide actuations applied to the
+             * Window Covering since the device was installed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.6
+             */
+            numberOfActuationsLift: OptionalAttribute(5, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
+
+            /**
+             * The TargetPositionLiftPercent100ths attribute identifies the position where the Window Covering Lift
+             * will go or is moving to as a percentage.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.13
+             */
+            targetPositionLiftPercent100Ths: OptionalAttribute(
+                11,
+                TlvNullable(TlvUInt16.bound({ max: 10000 })),
+                { scene: true, default: null, readAcl: AccessLevel.View }
+            ),
+
+            /**
+             * The CurrentPositionLiftPercent100ths attribute identifies the actual position as a percentage with a
+             * minimal step of 0.01%. E.g Max 10000 equals 100.00%.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.9
+             */
+            currentPositionLiftPercent100Ths: OptionalAttribute(
+                14,
+                TlvNullable(TlvUInt16.bound({ max: 10000 })),
+                { persistent: true, default: null, readAcl: AccessLevel.View }
+            ),
+
+            /**
+             * The InstalledOpenLimitLift attribute identifies the Open Limit for Lifting the Window Covering whether
+             * position (in centimeters) is encoded or timed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.17
+             */
+            installedOpenLimitLift: OptionalAttribute(
+                16,
+                TlvUInt16.bound({ max: 65534 }),
+                { persistent: true, readAcl: AccessLevel.View }
+            ),
+
+            /**
+             * The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering
+             * whether position (in centimeters) is encoded or timed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.18
+             */
+            installedClosedLimitLift: OptionalAttribute(
+                17,
+                TlvUInt16.bound({ max: 65534 }),
+                { persistent: true, readAcl: AccessLevel.View }
+            )
+        },
+
+        commands: {
+            /**
+             * The GoToLiftPercentage command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
+             */
+            goToLiftPercentage: OptionalCommand(5, TlvGoToLiftPercentageRequest, 5, TlvNoResponse)
+        }
+    });
+
+    /**
+     * A WindowCoveringCluster supports these elements if it supports feature Tilt.
+     */
+    export const TiltComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The NumberOfActuationsTilt attribute identifies the total number of tilt actuations applied to the
+             * Window Covering since the device was installed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.7
+             */
+            numberOfActuationsTilt: OptionalAttribute(6, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
+
+            /**
+             * The TargetPositionTiltPercent100ths attribute identifies the position where the Window Covering Tilt
+             * will go or is moving to as a percentage.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.14
+             */
+            targetPositionTiltPercent100Ths: OptionalAttribute(
+                12,
+                TlvNullable(TlvUInt16.bound({ max: 10000 })),
+                { scene: true, default: null, readAcl: AccessLevel.View }
+            ),
+
+            /**
+             * The CurrentPositionTiltPercent100ths attribute identifies the actual position as a percentage with a
+             * minimal step of 0.01%. E.g Max 10000 equals 100.00%.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.10
+             */
+            currentPositionTiltPercent100Ths: OptionalAttribute(
+                15,
+                TlvNullable(TlvUInt16.bound({ max: 10000 })),
+                { persistent: true, default: null, readAcl: AccessLevel.View }
+            ),
+
+            /**
+             * The InstalledOpenLimitTilt attribute identifies the Open Limit for Tilting the Window Covering whether
+             * position (in tenth of a degree) is encoded or timed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.19
+             */
+            installedOpenLimitTilt: OptionalAttribute(
+                18,
+                TlvUInt16.bound({ max: 65534 }),
+                { persistent: true, readAcl: AccessLevel.View }
+            ),
+
+            /**
+             * The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering
+             * whether position (in tenth of a degree) is encoded or timed.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.20
+             */
+            installedClosedLimitTilt: OptionalAttribute(
+                19,
+                TlvUInt16.bound({ max: 65534 }),
+                { persistent: true, readAcl: AccessLevel.View }
+            )
+        },
+
+        commands: {
+            /**
+             * The GoToTiltPercentage command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
+             */
+            goToTiltPercentage: OptionalCommand(8, TlvGoToTiltPercentageRequest, 8, TlvNoResponse)
+        }
+    });
+
+    /**
+     * A WindowCoveringCluster supports these elements if it supports features Lift, and AbsolutePosition.
+     */
+    export const LiftAndAbsolutePositionComponent = ClusterComponent({
+        commands: {
+            /**
+             * The GoToLiftValue command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.4
+             */
+            goToLiftValue: OptionalCommand(4, TlvGoToLiftValueRequest, 4, TlvNoResponse)
+        }
+    });
+
+    /**
+     * A WindowCoveringCluster supports these elements if it supports features Tilt, and AbsolutePosition.
+     */
+    export const TiltAndAbsolutePositionComponent = ClusterComponent({
+        commands: {
+            /**
+             * The GoToTiltValue command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.6
+             */
+            goToTiltValue: OptionalCommand(7, TlvGoToTiltValueRequest, 7, TlvNoResponse)
+        }
+    });
+
+    /**
+     * This cluster supports all WindowCovering features.  It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export const Complete = {
+        ...Metadata,
+
+        attributes: {
+            ...BaseComponent.attributes,
+            ...LiftAndPositionAwareLiftComponent.attributes,
+            ...TiltAndPositionAwareTiltComponent.attributes,
+            ...LiftComponent.attributes,
+            ...TiltComponent.attributes
+        },
+
+        commands: {
+            ...BaseComponent.commands,
+            ...LiftAndPositionAwareLiftComponent.commands,
+            ...TiltAndPositionAwareTiltComponent.commands,
+            ...LiftComponent.commands,
+            ...TiltComponent.commands,
+            ...LiftAndAbsolutePositionComponent.commands,
+            ...TiltAndAbsolutePositionComponent.commands
+        }
+    };
 };

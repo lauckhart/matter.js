@@ -6,6 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -13,7 +15,20 @@ import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * Target Navigator
+ *
+ * This cluster provides an interface for UX navigation within a set of targets on a device or endpoint.
+ *
+ * This function creates a TargetNavigator cluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
+ */
+export function TargetNavigatorCluster() {
+    const cluster = { ...TargetNavigatorCluster.Metadata, ...TargetNavigatorCluster.BaseComponent };
+    return cluster as unknown as TargetNavigatorCluster.Type;
+};
 
 /**
  * This indicates an object describing the navigable target.
@@ -99,65 +114,65 @@ export const TlvNavigateTargetResponseRequest = TlvObject({
     data: TlvOptionalField(1, TlvString)
 });
 
-/**
- * Standard TargetNavigator cluster properties.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
- */
-export const TargetNavigatorMetadata = ClusterMetadata({ id: 0x505, name: "TargetNavigator", revision: 1 });
+export namespace TargetNavigatorCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A TargetNavigatorCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The TargetList attribute SHALL represent a list of targets that can be navigated to within the experience
-         * presented to the user by the Endpoint (Video Player or Content App). The list SHALL not contain any entries
-         * with the same Identifier in the TargetInfoStruct object.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.1
-         */
-        targetList: Attribute(0, TlvArray(TlvTargetInfoStruct), { default: [], readAcl: AccessLevel.View }),
+    /**
+     * TargetNavigator cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
+     */
+    export const Metadata = ClusterMetadata({ id: 0x505, name: "TargetNavigator", revision: 1 });
 
-        /**
-         * The CurrentTarget attribute SHALL represent the Identifier for the target which is currently in foreground
-         * on the corresponding Endpoint (Video Player or Content App), or null to indicate that no target is in the
-         * foreground.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.2
-         */
-        currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View })
-    },
+    /**
+     * A TargetNavigatorCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The TargetList attribute SHALL represent a list of targets that can be navigated to within the
+             * experience presented to the user by the Endpoint (Video Player or Content App). The list SHALL not
+             * contain any entries with the same Identifier in the TargetInfoStruct object.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.1
+             */
+            targetList: Attribute(0, TlvArray(TlvTargetInfoStruct), { default: [], readAcl: AccessLevel.View }),
 
-    commands: {
-        /**
-         * Upon receipt, this SHALL navigation the UX to the target identified.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
-         */
-        navigateTarget: Command(0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponseRequest),
+            /**
+             * The CurrentTarget attribute SHALL represent the Identifier for the target which is currently in
+             * foreground on the corresponding Endpoint (Video Player or Content App), or null to indicate that no
+             * target is in the foreground.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.2
+             */
+            currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View })
+        },
 
-        /**
-         * This command SHALL be generated in response to NavigateTarget command.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
-         */
-        navigateTargetResponse: Command(1, TlvNavigateTargetResponseRequest, 1, TlvNoResponse)
-    }
-});
+        commands: {
+            /**
+             * Upon receipt, this SHALL navigation the UX to the target identified.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
+             */
+            navigateTarget: Command(0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponseRequest),
 
-export type TargetNavigatorCluster<T extends TypeFromPartialBitSchema<typeof TargetNavigatorMetadata.features>> = 
-    typeof TargetNavigatorMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+            /**
+             * This command SHALL be generated in response to NavigateTarget command.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
+             */
+            navigateTargetResponse: Command(1, TlvNavigateTargetResponseRequest, 1, TlvNoResponse)
+        }
+    });
 
-export function TargetNavigatorCluster<T extends (keyof typeof TargetNavigatorMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...TargetNavigatorMetadata,
-        supportedFeatures: BitFlags(TargetNavigatorMetadata.features, ...features),
-        ...BaseComponent
+    /**
+     * This cluster supports all TargetNavigator features.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands }
     };
-    
-    return cluster as unknown as TargetNavigatorCluster<BitFlags<typeof TargetNavigatorMetadata.features, T>>;
 };

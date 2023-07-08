@@ -5,11 +5,9 @@
  */
 
 import { ClusterModel } from "../models/index.js";
+import { IllegalFeatureCombinations } from "./cluster-variance/IllegalFeatureCombinations.js";
 import { InferredComponents } from "./cluster-variance/InferredComponents.js";
 import { NamedComponents } from "./cluster-variance/NamedComponents.js";
-
-export { VarianceCondition } from "./cluster-variance/InferredComponents.js";
-export { NamedComponent } from "./cluster-variance/NamedComponents.js";
 
 /**
  * Defines different variants of clusters.
@@ -26,9 +24,9 @@ export type ClusterVariance = {
     components: NamedComponents,
 
     /**
-     * Feature + component combinations for the cluster.
+     * Illegal feature combinations as bit flags.
      */
-    //clusters: ClusterDefinition[]
+    illegal: IllegalFeatureCombinations
 };
 
 /**
@@ -38,9 +36,11 @@ export type ClusterVariance = {
 export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
     const inferredComponents = InferredComponents(cluster);
     const components = NamedComponents(cluster, inferredComponents);
+    const illegal = IllegalFeatureCombinations(cluster);
 
     return {
         componentized: components.length > 1,
         components,
+        illegal
     }
 }

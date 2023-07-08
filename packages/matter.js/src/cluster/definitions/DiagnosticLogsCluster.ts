@@ -6,12 +6,28 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * Diagnostic Logs
+ *
+ * The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be used to aid in
+ * diagnostics.
+ *
+ * This function creates a DiagnosticLogs cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.10
+ */
+export function DiagnosticLogsCluster() {
+    const cluster = { ...DiagnosticLogsCluster.Metadata, ...DiagnosticLogsCluster.BaseComponent };
+    return cluster as unknown as DiagnosticLogsCluster.Type;
+};
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1
@@ -178,47 +194,43 @@ export const TlvRetrieveLogsResponseRequest = TlvObject({
     timeSinceBoot: TlvOptionalField(3, TlvUInt64)
 });
 
-/**
- * Standard DiagnosticLogs cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.10
- */
-export const DiagnosticLogsMetadata = ClusterMetadata({ id: 0x32, name: "DiagnosticLogs", revision: 1 });
+export namespace DiagnosticLogsCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A DiagnosticLogsCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    commands: {
-        /**
-         * Reception of this command starts the process of retrieving diagnostic logs from a Node. The data for this
-         * command is as follows:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
-         */
-        retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponseRequest),
+    /**
+     * DiagnosticLogs cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.10
+     */
+    export const Metadata = ClusterMetadata({ id: 0x32, name: "DiagnosticLogs", revision: 1 });
 
-        /**
-         * This SHALL be generated as a response to the RetrieveLogsRequest. The data for this command is shown in the
-         * following.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2
-         */
-        retrieveLogsResponse: Command(1, TlvRetrieveLogsResponseRequest, 1, TlvNoResponse)
-    }
-});
+    /**
+     * A DiagnosticLogsCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        commands: {
+            /**
+             * Reception of this command starts the process of retrieving diagnostic logs from a Node. The data for
+             * this command is as follows:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
+             */
+            retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponseRequest),
 
-export type DiagnosticLogsCluster<T extends TypeFromPartialBitSchema<typeof DiagnosticLogsMetadata.features>> = 
-    typeof DiagnosticLogsMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+            /**
+             * This SHALL be generated as a response to the RetrieveLogsRequest. The data for this command is shown in
+             * the following.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2
+             */
+            retrieveLogsResponse: Command(1, TlvRetrieveLogsResponseRequest, 1, TlvNoResponse)
+        }
+    });
 
-export function DiagnosticLogsCluster<T extends (keyof typeof DiagnosticLogsMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...DiagnosticLogsMetadata,
-        supportedFeatures: BitFlags(DiagnosticLogsMetadata.features, ...features),
-        ...BaseComponent
-    };
-    
-    return cluster as unknown as DiagnosticLogsCluster<BitFlags<typeof DiagnosticLogsMetadata.features, T>>;
+    /**
+     * This cluster supports all DiagnosticLogs features.
+     */
+    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
 };

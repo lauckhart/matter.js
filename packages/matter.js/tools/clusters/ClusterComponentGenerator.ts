@@ -26,14 +26,16 @@ import { TlvGenerator } from "./TlvGenerator.js";
 /** Generates cluster attributes, commands and events */
 export class ClusterComponentGenerator {
     private tlv: TlvGenerator;
+    private file: ClusterFile;
 
-    constructor(private file: ClusterFile, private cluster: ClusterModel) {
+    constructor(private target: Block, private cluster: ClusterModel) {
+        this.file = target.file as ClusterFile;
         this.tlv = new TlvGenerator(this.file, cluster);
     }
 
     defineComponent(component: NamedComponent): Block {
-        this.file.addImport("cluster/ClusterFactory", "ClusterComponent");
-        const block = this.file.expressions(`export const ${component.name}Component = ClusterComponent({`, `})`)
+        this.target.file.addImport("cluster/ClusterFactory", "ClusterComponent");
+        const block = this.target.expressions(`export const ${component.name}Component = ClusterComponent({`, `})`)
             .document(component.documentation);
         const mandatory = new Set(component.mandatory);
 
@@ -208,7 +210,7 @@ export class ClusterComponentGenerator {
                 }
 
                 this.file.addImport("schema/BitmapSchema", "BitFlags");
-                const flags = (def as FieldValue.Flags).flags.map(f => serialize(camelize(f, false)));
+                const flags = (def as FieldValue.Flags).flags.map(f => serialize(camelize(f, true)));
                 def = serialize.asIs(`BitFlags(${tlvType}Bits, ${flags.join(", ")})`);
 
                 break;

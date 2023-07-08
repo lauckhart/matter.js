@@ -6,13 +6,25 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Attribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvUInt32, TlvUInt16, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * Client Monitoring
+ *
+ * Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on the server.
+ *
+ * This function creates a ClientMonitoring cluster.
+ */
+export function ClientMonitoringCluster() {
+    const cluster = { ...ClientMonitoringCluster.Metadata, ...ClientMonitoringCluster.BaseComponent };
+    return cluster as unknown as ClientMonitoringCluster.Type;
+};
 
 export const TlvMonitoringRegistration = TlvObject({ clientNodeId: TlvField(1, TlvUInt64), iCid: TlvField(2, TlvUInt64) });
 
@@ -26,40 +38,40 @@ export const TlvUnregisterClientMonitoringRequest = TlvObject({
     iCid: TlvField(1, TlvUInt64)
 });
 
-/**
- * Standard ClientMonitoring cluster properties.
- */
-export const ClientMonitoringMetadata = ClusterMetadata({ id: 0x1046, name: "ClientMonitoring", revision: 1 });
+export namespace ClientMonitoringCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A ClientMonitoringCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        idleModeInterval: Attribute(0, TlvUInt32, { default: 18 }),
-        activeModeInterval: Attribute(1, TlvUInt32, { default: 18 }),
-        activeModeThreshold: Attribute(2, TlvUInt16),
-        expectedClients: Attribute(3, TlvArray(TlvMonitoringRegistration), { default: [] })
-    },
+    /**
+     * ClientMonitoring cluster metadata.
+     */
+    export const Metadata = ClusterMetadata({ id: 0x1046, name: "ClientMonitoring", revision: 1 });
 
-    commands: {
-        registerClientMonitoring: Command(0, TlvRegisterClientMonitoringRequest, 0, TlvNoResponse),
-        unregisterClientMonitoring: Command(1, TlvUnregisterClientMonitoringRequest, 1, TlvNoResponse),
-        stayAwakeRequest: OptionalCommand(2, TlvNoArguments, 2, TlvNoResponse)
-    }
-});
+    /**
+     * A ClientMonitoringCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            idleModeInterval: Attribute(0, TlvUInt32, { default: 18 }),
+            activeModeInterval: Attribute(1, TlvUInt32, { default: 18 }),
+            activeModeThreshold: Attribute(2, TlvUInt16),
+            expectedClients: Attribute(3, TlvArray(TlvMonitoringRegistration), { default: [] })
+        },
 
-export type ClientMonitoringCluster<T extends TypeFromPartialBitSchema<typeof ClientMonitoringMetadata.features>> = 
-    typeof ClientMonitoringMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+        commands: {
+            registerClientMonitoring: Command(0, TlvRegisterClientMonitoringRequest, 0, TlvNoResponse),
+            unregisterClientMonitoring: Command(1, TlvUnregisterClientMonitoringRequest, 1, TlvNoResponse),
+            stayAwakeRequest: OptionalCommand(2, TlvNoArguments, 2, TlvNoResponse)
+        }
+    });
 
-export function ClientMonitoringCluster<T extends (keyof typeof ClientMonitoringMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...ClientMonitoringMetadata,
-        supportedFeatures: BitFlags(ClientMonitoringMetadata.features, ...features),
-        ...BaseComponent
+    /**
+     * This cluster supports all ClientMonitoring features.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands }
     };
-    
-    return cluster as unknown as ClientMonitoringCluster<BitFlags<typeof ClientMonitoringMetadata.features, T>>;
 };

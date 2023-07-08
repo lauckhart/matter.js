@@ -6,6 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -13,7 +15,20 @@ import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * OTA Software Update Provider
+ *
+ * Provides an interface for providing OTA software updates
+ *
+ * This function creates a OtaSoftwareUpdateProvider cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
+ */
+export function OtaSoftwareUpdateProviderCluster() {
+    const cluster = { ...OtaSoftwareUpdateProviderCluster.Metadata, ...OtaSoftwareUpdateProviderCluster.BaseComponent };
+    return cluster as unknown as OtaSoftwareUpdateProviderCluster.Type;
+};
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.3
@@ -112,71 +127,63 @@ export const TlvNotifyUpdateAppliedRequest = TlvObject({
     softwareVersion: TlvField(1, TlvUInt32)
 });
 
-/**
- * Standard OtaSoftwareUpdateProvider cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
- */
-export const OtaSoftwareUpdateProviderMetadata = ClusterMetadata({
-    id: 0x29,
-    name: "OtaSoftwareUpdateProvider",
-    revision: 1
-});
+export namespace OtaSoftwareUpdateProviderCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A OtaSoftwareUpdateProviderCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    commands: {
-        /**
-         * Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA Provider to
-         * match the OTA Requestor’s constraints provided in the payload fields.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
-         */
-        queryImage: Command(0, TlvQueryImageRequest, 1, TlvQueryImageResponseRequest),
+    /**
+     * OtaSoftwareUpdateProvider cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
+     */
+    export const Metadata = ClusterMetadata({ id: 0x29, name: "OtaSoftwareUpdateProvider", revision: 1 });
 
-        /**
-         * < Previous | Contents | Next >
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
-         */
-        queryImageResponse: Command(1, TlvQueryImageResponseRequest, 1, TlvNoResponse),
+    /**
+     * A OtaSoftwareUpdateProviderCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        commands: {
+            /**
+             * Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA
+             * Provider to match the OTA Requestor’s constraints provided in the payload fields.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
+             */
+            queryImage: Command(0, TlvQueryImageRequest, 1, TlvQueryImageResponseRequest),
 
-        /**
-         * < Previous | Contents | Next >
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
-         */
-        applyUpdateRequest: Command(2, TlvApplyUpdateRequestRequest, 3, TlvApplyUpdateResponseRequest),
+            /**
+             * < Previous | Contents | Next >
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
+             */
+            queryImageResponse: Command(1, TlvQueryImageResponseRequest, 1, TlvNoResponse),
 
-        /**
-         * < Previous | Contents | Next >
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
-         */
-        applyUpdateResponse: Command(3, TlvApplyUpdateResponseRequest, 3, TlvNoResponse),
+            /**
+             * < Previous | Contents | Next >
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
+             */
+            applyUpdateRequest: Command(2, TlvApplyUpdateRequestRequest, 3, TlvApplyUpdateResponseRequest),
 
-        /**
-         * < Previous | Contents | Next >
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.22
-         */
-        notifyUpdateApplied: Command(4, TlvNotifyUpdateAppliedRequest, 4, TlvNoResponse)
-    }
-});
+            /**
+             * < Previous | Contents | Next >
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
+             */
+            applyUpdateResponse: Command(3, TlvApplyUpdateResponseRequest, 3, TlvNoResponse),
 
-export type OtaSoftwareUpdateProviderCluster<T extends TypeFromPartialBitSchema<typeof OtaSoftwareUpdateProviderMetadata.features>> = 
-    typeof OtaSoftwareUpdateProviderMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+            /**
+             * < Previous | Contents | Next >
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.22
+             */
+            notifyUpdateApplied: Command(4, TlvNotifyUpdateAppliedRequest, 4, TlvNoResponse)
+        }
+    });
 
-export function OtaSoftwareUpdateProviderCluster<T extends (keyof typeof OtaSoftwareUpdateProviderMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...OtaSoftwareUpdateProviderMetadata,
-        supportedFeatures: BitFlags(OtaSoftwareUpdateProviderMetadata.features, ...features),
-        ...BaseComponent
-    };
-    
-    return cluster as unknown as OtaSoftwareUpdateProviderCluster<BitFlags<typeof OtaSoftwareUpdateProviderMetadata.features, T>>;
+    /**
+     * This cluster supports all OtaSoftwareUpdateProvider features.
+     */
+    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
 };

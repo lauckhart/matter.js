@@ -9,7 +9,11 @@ export function wordWrap(text: string, width = 120) {
     
     const inputLines = text.split(/\n+/);
     for (let i = 0; i < inputLines.length; i++) {
-        const segments = inputLines[i].match(/\S+(?:\s+|$)/g);
+
+        // Note - do not wrap text surrounded by "{@" and "}" as this is likely
+        // a jsdoc directive and jsdoc doesn't like directives wrapped
+        const segments = inputLines[i].match(/(?:{@[^}]+}|\S+)(?:\s+|$)/g);
+        
         if (segments?.length) {
             const line = Array<string>();
             let length = 0;

@@ -6,14 +6,29 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { WritableFabricScopedAttribute, AccessLevel, FabricScopedAttribute, FixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+
+/**
+ * Group Key Management
+ *
+ * The Group Key Management Cluster is the mechanism by which group keys are managed.
+ *
+ * This function creates a GroupKeyManagement cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.2
+ */
+export function GroupKeyManagementCluster() {
+    const cluster = { ...GroupKeyManagementCluster.Metadata, ...GroupKeyManagementCluster.BaseComponent };
+    return cluster as unknown as GroupKeyManagementCluster.Type;
+};
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.3
@@ -203,133 +218,147 @@ export const TlvKeySetReadAllIndicesRequest = TlvObject({ groupKeySetIDs: TlvFie
  */
 export const TlvKeySetReadAllIndicesResponseRequest = TlvObject({ groupKeySetIDs: TlvField(0, TlvArray(TlvUInt16)) });
 
-/**
- * Standard GroupKeyManagement cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.2
- */
-export const GroupKeyManagementMetadata = ClusterMetadata({
-    id: 0x3f,
-    name: "GroupKeyManagement",
-    revision: 1,
-
-    features: {
+export namespace GroupKeyManagementCluster {
+    /**
+     * These are optional features supported by GroupKeyManagementCluster.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.2.5
+     */
+    export enum Feature {
         /**
          * CacheAndSync
          *
          * The ability to support CacheAndSync security policy and MCSP.
          */
-        cacheAndSync: BitFlag(0)
-    }
-});
-
-/**
- * A GroupKeyManagementCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * This attribute is a list of GroupKeyMapStruct entries. Each entry associates a logical Group Id with a
-         * particular group key set.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.1
-         */
-        groupKeyMap: WritableFabricScopedAttribute(
-            0,
-            TlvArray(TlvGroupKeyMapStruct),
-            { persistent: true, default: [], readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-        ),
-
-        /**
-         * This attribute is a list of GroupInfoMapStruct entries. Each entry provides read-only information about how
-         * a given logical Group ID maps to a particular set of endpoints, and a name for the group. The content of
-         * this attribute reflects data managed via the Groups cluster (see AppClusters), and is in general terms
-         * referred to as the 'node-wide Group Table'.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.2
-         */
-        groupTable: FabricScopedAttribute(1, TlvArray(TlvGroupInfoMapStruct), { default: [] }),
-
-        /**
-         * This attribute SHALL indicate the maximum number of groups that this node supports per fabric. The value of
-         * this attribute SHALL be set to be no less than the required minimum supported groups as specified in Group
-         * Limits. The length of the GroupKeyMap and GroupTable list attributes SHALL NOT exceed the value of the
-         * MaxGroupsPerFabric attribute multiplied by the number of supported fabrics.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.3
-         */
-        maxGroupsPerFabric: FixedAttribute(2, TlvUInt16),
-
-        /**
-         * This attribute SHALL indicate the maximum number of group key sets this node supports per fabric. The value
-         * of this attribute SHALL be set according to the minimum number of group key sets to support as specified in
-         * Group Limits.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.4
-         */
-        maxGroupKeysPerFabric: FixedAttribute(3, TlvUInt16.bound({ min: 1, max: 65535 }), { default: 1 })
-    },
-
-    commands: {
-        /**
-         * This command is used by Administrators to set the state of a given Group Key Set, including atomi
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.1
-         */
-        keySetWrite: Command(0, TlvKeySetWriteRequest, 0, TlvNoResponse),
-
-        /**
-         * This command is used by Administrators to read the state of a given Group Key Set.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.2
-         */
-        keySetRead: Command(1, TlvKeySetReadRequest, 2, TlvKeySetReadResponseRequest),
-
-        /**
-         * This command SHALL be generated in response to the KeySetRead command, if a valid Group Key Set was found.
-         * It SHALL contain the configuration of the requested Group Key Set, with the EpochKey0, EpochKey1 and
-         * EpochKey2 key contents replaced by null.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.3
-         */
-        keySetReadResponse: Command(2, TlvKeySetReadResponseRequest, 2, TlvNoResponse),
-
-        /**
-         * This command is used by Administrators to remove all state of a given Group Key Set.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.4
-         */
-        keySetRemove: Command(3, TlvKeySetRemoveRequest, 3, TlvNoResponse),
-
-        /**
-         * This command is used by Administrators to query a list of all Group Key Sets associated with the accessing
-         * fabric.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
-         */
-        keySetReadAllIndices: Command(4, TlvKeySetReadAllIndicesRequest, 5, TlvKeySetReadAllIndicesResponseRequest),
-
-        /**
-         * This command SHALL be generated in response to KeySetReadAllIndices and it SHALL contain the list of
-         * GroupKeySetID for all Group Key Sets associated with the scoped Fabric.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.6
-         */
-        keySetReadAllIndicesResponse: Command(5, TlvKeySetReadAllIndicesResponseRequest, 5, TlvNoResponse)
-    }
-});
-
-export type GroupKeyManagementCluster<T extends TypeFromPartialBitSchema<typeof GroupKeyManagementMetadata.features>> = 
-    typeof GroupKeyManagementMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
-
-export function GroupKeyManagementCluster<T extends (keyof typeof GroupKeyManagementMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...GroupKeyManagementMetadata,
-        supportedFeatures: BitFlags(GroupKeyManagementMetadata.features, ...features),
-        ...BaseComponent
+        CacheAndSync = "CacheAndSync"
     };
-    
-    return cluster as unknown as GroupKeyManagementCluster<BitFlags<typeof GroupKeyManagementMetadata.features, T>>;
+
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
+
+    /**
+     * GroupKeyManagement cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.2
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x3f,
+        name: "GroupKeyManagement",
+        revision: 1,
+
+        features: {
+            /**
+             * CacheAndSync
+             *
+             * The ability to support CacheAndSync security policy and MCSP.
+             */
+            cacheAndSync: BitFlag(0)
+        }
+    });
+
+    /**
+     * A GroupKeyManagementCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * This attribute is a list of GroupKeyMapStruct entries. Each entry associates a logical Group Id with a
+             * particular group key set.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.1
+             */
+            groupKeyMap: WritableFabricScopedAttribute(
+                0,
+                TlvArray(TlvGroupKeyMapStruct),
+                { persistent: true, default: [], readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            ),
+
+            /**
+             * This attribute is a list of GroupInfoMapStruct entries. Each entry provides read-only information about
+             * how a given logical Group ID maps to a particular set of endpoints, and a name for the group. The
+             * content of this attribute reflects data managed via the Groups cluster (see AppClusters), and is in
+             * general terms referred to as the 'node-wide Group Table'.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.2
+             */
+            groupTable: FabricScopedAttribute(1, TlvArray(TlvGroupInfoMapStruct), { default: [] }),
+
+            /**
+             * This attribute SHALL indicate the maximum number of groups that this node supports per fabric. The value
+             * of this attribute SHALL be set to be no less than the required minimum supported groups as specified in
+             * Group Limits. The length of the GroupKeyMap and GroupTable list attributes SHALL NOT exceed the value of
+             * the MaxGroupsPerFabric attribute multiplied by the number of supported fabrics.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.3
+             */
+            maxGroupsPerFabric: FixedAttribute(2, TlvUInt16),
+
+            /**
+             * This attribute SHALL indicate the maximum number of group key sets this node supports per fabric. The
+             * value of this attribute SHALL be set according to the minimum number of group key sets to support as
+             * specified in Group Limits.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.4
+             */
+            maxGroupKeysPerFabric: FixedAttribute(3, TlvUInt16.bound({ min: 1, max: 65535 }), { default: 1 })
+        },
+
+        commands: {
+            /**
+             * This command is used by Administrators to set the state of a given Group Key Set, including atomi
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.1
+             */
+            keySetWrite: Command(0, TlvKeySetWriteRequest, 0, TlvNoResponse),
+
+            /**
+             * This command is used by Administrators to read the state of a given Group Key Set.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.2
+             */
+            keySetRead: Command(1, TlvKeySetReadRequest, 2, TlvKeySetReadResponseRequest),
+
+            /**
+             * This command SHALL be generated in response to the KeySetRead command, if a valid Group Key Set was
+             * found. It SHALL contain the configuration of the requested Group Key Set, with the EpochKey0, EpochKey1
+             * and EpochKey2 key contents replaced by null.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.3
+             */
+            keySetReadResponse: Command(2, TlvKeySetReadResponseRequest, 2, TlvNoResponse),
+
+            /**
+             * This command is used by Administrators to remove all state of a given Group Key Set.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.4
+             */
+            keySetRemove: Command(3, TlvKeySetRemoveRequest, 3, TlvNoResponse),
+
+            /**
+             * This command is used by Administrators to query a list of all Group Key Sets associated with the
+             * accessing fabric.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
+             */
+            keySetReadAllIndices: Command(4, TlvKeySetReadAllIndicesRequest, 5, TlvKeySetReadAllIndicesResponseRequest),
+
+            /**
+             * This command SHALL be generated in response to KeySetReadAllIndices and it SHALL contain the list of
+             * GroupKeySetID for all Group Key Sets associated with the scoped Fabric.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.6
+             */
+            keySetReadAllIndicesResponse: Command(5, TlvKeySetReadAllIndicesResponseRequest, 5, TlvNoResponse)
+        }
+    });
+
+    /**
+     * This cluster supports all GroupKeyManagement features.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands }
+    };
 };

@@ -6,13 +6,30 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * Account Login
+ *
+ * This cluster provides commands that facilitate user account login on a Content App or a node. For example, a Content
+ * App running on a Video Player device, which is represented as an endpoint (see [TV Architecture]), can use this
+ * cluster to help make the user account on the Content App match the user account on the Client.
+ *
+ * This function creates a AccountLogin cluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2
+ */
+export function AccountLoginCluster() {
+    const cluster = { ...AccountLoginCluster.Metadata, ...AccountLoginCluster.BaseComponent };
+    return cluster as unknown as AccountLoginCluster.Type;
+};
 
 /**
  * The purpose of this command is to determine if the active user account of the given Content App matches the active
@@ -69,64 +86,60 @@ export const TlvLoginRequest = TlvObject({
     setupPin: TlvField(1, TlvString.bound({ minLength: 11 }))
 });
 
-/**
- * Standard AccountLogin cluster properties.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2
- */
-export const AccountLoginMetadata = ClusterMetadata({ id: 0x50e, name: "AccountLogin", revision: 1 });
+export namespace AccountLoginCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A AccountLoginCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    commands: {
-        /**
-         * The purpose of this command is to determine if the active user account of the given Content App matches the
-         * active user account of a given Commissionee, and when it does, return a Setup PIN code which can be used for
-         * password-authenticated session establishment (PASE) with the Commissionee.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.1
-         */
-        getSetupPin: Command(0, TlvGetSetupPinRequest, 1, TlvGetSetupPinResponseRequest),
+    /**
+     * AccountLogin cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2
+     */
+    export const Metadata = ClusterMetadata({ id: 0x50e, name: "AccountLogin", revision: 1 });
 
-        /**
-         * This message is sent in response to the GetSetupPIN command, and contains the Setup PIN code, or null when
-         * the account identified in the request does not match the active account of the running Content App.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2
-         */
-        getSetupPinResponse: Command(1, TlvGetSetupPinResponseRequest, 1, TlvNoResponse),
+    /**
+     * A AccountLoginCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        commands: {
+            /**
+             * The purpose of this command is to determine if the active user account of the given Content App matches
+             * the active user account of a given Commissionee, and when it does, return a Setup PIN code which can be
+             * used for password-authenticated session establishment (PASE) with the Commissionee.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.1
+             */
+            getSetupPin: Command(0, TlvGetSetupPinRequest, 1, TlvGetSetupPinResponseRequest),
 
-        /**
-         * The purpose of this command is to allow the Content App to assume the user account of a given Commissionee
-         * by leveraging the Setup PIN code input by the user during the commissioning process.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.3
-         */
-        login: Command(2, TlvLoginRequest, 2, TlvNoResponse),
+            /**
+             * This message is sent in response to the GetSetupPIN command, and contains the Setup PIN code, or null
+             * when the account identified in the request does not match the active account of the running Content App.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2
+             */
+            getSetupPinResponse: Command(1, TlvGetSetupPinResponseRequest, 1, TlvNoResponse),
 
-        /**
-         * The purpose of this command is to instruct the Content App to clear the current user account. This command
-         * SHOULD be used by clients of a Content App to indicate the end of a user session.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.4
-         */
-        logout: Command(3, TlvNoArguments, 3, TlvNoResponse)
-    }
-});
+            /**
+             * The purpose of this command is to allow the Content App to assume the user account of a given
+             * Commissionee by leveraging the Setup PIN code input by the user during the commissioning process.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.3
+             */
+            login: Command(2, TlvLoginRequest, 2, TlvNoResponse),
 
-export type AccountLoginCluster<T extends TypeFromPartialBitSchema<typeof AccountLoginMetadata.features>> = 
-    typeof AccountLoginMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+            /**
+             * The purpose of this command is to instruct the Content App to clear the current user account. This
+             * command SHOULD be used by clients of a Content App to indicate the end of a user session.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.4
+             */
+            logout: Command(3, TlvNoArguments, 3, TlvNoResponse)
+        }
+    });
 
-export function AccountLoginCluster<T extends (keyof typeof AccountLoginMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...AccountLoginMetadata,
-        supportedFeatures: BitFlags(AccountLoginMetadata.features, ...features),
-        ...BaseComponent
-    };
-    
-    return cluster as unknown as AccountLoginCluster<BitFlags<typeof AccountLoginMetadata.features, T>>;
+    /**
+     * This cluster supports all AccountLogin features.
+     */
+    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
 };

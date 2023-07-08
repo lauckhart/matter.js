@@ -6,8 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
 import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvUInt16, TlvBitmap, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -16,6 +17,20 @@ import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvAny } from "../../tlv/TlvAny.js";
+
+/**
+ * Scenes
+ *
+ * Attributes and commands for scene configuration and manipulation.
+ *
+ * This function creates a Scenes cluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4
+ */
+export function ScenesCluster() {
+    const cluster = { ...ScenesCluster.Metadata, ...ScenesCluster.BaseComponent };
+    return cluster as unknown as ScenesCluster.Type;
+};
 
 /**
  * This attribute provides legacy, read-only access to whether the Scene Names feature is supported. The most
@@ -341,234 +356,249 @@ export const TlvCopySceneResponseRequest = TlvObject({
     sceneIdentifierFrom: TlvField(2, TlvUInt8)
 });
 
-/**
- * Standard Scenes cluster properties.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4
- */
-export const ScenesMetadata = ClusterMetadata({
-    id: 0x5,
-    name: "Scenes",
-    revision: 1,
-
-    features: {
+export namespace ScenesCluster {
+    /**
+     * These are optional features supported by ScenesCluster.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.4
+     */
+    export enum Feature {
         /**
          * SceneNames
          *
          * The ability to store a name for a scene.
          */
-        sceneNames: BitFlag(0)
-    }
-});
-
-/**
- * A ScenesCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The SceneCount attribute specifies the number of scenes currently in the server’s Scene Table.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.1
-         */
-        sceneCount: Attribute(0, TlvUInt8, { readAcl: AccessLevel.View }),
-
-        /**
-         * The CurrentScene attribute holds the scene identifier of the scene last invoked.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.2
-         */
-        currentScene: Attribute(1, TlvUInt8, { readAcl: AccessLevel.View }),
-
-        /**
-         * The CurrentGroup attribute holds the group identifier of the scene last invoked, or 0 if the scene last
-         * invoked is not associated with a group.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.3
-         */
-        currentGroup: Attribute(2, TlvUInt16, { readAcl: AccessLevel.View }),
-
-        /**
-         * The SceneValid attribute indicates whether the state of the server corresponds to that associated with the
-         * CurrentScene and CurrentGroup attributes. TRUE indicates that these attributes are valid, FALSE indicates
-         * that they are not valid.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.4
-         */
-        sceneValid: Attribute(3, TlvBoolean, { default: true, readAcl: AccessLevel.View }),
-
-        /**
-         * This attribute provides legacy, read-only access to whether the Scene Names feature is supported. The most
-         * significant bit, bit 7, SHALL be equal to bit 0 of the FeatureMap attribute. All other bits SHALL be 0.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.5
-         */
-        nameSupport: Attribute(4, TlvNameSupport, { readAcl: AccessLevel.View }),
-
-        /**
-         * The LastConfiguredBy attribute holds the Node ID (the IEEE address in case of Zigbee) of the node that last
-         * configured the Scene Table.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.6
-         */
-        lastConfiguredBy: OptionalAttribute(5, TlvNullable(TlvUInt64), { default: null, readAcl: AccessLevel.View })
-    },
-
-    commands: {
-        /**
-         * The AddScene command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.2
-         */
-        addScene: Command(0, TlvAddSceneRequest, 0, TlvAddSceneResponseRequest),
-
-        /**
-         * The AddSceneResponse command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.12
-         */
-        addSceneResponse: Command(0, TlvAddSceneResponseRequest, 0, TlvNoResponse),
-
-        /**
-         * The ViewScene command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.3
-         */
-        viewScene: Command(1, TlvViewSceneRequest, 1, TlvViewSceneResponseRequest),
-
-        /**
-         * The ViewSceneResponse command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.13
-         */
-        viewSceneResponse: Command(1, TlvViewSceneResponseRequest, 1, TlvNoResponse),
-
-        /**
-         * The RemoveScene command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.4
-         */
-        removeScene: Command(2, TlvRemoveSceneRequest, 2, TlvRemoveSceneResponseRequest),
-
-        /**
-         * The RemoveSceneResponse command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.14
-         */
-        removeSceneResponse: Command(2, TlvRemoveSceneResponseRequest, 2, TlvNoResponse),
-
-        /**
-         * The RemoveAllScenes command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.5
-         */
-        removeAllScenes: Command(3, TlvRemoveAllScenesRequest, 3, TlvRemoveAllScenesResponseRequest),
-
-        /**
-         * The RemoveAllScenesResponse command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.15
-         */
-        removeAllScenesResponse: Command(3, TlvRemoveAllScenesResponseRequest, 3, TlvNoResponse),
-
-        /**
-         * The StoreScene command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.6
-         */
-        storeScene: Command(4, TlvStoreSceneRequest, 4, TlvStoreSceneResponseRequest),
-
-        /**
-         * The StoreSceneResponse command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.16
-         */
-        storeSceneResponse: Command(4, TlvStoreSceneResponseRequest, 4, TlvNoResponse),
-
-        /**
-         * The RecallScene command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.7
-         */
-        recallScene: Command(5, TlvRecallSceneRequest, 5, TlvNoResponse),
-
-        /**
-         * The GetSceneMembership command can be used to find an unused scene identifier within a certain group when no
-         * commissioning tool is in the network, or for a commissioning tool to get the used scene identifiers within a
-         * certain group, for the endpoint that implements this cluster.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.8
-         */
-        getSceneMembership: Command(6, TlvGetSceneMembershipRequest, 6, TlvGetSceneMembershipResponseRequest),
-
-        /**
-         * The GetSceneMembershipResponse command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.17
-         */
-        getSceneMembershipResponse: Command(6, TlvGetSceneMembershipResponseRequest, 6, TlvNoResponse),
-
-        /**
-         * The EnhancedAddScene command allows a scene to be added using a finer scene transition time than the
-         * AddScene command.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.9
-         */
-        enhancedAddScene: OptionalCommand(64, TlvEnhancedAddSceneRequest, 64, TlvEnhancedAddSceneResponseRequest),
-
-        /**
-         * The EnhancedAddSceneResponse command allows a server to respond to an EnhancedAddScene command, see
-         * EnhancedAddScene Command.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.18
-         */
-        enhancedAddSceneResponse: OptionalCommand(64, TlvEnhancedAddSceneResponseRequest, 64, TlvNoResponse),
-
-        /**
-         * The EnhancedViewScene command allows a scene to be retrieved using a finer scene transition time than the
-         * ViewScene command.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.10
-         */
-        enhancedViewScene: OptionalCommand(65, TlvEnhancedViewSceneRequest, 65, TlvEnhancedViewSceneResponseRequest),
-
-        /**
-         * The EnhancedViewSceneResponse command allows a server to respond to an EnhancedViewScene command using a
-         * finer scene transition time.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.19
-         */
-        enhancedViewSceneResponse: OptionalCommand(65, TlvEnhancedViewSceneResponseRequest, 65, TlvNoResponse),
-
-        /**
-         * The CopyScene command allows a client to efficiently copy scenes from one group/scene identifier pair to
-         * another group/scene identifier pair.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11
-         */
-        copyScene: OptionalCommand(66, TlvCopySceneRequest, 66, TlvCopySceneResponseRequest),
-
-        /**
-         * The CopySceneResponse command allows a server to respond to a CopyScene command. The CopySceneResponse
-         * command SHALL have the following data fields:
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.20
-         */
-        copySceneResponse: OptionalCommand(66, TlvCopySceneResponseRequest, 66, TlvNoResponse)
-    }
-});
-
-export type ScenesCluster<T extends TypeFromPartialBitSchema<typeof ScenesMetadata.features>> = 
-    typeof ScenesMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
-
-export function ScenesCluster<T extends (keyof typeof ScenesMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...ScenesMetadata,
-        supportedFeatures: BitFlags(ScenesMetadata.features, ...features),
-        ...BaseComponent
+        SceneNames = "SceneNames"
     };
-    
-    return cluster as unknown as ScenesCluster<BitFlags<typeof ScenesMetadata.features, T>>;
+
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
+
+    /**
+     * Scenes cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x5,
+        name: "Scenes",
+        revision: 1,
+
+        features: {
+            /**
+             * SceneNames
+             *
+             * The ability to store a name for a scene.
+             */
+            sceneNames: BitFlag(0)
+        }
+    });
+
+    /**
+     * A ScenesCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The SceneCount attribute specifies the number of scenes currently in the server’s Scene Table.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.1
+             */
+            sceneCount: Attribute(0, TlvUInt8, { readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentScene attribute holds the scene identifier of the scene last invoked.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.2
+             */
+            currentScene: Attribute(1, TlvUInt8, { readAcl: AccessLevel.View }),
+
+            /**
+             * The CurrentGroup attribute holds the group identifier of the scene last invoked, or 0 if the scene last
+             * invoked is not associated with a group.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.3
+             */
+            currentGroup: Attribute(2, TlvUInt16, { readAcl: AccessLevel.View }),
+
+            /**
+             * The SceneValid attribute indicates whether the state of the server corresponds to that associated with
+             * the CurrentScene and CurrentGroup attributes. TRUE indicates that these attributes are valid, FALSE
+             * indicates that they are not valid.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.4
+             */
+            sceneValid: Attribute(3, TlvBoolean, { default: true, readAcl: AccessLevel.View }),
+
+            /**
+             * This attribute provides legacy, read-only access to whether the Scene Names feature is supported. The
+             * most significant bit, bit 7, SHALL be equal to bit 0 of the FeatureMap attribute. All other bits SHALL
+             * be 0.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.5
+             */
+            nameSupport: Attribute(4, TlvNameSupport, { readAcl: AccessLevel.View }),
+
+            /**
+             * The LastConfiguredBy attribute holds the Node ID (the IEEE address in case of Zigbee) of the node that
+             * last configured the Scene Table.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.6
+             */
+            lastConfiguredBy: OptionalAttribute(5, TlvNullable(TlvUInt64), { default: null, readAcl: AccessLevel.View })
+        },
+
+        commands: {
+            /**
+             * The AddScene command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.2
+             */
+            addScene: Command(0, TlvAddSceneRequest, 0, TlvAddSceneResponseRequest),
+
+            /**
+             * The AddSceneResponse command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.12
+             */
+            addSceneResponse: Command(0, TlvAddSceneResponseRequest, 0, TlvNoResponse),
+
+            /**
+             * The ViewScene command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.3
+             */
+            viewScene: Command(1, TlvViewSceneRequest, 1, TlvViewSceneResponseRequest),
+
+            /**
+             * The ViewSceneResponse command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.13
+             */
+            viewSceneResponse: Command(1, TlvViewSceneResponseRequest, 1, TlvNoResponse),
+
+            /**
+             * The RemoveScene command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.4
+             */
+            removeScene: Command(2, TlvRemoveSceneRequest, 2, TlvRemoveSceneResponseRequest),
+
+            /**
+             * The RemoveSceneResponse command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.14
+             */
+            removeSceneResponse: Command(2, TlvRemoveSceneResponseRequest, 2, TlvNoResponse),
+
+            /**
+             * The RemoveAllScenes command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.5
+             */
+            removeAllScenes: Command(3, TlvRemoveAllScenesRequest, 3, TlvRemoveAllScenesResponseRequest),
+
+            /**
+             * The RemoveAllScenesResponse command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.15
+             */
+            removeAllScenesResponse: Command(3, TlvRemoveAllScenesResponseRequest, 3, TlvNoResponse),
+
+            /**
+             * The StoreScene command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.6
+             */
+            storeScene: Command(4, TlvStoreSceneRequest, 4, TlvStoreSceneResponseRequest),
+
+            /**
+             * The StoreSceneResponse command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.16
+             */
+            storeSceneResponse: Command(4, TlvStoreSceneResponseRequest, 4, TlvNoResponse),
+
+            /**
+             * The RecallScene command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.7
+             */
+            recallScene: Command(5, TlvRecallSceneRequest, 5, TlvNoResponse),
+
+            /**
+             * The GetSceneMembership command can be used to find an unused scene identifier within a certain group
+             * when no commissioning tool is in the network, or for a commissioning tool to get the used scene
+             * identifiers within a certain group, for the endpoint that implements this cluster.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.8
+             */
+            getSceneMembership: Command(6, TlvGetSceneMembershipRequest, 6, TlvGetSceneMembershipResponseRequest),
+
+            /**
+             * The GetSceneMembershipResponse command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.17
+             */
+            getSceneMembershipResponse: Command(6, TlvGetSceneMembershipResponseRequest, 6, TlvNoResponse),
+
+            /**
+             * The EnhancedAddScene command allows a scene to be added using a finer scene transition time than the
+             * AddScene command.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.9
+             */
+            enhancedAddScene: OptionalCommand(64, TlvEnhancedAddSceneRequest, 64, TlvEnhancedAddSceneResponseRequest),
+
+            /**
+             * The EnhancedAddSceneResponse command allows a server to respond to an EnhancedAddScene command, see
+             * EnhancedAddScene Command.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.18
+             */
+            enhancedAddSceneResponse: OptionalCommand(64, TlvEnhancedAddSceneResponseRequest, 64, TlvNoResponse),
+
+            /**
+             * The EnhancedViewScene command allows a scene to be retrieved using a finer scene transition time than
+             * the ViewScene command.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.10
+             */
+            enhancedViewScene: OptionalCommand(65, TlvEnhancedViewSceneRequest, 65, TlvEnhancedViewSceneResponseRequest),
+
+            /**
+             * The EnhancedViewSceneResponse command allows a server to respond to an EnhancedViewScene command using a
+             * finer scene transition time.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.19
+             */
+            enhancedViewSceneResponse: OptionalCommand(65, TlvEnhancedViewSceneResponseRequest, 65, TlvNoResponse),
+
+            /**
+             * The CopyScene command allows a client to efficiently copy scenes from one group/scene identifier pair to
+             * another group/scene identifier pair.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11
+             */
+            copyScene: OptionalCommand(66, TlvCopySceneRequest, 66, TlvCopySceneResponseRequest),
+
+            /**
+             * The CopySceneResponse command allows a server to respond to a CopyScene command. The CopySceneResponse
+             * command SHALL have the following data fields:
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.20
+             */
+            copySceneResponse: OptionalCommand(66, TlvCopySceneResponseRequest, 66, TlvNoResponse)
+        }
+    });
+
+    /**
+     * This cluster supports all Scenes features.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands }
+    };
 };

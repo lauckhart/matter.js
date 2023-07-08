@@ -6,12 +6,39 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterMetadata, ClusterComponent, extendCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { WritableAttribute, AccessLevel, FixedAttribute } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
+
+/**
+ * Time Format Localization
+ *
+ * Nodes should be expected to be deployed to any and all regions of the world. These global regions may have differing
+ * preferences for how dates and times are conveyed. As such, Nodes that visually or audibly convey time information
+ * need a mechanism by which they can be configured to use a user’s preferred format.
+ *
+ * This function creates a TimeFormatLocalization cluster supporting a specific set of features.  Include each
+ * {@link TimeFormatLocalizationCluster.Feature} you wish to support.
+ *
+ * @param features a list of {@link TimeFormatLocalizationCluster.Feature} to support
+ * @returns a TimeFormatLocalization cluster with specified features enabled
+ * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.4
+ */
+export function TimeFormatLocalizationCluster<T extends TimeFormatLocalizationCluster.Feature[]>(...features: [ ...T ]) {
+    const cluster = {
+        ...TimeFormatLocalizationCluster.Metadata,
+        supportedFeatures: BitFlags(TimeFormatLocalizationCluster.Metadata.features, ...features),
+        ...TimeFormatLocalizationCluster.BaseComponent
+    };
+    extendCluster(cluster, TimeFormatLocalizationCluster.CalendarFormatComponent, { calendarFormat: true });
+    return cluster as unknown as TimeFormatLocalizationCluster.Type<BitFlags<typeof TimeFormatLocalizationCluster.Metadata.features, T>>;
+};
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.1
@@ -39,92 +66,108 @@ export const enum TlvCalendarTypeEnum {
     Taiwanese = 11
 };
 
-/**
- * Standard TimeFormatLocalization cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.4
- */
-export const TimeFormatLocalizationMetadata = ClusterMetadata({
-    id: 0x2c,
-    name: "TimeFormatLocalization",
-    revision: 1,
-
-    features: {
+export namespace TimeFormatLocalizationCluster {
+    /**
+     * These are optional features supported by TimeFormatLocalizationCluster.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.4.4
+     */
+    export enum Feature {
         /**
          * CalendarFormat
          *
          * The Node can be configured to use different calendar formats when conveying values to a user.
          */
-        calendarFormat: BitFlag(0)
-    }
-});
-
-/**
- * A TimeFormatLocalizationCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The HourFormat attribute SHALL represent the format that the Node is currently configured to use when
-         * conveying the hour unit of time. If provided, this value SHALL take priority over any unit
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.1
-         */
-        hourFormat: WritableAttribute(
-            0,
-            TlvNullable(TlvEnum<TlvHourFormatEnum>()),
-            { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-        )
-    }
-});
-
-/**
- * A TimeFormatLocalizationCluster supports these elements if it supports feature CalendarFormat.
- */
-export const CalendarFormatComponent = ClusterComponent({
-    attributes: {
-        /**
-         * The ActiveCalendarType attribute SHALL represent the calendar format that the Node is currently configured
-         * to use when conveying dates. If provided, this value SHALL take priority over any unit implied through the
-         * ActiveLocale Attribute.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.2
-         */
-        activeCalendarType: WritableAttribute(
-            1,
-            TlvNullable(TlvEnum<TlvCalendarTypeEnum>()),
-            { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-        ),
-
-        /**
-         * The SupportedCalendarTypes attribute SHALL represent a list of CalendarTypeEnum values that are supported by
-         * the Node. The list SHALL NOT contain any duplicate entries. The ordering of items within the list SHOULD NOT
-         * express any meaning. The maximum length of the SupportedCalendarTypes list SHALL be equivalent to the number
-         * of enumerations within CalendarTypeEnum.
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.3
-         */
-        supportedCalendarTypes: FixedAttribute(
-            2,
-            TlvArray(TlvEnum<TlvCalendarTypeEnum>()),
-            { default: [], readAcl: AccessLevel.View }
-        )
-    }
-});
-
-export type TimeFormatLocalizationCluster<T extends TypeFromPartialBitSchema<typeof TimeFormatLocalizationMetadata.features>> = 
-    typeof TimeFormatLocalizationMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent
-    & (T extends { calendarFormat: true } ? typeof CalendarFormatComponent : {});
-
-export function TimeFormatLocalizationCluster<T extends (keyof typeof TimeFormatLocalizationMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...TimeFormatLocalizationMetadata,
-        supportedFeatures: BitFlags(TimeFormatLocalizationMetadata.features, ...features),
-        ...BaseComponent
+        CalendarFormat = "CalendarFormat"
     };
-    extendCluster(cluster, CalendarFormatComponent, { calendarFormat: true });
-    
-    return cluster as unknown as TimeFormatLocalizationCluster<BitFlags<typeof TimeFormatLocalizationMetadata.features, T>>;
+
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+        typeof Metadata
+        & { supportedFeatures: T }
+        & typeof BaseComponent
+        & (T extends { calendarFormat: true } ? typeof CalendarFormatComponent : {});
+
+    /**
+     * TimeFormatLocalization cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.4
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x2c,
+        name: "TimeFormatLocalization",
+        revision: 1,
+
+        features: {
+            /**
+             * CalendarFormat
+             *
+             * The Node can be configured to use different calendar formats when conveying values to a user.
+             */
+            calendarFormat: BitFlag(0)
+        }
+    });
+
+    /**
+     * A TimeFormatLocalizationCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The HourFormat attribute SHALL represent the format that the Node is currently configured to use when
+             * conveying the hour unit of time. If provided, this value SHALL take priority over any unit
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.1
+             */
+            hourFormat: WritableAttribute(
+                0,
+                TlvNullable(TlvEnum<TlvHourFormatEnum>()),
+                { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            )
+        }
+    });
+
+    /**
+     * A TimeFormatLocalizationCluster supports these elements if it supports feature CalendarFormat.
+     */
+    export const CalendarFormatComponent = ClusterComponent({
+        attributes: {
+            /**
+             * The ActiveCalendarType attribute SHALL represent the calendar format that the Node is currently
+             * configured to use when conveying dates. If provided, this value SHALL take priority over any unit
+             * implied through the ActiveLocale Attribute.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.2
+             */
+            activeCalendarType: WritableAttribute(
+                1,
+                TlvNullable(TlvEnum<TlvCalendarTypeEnum>()),
+                { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            ),
+
+            /**
+             * The SupportedCalendarTypes attribute SHALL represent a list of CalendarTypeEnum values that are
+             * supported by the Node. The list SHALL NOT contain any duplicate entries. The ordering of items within
+             * the list SHOULD NOT express any meaning. The maximum length of the SupportedCalendarTypes list SHALL be
+             * equivalent to the number of enumerations within CalendarTypeEnum.
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.3
+             */
+            supportedCalendarTypes: FixedAttribute(
+                2,
+                TlvArray(TlvEnum<TlvCalendarTypeEnum>()),
+                { default: [], readAcl: AccessLevel.View }
+            )
+        }
+    });
+
+    /**
+     * This cluster supports all TimeFormatLocalization features.  It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export const Complete = {
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes, ...CalendarFormatComponent.attributes }
+    };
 };

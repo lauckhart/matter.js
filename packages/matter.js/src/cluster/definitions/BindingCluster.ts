@@ -6,12 +6,28 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { WritableFabricScopedAttribute, AccessLevel } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt64, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * Binding
+ *
+ * The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for supporting the binding
+ * table.
+ *
+ * This function creates a Binding cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 9.6
+ */
+export function BindingCluster() {
+    const cluster = { ...BindingCluster.Metadata, ...BindingCluster.BaseComponent };
+    return cluster as unknown as BindingCluster.Type;
+};
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1
@@ -50,42 +66,38 @@ export const TlvTargetStruct = TlvObject({
     cluster: TlvOptionalField(4, TlvUInt32)
 });
 
-/**
- * Standard Binding cluster properties.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 9.6
- */
-export const BindingMetadata = ClusterMetadata({ id: 0x1e, name: "Binding", revision: 1 });
+export namespace BindingCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A BindingCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({
-    attributes: {
-        /**
-         * Each entry SHALL represent a binding. Here are some examples:
-         *
-         * @see {@link MatterCoreSpecificationV1_1} § 9.6.6.1
-         */
-        binding: WritableFabricScopedAttribute(
-            0,
-            TlvArray(TlvTargetStruct),
-            { persistent: true, default: [], readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-        )
-    }
-});
+    /**
+     * Binding cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.6
+     */
+    export const Metadata = ClusterMetadata({ id: 0x1e, name: "Binding", revision: 1 });
 
-export type BindingCluster<T extends TypeFromPartialBitSchema<typeof BindingMetadata.features>> = 
-    typeof BindingMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+    /**
+     * A BindingCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            /**
+             * Each entry SHALL represent a binding. Here are some examples:
+             *
+             * @see {@link MatterCoreSpecificationV1_1} § 9.6.6.1
+             */
+            binding: WritableFabricScopedAttribute(
+                0,
+                TlvArray(TlvTargetStruct),
+                { persistent: true, default: [], readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            )
+        }
+    });
 
-export function BindingCluster<T extends (keyof typeof BindingMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...BindingMetadata,
-        supportedFeatures: BitFlags(BindingMetadata.features, ...features),
-        ...BaseComponent
-    };
-    
-    return cluster as unknown as BindingCluster<BitFlags<typeof BindingMetadata.features, T>>;
+    /**
+     * This cluster supports all Binding features.
+     */
+    export const Complete = { ...Metadata, attributes: { ...BaseComponent.attributes } };
 };

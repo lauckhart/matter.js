@@ -6,12 +6,25 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt32, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
-import { TypeFromPartialBitSchema, BitFlags } from "../../schema/BitmapSchema.js";
+
+/**
+ * Fault Injection
+ *
+ * The Fault Injection Cluster provide a means for a test harness to configure faults(for example triggering a fault in
+ * the system).
+ *
+ * This function creates a FaultInjection cluster.
+ */
+export function FaultInjectionCluster() {
+    const cluster = { ...FaultInjectionCluster.Metadata, ...FaultInjectionCluster.BaseComponent };
+    return cluster as unknown as FaultInjectionCluster.Type;
+};
 
 export const enum TlvFaultType {
     Unspecified = 0,
@@ -35,30 +48,26 @@ export const TlvFailRandomlyAtFaultRequest = TlvObject({
     percentage: TlvField(2, TlvUInt8)
 });
 
-/**
- * Standard FaultInjection cluster properties.
- */
-export const FaultInjectionMetadata = ClusterMetadata({ id: 0xfff1fc06, name: "FaultInjection", revision: 1 });
+export namespace FaultInjectionCluster {
+    export type Type = 
+        typeof Metadata
+        & typeof BaseComponent;
 
-/**
- * A FaultInjectionCluster supports these elements for all feature combinations.
- */
-export const BaseComponent = ClusterComponent({ commands: {
-    failAtFault: Command(0, TlvFailAtFaultRequest, 0, TlvNoResponse),
-    failRandomlyAtFault: Command(1, TlvFailRandomlyAtFaultRequest, 1, TlvNoResponse)
-} });
+    /**
+     * FaultInjection cluster metadata.
+     */
+    export const Metadata = ClusterMetadata({ id: 0xfff1fc06, name: "FaultInjection", revision: 1 });
 
-export type FaultInjectionCluster<T extends TypeFromPartialBitSchema<typeof FaultInjectionMetadata.features>> = 
-    typeof FaultInjectionMetadata
-    & { supportedFeatures: T }
-    & typeof BaseComponent;
+    /**
+     * A FaultInjectionCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({ commands: {
+        failAtFault: Command(0, TlvFailAtFaultRequest, 0, TlvNoResponse),
+        failRandomlyAtFault: Command(1, TlvFailRandomlyAtFaultRequest, 1, TlvNoResponse)
+    } });
 
-export function FaultInjectionCluster<T extends (keyof typeof FaultInjectionMetadata.features)[]>(...features: [ ...T ]) {
-    const cluster = {
-        ...FaultInjectionMetadata,
-        supportedFeatures: BitFlags(FaultInjectionMetadata.features, ...features),
-        ...BaseComponent
-    };
-    
-    return cluster as unknown as FaultInjectionCluster<BitFlags<typeof FaultInjectionMetadata.features, T>>;
+    /**
+     * This cluster supports all FaultInjection features.
+     */
+    export const Complete = { ...Metadata, commands: { ...BaseComponent.commands } };
 };
