@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "BinaryInputBasic", id: 0xf, description: "Binary Input (Basic)",
     details: "An interface for reading the value of a binary measurement and accessing various characteristics of " +
-        "that measurement.",
+             "that measurement.",
 
     children: [
         { tag: "attribute", name: "ActiveText", id: 0x4, type: "string", access: "RW", conformance: "O", default: "" },

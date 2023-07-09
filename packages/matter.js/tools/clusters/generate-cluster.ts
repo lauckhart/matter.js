@@ -86,7 +86,7 @@ function withArticle(what: string) {
 function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
     let factoryFunction;
     if (variance.componentized) {
-        factoryFunction = file.types.statements(`export function ${file.clusterName}<T extends ${file.clusterName}.Feature[]>(...features: [ ...T ]) {`, "}")
+        factoryFunction = file.types.statements(`export function ${file.clusterName}<T extends ${file.clusterName}.Feature[]>(...features: [...T]) {`, "}")
             .document(
                 cluster,
                 [
@@ -145,14 +145,14 @@ function generateType(ns: Block, variance: ClusterVariance, featureNames: Featur
     if (variance.componentized) {
         ns.file.addImport("schema/BitmapSchema", "TypeFromPartialBitSchema");
         factoryType = Array<string>(
-            "export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = ",
+            "export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =",
             "    typeof Metadata",
             "    & { attributes: GlobalAttributes<typeof Metadata.features> }",
             "    & { supportedFeatures: T }"
         );
     } else {
         factoryType = Array<string>(
-            "export type Type = ",
+            "export type Type =",
             "    typeof Metadata",
             "    & { attributes: GlobalAttributes<{}> }"
         )

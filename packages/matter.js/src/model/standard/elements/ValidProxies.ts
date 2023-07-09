@@ -19,7 +19,7 @@ Matter.children.push({
             default: [], quality: "N F",
             details: "List of valid proxies that can proxy this Node. Each entry in this list is fabric-scoped.",
             xref: { document: "core", section: "9.15.15.5.1" },
-            children: [{ tag: "datatype", name: "entry", type: "ValidProxyStruct" }]
+            children: [ { tag: "datatype", name: "entry", type: "ValidProxyStruct" } ]
         },
 
         {
@@ -36,7 +36,7 @@ Matter.children.push({
             tag: "datatype", name: "ValidProxyStruct", type: "struct",
             details: "Encapsulates the Node ID of a Valid Proxy.",
             xref: { document: "core", section: "9.15.15.4.1" },
-            children: [{ tag: "datatype", name: "NodeId", id: 0x1, type: "node-id", access: "RW", conformance: "M" }]
+            children: [ { tag: "datatype", name: "NodeId", id: 0x1, type: "node-id", access: "RW", conformance: "M" } ]
         }
     ]
 });

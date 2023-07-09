@@ -55,7 +55,7 @@ Matter.children.push({
             tag: "attribute", name: "LocalTemperature", id: 0x0, type: "temperature", access: "R V",
             conformance: "M", default: null, quality: "X P",
             details: "This attribute indicates the current LocalTemperature value, when available. The value may be " +
-                "local, or remote, depending on the value of the RemoteSensing attribute when supported.",
+                     "local, or remote, depending on the value of the RemoteSensing attribute when supported.",
             xref: { document: "cluster", section: "4.3.7.2" }
         },
 
@@ -63,25 +63,25 @@ Matter.children.push({
             tag: "attribute", name: "OutdoorTemperature", id: 0x1, type: "temperature", access: "R V",
             conformance: "O", default: null, quality: "X",
             details: "This attribute represents the outdoor temperature, as measured locally or remotely (over the " +
-                "network).",
+                     "network).",
             xref: { document: "cluster", section: "4.3.7.3" }
         },
 
         {
             tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "OCC",
-            constraint: "desc", default: { type: "flags", flags: ["Occupied"] },
+            constraint: "desc", default: { type: "flags", flags: [ "Occupied" ] },
             details: "This attribute specifies whether the heated/cooled space is occupied or not, as measured locally or " +
-                "remotely (over the network). If bit 0 = 1, the space is occupied, else it is unoccupied. All other " +
-                "bits are reserved.",
+                     "remotely (over the network). If bit 0 = 1, the space is occupied, else it is unoccupied. All other " +
+                     "bits are reserved.",
             xref: { document: "cluster", section: "4.3.7.4" },
-            children: [{ tag: "datatype", name: "Occupied", id: 0x1, conformance: "M" }]
+            children: [ { tag: "datatype", name: "Occupied", id: 0x1, conformance: "M" } ]
         },
 
         {
             tag: "attribute", name: "AbsMinHeatSetpointLimit", id: 0x3, type: "temperature", access: "R V",
             conformance: "[HEAT]", constraint: "desc", default: 700, quality: "F",
             details: "This attribute specifies the absolute minimum level that the heating setpoint MAY be set to. This " +
-                "is a limitation imposed by the manufacturer.",
+                     "is a limitation imposed by the manufacturer.",
             xref: { document: "cluster", section: "4.3.7.5" }
         },
 
@@ -89,7 +89,7 @@ Matter.children.push({
             tag: "attribute", name: "AbsMaxHeatSetpointLimit", id: 0x4, type: "temperature", access: "R V",
             conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "F",
             details: "This attribute specifies the absolute maximum level that the heating setpoint MAY be set to. This " +
-                "is a limitation imposed by the manufacturer.",
+                     "is a limitation imposed by the manufacturer.",
             xref: { document: "cluster", section: "4.3.7.6" }
         },
 
@@ -97,7 +97,7 @@ Matter.children.push({
             tag: "attribute", name: "AbsMinCoolSetpointLimit", id: 0x5, type: "temperature", access: "R V",
             conformance: "[COOL]", constraint: "desc", default: 1600, quality: "F",
             details: "This attribute specifies the absolute minimum level that the cooling setpoint MAY be set to. This " +
-                "is a limitation imposed by the manufacturer.",
+                     "is a limitation imposed by the manufacturer.",
             xref: { document: "cluster", section: "4.3.7.7" }
         },
 
@@ -105,7 +105,7 @@ Matter.children.push({
             tag: "attribute", name: "AbsMaxCoolSetpointLimit", id: 0x6, type: "temperature", access: "R V",
             conformance: "[COOL]", constraint: "desc", default: 3200, quality: "F",
             details: "This attribute specifies the absolute maximum level that the cooling setpoint MAY be set to. This " +
-                "is a limitation imposed by the manufacturer.",
+                     "is a limitation imposed by the manufacturer.",
             xref: { document: "cluster", section: "4.3.7.8" }
         },
 
@@ -113,8 +113,8 @@ Matter.children.push({
             tag: "attribute", name: "PiCoolingDemand", id: 0x7, type: "uint8", access: "R V",
             conformance: "[COOL]", constraint: "0 to 100", quality: "P",
             details: "This attribute specifies the level of cooling demanded by the PI (proportional integral) control " +
-                "loop in use by the thermostat (if any), in percent. This value is 0 when the thermostat is in “off” " +
-                "or “heating” mode.",
+                     "loop in use by the thermostat (if any), in percent. This value is 0 when the thermostat is in “off” " +
+                     "or “heating” mode.",
             xref: { document: "cluster", section: "4.3.7.9" }
         },
 
@@ -122,7 +122,7 @@ Matter.children.push({
             tag: "attribute", name: "PiHeatingDemand", id: 0x8, type: "uint8", access: "R V",
             conformance: "[HEAT]", constraint: "0 to 100", quality: "P",
             details: "This attribute specifies the level of heating demanded by the PI loop in percent. This value is 0 " +
-                "when the thermostat is in “off” or “cooling” mode.",
+                     "when the thermostat is in “off” or “cooling” mode.",
             xref: { document: "cluster", section: "4.3.7.10" }
         },
 
@@ -130,10 +130,10 @@ Matter.children.push({
             tag: "attribute", name: "HvacSystemTypeConfiguration", id: 0x9, type: "map8", access: "R[W] VM",
             conformance: "D", constraint: "desc", default: 0, quality: "N",
             details: "This attribute specifies the HVAC system type controlled by the thermostat. If the thermostat uses " +
-                "physical DIP switches to set these parameters, this information SHALL be available read-only from " +
-                "the DIP switches. If these parameters are set via software, there SHALL be read/write access in " +
-                "order to provide remote programming capability. The meanings of individual bits are detailed below. " +
-                "Each bit represents a type of system configuration.",
+                     "physical DIP switches to set these parameters, this information SHALL be available read-only from " +
+                     "the DIP switches. If these parameters are set via software, there SHALL be read/write access in " +
+                     "order to provide remote programming capability. The meanings of individual bits are detailed below. " +
+                     "Each bit represents a type of system configuration.",
             xref: { document: "cluster", section: "4.3.7.11" },
 
             children: [
@@ -154,8 +154,8 @@ Matter.children.push({
             tag: "attribute", name: "LocalTemperatureCalibration", id: 0x10, type: "temp-s8", access: "RW VM",
             conformance: "[!LTNE]", constraint: "-2.5°C to 2.5°C", default: 0, quality: "N",
             details: "This attribute specifies the offset the Thermostat server SHALL make to the measured temperature " +
-                "(locally or remotely) to adjust the LocalTemperature Value prior to using, displaying or reporting " +
-                "it.",
+                     "(locally or remotely) to adjust the LocalTemperature Value prior to using, displaying or reporting " +
+                     "it.",
             xref: { document: "cluster", section: "4.3.7.12" }
         },
 
@@ -219,7 +219,7 @@ Matter.children.push({
             tag: "attribute", name: "MinSetpointDeadBand", id: 0x19, type: "temp-s8", access: "R[W] VM",
             conformance: "AUTO", constraint: "0°C to 2.5°C", default: 25, quality: "N",
             details: "On devices which support the AUTO feature, this attribute specifies the minimum difference between " +
-                "the Heat Setpoint and the Cool Setpoint.",
+                     "the Heat Setpoint and the Cool Setpoint.",
             xref: { document: "cluster", section: "4.3.7.21" }
         },
 
@@ -227,7 +227,7 @@ Matter.children.push({
             tag: "attribute", name: "RemoteSensing", id: 0x1a, type: "map8", access: "RW VM", conformance: "O",
             constraint: "0", default: 0, quality: "N",
             details: "This attribute indicates when the local temperature, outdoor temperature and occupancy are being " +
-                "sensed by remote networked sensors, rather than internal sensors.",
+                     "sensed by remote networked sensors, rather than internal sensors.",
             xref: { document: "cluster", section: "4.3.7.22" },
 
             children: [
@@ -250,7 +250,7 @@ Matter.children.push({
             tag: "attribute", name: "ControlSequenceOfOperation", id: 0x1b, type: "enum8", access: "RW VM",
             conformance: "M", constraint: "desc", default: 4, quality: "N",
             details: "This attribute specifies the overall operating environment of the thermostat, and thus the possible " +
-                "system modes that the thermostat can operate in. It SHALL be set to one of the following values.",
+                     "system modes that the thermostat can operate in. It SHALL be set to one of the following values.",
             xref: { document: "cluster", section: "4.3.7.23" },
 
             children: [
@@ -285,7 +285,7 @@ Matter.children.push({
             tag: "attribute", name: "SystemMode", id: 0x1c, type: "enum8", access: "RW VM", conformance: "M",
             constraint: "desc", default: 1, quality: "N S",
             details: "This attribute specifies the current operating mode of the thermostat, It SHALL be set to one of " +
-                "the following values, as limited by the ControlSequenceOfOperation Attribute.",
+                     "the following values, as limited by the ControlSequenceOfOperation Attribute.",
             xref: { document: "cluster", section: "4.3.7.24" },
 
             children: [
@@ -320,8 +320,8 @@ Matter.children.push({
             tag: "attribute", name: "AlarmMask", id: 0x1d, type: "map8", access: "R V", conformance: "O",
             constraint: "desc", default: 0,
             details: "This attribute specifies whether each of the alarms listed below is enabled. When the bit number " +
-                "corresponding to the alarm code is set to 1, the alarm is enabled, else it is disabled. Bits not " +
-                "corresponding to a code in the table are reserved.",
+                     "corresponding to the alarm code is set to 1, the alarm is enabled, else it is disabled. Bits not " +
+                     "corresponding to a code in the table are reserved.",
             xref: { document: "cluster", section: "4.3.7.25" },
             children: [
                 { tag: "datatype", name: "InitializationFailure", id: 0x0 },
@@ -345,7 +345,7 @@ Matter.children.push({
             tag: "attribute", name: "StartOfWeek", id: 0x20, type: "enum8", access: "R V", conformance: "SCH",
             constraint: "desc", quality: "F",
             details: "This attribute represents the day of the week that this thermostat considers to be the start of " +
-                "week for weekly set point scheduling.",
+                     "week for weekly set point scheduling.",
             xref: { document: "cluster", section: "4.3.7.27" },
 
             children: [
@@ -363,7 +363,7 @@ Matter.children.push({
             tag: "attribute", name: "NumberOfWeeklyTransitions", id: 0x21, type: "uint8", access: "R V",
             conformance: "SCH", default: 0, quality: "F",
             details: "This attribute determines how many weekly schedule transitions the thermostat is capable of " +
-                "handling.",
+                     "handling.",
             xref: { document: "cluster", section: "4.3.7.28" }
         },
 
@@ -378,10 +378,10 @@ Matter.children.push({
             tag: "attribute", name: "TemperatureSetpointHold", id: 0x23, type: "enum8", access: "RW VM",
             conformance: "O", constraint: "desc", default: 0, quality: "N",
             details: "This attribute specifies the temperature hold status on the thermostat. If hold status is on, the " +
-                "thermostat SHOULD maintain the temperature set point for the current mode until a system mode " +
-                "change. If hold status is off, the thermostat SHOULD follow the setpoint transitions specified by " +
-                "its internal scheduling program. If the thermostat supports setpoint hold for a specific duration, " +
-                "it SHOULD also implement the TemperatureSetpointHoldDuration attribute.",
+                     "thermostat SHOULD maintain the temperature set point for the current mode until a system mode " +
+                     "change. If hold status is off, the thermostat SHOULD follow the setpoint transitions specified by " +
+                     "its internal scheduling program. If the thermostat supports setpoint hold for a specific duration, " +
+                     "it SHOULD also implement the TemperatureSetpointHoldDuration attribute.",
             xref: { document: "cluster", section: "4.3.7.30" },
 
             children: [
@@ -400,8 +400,8 @@ Matter.children.push({
             tag: "attribute", name: "TemperatureSetpointHoldDuration", id: 0x24, type: "uint16",
             access: "RW VM", conformance: "O", constraint: "0 to 1440", default: 0, quality: "X N",
             details: "This attribute sets the period in minutes for which a setpoint hold is active. Thermostats that " +
-                "support hold for a specified duration SHOULD implement this attribute. The null value indicates the " +
-                "field is unused. All other values are reserved.",
+                     "support hold for a specified duration SHOULD implement this attribute. The null value indicates the " +
+                     "field is unused. All other values are reserved.",
             xref: { document: "cluster", section: "4.3.7.31" }
         },
 
@@ -409,10 +409,10 @@ Matter.children.push({
             tag: "attribute", name: "ThermostatProgrammingOperationMode", id: 0x25, type: "map8",
             access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "P",
             details: "This attribute determines the operational state of the thermostat’s programming. The thermostat " +
-                "SHALL modify its programming operation when this attribute is modified by a client and update this " +
-                "attribute when its programming operation is modified locally by a user. The thermostat MAY support " +
-                "more than one active ThermostatProgrammingOperationMode. For example, the thermostat MAY operate " +
-                "simultaneously in Schedule Programming Mode and Recovery Mode.",
+                     "SHALL modify its programming operation when this attribute is modified by a client and update this " +
+                     "attribute when its programming operation is modified locally by a user. The thermostat MAY support " +
+                     "more than one active ThermostatProgrammingOperationMode. For example, the thermostat MAY operate " +
+                     "simultaneously in Schedule Programming Mode and Recovery Mode.",
             xref: { document: "cluster", section: "4.3.7.32" },
 
             children: [
@@ -450,7 +450,7 @@ Matter.children.push({
             tag: "attribute", name: "SetpointChangeSource", id: 0x30, type: "enum8", access: "R V",
             conformance: "O", constraint: "desc", default: 0,
             details: "This attribute specifies the source of the current active OccupiedCoolingSetpoint or " +
-                "OccupiedHeatingSetpoint (i.e., who or what determined the current setpoint).",
+                     "OccupiedHeatingSetpoint (i.e., who or what determined the current setpoint).",
             xref: { document: "cluster", section: "4.3.7.34" },
 
             children: [
@@ -473,9 +473,9 @@ Matter.children.push({
             tag: "attribute", name: "SetpointChangeAmount", id: 0x31, type: "temp-diff", access: "R V",
             conformance: "O", default: 32768, quality: "X",
             details: "This attribute specifies the delta between the current active OccupiedCoolingSetpoint or " +
-                "OccupiedHeatingSetpoint and the previous active setpoint. This attribute is meant to accompany the " +
-                "SetpointChangeSource attribute; devices implementing SetpointChangeAmount SHOULD also implement " +
-                "SetpointChangeSource.",
+                     "OccupiedHeatingSetpoint and the previous active setpoint. This attribute is meant to accompany the " +
+                     "SetpointChangeSource attribute; devices implementing SetpointChangeAmount SHOULD also implement " +
+                     "SetpointChangeSource.",
             xref: { document: "cluster", section: "4.3.7.35" }
         },
 
@@ -483,7 +483,7 @@ Matter.children.push({
             tag: "attribute", name: "SetpointChangeSourceTimestamp", id: 0x32, type: "utc", access: "R V",
             conformance: "O", default: 0,
             details: "This attribute specifies the time in UTC at which the SetpointChangeSourceAmount attribute change " +
-                "was recorded.",
+                     "was recorded.",
             xref: { document: "cluster", section: "4.3.7.36" }
         },
 
@@ -492,10 +492,10 @@ Matter.children.push({
             conformance: "SB", constraint: "OccupiedSetbackMin to OccupiedSetbackMax", default: null,
             quality: "X N",
             details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature " +
-                "Value to float above the OccupiedCooling setpoint (i.e., OccupiedCooling + OccupiedSetback) or " +
-                "below the OccupiedHeating setpoint (i.e., OccupiedHeating – OccupiedSetback) before initiating a " +
-                "state change to bring the temperature back to the user’s desired setpoint. This attribute is " +
-                "sometimes also referred to as the “span.”",
+                     "Value to float above the OccupiedCooling setpoint (i.e., OccupiedCooling + OccupiedSetback) or " +
+                     "below the OccupiedHeating setpoint (i.e., OccupiedHeating – OccupiedSetback) before initiating a " +
+                     "state change to bring the temperature back to the user’s desired setpoint. This attribute is " +
+                     "sometimes also referred to as the “span.”",
             xref: { document: "cluster", section: "4.3.7.37" }
         },
 
@@ -503,7 +503,7 @@ Matter.children.push({
             tag: "attribute", name: "OccupiedSetbackMin", id: 0x35, type: "temp-u8", access: "R V",
             conformance: "SB", constraint: "0 to OccupiedSetbackMax", default: null, quality: "X F",
             details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
-                "OccupiedSetback attribute to be configured by a user.",
+                     "OccupiedSetback attribute to be configured by a user.",
             xref: { document: "cluster", section: "4.3.7.38" }
         },
 
@@ -511,7 +511,7 @@ Matter.children.push({
             tag: "attribute", name: "OccupiedSetbackMax", id: 0x36, type: "temp-u8", access: "R V",
             conformance: "SB", constraint: "OccupiedSetbackMin to 25.4°C", default: null, quality: "X F",
             details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
-                "OccupiedSetback attribute to be configured by a user.",
+                     "OccupiedSetback attribute to be configured by a user.",
             xref: { document: "cluster", section: "4.3.7.39" }
         },
 
@@ -520,10 +520,10 @@ Matter.children.push({
             conformance: "SB & OCC", constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax", default: null,
             quality: "X N",
             details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature " +
-                "Value to float above the UnoccupiedCooling setpoint (i.e., UnoccupiedCooling + UnoccupiedSetback) " +
-                "or below the UnoccupiedHeating setpoint (i.e., UnoccupiedHeating - UnoccupiedSetback) before " +
-                "initiating a state change to bring the temperature back to the user’s desired setpoint. This " +
-                "attribute is sometimes also referred to as the “span.”",
+                     "Value to float above the UnoccupiedCooling setpoint (i.e., UnoccupiedCooling + UnoccupiedSetback) " +
+                     "or below the UnoccupiedHeating setpoint (i.e., UnoccupiedHeating - UnoccupiedSetback) before " +
+                     "initiating a state change to bring the temperature back to the user’s desired setpoint. This " +
+                     "attribute is sometimes also referred to as the “span.”",
             xref: { document: "cluster", section: "4.3.7.40" }
         },
 
@@ -531,7 +531,7 @@ Matter.children.push({
             tag: "attribute", name: "UnoccupiedSetbackMin", id: 0x38, type: "temp-u8", access: "R V",
             conformance: "SB & OCC", constraint: "0 to UnoccupiedSetbackMax", default: null, quality: "X F",
             details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
-                "UnoccupiedSetback attribute to be configured by a user.",
+                     "UnoccupiedSetback attribute to be configured by a user.",
             xref: { document: "cluster", section: "4.3.7.41" }
         },
 
@@ -540,7 +540,7 @@ Matter.children.push({
             conformance: "SB & OCC", constraint: "UnoccupiedSetbackMin to 25.4°C", default: null,
             quality: "X F",
             details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
-                "UnoccupiedSetback attribute to be configured by a user.",
+                     "UnoccupiedSetback attribute to be configured by a user.",
             xref: { document: "cluster", section: "4.3.7.42" }
         },
 
@@ -548,8 +548,8 @@ Matter.children.push({
             tag: "attribute", name: "EmergencyHeatDelta", id: 0x3a, type: "temp-u8", access: "RW VM",
             conformance: "O", default: { type: "celsius", value: 25 }, quality: "N",
             details: "This attribute specifies the delta between the LocalTemperature Value and the " +
-                "OccupiedHeatingSetpoint or UnoccupiedHeatingSetpoint attributes at which the Thermostat server will " +
-                "operate in emergency heat mode.",
+                     "OccupiedHeatingSetpoint or UnoccupiedHeatingSetpoint attributes at which the Thermostat server will " +
+                     "operate in emergency heat mode.",
             xref: { document: "cluster", section: "4.3.7.43" }
         },
 
@@ -557,7 +557,7 @@ Matter.children.push({
             tag: "attribute", name: "AcType", id: 0x40, type: "enum8", access: "RW VM", conformance: "O",
             constraint: "desc", default: 0, quality: "N",
             details: "This attribute indicates the type of Mini Split ACType of Mini Split AC is defined depending on how " +
-                "Cooling and Heating condition is achieved by Mini Split AC.",
+                     "Cooling and Heating condition is achieved by Mini Split AC.",
             xref: { document: "cluster", section: "4.3.7.44" },
 
             children: [
@@ -579,7 +579,7 @@ Matter.children.push({
             tag: "attribute", name: "AcCapacity", id: 0x41, type: "uint16", access: "RW VM", conformance: "O",
             default: 0, quality: "N",
             details: "This attribute indicates capacity of Mini Split AC in terms of the format defined by the " +
-                "ACCapacityFormat attribute",
+                     "ACCapacityFormat attribute",
             xref: { document: "cluster", section: "4.3.7.45" }
         },
 
@@ -615,7 +615,7 @@ Matter.children.push({
             tag: "attribute", name: "AcErrorCode", id: 0x44, type: "map32", access: "RW VM", conformance: "O",
             default: 0,
             details: "This attribute indicates the type of errors encountered within the Mini Split AC. Error values are " +
-                "reported with four bytes values. Each bit within the four bytes indicates the unique error.",
+                     "reported with four bytes values. Each bit within the four bytes indicates the unique error.",
             xref: { document: "cluster", section: "4.3.7.48" },
 
             children: [
@@ -649,7 +649,7 @@ Matter.children.push({
             tag: "attribute", name: "AcCoilTemperature", id: 0x46, type: "temperature", access: "R V",
             conformance: "O", default: 32768, quality: "X",
             details: "This attribute represents the temperature of the AC coil, as measured locally or remotely (over the " +
-                "network).",
+                     "network).",
             xref: { document: "cluster", section: "4.3.7.50" }
         },
 
@@ -755,9 +755,9 @@ Matter.children.push({
                     tag: "datatype", name: "TransitionTime", id: 0x0, type: "uint16", access: "RW", conformance: "M",
                     constraint: "0 to 1439",
                     details: "This field represents the start time of the schedule transition during the associated day. The time " +
-                        "will be represented by a 16 bits unsigned integer to designate the minutes since midnight. For " +
-                        "example, 6am will be represented by 360 minutes since midnight and 11:30pm will be represented by " +
-                        "1410 minutes since midnight.",
+                             "will be represented by a 16 bits unsigned integer to designate the minutes since midnight. For " +
+                             "example, 6am will be represented by 360 minutes since midnight and 11:30pm will be represented by " +
+                             "1410 minutes since midnight.",
                     xref: { document: "cluster", section: "4.3.9.5.1" }
                 },
 

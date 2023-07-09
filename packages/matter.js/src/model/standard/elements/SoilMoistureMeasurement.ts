@@ -24,7 +24,7 @@ Matter.children.push({
             tag: "attribute", name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V",
             conformance: "M", constraint: "0 to MaxMeasuredValue1", quality: "X",
             details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
-                "The null value means this attribute is not defined. See Measured Value for more details.",
+                     "The null value means this attribute is not defined. See Measured Value for more details.",
             xref: { document: "cluster", section: "2.6.4.2" }
         },
 
@@ -32,7 +32,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V",
             conformance: "M", constraint: "MinMeasuredValue1 to 10000", quality: "X",
             details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
-                "The null value means this attribute is not defined. See Measured Value for more details.",
+                     "The null value means this attribute is not defined. See Measured Value for more details.",
             xref: { document: "cluster", section: "2.6.4.3" }
         },
 

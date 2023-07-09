@@ -19,9 +19,9 @@ Matter.children.push({
             tag: "attribute", name: "Breadcrumb", id: 0x0, type: "uint64", access: "RW VA", conformance: "M",
             default: 0,
             details: "This attribute allows for the storage of a client-provided small payload which Administrators and " +
-                "Commissioners MAY write and then subsequently read, to keep track of their own progress. This MAY " +
-                "be used by the Commissioner to avoid repeating already-executed actions upon re-establishing a " +
-                "commissioning link after an error.",
+                     "Commissioners MAY write and then subsequently read, to keep track of their own progress. This MAY " +
+                     "be used by the Commissioner to avoid repeating already-executed actions upon re-establishing a " +
+                     "commissioning link after an error.",
             xref: { document: "core", section: "11.9.5.1" }
         },
 
@@ -29,7 +29,7 @@ Matter.children.push({
             tag: "attribute", name: "BasicCommissioningInfo", id: 0x1, type: "BasicCommissioningInfo",
             access: "R V", conformance: "M", constraint: "desc", quality: "F",
             details: "This attribute SHALL describe critical parameters needed at the beginning of commissioning flow. " +
-                "See BasicCommissioningInfo for more information.",
+                     "See BasicCommissioningInfo for more information.",
             xref: { document: "core", section: "11.9.5.2" }
         },
 
@@ -44,10 +44,10 @@ Matter.children.push({
             tag: "attribute", name: "LocationCapability", id: 0x3, type: "RegulatoryLocationTypeEnum",
             access: "R V", conformance: "M", default: 2, quality: "F",
             details: "LocationCapability is statically set by the manufacturer and indicates if this Node needs to be " +
-                "told an exact RegulatoryLocation. For example a Node which is \"Indoor Only\" would not be certified " +
-                "for outdoor use at all, and thus there is no need for a commissioner to set or ask the user about " +
-                "whether the device will be used inside or outside. However a device which states its capability is " +
-                "\"Indoor/Outdoor\" means it would like clarification if possible.",
+                     "told an exact RegulatoryLocation. For example a Node which is \"Indoor Only\" would not be certified " +
+                     "for outdoor use at all, and thus there is no need for a commissioner to set or ask the user about " +
+                     "whether the device will be used inside or outside. However a device which states its capability is " +
+                     "\"Indoor/Outdoor\" means it would like clarification if possible.",
             xref: { document: "core", section: "11.9.5.4" }
         },
 
@@ -55,8 +55,8 @@ Matter.children.push({
             tag: "attribute", name: "SupportsConcurrentConnection", id: 0x4, type: "bool", access: "R V",
             conformance: "M", default: true, quality: "F",
             details: "This attribute SHALL indicate whether this device supports \"concurrent connection flow\" " +
-                "commissioning mode (see Section 5.5, “Commissioning Flows”). If false, the device only supports " +
-                "\"non-concurrent connection flow\" mode.",
+                     "commissioning mode (see Section 5.5, “Commissioning Flows”). If false, the device only supports " +
+                     "\"non-concurrent connection flow\" mode.",
             xref: { document: "core", section: "11.9.5.5" }
         },
 
@@ -80,7 +80,7 @@ Matter.children.push({
                     tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M",
                     default: 0,
                     details: "This field SHALL contain the result of the operation, based on the behavior specified in the " +
-                        "functional description of the ArmFailSafe command.",
+                             "functional description of the ArmFailSafe command.",
                     xref: { document: "core", section: "11.9.6.3.1" }
                 },
 
@@ -97,7 +97,7 @@ Matter.children.push({
             tag: "command", name: "SetRegulatoryConfig", id: 0x2, access: "A", conformance: "M",
             direction: "request", response: "SetRegulatoryConfigResponse",
             details: "This SHALL add or update the regulatory configuration in the RegulatoryConfig Attribute to the " +
-                "value provided in the NewRegulatoryConfig field.",
+                     "value provided in the NewRegulatoryConfig field.",
             xref: { document: "core", section: "11.9.6.4" },
 
             children: [
@@ -164,7 +164,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "RegulatoryLocationTypeEnum", type: "enum8", conformance: "M",
             details: "This enumeration is used by the RegulatoryConfig and LocationCapability attributes to indicate " +
-                "possible radio usage.",
+                     "possible radio usage.",
             xref: { document: "core", section: "11.9.4.2" },
             children: [
                 { tag: "datatype", name: "Indoor", id: 0x0, conformance: "M" },
@@ -182,10 +182,10 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "FailSafeExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M",
                     details: "This field SHALL contain a conservative initial duration (in seconds) to set in the FailSafe for " +
-                        "the commissioning flow to complete successfully. This may vary depending on the speed or sleepiness " +
-                        "of the Commissionee. This value, if used in the ArmFailSafe command’s ExpiryLengthSeconds field " +
-                        "SHOULD allow a Commissioner to proceed with a nominal commissioning without having to-rearm the " +
-                        "fail-safe, with some margin.",
+                             "the commissioning flow to complete successfully. This may vary depending on the speed or sleepiness " +
+                             "of the Commissionee. This value, if used in the ArmFailSafe command’s ExpiryLengthSeconds field " +
+                             "SHOULD allow a Commissioner to proceed with a nominal commissioning without having to-rearm the " +
+                             "fail-safe, with some margin.",
                     xref: { document: "core", section: "11.9.4.3.1" }
                 },
 
@@ -193,7 +193,7 @@ Matter.children.push({
                     tag: "datatype", name: "MaxCumulativeFailsafeSeconds", id: 0x1, type: "uint16", conformance: "M",
                     constraint: "desc",
                     details: "This field SHALL contain a conservative value in seconds denoting the maximum total duration for " +
-                        "which a fail safe timer can be re-armed. See Section 11.9.6.2.1, “Fail Safe Context”.",
+                             "which a fail safe timer can be re-armed. See Section 11.9.6.2.1, “Fail Safe Context”.",
                     xref: { document: "core", section: "11.9.4.3.2" }
                 }
             ]

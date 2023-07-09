@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "WiFiNetworkDiagnostics", id: 0x36, classification: "node",
     description: "WiFi Network Diagnostics",
     details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
-        "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
+             "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
     xref: { document: "core", section: "11.14" },
 
     children: [
@@ -24,12 +24,12 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
                     details: "Node makes available the counts for the number of received and transmitted packets on the Wi-Fi " +
-                        "interface."
+                             "interface."
                 },
                 {
                     tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
                     details: "Node makes available the counts for the number of errors that have occurred during the reception " +
-                        "and transmission of packets on the Wi-Fi interface."
+                             "and transmission of packets on the Wi-Fi interface."
                 }
             ]
         },
@@ -38,7 +38,7 @@ Matter.children.push({
             tag: "attribute", name: "Bssid", id: 0x0, type: "octstr", access: "R V", conformance: "M",
             constraint: "6", default: null, quality: "X",
             details: "The BSSID attribute SHALL indicate the BSSID for which the Wi-Fi network the Node is currently " +
-                "connected.",
+                     "connected.",
             xref: { document: "core", section: "11.14.6.1" }
         },
 
@@ -53,7 +53,7 @@ Matter.children.push({
             tag: "attribute", name: "WiFiVersion", id: 0x2, type: "WiFiVersionEnum", access: "R V",
             conformance: "M", default: null, quality: "X",
             details: "The WiFiVersion attribute SHALL indicate the current 802.11 standard version in use by the Node, " +
-                "per the table below.",
+                     "per the table below.",
             xref: { document: "core", section: "11.14.6.3" }
         },
 
@@ -61,7 +61,7 @@ Matter.children.push({
             tag: "attribute", name: "ChannelNumber", id: 0x3, type: "uint16", access: "R V", conformance: "M",
             default: 0, quality: "X",
             details: "The ChannelNumber attribute SHALL indicate the channel that Wi-Fi communication is currently " +
-                "operating on.",
+                     "operating on.",
             xref: { document: "core", section: "11.14.6.4" }
         },
 
@@ -76,8 +76,8 @@ Matter.children.push({
             tag: "attribute", name: "BeaconLostCount", id: 0x5, type: "uint32", access: "R V",
             conformance: "ERRCNT", default: 0, quality: "X C",
             details: "The BeaconLostCount attribute SHALL indicate the count of the number of missed beacons the Node has " +
-                "detected. If the Node does not have an ability to count beacons expected and not received, this " +
-                "value MAY remain set to zero.",
+                     "detected. If the Node does not have an ability to count beacons expected and not received, this " +
+                     "value MAY remain set to zero.",
             xref: { document: "core", section: "11.14.6.6" }
         },
 
@@ -85,9 +85,9 @@ Matter.children.push({
             tag: "attribute", name: "BeaconRxCount", id: 0x6, type: "uint32", access: "R V",
             conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The BeaconRxCount attribute SHALL indicate the count of the number of received beacons. The total " +
-                "number of expected beacons that could have been received during the interval since association " +
-                "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
-                "report count of beacons received, this value MAY remain set to zero.",
+                     "number of expected beacons that could have been received during the interval since association " +
+                     "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
+                     "report count of beacons received, this value MAY remain set to zero.",
             xref: { document: "core", section: "11.14.6.7" }
         },
 
@@ -102,7 +102,7 @@ Matter.children.push({
             tag: "attribute", name: "PacketMulticastTxCount", id: 0x8, type: "uint32", access: "R V",
             conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The PacketMulticastTxCount attribute SHALL indicate the number of multicast packets transmitted by " +
-                "the Node.",
+                     "the Node.",
             xref: { document: "core", section: "11.14.6.9" }
         },
 
@@ -110,7 +110,7 @@ Matter.children.push({
             tag: "attribute", name: "PacketUnicastRxCount", id: 0x9, type: "uint32", access: "R V",
             conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The PacketUnicastRxCount attribute SHALL indicate the number of unicast packets received by the " +
-                "Node.",
+                     "Node.",
             xref: { document: "core", section: "11.14.6.10" }
         },
 
@@ -118,7 +118,7 @@ Matter.children.push({
             tag: "attribute", name: "PacketUnicastTxCount", id: 0xa, type: "uint32", access: "R V",
             conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The PacketUnicastTxCount attribute SHALL indicate the number of unicast packets transmitted by the " +
-                "Node.",
+                     "Node.",
             xref: { document: "core", section: "11.14.6.11" }
         },
 
@@ -126,7 +126,7 @@ Matter.children.push({
             tag: "attribute", name: "CurrentMaxRate", id: 0xb, type: "uint64", access: "R V", conformance: "O",
             default: 0, quality: "X C",
             details: "The CurrentMaxRate attribute SHALL indicate the current maximum PHY rate of transfer of data in " +
-                "bits-per-second.",
+                     "bits-per-second.",
             xref: { document: "core", section: "11.14.6.12" }
         },
 
@@ -134,31 +134,31 @@ Matter.children.push({
             tag: "attribute", name: "OverrunCount", id: 0xc, type: "uint64", access: "R V",
             conformance: "ERRCNT", default: 0, quality: "X C",
             details: "The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or " +
-                "egress, due to lack of buffer memory to retain all packets on the network interface. The " +
-                "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+                     "egress, due to lack of buffer memory to retain all packets on the network interface. The " +
+                     "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
             xref: { document: "core", section: "11.14.6.13" }
         },
 
         {
             tag: "event", name: "Disconnection", id: 0x0, access: "V", conformance: "O", priority: "info",
             details: "The Disconnection Event SHALL indicate that a Node’s Wi-Fi connection has been disconnected as a " +
-                "result of de-authenticated or dis-association and indicates the reason.",
+                     "result of de-authenticated or dis-association and indicates the reason.",
             xref: { document: "core", section: "11.14.8.1" },
 
-            children: [{
+            children: [ {
                 tag: "datatype", name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M",
                 details: "This field SHALL contain the Reason Code field value for the Disassociation or Deauthentication " +
-                    "event that caused the disconnection and the value SHALL align with Table 9-49 \"Reason codes\" of " +
-                    "IEEE 802.11-2020.",
+                         "event that caused the disconnection and the value SHALL align with Table 9-49 \"Reason codes\" of " +
+                         "IEEE 802.11-2020.",
                 xref: { document: "core", section: "11.14.8.1.1" }
-            }]
+            } ]
         },
 
         {
             tag: "event", name: "AssociationFailure", id: 0x1, access: "V", conformance: "O", priority: "info",
             details: "The AssociationFailure event SHALL indicate that a Node has attempted to connect, or reconnect, to " +
-                "a Wi-Fi access point, but is unable to successfully associate or authenticate, after exhausting all " +
-                "internal retries of its supplicant.",
+                     "a Wi-Fi access point, but is unable to successfully associate or authenticate, after exhausting all " +
+                     "internal retries of its supplicant.",
             xref: { document: "core", section: "11.14.8.2" },
 
             children: [
@@ -172,8 +172,8 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Status", id: 0x1, type: "uint16", conformance: "M",
                     details: "The Status field SHALL be set to the Status Code value that was present in the last frame related " +
-                        "to association where Status Code was not equal to zero and which caused the failure of a last trial " +
-                        "attempt, if this last failure was due to one of the following Management frames:",
+                             "to association where Status Code was not equal to zero and which caused the failure of a last trial " +
+                             "attempt, if this last failure was due to one of the following Management frames:",
                     xref: { document: "core", section: "11.14.8.2.2" }
                 }
             ]
@@ -182,8 +182,8 @@ Matter.children.push({
         {
             tag: "event", name: "ConnectionStatus", id: 0x2, access: "V", conformance: "O", priority: "info",
             details: "The ConnectionStatus Event SHALL indicate that a Node’s connection status to a Wi-Fi network has " +
-                "changed. Connected, in this context, SHALL mean that a Node acting as a Wi-Fi station is " +
-                "successfully associated to a Wi-Fi Access Point.",
+                     "changed. Connected, in this context, SHALL mean that a Node acting as a Wi-Fi station is " +
+                     "successfully associated to a Wi-Fi Access Point.",
             xref: { document: "core", section: "11.14.8.3" },
             children: [
                 { tag: "datatype", name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" }

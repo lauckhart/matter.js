@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "FaultInjection", id: 0xfff1fc06, description: "Fault Injection",
     details: "The Fault Injection Cluster provide a means for a test harness to configure faults(for example " +
-        "triggering a fault in the system).",
+             "triggering a fault in the system).",
 
     children: [
         {

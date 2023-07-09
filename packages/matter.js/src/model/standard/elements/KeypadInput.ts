@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "KeypadInput", id: 0x509, classification: "application",
     description: "Keypad Input",
     details: "This cluster provides an interface for controlling a device like a TV using action commands such as " +
-        "UP, DOWN, and SELECT.",
+             "UP, DOWN, and SELECT.",
     xref: { document: "cluster", section: "6.8" },
 
     children: [
@@ -38,23 +38,23 @@ Matter.children.push({
             response: "SendKeyResponse",
             details: "Upon receipt, this SHALL process a keycode as input to the media device.",
             xref: { document: "cluster", section: "6.8.3.1" },
-            children: [{
+            children: [ {
                 tag: "datatype", name: "KeyCode", id: 0x0, type: "CecKeyCode", conformance: "M",
                 details: "This SHALL indicate the key code to process.",
                 xref: { document: "cluster", section: "6.8.3.1.1" }
-            }]
+            } ]
         },
 
         {
             tag: "command", name: "SendKeyResponse", id: 0x1, conformance: "M", direction: "response",
             details: "This command SHALL be generated in response to a SendKey command. The data for this command SHALL " +
-                "be as follows:",
+                     "be as follows:",
             xref: { document: "cluster", section: "6.8.3.2" },
-            children: [{
+            children: [ {
                 tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
                 details: "This SHALL indicate the status of the command.",
                 xref: { document: "cluster", section: "6.8.3.2.1" }
-            }]
+            } ]
         },
 
         {

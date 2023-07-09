@@ -19,19 +19,19 @@ Matter.children.push({
             tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW F VA",
             conformance: "M", constraint: "desc", default: [],
             details: "This field is a list of ProviderLocationStruct whose entries SHALL be set by Administrators, either " +
-                "during Commissioning or at a later time, to set the Provider Location for the default OTA Provider " +
-                "Node to use for software updates on a given Fabric.",
+                     "during Commissioning or at a later time, to set the Provider Location for the default OTA Provider " +
+                     "Node to use for software updates on a given Fabric.",
             xref: { document: "core", section: "11.19.7.5.1" },
-            children: [{ tag: "datatype", name: "entry", type: "ProviderLocationStruct" }]
+            children: [ { tag: "datatype", name: "entry", type: "ProviderLocationStruct" } ]
         },
 
         {
             tag: "attribute", name: "UpdatePossible", id: 0x1, type: "bool", access: "R V", conformance: "M",
             default: true,
             details: "This field SHALL be set to True if the OTA Requestor is currently able to be updated. Otherwise, it " +
-                "SHALL be set to False in case of any condition preventing update being possible, such as " +
-                "insufficient capacity of an internal battery. This field is merely informational for diagnostics " +
-                "purposes and SHALL NOT affect the responses provided by an OTA Provider to an OTA Requestor.",
+                     "SHALL be set to False in case of any condition preventing update being possible, such as " +
+                     "insufficient capacity of an internal battery. This field is merely informational for diagnostics " +
+                     "purposes and SHALL NOT affect the responses provided by an OTA Provider to an OTA Requestor.",
             xref: { document: "core", section: "11.19.7.5.2" }
         },
 
@@ -39,7 +39,7 @@ Matter.children.push({
             tag: "attribute", name: "UpdateState", id: 0x2, type: "UpdateStateEnum", access: "R V",
             conformance: "M", default: 0,
             details: "This field SHALL reflect the current state of the OTA Requestor with regards to obtaining software " +
-                "updates. See Section 11.19.7.4.2, “UpdateStateEnum” for possible values.",
+                     "updates. See Section 11.19.7.4.2, “UpdateStateEnum” for possible values.",
             xref: { document: "core", section: "11.19.7.5.3" }
         },
 
@@ -47,14 +47,14 @@ Matter.children.push({
             tag: "attribute", name: "UpdateStateProgress", id: 0x3, type: "uint8", access: "R V",
             conformance: "M", constraint: "0 to 100", default: null, quality: "X",
             details: "This field SHALL reflect the percentage value of progress, relative to the current UpdateState, if " +
-                "applicable to the state.",
+                     "applicable to the state.",
             xref: { document: "core", section: "11.19.7.5.4" }
         },
 
         {
             tag: "event", name: "StateTransition", id: 0x0, access: "V", conformance: "M", priority: "info",
             details: "This event SHALL be generated when a change of the UpdateState attribute occurs due to an OTA " +
-                "Requestor moving through the states necessary to query for updates.",
+                     "Requestor moving through the states necessary to query for updates.",
             xref: { document: "core", section: "11.19.7.7.1" },
 
             children: [
@@ -71,8 +71,8 @@ Matter.children.push({
         {
             tag: "event", name: "VersionApplied", id: 0x1, access: "V", conformance: "M", priority: "critical",
             details: "This event SHALL be generated whenever a new version starts executing after being applied due to a " +
-                "software update. This event SHOULD be generated even if a software update was done using means " +
-                "outside of this cluster.",
+                     "software update. This event SHOULD be generated even if a software update was done using means " +
+                     "outside of this cluster.",
             xref: { document: "core", section: "11.19.7.7.6" },
             children: [
                 { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" },

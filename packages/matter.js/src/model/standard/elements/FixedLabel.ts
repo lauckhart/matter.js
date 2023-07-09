@@ -12,13 +12,13 @@ Matter.children.push({
     tag: "cluster", name: "FixedLabel", id: 0x40, type: "Label", classification: "endpoint",
     description: "Fixed Label",
     details: "The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read " +
-        "only labels.",
+             "only labels.",
     xref: { document: "core", section: "9.8" },
 
-    children: [{
+    children: [ {
         tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "R V", conformance: "M",
         default: [], quality: "N",
         xref: { document: "core", section: "9.8.4" },
-        children: [{ tag: "datatype", name: "entry", type: "LabelStruct" }]
-    }]
+        children: [ { tag: "datatype", name: "entry", type: "LabelStruct" } ]
+    } ]
 });
