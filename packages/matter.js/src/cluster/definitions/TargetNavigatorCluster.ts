@@ -27,7 +27,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export function TargetNavigatorCluster() {
     const cluster = Cluster({ ...TargetNavigatorCluster.Metadata, ...TargetNavigatorCluster.BaseComponent });
     return cluster as unknown as TargetNavigatorCluster.Type;
-};
+}
 
 /**
  * This indicates an object describing the navigable target.
@@ -90,7 +90,7 @@ export const enum StatusEnum {
      * Target request is not allowed in current state.
      */
     NotAllowed = 2
-};
+}
 
 /**
  * This command SHALL be generated in response to NavigateTarget command.
@@ -175,4 +175,4 @@ export namespace TargetNavigatorCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

@@ -30,7 +30,7 @@ import { TlvEnum, TlvUInt16, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js
 export function GeneralDiagnosticsCluster() {
     const cluster = Cluster({ ...GeneralDiagnosticsCluster.Metadata, ...GeneralDiagnosticsCluster.BaseComponent });
     return cluster as unknown as GeneralDiagnosticsCluster.Type;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.4
@@ -41,7 +41,7 @@ export const enum InterfaceTypeEnum {
     Ethernet = 2,
     Cellular = 3,
     Thread = 4
-};
+}
 
 /**
  * This structure describes a network interface supported by the Node, as provided in the NetworkInterfaces attribute.
@@ -125,7 +125,7 @@ export const enum BootReasonEnum {
     HardwareWatchdogReset = 4,
     SoftwareUpdateCompleted = 5,
     SoftwareReset = 6
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.1
@@ -142,7 +142,7 @@ export const enum HardwareFaultEnum {
     UserInterfaceFault = 8,
     NonVolatileMemoryError = 9,
     TamperDetected = 10
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.2
@@ -155,7 +155,7 @@ export const enum RadioFaultEnum {
     NfcFault = 4,
     BleFault = 5,
     EthernetFault = 6
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.3
@@ -165,7 +165,7 @@ export const enum NetworkFaultEnum {
     HardwareFailure = 1,
     NetworkJammed = 2,
     ConnectionFailed = 3
-};
+}
 
 /**
  * This command SHALL be supported to provide a means for certification tests to trigger some test- plan-specific
@@ -436,4 +436,4 @@ export namespace GeneralDiagnosticsCluster {
         commands: { ...BaseComponent.commands },
         events: { ...BaseComponent.events }
     });
-};
+}

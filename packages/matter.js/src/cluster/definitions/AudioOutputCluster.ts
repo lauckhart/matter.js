@@ -37,7 +37,7 @@ export function AudioOutputCluster<T extends AudioOutputCluster.Feature[]>(...fe
     });
     extendCluster(cluster, AudioOutputCluster.NameUpdatesComponent, { nameUpdates: true });
     return cluster as unknown as AudioOutputCluster.Type<BitFlags<typeof AudioOutputCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * The type of output, expressed as an enum, with the following values:
@@ -55,7 +55,7 @@ export const enum OutputTypeEnum {
     Headphone = 3,
     Internal = 4,
     Other = 5
-};
+}
 
 /**
  * This contains information about an output.
@@ -111,7 +111,7 @@ export namespace AudioOutputCluster {
          * Supports updates to output names
          */
         NameUpdates = "NameUpdates"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -193,4 +193,4 @@ export namespace AudioOutputCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands, ...NameUpdatesComponent.commands }
     });
-};
+}

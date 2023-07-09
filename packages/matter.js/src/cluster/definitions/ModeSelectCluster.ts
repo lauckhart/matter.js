@@ -38,7 +38,7 @@ export function ModeSelectCluster<T extends ModeSelectCluster.Feature[]>(...feat
     });
     extendCluster(cluster, ModeSelectCluster.OnOffComponent, { onOff: true });
     return cluster as unknown as ModeSelectCluster.Type<BitFlags<typeof ModeSelectCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * A Semantic Tag is meant to be interpreted by the client for the purpose the cluster serves.
@@ -121,7 +121,7 @@ export namespace ModeSelectCluster {
          * Dependency with the On/Off cluster
          */
         OnOff = "OnOff"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -245,4 +245,4 @@ export namespace ModeSelectCluster {
         attributes: { ...BaseComponent.attributes, ...OnOffComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

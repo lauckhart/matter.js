@@ -24,7 +24,7 @@ import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
 export function FixedLabelCluster() {
     const cluster = Cluster({ ...FixedLabelCluster.Metadata, ...FixedLabelCluster.BaseComponent });
     return cluster as unknown as FixedLabelCluster.Type;
-};
+}
 
 export namespace FixedLabelCluster {
     export type Type = 
@@ -55,4 +55,4 @@ export namespace FixedLabelCluster {
      * This cluster supports all FixedLabel features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

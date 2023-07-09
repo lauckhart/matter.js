@@ -26,7 +26,7 @@ export function ThermostatUserInterfaceConfigurationCluster() {
         ...ThermostatUserInterfaceConfigurationCluster.BaseComponent
     });
     return cluster as unknown as ThermostatUserInterfaceConfigurationCluster.Type;
-};
+}
 
 /**
  * The TemperatureDisplayMode attribute specifies the units of the temperature displayed on the thermostat screen.
@@ -43,7 +43,7 @@ export const enum TemperatureDisplayMode {
      * Temperature displayed in °F
      */
     Fahrenheit = 1
-};
+}
 
 /**
  * The KeypadLockout attribute specifies the level of functionality that is available to the user via the keypad.
@@ -80,7 +80,7 @@ export const enum KeypadLockout {
      * Least functionality available to the user
      */
     Lockout5 = 5
-};
+}
 
 /**
  * The ScheduleProgrammingVisibility attribute is used to hide the weekly schedule programming functionality or menu on
@@ -99,7 +99,7 @@ export const enum ScheduleProgrammingVisibility {
      * Local schedule programming functionality is disabled at the thermostat
      */
     ScheduleProgrammingDenied = 1
-};
+}
 
 export namespace ThermostatUserInterfaceConfigurationCluster {
     export type Type = 
@@ -168,4 +168,4 @@ export namespace ThermostatUserInterfaceConfigurationCluster {
      * This cluster supports all ThermostatUserInterfaceConfiguration features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

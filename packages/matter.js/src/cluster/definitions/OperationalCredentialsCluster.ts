@@ -22,14 +22,14 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  * This cluster is used to add or remove Operational Credentials on a Commissionee or Node, as well as manage the
  * associated Fabrics.
  *
- * This function creates a OperationalCredentials cluster.
+ * This function creates an OperationalCredentials cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17
  */
 export function OperationalCredentialsCluster() {
     const cluster = Cluster({ ...OperationalCredentialsCluster.Metadata, ...OperationalCredentialsCluster.BaseComponent });
     return cluster as unknown as OperationalCredentialsCluster.Type;
-};
+}
 
 /**
  * This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a given Node.
@@ -143,7 +143,7 @@ export const TlvAttestationResponseRequest = TlvObject({
 export const enum CertificateChainTypeEnum {
     DacCertificate = 1,
     PaiCertificate = 2
-};
+}
 
 /**
  * If the CertificateType is not a valid value per CertificateChainTypeEnum then the command SHALL fail with a Status
@@ -248,7 +248,7 @@ export const enum NodeOperationalCertStatusEnum {
     FabricConflict = 9,
     LabelConflict = 10,
     InvalidFabricIndex = 11
-};
+}
 
 /**
  * This command SHALL be generated in response to the following commands:
@@ -508,4 +508,4 @@ export namespace OperationalCredentialsCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

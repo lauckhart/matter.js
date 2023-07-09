@@ -87,8 +87,7 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
         const variantPriorities = this.priority.get(tag, fieldName);
 
         for (const variantName of variantPriorities) {
-            let variantValue = variantValues[variantName]?.[fieldName];
-
+            const variantValue = variantValues[variantName]?.[fieldName];
             if (variantValue !== undefined) {
                 return variantValue;
             }
@@ -147,7 +146,7 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
 
         return type;
     }
-};
+}
 
 /**
  * Utility class for working with merge priorities.

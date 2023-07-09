@@ -49,4 +49,4 @@ export namespace LabelCluster {
             labelList: Attribute(0, TlvArray(TlvLabelStruct), { default: [] })
         }
     });
-};
+}

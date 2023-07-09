@@ -42,7 +42,7 @@ export function ColorControlCluster<T extends ColorControlCluster.Feature[]>(...
     extendCluster(cluster, ColorControlCluster.ColorLoopComponent, { colorLoop: true });
     extendCluster(cluster, ColorControlCluster.HueSaturationOrXyComponent, { hueSaturation: true }, { xy: true });
     return cluster as unknown as ColorControlCluster.Type<BitFlags<typeof ColorControlCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * The DriftCompensation attribute indicates what mechanism, if any, is in use for compensation for color/intensity
@@ -56,7 +56,7 @@ export const enum DriftCompensation {
     TemperatureMonitoring = 2,
     OpticalLuminanceMonitoringAndFeedback = 3,
     OpticalColorMonitoringAndFeedback = 4
-};
+}
 
 /**
  * The ColorMode attribute indicates which attributes are currently determining the color of the device.
@@ -67,7 +67,7 @@ export const enum ColorMode {
     CurrentHueAndCurrentSaturation = 0,
     CurrentXAndCurrentY = 1,
     ColorTemperatureMireds = 2
-};
+}
 
 /**
  * The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap that
@@ -93,7 +93,7 @@ export const enum EnhancedColorMode {
     CurrentXAndCurrentY = 1,
     ColorTemperatureMireds = 2,
     EnhancedCurrentHueAndCurrentSaturation = 3
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.2
@@ -103,7 +103,7 @@ export const enum ColorControlDirection {
     LongestDistance = 1,
     Up = 2,
     Down = 3
-};
+}
 
 /**
  * The MoveToHue command SHALL have the following data fields:
@@ -143,7 +143,7 @@ export const enum MoveMode {
     Stop = 0,
     Up = 1,
     Down = 3
-};
+}
 
 /**
  * The MoveHue command SHALL have the following data fields:
@@ -179,7 +179,7 @@ export const TlvMoveHueRequest = TlvObject({
 export const enum StepMode {
     Up = 1,
     Down = 3
-};
+}
 
 /**
  * The StepHue command SHALL have the following data fields:
@@ -619,7 +619,7 @@ export const enum Action {
     DeActivateTheColorLoop = 0,
     ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField = 1,
     ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute = 2
-};
+}
 
 /**
  * The Direction field specifies the direction for the color loop if the Update Direction field of the UpdateFlags
@@ -631,7 +631,7 @@ export const enum Action {
 export const enum ColorLoopSetDirection {
     DecrementTheHueInTheColorLoop = 0,
     IncrementTheHueInTheColorLoop = 1
-};
+}
 
 /**
  * The Color Loop Set command allows a color loop to be activated such that the color lamp cycles through its range of
@@ -731,7 +731,7 @@ export namespace ColorControlCluster {
          * Supports specification of color temperature.
          */
         ColorTemperature = "ColorTemperature"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -1467,4 +1467,4 @@ export namespace ColorControlCluster {
             ...HueSaturationOrXyComponent.commands
         }
     });
-};
+}

@@ -51,7 +51,7 @@ export function ThermostatCluster<T extends ThermostatCluster.Feature[]>(...feat
     );
 
     return cluster as unknown as ThermostatCluster.Type<BitFlags<typeof ThermostatCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * This attribute indicates when the local temperature, outdoor temperature and occupancy are being sensed by remote
@@ -114,7 +114,7 @@ export const enum ControlSequenceOfOperation {
      * All modes are possible
      */
     CoolingAndHeatingWithReheat = 5
-};
+}
 
 /**
  * This attribute specifies the current operating mode of the thermostat, It SHALL be set to one of the following
@@ -156,7 +156,7 @@ export const enum SystemMode {
     FanOnly = 7,
     Dry = 8,
     Sleep = 9
-};
+}
 
 /**
  * This attribute specifies whether each of the alarms listed below is enabled. When the bit number corresponding to
@@ -192,7 +192,7 @@ export const enum TemperatureSetpointHold {
      * Maintain current setpoint, regardless of schedule transitions
      */
     SetpointHoldOn = 1
-};
+}
 
 /**
  * This attribute determines the operational state of the thermostat’s programming. The thermostat SHALL modify its
@@ -292,7 +292,7 @@ export const enum SetpointChangeSource {
      * Externally-initiated setpoint change (e.g., DRLC cluster command, attribute write)
      */
     External = 2
-};
+}
 
 /**
  * This attribute indicates the type of Mini Split ACType of Mini Split AC is defined depending on how Cooling and
@@ -325,7 +325,7 @@ export const enum AcType {
      * Heat Pump and Inverter
      */
     HeatPumpInverter = 4
-};
+}
 
 /**
  * This attribute indicates type of refrigerant used within the Mini Split AC.
@@ -352,7 +352,7 @@ export const enum AcRefrigerantType {
      * R407c Refrigerant
      */
     R407C = 3
-};
+}
 
 /**
  * This attribute indicates type of Compressor used within the Mini Split AC.
@@ -379,7 +379,7 @@ export const enum AcCompressorType {
      * Max working ambient 52 °C
      */
     T3 = 3
-};
+}
 
 /**
  * This attribute indicates the type of errors encountered within the Mini Split AC. Error values are reported with
@@ -446,7 +446,7 @@ export const enum AcLouverPosition {
      * Three Quarters Open
      */
     ThreeQuarters = 5
-};
+}
 
 /**
  * This attribute specifies the format for the ACCapacity attribute.
@@ -458,13 +458,13 @@ export const enum AcCapacityFormat {
      * British Thermal Unit per Hour
      */
     BtUh = 0
-};
+}
 
 export const enum SetpointAdjustMode {
     Heat = 0,
     Cool = 1,
     Both = 2
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
@@ -491,7 +491,7 @@ export const enum ThermostatRunningMode {
     Off = 0,
     Cool = 3,
     Heat = 4
-};
+}
 
 /**
  * This attribute represents the day of the week that this thermostat considers to be the start of week for weekly set
@@ -507,7 +507,7 @@ export const enum StartOfWeek {
     Thursday = 4,
     Friday = 5,
     Saturday = 6
-};
+}
 
 export const TlvDayOfWeekBits = {
     sunday: BitFlag(1),
@@ -627,7 +627,7 @@ export namespace ThermostatCluster {
          * Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute
          */
         LocalTemperatureNotExposed = "LocalTemperatureNotExposed"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -1347,4 +1347,4 @@ export namespace ThermostatCluster {
 
         commands: { ...BaseComponent.commands, ...ScheduleConfigurationComponent.commands }
     });
-};
+}

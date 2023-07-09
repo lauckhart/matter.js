@@ -260,10 +260,10 @@ export class Logger {
      * Perform operations in a nested logging context.  Messages will be
      * indented while the context executes.
      */
-    static nest(context: () => any) {
+    static nest<T>(context: () => T): T {
         this.nestingLevel++;
         try {
-            context();
+            return context();
         } finally {
             this.nestingLevel--;
         }

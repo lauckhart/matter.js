@@ -26,7 +26,7 @@ import { TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
 export function DescriptorCluster() {
     const cluster = Cluster({ ...DescriptorCluster.Metadata, ...DescriptorCluster.BaseComponent });
     return cluster as unknown as DescriptorCluster.Type;
-};
+}
 
 /**
  * The device type and revision define endpoint conformance to a release of a device type definition. See the Data
@@ -107,4 +107,4 @@ export namespace DescriptorCluster {
      * This cluster supports all Descriptor features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

@@ -76,7 +76,7 @@ export function DoorLockCluster<T extends DoorLockCluster.Feature[]>(...features
     extendCluster(cluster, DoorLockCluster.RfidCredentialNotUserComponent, { rfidCredential: true, user: false });
     preventCluster(cluster, { user: true, pinCredential: false, rfidCredential: false });
     return cluster as unknown as DoorLockCluster.Type<BitFlags<typeof DoorLockCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * This attribute has the following possible values:
@@ -98,7 +98,7 @@ export const enum LockState {
      * Lock state is fully unlocked
      */
     Unlocked = 2
-};
+}
 
 /**
  * The LockType attribute is indicated by an enumeration:
@@ -160,7 +160,7 @@ export const enum LockType {
      * Physical lock type is door furniture
      */
     DoorFurniture = 10
-};
+}
 
 /**
  * This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All operating modes
@@ -296,7 +296,7 @@ export const enum AlarmCodeEnum {
      * Force User SOS alarm
      */
     ForcedUser = 8
-};
+}
 
 /**
  * The door lock cluster provides several alarms which can be sent when there is a critical state on the door lock. The
@@ -323,7 +323,7 @@ export const enum LockOperationTypeEnum {
     Unlock = 1,
     NonAccessUserEvent = 2,
     ForcedUserEvent = 3
-};
+}
 
 /**
  * The OperationSource enumeration shall indicate the source of the Lock/Unlock operation performed.
@@ -341,7 +341,7 @@ export const enum OperationSourceEnum {
     Remote = 7,
     Rfid = 8,
     Biometric = 9
-};
+}
 
 /**
  * The Credential Type enum shall indicate the credential type.
@@ -355,7 +355,7 @@ export const enum CredentialTypeEnum {
     Fingerprint = 3,
     FingerVein = 4,
     Face = 5
-};
+}
 
 /**
  * The CredentialStruct is used in LockOperation event and Get User Record Response command and shall indicate the
@@ -447,7 +447,7 @@ export const enum OperationErrorEnum {
     DisabledUserDenied = 2,
     Restricted = 3,
     InsufficientBattery = 4
-};
+}
 
 /**
  * The door lock server sends out a LockOperationError event when a lock operation fails for various reasons.
@@ -544,7 +544,7 @@ export const enum DoorStateEnum {
      * Door state is ajar
      */
     DoorAjar = 5
-};
+}
 
 /**
  * The door lock server sends out a DoorStateChange event when the door lock door state changes. The data of this event
@@ -590,7 +590,7 @@ export const enum DataOperationTypeEnum {
      * Data is being modified or was modified
      */
     Modify = 2
-};
+}
 
 /**
  * The UserStatus enum used in various commands shall indicate what the status is for a specific user ID.
@@ -601,7 +601,7 @@ export const enum UserStatusEnum {
     Available = 0,
     OccupiedEnabled = 1,
     OccupiedDisabled = 3
-};
+}
 
 /**
  * The UserType enum used in various commands shall indicate what the type is for a specific user ID.
@@ -690,7 +690,7 @@ export const enum UserTypeEnum {
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.16.10
      */
     RemoteOnlyUser = 9
-};
+}
 
 /**
  * The CredentialRule enum used in various commands shall indicate the credential rule that can be applied to a
@@ -702,7 +702,7 @@ export const enum CredentialRuleEnum {
     Single = 0,
     Dual = 1,
     Tri = 2
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -763,7 +763,7 @@ export const enum DlStatus {
     InvalidField = 133,
     ResourceExhausted = 137,
     NotFound = 139
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -855,7 +855,7 @@ export const enum LockDataTypeEnum {
      * Lock user face information was added, cleared, or modified.
      */
     Face = 10
-};
+}
 
 /**
  * The door lock server sends out a LockUserChange event when a lock user, schedule, or credential change has occurred.
@@ -1061,7 +1061,7 @@ export const enum OperatingModeEnum {
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.5
      */
     Passage = 4
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -1294,7 +1294,7 @@ export namespace DoorLockCluster {
          * Lock supports holiday schedules
          */
         HolidaySchedules = "HolidaySchedules"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -2392,4 +2392,4 @@ export namespace DoorLockCluster {
 
         events: { ...BaseComponent.events, ...DoorPositionSensorComponent.events, ...UserComponent.events }
     });
-};
+}

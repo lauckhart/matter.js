@@ -34,5 +34,5 @@ export function generateIntermediateModel(source: string, elements: MatterElemen
     generateElement(file, matter, `export const ${camelize(source)}Matter: MatterElement = `);
     file.save();
 
-    validationResult!.report();
+    validationResult.report();
 }

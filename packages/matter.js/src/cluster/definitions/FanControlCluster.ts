@@ -37,7 +37,7 @@ export function FanControlCluster<T extends FanControlCluster.Feature[]>(...feat
     extendCluster(cluster, FanControlCluster.RockingComponent, { rocking: true });
     extendCluster(cluster, FanControlCluster.WindComponent, { wind: true });
     return cluster as unknown as FanControlCluster.Type<BitFlags<typeof FanControlCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * This attribute SHALL indicate the current speed mode of the fan. This attribute MAY be written by the client to
@@ -66,7 +66,7 @@ export const enum FanMode {
     Auto = 5,
 
     Smart = 6
-};
+}
 
 /**
  * This indicates the fan speed ranges that SHALL be supported.
@@ -80,7 +80,7 @@ export const enum FanModeSequence {
     OffLowHighAuto = 3,
     OffOnAuto = 4,
     OffOn = 5
-};
+}
 
 /**
  * This attribute is a bitmap that indicates what rocking motions the server supports. The bitmap is shown in the table
@@ -158,7 +158,7 @@ export namespace FanControlCluster {
          * Wind emulation supported
          */
         Wind = "Wind"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -363,4 +363,4 @@ export namespace FanControlCluster {
             ...WindComponent.attributes
         }
     });
-};
+}

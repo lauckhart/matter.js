@@ -47,7 +47,7 @@ export function ContentLauncherCluster<T extends ContentLauncherCluster.Feature[
     );
 
     return cluster as unknown as ContentLauncherCluster.Type<BitFlags<typeof ContentLauncherCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9
@@ -70,7 +70,7 @@ export const enum MetricTypeEnum {
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9.2
      */
     Percentage = 1
-};
+}
 
 /**
  * This object defines dimension which can be used for defining Size of background images.
@@ -233,7 +233,7 @@ export const enum StatusEnum {
      * Requested URL returned 401 error code.
      */
     AuthFailed = 2
-};
+}
 
 /**
  * This command SHALL be generated in response to LaunchContent and LaunchURL commands.
@@ -337,7 +337,7 @@ export const enum ParameterEnum {
      * Sea".
      */
     Video = 13
-};
+}
 
 /**
  * This object defines additional name=value pairs that can be used for identifying content.
@@ -454,7 +454,7 @@ export namespace ContentLauncherCluster {
          * Device supports basic URL-based file playback
          */
         UrlPlayback = "UrlPlayback"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -572,4 +572,4 @@ export namespace ContentLauncherCluster {
             ...ContentSearchOrUrlPlaybackComponent.commands
         }
     });
-};
+}

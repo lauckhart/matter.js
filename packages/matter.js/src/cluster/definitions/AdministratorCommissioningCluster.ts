@@ -38,7 +38,7 @@ export function AdministratorCommissioningCluster<T extends AdministratorCommiss
     });
     extendCluster(cluster, AdministratorCommissioningCluster.BasicComponent, { basic: true });
     return cluster as unknown as AdministratorCommissioningCluster.Type<BitFlags<typeof AdministratorCommissioningCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.18.5.1
@@ -47,7 +47,7 @@ export const enum CommissioningWindowStatusEnum {
     WindowNotOpen = 0,
     EnhancedWindowOpen = 1,
     BasicWindowOpen = 2
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.18.8
@@ -78,7 +78,7 @@ export namespace AdministratorCommissioningCluster {
          * Node supports Basic Commissioning Method.
          */
         Basic = "Basic"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -183,4 +183,4 @@ export namespace AdministratorCommissioningCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands, ...BasicComponent.commands }
     });
-};
+}

@@ -26,7 +26,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 export function ValidProxiesCluster() {
     const cluster = Cluster({ ...ValidProxiesCluster.Metadata, ...ValidProxiesCluster.BaseComponent });
     return cluster as unknown as ValidProxiesCluster.Type;
-};
+}
 
 /**
  * Encapsulates the Node ID of a Valid Proxy.
@@ -82,4 +82,4 @@ export namespace ValidProxiesCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

@@ -23,7 +23,7 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 export function FaultInjectionCluster() {
     const cluster = Cluster({ ...FaultInjectionCluster.Metadata, ...FaultInjectionCluster.BaseComponent });
     return cluster as unknown as FaultInjectionCluster.Type;
-};
+}
 
 export const enum FaultType {
     Unspecified = 0,
@@ -31,7 +31,7 @@ export const enum FaultType {
     InetFault = 2,
     ChipFault = 3,
     CertFault = 4
-};
+}
 
 export const TlvFailAtFaultRequest = TlvObject({
     type: TlvField(0, TlvEnum<FaultType>()),
@@ -70,4 +70,4 @@ export namespace FaultInjectionCluster {
      * This cluster supports all FaultInjection features.
      */
     export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-};
+}

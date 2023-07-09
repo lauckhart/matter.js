@@ -34,7 +34,7 @@ export function BridgedDeviceBasicInformationCluster() {
         ...BridgedDeviceBasicInformationCluster.BaseComponent
     });
     return cluster as unknown as BridgedDeviceBasicInformationCluster.Type;
-};
+}
 
 export const enum ProductFinishEnum {
     Other = 0,
@@ -43,7 +43,7 @@ export const enum ProductFinishEnum {
     Polished = 3,
     Rugged = 4,
     Fabric = 5
-};
+}
 
 export const enum ColorEnum {
     Black = 0,
@@ -67,7 +67,7 @@ export const enum ColorEnum {
     Copper = 18,
     Silver = 19,
     Gold = 20
-};
+}
 
 export const TlvProductAppearanceStruct = TlvObject({
     finish: TlvField(0, TlvEnum<ProductFinishEnum>()),
@@ -219,4 +219,4 @@ export namespace BridgedDeviceBasicInformationCluster {
         attributes: { ...BaseComponent.attributes },
         events: { ...BaseComponent.events }
     });
-};
+}

@@ -70,7 +70,7 @@ export abstract class Model {
      */
     get parent(): Model | undefined {
         return this[PARENT];
-    };
+    }
 
     set parent(parent: Model | undefined) {
         if (this.parent === parent) {

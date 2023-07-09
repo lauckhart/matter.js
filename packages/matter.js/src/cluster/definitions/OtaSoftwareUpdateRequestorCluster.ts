@@ -21,7 +21,7 @@ import { TlvByteString } from "../../tlv/TlvString.js";
  *
  * Provides an interface for downloading and applying OTA software updates
  *
- * This function creates a OtaSoftwareUpdateRequestor cluster.
+ * This function creates an OtaSoftwareUpdateRequestor cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7
  */
@@ -31,7 +31,7 @@ export function OtaSoftwareUpdateRequestorCluster() {
         ...OtaSoftwareUpdateRequestorCluster.BaseComponent
     });
     return cluster as unknown as OtaSoftwareUpdateRequestorCluster.Type;
-};
+}
 
 /**
  * This structure encodes a fabric-scoped location of an OTA provider on a given fabric.
@@ -56,7 +56,7 @@ export const enum UpdateStateEnum {
     DelayedOnApply = 6,
     RollingBack = 7,
     DelayedOnUserConsent = 8
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.1
@@ -65,7 +65,7 @@ export const enum AnnouncementReasonEnum {
     SimpleAnnouncement = 0,
     UpdateAvailable = 1,
     UrgentUpdateAvailable = 2
-};
+}
 
 /**
  * This command MAY be invoked by Administrators to announce the presence of a particular OTA Provider.
@@ -89,7 +89,7 @@ export const enum ChangeReasonEnum {
     Failure = 2,
     TimeOut = 3,
     DelayByProvider = 4
-};
+}
 
 /**
  * This event SHALL be generated when a change of the UpdateState attribute occurs due to an OTA Requestor moving
@@ -234,4 +234,4 @@ export namespace OtaSoftwareUpdateRequestorCluster {
         commands: { ...BaseComponent.commands },
         events: { ...BaseComponent.events }
     });
-};
+}

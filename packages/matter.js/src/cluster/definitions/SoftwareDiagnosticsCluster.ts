@@ -39,7 +39,7 @@ export function SoftwareDiagnosticsCluster<T extends SoftwareDiagnosticsCluster.
     });
     extendCluster(cluster, SoftwareDiagnosticsCluster.WatermarksComponent, { watermarks: true });
     return cluster as unknown as SoftwareDiagnosticsCluster.Type<BitFlags<typeof SoftwareDiagnosticsCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.12.5.1
@@ -119,7 +119,7 @@ export namespace SoftwareDiagnosticsCluster {
          * Node makes available the metrics for high watermark related to memory consumption.
          */
         Watermarks = "Watermarks"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -230,4 +230,4 @@ export namespace SoftwareDiagnosticsCluster {
         events: { ...BaseComponent.events },
         commands: { ...WatermarksComponent.commands }
     });
-};
+}

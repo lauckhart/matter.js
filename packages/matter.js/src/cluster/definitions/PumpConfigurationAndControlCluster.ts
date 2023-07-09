@@ -54,7 +54,7 @@ export function PumpConfigurationAndControlCluster<T extends PumpConfigurationAn
     );
 
     return cluster as unknown as PumpConfigurationAndControlCluster.Type<BitFlags<typeof PumpConfigurationAndControlCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1
@@ -152,7 +152,7 @@ export const enum OperationModeEnum {
     Minimum = 1,
     Maximum = 2,
     Local = 3
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.3
@@ -213,7 +213,7 @@ export const enum ControlModeEnum {
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.3.6
      */
     Automatic = 7
-};
+}
 
 export namespace PumpConfigurationAndControlCluster {
     /**
@@ -270,7 +270,7 @@ export namespace PumpConfigurationAndControlCluster {
          * Supports operating using local settings
          */
         LocalOperation = "LocalOperation"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -802,4 +802,4 @@ export namespace PumpConfigurationAndControlCluster {
 
         events: { ...BaseComponent.events }
     });
-};
+}

@@ -24,7 +24,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export function TemperatureMeasurementCluster() {
     const cluster = Cluster({ ...TemperatureMeasurementCluster.Metadata, ...TemperatureMeasurementCluster.BaseComponent });
     return cluster as unknown as TemperatureMeasurementCluster.Type;
-};
+}
 
 export namespace TemperatureMeasurementCluster {
     export type Type = 
@@ -88,4 +88,4 @@ export namespace TemperatureMeasurementCluster {
      * This cluster supports all TemperatureMeasurement features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

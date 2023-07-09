@@ -454,7 +454,7 @@ function validate({ fields, features }: ClusterStructure, { supports, record, er
 
     // Perform validation
     try {
-        let result = validator.validate(record ?? {});
+        const result = validator.validate(record ?? {});
         expect(result.valid).toBe(!errors);
         expect(result.errors).toEqual(definitionErrors);
     } catch (e) {

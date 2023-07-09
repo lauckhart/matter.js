@@ -43,7 +43,7 @@ export function PowerSourceCluster<T extends PowerSourceCluster.Feature[]>(...fe
     extendCluster(cluster, PowerSourceCluster.ReplaceableComponent, { replaceable: true });
     extendCluster(cluster, PowerSourceCluster.RechargeableComponent, { rechargeable: true });
     return cluster as unknown as PowerSourceCluster.Type<BitFlags<typeof PowerSourceCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.4
@@ -53,7 +53,7 @@ export const enum PowerSourceStatusEnum {
     Active = 1,
     Standby = 2,
     Unavailable = 3
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.5
@@ -61,7 +61,7 @@ export const enum PowerSourceStatusEnum {
 export const enum WiredCurrentTypeEnum {
     Ac = 0,
     Dc = 1
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.1
@@ -70,7 +70,7 @@ export const enum WiredFaultEnum {
     Unspecified = 0,
     OverVoltage = 1,
     UnderVoltage = 2
-};
+}
 
 /**
  * The WiredFaultChange Event SHALL be generated when the set of wired faults currently detected by the Node on this
@@ -103,7 +103,7 @@ export const enum BatChargeLevelEnum {
     Ok = 0,
     Warning = 1,
     Critical = 2
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.7
@@ -113,7 +113,7 @@ export const enum BatReplaceabilityEnum {
     NotReplaceable = 1,
     UserReplaceable = 2,
     FactoryReplaceable = 3
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.2
@@ -122,7 +122,7 @@ export const enum BatFaultEnum {
     Unspecified = 0,
     OverTemp = 1,
     UnderTemp = 2
-};
+}
 
 /**
  * The BatFaultChange Event SHALL be generated when the set of battery faults currently detected by the Node on this
@@ -220,7 +220,7 @@ export const enum BatCommonDesignationEnum {
     E25500 = 78,
     E26650 = 79,
     E32600 = 80
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.9
@@ -259,7 +259,7 @@ export const enum BatApprovedChemistryEnum {
     SodiumSulfur = 30,
     ZincBromide = 31,
     ZincCerium = 32
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.10
@@ -269,7 +269,7 @@ export const enum BatChargeStateEnum {
     IsCharging = 1,
     IsAtFullCharge = 2,
     IsNotCharging = 3
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.3
@@ -286,7 +286,7 @@ export const enum BatChargeFaultEnum {
     ChargerOverVoltage = 8,
     ChargerUnderVoltage = 9,
     SafetyTimeout = 10
-};
+}
 
 /**
  * The BatChargeFaultChange Event SHALL be generated when the set of charge faults currently
@@ -332,7 +332,7 @@ export namespace PowerSourceCluster {
          * A replaceable battery power source (requires Battery feature)
          */
         Replaceable = "Replaceable"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -799,4 +799,4 @@ export namespace PowerSourceCluster {
 
         events: { ...WiredComponent.events, ...BatteryComponent.events, ...RechargeableComponent.events }
     });
-};
+}

@@ -29,7 +29,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 export function GroupsCluster() {
     const cluster = Cluster({ ...GroupsCluster.Metadata, ...GroupsCluster.BaseComponent });
     return cluster as unknown as GroupsCluster.Type;
-};
+}
 
 /**
  * This attribute provides legacy, read-only access to whether the Group Names feature is supported. The most
@@ -148,7 +148,7 @@ export namespace GroupsCluster {
          * The ability to store a name for a group.
          */
         GroupNames = "GroupNames"
-    };
+    }
 
     export type Type = 
         typeof Metadata
@@ -281,4 +281,4 @@ export namespace GroupsCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

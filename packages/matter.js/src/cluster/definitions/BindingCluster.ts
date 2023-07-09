@@ -26,7 +26,7 @@ import { TlvUInt64, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
 export function BindingCluster() {
     const cluster = Cluster({ ...BindingCluster.Metadata, ...BindingCluster.BaseComponent });
     return cluster as unknown as BindingCluster.Type;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1
@@ -100,4 +100,4 @@ export namespace BindingCluster {
      * This cluster supports all Binding features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

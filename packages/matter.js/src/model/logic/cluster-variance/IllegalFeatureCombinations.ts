@@ -33,7 +33,7 @@ export function IllegalFeatureCombinations(cluster: ClusterModel) {
     const choices = {} as Choices;
 
     for (const f of cluster.features) {
-        addFeatureNode(f, f.conformance, illegal, choices);
+        addFeatureNode(f, f.conformance.ast, illegal, choices);
     }
 
     for (const choice of Object.values(choices)) {
@@ -61,13 +61,12 @@ function addFeatureNode(feature: DatatypeModel, node: Conformance.Ast, illegal: 
     function addDisjunctRequirement(flags: FeatureBitmap, node: Conformance.Ast) {
         switch (node.type) {
             case Conformance.Special.Name:
-                flags[node.param as string] = false;
+                flags[node.param] = false;
                 break;
 
             case Conformance.OR:
-                const operands = node.param as Conformance.Ast.BinaryOperands;
-                addDisjunctRequirement(flags, operands.lhs);
-                addDisjunctRequirement(flags, operands.rhs);
+                addDisjunctRequirement(flags, node.param.lhs);
+                addDisjunctRequirement(flags, node.param.rhs);
                 break;
 
             default:
@@ -78,13 +77,12 @@ function addFeatureNode(feature: DatatypeModel, node: Conformance.Ast, illegal: 
     function addConjunctRequirement(feature: string, node: Conformance.Ast) {
         switch (node.type) {
             case Conformance.Special.Name:
-                illegal.push({ [feature]: true, [node.param as string]: false });
+                illegal.push({ [feature]: true, [node.param]: false });
                 break;
 
             case Conformance.AND:
-                const operands = node.param as Conformance.Ast.BinaryOperands;
-                addConjunctRequirement(feature, operands.lhs);
-                addConjunctRequirement(feature, operands.rhs);
+                addConjunctRequirement(feature, node.param.lhs);
+                addConjunctRequirement(feature, node.param.rhs);
                 break;
         }
     }
@@ -96,36 +94,34 @@ function addFeatureNode(feature: DatatypeModel, node: Conformance.Ast, illegal: 
             break;
 
         case Conformance.Special.Group:
-            (node.param as Conformance.Ast.Group).forEach(ast => addFeatureNode(feature, ast, illegal, choices));
+            node.param.forEach(ast => addFeatureNode(feature, ast, illegal, choices));
             break;
 
         case Conformance.Special.Choice:
-            const definition = node.param as Conformance.Ast.Choice;
-            if (definition.num > 1) {
+            if (node.param.num > 1) {
                 unsupported();
             }
-            let choice = choices[definition.name];
+            let choice = choices[node.param.name];
             if (choice) {
                 choice.features.push(feature.name);
             } else {
-                choice = choices[definition.name] = {
-                    exclusive: !definition.orMore,
+                choice = choices[node.param.name] = {
+                    exclusive: !node.param.orMore,
                     features: [ feature.name ]
                 };
             }
             break;
 
         case Conformance.Special.Name:
-            illegal.push({ [node.param as string]: true, [feature.name]: false } );
+            illegal.push({ [node.param]: true, [feature.name]: false } );
             break;
 
         case Conformance.Special.OptionalIf:
-            const param = node.param as Conformance.Ast;
-            if (param.type == Conformance.AND) {
-                addConjunctRequirement(feature.name, param);
+            if (node.param.type == Conformance.AND) {
+                addConjunctRequirement(feature.name, node.param);
             } else {
                 const flags = FeatureBitmap({ [feature.name]: true });
-                addDisjunctRequirement(flags, node.param as Conformance.Ast);
+                addDisjunctRequirement(flags, node.param);
                 illegal.push(flags);
             }
             break;

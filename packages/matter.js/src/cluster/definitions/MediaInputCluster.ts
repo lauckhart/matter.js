@@ -38,7 +38,7 @@ export function MediaInputCluster<T extends MediaInputCluster.Feature[]>(...feat
     });
     extendCluster(cluster, MediaInputCluster.NameUpdatesComponent, { nameUpdates: true });
     return cluster as unknown as MediaInputCluster.Type<BitFlags<typeof MediaInputCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * The type of input, expressed as an enum, with the following values:
@@ -62,7 +62,7 @@ export const enum InputTypeEnum {
     Scart = 9,
     Usb = 10,
     Other = 11
-};
+}
 
 /**
  * This contains information about an input.
@@ -135,7 +135,7 @@ export namespace MediaInputCluster {
          * Supports updates to the input names
          */
         NameUpdates = "NameUpdates"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -235,4 +235,4 @@ export namespace MediaInputCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands, ...NameUpdatesComponent.commands }
     });
-};
+}

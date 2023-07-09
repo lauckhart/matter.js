@@ -38,7 +38,7 @@ export function PulseWidthModulationCluster<T extends PulseWidthModulationCluste
     extendCluster(cluster, PulseWidthModulationCluster.LightingComponent, { lighting: true });
     extendCluster(cluster, PulseWidthModulationCluster.FrequencyComponent, { frequency: true });
     return cluster as unknown as PulseWidthModulationCluster.Type<BitFlags<typeof PulseWidthModulationCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap that
@@ -73,7 +73,7 @@ export const TlvMoveToLevelRequest = TlvObject({
 export const enum MoveMode {
     Up = 0,
     Down = 1
-};
+}
 
 /**
  * The Move command SHALL have the following data fields:
@@ -159,7 +159,7 @@ export namespace PulseWidthModulationCluster {
          * control.
          */
         Frequency = "Frequency"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -444,4 +444,4 @@ export namespace PulseWidthModulationCluster {
         attributes: { ...BaseComponent.attributes, ...LightingComponent.attributes, ...FrequencyComponent.attributes },
         commands: { ...BaseComponent.commands, ...FrequencyComponent.commands }
     });
-};
+}

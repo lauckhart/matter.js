@@ -81,7 +81,7 @@ function installDatatypes(elements: AnyElement[]) {
     // as well
     function install(into: ClusterElement, referencer: AnyElement, alreadyInstalled: Set<string>) {
         referencer.children?.forEach(c => {
-            let type = (c as ValueElement).type;
+            const type = (c as ValueElement).type;
 
             if (type) {
                 installChildren(type, c);

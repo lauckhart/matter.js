@@ -268,7 +268,7 @@ export class TlvGenerator {
     }
 
     private defineDatatype(model: ValueModel, scope: ClusterModel) {
-        let defining = model.definingModel;
+        const defining = model.definingModel;
         if (defining) {
             model = defining;
         } else {

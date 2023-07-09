@@ -26,7 +26,7 @@ import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 export function DiagnosticLogsCluster() {
     const cluster = Cluster({ ...DiagnosticLogsCluster.Metadata, ...DiagnosticLogsCluster.BaseComponent });
     return cluster as unknown as DiagnosticLogsCluster.Type;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1
@@ -54,7 +54,7 @@ export const enum IntentEnum {
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1.3
      */
     CrashLogs = 2
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3
@@ -73,7 +73,7 @@ export const enum TransferProtocolEnum {
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3.2
      */
     Bdx = 1
-};
+}
 
 /**
  * Reception of this command starts the process of retrieving diagnostic logs from a Node. The data for this command is
@@ -149,7 +149,7 @@ export const enum StatusEnum {
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.5
      */
     Denied = 4
-};
+}
 
 /**
  * This SHALL be generated as a response to the RetrieveLogsRequest. The data for this command is shown in the
@@ -233,4 +233,4 @@ export namespace DiagnosticLogsCluster {
      * This cluster supports all DiagnosticLogs features.
      */
     export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-};
+}

@@ -40,7 +40,7 @@ export class ClusterComponentGenerator {
         const mandatory = new Set(component.mandatory);
 
         const elements = [ ...component.optional, ...component.mandatory ]
-            .sort((a, b) => a.id! - b.id!);
+            .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 
         this.defineTypedElements(AttributeModel, elements, block, (model, add) => {
             if (model.base instanceof AttributeModel && model.base.global) {
@@ -75,7 +75,7 @@ export class ClusterComponentGenerator {
                 options.atom("scene", true);
             }
             if (model.quality.nonvolatile) {
-                options.atom("persistent", true);;
+                options.atom("persistent", true);
             }
             if (model.quality.changesOmitted) {
                 options.atom("omitChanges", true);

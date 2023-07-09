@@ -85,10 +85,16 @@ export class ValidatorImplementation implements RecordValidator {
 
     // Compiled validator calls to add a validation error
     error(code: string, source: string, message: string) {
-        if (!this.result!.errors) {
-            this.result!.valid = false;
-            this.result!.errors = [];
+        const result = this.result;
+        if (!result) {
+            // This cannot fail but TS & eslint don't know that
+            return;
         }
-        this.result!.errors.push({ code, source, message });
+        
+        if (!result.errors) {
+            result.valid = false;
+            result.errors = [];
+        }
+        result.errors.push({ code, source, message });
     }
 }

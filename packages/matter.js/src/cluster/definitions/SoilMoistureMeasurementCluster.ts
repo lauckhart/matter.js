@@ -20,7 +20,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export function SoilMoistureMeasurementCluster() {
     const cluster = Cluster({ ...SoilMoistureMeasurementCluster.Metadata, ...SoilMoistureMeasurementCluster.BaseComponent });
     return cluster as unknown as SoilMoistureMeasurementCluster.Type;
-};
+}
 
 export namespace SoilMoistureMeasurementCluster {
     export type Type = 
@@ -76,4 +76,4 @@ export namespace SoilMoistureMeasurementCluster {
      * This cluster supports all SoilMoistureMeasurement features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

@@ -76,7 +76,7 @@ export function serialize(value: any) {
     const visited = new Set();
 
     function asValidKey(key: string) {
-        if (key.match(/[a-z_\$][a-z_\$0-9]*/i)) {
+        if (key.match(/[a-z_$][a-z_$0-9]*/i)) {
             return key;
         }
         return JSON.stringify(key);
@@ -137,7 +137,7 @@ export function serialize(value: any) {
             const entries = Object.entries(value)
                 .map(([k, v]) => [ k, serializeOne(v) ])
                 .filter(([_k, v]) => v !== undefined)
-                .map(([k, v]) => `${asValidKey(k!)}: ${v}`);
+                .map(([k, v]) => `${asValidKey(k ?? "")}: ${v}`);
 
             if (!entries.length) {
                 return "{}";

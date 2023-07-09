@@ -56,7 +56,7 @@ export function SwitchCluster<T extends SwitchCluster.Feature[]>(...features: [ 
     );
 
     return cluster as unknown as SwitchCluster.Type<BitFlags<typeof SwitchCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * This event SHALL be generated to indicate how many times the momentary switch has been pressed in a multi-press
@@ -151,7 +151,7 @@ export namespace SwitchCluster {
          * MomentarySwitchMultiPress
          */
         MomentarySwitchMultiPress = "MomentarySwitchMultiPress"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -356,4 +356,4 @@ export namespace SwitchCluster {
             ...MomentarySwitchReleaseComponent.events
         }
     });
-};
+}

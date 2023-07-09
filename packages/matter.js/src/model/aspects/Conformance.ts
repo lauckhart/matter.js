@@ -17,9 +17,12 @@ import { Aspect } from "./Aspect.js";
  * "Conformance" controls when a data field or cluster element is allowed or
  * required.
  */
-export class Conformance extends Aspect<Conformance.Definition> implements Conformance.Ast {
-    type: Conformance.AstType;
-    param?: Conformance.AstParam;
+export class Conformance extends Aspect<Conformance.Definition> {
+    ast: Conformance.Ast;
+
+    get type() {
+        return this.ast.type;
+    }
 
     override get empty() {
         return this.type === Conformance.Special.Empty;
@@ -34,11 +37,11 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
 
         let ast: Conformance.Ast;
         if (definition === undefined) {
-            this.type = Conformance.Special.Empty;
+            this.ast = { type: Conformance.Special.Empty };
             return;
         } else if (typeof definition === "string") {
             if (definition.toLowerCase() === "desc") {
-                this.type = Conformance.Special.Desc;
+                this.ast ={ type: Conformance.Special.Desc };
                 return;
             }
             ast = new Parser(this, definition).ast;
@@ -53,31 +56,46 @@ export class Conformance extends Aspect<Conformance.Definition> implements Confo
                 }
             }
         } else {
-            ast = definition;
+            ast = definition.ast;
         }
-        this.type = ast.type;
-        if (ast.param) {
-            this.param = ast.param;
-        }
+        this.ast = ast;
     }
 
     validateReferences(lookup: Conformance.ReferenceResolver<boolean>) {
-        return Conformance.validateReferences(this, this, lookup);
+        return Conformance.validateReferences(this, this.ast, lookup);
     }
 
     override toString() {
-        return Conformance.serialize(this);
+        return Conformance.serialize(this.ast);
     }
 }
 
 export namespace Conformance {
-    export type AstType =
-        Special | Flag | Exclude<Operator, Operator.DOT>;
     export type AstParam = Ast.Name | Ast.Value | Ast.Option | Ast.UnaryOperand | Ast.BinaryOperands | Ast.Group | Ast.Choice;
 
     export type Ast = {
-        type: AstType,
-        param?: AstParam
+        type: Special.Empty | Special.Desc | Flag
+    } | {
+        type: Special.Name,
+        param: Ast.Name
+    } | {
+        type: Special.Value,
+        param: Ast.Value
+    } | {
+        type: Special.Choice,
+        param: Ast.Choice
+    } | {
+        type: Special.Group,
+        param: Ast.Group
+    } | {
+        type: Special.OptionalIf,
+        param: Ast.Option
+    } | {
+        type: Operator.AND | Operator.OR | Operator.XOR | Operator.EQ | Operator.NE | Operator.LT | Operator.GT | Operator.LTE | Operator.GTE,
+        param: Ast.BinaryOperands
+    } | {
+        type: Operator.NOT,
+        param: Ast.UnaryOperand
     };
 
     export namespace Ast {
@@ -158,7 +176,7 @@ export namespace Conformance {
      * Supported ways of expressing conformance.
      */
     export type Definition
-        = Flag | Name | (Flag | Name)[] | Ast | string | undefined;
+        = Flag | Name | (Flag | Name)[] | { ast: Conformance.Ast } | string | undefined;
 
     const BinaryOperators = new Set([ EQ, NE, OR, XOR, AND ]);
     const OrXorAnd = new Set([ OR, XOR, AND ]);
@@ -183,23 +201,22 @@ export namespace Conformance {
             case Operator.LT:
             case Operator.GTE:
             case Operator.LTE:
-                const operands = ast.param as Conformance.Ast.BinaryOperands;
-                validateReferences(conformance, operands.lhs, resolver);
-                validateReferences(conformance, operands.rhs, resolver);
+                validateReferences(conformance, ast.param.lhs, resolver);
+                validateReferences(conformance, ast.param.rhs, resolver);
                 break;
 
             case Operator.NOT:
-                validateReferences(conformance, ast.param as Conformance.Ast.UnaryOperand, resolver);
+                validateReferences(conformance, ast.param, resolver);
                 break;
 
             case Special.Group:
-                for (const a of ast.param as Conformance.Ast.Group) {
+                for (const a of ast.param) {
                     validateReferences(conformance, a, resolver);
                 }
                 break;
 
             case Special.Name:
-                if (typeof ast.param === "string" && !resolver(ast.param)) {
+                if (!resolver(ast.param)) {
                     conformance.error(`UNRESOLVED_CONFORMANCE_${ast.type.toUpperCase()}`, `Conformance ${ast.type} reference "${ast.param}" does not resolve`);
                 }
                 break;
@@ -217,12 +234,10 @@ export namespace Conformance {
             case Operator.LT:
             case Operator.GTE:
             case Operator.LTE:
-                const operands = ast.param as Conformance.Ast.BinaryOperands;
-                return `${serializeAtomic(operands.lhs, OrXorAnd)} ${ast.type} ${serializeAtomic(operands.rhs, OrXorAnd)}`;
+                return `${serializeAtomic(ast.param.lhs, OrXorAnd)} ${ast.type} ${serializeAtomic(ast.param.rhs, OrXorAnd)}`;
 
             case Operator.NOT:
-                const n = ast.param as Conformance.Ast.UnaryOperand;
-                return `!${serializeAtomic(n)}`;
+                return `!${serializeAtomic(ast.param)}`;
 
             case Special.Empty:
                 return "";
@@ -231,28 +246,25 @@ export namespace Conformance {
                 return "desc";
                     
             case Special.Choice:
-                const c = ast.param as Conformance.Ast.Choice;
-                let result = `${serializeAtomic(c.expr)}.${c.name}`;
-                if (c.num > 1) {
-                    result = `${result}${c.num}`;
+                let result = `${serializeAtomic(ast.param.expr)}.${ast.param.name}`;
+                if (ast.param.num > 1) {
+                    result = `${result}${ast.param.num}`;
                 }
-                if (c.orMore) {
+                if (ast.param.orMore) {
                     result = `${result}+`;
                 }
                 return result;
     
             case Special.Group:
-                const l = ast.param as Conformance.Ast.Group;
-                return l.map(d => serialize(d)).join(", ");
+                return ast.param.map(d => serialize(d)).join(", ");
 
             case Special.OptionalIf:
-                const o = ast.param as Conformance.Ast.Option;
-                return `[${serialize(o)}]`;
+                return `[${serialize(ast.param)}]`;
 
             case Special.Name:
             case Special.Value:
                 // Name or value
-                return FieldValue.serialize(ast.param as FieldValue)!;
+                return FieldValue.serialize(ast.param);
 
             default:
                 // Flag
@@ -497,14 +509,14 @@ class Parser {
     // Note that Conformance.Definition effectively serves as our AST.  Its
     // design is slightly suboptimal for this purpose because it also attempts
     // to serve as a DSL for manual expression of conformance
-    private parse() {
+    private parse(): Conformance.Ast {
         return this.parseGroup();
     }
 
-    private parseGroup(end?: Tokenizer.Special) {
+    private parseGroup(end?: Tokenizer.Special): Conformance.Ast {
         const group = [] as Conformance.Ast[];
 
-        function groupAsAst() {
+        function groupAsAst(): Conformance.Ast {
             if (group.length === 1) {
                 return group[0];
             }
@@ -558,7 +570,7 @@ class Parser {
     }
 
     private parseExpression() {
-        let elements = [] as (Tokenizer.Special | Conformance.Ast | string)[];
+        const elements = [] as (Tokenizer.Special | Conformance.Ast | string)[];
 
         // Collect binary expressions into an array so we can back up and
         // apply operator precedence
@@ -581,9 +593,9 @@ class Parser {
                 if (operators.indexOf(elements[i + 1] as Tokenizer.Special) !== -1) {
                     const [ lhs, op, rhs ] = elements.splice(i, 3);
                     elements.splice(i, 0, {
-                        type: op as Conformance.AstType,
-                        param: { lhs: lhs as Conformance.Ast, rhs: rhs as Conformance.Ast
-                    }});
+                        type: op,
+                        param: { lhs, rhs }
+                    } as Conformance.Ast);
                 }
             }
         });
@@ -654,7 +666,7 @@ class Parser {
 
         if (this.atSpecial(Tokenizer.Special.Not)) {
             this.next();
-            return { type: Conformance.Operator.NOT, param: this.parseAtomicExpression() };
+            return { type: Conformance.Operator.NOT, param: this.parseAtomicExpression() as Conformance.Ast };
         }
 
         if (this.atSpecial(Tokenizer.Special.GroupBegin)) {

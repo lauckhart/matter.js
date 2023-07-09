@@ -26,7 +26,7 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
 export function KeypadInputCluster() {
     const cluster = Cluster({ ...KeypadInputCluster.Metadata, ...KeypadInputCluster.BaseComponent });
     return cluster as unknown as KeypadInputCluster.Type;
-};
+}
 
 export const enum CecKeyCode {
     Select = 0,
@@ -115,7 +115,7 @@ export const enum CecKeyCode {
     F4Yellow = 116,
     F5 = 117,
     Data = 118
-};
+}
 
 /**
  * Upon receipt, this SHALL process a keycode as input to the media device.
@@ -149,7 +149,7 @@ export const enum StatusEnum {
      * Command failed: Requested key code is invalid in the context of the responder’s current state.
      */
     InvalidKeyInCurrentState = 2
-};
+}
 
 /**
  * This command SHALL be generated in response to a SendKey command. The data for this command SHALL be as follows:
@@ -192,7 +192,7 @@ export namespace KeypadInputCluster {
          * Supports numeric input 0..9
          */
         NumberKeys = "NumberKeys"
-    };
+    }
 
     export type Type = 
         typeof Metadata
@@ -259,4 +259,4 @@ export namespace KeypadInputCluster {
      * This cluster supports all KeypadInput features.
      */
     export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-};
+}

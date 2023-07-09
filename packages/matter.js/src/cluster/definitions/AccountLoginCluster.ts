@@ -21,14 +21,14 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * App running on a Video Player device, which is represented as an endpoint (see [TV Architecture]), can use this
  * cluster to help make the user account on the Content App match the user account on the Client.
  *
- * This function creates a AccountLogin cluster.
+ * This function creates an AccountLogin cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2
  */
 export function AccountLoginCluster() {
     const cluster = Cluster({ ...AccountLoginCluster.Metadata, ...AccountLoginCluster.BaseComponent });
     return cluster as unknown as AccountLoginCluster.Type;
-};
+}
 
 /**
  * The purpose of this command is to determine if the active user account of the given Content App matches the active
@@ -142,4 +142,4 @@ export namespace AccountLoginCluster {
      * This cluster supports all AccountLogin features.
      */
     export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-};
+}

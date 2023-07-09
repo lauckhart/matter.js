@@ -9,7 +9,7 @@ import { serialize } from "../../../src/util/String.js";
 import { Block } from "../../util/TsFile.js";
 import { wordWrap } from "../../util/string.js";
 
-export function generateElement(target: Block, element: AnyElement, prefix: string = "", suffix = "") {
+export function generateElement(target: Block, element: AnyElement, prefix = "", suffix = "") {
     const block = target.expressions(`${prefix}{`, `}${suffix}`);
 
     const fields = element.valueOf() as { [ name: string ]: any };
@@ -87,7 +87,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
     if (children?.length) {
         const childBlock = block.expressions(`children: [`, "]");
         for (const child of children) {
-            generateElement(childBlock, child as AnyElement);
+            generateElement(childBlock, child);
         }
     }
 }

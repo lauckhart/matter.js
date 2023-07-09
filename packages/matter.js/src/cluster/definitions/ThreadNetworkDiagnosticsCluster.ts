@@ -43,7 +43,7 @@ export function ThreadNetworkDiagnosticsCluster<T extends ThreadNetworkDiagnosti
     extendCluster(cluster, ThreadNetworkDiagnosticsCluster.MleCountsComponent, { mleCounts: true });
     extendCluster(cluster, ThreadNetworkDiagnosticsCluster.MacCountsComponent, { macCounts: true });
     return cluster as unknown as ThreadNetworkDiagnosticsCluster.Type<BitFlags<typeof ThreadNetworkDiagnosticsCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.3
@@ -56,7 +56,7 @@ export const enum RoutingRoleEnum {
     Reed = 4,
     Router = 5,
     Leader = 6
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4
@@ -356,7 +356,7 @@ export const enum NetworkFaultEnum {
     LinkDown = 1,
     HardwareFailure = 2,
     NetworkJammed = 3
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.2
@@ -364,7 +364,7 @@ export const enum NetworkFaultEnum {
 export const enum ConnectionStatusEnum {
     Connected = 0,
     NotConnected = 1
-};
+}
 
 /**
  * The ConnectionStatus Event SHALL indicate that a Node’s connection status to a Thread network has changed.
@@ -430,7 +430,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
          * Server supports the counts for various MAC layer happenings.
          */
         MacCounts = "MacCounts"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -1201,4 +1201,4 @@ export namespace ThreadNetworkDiagnosticsCluster {
         events: { ...BaseComponent.events },
         commands: { ...ErrorCountsComponent.commands }
     });
-};
+}

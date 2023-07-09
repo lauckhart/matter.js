@@ -38,7 +38,7 @@ export function UnitLocalizationCluster<T extends UnitLocalizationCluster.Featur
     });
     extendCluster(cluster, UnitLocalizationCluster.TemperatureUnitComponent, { temperatureUnit: true });
     return cluster as unknown as UnitLocalizationCluster.Type<BitFlags<typeof UnitLocalizationCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.5.5.1
@@ -47,7 +47,7 @@ export const enum TempUnitEnum {
     Fahrenheit = 0,
     Celsius = 1,
     Kelvin = 2
-};
+}
 
 export namespace UnitLocalizationCluster {
     /**
@@ -62,7 +62,7 @@ export namespace UnitLocalizationCluster {
          * The Node can be configured to use different units of temperature when conveying values to a user.
          */
         TemperatureUnit = "TemperatureUnit"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -123,4 +123,4 @@ export namespace UnitLocalizationCluster {
      * features is legal per the Matter specification.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...TemperatureUnitComponent.attributes } });
-};
+}

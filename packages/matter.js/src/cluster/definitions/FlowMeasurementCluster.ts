@@ -24,7 +24,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export function FlowMeasurementCluster() {
     const cluster = Cluster({ ...FlowMeasurementCluster.Metadata, ...FlowMeasurementCluster.BaseComponent });
     return cluster as unknown as FlowMeasurementCluster.Type;
-};
+}
 
 export namespace FlowMeasurementCluster {
     export type Type = 
@@ -80,4 +80,4 @@ export namespace FlowMeasurementCluster {
      * This cluster supports all FlowMeasurement features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

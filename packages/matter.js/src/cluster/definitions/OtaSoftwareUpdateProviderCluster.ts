@@ -20,7 +20,7 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  *
  * Provides an interface for providing OTA software updates
  *
- * This function creates a OtaSoftwareUpdateProvider cluster.
+ * This function creates an OtaSoftwareUpdateProvider cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
  */
@@ -30,7 +30,7 @@ export function OtaSoftwareUpdateProviderCluster() {
         ...OtaSoftwareUpdateProviderCluster.BaseComponent
     });
     return cluster as unknown as OtaSoftwareUpdateProviderCluster.Type;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.3
@@ -40,7 +40,7 @@ export const enum DownloadProtocolEnum {
     BdxAsynchronous = 1,
     Https = 2,
     VendorSpecific = 3
-};
+}
 
 /**
  * Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA Provider to match
@@ -69,7 +69,7 @@ export const enum StatusEnum {
     Busy = 1,
     NotAvailable = 2,
     DownloadProtocolNotSupported = 3
-};
+}
 
 /**
  * < Previous | Contents | Next >
@@ -107,7 +107,7 @@ export const enum ApplyUpdateActionEnum {
     Proceed = 0,
     AwaitNextAction = 1,
     Discontinue = 2
-};
+}
 
 /**
  * < Previous | Contents | Next >
@@ -189,4 +189,4 @@ export namespace OtaSoftwareUpdateProviderCluster {
      * This cluster supports all OtaSoftwareUpdateProvider features.
      */
     export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-};
+}

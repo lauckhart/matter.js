@@ -22,7 +22,7 @@ import { TlvUInt8, TlvUInt32 } from "../../tlv/TlvNumber.js";
 export function BinaryInputBasicCluster() {
     const cluster = Cluster({ ...BinaryInputBasicCluster.Metadata, ...BinaryInputBasicCluster.BaseComponent });
     return cluster as unknown as BinaryInputBasicCluster.Type;
-};
+}
 
 export namespace BinaryInputBasicCluster {
     export type Type = 
@@ -54,4 +54,4 @@ export namespace BinaryInputBasicCluster {
      * This cluster supports all BinaryInputBasic features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

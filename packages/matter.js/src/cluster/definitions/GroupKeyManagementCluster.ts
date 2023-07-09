@@ -28,7 +28,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export function GroupKeyManagementCluster() {
     const cluster = Cluster({ ...GroupKeyManagementCluster.Metadata, ...GroupKeyManagementCluster.BaseComponent });
     return cluster as unknown as GroupKeyManagementCluster.Type;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.3
@@ -79,7 +79,7 @@ export const TlvGroupInfoMapStruct = TlvObject({
 export const enum GroupKeySecurityPolicyEnum {
     TrustFirst = 0,
     CacheAndSync = 1
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.2
@@ -98,7 +98,7 @@ export const enum GroupKeyMulticastPolicyEnum {
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.2.2
      */
     AllNodes = 1
-};
+}
 
 /**
  * This field shall provide the fabric-unique index for the associated group key set, as specified in Section
@@ -231,7 +231,7 @@ export namespace GroupKeyManagementCluster {
          * The ability to support CacheAndSync security policy and MCSP.
          */
         CacheAndSync = "CacheAndSync"
-    };
+    }
 
     export type Type = 
         typeof Metadata
@@ -362,4 +362,4 @@ export namespace GroupKeyManagementCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

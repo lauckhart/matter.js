@@ -20,7 +20,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export function LeafWetnessMeasurementCluster() {
     const cluster = Cluster({ ...LeafWetnessMeasurementCluster.Metadata, ...LeafWetnessMeasurementCluster.BaseComponent });
     return cluster as unknown as LeafWetnessMeasurementCluster.Type;
-};
+}
 
 export namespace LeafWetnessMeasurementCluster {
     export type Type = 
@@ -76,4 +76,4 @@ export namespace LeafWetnessMeasurementCluster {
      * This cluster supports all LeafWetnessMeasurement features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}
