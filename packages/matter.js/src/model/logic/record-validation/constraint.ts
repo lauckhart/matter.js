@@ -37,7 +37,7 @@ export function addConstraint(builder: ValidatorBuilder, model: ValueModel, cons
     }
 
     function generateRangeTest(value: string, ast: Constraint.Ast, typeTest?: string, entryTest?: string) {
-        const parts = [];
+        const parts = Array<string>();
         if (typeTest) {
             parts.push(...typeTest);
         }

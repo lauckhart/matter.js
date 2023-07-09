@@ -32,7 +32,7 @@ export function NamedComponents(cluster: ClusterModel, inferredComponents: Infer
     for (const elementVariance of inferredComponents) {
         let name;
 
-        let contributorDocumentation = [];
+        let contributorDocumentation = Array<string>();
 
         const allOf = elementVariance.condition?.allOf;
         if (allOf) {
