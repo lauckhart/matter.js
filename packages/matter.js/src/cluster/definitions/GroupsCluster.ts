@@ -150,7 +150,7 @@ export namespace GroupsCluster {
         GroupNames = "GroupNames"
     }
 
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

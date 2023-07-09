@@ -31,7 +31,7 @@ export function conditionToBitmaps(condition: VarianceCondition, featureNames: F
     }
 
     if (!condition.anyOf) {
-        return [ translateBitmap(bitmap, featureNames) ];
+        return [translateBitmap(bitmap, featureNames)];
     }
 
     const bitmaps = Array<typeof bitmap>();

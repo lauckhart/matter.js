@@ -9,8 +9,8 @@ import { AnyElement, MatterModel, ModelVariantTraversal, VariantDetail } from ".
 describe("ModelVariantTraversal", () => {
     it("associates attributes by ID", () => {
         const result = traverseClusters(
-            [ { tag: "attribute", name: "attr", id: 1 } ],
-            [ { tag: "attribute", name: "asdf", id: 1 }]
+            [{ tag: "attribute", name: "attr", id: 1 }],
+            [{ tag: "attribute", name: "asdf", id: 1 }]
         );
 
         expect(result.length).toBe(1);
@@ -35,8 +35,8 @@ describe("ModelVariantTraversal", () => {
 
     it("doesn't associate request and response commands", () => {
         const result = traverseClusters(
-            [ { tag: "command", name: "command1", id: 1, direction: "request" } ],
-            [ { tag: "command", name: "command1response", id: 1, direction: "response" } ]
+            [{ tag: "command", name: "command1", id: 1, direction: "request" }],
+            [{ tag: "command", name: "command1response", id: 1, direction: "response" }]
         );
         expect(result.length).toBe(2);
         expect(result[0].name).toBe("command1");
@@ -45,8 +45,8 @@ describe("ModelVariantTraversal", () => {
 
     it("prefers shorter names", () => {
         const result = traverseClusters(
-            [ { tag: "attribute", name: "ReallyLongName", id: 1 }],
-            [ { tag: "attribute", name: "ShortName", id: 1 }]
+            [{ tag: "attribute", name: "ReallyLongName", id: 1 }],
+            [{ tag: "attribute", name: "ShortName", id: 1 }]
         );
         expect(result.length).toBe(1);
         expect(result[0].name).toBe("ShortName");
@@ -54,8 +54,8 @@ describe("ModelVariantTraversal", () => {
 
     it("prefers more capitalization", () => {
         const result = traverseClusters(
-            [ { tag: "attribute", name: "myattribute", id: 1 } ],
-            [ { tag: "attribute", name: "MyAttribute", id: 1 } ]
+            [{ tag: "attribute", name: "myattribute", id: 1 }],
+            [{ tag: "attribute", name: "MyAttribute", id: 1 }]
         );
         expect(result.length).toBe(1);
         expect(result[0].name).toBe("MyAttribute");
@@ -69,7 +69,7 @@ describe("ModelVariantTraversal", () => {
             ],
             [
                 { tag: "attribute", name: "attr", id: 1, type: "datatype2" },
-                { tag: "datatype", name: "datatype2"}
+                { tag: "datatype", name: "datatype2" }
             ]
         )
         expect(result.length).toBe(2);
@@ -87,7 +87,7 @@ function traverseClusters(children1: AnyElement[], children2: AnyElement[]) {
             }
             recurse();
         }
-    }([ "variant1", "variant2", "variant3" ]);
+    }(["variant1", "variant2", "variant3"]);
 
     const inputVariants = {
         variant2: new MatterModel({

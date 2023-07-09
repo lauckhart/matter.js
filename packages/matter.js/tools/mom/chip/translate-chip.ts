@@ -76,7 +76,7 @@ function setAccessPrivileges(src: Element, target: Access.Ast) {
     const srcAccess = {
         read: undefined,
         invoke: undefined,
-        write: undefined 
+        write: undefined
     } as {
         read?: Access.Privilege,
         invoke?: Access.Privilege,
@@ -135,7 +135,7 @@ function setQualities(src: Element, target: ValueElement) {
     const timed = bool(src.getAttribute("mustUseTimedWrite"));
 
     const access: Access.Ast = {
-         rw: Access.Rw.Read
+        rw: Access.Rw.Read
     };
     if (writable) {
         access.rw = Access.Rw.ReadWrite;
@@ -238,7 +238,7 @@ function createValueElement<T extends AnyValueElement>({
     if (!element.children?.length) {
         const entryType = source.getAttribute("entryType");
         if (entryType) {
-            element.children = [ DatatypeElement({ name: "entry", type: mapType(entryType) }) ];
+            element.children = [DatatypeElement({ name: "entry", type: mapType(entryType) })];
         }
     }
 

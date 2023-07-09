@@ -65,14 +65,14 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
                 const choice = ast.param;
                 const choiceName = `${model.parent?.path || "?"}.${choice.name}`
                 return { text: `this.testChoice(${JSON.stringify(choiceName)}, ${expr(choice.expr).text}, (v !== undefined && v !== null), ${choice.num}, ${choice.orMore ? "true" : "false"})` };
-    
+
             case Conformance.Special.Group:
                 if (!Array.isArray(ast.param)) {
                     logger.error("Conformance AST group parameter is not an array");
                     return { text: "true" };
                 }
                 return { text: `this.testGroup(${ast.param.map(e => expr(e).text).join(", ")})` };
-    
+
             case Conformance.Special.Name:
                 const name = ast.param;
                 if (builder.definedFeatures.has(name)) {
@@ -82,7 +82,7 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
                     return { text: "(v === undefined || v === null)", feature: false };
                 }
                 return { text: `record[${JSON.stringify(name)}]` };
-    
+
             case Conformance.Special.OptionalIf:
                 {
                     const e = expr(ast.param);
@@ -94,7 +94,7 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
                         // doesn't work on an optional group
                         return { text: "true" };
                     }
-                    
+
                     // If e is the result of a failing conformance test then accept
                     // no values
                     if (e.feature === false) {
@@ -106,16 +106,16 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
                     // also except missing values
                     return { text: `(${e.text} || v === undefined || v === null)` };
                 }
-    
+
             case Conformance.Special.Value:
                 return { text: `(record[${JSON.stringify(ast.param)}] == undefined ? true : false)` };
-    
+
             case Conformance.Flag.Disallowed:
                 return { text: "false" };
-    
+
             case Conformance.Flag.Mandatory:
                 return { text: "(v !== undefined && v !== null)" };
-    
+
             case Conformance.Operator.AND:
             case Conformance.Operator.EQ:
             case Conformance.Operator.NE:
@@ -137,7 +137,7 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
                             case Conformance.Operator.AND:
                                 feature = e1.feature && e2.feature;
                                 break;
-                                
+
                             case Conformance.Operator.OR:
                                 feature = e1.feature || e2.feature;
                                 break;
@@ -159,11 +159,11 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
 
                     return { text: `${e1.text} ${BinaryOperatorMap[ast.type]} ${e2.text}` }
                 }
-    
+
             case Conformance.Operator.NOT:
                 {
                     const e = expr(ast.param);
-                    
+
                     // Invert feature state
                     if (e.feature !== undefined) {
                         e.feature = !e.feature;

@@ -89,16 +89,16 @@ export class ModelTraversal {
                         case Globals.map8.name:
                             result = Globals.uint8.name;
                             return false;
-            
+
                         case Globals.enum16.name:
                         case Globals.map16.name:
                             result = Globals.uint16.name;
                             return false;
-            
+
                         case Globals.map32.name:
                             result = Globals.uint32.name;
                             return false;
-            
+
                         case Globals.map64.name:
                             result = Globals.uint64.name;
                             return false;
@@ -107,7 +107,7 @@ export class ModelTraversal {
 
                 // If I override a field my type is the same as the overridden
                 // field
-                const overridden = this.findLocal(ancestor, name, [ model.tag ]);
+                const overridden = this.findLocal(ancestor, name, [model.tag]);
                 if (overridden?.type) {
                     result = overridden.type;
                     return false;
@@ -222,7 +222,7 @@ export class ModelTraversal {
     findListEntry(model: ValueModel | undefined): DatatypeModel | undefined {
         return this.operation(() => {
             while (model) {
-                const entry = this.findMember(model, "entry", [ ElementTag.Datatype ]);
+                const entry = this.findMember(model, "entry", [ElementTag.Datatype]);
                 if (entry) {
                     return entry as DatatypeModel;
                 }
@@ -281,7 +281,7 @@ export class ModelTraversal {
      */
     findResponse(command: CommandModel) {
         if (command.response && command.response !== "status") {
-            return new ModelTraversal().findType(command, command.response, [ ElementTag.Command ]);
+            return new ModelTraversal().findType(command, command.response, [ElementTag.Command]);
         }
     }
 

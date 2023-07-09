@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "ContentLauncher", id: 0x50a, classification: "application",
     description: "Content Launcher",
     details: "This cluster provides an interface for launching content on a media player device such as a TV or " +
-             "Speaker.",
+        "Speaker.",
     xref: { document: "cluster", section: "6.7" },
 
     children: [
@@ -36,9 +36,9 @@ Matter.children.push({
             tag: "attribute", name: "AcceptHeader", id: 0x0, type: "list", access: "R V", conformance: "UP",
             constraint: "max 100[max 1024]", default: [], quality: "N",
             details: "This list provides list of content types supported by the Video Player or Content App in the form " +
-                     "of entries in the HTTP \"Accept\" request header.",
+                "of entries in the HTTP \"Accept\" request header.",
             xref: { document: "cluster", section: "6.7.3.1" },
-            children: [ { tag: "datatype", name: "entry", type: "string" } ]
+            children: [{ tag: "datatype", name: "entry", type: "string" }]
         },
 
         {
@@ -52,7 +52,7 @@ Matter.children.push({
             tag: "command", name: "LaunchContent", id: 0x0, access: "O", conformance: "CS",
             direction: "request", response: "LauncherResponse",
             details: "Upon receipt, this SHALL launch the specified content with optional search criteria. This command " +
-                     "returns a Launch Response.",
+                "returns a Launch Response.",
             xref: { document: "cluster", section: "6.7.4.1" },
 
             children: [
@@ -66,8 +66,8 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "AutoPlay", id: 0x1, type: "bool", conformance: "M", constraint: "desc",
                     details: "This SHALL indicate whether to automatically start playing content, where: * TRUE means best match " +
-                             "should start playing automatically. * FALSE means matches should be displayed on screen for user " +
-                             "selection.",
+                        "should start playing automatically. * FALSE means matches should be displayed on screen for user " +
+                        "selection.",
                     xref: { document: "cluster", section: "6.7.4.1.2" }
                 },
 
@@ -95,7 +95,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "DisplayString", id: 0x1, type: "string", conformance: "O",
                     details: "This field, if present, SHALL provide a string that MAY be used to describe the content being " +
-                             "accessed at the given URL.",
+                        "accessed at the given URL.",
                     xref: { document: "cluster", section: "6.7.4.2.2" }
                 },
 
@@ -103,7 +103,7 @@ Matter.children.push({
                     tag: "datatype", name: "BrandingInformation", id: 0x2, type: "BrandingInformationStruct",
                     conformance: "O",
                     details: "This field, if present, SHALL indicate the branding information that MAY be displayed when playing " +
-                             "back the given content.",
+                        "back the given content.",
                     xref: { document: "cluster", section: "6.7.4.2.3" }
                 }
             ]
@@ -150,14 +150,14 @@ Matter.children.push({
             details: "This object defines inputs to a search for content for display or playback.",
             xref: { document: "cluster", section: "6.7.5.2" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "ParameterList", id: 0x0, type: "list", conformance: "M",
                 details: "This SHALL indicate the list of parameters comprising the search. If multiple parameters are " +
-                         "provided, the search parameters SHALL be joined with 'AND' logic. e.g. action movies with Tom " +
-                         "Cruise will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]",
+                    "provided, the search parameters SHALL be joined with 'AND' logic. e.g. action movies with Tom " +
+                    "Cruise will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]",
                 xref: { document: "cluster", section: "6.7.5.2.1" },
-                children: [ { tag: "datatype", name: "entry", type: "ParameterStruct" } ]
-            } ]
+                children: [{ tag: "datatype", name: "entry", type: "ParameterStruct" }]
+            }]
         },
 
         {
@@ -181,7 +181,7 @@ Matter.children.push({
                     tag: "datatype", name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: [],
                     details: "This SHALL indicate the list of additional external content identifiers.",
                     xref: { document: "cluster", section: "6.7.5.3.3" },
-                    children: [ { tag: "datatype", name: "entry", type: "AdditionalInfoStruct" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "AdditionalInfoStruct" }]
                 }
             ]
         },
@@ -272,7 +272,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "BrandingInformationStruct", type: "struct", conformance: "M",
             details: "This object defines Branding Information which can be provided by the client in order to customize " +
-                     "the skin of the Video Player during playback.",
+                "the skin of the Video Player during playback.",
             xref: { document: "cluster", section: "6.7.5.6" },
 
             children: [
@@ -286,14 +286,14 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Background", id: 0x1, type: "StyleInformationStruct", conformance: "O",
                     details: "This SHALL indicate background of the Video Player while content launch request is being processed " +
-                             "by it. This background information MAY also be used by the Video Player when it is in idle state.",
+                        "by it. This background information MAY also be used by the Video Player when it is in idle state.",
                     xref: { document: "cluster", section: "6.7.5.6.2" }
                 },
 
                 {
                     tag: "datatype", name: "Logo", id: 0x2, type: "StyleInformationStruct", conformance: "O",
                     details: "This SHALL indicate the logo shown when the Video Player is launching. This is also used when the " +
-                             "Video Player is in the idle state and Splash field is not available.",
+                        "Video Player is in the idle state and Splash field is not available.",
                     xref: { document: "cluster", section: "6.7.5.6.3" }
                 },
 
@@ -306,7 +306,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Splash", id: 0x4, type: "StyleInformationStruct", conformance: "O",
                     details: "This SHALL indicate the screen shown when the Video Player is in an idle state. If this property is " +
-                             "not populated, the Video Player SHALL default to logo or the provider name.",
+                        "not populated, the Video Player SHALL default to logo or the provider name.",
                     xref: { document: "cluster", section: "6.7.5.6.5" }
                 },
 
@@ -321,7 +321,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "StyleInformationStruct", type: "struct", conformance: "M",
             details: "This object defines style information which can be used by content providers to change the Media " +
-                     "Player’s style related properties.",
+                "Player’s style related properties.",
             xref: { document: "cluster", section: "6.7.5.7" },
 
             children: [
@@ -329,22 +329,22 @@ Matter.children.push({
                     tag: "datatype", name: "ImageUrl", id: 0x0, type: "string", conformance: "O",
                     constraint: "max 8192",
                     details: "This SHALL indicate the URL of image used for Styling different Video Player sections like Logo, " +
-                             "Watermark etc.",
+                        "Watermark etc.",
                     xref: { document: "cluster", section: "6.7.5.7.1" }
                 },
 
                 {
                     tag: "datatype", name: "Color", id: 0x1, type: "string", conformance: "O", constraint: "7, 9",
                     details: "This SHALL indicate the color, in RGB or RGBA, used for styling different Video Player sections " +
-                             "like Logo, Watermark, etc. The value SHALL conform to the 6-digit or 8-digit format defined for CSS " +
-                             "sRGB hexadecimal color notation [https://www.w3.org/TR/css-color-4/#hex-notation]. Examples:",
+                        "like Logo, Watermark, etc. The value SHALL conform to the 6-digit or 8-digit format defined for CSS " +
+                        "sRGB hexadecimal color notation [https://www.w3.org/TR/css-color-4/#hex-notation]. Examples:",
                     xref: { document: "cluster", section: "6.7.5.7.2" }
                 },
 
                 {
                     tag: "datatype", name: "Size", id: 0x2, type: "DimensionStruct", conformance: "O",
                     details: "This SHALL indicate the size of the image used for Styling different Video Player sections like " +
-                             "Logo, Watermark etc.",
+                        "Logo, Watermark etc.",
                     xref: { document: "cluster", section: "6.7.5.7.3" }
                 }
             ]
@@ -388,10 +388,10 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Percentage", id: 0x1, conformance: "M",
                     details: "This value is for dimensions defined as a percentage of the overall display dimensions. For " +
-                             "example, if using a Percentage Metric type for a Width measurement of 50.0, against a display width " +
-                             "of 1920 pixels, then the resulting value used would be 960 pixels (50.0% of 1920) for that " +
-                             "dimension. Whenever a measurement uses this Metric type, the resulting values SHALL be rounded " +
-                             "(\"floored\") towards 0 if the measurement requires an integer final value.",
+                        "example, if using a Percentage Metric type for a Width measurement of 50.0, against a display width " +
+                        "of 1920 pixels, then the resulting value used would be 960 pixels (50.0% of 1920) for that " +
+                        "dimension. Whenever a measurement uses this Metric type, the resulting values SHALL be rounded " +
+                        "(\"floored\") towards 0 if the measurement requires an integer final value.",
                     xref: { document: "cluster", section: "6.7.5.9.2" }
                 }
             ]

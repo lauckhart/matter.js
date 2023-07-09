@@ -31,7 +31,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.12
  */
-export function SoftwareDiagnosticsCluster<T extends SoftwareDiagnosticsCluster.Feature[]>(...features: [ ...T ]) {
+export function SoftwareDiagnosticsCluster<T extends SoftwareDiagnosticsCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...SoftwareDiagnosticsCluster.Metadata,
         supportedFeatures: BitFlags(SoftwareDiagnosticsCluster.Metadata.features, ...features),
@@ -121,7 +121,7 @@ export namespace SoftwareDiagnosticsCluster {
         Watermarks = "Watermarks"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

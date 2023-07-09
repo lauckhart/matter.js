@@ -55,7 +55,7 @@ export const TlvLampAlarmModeBits = { lampBurnHours: BitFlag(1) };
 export const TlvLampAlarmMode = TlvBitmap(TlvUInt8, TlvLampAlarmModeBits);
 
 export namespace BallastConfigurationCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

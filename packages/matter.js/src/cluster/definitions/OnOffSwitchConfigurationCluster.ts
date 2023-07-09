@@ -38,7 +38,7 @@ export const enum SwitchActions {
 }
 
 export namespace OnOffSwitchConfigurationCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
@@ -51,10 +51,12 @@ export namespace OnOffSwitchConfigurationCluster {
     /**
      * A OnOffSwitchConfigurationCluster supports these elements for all feature combinations.
      */
-    export const BaseComponent = ClusterComponent({ attributes: {
-        switchType: Attribute(0, TlvEnum<SwitchType>()),
-        switchActions: WritableAttribute(16, TlvEnum<SwitchActions>(), { default: 0 })
-    } });
+    export const BaseComponent = ClusterComponent({
+        attributes: {
+            switchType: Attribute(0, TlvEnum<SwitchType>()),
+            switchActions: WritableAttribute(16, TlvEnum<SwitchActions>(), { default: 0 })
+        }
+    });
 
     /**
      * This cluster supports all OnOffSwitchConfiguration features.

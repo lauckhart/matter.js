@@ -30,7 +30,7 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7
  */
-export function ContentLauncherCluster<T extends ContentLauncherCluster.Feature[]>(...features: [ ...T ]) {
+export function ContentLauncherCluster<T extends ContentLauncherCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...ContentLauncherCluster.Metadata,
         supportedFeatures: BitFlags(ContentLauncherCluster.Metadata.features, ...features),
@@ -456,7 +456,7 @@ export namespace ContentLauncherCluster {
         UrlPlayback = "UrlPlayback"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

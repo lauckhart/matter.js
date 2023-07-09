@@ -19,7 +19,7 @@ describe("Quality", () => {
                 expect((new Quality(`${flag}`))[field]).toBe(true);
             });
 
-            it ("disallows from text definition", () => {
+            it("disallows from text definition", () => {
                 const quality = new Quality(`!${flag}`);
                 expect(quality[field]).toBe(undefined);
                 expect(quality.disallowed?.[field]).toBe(true);

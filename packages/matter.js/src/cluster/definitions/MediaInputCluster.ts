@@ -30,7 +30,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9
  */
-export function MediaInputCluster<T extends MediaInputCluster.Feature[]>(...features: [ ...T ]) {
+export function MediaInputCluster<T extends MediaInputCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...MediaInputCluster.Metadata,
         supportedFeatures: BitFlags(MediaInputCluster.Metadata.features, ...features),
@@ -137,7 +137,7 @@ export namespace MediaInputCluster {
         NameUpdates = "NameUpdates"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

@@ -141,7 +141,7 @@ export const TlvCommissioningCompleteResponseRequest = TlvObject({
 });
 
 export namespace GeneralCommissioningCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

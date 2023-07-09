@@ -141,7 +141,7 @@ export const TlvReachableChangedEvent = TlvObject({
 });
 
 export namespace BasicInformationCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

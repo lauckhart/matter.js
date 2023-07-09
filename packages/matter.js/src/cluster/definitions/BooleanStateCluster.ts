@@ -34,7 +34,7 @@ export function BooleanStateCluster() {
 export const TlvStateChangeEvent = TlvObject({ stateValue: TlvField(0, TlvBoolean) });
 
 export namespace BooleanStateCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

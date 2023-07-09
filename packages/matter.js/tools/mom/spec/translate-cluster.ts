@@ -12,7 +12,7 @@ import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, Up
 
 const logger = Logger.get("translate-cluster");
 
-const TYPE_ERRORS: { [badType: string]: string} = {
+const TYPE_ERRORS: { [badType: string]: string } = {
     "attribute-id": "attrib-id",
     "bitmap8": "map8",
     "node-idx": "node-id",
@@ -88,7 +88,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             id: Alias(Str, "identifier"),
             name: Identifier
         });
-    
+
         // Some tables list the primary ID twice; only accept the secondary
         // instance in core spec; only accept the primary in cluster spec
         const uniqueIds = new Map<number | undefined, string>();
@@ -113,21 +113,21 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
                 uniqueIds.set(id, camelize(record.name || definition.name));
             }
         }
-    
+
         if (!uniqueIds.size) {
             return false;
         }
-    
+
         return uniqueIds;
     }
-    
+
     function translateClassification() {
         const classifications = translateTable("classfication", definition.classifications, {
             hierarchy: Optional(Str),
             role: Optional(LowerIdentifier),
             scope: Optional(Alias(LowerIdentifier, "context"))
         });
-    
+
         let classification: ClusterElement.Classification;
         if (classifications[0]?.role === "utility") {
             if (classifications[0]?.scope === "node") {
@@ -147,26 +147,26 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
                 derivesFrom = undefined;
             }
         }
-    
+
         return { classification, derivesFrom };
     }
-    
+
     function translateRevision() {
         const revisions = translateTable("revision", definition.revisions, {
             revision: Alias(Integer, "rev")
         });
-    
+
         let revision = revisions[revisions.length - 1]?.revision;
         if (revision === undefined) {
             logger.warn(`no revisions for ${definition.name}, assuming "1"`);
             revision = 1;
         }
-    
+
         children.push({ ...Globals.ClusterRevision, default: revision });
-    
+
         return revision;
     }
-    
+
     function translateFeatures() {
         const records = translateTable("feature", definition.features, {
             id: Alias(Integer, "bit"),
@@ -175,14 +175,14 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
 
             // Must define after details which uses description column
             description: Optional(Alias(Identifier, "feature", "name")),
-    
+
             // Must define after description which uses name column
             name: Alias(UpperIdentifier, "code", "feature"),
-    
+
             // Actual type is numeric but we let Model handle that translation
             default: Optional(Alias(NoSpace, "def"))
         });
-    
+
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
         values && children.push({
             tag: Globals.FeatureMap.tag,
@@ -353,8 +353,8 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
             // in the future
             const { ids, names } = chooseIdentityAliases(
                 definition,
-                [ "id", "value", "enum" ],
-                [ "name", "type", "statuscode", "description" ]
+                ["id", "value", "enum"],
+                ["name", "type", "statuscode", "description"]
             );
 
             let records = translateTable("value", definition, {
@@ -384,7 +384,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
                 //
                 // Previously had identified aliases as "mappedprotocol", "statebit", "function", "relatedattribute"
                 // but this was only a partial list.  Auto-detection makes more sense
-                const { ids, names } = chooseIdentityAliases(definition, [ "bit", "id" ], [ "name", "eventdescription" ]);
+                const { ids, names } = chooseIdentityAliases(definition, ["bit", "id"], ["name", "eventdescription"]);
                 records = translateTable("bit", definition, {
                     id: Alias(Integer, ...ids),
                     name: Alias(Identifier, ...names),
@@ -403,14 +403,14 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
 }
 
 // Load attributes, events and commands
-function translateInvokable(definition: ClusterReference, children: Array<ClusterElement.Child>) {    
+function translateInvokable(definition: ClusterReference, children: Array<ClusterElement.Child>) {
     translateAttributes();
     translateEvents();
     translateCommands();
     translateStatusCodes();
 
     function translateAttributes() {
-        const attributeSets = [ definition.attributes ];
+        const attributeSets = [definition.attributes];
         if (definition.attributeSets) {
             attributeSets.push(...definition.attributeSets);
         }
@@ -422,7 +422,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             }
         }
     }
-    
+
     function translateCommands() {
         const records = translateTable("command", definition.commands, {
             id: Integer,
@@ -435,7 +435,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
         });
 
         applyAccessNotes(definition.commands, records);
-    
+
         const commands = translateRecordsToMatter("command", records, (r) => {
             let direction: CommandElement.Direction | undefined;
             if (r.direction.match(/client.*server/i)) {
@@ -443,28 +443,28 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             } else if (r.direction.match(/server.*client/i)) {
                 direction = CommandElement.Direction.Response;
             }
-    
+
             let response: string | undefined;
             switch (r.response) {
                 case "Y":
                     response = "status";
                     break;
-    
+
                 case "N":
                 case "":
                 case undefined:
                     break;
-    
+
                 default:
                     response = r.response;
                     break;
             }
-    
+
             return CommandElement({ ...r, response: response, direction: direction });
         });
         commands && children.push(...commands);
     }
-    
+
     function translateEvents() {
         const records = translateTable("event", definition.events, {
             id: Integer,
@@ -476,7 +476,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
         });
 
         applyAccessNotes(definition.events, records);
-        
+
         const events = translateRecordsToMatter("event", records, (r) => {
             let priority: EventElement.Priority;
             switch (r.priority?.toLowerCase()) {
@@ -500,7 +500,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
                 default:
                     logger.warn(`unrecognized priority "${r.priority}", assuming CRITICAL`)
                     priority = EventElement.Priority.Critical;
-                }
+            }
             return EventElement({ ...r, priority });
         });
         events && children.push(...events);
@@ -532,7 +532,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             }
         });
     }
-    
+
     function translateDatatype(definition: HtmlReference) {
         let name = definition.name;
         const text = definition.firstParagraph?.textContent;
@@ -541,11 +541,11 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         }
         let match = text?.match(/derived from ([a-z0-9\-_]+)/i);
         let type = match?.[1];
-    
+
         let description: string | undefined;
 
         type = fixTypeError(type);
-    
+
         if (name.match(/enum$/i) || type?.match(/^enum/i)) {
             if (!type) {
                 logger.warn(`no base detected, guessing enum8`)

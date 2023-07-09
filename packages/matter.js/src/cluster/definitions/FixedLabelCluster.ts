@@ -27,7 +27,7 @@ export function FixedLabelCluster() {
 }
 
 export namespace FixedLabelCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

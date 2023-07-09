@@ -27,7 +27,7 @@ export function FlowMeasurementCluster() {
 }
 
 export namespace FlowMeasurementCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

@@ -38,7 +38,7 @@ export const enum LightSensorType {
 }
 
 export namespace IlluminanceMeasurementCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

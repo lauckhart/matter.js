@@ -78,7 +78,7 @@ export const enum ApplicationStatusEnum {
 }
 
 export namespace ApplicationBasicCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

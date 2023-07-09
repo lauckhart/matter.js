@@ -36,7 +36,7 @@ export function ValidProxiesCluster() {
 export const TlvValidProxyStruct = TlvObject({ nodeId: TlvField(1, TlvUInt64) });
 
 export namespace ValidProxiesCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

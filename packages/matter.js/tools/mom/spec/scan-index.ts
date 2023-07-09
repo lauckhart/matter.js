@@ -134,6 +134,6 @@ export function scanIndex(path: string) {
             return;
         }
     });
-    
+
     return result;
 }

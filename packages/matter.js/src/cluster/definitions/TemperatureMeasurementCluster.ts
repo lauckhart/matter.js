@@ -27,7 +27,7 @@ export function TemperatureMeasurementCluster() {
 }
 
 export namespace TemperatureMeasurementCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

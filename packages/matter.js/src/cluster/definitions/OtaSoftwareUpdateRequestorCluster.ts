@@ -128,7 +128,7 @@ export const TlvDownloadErrorEvent = TlvObject({
 });
 
 export namespace OtaSoftwareUpdateRequestorCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

@@ -10,18 +10,18 @@ import { camelize, serialize } from "../../src/util/String.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
 
-const IntegerGlobalMap: { [name: string]: [ string, string ]} = {
-    [Globals.actionId.name]: [ "datatype", "TlvAttributeId" ],
-    [Globals.clusterId.name]: [ "datatype", "TlvClusterId" ],
-    [Globals.commandId.name]: [ "datatype", "TlvCommandId" ],
-    [Globals.deviceTypeId.name]: [ "datatype", "TlvDeviceTypeId" ],
-    [Globals.endpointNo.name]: [ "datatype", "TlvEndpointNumber" ],
-    [Globals.eventId.name]: [ "datatype", "TlvEventId" ],
-    [Globals.fabricId.name]: [ "datatype", "TlvFabricId" ],
-    [Globals.groupId.name]: [ "datatype", "TlvGroupId" ],
-    [Globals.nodeId.name]: [ "datatype", "TlvNodeId" ],
-    [Globals.SubjectId.name]: [ "datatype", "TlvSubjectId" ],
-    [Globals.vendorId.name]: [ "datatype", "TlvVendorId" ]
+const IntegerGlobalMap: { [name: string]: [string, string] } = {
+    [Globals.actionId.name]: ["datatype", "TlvAttributeId"],
+    [Globals.clusterId.name]: ["datatype", "TlvClusterId"],
+    [Globals.commandId.name]: ["datatype", "TlvCommandId"],
+    [Globals.deviceTypeId.name]: ["datatype", "TlvDeviceTypeId"],
+    [Globals.endpointNo.name]: ["datatype", "TlvEndpointNumber"],
+    [Globals.eventId.name]: ["datatype", "TlvEventId"],
+    [Globals.fabricId.name]: ["datatype", "TlvFabricId"],
+    [Globals.groupId.name]: ["datatype", "TlvGroupId"],
+    [Globals.nodeId.name]: ["datatype", "TlvNodeId"],
+    [Globals.SubjectId.name]: ["datatype", "TlvSubjectId"],
+    [Globals.vendorId.name]: ["datatype", "TlvVendorId"]
 };
 
 /** Adds TLV structures for ValueModels to a ClusterFile */
@@ -97,7 +97,7 @@ export class TlvGenerator {
             case Metatype.any:
                 tlv = this.importTlv("tlv", "TlvAny");
                 break;
-    
+
             case Metatype.bytes:
             case Metatype.string:
                 tlv = this.importTlv("tlv/TlvString", metabase.name === Globals.octstr.name ? "TlvByteString" : "TlvString");
@@ -106,7 +106,7 @@ export class TlvGenerator {
                     tlv = `${tlv}.bound(${serialize(bounds)})`;
                 }
                 break;
-    
+
             case Metatype.array:
                 this.importTlv("tlv", "TlvArray");
                 const entry = model.listEntry;
@@ -115,7 +115,7 @@ export class TlvGenerator {
                 }
                 tlv = `TlvArray(${this.reference(entry, scope)})`;
                 break;
-    
+
             case Metatype.bitmap:
                 {
                     const dt = this.defineDatatype(model, scope);
@@ -128,7 +128,7 @@ export class TlvGenerator {
                     }
                 }
                 break;
-    
+
             case Metatype.enum:
                 {
                     const dt = this.defineDatatype(model, scope);
@@ -172,7 +172,7 @@ export class TlvGenerator {
         if (globalMapping) {
             return this.importTlv(...globalMapping);
         }
-        
+
         let tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
         this.importTlv("tlv/TlvNumber", tlv);
 
@@ -331,9 +331,9 @@ export class TlvGenerator {
         return name;
     }
 
-    private createBounds<MIN extends string, MAX extends string>(model: ValueModel, minKey: MIN, maxKey: MAX): { [ key in MIN | MAX ]: number } | undefined {
+    private createBounds<MIN extends string, MAX extends string>(model: ValueModel, minKey: MIN, maxKey: MAX): { [key in MIN | MAX]: number } | undefined {
         const bounds = {} as any;
-        
+
         const min = FieldValue.numericValue(model.constraint.min, model.type);
         const max = FieldValue.numericValue(model.constraint.max, model.type);
         if (!(min || max)) {

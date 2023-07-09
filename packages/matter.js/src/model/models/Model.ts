@@ -76,14 +76,14 @@ export abstract class Model {
         if (this.parent === parent) {
             return;
         }
-        
+
         if (this.parent) {
             const index = this.parent.children.indexOf(this);
             if (index !== -1) {
                 this.parent.children.splice(index, 1);
             }
         }
-        
+
         if (!parent) {
             delete this[PARENT];
         } else {
@@ -173,15 +173,15 @@ export abstract class Model {
 
         // Clone child array because if it references a former parent they'll
         // disappear as we add
-        children = [ ...children ];
-        
+        children = [...children];
+
         this[CHILDREN].push(...children);
     }
 
     /**
      * Factory support.  Populated by derivatives upon definition.
      */
-    static constructors = {} as { [ type: string ]: new(definition: any) => Model };
+    static constructors = {} as { [type: string]: new (definition: any) => Model };
 
     /**
      * In some circumstances the base type can be inferred.  This inference
@@ -219,7 +219,7 @@ export abstract class Model {
      * The set of tags from which this model may derive.
      */
     get allowedBaseTags() {
-        return [ this.tag ];
+        return [this.tag];
     }
 
     /**
@@ -259,7 +259,7 @@ export abstract class Model {
     get<T extends Model>(constructor: Model.Constructor<T>, key: number | string) {
         return this.children.find(
             c => c instanceof constructor
-            && typeof key === "number" ? c.effectiveId === key : c.name === key
+                && typeof key === "number" ? c.effectiveId === key : c.name === key
         ) as T;
     }
 
@@ -289,7 +289,7 @@ export abstract class Model {
         if (!this.errors) {
             this.errors = [];
         }
-        
+
         this.errors.push({
             code,
             source: this.path,
@@ -324,7 +324,7 @@ export abstract class Model {
                     result[key] = this[key];
             }
         }
-        
+
         return result as AnyElement;
     }
 
@@ -345,7 +345,7 @@ export abstract class Model {
     /**
      * Search the inheritance chain for a child property.
      */
-    member(key: ModelTraversal.ElementSelector, allowedTags = [ ElementTag.Datatype, ElementTag.Attribute ]): Model | undefined {
+    member(key: ModelTraversal.ElementSelector, allowedTags = [ElementTag.Datatype, ElementTag.Attribute]): Model | undefined {
         return new ModelTraversal().findMember(this, key, allowedTags);
     }
 
@@ -373,13 +373,13 @@ export abstract class Model {
 }
 
 export namespace Model {
-    export type Constructor<T extends Model> = abstract new(...args: any) => T;
+    export type Constructor<T extends Model> = abstract new (...args: any) => T;
 
     export type LookupPredicate<T extends Model> = Constructor<T> | { type: Constructor<T>, test: (model: Model) => boolean };
 
     export type PropertyValidation = {
         name: string,
-        type: string | (new(...args: any[]) => any) | { [key: string | number]: any } | undefined,
+        type: string | (new (...args: any[]) => any) | { [key: string | number]: any } | undefined,
         required?: boolean,
         nullable?: boolean,
         values?: { [name: string]: any }

@@ -49,7 +49,7 @@ export const TlvGetMeasurementProfileCommandRequest = TlvObject({
 });
 
 export namespace ElectricalMeasurementCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

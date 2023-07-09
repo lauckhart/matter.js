@@ -30,7 +30,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.18
  */
-export function AdministratorCommissioningCluster<T extends AdministratorCommissioningCluster.Feature[]>(...features: [ ...T ]) {
+export function AdministratorCommissioningCluster<T extends AdministratorCommissioningCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...AdministratorCommissioningCluster.Metadata,
         supportedFeatures: BitFlags(AdministratorCommissioningCluster.Metadata.features, ...features),
@@ -80,7 +80,7 @@ export namespace AdministratorCommissioningCluster {
         Basic = "Basic"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

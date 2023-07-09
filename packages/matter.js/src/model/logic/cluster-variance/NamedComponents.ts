@@ -27,7 +27,7 @@ export type NamedComponents = NamedComponent[];
 export function NamedComponents(cluster: ClusterModel, inferredComponents: InferredComponents): NamedComponents {
     const namedComponents = [] as NamedComponents;
     const namedComponentMap = {} as { [name: string]: NamedComponent };
-    const featureNames = Object.fromEntries(cluster.features.map(f => [ f.name, f.description || f.name ]));
+    const featureNames = Object.fromEntries(cluster.features.map(f => [f.name, f.description || f.name]));
 
     for (const elementVariance of inferredComponents) {
         let name;

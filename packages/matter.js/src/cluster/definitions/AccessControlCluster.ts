@@ -183,7 +183,7 @@ export const TlvAccessControlExtensionChangedEvent = TlvObject({
 });
 
 export namespace AccessControlCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

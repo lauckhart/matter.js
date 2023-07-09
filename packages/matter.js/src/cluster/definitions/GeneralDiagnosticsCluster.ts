@@ -250,7 +250,7 @@ export const TlvBootReasonEvent = TlvObject({
 });
 
 export namespace GeneralDiagnosticsCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

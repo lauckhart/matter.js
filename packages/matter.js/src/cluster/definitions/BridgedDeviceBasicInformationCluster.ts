@@ -89,7 +89,7 @@ export const TlvStartUpEvent = TlvObject({ softwareVersion: TlvField(0, TlvUInt3
 export const TlvReachableChangedEvent = TlvObject({ reachableNewValue: TlvField(0, TlvBoolean) });
 
 export namespace BridgedDeviceBasicInformationCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

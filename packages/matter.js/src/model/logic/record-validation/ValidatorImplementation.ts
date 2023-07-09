@@ -90,7 +90,7 @@ export class ValidatorImplementation implements RecordValidator {
             // This cannot fail but TS & eslint don't know that
             return;
         }
-        
+
         if (!result.errors) {
             result.valid = false;
             result.errors = [];

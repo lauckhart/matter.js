@@ -29,7 +29,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3
  */
-export function ThermostatCluster<T extends ThermostatCluster.Feature[]>(...features: [ ...T ]) {
+export function ThermostatCluster<T extends ThermostatCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...ThermostatCluster.Metadata,
         supportedFeatures: BitFlags(ThermostatCluster.Metadata.features, ...features),
@@ -629,7 +629,7 @@ export namespace ThermostatCluster {
         LocalTemperatureNotExposed = "LocalTemperatureNotExposed"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

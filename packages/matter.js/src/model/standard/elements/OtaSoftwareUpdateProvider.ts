@@ -19,7 +19,7 @@ Matter.children.push({
             tag: "command", name: "QueryImage", id: 0x0, conformance: "M", direction: "request",
             response: "QueryImageResponse",
             details: "Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA " +
-                     "Provider to match the OTA Requestor’s constraints provided in the payload fields.",
+                "Provider to match the OTA Requestor’s constraints provided in the payload fields.",
             xref: { document: "core", section: "11.19.6.5.1" },
 
             children: [
@@ -29,7 +29,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "ProtocolsSupported", id: 0x3, type: "list", conformance: "M",
                     constraint: "max 8",
-                    children: [ { tag: "datatype", name: "entry", type: "DownloadProtocolEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "DownloadProtocolEnum" }]
                 },
                 { tag: "datatype", name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O" },
                 { tag: "datatype", name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2" },
@@ -112,8 +112,8 @@ Matter.children.push({
         {
             tag: "datatype", name: "ApplyUpdateActionEnum", type: "enum8", conformance: "M",
             details: "See Section 11.19.3.6, “Applying a software update” for the semantics of the values. This " +
-                     "enumeration is used in the Action field of the ApplyUpdateResponse command. See (Section " +
-                     "11.19.6.5.4.1, “Action Field”).",
+                "enumeration is used in the Action field of the ApplyUpdateResponse command. See (Section " +
+                "11.19.6.5.4.1, “Action Field”).",
             xref: { document: "core", section: "11.19.6.4.2" },
             children: [
                 { tag: "datatype", name: "Proceed", id: 0x0, conformance: "M" },

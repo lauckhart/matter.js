@@ -12,10 +12,10 @@ Matter.children.push({
     tag: "cluster", name: "BridgedDeviceBasicInformation", id: 0x39, type: "BasicInformation",
     classification: "endpoint", description: "Bridged Device Basic Information",
     details: "This Cluster serves two purposes towards a Node communicating with a Bridge: indicate that the " +
-             "functionality on the Endpoint where it is placed (and its Parts) is bridged from a non-CHIP " +
-             "technology; and provide a centralized collection of attributes that the Node MAY collect to aid in " +
-             "conveying information regarding the Bridged Device to a user, such as the vendor name, the model " +
-             "name, or user-assigned name.",
+        "functionality on the Endpoint where it is placed (and its Parts) is bridged from a non-CHIP " +
+        "technology; and provide a centralized collection of attributes that the Node MAY collect to aid in " +
+        "conveying information regarding the Bridged Device to a user, such as the vendor name, the model " +
+        "name, or user-assigned name.",
     xref: { document: "core", section: "9.13" },
 
     children: [
@@ -98,7 +98,7 @@ Matter.children.push({
         {
             tag: "event", name: "StartUp", id: 0x0, conformance: "O", priority: "critical",
             xref: { document: "core", section: "9.13.5" },
-            children: [ { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }]
         },
         {
             tag: "event", name: "ShutDown", id: 0x1, conformance: "O", priority: "critical",
@@ -112,10 +112,10 @@ Matter.children.push({
         {
             tag: "event", name: "ReachableChanged", id: 0x3, conformance: "M", priority: "info",
             details: "This event SHALL be generated when there is a change in the Reachable attribute. Its purpose is to " +
-                     "provide an indication towards interested parties that the reachability of a bridged device (over " +
-                     "the non-Matter network) has changed, so they MAY take appropriate action.",
+                "provide an indication towards interested parties that the reachability of a bridged device (over " +
+                "the non-Matter network) has changed, so they MAY take appropriate action.",
             xref: { document: "core", section: "9.13.5.1" },
-            children: [ { tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M" }]
         },
 
         {

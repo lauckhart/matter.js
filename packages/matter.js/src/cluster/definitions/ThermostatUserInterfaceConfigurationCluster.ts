@@ -102,7 +102,7 @@ export const enum ScheduleProgrammingVisibility {
 }
 
 export namespace ThermostatUserInterfaceConfigurationCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

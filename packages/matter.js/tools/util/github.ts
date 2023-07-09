@@ -14,14 +14,14 @@ type Cache = (name: string, generator: (name: string) => Promise<string>) => Pro
 
 export class Directory {
     private contents = {} as {
-        [ key: string ]: Entry
+        [key: string]: Entry
     };
 
     constructor(
         public readonly url: string,
         private readonly cache: Cache,
         private readonly auth?: string,
-    ) {}
+    ) { }
 
     async ls(): Promise<string[]> {
         await this.load();

@@ -33,7 +33,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.13
  */
-export function ThreadNetworkDiagnosticsCluster<T extends ThreadNetworkDiagnosticsCluster.Feature[]>(...features: [ ...T ]) {
+export function ThreadNetworkDiagnosticsCluster<T extends ThreadNetworkDiagnosticsCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...ThreadNetworkDiagnosticsCluster.Metadata,
         supportedFeatures: BitFlags(ThreadNetworkDiagnosticsCluster.Metadata.features, ...features),
@@ -432,7 +432,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
         MacCounts = "MacCounts"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

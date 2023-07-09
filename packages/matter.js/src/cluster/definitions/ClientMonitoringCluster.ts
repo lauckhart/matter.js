@@ -38,7 +38,7 @@ export const TlvUnregisterClientMonitoringRequest = TlvObject({
 });
 
 export namespace ClientMonitoringCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

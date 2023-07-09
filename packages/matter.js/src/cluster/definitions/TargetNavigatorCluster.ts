@@ -114,7 +114,7 @@ export const TlvNavigateTargetResponseRequest = TlvObject({
 });
 
 export namespace TargetNavigatorCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

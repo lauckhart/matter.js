@@ -61,12 +61,12 @@ export type ValueElement = BaseElement & {
 
 export function ValueElement(tag: ElementTag, definition: ValueElement) {
     definition = { ...definition };
-    
+
     if (definition.constraint?.toString().toLowerCase() === "all") {
         delete definition.constraint;
     }
 
-    for (const k of [ "conformance", "quality", "access", "quality" ]) {
+    for (const k of ["conformance", "quality", "access", "quality"]) {
         if ((definition as any)[k] === "") {
             delete (definition as any)[k];
         }
@@ -90,11 +90,11 @@ export namespace ValueElement {
      * A pool of datatype definitions indexed by name.
      */
     export type Datatypes = { [name: string]: ValueElement };
-    
+
     /**
      * Valid sizes for ints.
      */
-    export type Size = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;    
+    export type Size = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
     /**
      * Legal bitmap sizes.  The Matter specification defines enums as

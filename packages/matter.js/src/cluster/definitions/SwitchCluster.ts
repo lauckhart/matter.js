@@ -32,7 +32,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11
  */
-export function SwitchCluster<T extends SwitchCluster.Feature[]>(...features: [ ...T ]) {
+export function SwitchCluster<T extends SwitchCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...SwitchCluster.Metadata,
         supportedFeatures: BitFlags(SwitchCluster.Metadata.features, ...features),
@@ -153,7 +153,7 @@ export namespace SwitchCluster {
         MomentarySwitchMultiPress = "MomentarySwitchMultiPress"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

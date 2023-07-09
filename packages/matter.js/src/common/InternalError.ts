@@ -7,4 +7,4 @@
 import { MatterError } from "./MatterError.js";
 
 /** Error base class for all errors thrown by this library. */
-export class InternalError extends MatterError {}
+export class InternalError extends MatterError { }

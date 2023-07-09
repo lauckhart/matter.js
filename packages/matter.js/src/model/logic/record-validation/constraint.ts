@@ -16,7 +16,7 @@ export function addConstraint(builder: ValidatorBuilder, model: ValueModel, cons
         if (ast.parts) {
             return `(${ast.parts.map(part => generateConstraintExpr(model, part)).join(" || ")})`;
         }
-        
+
         const metatype = model.metatype;
         switch (metatype) {
             case Metatype.array:

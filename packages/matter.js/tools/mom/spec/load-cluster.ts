@@ -126,7 +126,7 @@ export function loadCluster(clusterRef: HtmlReference) {
             case "classification":
                 defineElement("classifications", subref);
                 break;
-    
+
             case "attributes":
                 defineElement("attributes", subref);
                 break;

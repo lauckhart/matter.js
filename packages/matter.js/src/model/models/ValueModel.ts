@@ -28,7 +28,7 @@ export abstract class ValueModel extends Model implements ValueElement {
     byteSize?: ValueElement.Size;
     default?: FieldValue;
     metatype?: Metatype;
-    override isType? = true;
+    override isType?= true;
 
     override get children(): DatatypeModel[] {
         return super.children as any;
@@ -95,7 +95,7 @@ export abstract class ValueModel extends Model implements ValueElement {
             const primitiveName = metabase.name.replace("map", "uint");
             return metabase.parent?.children.find(c => c.name === primitiveName) as ValueModel | undefined;
         }
-        
+
         return metabase;
     }
 
@@ -166,9 +166,9 @@ export abstract class ValueModel extends Model implements ValueElement {
      */
     override get allowedBaseTags() {
         if (this.tag === ElementTag.Datatype) {
-            return [ ElementTag.Datatype ];
+            return [ElementTag.Datatype];
         }
-        return [ this.tag, ElementTag.Datatype ];
+        return [this.tag, ElementTag.Datatype];
     }
 
     /**
@@ -176,7 +176,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      */
     get validationAspects() {
         const aspects = Array<Aspect<any>>();
-        
+
         new ModelTraversal().visitInheritance(this, (model) => {
             if (model instanceof ValueModel) {
                 if (
@@ -213,7 +213,7 @@ export abstract class ValueModel extends Model implements ValueElement {
 
     override valueOf() {
         const result = super.valueOf() as any;
-        for (const k of [ "conformance", "access", "quality", "constraint" ]) {
+        for (const k of ["conformance", "access", "quality", "constraint"]) {
             const v = (this as any)[k] as Aspect<any>;
             if (v && !v.empty) {
                 result[k] = v.valueOf();
@@ -235,11 +235,11 @@ export abstract class ValueModel extends Model implements ValueElement {
         }
     }
 
-    private getAspect(symbol: symbol, constructor: new(definition: any) => any) {
+    private getAspect(symbol: symbol, constructor: new (definition: any) => any) {
         return (this as any)[symbol] || ((this as any)[symbol] = new constructor(undefined));
     }
 
-    private setAspect(symbol: symbol, constructor: new(definition: any) => any, value: any) {
+    private setAspect(symbol: symbol, constructor: new (definition: any) => any, value: any) {
         if (value instanceof constructor) {
             (this as any)[symbol] = value;
         } else {

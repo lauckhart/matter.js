@@ -35,7 +35,7 @@ export namespace DeviceTypeElement {
         Simple = "simple",
         Dynamic = "dynamic"
     }
-    
+
     // TODO - kill this enum once clusters are loaded
     export enum DeviceType {
         // Lighting
@@ -43,12 +43,12 @@ export namespace DeviceTypeElement {
         DimmableLight = 0x0101,
         ColorTemperatureLight = 0x010c,
         ExtendedColorLight = 0x010d,
-    
+
         // Smart plugs/outlets and other actuators
         OnOffPluginUnit = 0x010a,
         DimmablePluginUnit = 0x010b,
         Pump = 0x303,
-    
+
         // Switches and controls
         OnOffLightSwitch = 0x0103,
         DimmerSwitch = 0x0104,
@@ -56,7 +56,7 @@ export namespace DeviceTypeElement {
         ControlBridge = 0x0840,
         PumpController = 0x0304,
         GenericSwitch = 0x000f,
-    
+
         // Sensors
         ContactSensor = 0x0015,
         LightSensor = 0x0106,
@@ -66,17 +66,17 @@ export namespace DeviceTypeElement {
         FlowSensor = 0x0306,
         HumiditySensor = 0x0307,
         OnOffSensor = 0x0850,
-    
+
         // Closures
         DoorLock = 0x000a,
         DoorLockController = 0x000b,
         WindowCovering = 0x0202,
-    
+
         // HVAC
         HeatingCoolingUnit = 0x0300,
         Thermostat = 0x0301,
         Fan = 0x002b,
-    
+
         // Media
         BasicVideoPlayer = 0x0028,
         CastingVideoPlayer = 0x0023,
@@ -84,7 +84,7 @@ export namespace DeviceTypeElement {
         ContentApp = 0x0024,
         CastingVideoClient = 0x0029,
         VideoRemoteControl = 0x002a,
-    
+
         // Generic
         ModeSelect = 0x0027
     }

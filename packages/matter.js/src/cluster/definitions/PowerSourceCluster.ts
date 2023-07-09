@@ -32,7 +32,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7
  */
-export function PowerSourceCluster<T extends PowerSourceCluster.Feature[]>(...features: [ ...T ]) {
+export function PowerSourceCluster<T extends PowerSourceCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...PowerSourceCluster.Metadata,
         supportedFeatures: BitFlags(PowerSourceCluster.Metadata.features, ...features),
@@ -334,7 +334,7 @@ export namespace PowerSourceCluster {
         Replaceable = "Replaceable"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

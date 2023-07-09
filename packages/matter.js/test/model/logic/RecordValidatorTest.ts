@@ -68,12 +68,12 @@ const AllTests = Tests({
         feature: Tests(Features({ F: "Foo" }), {
             mandatory: Tests(Fields({ conformance: "F" }), {
                 "allows if enabled": {
-                    supports: [ "foo" ],
+                    supports: ["foo"],
                     record: { test: 1234 }
                 },
 
                 "requires if enabled": {
-                    supports: [ "foo" ],
+                    supports: ["foo"],
                     errors: { conformance: "Test" }
                 },
 
@@ -87,12 +87,12 @@ const AllTests = Tests({
 
             optional: Tests(Fields({ conformance: "[F]" }), {
                 "allows if enabled": {
-                    supports: [ "foo" ],
+                    supports: ["foo"],
                     record: { test: 1234 }
                 },
 
                 "allows omission if enabled": {
-                    supports: [ "foo" ],
+                    supports: ["foo"],
                 },
 
                 "disallows if disabled": {
@@ -103,7 +103,7 @@ const AllTests = Tests({
                 "allows omission if disabled": {}
             }),
 
-            "negated mandatory": Tests(Fields({ conformance: "!F"}), {
+            "negated mandatory": Tests(Fields({ conformance: "!F" }), {
                 "allows if disabled": {
                     record: { test: 1234 }
                 },
@@ -113,17 +113,17 @@ const AllTests = Tests({
                 },
 
                 "disallows if enabled": {
-                    supports: [ "foo" ],
+                    supports: ["foo"],
                     record: { test: 1234 },
                     errors: { conformance: "Test" }
                 },
 
                 "allows omission if enabled": {
-                    supports: [ "foo" ]
+                    supports: ["foo"]
                 }
             }),
 
-            "negated optional": Tests(Fields({ conformance: "[!F]"}), {
+            "negated optional": Tests(Fields({ conformance: "[!F]" }), {
                 "allows if disabled": {
                     record: { test: 1234 }
                 },
@@ -131,13 +131,13 @@ const AllTests = Tests({
                 "allows omission if disabled": {},
 
                 "disallows if enabled": {
-                    supports: [ "foo" ],
+                    supports: ["foo"],
                     record: { test: 1234 },
                     errors: { conformance: "Test" }
                 },
 
                 "allows omission if enabled": {
-                    supports: [ "foo" ]
+                    supports: ["foo"]
                 }
             })
         }),
@@ -146,12 +146,12 @@ const AllTests = Tests({
             "disjunction": Tests({
                 mandatory: Tests(Fields({ conformance: "F | B" }), {
                     "allows if enabled (LHS)": {
-                        supports: [ "foo" ],
+                        supports: ["foo"],
                         record: { test: 1234 }
                     },
 
                     "allows if enabled (RHS)": {
-                        supports: [ "bar" ],
+                        supports: ["bar"],
                         record: { test: 1234 }
                     },
 
@@ -165,21 +165,21 @@ const AllTests = Tests({
 
                 optional: Tests(Fields({ conformance: "[F | B]" }), {
                     "allows if enabled (LHS)": {
-                        supports: [ "foo" ],
+                        supports: ["foo"],
                         record: { test: 1234 }
                     },
 
                     "allows if enabled (RHS)": {
-                        supports: [ "bar" ],
+                        supports: ["bar"],
                         record: { test: 1234 }
                     },
 
                     "allows omission if enabled (LHS)": {
-                        supports: [ "foo" ]
+                        supports: ["foo"]
                     },
 
                     "allows omission if enabled (RHS)": {
-                        supports: [ "bar" ]
+                        supports: ["bar"]
                     },
 
                     "disallows if disabled": {
@@ -194,12 +194,12 @@ const AllTests = Tests({
             "conjunction": Tests({
                 mandatory: Tests(Fields({ conformance: "F & B" }), {
                     "allows if enabled": {
-                        supports: [ "foo", "bar" ],
+                        supports: ["foo", "bar"],
                         record: { test: 1234 }
                     },
 
                     "requires if enabled": {
-                        supports: [ "foo", "bar" ],
+                        supports: ["foo", "bar"],
                         errors: { conformance: "Test" }
                     },
 
@@ -209,13 +209,13 @@ const AllTests = Tests({
                     },
 
                     "disallows if disabled (LHS enabled)": {
-                        supports: [ "foo" ],
+                        supports: ["foo"],
                         record: { test: 1234 },
                         errors: { conformance: "Test" }
                     },
 
                     "disallows if disabled (RHS enabled)": {
-                        supports: [ "bar" ],
+                        supports: ["bar"],
                         record: { test: 1234 },
                         errors: { conformance: "Test" }
                     },
@@ -223,22 +223,22 @@ const AllTests = Tests({
                     "allows omission if disabled": {},
 
                     "allows omission if disabled (LHS enabled)": {
-                        supports: [ "foo" ]
+                        supports: ["foo"]
                     },
 
                     "allows omission if disabled (RHS enabled)": {
-                        supports: [ "bar" ]
+                        supports: ["bar"]
                     }
                 }),
 
                 optional: Tests(Fields({ conformance: "[F & B]" }), {
                     "allows if enabled": {
-                        supports: [ "foo", "bar" ],
+                        supports: ["foo", "bar"],
                         record: { test: 1234 }
                     },
 
                     "allows omission if enabled": {
-                        supports: [ "foo", "bar" ]
+                        supports: ["foo", "bar"]
                     },
 
                     "disallows if disabled": {
@@ -247,13 +247,13 @@ const AllTests = Tests({
                     },
 
                     "disallows if disabled (LHS enabled)": {
-                        supports: [ "foo" ],
+                        supports: ["foo"],
                         record: { test: 1234 },
                         errors: { conformance: "Test" }
                     },
 
                     "disallows if disabled (RHS enabled)": {
-                        supports: [ "bar" ],
+                        supports: ["bar"],
                         record: { test: 1234 },
                         errors: { conformance: "Test" }
                     },
@@ -261,11 +261,11 @@ const AllTests = Tests({
                     "allows omission if disabled": {},
 
                     "allows omission if disabled (LHS enabled)": {
-                        supports: [ "foo" ]
+                        supports: ["foo"]
                     },
 
                     "allows omission if disabled (RHS enabled)": {
-                        supports: [ "bar" ]
+                        supports: ["bar"]
                     }
                 })
             })
@@ -274,71 +274,71 @@ const AllTests = Tests({
         "trinary logical feature": Tests(Features({ A: "Aye", B: "Bee", C: "See" }), {
             "conjunction": Tests(Fields({ conformance: "A & B & C" }), {
                 "allows if enabled": {
-                    supports: [ "aye", "bee", "see" ],
+                    supports: ["aye", "bee", "see"],
                     record: { test: 1234 }
                 },
 
                 "requires if enabled": {
-                    supports: [ "aye", "bee", "see" ],
+                    supports: ["aye", "bee", "see"],
                     errors: { conformance: "Test" }
                 },
 
                 "disallows if disabled (RHS & LHS enabled)": {
-                    supports: [ "aye", "see" ],
+                    supports: ["aye", "see"],
                     record: { test: 1234 },
                     errors: { conformance: "Test" }
                 },
 
                 "allows omission if disabled (RHS & LHS enabled)": {
-                    supports: [ "aye", "see" ]
+                    supports: ["aye", "see"]
                 }
             }),
 
-            "disjunction within conjunction": Tests(Fields({ conformance: "A & (B | C)"}), {
+            "disjunction within conjunction": Tests(Fields({ conformance: "A & (B | C)" }), {
                 "allows if enabled (disjunction RHS)": {
-                    supports: [ "aye", "bee" ],
+                    supports: ["aye", "bee"],
                     record: { test: 1234 }
                 },
 
                 "allows if enabled (disjunction LHS)": {
-                    supports: [ "aye", "see" ],
+                    supports: ["aye", "see"],
                     record: { test: 1234 }
                 },
 
                 "requires if enabled (disjunction RHS)": {
-                    supports: [ "aye", "bee" ],
+                    supports: ["aye", "bee"],
                     errors: { conformance: "Test" }
                 },
 
                 "requires if enabled (disjunction LHS)": {
-                    supports: [ "aye", "see" ],
+                    supports: ["aye", "see"],
                     errors: { conformance: "Test" }
                 },
 
                 "disallows if disabled (conjunction LHS)": {
-                    supports: [ "see" ],
+                    supports: ["see"],
                     record: { test: 1234 },
                     errors: { conformance: "Test" }
                 },
 
                 "allows omission if disabled (conjunction LHS)": {
-                    supports: [ "see" ]
+                    supports: ["see"]
                 }
             }),
 
-            "conjunction within disjunction": Tests(Fields({ conformance: "A | (B & C)"}), {
+            "conjunction within disjunction": Tests(Fields({ conformance: "A | (B & C)" }), {
                 "allows if enabled (conjunction LHS)": {
-                    supports: [ "aye" ],
+                    supports: ["aye"],
                     record: { test: 1234 }
                 },
 
                 "allows if enabled (conjunction RHS)": {
-                    supports: [ "bee", "see" ],
+                    supports: ["bee", "see"],
                     record: { test: 1234 }
                 },
 
                 "disallows if disabled (conjunction LHS enabled)": {
-                    supports: [ "bee" ],
+                    supports: ["bee"],
                     record: { test: 1234 },
                     errors: { conformance: "Test" }
                 }
@@ -429,7 +429,7 @@ function validate({ fields, features }: ClusterStructure, { supports, record, er
 
     // Create definition errors
     if (errors && !Array.isArray(errors)) {
-        errors = [ errors ];
+        errors = [errors];
     }
     const definitionErrors = errors && errors.map(e => {
         // Shortcut for conformance errors

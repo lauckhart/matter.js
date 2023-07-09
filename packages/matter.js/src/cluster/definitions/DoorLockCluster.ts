@@ -32,7 +32,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2
  */
-export function DoorLockCluster<T extends DoorLockCluster.Feature[]>(...features: [ ...T ]) {
+export function DoorLockCluster<T extends DoorLockCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...DoorLockCluster.Metadata,
         supportedFeatures: BitFlags(DoorLockCluster.Metadata.features, ...features),
@@ -1296,7 +1296,7 @@ export namespace DoorLockCluster {
         HolidaySchedules = "HolidaySchedules"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

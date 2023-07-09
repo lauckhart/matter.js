@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "Actions", id: 0x25, classification: "application", description: "Actions",
     details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to " +
-             "expose action information.",
+        "expose action information.",
     xref: { document: "core", section: "9.14" },
 
     children: [
@@ -19,33 +19,33 @@ Matter.children.push({
             tag: "attribute", name: "ActionList", id: 0x0, type: "list", access: "R V", conformance: "M",
             constraint: "max 256", default: [],
             details: "The ActionList attribute holds the list of actions. Each entry SHALL have an unique ActionID, and " +
-                     "its EndpointListID SHALL exist in the EndpointLists attribute.",
+                "its EndpointListID SHALL exist in the EndpointLists attribute.",
             xref: { document: "core", section: "9.14.5.1" },
-            children: [ { tag: "datatype", name: "entry", type: "ActionStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "ActionStruct" }]
         },
 
         {
             tag: "attribute", name: "EndpointLists", id: 0x1, type: "list", access: "R V", conformance: "M",
             constraint: "max 256", default: [],
             details: "The EndpointLists attribute holds the list of endpoint lists. Each entry SHALL have an unique " +
-                     "EndpointListID.",
+                "EndpointListID.",
             xref: { document: "core", section: "9.14.5.2" },
-            children: [ { tag: "datatype", name: "entry", type: "EndpointListStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "EndpointListStruct" }]
         },
 
         {
             tag: "attribute", name: "SetupUrl", id: 0x2, type: "string", access: "R V", conformance: "O",
             constraint: "max 512", default: "empty",
             details: "The SetupURL attribute (when provided) SHALL indicate a URL; its syntax SHALL follow the syntax as " +
-                     "specified in RFC 3986, max. 512 ASCII characters. The location referenced by this URL SHALL provide " +
-                     "additional information for the actions provided:",
+                "specified in RFC 3986, max. 512 ASCII characters. The location referenced by this URL SHALL provide " +
+                "additional information for the actions provided:",
             xref: { document: "core", section: "9.14.5.3" }
         },
 
         {
             tag: "event", name: "StateChanged", id: 0x0, access: "V", conformance: "M", priority: "info",
             details: "This event SHALL be generated when there is a change in the State of an ActionID during the " +
-                     "execution of an action and the most recent command using that ActionID used an InvokeID data field.",
+                "execution of an action and the most recent command using that ActionID used an InvokeID data field.",
             xref: { document: "core", section: "9.14.7.1" },
 
             children: [
@@ -54,7 +54,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
                     details: "This field SHALL be set to the InvokeID which was provided to the most recent command referencing " +
-                             "this ActionID.",
+                        "this ActionID.",
                     xref: { document: "core", section: "9.14.7.1.1" }
                 },
 
@@ -69,7 +69,7 @@ Matter.children.push({
         {
             tag: "event", name: "ActionFailed", id: 0x1, access: "V", conformance: "M", priority: "info",
             details: "This event SHALL be generated when there is some error which prevents the action from its normal " +
-                     "planned execution and the most recent command using that ActionID used an InvokeID data field.",
+                "planned execution and the most recent command using that ActionID used an InvokeID data field.",
             xref: { document: "core", section: "9.14.7.2" },
 
             children: [
@@ -293,17 +293,17 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Scene", id: 0x1, conformance: "M",
                     details: "Can be used to set a static state of the associated endpoints (typically using InstantAction or " +
-                             "InstantActionWithTransition), or to bring these endpoints into a more dynamic state (typically " +
-                             "using StartAction), where the endpoints would e.g. gradually cycle through certain colors for a " +
-                             "pleasing effect. A voice controller could use \"set\" (to map to InstantAction) or \"play\" (to map to " +
-                             "StartAction) to trig",
+                        "InstantActionWithTransition), or to bring these endpoints into a more dynamic state (typically " +
+                        "using StartAction), where the endpoints would e.g. gradually cycle through certain colors for a " +
+                        "pleasing effect. A voice controller could use \"set\" (to map to InstantAction) or \"play\" (to map to " +
+                        "StartAction) to trig",
                     xref: { document: "core", section: "9.14.4.2.1" }
                 },
 
                 {
                     tag: "datatype", name: "Sequence", id: 0x2, conformance: "M",
                     details: "Indicates an action which involves a sequence of events/states of the associated endpoints, such as " +
-                             "a wake-up experience.",
+                        "a wake-up experience.",
                     xref: { document: "core", section: "9.14.4.2.2" }
                 },
 
@@ -316,7 +316,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Exception", id: 0x4, conformance: "M",
                     details: "Indicates some action which the server will execute when a certain condition (which normally does " +
-                             "not happen) is not met.",
+                        "not happen) is not met.",
                     xref: { document: "core", section: "9.14.4.2.4" }
                 },
 
@@ -329,7 +329,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Alarm", id: 0x6, conformance: "M",
                     details: "Similar to Notification but with a higher priority (and might override other endpoint states which " +
-                             "Type=Notification would not override).",
+                        "Type=Notification would not override).",
                     xref: { document: "core", section: "9.14.4.2.6" }
                 }
             ]
@@ -364,26 +364,26 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Other", id: 0x0, conformance: "M",
                     details: "This value is provided for the case of an endpoint list which is tied specifically to this action " +
-                             "i.e. not independently created by the user. For Type=Other the Name MAY be empty. A Matter " +
-                             "controller would typically not use this for anything else than just to know which endpoints would " +
-                             "be affected by the action.",
+                        "i.e. not independently created by the user. For Type=Other the Name MAY be empty. A Matter " +
+                        "controller would typically not use this for anything else than just to know which endpoints would " +
+                        "be affected by the action.",
                     xref: { document: "core", section: "9.14.4.5.1" }
                 },
 
                 {
                     tag: "datatype", name: "Room", id: 0x1, conformance: "M",
                     details: "Is used for the situation where an endpoint can only be part of one such rooms (e.g. physical " +
-                             "mapping). Using these exposed logical groups, a Matter controller who has a similar grouping " +
-                             "concept can use it to place each endpoint (bridged device) in the right room automatically, without " +
-                             "user having to redo that setup for each device in each system - both at first contact and upon " +
-                             "later updates to the endpoints (e.g. user adds a bridged device or creates a new room).",
+                        "mapping). Using these exposed logical groups, a Matter controller who has a similar grouping " +
+                        "concept can use it to place each endpoint (bridged device) in the right room automatically, without " +
+                        "user having to redo that setup for each device in each system - both at first contact and upon " +
+                        "later updates to the endpoints (e.g. user adds a bridged device or creates a new room).",
                     xref: { document: "core", section: "9.14.4.5.2" }
                 },
 
                 {
                     tag: "datatype", name: "Zone", id: 0x2, conformance: "M",
                     details: "Is a more general concept where an endpoint can be part of multiple zones, e.g. a light in the " +
-                             "living",
+                        "living",
                     xref: { document: "core", section: "9.14.4.5.3" }
                 }
             ]
@@ -404,23 +404,23 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]",
                     details: "This field SHALL indicate the name (as assigned by the user or automatically by the server) " +
-                             "associated with this action. This can be used for identifying the action to the user by the client. " +
-                             "Example: \"my colorful scene\".",
+                        "associated with this action. This can be used for identifying the action to the user by the client. " +
+                        "Example: \"my colorful scene\".",
                     xref: { document: "core", section: "9.14.4.6.2" }
                 },
 
                 {
                     tag: "datatype", name: "Type", id: 0x2, type: "ActionTypeEnum", conformance: "M",
                     details: "This field SHALL indicate the type of action. The value of Type of an action, along with its " +
-                             "SupportedCommands can be used by the client in its UX or logic to determine how to present or use " +
-                             "such action. See ActionTypeEnum for details and examples.",
+                        "SupportedCommands can be used by the client in its UX or logic to determine how to present or use " +
+                        "such action. See ActionTypeEnum for details and examples.",
                     xref: { document: "core", section: "9.14.4.6.3" }
                 },
 
                 {
                     tag: "datatype", name: "EndpointListId", id: 0x3, type: "uint16", conformance: "M",
                     details: "This field SHALL provide a reference to the associated endpoint list, which specifies the endpoints " +
-                             "on this Node which will be impacted by this ActionID.",
+                        "on this Node which will be impacted by this ActionID.",
                     xref: { document: "core", section: "9.14.4.6.4" }
                 },
 
@@ -442,7 +442,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "EndpointListStruct", type: "struct", conformance: "M",
             details: "This data type holds the details of a single endpoint list, which relates to a set of endpoints " +
-                     "that have some logical relation, and contains the data fields below.",
+                "that have some logical relation, and contains the data fields below.",
             xref: { document: "core", section: "9.14.4.7" },
 
             children: [
@@ -454,7 +454,7 @@ Matter.children.push({
                     tag: "datatype", name: "Endpoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256",
                     details: "This field SHALL provide a list of endpoint numbers.",
                     xref: { document: "core", section: "9.14.4.7.1" },
-                    children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
                 }
             ]
         }

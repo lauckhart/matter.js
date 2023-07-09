@@ -43,7 +43,7 @@ abstract class Entry {
     private documentation?: Documentation;
     private docText?: string;
 
-    constructor(protected parentBlock: Block | undefined) {}
+    constructor(protected parentBlock: Block | undefined) { }
 
     get isDocumented() {
         return !!(this.documentation?.description || this.documentation?.details || this.documentation?.xref || this.docText);
@@ -72,7 +72,7 @@ abstract class Entry {
 
     private createComment(linePrefix: string) {
         const paragraphs = Array<string>();
-        
+
         if (this.documentation?.description) {
             paragraphs.push(this.documentation.description);
         }
@@ -161,7 +161,7 @@ export class Block extends Entry {
 
     get(index: number) {
         return this.entries[index];
-    }    
+    }
 
     serialize(linePrefix: string) {
         const pieces = new Array<string>();
@@ -330,7 +330,7 @@ abstract class NestedBlock extends Block {
         if (this.prefix) {
             parts.push(`${linePrefix}${this.prefix}`);
         }
-        
+
         let needSpace = false;
         for (let i = 0; i < serializedEntries.length; i++) {
             // Add delimiter to entry if necessary
@@ -411,7 +411,7 @@ function chooseExpressionLayout(lineLength: number, serializedEntries: string[])
                 }
 
                 lineLength += entry.trim().length + 2;
-                
+
                 if (lineLength >= WRAP_WIDTH + INDENT.length) {
                     currentLayout = ExpressionLayout.MultipleLines;
                 }

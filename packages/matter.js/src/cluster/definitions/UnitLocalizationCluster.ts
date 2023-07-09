@@ -30,7 +30,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.5
  */
-export function UnitLocalizationCluster<T extends UnitLocalizationCluster.Feature[]>(...features: [ ...T ]) {
+export function UnitLocalizationCluster<T extends UnitLocalizationCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...UnitLocalizationCluster.Metadata,
         supportedFeatures: BitFlags(UnitLocalizationCluster.Metadata.features, ...features),
@@ -64,7 +64,7 @@ export namespace UnitLocalizationCluster {
         TemperatureUnit = "TemperatureUnit"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

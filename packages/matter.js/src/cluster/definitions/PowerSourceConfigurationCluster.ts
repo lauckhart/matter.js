@@ -30,7 +30,7 @@ export function PowerSourceConfigurationCluster() {
 }
 
 export namespace PowerSourceConfigurationCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

@@ -134,7 +134,7 @@ export namespace Quality {
     /**
      * Runtime version of QualityFlag.
      */
-    export const FlagNames: FlagName[] = [ "X", "N", "F", "S", "P", "C", "I" ];
+    export const FlagNames: FlagName[] = ["X", "N", "F", "S", "P", "C", "I"];
 
     /**
      * Quality values that apply to data fields.

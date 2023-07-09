@@ -233,7 +233,7 @@ export namespace GroupKeyManagementCluster {
         CacheAndSync = "CacheAndSync"
     }
 
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

@@ -12,7 +12,7 @@ export type Table = {
     fields: string[],
 
     /** Column name -> defining HTML element */
-    rows: { [name: string ]: HTMLElement | undefined }[],
+    rows: { [name: string]: HTMLElement | undefined }[],
 
     /** Single-cell rows, tend to be informational */
     notes: HTMLElement[]

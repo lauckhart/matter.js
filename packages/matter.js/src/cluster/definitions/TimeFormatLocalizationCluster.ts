@@ -30,7 +30,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.4
  */
-export function TimeFormatLocalizationCluster<T extends TimeFormatLocalizationCluster.Feature[]>(...features: [ ...T ]) {
+export function TimeFormatLocalizationCluster<T extends TimeFormatLocalizationCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...TimeFormatLocalizationCluster.Metadata,
         supportedFeatures: BitFlags(TimeFormatLocalizationCluster.Metadata.features, ...features),
@@ -81,7 +81,7 @@ export namespace TimeFormatLocalizationCluster {
         CalendarFormat = "CalendarFormat"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

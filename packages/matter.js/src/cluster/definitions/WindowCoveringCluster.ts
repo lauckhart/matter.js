@@ -29,7 +29,7 @@ import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3
  */
-export function WindowCoveringCluster<T extends WindowCoveringCluster.Feature[]>(...features: [ ...T ]) {
+export function WindowCoveringCluster<T extends WindowCoveringCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...WindowCoveringCluster.Metadata,
         supportedFeatures: BitFlags(WindowCoveringCluster.Metadata.features, ...features),
@@ -297,7 +297,7 @@ export namespace WindowCoveringCluster {
         PositionAwareTilt = "PositionAwareTilt"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

@@ -29,7 +29,7 @@ import { TlvString } from "../../tlv/TlvString.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5
  */
-export function AudioOutputCluster<T extends AudioOutputCluster.Feature[]>(...features: [ ...T ]) {
+export function AudioOutputCluster<T extends AudioOutputCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...AudioOutputCluster.Metadata,
         supportedFeatures: BitFlags(AudioOutputCluster.Metadata.features, ...features),
@@ -113,7 +113,7 @@ export namespace AudioOutputCluster {
         NameUpdates = "NameUpdates"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

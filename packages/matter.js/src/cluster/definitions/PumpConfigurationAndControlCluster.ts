@@ -28,7 +28,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2
  */
-export function PumpConfigurationAndControlCluster<T extends PumpConfigurationAndControlCluster.Feature[]>(...features: [ ...T ]) {
+export function PumpConfigurationAndControlCluster<T extends PumpConfigurationAndControlCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...PumpConfigurationAndControlCluster.Metadata,
         supportedFeatures: BitFlags(PumpConfigurationAndControlCluster.Metadata.features, ...features),
@@ -272,7 +272,7 @@ export namespace PumpConfigurationAndControlCluster {
         LocalOperation = "LocalOperation"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

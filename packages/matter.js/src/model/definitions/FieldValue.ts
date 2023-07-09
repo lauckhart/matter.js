@@ -29,7 +29,7 @@ export namespace FieldValue {
     export const percent = "percent";
     export type percent = typeof percent;
 
-    export const celsius = "celsius";    
+    export const celsius = "celsius";
     export type celsius = typeof celsius;
 
     export const reference = "reference";

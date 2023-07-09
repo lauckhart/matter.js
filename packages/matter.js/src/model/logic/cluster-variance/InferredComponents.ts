@@ -88,7 +88,7 @@ const VarianceMatchers: VarianceMatcher[] = [
             add();
         }
     },
-    
+
     // Optional, unconditional
     {
         pattern: pattern("(?:O|desc)"),
@@ -129,7 +129,7 @@ const VarianceMatchers: VarianceMatcher[] = [
             add(true, { allOf: match })
         }
     },
-    
+
     // FOO | BAR or FOO, BAR
     {
         pattern: pattern(FEATURE, "(?:, | \\| )", FEATURE),
@@ -151,8 +151,8 @@ const VarianceMatchers: VarianceMatcher[] = [
         pattern: pattern(FEATURE, ", ", "[", FEATURE, "]"),
         processor: (add, match) => {
             // Must add to two sets because optionality differs
-            add(false, { allOf: [ match[0] ] });
-            add(true, { allOf: [ match[1] ] });
+            add(false, { allOf: [match[0]] });
+            add(true, { allOf: [match[1]] });
         }
     },
 
@@ -160,7 +160,7 @@ const VarianceMatchers: VarianceMatcher[] = [
     {
         pattern: pattern(NOT, FEATURE, AND, FEATURE),
         processor: (add, match) => {
-            add(false, { allOf: [ match[1] ], not: match[0] });
+            add(false, { allOf: [match[1]], not: match[0] });
         }
     },
 
@@ -168,7 +168,7 @@ const VarianceMatchers: VarianceMatcher[] = [
     {
         pattern: pattern(NOT, FEATURE, AND, "[", FEATURE, "]"),
         processor: (add, match) => {
-            add(true, { allOf: [ match[1] ], not: match[0] });
+            add(true, { allOf: [match[1]], not: match[0] });
         }
     },
 
@@ -209,7 +209,7 @@ const VarianceMatchers: VarianceMatcher[] = [
         pattern: pattern(FEATURE, AND, FEATURE, ", ", "[", FEATURE, "]"),
         processor: (add, match) => {
             add(false, { allOf: match.slice(0, 2) });
-            add(true, { allOf: [ match[2] ] });
+            add(true, { allOf: [match[2]] });
         }
     }
 ];

@@ -194,7 +194,7 @@ export namespace KeypadInputCluster {
         NumberKeys = "NumberKeys"
     }
 
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
