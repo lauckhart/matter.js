@@ -529,10 +529,12 @@ class Parser {
 
             if (optional) {
                 this.next();
-                group.push({
+                let expr: Conformance.Ast = {
                     type: Conformance.Special.OptionalIf,
                     param: this.parseGroup(Tokenizer.Special.OptionalEnd)
-                })
+                };
+                expr = this.parseChoice(expr) as Conformance.Ast;
+                group.push(expr)
             } else {
                 const expr = this.parseExpression();
                 if (expr) {
@@ -589,38 +591,41 @@ class Parser {
         return elements[0] as Conformance.Ast;
     }
 
+    private parseChoice(expr: string | Conformance.Ast | undefined): string | Conformance.Ast | undefined {
+        if (!this.atSpecial(Tokenizer.Special.Dot)) {
+            return expr;
+        }
+
+        this.next();
+
+        if ((this.token as any)?.type !== Tokenizer.TokenType.Choice) {
+            this.conformance.error("INVALID_CHOICE", 'Choice indicator (".") must be followed by a single lowercase letter');
+        }
+        const choice = {
+            name: this.token?.value ?? "?",
+            expr: expr,
+            num: 1
+        } as Conformance.Ast.Choice;
+        this.next();
+        if ((this.token as any)?.type === Tokenizer.TokenType.Number) {
+            choice.num = this.token?.value as number;
+            this.next();
+        }
+        if (this.atSpecial(Tokenizer.Special.Plus)) {
+            choice.orMore = true;
+            this.next();
+        }
+
+        return {
+            type: Conformance.Special.Choice,
+            param: choice
+        }
+    }
+
     private parseAtomicExpression(): string | Conformance.Ast | undefined {
         const expr = this.parseAtomicExpressionWithoutChoice();
 
-        // Parse choice suffix
-        if (this.atSpecial(Tokenizer.Special.Dot)) {
-            this.next();
-
-            if ((this.token as any)?.type !== Tokenizer.TokenType.Choice) {
-                this.conformance.error("INVALID_CHOICE", 'Choice indicator (".") must be followed by a single lowercase letter');
-            }
-            const choice = {
-                name: this.token?.value ?? "?",
-                expr: expr,
-                num: 1
-            } as Conformance.Ast.Choice;
-            this.next();
-            if ((this.token as any)?.type === Tokenizer.TokenType.Number) {
-                choice.num = this.token?.value as number;
-                this.next();
-            }
-            if (this.atSpecial(Tokenizer.Special.Plus)) {
-                choice.orMore = true;
-                this.next();
-            }
-
-            return {
-                type: Conformance.Special.Choice,
-                param: choice
-            }
-        }
-
-        return expr;
+        return this.parseChoice(expr);
     }
 
     private parseAtomicExpressionWithoutChoice(): string | Conformance.Ast | undefined {

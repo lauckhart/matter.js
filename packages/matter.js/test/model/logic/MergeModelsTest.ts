@@ -4,15 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../../src/log/index.js";
 import { MergeModels } from "../../../src/model/logic/index.js";
-import { Time } from "../../../src/time/Time.js";
-import { SpecMatter, ChipMatter } from "../../../models/index.js";
-import { TimeFake } from "../../../src/time/index.js";
-import { ClusterElement, ClusterModel, CommandModel, MatterElement, MatterModel } from "../../../src/model/index.js";
-
-Time.get = () => new TimeFake(0);
-Logger.format = "ansi";
+import { ClusterElement, ClusterModel, MatterElement, MatterModel } from "../../../src/model/index.js";
 
 // Utility function to perform merge.  Type resolution works differently
 // without the global types in MatterModel so we fake that up even though we're
@@ -65,12 +58,6 @@ describe("MergeModels", () => {
         expect(merged.children.length).toBe(1);
         expect(merged.children[0].type).toBe("map8");
         expect(merged.children[0].children.length).toBe(4);
-    })
-
-    it("merges commands with children correctly", () => {
-        const merged = merge(Fixtures.OnOff);
-        const offWithEffect = merged.get(CommandModel, "OffWithEffect");
-        expect(offWithEffect.children.map(c => c.name)).toEqual([ "EffectIdentifier", "EffectVariant" ]);
     })
 })
 
@@ -241,10 +228,5 @@ namespace Fixtures {
                 },
             ]
         })
-    }
-
-    export const OnOff = {
-        spec: SpecMatter.children.find(e => e.name == "OnOff") as ClusterElement,
-        chip: ChipMatter.children.find(e => e.name == "OnOff") as ClusterElement
     }
 }

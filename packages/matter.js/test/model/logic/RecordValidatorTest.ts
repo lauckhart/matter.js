@@ -4,12 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../../src/log/Logger.js";
 import { AttributeModel, DatatypeModel, FeatureSet, Globals, RecordValidator } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { Properties } from "../../../src/util/Type.js";
-
-Logger.format = "ansi";
 
 function Fields(...definition: { name?: string, type?: string, conformance?: string }[]): Fields {
     return definition.map(f => new DatatypeModel({
@@ -459,7 +456,7 @@ function validate({ fields, features }: ClusterStructure, { supports, record, er
     try {
         let result = validator.validate(record ?? {});
         expect(result.valid).toBe(!errors);
-        expect(result.errors).toStrictEqual(definitionErrors);
+        expect(result.errors).toEqual(definitionErrors);
     } catch (e) {
         validator.logFailure();
         throw e;

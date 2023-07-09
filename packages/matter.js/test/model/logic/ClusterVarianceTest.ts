@@ -10,9 +10,9 @@ import {
     ClusterVariance,
     Conformance,
     Globals,
-    MatterModel,
-    VarianceCondition,
+    MatterModel
 } from "../../../src/model/index.js"
+import { VarianceCondition } from "../../../src/model/logic/cluster-variance/VarianceCondition.js"
 
 describe("ClusterVariance", () => {
     describe("invariant", () => {

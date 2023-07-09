@@ -144,14 +144,14 @@ describe("Logger", () => {
     describe("nesting", () => {
         it("nests once", () => {
             Logger.nest(() => {
-                assert.match(logTestLine()!.log, /⎸ test/);
+                assert.ok(logTestLine()!.log.match(/⎸ test/));
             });
         });
 
         it("nests twice", () => {
             Logger.nest(() => {
                 Logger.nest(() => {
-                    assert.match(logTestLine()!.log, /⎸   test/);
+                    assert.ok(logTestLine()!.log.match(/⎸   test/));
                 });
             });
         });

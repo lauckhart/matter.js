@@ -193,3 +193,26 @@ export namespace serialize {
         return typeof value !== "object";
     }
 }
+
+/**
+ * Create a human readable version of a list of items.
+ */
+export function describeList(setType: "and" | "or", ...entries: string[]) {
+    const text = Array<string>();
+
+    if (entries.length === 1) {
+        return entries[0];
+    }
+
+    for (let i = 0; i < entries.length; i++) {
+        if (i === entries.length - 1) {
+            text.push(setType, entries[i]);
+        } else if (i === entries.length - 2) {
+            text.push(entries[i]);
+        } else {
+            text.push(`${entries[i]},`);
+        }
+    }
+
+    return text.join(" ");
+}

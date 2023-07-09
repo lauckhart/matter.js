@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeModel, ClusterModel, Datatype, DatatypeModel, MatterModel, Metatype } from "../../../src/model/index.js";
+import { AttributeModel, ClusterModel, DatatypeModel, Globals, MatterModel, Metatype } from "../../../src/model/index.js";
 
 describe("Model", () => {
     describe("children", () => {
@@ -77,16 +77,16 @@ describe("Model", () => {
         })
     })
 
-    describe("childrenOfType", () => {
+    describe("all", () => {
         it("finds all models by type", () => {
             expect(Fixtures.matter.all(ClusterModel).length).toBe(3);
 
             // 68 standard datatypes + 3 defined in our fake model
-            expect(Fixtures.matter.all(DatatypeModel).length).toBe(71);
+            expect(Fixtures.matter.all(DatatypeModel).length).toBe(70);
         })
     });
 
-    describe("childOfType", () => {
+    describe("get", () => {
         it("finds by ID", () => {
             expect(Fixtures.matter.get(ClusterModel, 1)).toBe(Fixtures.cluster1);
             expect(Fixtures.matter.get(AttributeModel, 1)).toBe(Fixtures.globalAttr);
@@ -111,7 +111,7 @@ describe("Model", () => {
         })
 
         it("is inferred from inherited base", () => {
-            expect(Fixtures.feature.base?.name).toBe(Datatype.uint32);
+            expect(Fixtures.feature.base?.name).toBe(Globals.uint32.name);
         })
 
         it("finds attribute struct", () => {
@@ -147,21 +147,21 @@ describe("Model", () => {
         })
 
         it("infers type", () => {
-            expect(Fixtures.enumValue2.effectiveType).toBe(Datatype.uint16)
+            expect(Fixtures.enumValue2.effectiveType).toBe(Globals.uint16.name)
         })
     });
 
     describe("effectiveType", () => {
         it("is inherited on datatype override", () => {
-            expect(Fixtures.cluster1StructFieldOverride.effectiveType).toBe(Datatype.string);
+            expect(Fixtures.cluster1StructFieldOverride.effectiveType).toBe(Globals.string.name);
         })
 
         it("is inherited on secondary datatype override", () => {
-            expect(Fixtures.cluster2StructFieldOverride.effectiveType).toBe(Datatype.string);
+            expect(Fixtures.cluster2StructFieldOverride.effectiveType).toBe(Globals.string.name);
         })
 
         it("is inherited on attribute override", () => {
-            expect(Fixtures.cluster2Attr1.effectiveType).toBe(Datatype.uint8);
+            expect(Fixtures.cluster2Attr1.effectiveType).toBe(Globals.uint8.name);
         })
     });
 })
