@@ -21,14 +21,14 @@ import { TlvByteString } from "../../tlv/TlvString.js";
  * The Access Control Cluster exposes a data model view of a Node's Access Control List (ACL), which codifies the rules
  * used to manage and enforce Access Control for the Node's endpoints and their associated cluster instances.
  *
- * This function creates a AccessControl cluster.
+ * This function creates an AccessControl cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.10
  */
 export function AccessControlCluster() {
     const cluster = Cluster({ ...AccessControlCluster.Metadata, ...AccessControlCluster.BaseComponent });
     return cluster as unknown as AccessControlCluster.Type;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2
@@ -57,7 +57,7 @@ export const enum AccessControlEntryPrivilegeEnum {
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2.3
      */
     Administer = 5
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.3
@@ -66,7 +66,7 @@ export const enum AccessControlEntryAuthModeEnum {
     Pase = 1,
     Case = 2,
     Group = 3
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.4
@@ -130,7 +130,7 @@ export const enum ChangeTypeEnum {
     Changed = 0,
     Added = 1,
     Removed = 2
-};
+}
 
 /**
  * The cluster SHALL send AccessControlEntryChanged events whenever its ACL attribute data is changed by an
@@ -286,4 +286,4 @@ export namespace AccessControlCluster {
         attributes: { ...BaseComponent.attributes },
         events: { ...BaseComponent.events }
     });
-};
+}

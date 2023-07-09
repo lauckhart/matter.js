@@ -71,7 +71,7 @@ export const Code = (el: HTMLElement) => {
     let str = Str(el);
 
     // Use the english dictionary to heuristically repair whitespace errors
-    let parts = str.split(/\s+/);
+    const parts = str.split(/\s+/);
     for (let i = 0; i < parts.length - 1; i++) {
         // If the current word is all uppercase, assume it's a standalone
         // identifier
@@ -118,7 +118,7 @@ export const Identifier = (el: HTMLElement) => {
 
     // Strip everything following a subset of characters known to be inside
     // what is properly a "key"
-    str = str.replace(/^([a-z0-9 _:,\/\-\$]+).*/i, "$1");
+    str = str.replace(/^([a-z0-9 _:,/-$]+).*/i, "$1");
 
     return camelize(str, true);
 }
@@ -140,7 +140,7 @@ export const Alias = <T> (wrapped: Translator<T>, ...sources: string[]): Alias<T
     ({ option: "alias", sources, wrapped });
 
 /** Injects a column with a fixed value */
-type Constant<T> = { option: "constant", value: any };
+type Constant<T> = { option: "constant", value: T };
 export const Constant = <T> (value: T): Constant<T> =>
     ({ option: "constant", value });
 
@@ -169,7 +169,7 @@ type TableRecord<T extends TableSchema> = {
     [name in keyof T]: FieldType<T[name]>
 } & { xref?: Specification.CrossReference, name?: string, details?: string };
 
-const has = (object: Object, name: string) =>
+const has = (object: object, name: string) =>
     !!Object.getOwnPropertyDescriptor(object, name);
 
 /** Translates an array of key => HTMLElement records into a proper TS type */
@@ -187,15 +187,17 @@ export function translateTable<T extends TableSchema>(
         return [];
     }
 
-    let missing = new Set<string>();
+    const missing = new Set<string>();
     const result = Array<TableRecord<T>>();
 
     const aliases = Array<[string, string]>();
-    const optional = new Set<String>();
+    const optional = new Set<string>();
     const translators = Array<[string, Translator<any>]>();
     let childTranslator: ChildTranslator | undefined;
 
-    nextField: for (let [ k, v ] of Object.entries(schema)) {
+    nextField: for (const kv of Object.entries(schema)) {
+        const [ k ] = kv;
+        let [ , v] = kv;
         while (typeof v === "object") {
             switch (v.option) {
                 case "optional":
@@ -286,7 +288,7 @@ export function translateRecordsToMatter<R, E extends { id?: number, name: strin
         }
 
         logger.debug(`${desc} ${mapped.name} = ${mapped.id ?? "(anon)"}`);
-        result.push(mapped as E);
+        result.push(mapped);
     }
     if (!result.length) {
         return undefined;
@@ -335,7 +337,7 @@ enum InferredFieldType {
     Unknown,
     UniqueNumbers,
     UniqueStrings
-};
+}
 
 /** Examine a field in every row to infer the type of a field */
 function inferFieldType(definition: HtmlReference, name: string): InferredFieldType {
@@ -378,7 +380,7 @@ function inferFieldType(definition: HtmlReference, name: string): InferredFieldT
             }
             inferredType = InferredFieldType.UniqueStrings;
         }
-    };
+    }
 
     return inferredType;
 }

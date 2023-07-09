@@ -24,7 +24,7 @@ const BinaryOperatorMap = {
 }
 
 export function addConformance(builder: ValidatorBuilder, model: ValueModel, conformance: Conformance) {
-    builder.addTest(`(${expr(conformance).text})`, "CONFORMANCE_VIOLATION", model, `Value of ${camelize(model.name, false)} is disallowed by conformance`);
+    builder.addTest(`(${expr(conformance.ast).text})`, "CONFORMANCE_VIOLATION", model, `Value of ${camelize(model.name, false)} is disallowed by conformance`);
 
     // Generates JS equivalent of conformance expression.  While generating the
     // expression we also track feature conformance because feature conformance
@@ -48,7 +48,9 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
                 return { text: "true" };
 
             default:
-                logger.error(`Unknown conformance AST type ${ast.type}`);
+                // Must cast AST to any because this list is exhaustive so
+                // TS thinks ast type is "never"
+                logger.error(`Unknown conformance AST type ${(ast as any).type}`);
                 return { text: "true" };
 
             case Conformance.Special.Empty:
@@ -60,20 +62,19 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
 
             case Conformance.Special.Choice:
                 builder.hasChoices = true;
-                const choice = ast.param as Conformance.Ast.Choice;
+                const choice = ast.param;
                 const choiceName = `${model.parent?.path || "?"}.${choice.name}`
                 return { text: `this.testChoice(${JSON.stringify(choiceName)}, ${expr(choice.expr).text}, (v !== undefined && v !== null), ${choice.num}, ${choice.orMore ? "true" : "false"})` };
     
             case Conformance.Special.Group:
-                const param = ast.param as Conformance.Ast.Group;
-                if (!Array.isArray(param)) {
+                if (!Array.isArray(ast.param)) {
                     logger.error("Conformance AST group parameter is not an array");
                     return { text: "true" };
                 }
-                return { text: `this.testGroup(${param.map(e => expr(e).text).join(", ")})` };
+                return { text: `this.testGroup(${ast.param.map(e => expr(e).text).join(", ")})` };
     
             case Conformance.Special.Name:
-                const name = ast.param as string;
+                const name = ast.param;
                 if (builder.definedFeatures.has(name)) {
                     if (builder.enabledFeatures.has(name)) {
                         return { text: "(v !== undefined && v !== null)", feature: true };
@@ -84,7 +85,7 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
     
             case Conformance.Special.OptionalIf:
                 {
-                    const e = expr(ast.param as Conformance.Ast.Option);
+                    const e = expr(ast.param);
 
                     // If e is the result of a positive conformance test then
                     // accept any value
@@ -125,9 +126,8 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
             case Conformance.Operator.LTE:
             case Conformance.Operator.XOR:
                 {
-                    const binops = ast.param as Conformance.Ast.BinaryOperands;
-                    const e1 = expr(binops.lhs);
-                    const e2 = expr(binops.rhs);
+                    const e1 = expr(ast.param.lhs);
+                    const e2 = expr(ast.param.rhs);
 
                     // Reduce feature conjunction/disjunction to a single
                     // boolean expression
@@ -162,14 +162,14 @@ export function addConformance(builder: ValidatorBuilder, model: ValueModel, con
     
             case Conformance.Operator.NOT:
                 {
-                    const e = expr(ast.param as Conformance.Ast.UnaryOperand);
+                    const e = expr(ast.param);
                     
                     // Invert feature state
                     if (e.feature !== undefined) {
                         e.feature = !e.feature;
                     }
 
-                    return { text: `!${expr(ast.param as Conformance.Ast.UnaryOperand).text}`, feature: e.feature };
+                    return { text: `!${e.text}`, feature: e.feature };
                 }
         }
     }

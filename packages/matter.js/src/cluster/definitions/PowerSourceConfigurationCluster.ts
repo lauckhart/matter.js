@@ -27,7 +27,7 @@ export function PowerSourceConfigurationCluster() {
         ...PowerSourceConfigurationCluster.BaseComponent
     });
     return cluster as unknown as PowerSourceConfigurationCluster.Type;
-};
+}
 
 export namespace PowerSourceConfigurationCluster {
     export type Type = 
@@ -63,4 +63,4 @@ export namespace PowerSourceConfigurationCluster {
      * This cluster supports all PowerSourceConfiguration features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

@@ -15,7 +15,7 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
  *
  * Attributes and commands for configuring On/Off switching devices.
  *
- * This function creates a OnOffSwitchConfiguration cluster.
+ * This function creates an OnOffSwitchConfiguration cluster.
  */
 export function OnOffSwitchConfigurationCluster() {
     const cluster = Cluster({
@@ -23,19 +23,19 @@ export function OnOffSwitchConfigurationCluster() {
         ...OnOffSwitchConfigurationCluster.BaseComponent
     });
     return cluster as unknown as OnOffSwitchConfigurationCluster.Type;
-};
+}
 
 export const enum SwitchType {
     Toggle = 0,
     Momentary = 1,
     MultiFunction = 2
-};
+}
 
 export const enum SwitchActions {
     On = 0,
     Off = 1,
     Toggle = 2
-};
+}
 
 export namespace OnOffSwitchConfigurationCluster {
     export type Type = 
@@ -60,4 +60,4 @@ export namespace OnOffSwitchConfigurationCluster {
      * This cluster supports all OnOffSwitchConfiguration features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

@@ -23,7 +23,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 export function ClientMonitoringCluster() {
     const cluster = Cluster({ ...ClientMonitoringCluster.Metadata, ...ClientMonitoringCluster.BaseComponent });
     return cluster as unknown as ClientMonitoringCluster.Type;
-};
+}
 
 export const TlvMonitoringRegistration = TlvObject({ clientNodeId: TlvField(1, TlvUInt64), iCid: TlvField(2, TlvUInt64) });
 
@@ -74,4 +74,4 @@ export namespace ClientMonitoringCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

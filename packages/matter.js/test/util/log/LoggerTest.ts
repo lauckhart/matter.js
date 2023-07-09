@@ -144,21 +144,28 @@ describe("Logger", () => {
     describe("nesting", () => {
         it("nests once", () => {
             Logger.nest(() => {
-                assert.ok(logTestLine()!.log.match(/⎸ test/));
+                const line = logTestLine();
+                assert.ok(line);
+                assert.ok(line.log.match(/⎸ test/));
             });
         });
 
         it("nests twice", () => {
             Logger.nest(() => {
                 Logger.nest(() => {
-                    assert.ok(logTestLine()!.log.match(/⎸   test/));
+                    const line = logTestLine();
+                    assert.ok(line);
+                    assert.ok(line.log.match(/⎸ {3}test/));
                 });
             });
         });
 
         it("unnests", () => {
-            Logger.nest(() => {});
-            assert.equal(logTestLine()!.log.indexOf("⎸"), -1);
+            // "true" is for eslint
+            Logger.nest(() => { true });
+            const line = logTestLine();
+            assert.ok(line);
+            assert.equal(line.log.indexOf("⎸"), -1);
         })
     })
 

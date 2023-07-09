@@ -20,14 +20,14 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * This cluster provides information about an application running on a TV or media player device which is represented
  * as an endpoint.
  *
- * This function creates a ApplicationBasic cluster.
+ * This function creates an ApplicationBasic cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3
  */
 export function ApplicationBasicCluster() {
     const cluster = Cluster({ ...ApplicationBasicCluster.Metadata, ...ApplicationBasicCluster.BaseComponent });
     return cluster as unknown as ApplicationBasicCluster.Type;
-};
+}
 
 /**
  * This indicates a global identifier for an Application given a catalog.
@@ -75,7 +75,7 @@ export const enum ApplicationStatusEnum {
      * Application is running and visible, but is not the active target for input.
      */
     ActiveVisibleNotFocus = 3
-};
+}
 
 export namespace ApplicationBasicCluster {
     export type Type = 
@@ -171,4 +171,4 @@ export namespace ApplicationBasicCluster {
      * This cluster supports all ApplicationBasic features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

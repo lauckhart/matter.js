@@ -35,7 +35,7 @@ export function PressureMeasurementCluster<T extends PressureMeasurementCluster.
     });
     extendCluster(cluster, PressureMeasurementCluster.ExtendedComponent, { extended: true });
     return cluster as unknown as PressureMeasurementCluster.Type<BitFlags<typeof PressureMeasurementCluster.Metadata.features, T>>;
-};
+}
 
 export namespace PressureMeasurementCluster {
     /**
@@ -50,7 +50,7 @@ export namespace PressureMeasurementCluster {
          * The cluster is capable of extended range and resolution
          */
         Extended = "Extended"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -183,4 +183,4 @@ export namespace PressureMeasurementCluster {
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...ExtendedComponent.attributes }
     });
-};
+}

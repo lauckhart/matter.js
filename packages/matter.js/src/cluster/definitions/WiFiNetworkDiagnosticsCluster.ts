@@ -40,7 +40,7 @@ export function WiFiNetworkDiagnosticsCluster<T extends WiFiNetworkDiagnosticsCl
     extendCluster(cluster, WiFiNetworkDiagnosticsCluster.ErrorCountsComponent, { errorCounts: true });
     extendCluster(cluster, WiFiNetworkDiagnosticsCluster.PacketCountsComponent, { packetCounts: true });
     return cluster as unknown as WiFiNetworkDiagnosticsCluster.Type<BitFlags<typeof WiFiNetworkDiagnosticsCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.1
@@ -52,7 +52,7 @@ export const enum SecurityTypeEnum {
     Wpa = 3,
     Wpa2 = 4,
     Wpa3 = 5
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.2
@@ -64,7 +64,7 @@ export const enum WiFiVersionEnum {
     N = 3,
     Ac = 4,
     Ax = 5
-};
+}
 
 /**
  * The Disconnection Event SHALL indicate that a Node’s Wi-Fi connection has been disconnected as a result of
@@ -90,7 +90,7 @@ export const enum AssociationFailureCauseEnum {
     AssociationFailed = 1,
     AuthenticationFailed = 2,
     SsidNotFound = 3
-};
+}
 
 /**
  * The AssociationFailure event SHALL indicate that a Node has attempted to connect, or reconnect, to a Wi-Fi access
@@ -123,7 +123,7 @@ export const TlvAssociationFailureEvent = TlvObject({
 export const enum ConnectionStatusEnum {
     Connected = 0,
     NotConnected = 1
-};
+}
 
 /**
  * The ConnectionStatus Event SHALL indicate that a Node’s connection status to a Wi-Fi network has changed. Connected,
@@ -154,7 +154,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
          * transmission of packets on the Wi-Fi interface.
          */
         ErrorCounts = "ErrorCounts"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -409,4 +409,4 @@ export namespace WiFiNetworkDiagnosticsCluster {
         events: { ...BaseComponent.events },
         commands: { ...ErrorCountsComponent.commands }
     });
-};
+}

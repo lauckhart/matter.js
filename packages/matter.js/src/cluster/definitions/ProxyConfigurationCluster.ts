@@ -26,7 +26,7 @@ import { TlvUInt64 } from "../../tlv/TlvNumber.js";
 export function ProxyConfigurationCluster() {
     const cluster = Cluster({ ...ProxyConfigurationCluster.Metadata, ...ProxyConfigurationCluster.BaseComponent });
     return cluster as unknown as ProxyConfigurationCluster.Type;
-};
+}
 
 /**
  * < Previous | Contents | Next >
@@ -69,4 +69,4 @@ export namespace ProxyConfigurationCluster {
      * This cluster supports all ProxyConfiguration features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

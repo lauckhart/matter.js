@@ -29,7 +29,7 @@ export function LocalizationConfigurationCluster() {
         ...LocalizationConfigurationCluster.BaseComponent
     });
     return cluster as unknown as LocalizationConfigurationCluster.Type;
-};
+}
 
 export namespace LocalizationConfigurationCluster {
     export type Type = 
@@ -78,4 +78,4 @@ export namespace LocalizationConfigurationCluster {
      * This cluster supports all LocalizationConfiguration features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

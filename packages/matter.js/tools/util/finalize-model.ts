@@ -110,10 +110,7 @@ export function finalizeModel(matter: MatterModel) {
 
     logger.info(`validate ${matter.name}`);
     
-    let validationResult: ValidateModel.Result | undefined;
-    Logger.nest(() => {
-        validationResult = ValidateModel(matter);
+    return Logger.nest(() => {
+        return ValidateModel(matter);
     });
-
-    return validationResult!;
 }

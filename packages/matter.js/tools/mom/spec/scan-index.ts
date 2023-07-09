@@ -29,7 +29,7 @@ export function parseHeading(e: Node | null) {
         return undefined;
     }
 
-    const parsed = /^([\d\.]+)\. (.+)$/.exec(heading);
+    const parsed = /^([\d.]+)\. (.+)$/.exec(heading);
     if (!parsed) {
         return;
     }
@@ -71,7 +71,7 @@ export function scanIndex(path: string) {
         logger.error(`version element unrecognized`)
         return;
     }
-    const version = versionEl.textContent.replace(/.*version ([\d\.]+).*/i, "$1");
+    const version = versionEl.textContent.replace(/.*version ([\d.]+).*/i, "$1");
 
     logger.info("recognized", Logger.dict({ doc: spec, version: version }));
 

@@ -24,7 +24,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 export function BooleanStateCluster() {
     const cluster = Cluster({ ...BooleanStateCluster.Metadata, ...BooleanStateCluster.BaseComponent });
     return cluster as unknown as BooleanStateCluster.Type;
-};
+}
 
 /**
  * This event SHALL be generated when the StateValue attribute changes.
@@ -77,4 +77,4 @@ export namespace BooleanStateCluster {
         attributes: { ...BaseComponent.attributes },
         events: { ...BaseComponent.events }
     });
-};
+}

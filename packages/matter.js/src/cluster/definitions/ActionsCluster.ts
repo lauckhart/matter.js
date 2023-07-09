@@ -21,14 +21,14 @@ import { BitFlag } from "../../schema/BitmapSchema.js";
  * This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to expose action
  * information.
  *
- * This function creates a Actions cluster.
+ * This function creates an Actions cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14
  */
 export function ActionsCluster() {
     const cluster = Cluster({ ...ActionsCluster.Metadata, ...ActionsCluster.BaseComponent });
     return cluster as unknown as ActionsCluster.Type;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2
@@ -83,7 +83,7 @@ export const enum ActionTypeEnum {
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2.6
      */
     Alarm = 6
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.1
@@ -155,7 +155,7 @@ export const enum ActionStateEnum {
     Active = 1,
     Paused = 2,
     Disabled = 3
-};
+}
 
 /**
  * This data type holds the details of a single action, and contains the data fields below.
@@ -240,7 +240,7 @@ export const enum EndpointListTypeEnum {
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.5.3
      */
     Zone = 2
-};
+}
 
 /**
  * This data type holds the details of a single endpoint list, which relates to a set of endpoints that have some
@@ -425,7 +425,7 @@ export const TlvStateChangedEvent = TlvObject({
 export const enum ActionErrorEnum {
     Unknown = 0,
     Interrupted = 1
-};
+}
 
 /**
  * This event SHALL be generated when there is some error which prevents the action from its normal planned execution
@@ -608,4 +608,4 @@ export namespace ActionsCluster {
         commands: { ...BaseComponent.commands },
         events: { ...BaseComponent.events }
     });
-};
+}

@@ -44,13 +44,15 @@ export function ValidateModel(model: Model) {
         result.elementCount++;
         if (!model.valid) {
             result.invalidElementCount++;
-            for (const error of model.errors!) {
-                if (result.errorCounts[error.code]) {
-                    result.errorCounts[error.code]++;
-                } else {
-                    result.errorCounts[error.code] = 1;
+            if (model.errors) {
+                for (const error of model.errors) {
+                    if (result.errorCounts[error.code]) {
+                        result.errorCounts[error.code]++;
+                    } else {
+                        result.errorCounts[error.code] = 1;
+                    }
+                    result.errors.push(error);
                 }
-                result.errors.push(error);
             }
         }
 

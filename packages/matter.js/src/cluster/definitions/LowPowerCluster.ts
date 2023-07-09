@@ -23,7 +23,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 export function LowPowerCluster() {
     const cluster = Cluster({ ...LowPowerCluster.Metadata, ...LowPowerCluster.BaseComponent });
     return cluster as unknown as LowPowerCluster.Type;
-};
+}
 
 export namespace LowPowerCluster {
     export type Type = 
@@ -56,4 +56,4 @@ export namespace LowPowerCluster {
      * This cluster supports all LowPower features.
      */
     export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-};
+}

@@ -36,7 +36,7 @@ export class Directory {
             if (entry.type !== "tree") throw new Error(`Path "${p}" not a directory`);
             result = new Directory(entry.url, this.cache, this.auth);
         }
-        return result!;
+        return result;
     }
 
     async get(name: string) {

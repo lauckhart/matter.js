@@ -22,7 +22,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 export function BarrierControlCluster() {
     const cluster = Cluster({ ...BarrierControlCluster.Metadata, ...BarrierControlCluster.BaseComponent });
     return cluster as unknown as BarrierControlCluster.Type;
-};
+}
 
 export const TlvBarrierControlGoToPercentRequest = TlvObject({ percentOpen: TlvField(0, TlvUInt8) });
 
@@ -68,4 +68,4 @@ export namespace BarrierControlCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

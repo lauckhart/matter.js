@@ -38,7 +38,7 @@ export function TimeFormatLocalizationCluster<T extends TimeFormatLocalizationCl
     });
     extendCluster(cluster, TimeFormatLocalizationCluster.CalendarFormatComponent, { calendarFormat: true });
     return cluster as unknown as TimeFormatLocalizationCluster.Type<BitFlags<typeof TimeFormatLocalizationCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.1
@@ -46,7 +46,7 @@ export function TimeFormatLocalizationCluster<T extends TimeFormatLocalizationCl
 export const enum HourFormatEnum {
     "12Hr" = 0,
     "24Hr" = 1
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.2
@@ -64,7 +64,7 @@ export const enum CalendarTypeEnum {
     Korean = 9,
     Persian = 10,
     Taiwanese = 11
-};
+}
 
 export namespace TimeFormatLocalizationCluster {
     /**
@@ -79,7 +79,7 @@ export namespace TimeFormatLocalizationCluster {
          * The Node can be configured to use different calendar formats when conveying values to a user.
          */
         CalendarFormat = "CalendarFormat"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -171,4 +171,4 @@ export namespace TimeFormatLocalizationCluster {
         ...Metadata,
         attributes: { ...BaseComponent.attributes, ...CalendarFormatComponent.attributes }
     });
-};
+}

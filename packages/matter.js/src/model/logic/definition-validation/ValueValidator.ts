@@ -82,7 +82,13 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             this.error("METATYPE_UNKNOWN", `No metatype for ${this.model.type}`);
             return;
         }
-        const metatype = metabase.metatype!;
+        const metatype = metabase.metatype;
+        if (metatype === undefined) {
+            // This shouldn't happen because the presence of the metatype is
+            // what makes it a metabase.  But eslint doesn't know that
+            this.error("METATYPE_MISSING", `Metabase ${metabase.name} has no metatype`);
+            return;
+        }
 
         let def = this.model.default;
         if (def === undefined) {

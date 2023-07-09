@@ -36,7 +36,7 @@ export function IdentifyCluster<T extends IdentifyCluster.Feature[]>(...features
     });
     extendCluster(cluster, IdentifyCluster.QueryComponent, { query: true });
     return cluster as unknown as IdentifyCluster.Type<BitFlags<typeof IdentifyCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * This attribute specifies how the identification state is presented to the user. This field SHALL contain one of the
@@ -72,7 +72,7 @@ export const enum IdentifyType {
      * relay.
      */
     Actuator = 5
-};
+}
 
 /**
  * This command starts or stops the receiving device identifying itself. This command SHALL have the following data
@@ -121,7 +121,7 @@ export const enum EffectIdentifier {
      * Terminate the effect as soon as possible.
      */
     StopEffect = 255
-};
+}
 
 /**
  * This field is used to indicate which variant of the effect, indicated in the EffectIdentifier field, SHOULD be
@@ -132,7 +132,7 @@ export const enum EffectIdentifier {
  */
 export const enum EffectVariant {
     Default = 0
-};
+}
 
 /**
  * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow an
@@ -192,7 +192,7 @@ export namespace IdentifyCluster {
          * Multicast query for identification state
          */
         Query = "Query"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -303,4 +303,4 @@ export namespace IdentifyCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands, ...QueryComponent.commands }
     });
-};
+}

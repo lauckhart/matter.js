@@ -18,14 +18,14 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * Attributes and commands for configuring occupancy sensing, and reporting occupancy status.
  *
- * This function creates a OccupancySensing cluster.
+ * This function creates an OccupancySensing cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7
  */
 export function OccupancySensingCluster() {
     const cluster = Cluster({ ...OccupancySensingCluster.Metadata, ...OccupancySensingCluster.BaseComponent });
     return cluster as unknown as OccupancySensingCluster.Type;
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.1
@@ -47,7 +47,7 @@ export const enum OccupancySensorTypeEnum {
     Ultrasonic = 1,
     PirAndUltrasonic = 2,
     PhysicalContact = 3
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.3
@@ -229,4 +229,4 @@ export namespace OccupancySensingCluster {
      * This cluster supports all OccupancySensing features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

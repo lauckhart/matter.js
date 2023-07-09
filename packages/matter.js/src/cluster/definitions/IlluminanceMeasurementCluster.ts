@@ -17,14 +17,14 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * Attributes and commands for configuring the measurement of illuminance, and reporting illuminance measurements.
  *
- * This function creates a IlluminanceMeasurement cluster.
+ * This function creates an IlluminanceMeasurement cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2
  */
 export function IlluminanceMeasurementCluster() {
     const cluster = Cluster({ ...IlluminanceMeasurementCluster.Metadata, ...IlluminanceMeasurementCluster.BaseComponent });
     return cluster as unknown as IlluminanceMeasurementCluster.Type;
-};
+}
 
 /**
  * The LightSensorType attribute specifies the electronic type of the light sensor. This attribute shall be set to one
@@ -35,7 +35,7 @@ export function IlluminanceMeasurementCluster() {
 export const enum LightSensorType {
     Photodiode = 0,
     Cmos = 1
-};
+}
 
 export namespace IlluminanceMeasurementCluster {
     export type Type = 
@@ -103,4 +103,4 @@ export namespace IlluminanceMeasurementCluster {
      * This cluster supports all IlluminanceMeasurement features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

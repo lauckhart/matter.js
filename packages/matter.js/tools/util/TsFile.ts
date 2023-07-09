@@ -59,7 +59,7 @@ abstract class Entry {
         this.docText = extra;
         const spec = mapSpec(this.documentation.xref);
         if (spec) {
-            this.parentBlock!.file.addImport("spec/Specifications", spec);
+            this.parentBlock?.file.addImport("spec/Specifications", spec);
         }
         return this;
     }
@@ -71,7 +71,7 @@ abstract class Entry {
     protected abstract serialize(linePrefix: string): string;
 
     private createComment(linePrefix: string) {
-        let paragraphs = Array<string>();
+        const paragraphs = Array<string>();
         
         if (this.documentation?.description) {
             paragraphs.push(this.documentation.description);
@@ -93,7 +93,7 @@ abstract class Entry {
             if (lines.length) {
                 lines.push("");
             }
-            lines.push(`@see {@link ${spec}} § ${this.documentation!.xref!.section}`);
+            lines.push(`@see {@link ${spec}} § ${this.documentation?.xref?.section}`);
         }
 
         if (lines.length) {
@@ -166,7 +166,8 @@ export class Block extends Entry {
     serialize(linePrefix: string) {
         const pieces = new Array<string>();
         for (let i = 0; i < this.length; i++) {
-            pieces.push(`${this.get(i).toString(linePrefix)}${this.delimiterAfter(i)}`);
+            const serialized = this.get(i).toString(linePrefix);
+            pieces.push(`${serialized}${this.delimiterAfter(i, serialized)}`);
             if (i < this.length - 1) {
                 if (this.get(i) instanceof Block) {
                     // Always have blank line after blocks with following content
@@ -234,7 +235,7 @@ export class Block extends Entry {
     }
 
     /** Add a block with separate statements terminated by ";" */
-    statements(prefix: string = "", suffix = "") {
+    statements(prefix = "", suffix = "") {
         const block = new StatementBlock(this, prefix, suffix);
         this.add(block);
         return block;
@@ -255,7 +256,7 @@ export class Block extends Entry {
     }
 
     /** Add an atom or block that recreates the input value */
-    value(value: any, prefix: string = "", suffix: string = "") {
+    value(value: any, prefix = "", suffix = "") {
         if (value === undefined) {
             return;
         }
@@ -292,10 +293,16 @@ export class Block extends Entry {
         }
     }
 
-    protected delimiterAfter(index: number): string {
+    protected delimiterAfter(index: number, serialized: string): string {
+        // Do not delimit functions structures that eslint will complain about
+        if (serialized.match(/^(?:\s*(?:\/\*.*\*\/|export|const))*\s*(?:export)?\s*(?:enum|function|namespace)/m)) {
+            return "";
+        }
+
         if (this.isDelimited(index)) {
             return ";";
         }
+
         return "";
     }
 
@@ -319,7 +326,7 @@ abstract class NestedBlock extends Block {
     }
 
     layOutEntries(linePrefix: string, serializedEntries: string[]) {
-        let parts = Array<string>();
+        const parts = Array<string>();
         if (this.prefix) {
             parts.push(`${linePrefix}${this.prefix}`);
         }
@@ -327,7 +334,7 @@ abstract class NestedBlock extends Block {
         let needSpace = false;
         for (let i = 0; i < serializedEntries.length; i++) {
             // Add delimiter to entry if necessary
-            const entry = `${serializedEntries[i]}${this.delimiterAfter(i)}`;
+            const entry = `${serializedEntries[i]}${this.delimiterAfter(i, serializedEntries[i])}`;
 
             // Separate documented and large elements from their siblings
             if (this.entries[i].isDocumented || entry.split("\n").length > 5) {
@@ -356,7 +363,7 @@ abstract class NestedBlock extends Block {
 }
 
 class StatementBlock extends NestedBlock {
-    constructor(parent: Block | undefined, prefix: string = "{", suffix: string = "}") {
+    constructor(parent: Block | undefined, prefix = "{", suffix = "}") {
         super(parent, prefix, suffix);
     }
 }
@@ -369,7 +376,7 @@ enum ExpressionLayout {
     SingleNested,
     MultipleLines,
     Verbose
-};
+}
 
 function chooseExpressionLayout(lineLength: number, serializedEntries: string[]) {
     let currentLayout = ExpressionLayout.None;
@@ -428,7 +435,7 @@ class ExpressionBlock extends NestedBlock {
 
     override layOutEntries(linePrefix: string, serializedEntries: string[]) {
         let adornmentLength = linePrefix.length + this.prefix.length;
-        const isArrayOrObject = this.prefix.match(/[\[{]/);
+        const isArrayOrObject = this.prefix.match(/[[{]/);
         if (isArrayOrObject) {
             adornmentLength += 2;
         }
@@ -456,7 +463,7 @@ class ExpressionBlock extends NestedBlock {
                     let line = serializedEntries.map(e => e.trim()).join(", ");
                     if (isArrayOrObject) {
                         line = ` ${line} `;
-                    };
+                    }
                     return `${linePrefix}${this.prefix}${line}${this.suffix}`;
                 }
 

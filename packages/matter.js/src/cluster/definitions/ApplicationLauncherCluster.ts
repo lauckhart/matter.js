@@ -38,7 +38,7 @@ export function ApplicationLauncherCluster<T extends ApplicationLauncherCluster.
     });
     extendCluster(cluster, ApplicationLauncherCluster.ApplicationPlatformComponent, { applicationPlatform: true });
     return cluster as unknown as ApplicationLauncherCluster.Type<BitFlags<typeof ApplicationLauncherCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * This indicates a global identifier for an Application given a catalog.
@@ -112,7 +112,7 @@ export const enum StatusEnum {
      * Video platform unable to honor command.
      */
     SystemBusy = 2
-};
+}
 
 /**
  * This command SHALL be generated in response to LaunchApp/StopApp/HideApp commands.
@@ -177,7 +177,7 @@ export namespace ApplicationLauncherCluster {
          * supported application catalogs
          */
         ApplicationPlatform = "ApplicationPlatform"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -285,4 +285,4 @@ export namespace ApplicationLauncherCluster {
         attributes: { ...BaseComponent.attributes, ...ApplicationPlatformComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

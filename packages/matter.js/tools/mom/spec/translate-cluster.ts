@@ -93,7 +93,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         // instance in core spec; only accept the primary in cluster spec
         const uniqueIds = new Map<number | undefined, string>();
         for (const record of ids) {
-            let idStr = record.id.trim().toLowerCase();
+            const idStr = record.id.trim().toLowerCase();
             let id;
             if (idStr === "n/a") {
                 // Base cluster
@@ -205,7 +205,7 @@ function applyAccessNotes(fields?: HtmlReference, records?: { access?: string }[
     // Determine what the access flag should be
     let flag: string | undefined;
     for (const n of fields.table.notes) {
-        const match = n.textContent?.match(/access quality: fabric[\s\-](\w+)/i);
+        const match = n.textContent?.match(/access quality: fabric[\s-](\w+)/i);
         if (match) {
             const quality = match[1].toLowerCase();
 
@@ -477,7 +477,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
 
         applyAccessNotes(definition.events, records);
         
-        let events = translateRecordsToMatter("event", records, (r) => {
+        const events = translateRecordsToMatter("event", records, (r) => {
             let priority: EventElement.Priority;
             switch (r.priority?.toLowerCase()) {
                 case "debug":
@@ -569,9 +569,12 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             if (!type) {
                 type = "status";
             }
-        } else if (match = name.match(/(.+) \((\S+) type\)/i)) {
-            description = match[1];
-            name = match[2];
+        } else {
+            match = name.match(/(.+) \((\S+) type\)/i);
+            if (match) {
+                description = match[1];
+                name = match[2];
+            }
         }
 
         if (!type && name.match(/\s/)) {

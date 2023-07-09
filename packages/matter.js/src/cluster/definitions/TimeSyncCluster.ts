@@ -42,7 +42,7 @@ export function TimeSyncCluster<T extends TimeSyncCluster.Feature[]>(...features
     extendCluster(cluster, TimeSyncCluster.TimeZoneComponent, { timeZone: true });
     extendCluster(cluster, TimeSyncCluster.NtpServerComponent, { ntpServer: true });
     return cluster as unknown as TimeSyncCluster.Type<BitFlags<typeof TimeSyncCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.1
@@ -53,7 +53,7 @@ export const enum GranularityEnum {
     SecondsGranularity = 2,
     MillisecondsGranularity = 3,
     MicrosecondsGranularity = 4
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.2
@@ -144,7 +144,7 @@ export const enum TimeSourceEnum {
      * Time synchronization comes from a GNSS source.
      */
     Gnss = 16
-};
+}
 
 /**
  * The data for this command are as follows:
@@ -263,7 +263,7 @@ export namespace TimeSyncCluster {
          * Server supports an NTP server role.
          */
         NtpServer = "NtpServer"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -496,4 +496,4 @@ export namespace TimeSyncCluster {
         commands: { ...BaseComponent.commands },
         events: { ...TimeZoneComponent.events }
     });
-};
+}

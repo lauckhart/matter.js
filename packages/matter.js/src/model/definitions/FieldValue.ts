@@ -109,10 +109,7 @@ export namespace FieldValue {
     /**
      * Convert the field value to a "defacto-standard" form.
      */
-    export function serialize(value: FieldValue | undefined) {
-        if (value === undefined) {
-            return value;
-        }
+    export function serialize(value: FieldValue) {
         if (value === null) {
             return "null";
         }

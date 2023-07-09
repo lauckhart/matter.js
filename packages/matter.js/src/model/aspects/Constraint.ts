@@ -93,7 +93,7 @@ export namespace Constraint {
     export type Definition = (Ast & { definition?: Definition }) | string | number | undefined;
 
     function parseValue(numOrName: string): FieldValue {
-        let value: FieldValue = Number.parseFloat(numOrName);
+        const value = Number.parseFloat(numOrName);
         if (Number.isNaN(value)) {
             return FieldValue.Reference(camelize(numOrName));
         }

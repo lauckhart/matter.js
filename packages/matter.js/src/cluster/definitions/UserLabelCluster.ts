@@ -17,14 +17,14 @@ import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
  *
  * The User Label Cluster provides a feature to tag an endpoint with zero or more labels.
  *
- * This function creates a UserLabel cluster.
+ * This function creates an UserLabel cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.9
  */
 export function UserLabelCluster() {
     const cluster = Cluster({ ...UserLabelCluster.Metadata, ...UserLabelCluster.BaseComponent });
     return cluster as unknown as UserLabelCluster.Type;
-};
+}
 
 export namespace UserLabelCluster {
     export type Type = 
@@ -62,4 +62,4 @@ export namespace UserLabelCluster {
      * This cluster supports all UserLabel features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

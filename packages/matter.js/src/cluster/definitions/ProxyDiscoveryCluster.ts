@@ -23,7 +23,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 export function ProxyDiscoveryCluster() {
     const cluster = Cluster({ ...ProxyDiscoveryCluster.Metadata, ...ProxyDiscoveryCluster.BaseComponent });
     return cluster as unknown as ProxyDiscoveryCluster.Type;
-};
+}
 
 export namespace ProxyDiscoveryCluster {
     export type Type = 
@@ -59,4 +59,4 @@ export namespace ProxyDiscoveryCluster {
      * This cluster supports all ProxyDiscovery features.
      */
     export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-};
+}

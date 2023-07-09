@@ -40,7 +40,7 @@ export function MediaPlaybackCluster<T extends MediaPlaybackCluster.Feature[]>(.
     extendCluster(cluster, MediaPlaybackCluster.AdvancedSeekComponent, { advancedSeek: true });
     extendCluster(cluster, MediaPlaybackCluster.VariableSpeedComponent, { variableSpeed: true });
     return cluster as unknown as MediaPlaybackCluster.Type<BitFlags<typeof MediaPlaybackCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.1
@@ -65,7 +65,7 @@ export const enum PlaybackStateEnum {
      * Media is not currently buffering and playback will start when buffer has been filled
      */
     Buffering = 3
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.2
@@ -103,7 +103,7 @@ export const enum StatusEnum {
      * media.
      */
     SeekOutOfRange = 5
-};
+}
 
 /**
  * This command SHALL be generated in response to various Playback Commands. The data for this command SHALL be as
@@ -227,7 +227,7 @@ export namespace MediaPlaybackCluster {
          * Support for commands to support variable speed playback on media that supports it.
          */
         VariableSpeed = "VariableSpeed"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -464,4 +464,4 @@ export namespace MediaPlaybackCluster {
         attributes: { ...BaseComponent.attributes, ...AdvancedSeekComponent.attributes },
         commands: { ...BaseComponent.commands, ...AdvancedSeekComponent.commands, ...VariableSpeedComponent.commands }
     });
-};
+}

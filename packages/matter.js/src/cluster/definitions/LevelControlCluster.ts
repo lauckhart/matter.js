@@ -37,7 +37,7 @@ export function LevelControlCluster<T extends LevelControlCluster.Feature[]>(...
     extendCluster(cluster, LevelControlCluster.LightingComponent, { lighting: true });
     extendCluster(cluster, LevelControlCluster.FrequencyComponent, { frequency: true });
     return cluster as unknown as LevelControlCluster.Type<BitFlags<typeof LevelControlCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap that
@@ -67,7 +67,7 @@ export const TlvMoveToLevelRequest = TlvObject({
 export const enum MoveMode {
     Up = 0,
     Down = 1
-};
+}
 
 /**
  * The Move command SHALL have the following data fields:
@@ -101,7 +101,7 @@ export const TlvMoveRequest = TlvObject({
 export const enum StepMode {
     Up = 0,
     Down = 1
-};
+}
 
 /**
  * The Step command SHALL have the following data fields:
@@ -201,7 +201,7 @@ export namespace LevelControlCluster {
          * control.
          */
         Frequency = "Frequency"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -486,4 +486,4 @@ export namespace LevelControlCluster {
         attributes: { ...BaseComponent.attributes, ...LightingComponent.attributes, ...FrequencyComponent.attributes },
         commands: { ...BaseComponent.commands, ...FrequencyComponent.commands }
     });
-};
+}

@@ -32,18 +32,18 @@ export function NamedComponents(cluster: ClusterModel, inferredComponents: Infer
     for (const elementVariance of inferredComponents) {
         let name;
 
-        let contributorDocumentation = Array<string>();
+        const contributorDocumentation = Array<string>();
 
         const allOf = elementVariance.condition?.allOf;
         if (allOf) {
-            const names = allOf.map(f => featureNames[f]!);
+            const names = allOf.map(f => featureNames[f]);
             name = names.join("And");
             contributorDocumentation.push(`it supports feature${allOf.length === 1 ? "" : "s"}`, describeList("and", ...names));
         }
 
         const anyOf = elementVariance.condition?.anyOf;
         if (anyOf) {
-            const names = anyOf.map(f => featureNames[f]!);
+            const names = anyOf.map(f => featureNames[f]);
             const members = Array<string>();
             if (name) {
                 members.push(name);

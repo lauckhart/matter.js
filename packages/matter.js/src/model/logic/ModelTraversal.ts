@@ -139,7 +139,7 @@ export class ModelTraversal {
             if (!model) {
                 return;
             }
-            let type = this.getTypeName(model);
+            const type = this.getTypeName(model);
             if (type !== undefined) {
                 return this.findType(model.parent, type, model.allowedBaseTags);
             }
@@ -254,7 +254,7 @@ export class ModelTraversal {
                 return;
             }
             const queue = Array<Model>(scope);
-            while (scope = queue.shift()) {
+            for (scope = queue.shift(); scope; scope = queue.shift()) {
                 if (scope.isTypeScope) {
                     const result = this.findLocal(scope, name, allowedTags);
                     if (result) {
@@ -263,7 +263,7 @@ export class ModelTraversal {
                 }
 
                 // Search inherited scope next
-                let inheritedScope = this.findBase(scope);
+                const inheritedScope = this.findBase(scope);
                 if (inheritedScope) {
                     queue.unshift(inheritedScope);
                 }

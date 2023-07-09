@@ -19,12 +19,12 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * that need to provide instantaneous data as opposed to metrology data which should be retrieved from the metering
  * cluster..
  *
- * This function creates a ElectricalMeasurement cluster.
+ * This function creates an ElectricalMeasurement cluster.
  */
 export function ElectricalMeasurementCluster() {
     const cluster = Cluster({ ...ElectricalMeasurementCluster.Metadata, ...ElectricalMeasurementCluster.BaseComponent });
     return cluster as unknown as ElectricalMeasurementCluster.Type;
-};
+}
 
 export const TlvGetProfileInfoResponseCommandRequest = TlvObject({
     profileCount: TlvField(0, TlvUInt8),
@@ -217,4 +217,4 @@ export namespace ElectricalMeasurementCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

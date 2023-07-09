@@ -26,7 +26,7 @@ import { TlvString } from "../../tlv/TlvString.js";
 export function BallastConfigurationCluster() {
     const cluster = Cluster({ ...BallastConfigurationCluster.Metadata, ...BallastConfigurationCluster.BaseComponent });
     return cluster as unknown as BallastConfigurationCluster.Type;
-};
+}
 
 /**
  * The BallastStatus attribute specifies the activity status of the ballast functions. The usage of the bits is
@@ -235,4 +235,4 @@ export namespace BallastConfigurationCluster {
      * This cluster supports all BallastConfiguration features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

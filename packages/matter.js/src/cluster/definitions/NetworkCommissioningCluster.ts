@@ -56,7 +56,7 @@ export function NetworkCommissioningCluster<T extends NetworkCommissioningCluste
     );
 
     return cluster as unknown as NetworkCommissioningCluster.Type<BitFlags<typeof NetworkCommissioningCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * NetworkInfoStruct struct describes an existing network configuration, as provided in the Networks attribute.
@@ -98,7 +98,7 @@ export const enum NetworkCommissioningStatusEnum {
     Ipv6Failed = 10,
     IpBindFailed = 11,
     UnknownError = 12
-};
+}
 
 /**
  * This command SHALL scan on the Cluster instance’s associated network interface for either of:
@@ -165,7 +165,7 @@ export const enum WiFiBand {
     "5G" = 2,
     "6G" = 3,
     "60G" = 4
-};
+}
 
 /**
  * WiFiInterfaceScanResultStruct represents a single Wi-Fi network scan result.
@@ -392,7 +392,7 @@ export namespace NetworkCommissioningCluster {
          * Ethernet related features
          */
         EthernetNetworkInterface = "EthernetNetworkInterface"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -654,4 +654,4 @@ export namespace NetworkCommissioningCluster {
             ...ThreadNetworkInterfaceComponent.commands
         }
     });
-};
+}

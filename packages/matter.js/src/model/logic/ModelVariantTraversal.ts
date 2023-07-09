@@ -206,7 +206,7 @@ export abstract class ModelVariantTraversal<S = void> {
                     (mappings[child.tag] = { slots: [], idToSlot: {}, nameToSlot: {} });
 
                 const childId = child.effectiveId;
-                let childName = this.getCanonicalName(child);
+                const childName = this.getCanonicalName(child);
 
                 let slot;
                 let idStr: string | undefined;
@@ -216,7 +216,7 @@ export abstract class ModelVariantTraversal<S = void> {
                     // Commands may re-use the ID for request and response
                     // So append the direction to the ID
                     if (child instanceof CommandModel) {
-                        idStr = `${idStr}:${(child as CommandModel).direction}`
+                        idStr = `${idStr}:${child.direction}`
                     }
 
                     // Find existing slot by ID
@@ -320,7 +320,7 @@ type ClusterState = {
 function computeCanonicalNames(sourceNames: string[], variants: VariantDetail) {
     // First, infer name equivalence of datatypes based on usage.  There is no
     // ID on datatypes.  This is a reliable alternative
-    let datatypeNameMap = inferEquivalentDatatypes(sourceNames, variants);
+    const datatypeNameMap = inferEquivalentDatatypes(sourceNames, variants);
 
     // Now that we generally what what equals what, go through the names and
     // choose the name for the final model

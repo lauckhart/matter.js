@@ -175,7 +175,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Collect constraints and conformance for this type and all base types.
      */
     get validationAspects() {
-        let aspects = Array<Aspect<any>>();
+        const aspects = Array<Aspect<any>>();
         
         new ModelTraversal().visitInheritance(this, (model) => {
             if (model instanceof ValueModel) {

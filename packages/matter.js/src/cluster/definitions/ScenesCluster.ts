@@ -30,7 +30,7 @@ import { TlvAny } from "../../tlv/TlvAny.js";
 export function ScenesCluster() {
     const cluster = Cluster({ ...ScenesCluster.Metadata, ...ScenesCluster.BaseComponent });
     return cluster as unknown as ScenesCluster.Type;
-};
+}
 
 /**
  * This attribute provides legacy, read-only access to whether the Scene Names feature is supported. The most
@@ -369,7 +369,7 @@ export namespace ScenesCluster {
          * The ability to store a name for a scene.
          */
         SceneNames = "SceneNames"
-    };
+    }
 
     export type Type = 
         typeof Metadata
@@ -602,4 +602,4 @@ export namespace ScenesCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

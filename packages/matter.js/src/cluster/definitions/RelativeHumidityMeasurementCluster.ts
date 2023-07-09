@@ -28,7 +28,7 @@ export function RelativeHumidityMeasurementCluster() {
         ...RelativeHumidityMeasurementCluster.BaseComponent
     });
     return cluster as unknown as RelativeHumidityMeasurementCluster.Type;
-};
+}
 
 export namespace RelativeHumidityMeasurementCluster {
     export type Type = 
@@ -84,4 +84,4 @@ export namespace RelativeHumidityMeasurementCluster {
      * This cluster supports all RelativeHumidityMeasurement features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

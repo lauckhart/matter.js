@@ -47,7 +47,7 @@ export function EthernetNetworkDiagnosticsCluster<T extends EthernetNetworkDiagn
     );
 
     return cluster as unknown as EthernetNetworkDiagnosticsCluster.Type<BitFlags<typeof EthernetNetworkDiagnosticsCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.15.5.1
@@ -63,7 +63,7 @@ export const enum PHYRateEnum {
     Rate100G = 7,
     Rate200G = 8,
     Rate400G = 9
-};
+}
 
 export namespace EthernetNetworkDiagnosticsCluster {
     /**
@@ -86,7 +86,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
          * transmission of packets on the ethernet interface.
          */
         ErrorCounts = "ErrorCounts"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -250,4 +250,4 @@ export namespace EthernetNetworkDiagnosticsCluster {
         attributes: { ...BaseComponent.attributes, ...PacketCountsComponent.attributes, ...ErrorCountsComponent.attributes },
         commands: { ...PacketCountsOrErrorCountsComponent.commands }
     });
-};
+}

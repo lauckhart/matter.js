@@ -27,7 +27,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 export function GeneralCommissioningCluster() {
     const cluster = Cluster({ ...GeneralCommissioningCluster.Metadata, ...GeneralCommissioningCluster.BaseComponent });
     return cluster as unknown as GeneralCommissioningCluster.Type;
-};
+}
 
 /**
  * This structure provides some constant values that MAY be of use to all commissioners.
@@ -63,7 +63,7 @@ export const enum RegulatoryLocationTypeEnum {
     Indoor = 0,
     Outdoor = 1,
     IndoorOutdoor = 2
-};
+}
 
 /**
  * The arguments for this command are as follows:
@@ -86,7 +86,7 @@ export const enum CommissioningErrorEnum {
     InvalidAuthentication = 2,
     NoFailSafe = 3,
     BusyWithOtherAdmin = 4
-};
+}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.3
@@ -264,4 +264,4 @@ export namespace GeneralCommissioningCluster {
         attributes: { ...BaseComponent.attributes },
         commands: { ...BaseComponent.commands }
     });
-};
+}

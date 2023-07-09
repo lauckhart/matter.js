@@ -23,7 +23,7 @@ import { TlvByteString } from "../../tlv/TlvString.js";
 export function WakeOnLanCluster() {
     const cluster = Cluster({ ...WakeOnLanCluster.Metadata, ...WakeOnLanCluster.BaseComponent });
     return cluster as unknown as WakeOnLanCluster.Type;
-};
+}
 
 export namespace WakeOnLanCluster {
     export type Type = 
@@ -65,4 +65,4 @@ export namespace WakeOnLanCluster {
      * This cluster supports all WakeOnLan features.
      */
     export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-};
+}

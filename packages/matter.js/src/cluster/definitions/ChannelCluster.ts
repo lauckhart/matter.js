@@ -40,7 +40,7 @@ export function ChannelCluster<T extends ChannelCluster.Feature[]>(...features: 
     extendCluster(cluster, ChannelCluster.LineupInfoComponent, { lineupInfo: true });
     extendCluster(cluster, ChannelCluster.ChannelListOrLineupInfoComponent, { channelList: true }, { lineupInfo: true });
     return cluster as unknown as ChannelCluster.Type<BitFlags<typeof ChannelCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * This indicates a channel in a channel lineup.
@@ -134,7 +134,7 @@ export const enum LineupInfoTypeEnum {
      * MultiSystemOperator
      */
     Mso = 0
-};
+}
 
 /**
  * The Lineup Info allows references to external lineup sources like Gracenote. The combination of OperatorName,
@@ -193,7 +193,7 @@ export const enum StatusEnum {
      * No matches for the ChannelInfoStruct passed in.
      */
     NoMatches = 2
-};
+}
 
 /**
  * This command SHALL be generated in response to a ChangeChannel command. The data for this command SHALL be as
@@ -237,7 +237,7 @@ export namespace ChannelCluster {
          * Provides lineup info, which is a reference to an external source of lineup information.
          */
         LineupInfo = "LineupInfo"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -373,4 +373,4 @@ export namespace ChannelCluster {
         attributes: { ...BaseComponent.attributes, ...ChannelListComponent.attributes, ...LineupInfoComponent.attributes },
         commands: { ...BaseComponent.commands, ...ChannelListOrLineupInfoComponent.commands }
     });
-};
+}

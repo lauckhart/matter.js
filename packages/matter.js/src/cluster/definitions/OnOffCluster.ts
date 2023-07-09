@@ -38,7 +38,7 @@ export function OnOffCluster<T extends OnOffCluster.Feature[]>(...features: [ ..
     });
     extendCluster(cluster, OnOffCluster.LevelControlForLightingComponent, { levelControlForLighting: true });
     return cluster as unknown as OnOffCluster.Type<BitFlags<typeof OnOffCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.5.1
@@ -59,12 +59,12 @@ export const enum StartUpOnOffEnum {
      * value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle).
      */
     Toggle = 2
-};
+}
 
 export const enum OnOffEffectIdentifier {
     DelayedAllOff = 0,
     DyingLight = 1
-};
+}
 
 /**
  * The OffWithEffect command allows devices to be turned off using enhanced ways of fading. The OffWithEffect command
@@ -147,7 +147,7 @@ export namespace OnOffCluster {
          * Behavior that supports lighting applications.
          */
         LevelControlForLighting = "LevelControlForLighting"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -312,4 +312,4 @@ export namespace OnOffCluster {
         attributes: { ...BaseComponent.attributes, ...LevelControlForLightingComponent.attributes },
         commands: { ...BaseComponent.commands, ...LevelControlForLightingComponent.commands }
     });
-};
+}

@@ -50,7 +50,7 @@ export function WindowCoveringCluster<T extends WindowCoveringCluster.Feature[]>
     );
 
     return cluster as unknown as WindowCoveringCluster.Type<BitFlags<typeof WindowCoveringCluster.Metadata.features, T>>;
-};
+}
 
 /**
  * The Type attribute identifies the type of window covering being controlled by this endpoint and SHALL be set to one
@@ -70,7 +70,7 @@ export const enum WindowCoveringType {
     TiltBlindLift = 8,
     ProjectorScreen = 9,
     Unknown = 255
-};
+}
 
 /**
  * The ConfigStatus attribute makes configuration and status information available. To change settings, devices SHALL
@@ -133,7 +133,7 @@ export const enum EndProductType {
     SwingingShutter = 22,
     SlidingShutter = 23,
     Unknown = 255
-};
+}
 
 /**
  * The Mode attribute allows configuration of the Window Covering, such as: reversing the motor direction, placing the
@@ -295,7 +295,7 @@ export namespace WindowCoveringCluster {
          * Position Aware tilt control is supported.
          */
         PositionAwareTilt = "PositionAwareTilt"
-    };
+    }
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
@@ -764,4 +764,4 @@ export namespace WindowCoveringCluster {
             ...TiltAndAbsolutePositionComponent.commands
         }
     });
-};
+}
