@@ -31,7 +31,7 @@ describe("Access", () => {
     FLAG_PERMUTATIONS.forEach(([ text, ast ]) => {
         describe(text, () => {
             it("parses", () => {
-                expect(new Access(text)).toEqual({ ...ast, definition: text });
+                expect({ ...new Access(text) }).toEqual({ ...ast, definition: text });
             });
 
             it("serializes", () => {
