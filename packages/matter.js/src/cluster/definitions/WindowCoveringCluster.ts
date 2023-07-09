@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, FixedAttribute, AccessLevel, Attribute, WritableAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -30,11 +30,11 @@ import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3
  */
 export function WindowCoveringCluster<T extends WindowCoveringCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...WindowCoveringCluster.Metadata,
         supportedFeatures: BitFlags(WindowCoveringCluster.Metadata.features, ...features),
         ...WindowCoveringCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, WindowCoveringCluster.LiftAndPositionAwareLiftComponent, { lift: true, positionAwareLift: true });
     extendCluster(cluster, WindowCoveringCluster.TiltAndPositionAwareTiltComponent, { tilt: true, positionAwareTilt: true });
     extendCluster(cluster, WindowCoveringCluster.LiftComponent, { lift: true });
@@ -58,7 +58,7 @@ export function WindowCoveringCluster<T extends WindowCoveringCluster.Feature[]>
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.1
  */
-export const enum TlvType {
+export const enum WindowCoveringType {
     Rollershade = 0,
     Rollershade2Motor = 1,
     RollershadeExterior = 2,
@@ -107,7 +107,7 @@ export const TlvOperationalStatus = TlvBitmap(TlvUInt8, TlvOperationalStatusBits
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.16
  */
-export const enum TlvEndProductType {
+export const enum EndProductType {
     RollerShade = 0,
     RomanShade = 1,
     BalloonShade = 2,
@@ -299,6 +299,7 @@ export namespace WindowCoveringCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { lift: true, positionAwareLift: true } ? typeof LiftAndPositionAwareLiftComponent : {})
@@ -370,7 +371,7 @@ export namespace WindowCoveringCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.1
              */
-            type: FixedAttribute(0, TlvEnum<TlvType>(), { readAcl: AccessLevel.View }),
+            type: FixedAttribute(0, TlvEnum<WindowCoveringType>(), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The ConfigStatus attribute makes configuration and status information available. To change settings,
@@ -403,7 +404,7 @@ export namespace WindowCoveringCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.16
              */
-            endProductType: FixedAttribute(13, TlvEnum<TlvEndProductType>(), { readAcl: AccessLevel.View }),
+            endProductType: FixedAttribute(13, TlvEnum<EndProductType>(), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The Mode attribute allows configuration of the Window Covering, such as: reversing the motor direction,
@@ -469,7 +470,7 @@ export namespace WindowCoveringCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.2
              */
-            physicalClosedLimitLift: OptionalFixedAttribute(1, TlvUInt16, { readAcl: AccessLevel.View }),
+            physicalClosedLimitLift: OptionalFixedAttribute(1, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the window
@@ -518,7 +519,7 @@ export namespace WindowCoveringCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.3
              */
-            physicalClosedLimitTilt: OptionalFixedAttribute(2, TlvUInt16, { readAcl: AccessLevel.View }),
+            physicalClosedLimitTilt: OptionalFixedAttribute(2, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of the
@@ -567,7 +568,11 @@ export namespace WindowCoveringCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.6
              */
-            numberOfActuationsLift: OptionalAttribute(5, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
+            numberOfActuationsLift: OptionalAttribute(
+                5,
+                TlvUInt16,
+                { persistent: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The TargetPositionLiftPercent100ths attribute identifies the position where the Window Covering Lift
@@ -602,7 +607,7 @@ export namespace WindowCoveringCluster {
             installedOpenLimitLift: OptionalAttribute(
                 16,
                 TlvUInt16.bound({ max: 65534 }),
-                { persistent: true, readAcl: AccessLevel.View }
+                { persistent: true, default: 0, readAcl: AccessLevel.View }
             ),
 
             /**
@@ -614,7 +619,7 @@ export namespace WindowCoveringCluster {
             installedClosedLimitLift: OptionalAttribute(
                 17,
                 TlvUInt16.bound({ max: 65534 }),
-                { persistent: true, readAcl: AccessLevel.View }
+                { persistent: true, default: 0, readAcl: AccessLevel.View }
             )
         },
 
@@ -639,7 +644,11 @@ export namespace WindowCoveringCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.7
              */
-            numberOfActuationsTilt: OptionalAttribute(6, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
+            numberOfActuationsTilt: OptionalAttribute(
+                6,
+                TlvUInt16,
+                { persistent: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The TargetPositionTiltPercent100ths attribute identifies the position where the Window Covering Tilt
@@ -674,7 +683,7 @@ export namespace WindowCoveringCluster {
             installedOpenLimitTilt: OptionalAttribute(
                 18,
                 TlvUInt16.bound({ max: 65534 }),
-                { persistent: true, readAcl: AccessLevel.View }
+                { persistent: true, default: 0, readAcl: AccessLevel.View }
             ),
 
             /**
@@ -686,7 +695,7 @@ export namespace WindowCoveringCluster {
             installedClosedLimitTilt: OptionalAttribute(
                 19,
                 TlvUInt16.bound({ max: 65534 }),
-                { persistent: true, readAcl: AccessLevel.View }
+                { persistent: true, default: 0, readAcl: AccessLevel.View }
             )
         },
 

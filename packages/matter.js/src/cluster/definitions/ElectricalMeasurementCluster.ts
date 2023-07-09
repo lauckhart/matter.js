@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { GlobalAttributes, OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt32, TlvInt16, TlvUInt16, TlvInt32, TlvInt8, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -22,7 +22,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * This function creates a ElectricalMeasurement cluster.
  */
 export function ElectricalMeasurementCluster() {
-    const cluster = { ...ElectricalMeasurementCluster.Metadata, ...ElectricalMeasurementCluster.BaseComponent };
+    const cluster = Cluster({ ...ElectricalMeasurementCluster.Metadata, ...ElectricalMeasurementCluster.BaseComponent });
     return cluster as unknown as ElectricalMeasurementCluster.Type;
 };
 
@@ -51,6 +51,7 @@ export const TlvGetMeasurementProfileCommandRequest = TlvObject({
 export namespace ElectricalMeasurementCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -82,9 +83,9 @@ export namespace ElectricalMeasurementCluster {
             acFrequency: OptionalAttribute(768, TlvUInt16, { default: 65535 }),
             acFrequencyMin: OptionalAttribute(769, TlvUInt16, { default: 65535 }),
             acFrequencyMax: OptionalAttribute(770, TlvUInt16, { default: 65535 }),
-            neutralCurrent: OptionalAttribute(771, TlvUInt16),
-            totalActivePower: OptionalAttribute(772, TlvInt32),
-            totalReactivePower: OptionalAttribute(773, TlvInt32),
+            neutralCurrent: OptionalAttribute(771, TlvUInt16, { default: 0 }),
+            totalActivePower: OptionalAttribute(772, TlvInt32, { default: 0 }),
+            totalReactivePower: OptionalAttribute(773, TlvInt32, { default: 0 }),
             totalApparentPower: OptionalAttribute(774, TlvUInt32, { default: 1 }),
             measured1StHarmonicCurrent: OptionalAttribute(775, TlvInt16, { default: 32768 }),
             measured3RdHarmonicCurrent: OptionalAttribute(776, TlvInt16, { default: 32768 }),
@@ -102,8 +103,8 @@ export namespace ElectricalMeasurementCluster {
             acFrequencyDivisor: OptionalAttribute(1025, TlvUInt16, { default: 1 }),
             powerMultiplier: OptionalAttribute(1026, TlvUInt32, { default: 1 }),
             powerDivisor: OptionalAttribute(1027, TlvUInt32, { default: 1 }),
-            harmonicCurrentMultiplier: OptionalAttribute(1028, TlvInt8),
-            phaseHarmonicCurrentMultiplier: OptionalAttribute(1029, TlvInt8),
+            harmonicCurrentMultiplier: OptionalAttribute(1028, TlvInt8, { default: 0 }),
+            phaseHarmonicCurrentMultiplier: OptionalAttribute(1029, TlvInt8, { default: 0 }),
             instantaneousVoltage: OptionalAttribute(1280, TlvInt16, { default: 65535 }),
             instantaneousLineCurrent: OptionalAttribute(1281, TlvUInt16, { default: 65535 }),
             instantaneousActiveCurrent: OptionalAttribute(1282, TlvInt16, { default: 65535 }),
@@ -120,13 +121,13 @@ export namespace ElectricalMeasurementCluster {
             activePowerMax: OptionalAttribute(1293, TlvInt16, { default: 65535 }),
             reactivePower: OptionalAttribute(1294, TlvInt16, { default: 65535 }),
             apparentPower: OptionalAttribute(1295, TlvUInt16, { default: 65535 }),
-            acPowerFactor: OptionalAttribute(1296, TlvInt8),
-            averageRmsVoltageMeasurementPeriod: OptionalWritableAttribute(1297, TlvUInt16),
-            averageRmsUnderVoltageCounter: OptionalWritableAttribute(1299, TlvUInt16),
-            rmsExtremeOverVoltagePeriod: OptionalWritableAttribute(1300, TlvUInt16),
-            rmsExtremeUnderVoltagePeriod: OptionalWritableAttribute(1301, TlvUInt16),
-            rmsVoltageSagPeriod: OptionalWritableAttribute(1302, TlvUInt16),
-            rmsVoltageSwellPeriod: OptionalWritableAttribute(1303, TlvUInt16),
+            acPowerFactor: OptionalAttribute(1296, TlvInt8, { default: 0 }),
+            averageRmsVoltageMeasurementPeriod: OptionalWritableAttribute(1297, TlvUInt16, { default: 0 }),
+            averageRmsUnderVoltageCounter: OptionalWritableAttribute(1299, TlvUInt16, { default: 0 }),
+            rmsExtremeOverVoltagePeriod: OptionalWritableAttribute(1300, TlvUInt16, { default: 0 }),
+            rmsExtremeUnderVoltagePeriod: OptionalWritableAttribute(1301, TlvUInt16, { default: 0 }),
+            rmsVoltageSagPeriod: OptionalWritableAttribute(1302, TlvUInt16, { default: 0 }),
+            rmsVoltageSwellPeriod: OptionalWritableAttribute(1303, TlvUInt16, { default: 0 }),
             acVoltageMultiplier: OptionalAttribute(1536, TlvUInt16, { default: 1 }),
             acVoltageDivisor: OptionalAttribute(1537, TlvUInt16, { default: 1 }),
             acCurrentMultiplier: OptionalAttribute(1538, TlvUInt16, { default: 1 }),
@@ -161,14 +162,14 @@ export namespace ElectricalMeasurementCluster {
             activePowerMaxPhaseB: OptionalAttribute(2317, TlvInt16, { default: 65535 }),
             reactivePowerPhaseB: OptionalAttribute(2318, TlvInt16, { default: 65535 }),
             apparentPowerPhaseB: OptionalAttribute(2319, TlvUInt16, { default: 65535 }),
-            powerFactorPhaseB: OptionalAttribute(2320, TlvInt8),
-            averageRmsVoltageMeasurementPeriodPhaseB: OptionalAttribute(2321, TlvUInt16),
-            averageRmsOverVoltageCounterPhaseB: OptionalAttribute(2322, TlvUInt16),
-            averageRmsUnderVoltageCounterPhaseB: OptionalAttribute(2323, TlvUInt16),
-            rmsExtremeOverVoltagePeriodPhaseB: OptionalAttribute(2324, TlvUInt16),
-            rmsExtremeUnderVoltagePeriodPhaseB: OptionalAttribute(2325, TlvUInt16),
-            rmsVoltageSagPeriodPhaseB: OptionalAttribute(2326, TlvUInt16),
-            rmsVoltageSwellPeriodPhaseB: OptionalAttribute(2327, TlvUInt16),
+            powerFactorPhaseB: OptionalAttribute(2320, TlvInt8, { default: 0 }),
+            averageRmsVoltageMeasurementPeriodPhaseB: OptionalAttribute(2321, TlvUInt16, { default: 0 }),
+            averageRmsOverVoltageCounterPhaseB: OptionalAttribute(2322, TlvUInt16, { default: 0 }),
+            averageRmsUnderVoltageCounterPhaseB: OptionalAttribute(2323, TlvUInt16, { default: 0 }),
+            rmsExtremeOverVoltagePeriodPhaseB: OptionalAttribute(2324, TlvUInt16, { default: 0 }),
+            rmsExtremeUnderVoltagePeriodPhaseB: OptionalAttribute(2325, TlvUInt16, { default: 0 }),
+            rmsVoltageSagPeriodPhaseB: OptionalAttribute(2326, TlvUInt16, { default: 0 }),
+            rmsVoltageSwellPeriodPhaseB: OptionalAttribute(2327, TlvUInt16, { default: 0 }),
             lineCurrentPhaseC: OptionalAttribute(2561, TlvUInt16, { default: 65535 }),
             activeCurrentPhaseC: OptionalAttribute(2562, TlvInt16, { default: 65535 }),
             reactiveCurrentPhaseC: OptionalAttribute(2563, TlvInt16, { default: 65535 }),
@@ -183,14 +184,14 @@ export namespace ElectricalMeasurementCluster {
             activePowerMaxPhaseC: OptionalAttribute(2573, TlvInt16, { default: 65535 }),
             reactivePowerPhaseC: OptionalAttribute(2574, TlvInt16, { default: 65535 }),
             apparentPowerPhaseC: OptionalAttribute(2575, TlvUInt16, { default: 65535 }),
-            powerFactorPhaseC: OptionalAttribute(2576, TlvInt8),
-            averageRmsVoltageMeasurementPeriodPhaseC: OptionalAttribute(2577, TlvUInt16),
-            averageRmsOverVoltageCounterPhaseC: OptionalAttribute(2578, TlvUInt16),
-            averageRmsUnderVoltageCounterPhaseC: OptionalAttribute(2579, TlvUInt16),
-            rmsExtremeOverVoltagePeriodPhaseC: OptionalAttribute(2580, TlvUInt16),
-            rmsExtremeUnderVoltagePeriodPhaseC: OptionalAttribute(2581, TlvUInt16),
-            rmsVoltageSagPeriodPhaseC: OptionalAttribute(2582, TlvUInt16),
-            rmsVoltageSwellPeriodPhaseC: OptionalAttribute(2583, TlvUInt16)
+            powerFactorPhaseC: OptionalAttribute(2576, TlvInt8, { default: 0 }),
+            averageRmsVoltageMeasurementPeriodPhaseC: OptionalAttribute(2577, TlvUInt16, { default: 0 }),
+            averageRmsOverVoltageCounterPhaseC: OptionalAttribute(2578, TlvUInt16, { default: 0 }),
+            averageRmsUnderVoltageCounterPhaseC: OptionalAttribute(2579, TlvUInt16, { default: 0 }),
+            rmsExtremeOverVoltagePeriodPhaseC: OptionalAttribute(2580, TlvUInt16, { default: 0 }),
+            rmsExtremeUnderVoltagePeriodPhaseC: OptionalAttribute(2581, TlvUInt16, { default: 0 }),
+            rmsVoltageSagPeriodPhaseC: OptionalAttribute(2582, TlvUInt16, { default: 0 }),
+            rmsVoltageSwellPeriodPhaseC: OptionalAttribute(2583, TlvUInt16, { default: 0 })
         },
 
         commands: {

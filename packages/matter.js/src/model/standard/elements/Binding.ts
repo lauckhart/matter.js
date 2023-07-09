@@ -17,7 +17,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "Binding", id: 0x0, type: "list", access: "RW F VM", conformance: "M",
-            constraint: "desc", quality: "N",
+            constraint: "desc", default: [], quality: "N",
             details: "Each entry SHALL represent a binding. Here are some examples:",
             xref: { document: "core", section: "9.6.6.1" },
             children: [ { tag: "datatype", name: "entry", type: "TargetStruct" } ]

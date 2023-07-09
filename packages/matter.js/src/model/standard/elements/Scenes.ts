@@ -18,24 +18,28 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.4.4" },
             children: [ {
-                tag: "datatype", name: "SN", id: 0x0, description: "SceneNames",
+                tag: "datatype", name: "SN", id: 0x0, default: 0, description: "SceneNames",
                 details: "The ability to store a name for a scene."
             } ]
         },
 
         {
             tag: "attribute", name: "SceneCount", id: 0x0, type: "uint8", access: "R V", conformance: "M",
+            default: 0,
             details: "The SceneCount attribute specifies the number of scenes currently in the server’s Scene Table.",
             xref: { document: "cluster", section: "1.4.7.1" }
         },
+
         {
             tag: "attribute", name: "CurrentScene", id: 0x1, type: "uint8", access: "R V", conformance: "M",
+            default: 0,
             details: "The CurrentScene attribute holds the scene identifier of the scene last invoked.",
             xref: { document: "cluster", section: "1.4.7.2" }
         },
 
         {
             tag: "attribute", name: "CurrentGroup", id: 0x2, type: "group-id", access: "R V", conformance: "M",
+            default: 0,
             details: "The CurrentGroup attribute holds the group identifier of the scene last invoked, or 0 if the scene " +
                      "last invoked is not associated with a group.",
             xref: { document: "cluster", section: "1.4.7.3" }
@@ -52,7 +56,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "NameSupport", id: 0x4, type: "map8", access: "R V", conformance: "M",
-            constraint: "desc",
+            constraint: "desc", default: 0,
             details: "This attribute provides legacy, read-only access to whether the Scene Names feature is supported. " +
                      "The most significant bit, bit 7, SHALL be equal to bit 0 of the FeatureMap attribute. All other " +
                      "bits SHALL be 0.",

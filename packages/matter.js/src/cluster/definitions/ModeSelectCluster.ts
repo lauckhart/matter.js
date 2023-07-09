@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, Attribute, OptionalWritableAttribute, Command, TlvNoResponse, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, FixedAttribute, AccessLevel, Attribute, OptionalWritableAttribute, Command, TlvNoResponse, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -31,11 +31,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8
  */
 export function ModeSelectCluster<T extends ModeSelectCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...ModeSelectCluster.Metadata,
         supportedFeatures: BitFlags(ModeSelectCluster.Metadata.features, ...features),
         ...ModeSelectCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, ModeSelectCluster.OnOffComponent, { onOff: true });
     return cluster as unknown as ModeSelectCluster.Type<BitFlags<typeof ModeSelectCluster.Metadata.features, T>>;
 };
@@ -125,6 +125,7 @@ export namespace ModeSelectCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { onOff: true } ? typeof OnOffComponent : {});

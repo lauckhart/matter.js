@@ -52,7 +52,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentPosition", id: 0x1, type: "uint8", conformance: "M",
-            constraint: "0 to NumberOfPositions1", quality: "N",
+            constraint: "0 to NumberOfPositions1", default: 0, quality: "N",
             details: "This attribute SHALL indicate the position of the switch. The valid range is zero to " +
                      "NumberOfPositions-1. CurrentPosition value 0 SHALL be assigned to the default position of the " +
                      "switch: for example the \"open\" state of a rocker switch, or the \"idle\" state of a push button " +

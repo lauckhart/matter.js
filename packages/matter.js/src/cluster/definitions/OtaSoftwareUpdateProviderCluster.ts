@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -25,14 +25,17 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
  */
 export function OtaSoftwareUpdateProviderCluster() {
-    const cluster = { ...OtaSoftwareUpdateProviderCluster.Metadata, ...OtaSoftwareUpdateProviderCluster.BaseComponent };
+    const cluster = Cluster({
+        ...OtaSoftwareUpdateProviderCluster.Metadata,
+        ...OtaSoftwareUpdateProviderCluster.BaseComponent
+    });
     return cluster as unknown as OtaSoftwareUpdateProviderCluster.Type;
 };
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.3
  */
-export const enum TlvDownloadProtocolEnum {
+export const enum DownloadProtocolEnum {
     BdxSynchronous = 0,
     BdxAsynchronous = 1,
     Https = 2,
@@ -49,7 +52,7 @@ export const TlvQueryImageRequest = TlvObject({
     vendorId: TlvField(0, TlvUInt16),
     productId: TlvField(1, TlvUInt16),
     softwareVersion: TlvField(2, TlvUInt32),
-    protocolsSupported: TlvField(3, TlvArray(TlvEnum<TlvDownloadProtocolEnum>())),
+    protocolsSupported: TlvField(3, TlvArray(TlvEnum<DownloadProtocolEnum>())),
     hardwareVersion: TlvOptionalField(4, TlvUInt16),
     location: TlvOptionalField(5, TlvString.bound({ minLength: 2, maxLength: 2 })),
     requestorCanConsent: TlvOptionalField(6, TlvBoolean),
@@ -61,7 +64,7 @@ export const TlvQueryImageRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.1
  */
-export const enum TlvStatusEnum {
+export const enum StatusEnum {
     UpdateAvailable = 0,
     Busy = 1,
     NotAvailable = 2,
@@ -74,7 +77,7 @@ export const enum TlvStatusEnum {
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
  */
 export const TlvQueryImageResponseRequest = TlvObject({
-    status: TlvField(0, TlvEnum<TlvStatusEnum>()),
+    status: TlvField(0, TlvEnum<StatusEnum>()),
     delayedActionTime: TlvOptionalField(1, TlvUInt32),
     imageUri: TlvOptionalField(2, TlvString.bound({ maxLength: 256 })),
     softwareVersion: TlvOptionalField(3, TlvUInt32),
@@ -100,7 +103,7 @@ export const TlvApplyUpdateRequestRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.2
  */
-export const enum TlvApplyUpdateActionEnum {
+export const enum ApplyUpdateActionEnum {
     Proceed = 0,
     AwaitNextAction = 1,
     Discontinue = 2
@@ -112,7 +115,7 @@ export const enum TlvApplyUpdateActionEnum {
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
  */
 export const TlvApplyUpdateResponseRequest = TlvObject({
-    action: TlvField(0, TlvEnum<TlvApplyUpdateActionEnum>()),
+    action: TlvField(0, TlvEnum<ApplyUpdateActionEnum>()),
     delayedActionTime: TlvField(1, TlvUInt32)
 });
 
@@ -129,6 +132,7 @@ export const TlvNotifyUpdateAppliedRequest = TlvObject({
 export namespace OtaSoftwareUpdateProviderCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

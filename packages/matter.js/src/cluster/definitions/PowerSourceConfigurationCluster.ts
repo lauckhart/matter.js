@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvUInt16 } from "../../tlv/TlvNumber.js";
 
@@ -22,13 +22,17 @@ import { TlvUInt16 } from "../../tlv/TlvNumber.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.6
  */
 export function PowerSourceConfigurationCluster() {
-    const cluster = { ...PowerSourceConfigurationCluster.Metadata, ...PowerSourceConfigurationCluster.BaseComponent };
+    const cluster = Cluster({
+        ...PowerSourceConfigurationCluster.Metadata,
+        ...PowerSourceConfigurationCluster.BaseComponent
+    });
     return cluster as unknown as PowerSourceConfigurationCluster.Type;
 };
 
 export namespace PowerSourceConfigurationCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

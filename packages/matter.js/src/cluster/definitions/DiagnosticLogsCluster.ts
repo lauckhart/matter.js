@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -24,14 +24,14 @@ import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.10
  */
 export function DiagnosticLogsCluster() {
-    const cluster = { ...DiagnosticLogsCluster.Metadata, ...DiagnosticLogsCluster.BaseComponent };
+    const cluster = Cluster({ ...DiagnosticLogsCluster.Metadata, ...DiagnosticLogsCluster.BaseComponent });
     return cluster as unknown as DiagnosticLogsCluster.Type;
 };
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1
  */
-export const enum TlvIntentEnum {
+export const enum IntentEnum {
     /**
      * SHALL indicate that the purpose of the log request is to retrieve logs for the intention of providing support to
      * an end-user.
@@ -59,7 +59,7 @@ export const enum TlvIntentEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3
  */
-export const enum TlvTransferProtocolEnum {
+export const enum TransferProtocolEnum {
     /**
      * SHALL be used by a Client to request that logs are transferred using the LogContent attribute of the response
      *
@@ -88,7 +88,7 @@ export const TlvRetrieveLogsRequestRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1.1
      */
-    intent: TlvField(0, TlvEnum<TlvIntentEnum>()),
+    intent: TlvField(0, TlvEnum<IntentEnum>()),
 
     /**
      * This field SHALL be used to indicate how the log transfer is to be realized. If the field is set to BDX, then if
@@ -99,7 +99,7 @@ export const TlvRetrieveLogsRequestRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1.2
      */
-    requestedProtocol: TlvField(1, TlvEnum<TlvTransferProtocolEnum>()),
+    requestedProtocol: TlvField(1, TlvEnum<TransferProtocolEnum>()),
 
     /**
      * This field SHALL be present if the RequestedProtocol is BDX. The TransferFileDesignator SHALL be set as the File
@@ -113,7 +113,7 @@ export const TlvRetrieveLogsRequestRequest = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2
  */
-export const enum TlvStatusEnum {
+export const enum StatusEnum {
     /**
      * SHALL be used if diagnostic logs will be or are being transferred.
      *
@@ -163,7 +163,7 @@ export const TlvRetrieveLogsResponseRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.1
      */
-    status: TlvField(0, TlvEnum<TlvStatusEnum>()),
+    status: TlvField(0, TlvEnum<StatusEnum>()),
 
     /**
      * This field SHALL be included in the command if the Status field has a value of Success or Exhausted. A Node
@@ -196,6 +196,7 @@ export const TlvRetrieveLogsResponseRequest = TlvObject({
 export namespace DiagnosticLogsCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

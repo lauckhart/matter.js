@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -31,11 +31,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9
  */
 export function MediaInputCluster<T extends MediaInputCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...MediaInputCluster.Metadata,
         supportedFeatures: BitFlags(MediaInputCluster.Metadata.features, ...features),
         ...MediaInputCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, MediaInputCluster.NameUpdatesComponent, { nameUpdates: true });
     return cluster as unknown as MediaInputCluster.Type<BitFlags<typeof MediaInputCluster.Metadata.features, T>>;
 };
@@ -45,7 +45,7 @@ export function MediaInputCluster<T extends MediaInputCluster.Feature[]>(...feat
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.2
  */
-export const enum TlvInputTypeEnum {
+export const enum InputTypeEnum {
     /**
      * Indicates content not coming from a physical input.
      */
@@ -82,7 +82,7 @@ export const TlvInputInfoStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.1.2
      */
-    inputType: TlvField(1, TlvEnum<TlvInputTypeEnum>()),
+    inputType: TlvField(1, TlvEnum<InputTypeEnum>()),
 
     /**
      * This SHALL indicate the input name, such as “HDMI 1”. This field may be blank, but SHOULD be provided when known.
@@ -139,6 +139,7 @@ export namespace MediaInputCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { nameUpdates: true } ? typeof NameUpdatesComponent : {});
@@ -180,7 +181,7 @@ export namespace MediaInputCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.2
              */
-            currentInput: Attribute(1, TlvUInt8, { readAcl: AccessLevel.View })
+            currentInput: Attribute(1, TlvUInt8, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

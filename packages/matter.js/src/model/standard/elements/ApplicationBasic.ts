@@ -25,7 +25,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "VendorId", id: 0x1, type: "vendor-id", access: "R V", conformance: "O",
-            quality: "F",
+            default: 0, quality: "F",
             details: "This attribute, if present, SHALL specify the Connectivity Standards Alliance assigned Vendor ID " +
                      "for the Content App.",
             xref: { document: "cluster", section: "6.3.3.2" }
@@ -42,7 +42,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ProductId", id: 0x3, type: "uint16", access: "R V", conformance: "O",
-            quality: "F",
+            default: 0, quality: "F",
             details: "This attribute, if present, SHALL specify a numeric ID assigned by the vendor to identify a " +
                      "specific Content App made by them. If the Content App is certified by the Connectivity Standards " +
                      "Alliance, then this would be the Product ID as specified by the vendor for the certification.",

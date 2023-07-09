@@ -7,9 +7,9 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvUInt16, TlvBitmap, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -28,7 +28,7 @@ import { TlvAny } from "../../tlv/TlvAny.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4
  */
 export function ScenesCluster() {
-    const cluster = { ...ScenesCluster.Metadata, ...ScenesCluster.BaseComponent };
+    const cluster = Cluster({ ...ScenesCluster.Metadata, ...ScenesCluster.BaseComponent });
     return cluster as unknown as ScenesCluster.Type;
 };
 
@@ -373,6 +373,7 @@ export namespace ScenesCluster {
 
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -405,14 +406,14 @@ export namespace ScenesCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.1
              */
-            sceneCount: Attribute(0, TlvUInt8, { readAcl: AccessLevel.View }),
+            sceneCount: Attribute(0, TlvUInt8, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The CurrentScene attribute holds the scene identifier of the scene last invoked.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.2
              */
-            currentScene: Attribute(1, TlvUInt8, { readAcl: AccessLevel.View }),
+            currentScene: Attribute(1, TlvUInt8, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The CurrentGroup attribute holds the group identifier of the scene last invoked, or 0 if the scene last
@@ -420,7 +421,7 @@ export namespace ScenesCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.3
              */
-            currentGroup: Attribute(2, TlvUInt16, { readAcl: AccessLevel.View }),
+            currentGroup: Attribute(2, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The SceneValid attribute indicates whether the state of the server corresponds to that associated with

@@ -34,6 +34,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentOutput", id: 0x1, type: "uint8", access: "R V", conformance: "M",
+            default: 0,
             details: "This field contains the value of the index field of the currently selected OutputInfoStruct.",
             xref: { document: "cluster", section: "6.5.3.2" }
         },

@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, AccessLevel, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -31,11 +31,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.15
  */
 export function EthernetNetworkDiagnosticsCluster<T extends EthernetNetworkDiagnosticsCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...EthernetNetworkDiagnosticsCluster.Metadata,
         supportedFeatures: BitFlags(EthernetNetworkDiagnosticsCluster.Metadata.features, ...features),
         ...EthernetNetworkDiagnosticsCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, EthernetNetworkDiagnosticsCluster.PacketCountsComponent, { packetCounts: true });
     extendCluster(cluster, EthernetNetworkDiagnosticsCluster.ErrorCountsComponent, { errorCounts: true });
 
@@ -52,7 +52,7 @@ export function EthernetNetworkDiagnosticsCluster<T extends EthernetNetworkDiagn
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.15.5.1
  */
-export const enum TlvPHYRateEnum {
+export const enum PHYRateEnum {
     Rate10M = 0,
     Rate100M = 1,
     Rate1G = 2,
@@ -90,6 +90,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { packetCounts: true } ? typeof PacketCountsComponent : {})
@@ -137,11 +138,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.1
              */
-            phyRate: OptionalAttribute(
-                0,
-                TlvNullable(TlvEnum<TlvPHYRateEnum>()),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            phyRate: OptionalAttribute(0, TlvNullable(TlvEnum<PHYRateEnum>()), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * The FullDuplex attribute SHALL indicate if the Node is currently utilizing the full-duplex operating
@@ -167,7 +164,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 11.15.6
              */
-            timeSinceReset: OptionalAttribute(8, TlvUInt64, { omitChanges: true, readAcl: AccessLevel.View })
+            timeSinceReset: OptionalAttribute(8, TlvUInt64, { omitChanges: true, default: 0, readAcl: AccessLevel.View })
         }
     });
 
@@ -182,7 +179,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.3
              */
-            packetRxCount: Attribute(2, TlvUInt64, { readAcl: AccessLevel.View }),
+            packetRxCount: Attribute(2, TlvUInt64, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The PacketTxCount attribute SHALL indicate the number of packets that have been successfully transferred
@@ -191,7 +188,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.4
              */
-            packetTxCount: Attribute(3, TlvUInt64, { omitChanges: true, readAcl: AccessLevel.View })
+            packetTxCount: Attribute(3, TlvUInt64, { omitChanges: true, default: 0, readAcl: AccessLevel.View })
         }
     });
 
@@ -206,7 +203,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.5
              */
-            txErrCount: Attribute(4, TlvUInt64, { omitChanges: true, readAcl: AccessLevel.View }),
+            txErrCount: Attribute(4, TlvUInt64, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The CollisionCount attribute SHALL indicate the number of collisions that have occurred while attempting
@@ -215,7 +212,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.6
              */
-            collisionCount: Attribute(5, TlvUInt64, { omitChanges: true, readAcl: AccessLevel.View }),
+            collisionCount: Attribute(5, TlvUInt64, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or egress, due
@@ -224,7 +221,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.7
              */
-            overrunCount: Attribute(6, TlvUInt64, { omitChanges: true, readAcl: AccessLevel.View })
+            overrunCount: Attribute(6, TlvUInt64, { omitChanges: true, default: 0, readAcl: AccessLevel.View })
         }
     });
 

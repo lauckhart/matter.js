@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, OptionalAttribute, Attribute, OptionalWritableAttribute, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, FixedAttribute, AccessLevel, OptionalAttribute, Attribute, OptionalWritableAttribute, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvBitmap, TlvEnum, TlvUInt24, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -29,11 +29,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2
  */
 export function PumpConfigurationAndControlCluster<T extends PumpConfigurationAndControlCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...PumpConfigurationAndControlCluster.Metadata,
         supportedFeatures: BitFlags(PumpConfigurationAndControlCluster.Metadata.features, ...features),
         ...PumpConfigurationAndControlCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, PumpConfigurationAndControlCluster.ConstantPressureComponent, { constantPressure: true });
     extendCluster(cluster, PumpConfigurationAndControlCluster.AutomaticComponent, { automatic: true });
     extendCluster(cluster, PumpConfigurationAndControlCluster.CompensatedPressureComponent, { compensatedPressure: true });
@@ -140,7 +140,7 @@ export const TlvPumpStatusBitmap = TlvBitmap(TlvUInt16, TlvPumpStatusBitmapBits)
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.2
  */
-export const enum TlvOperationModeEnum {
+export const enum OperationModeEnum {
     /**
      * If the pump is running in this operation mode the setpoint is an internal variable which MAY be controlled
      * between 0% and 100%, e.g., by means of the Level Control cluster
@@ -157,7 +157,7 @@ export const enum TlvOperationModeEnum {
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.3
  */
-export const enum TlvControlModeEnum {
+export const enum ControlModeEnum {
     /**
      * The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – MaxConstSpeed]
      * attributes.
@@ -274,6 +274,7 @@ export namespace PumpConfigurationAndControlCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { constantPressure: true } ? typeof ConstantPressureComponent : {})
@@ -391,7 +392,7 @@ export namespace PumpConfigurationAndControlCluster {
              */
             effectiveOperationMode: Attribute(
                 17,
-                TlvEnum<TlvOperationModeEnum>(),
+                TlvEnum<OperationModeEnum>(),
                 { persistent: true, readAcl: AccessLevel.View }
             ),
 
@@ -400,11 +401,7 @@ export namespace PumpConfigurationAndControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.16
              */
-            effectiveControlMode: Attribute(
-                18,
-                TlvEnum<TlvControlModeEnum>(),
-                { persistent: true, readAcl: AccessLevel.View }
-            ),
+            effectiveControlMode: Attribute(18, TlvEnum<ControlModeEnum>(), { persistent: true, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the actual capacity of the pump as a percentage of the effective maximum
@@ -432,7 +429,7 @@ export namespace PumpConfigurationAndControlCluster {
             lifetimeRunningHours: OptionalWritableAttribute(
                 21,
                 TlvNullable(TlvUInt24),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -454,7 +451,7 @@ export namespace PumpConfigurationAndControlCluster {
             lifetimeEnergyConsumed: OptionalWritableAttribute(
                 23,
                 TlvNullable(TlvUInt32),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -464,8 +461,8 @@ export namespace PumpConfigurationAndControlCluster {
              */
             operationMode: WritableAttribute(
                 32,
-                TlvEnum<TlvOperationModeEnum>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<OperationModeEnum>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -475,8 +472,8 @@ export namespace PumpConfigurationAndControlCluster {
              */
             controlMode: OptionalWritableAttribute(
                 33,
-                TlvEnum<TlvControlModeEnum>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<ControlModeEnum>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         },
 

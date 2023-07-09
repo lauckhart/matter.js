@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, Command, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt64, TlvFloat } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -32,11 +32,11 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10
  */
 export function MediaPlaybackCluster<T extends MediaPlaybackCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...MediaPlaybackCluster.Metadata,
         supportedFeatures: BitFlags(MediaPlaybackCluster.Metadata.features, ...features),
         ...MediaPlaybackCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, MediaPlaybackCluster.AdvancedSeekComponent, { advancedSeek: true });
     extendCluster(cluster, MediaPlaybackCluster.VariableSpeedComponent, { variableSpeed: true });
     return cluster as unknown as MediaPlaybackCluster.Type<BitFlags<typeof MediaPlaybackCluster.Metadata.features, T>>;
@@ -45,7 +45,7 @@ export function MediaPlaybackCluster<T extends MediaPlaybackCluster.Feature[]>(.
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.1
  */
-export const enum TlvPlaybackStateEnum {
+export const enum PlaybackStateEnum {
     /**
      * Media is currently playing (includes FF and REW)
      */
@@ -70,7 +70,7 @@ export const enum TlvPlaybackStateEnum {
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.2
  */
-export const enum TlvStatusEnum {
+export const enum StatusEnum {
     /**
      * Command succeeded
      */
@@ -117,7 +117,7 @@ export const TlvPlaybackResponseRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12.1
      */
-    status: TlvField(0, TlvEnum<TlvStatusEnum>()),
+    status: TlvField(0, TlvEnum<StatusEnum>()),
 
     /**
      * This SHALL indicate Optional app-specific data.
@@ -231,6 +231,7 @@ export namespace MediaPlaybackCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { advancedSeek: true } ? typeof AdvancedSeekComponent : {})
@@ -274,7 +275,7 @@ export namespace MediaPlaybackCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.1
              */
-            currentState: Attribute(0, TlvEnum<TlvPlaybackStateEnum>(), { readAcl: AccessLevel.View })
+            currentState: Attribute(0, TlvEnum<PlaybackStateEnum>(), { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {
@@ -361,7 +362,7 @@ export namespace MediaPlaybackCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.2
              */
-            startTime: Attribute(1, TlvNullable(TlvUInt64), { readAcl: AccessLevel.View }),
+            startTime: Attribute(1, TlvNullable(TlvUInt64), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This SHALL indicate the duration, in milliseconds, of the current media being played back or null when
@@ -370,7 +371,7 @@ export namespace MediaPlaybackCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.3
              */
-            duration: Attribute(2, TlvNullable(TlvUInt64), { readAcl: AccessLevel.View }),
+            duration: Attribute(2, TlvNullable(TlvUInt64), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This SHALL indicate the position of playback (Position field) at the time (UpdateAt field) specified in
@@ -393,7 +394,7 @@ export namespace MediaPlaybackCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.5
              */
-            playbackSpeed: Attribute(4, TlvFloat, { readAcl: AccessLevel.View }),
+            playbackSpeed: Attribute(4, TlvFloat, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This SHALL indicate the furthest forward valid position to which a client MAY seek forward, in

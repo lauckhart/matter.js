@@ -36,6 +36,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentHeapFree", id: 0x1, type: "uint64", access: "R V", conformance: "O",
+            default: 0,
             details: "The CurrentHeapFree attribute SHALL indicate the current amount of heap memory, in bytes, that are " +
                      "free for allocation. The effective amount MAY be smaller due to heap fragmentation or other reasons.",
             xref: { document: "core", section: "11.12.6.2" }
@@ -43,6 +44,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentHeapUsed", id: 0x2, type: "uint64", access: "R V", conformance: "O",
+            default: 0,
             details: "The CurrentHeapUsed attribute SHALL indicate the current amount of heap memory, in bytes, that is " +
                      "being used.",
             xref: { document: "core", section: "11.12.6.3" }
@@ -50,7 +52,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentHeapHighWatermark", id: 0x3, type: "uint64", access: "R V",
-            conformance: "WTRMRK",
+            conformance: "WTRMRK", default: 0,
             details: "The CurrentHeapHighWatermark attribute SHALL indicate the maximum amount of heap memory, in bytes, " +
                      "that has been used by the Node. This value SHALL only be reset upon a Node reboot or upon receiving " +
                      "of the ResetWatermarks command.",
@@ -64,7 +66,7 @@ Matter.children.push({
             xref: { document: "core", section: "11.12.8.1" },
 
             children: [
-                { tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M" },
+                { tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M", default: 0 },
                 {
                     tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
                     default: "empty"

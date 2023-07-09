@@ -26,7 +26,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ServerList", id: 0x1, type: "list", access: "R V", conformance: "M",
-            quality: "F",
+            default: [], quality: "F",
             details: "This attribute SHALL list each cluster ID for the server clusters present on the endpoint instance.",
             xref: { document: "core", section: "9.5.5.2" },
             children: [ { tag: "datatype", name: "entry", type: "cluster-id" } ]
@@ -34,7 +34,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ClientList", id: 0x2, type: "list", access: "R V", conformance: "M",
-            quality: "F",
+            default: [], quality: "F",
             details: "This attribute SHALL list each cluster ID for the client clusters present on the endpoint instance.",
             xref: { document: "core", section: "9.5.5.3" },
             children: [ { tag: "datatype", name: "entry", type: "cluster-id" } ]
@@ -42,6 +42,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PartsList", id: 0x3, type: "list", access: "R V", conformance: "M",
+            default: [],
             details: "This attribute indicates composition of the device type instance. Device type instance composition " +
                      "SHALL include the endpoints in this list. See Endpoint Composition for more information which " +
                      "endpoints to include in this list.",

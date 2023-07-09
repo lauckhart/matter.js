@@ -7,9 +7,9 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, FixedAttribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { FixedAttribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
@@ -27,7 +27,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3
  */
 export function GroupsCluster() {
-    const cluster = { ...GroupsCluster.Metadata, ...GroupsCluster.BaseComponent };
+    const cluster = Cluster({ ...GroupsCluster.Metadata, ...GroupsCluster.BaseComponent });
     return cluster as unknown as GroupsCluster.Type;
 };
 
@@ -152,6 +152,7 @@ export namespace GroupsCluster {
 
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

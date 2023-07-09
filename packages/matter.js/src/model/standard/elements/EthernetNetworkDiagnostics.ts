@@ -55,7 +55,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketRxCount", id: 0x2, type: "uint64", access: "R V",
-            conformance: "PKTCNT",
+            conformance: "PKTCNT", default: 0,
             details: "The PacketRxCount attribute SHALL indicate the number of packets that have been received on the " +
                      "ethernet network interface. The PacketRxCount attribute SHALL be reset to 0 upon a reboot of the " +
                      "Node.",
@@ -64,7 +64,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketTxCount", id: 0x3, type: "uint64", access: "R V",
-            conformance: "PKTCNT", quality: "C",
+            conformance: "PKTCNT", default: 0, quality: "C",
             details: "The PacketTxCount attribute SHALL indicate the number of packets that have been successfully " +
                      "transferred on the ethernet network interface. The PacketTxCount attribute SHALL be reset to 0 upon " +
                      "a reboot of the Node.",
@@ -73,7 +73,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TxErrCount", id: 0x4, type: "uint64", access: "R V", conformance: "ERRCNT",
-            quality: "C",
+            default: 0, quality: "C",
             details: "The TxErrCount attribute SHALL indicate the number of failed packet transmissions that have " +
                      "occurred on the ethernet network interface. The TxErrCount attribute SHALL be reset to 0 upon a " +
                      "reboot of the Node.",
@@ -82,7 +82,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CollisionCount", id: 0x5, type: "uint64", access: "R V",
-            conformance: "ERRCNT", quality: "C",
+            conformance: "ERRCNT", default: 0, quality: "C",
             details: "The CollisionCount attribute SHALL indicate the number of collisions that have occurred while " +
                      "attempting to transmit a packet on the ethernet network interface. The CollisionCount attribute " +
                      "SHALL be reset to 0 upon a reboot of the Node.",
@@ -91,7 +91,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OverrunCount", id: 0x6, type: "uint64", access: "R V",
-            conformance: "ERRCNT", quality: "C",
+            conformance: "ERRCNT", default: 0, quality: "C",
             details: "The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or " +
                      "egress, due to lack of buffer memory to retain all packets on the ethernet network interface. The " +
                      "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
@@ -109,7 +109,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TimeSinceReset", id: 0x8, type: "uint64", access: "R V", conformance: "O",
-            quality: "C",
+            default: 0, quality: "C",
             xref: { document: "core", section: "11.15.6" }
         },
 

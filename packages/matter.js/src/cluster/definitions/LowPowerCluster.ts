@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
@@ -21,13 +21,14 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
  */
 export function LowPowerCluster() {
-    const cluster = { ...LowPowerCluster.Metadata, ...LowPowerCluster.BaseComponent };
+    const cluster = Cluster({ ...LowPowerCluster.Metadata, ...LowPowerCluster.BaseComponent });
     return cluster as unknown as LowPowerCluster.Type;
 };
 
 export namespace LowPowerCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

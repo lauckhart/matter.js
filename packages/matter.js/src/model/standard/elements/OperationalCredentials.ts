@@ -60,7 +60,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentFabricIndex", id: 0x5, type: "uint8", access: "R V",
-            conformance: "M",
+            conformance: "M", default: 0,
             details: "This attribute SHALL contain accessing fabric index.",
             xref: { document: "core", section: "11.17.5.6" }
         },

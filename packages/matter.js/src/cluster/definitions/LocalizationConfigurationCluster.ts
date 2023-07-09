@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 
@@ -24,13 +24,17 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.3
  */
 export function LocalizationConfigurationCluster() {
-    const cluster = { ...LocalizationConfigurationCluster.Metadata, ...LocalizationConfigurationCluster.BaseComponent };
+    const cluster = Cluster({
+        ...LocalizationConfigurationCluster.Metadata,
+        ...LocalizationConfigurationCluster.BaseComponent
+    });
     return cluster as unknown as LocalizationConfigurationCluster.Type;
 };
 
 export namespace LocalizationConfigurationCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

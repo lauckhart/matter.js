@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, FixedAttribute, AccessLevel, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
@@ -24,7 +24,7 @@ import { TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.5
  */
 export function DescriptorCluster() {
-    const cluster = { ...DescriptorCluster.Metadata, ...DescriptorCluster.BaseComponent };
+    const cluster = Cluster({ ...DescriptorCluster.Metadata, ...DescriptorCluster.BaseComponent });
     return cluster as unknown as DescriptorCluster.Type;
 };
 
@@ -55,6 +55,7 @@ export const TlvDeviceTypeStruct = TlvObject({
 export namespace DescriptorCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

@@ -186,8 +186,8 @@ class PriorityHandler {
  * move the children from MyPropertyEnum into MyPropertyAttribute if the final
  * type will be enum8 rather than MyPropertyEnum.
  *
- * To keep things simple we just do this in a separate preprocessing pass
- * before performing the actual merge.
+ * To keep things simple we do this in a separate preprocessing pass before
+ * performing the actual merge.
  * 
  * Another simplifying assumption we make is that we will only ever move
  * children *into* the direct parent from the cluster-scoped type, not the

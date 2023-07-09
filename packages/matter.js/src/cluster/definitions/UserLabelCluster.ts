@@ -7,11 +7,10 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
-import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { TlvString } from "../../tlv/TlvString.js";
+import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
 
 /**
  * User Label
@@ -23,15 +22,14 @@ import { TlvString } from "../../tlv/TlvString.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.9
  */
 export function UserLabelCluster() {
-    const cluster = { ...UserLabelCluster.Metadata, ...UserLabelCluster.BaseComponent };
+    const cluster = Cluster({ ...UserLabelCluster.Metadata, ...UserLabelCluster.BaseComponent });
     return cluster as unknown as UserLabelCluster.Type;
 };
-
-export const TlvLabelStruct = TlvObject({ label: TlvField(0, TlvString), value: TlvField(1, TlvString) });
 
 export namespace UserLabelCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

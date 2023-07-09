@@ -59,7 +59,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ChannelNumber", id: 0x3, type: "uint16", access: "R V", conformance: "M",
-            quality: "X",
+            default: 0, quality: "X",
             details: "The ChannelNumber attribute SHALL indicate the channel that Wi-Fi communication is currently " +
                      "operating on.",
             xref: { document: "core", section: "11.14.6.4" }
@@ -74,7 +74,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "BeaconLostCount", id: 0x5, type: "uint32", access: "R V",
-            conformance: "ERRCNT", quality: "X C",
+            conformance: "ERRCNT", default: 0, quality: "X C",
             details: "The BeaconLostCount attribute SHALL indicate the count of the number of missed beacons the Node has " +
                      "detected. If the Node does not have an ability to count beacons expected and not received, this " +
                      "value MAY remain set to zero.",
@@ -83,7 +83,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "BeaconRxCount", id: 0x6, type: "uint32", access: "R V",
-            conformance: "PKTCNT", quality: "X C",
+            conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The BeaconRxCount attribute SHALL indicate the count of the number of received beacons. The total " +
                      "number of expected beacons that could have been received during the interval since association " +
                      "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
@@ -93,14 +93,14 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketMulticastRxCount", id: 0x7, type: "uint32", access: "R V",
-            conformance: "PKTCNT", quality: "X C",
+            conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The PacketMulticastRxCount attribute SHALL indicate the number of multicast packets received by",
             xref: { document: "core", section: "11.14.6.8" }
         },
 
         {
             tag: "attribute", name: "PacketMulticastTxCount", id: 0x8, type: "uint32", access: "R V",
-            conformance: "PKTCNT", quality: "X C",
+            conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The PacketMulticastTxCount attribute SHALL indicate the number of multicast packets transmitted by " +
                      "the Node.",
             xref: { document: "core", section: "11.14.6.9" }
@@ -108,7 +108,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketUnicastRxCount", id: 0x9, type: "uint32", access: "R V",
-            conformance: "PKTCNT", quality: "X C",
+            conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The PacketUnicastRxCount attribute SHALL indicate the number of unicast packets received by the " +
                      "Node.",
             xref: { document: "core", section: "11.14.6.10" }
@@ -116,7 +116,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PacketUnicastTxCount", id: 0xa, type: "uint32", access: "R V",
-            conformance: "PKTCNT", quality: "X C",
+            conformance: "PKTCNT", default: 0, quality: "X C",
             details: "The PacketUnicastTxCount attribute SHALL indicate the number of unicast packets transmitted by the " +
                      "Node.",
             xref: { document: "core", section: "11.14.6.11" }
@@ -124,7 +124,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentMaxRate", id: 0xb, type: "uint64", access: "R V", conformance: "O",
-            quality: "X C",
+            default: 0, quality: "X C",
             details: "The CurrentMaxRate attribute SHALL indicate the current maximum PHY rate of transfer of data in " +
                      "bits-per-second.",
             xref: { document: "core", section: "11.14.6.12" }
@@ -132,7 +132,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OverrunCount", id: 0xc, type: "uint64", access: "R V",
-            conformance: "ERRCNT", quality: "X C",
+            conformance: "ERRCNT", default: 0, quality: "X C",
             details: "The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or " +
                      "egress, due to lack of buffer memory to retain all packets on the network interface. The " +
                      "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",

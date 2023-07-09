@@ -29,7 +29,7 @@ export class TlvGenerator {
     private definedDatatypes = new Set<Model>();
     private scopedNames = new Set<string>();
 
-    constructor(private file: ClusterFile, cluster: ClusterModel) {
+    constructor(private file: ClusterFile, private cluster: ClusterModel) {
         // Find datatype names that conflict at top-level module scope.
         // Datatypes at cluster level get to use their own name but for nested
         // structures we prepend the parent name
@@ -69,7 +69,7 @@ export class TlvGenerator {
      * 
      * @return the referencing TS expression as a string
      */
-    reference(model: ValueModel): string {
+    reference(model: ValueModel, scope: ClusterModel): string {
         const metabase = model.metabase;
         if (!metabase) {
             throw new InternalError(`${model.path}: No root type for ${model.type}`);
@@ -113,12 +113,12 @@ export class TlvGenerator {
                 if (!entry) {
                     throw new InternalError(`${model.path}: No list entry type`);
                 }
-                tlv = `TlvArray(${this.reference(entry)})`;
+                tlv = `TlvArray(${this.reference(entry, scope)})`;
                 break;
     
             case Metatype.bitmap:
                 {
-                    const dt = this.defineDatatype(model);
+                    const dt = this.defineDatatype(model, scope);
                     if (dt) {
                         tlv = dt;
                     } else {
@@ -131,7 +131,7 @@ export class TlvGenerator {
     
             case Metatype.enum:
                 {
-                    const dt = this.defineDatatype(model);
+                    const dt = this.defineDatatype(model, scope);
                     if (dt) {
                         this.importTlv("tlv/TlvNumber", "TlvEnum");
                         tlv = `TlvEnum<${dt}>()`;
@@ -145,7 +145,7 @@ export class TlvGenerator {
 
             case Metatype.object:
                 {
-                    const dt = this.defineDatatype(model);
+                    const dt = this.defineDatatype(model, scope);
                     if (dt) {
                         tlv = dt;
                     } else {
@@ -197,13 +197,18 @@ export class TlvGenerator {
             .document(model);
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(child => {
-                block.atom(`${asObjectKey(child.name)} = ${child.id}`)
+                let name = child.name;
+                if (name.match(/^\d+$/)) {
+                    // Typescript doesn't allow numeric enum keys
+                    name = `E${name}`;
+                }
+                block.atom(`${asObjectKey(name)} = ${child.id}`)
                     .document(child);
             });
         });
     }
 
-    private defineStruct(name: string, model: ValueModel) {
+    private defineStruct(name: string, model: ValueModel, scope: ClusterModel) {
         this.importTlv("tlv", "TlvObject");
         const block = this.file.types.expressions(`export const ${name} = TlvObject({`, "})")
             .document(model);
@@ -216,7 +221,7 @@ export class TlvGenerator {
                     tlv = "TlvOptionalField"
                 }
                 this.importTlv("tlv/TlvObject", tlv);
-                block.atom(camelize(field.name, false), `${tlv}(${field.effectiveId}, ${this.reference(field)})`)
+                block.atom(camelize(field.name, false), `${tlv}(${field.effectiveId}, ${this.reference(field, scope)})`)
                     .document(field);
             });
         });
@@ -262,7 +267,7 @@ export class TlvGenerator {
         this.file.types.atom(`export const ${name} = TlvBitmap(${tlvNum}, ${name}Bits)`);
     }
 
-    private defineDatatype(model: ValueModel) {
+    private defineDatatype(model: ValueModel, scope: ClusterModel) {
         let defining = model.definingModel;
         if (defining) {
             model = defining;
@@ -285,7 +290,13 @@ export class TlvGenerator {
             name += "Event";
         }
 
-        name = "Tlv" + name;
+        if (model.effectiveMetatype !== Metatype.enum) {
+            name = "Tlv" + name;
+        }
+
+        if (name == "Type") {
+            name = `${this.cluster.name}Type`;
+        }
 
         if (this.definedDatatypes.has(model)) {
             return name;
@@ -294,13 +305,19 @@ export class TlvGenerator {
         this.definedDatatypes.add(model);
         this.file.nameDefined(name);
 
+        const definingScope = defining.owner(ClusterModel);
+        if (definingScope && scope !== definingScope) {
+            this.file.addImport(`cluster/definitions/${definingScope.name}Cluster`, name);
+            return name;
+        }
+
         switch (model.effectiveMetatype) {
             case Metatype.enum:
                 this.defineEnum(name, model);
                 break;
 
             case Metatype.object:
-                this.defineStruct(name, model);
+                this.defineStruct(name, model, scope);
                 break;
 
             case Metatype.bitmap:

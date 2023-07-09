@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, Command, TlvNoResponse, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, WritableAttribute, Command, TlvNoResponse, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt64, TlvEnum, TlvInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -33,11 +33,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.16
  */
 export function TimeSyncCluster<T extends TimeSyncCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...TimeSyncCluster.Metadata,
         supportedFeatures: BitFlags(TimeSyncCluster.Metadata.features, ...features),
         ...TimeSyncCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, TimeSyncCluster.NtpClientComponent, { ntpClient: true });
     extendCluster(cluster, TimeSyncCluster.TimeZoneComponent, { timeZone: true });
     extendCluster(cluster, TimeSyncCluster.NtpServerComponent, { ntpServer: true });
@@ -47,7 +47,7 @@ export function TimeSyncCluster<T extends TimeSyncCluster.Feature[]>(...features
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.1
  */
-export const enum TlvGranularityEnum {
+export const enum GranularityEnum {
     NoTimeGranularity = 0,
     MinutesGranularity = 1,
     SecondsGranularity = 2,
@@ -58,7 +58,7 @@ export const enum TlvGranularityEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.2
  */
-export const enum TlvTimeSourceEnum {
+export const enum TimeSourceEnum {
     /**
      * Server is not currently synchronized with a UTC Time source.
      */
@@ -164,14 +164,14 @@ export const TlvSetUtcTimeRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.9.1.2
      */
-    granularity: TlvField(1, TlvEnum<TlvGranularityEnum>()),
+    granularity: TlvField(1, TlvEnum<GranularityEnum>()),
 
     /**
      * This SHALL give the Client’s TimeSource, as described in Section 11.16.8.3, “TimeSource Attribute”.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.9.1.3
      */
-    timeSource: TlvOptionalField(2, TlvEnum<TlvTimeSourceEnum>())
+    timeSource: TlvOptionalField(2, TlvEnum<TimeSourceEnum>())
 });
 
 /**
@@ -267,6 +267,7 @@ export namespace TimeSyncCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { ntpClient: true } ? typeof NtpClientComponent : {})
@@ -326,7 +327,7 @@ export namespace TimeSyncCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.2
              */
-            granularity: Attribute(1, TlvEnum<TlvGranularityEnum>(), { readAcl: AccessLevel.View }),
+            granularity: Attribute(1, TlvEnum<GranularityEnum>(), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The server’s time source. This attribute indicates what method the server is using to sync, whether the
@@ -335,7 +336,7 @@ export namespace TimeSyncCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.3
              */
-            timeSource: OptionalAttribute(2, TlvEnum<TlvTimeSourceEnum>(), { readAcl: AccessLevel.View }),
+            timeSource: OptionalAttribute(2, TlvEnum<TimeSourceEnum>(), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The Node ID of a trusted Time Cluster. The TrustedTimeNodeId Node is used as a check on external time
@@ -423,7 +424,7 @@ export namespace TimeSyncCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.8
              */
-            localTime: Attribute(7, TlvNullable(TlvUInt64), { omitChanges: true, readAcl: AccessLevel.View }),
+            localTime: Attribute(7, TlvNullable(TlvUInt64), { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * Indicates whether the server has access to a time zone database. Nodes with a time zone database MAY

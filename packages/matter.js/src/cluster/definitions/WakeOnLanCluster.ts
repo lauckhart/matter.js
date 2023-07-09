@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, OptionalFixedAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalFixedAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
 
 /**
@@ -21,13 +21,14 @@ import { TlvByteString } from "../../tlv/TlvString.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.10
  */
 export function WakeOnLanCluster() {
-    const cluster = { ...WakeOnLanCluster.Metadata, ...WakeOnLanCluster.BaseComponent };
+    const cluster = Cluster({ ...WakeOnLanCluster.Metadata, ...WakeOnLanCluster.BaseComponent });
     return cluster as unknown as WakeOnLanCluster.Type;
 };
 
 export namespace WakeOnLanCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

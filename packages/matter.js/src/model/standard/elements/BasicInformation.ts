@@ -84,7 +84,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "HardwareVersion", id: 0x7, type: "uint16", access: "R V", conformance: "M",
-            quality: "F",
+            default: 0, quality: "F",
             details: "This attribute SHALL specify the version number of the hardware of the Node. The meaning of its " +
                      "value, and the versioning scheme, are vendor defined.",
             xref: { document: "core", section: "11.1.5.8" }
@@ -101,7 +101,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SoftwareVersion", id: 0x9, type: "uint32", access: "R V", conformance: "M",
-            constraint: "desc", quality: "F",
+            constraint: "desc", default: 0, quality: "F",
             details: "This attribute SHALL contain the current version number for the software running on this Node. The " +
                      "version number can be compared using a total ordering to determine if a version is logically newer " +
                      "than another one. A larger value of SoftwareVersion is newer than a lower value, from the " +

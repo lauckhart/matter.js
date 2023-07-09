@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalEvent, EventPriority, Event, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalEvent, EventPriority, Event, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -28,14 +28,14 @@ import { TlvEnum, TlvUInt16, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js
  * @see {@link MatterCoreSpecificationV1_1} § 11.11
  */
 export function GeneralDiagnosticsCluster() {
-    const cluster = { ...GeneralDiagnosticsCluster.Metadata, ...GeneralDiagnosticsCluster.BaseComponent };
+    const cluster = Cluster({ ...GeneralDiagnosticsCluster.Metadata, ...GeneralDiagnosticsCluster.BaseComponent });
     return cluster as unknown as GeneralDiagnosticsCluster.Type;
 };
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.4
  */
-export const enum TlvInterfaceTypeEnum {
+export const enum InterfaceTypeEnum {
     Unspecified = 0,
     WiFi = 1,
     Ethernet = 2,
@@ -111,13 +111,13 @@ export const TlvNetworkInterface = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.6.8
      */
-    type: TlvField(7, TlvEnum<TlvInterfaceTypeEnum>())
+    type: TlvField(7, TlvEnum<InterfaceTypeEnum>())
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.5
  */
-export const enum TlvBootReasonEnum {
+export const enum BootReasonEnum {
     Unspecified = 0,
     PowerOnReboot = 1,
     BrownOutReset = 2,
@@ -130,7 +130,7 @@ export const enum TlvBootReasonEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.1
  */
-export const enum TlvHardwareFaultEnum {
+export const enum HardwareFaultEnum {
     Unspecified = 0,
     Radio = 1,
     Sensor = 2,
@@ -147,7 +147,7 @@ export const enum TlvHardwareFaultEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.2
  */
-export const enum TlvRadioFaultEnum {
+export const enum RadioFaultEnum {
     Unspecified = 0,
     WiFiFault = 1,
     CellularFault = 2,
@@ -160,7 +160,7 @@ export const enum TlvRadioFaultEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.3
  */
-export const enum TlvNetworkFaultEnum {
+export const enum NetworkFaultEnum {
     Unspecified = 0,
     HardwareFailure = 1,
     NetworkJammed = 2,
@@ -204,14 +204,14 @@ export const TlvHardwareFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1.1
      */
-    current: TlvField(0, TlvArray(TlvEnum<TlvHardwareFaultEnum>())),
+    current: TlvField(0, TlvArray(TlvEnum<HardwareFaultEnum>())),
 
     /**
      * This field SHALL represent the set of faults detected prior to this change event, as per Section
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1.2
      */
-    previous: TlvField(1, TlvArray(TlvEnum<TlvHardwareFaultEnum>()))
+    previous: TlvField(1, TlvArray(TlvEnum<HardwareFaultEnum>()))
 });
 
 /**
@@ -220,8 +220,8 @@ export const TlvHardwareFaultChangeEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.2
  */
 export const TlvRadioFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<TlvRadioFaultEnum>())),
-    previous: TlvField(1, TlvArray(TlvEnum<TlvRadioFaultEnum>()))
+    current: TlvField(0, TlvArray(TlvEnum<RadioFaultEnum>())),
+    previous: TlvField(1, TlvArray(TlvEnum<RadioFaultEnum>()))
 });
 
 /**
@@ -230,8 +230,8 @@ export const TlvRadioFaultChangeEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.3
  */
 export const TlvNetworkFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<TlvNetworkFaultEnum>())),
-    previous: TlvField(1, TlvArray(TlvEnum<TlvNetworkFaultEnum>()))
+    current: TlvField(0, TlvArray(TlvEnum<NetworkFaultEnum>())),
+    previous: TlvField(1, TlvArray(TlvEnum<NetworkFaultEnum>()))
 });
 
 /**
@@ -246,12 +246,13 @@ export const TlvBootReasonEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.4.1
      */
-    bootReason: TlvField(0, TlvEnum<TlvBootReasonEnum>())
+    bootReason: TlvField(0, TlvEnum<BootReasonEnum>())
 });
 
 export namespace GeneralDiagnosticsCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -282,7 +283,7 @@ export namespace GeneralDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.2
              */
-            rebootCount: Attribute(1, TlvUInt16, { persistent: true, readAcl: AccessLevel.View }),
+            rebootCount: Attribute(1, TlvUInt16, { persistent: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The UpTime attribute SHALL indicate a best-effort assessment of the length of time, in seconds, since
@@ -292,7 +293,7 @@ export namespace GeneralDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.3
              */
-            upTime: OptionalAttribute(2, TlvUInt64, { omitChanges: true, readAcl: AccessLevel.View }),
+            upTime: OptionalAttribute(2, TlvUInt64, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TotalOperationalHours attribute SHALL indicate a best-effort attempt at tracking the length of time,
@@ -304,7 +305,7 @@ export namespace GeneralDiagnosticsCluster {
             totalOperationalHours: OptionalAttribute(
                 3,
                 TlvUInt32,
-                { persistent: true, omitChanges: true, readAcl: AccessLevel.View }
+                { persistent: true, omitChanges: true, default: 0, readAcl: AccessLevel.View }
             ),
 
             /**
@@ -312,7 +313,7 @@ export namespace GeneralDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.5
              */
-            bootReason: OptionalAttribute(4, TlvEnum<TlvBootReasonEnum>(), { readAcl: AccessLevel.View }),
+            bootReason: OptionalAttribute(4, TlvEnum<BootReasonEnum>(), { readAcl: AccessLevel.View }),
 
             /**
              * The ActiveHardwareFaults attribute SHALL indicate the set of faults currently detected by the Node. When
@@ -328,7 +329,7 @@ export namespace GeneralDiagnosticsCluster {
              */
             activeHardwareFaults: OptionalAttribute(
                 5,
-                TlvArray(TlvEnum<TlvHardwareFaultEnum>()),
+                TlvArray(TlvEnum<HardwareFaultEnum>()),
                 { default: [], readAcl: AccessLevel.View }
             ),
 
@@ -345,7 +346,7 @@ export namespace GeneralDiagnosticsCluster {
              */
             activeRadioFaults: OptionalAttribute(
                 6,
-                TlvArray(TlvEnum<TlvRadioFaultEnum>()),
+                TlvArray(TlvEnum<RadioFaultEnum>()),
                 { default: [], readAcl: AccessLevel.View }
             ),
 
@@ -362,7 +363,7 @@ export namespace GeneralDiagnosticsCluster {
              */
             activeNetworkFaults: OptionalAttribute(
                 7,
-                TlvArray(TlvEnum<TlvNetworkFaultEnum>()),
+                TlvArray(TlvEnum<NetworkFaultEnum>()),
                 { default: [], readAcl: AccessLevel.View }
             ),
 

@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, OptionalAttribute, OptionalWritableAttribute, Attribute, OptionalEvent, EventPriority, Event, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, OptionalWritableAttribute, Attribute, OptionalEvent, EventPriority, Event, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -29,14 +29,14 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.13
  */
 export function BridgedDeviceBasicInformationCluster() {
-    const cluster = {
+    const cluster = Cluster({
         ...BridgedDeviceBasicInformationCluster.Metadata,
         ...BridgedDeviceBasicInformationCluster.BaseComponent
-    };
+    });
     return cluster as unknown as BridgedDeviceBasicInformationCluster.Type;
 };
 
-export const enum TlvProductFinishEnum {
+export const enum ProductFinishEnum {
     Other = 0,
     Matte = 1,
     Satin = 2,
@@ -45,7 +45,7 @@ export const enum TlvProductFinishEnum {
     Fabric = 5
 };
 
-export const enum TlvColorEnum {
+export const enum ColorEnum {
     Black = 0,
     Navy = 1,
     Green = 2,
@@ -70,8 +70,8 @@ export const enum TlvColorEnum {
 };
 
 export const TlvProductAppearanceStruct = TlvObject({
-    finish: TlvField(0, TlvEnum<TlvProductFinishEnum>()),
-    primaryColor: TlvField(1, TlvNullable(TlvEnum<TlvColorEnum>()))
+    finish: TlvField(0, TlvEnum<ProductFinishEnum>()),
+    primaryColor: TlvField(1, TlvNullable(TlvEnum<ColorEnum>()))
 });
 
 /**
@@ -91,6 +91,7 @@ export const TlvReachableChangedEvent = TlvObject({ reachableNewValue: TlvField(
 export namespace BridgedDeviceBasicInformationCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -128,7 +129,7 @@ export namespace BridgedDeviceBasicInformationCluster {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
              */
-            hardwareVersion: OptionalAttribute(7, TlvUInt16),
+            hardwareVersion: OptionalAttribute(7, TlvUInt16, { default: 0 }),
 
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
@@ -138,7 +139,7 @@ export namespace BridgedDeviceBasicInformationCluster {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
              */
-            softwareVersion: OptionalAttribute(9, TlvUInt32),
+            softwareVersion: OptionalAttribute(9, TlvUInt32, { default: 0 }),
 
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.4

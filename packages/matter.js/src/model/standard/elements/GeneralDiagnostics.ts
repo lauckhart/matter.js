@@ -28,7 +28,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RebootCount", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-            quality: "N",
+            default: 0, quality: "N",
             details: "The RebootCount attribute SHALL indicate a best-effort count of the number of times the Node has " +
                      "rebooted. The RebootCount attribute SHOULD be incremented each time the Node reboots. The " +
                      "RebootCount attribute SHALL NOT be incremented when a Node wakes from a low-power or sleep state. " +
@@ -38,7 +38,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UpTime", id: 0x2, type: "uint64", access: "R V", conformance: "O",
-            quality: "C",
+            default: 0, quality: "C",
             details: "The UpTime attribute SHALL indicate a best-effort assessment of the length of time, in seconds, " +
                      "since the Node’s last reboot. The UpTime attribute SHOULD be incremented to account for the periods " +
                      "of time that a Node is in a low-power or sleep state. The UpTime attribute SHALL only be reset upon " +
@@ -48,7 +48,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TotalOperationalHours", id: 0x3, type: "uint32", access: "R V",
-            conformance: "O", quality: "N C",
+            conformance: "O", default: 0, quality: "N C",
             details: "The TotalOperationalHours attribute SHALL indicate a best-effort attempt at tracking the length of " +
                      "time, in hours, that the Node has been operational. The TotalOperationalHours attribute SHOULD be " +
                      "incremented to account for the periods of time that a Node is in a low-power or sleep state. The",

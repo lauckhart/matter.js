@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -26,7 +26,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2
  */
 export function AccountLoginCluster() {
-    const cluster = { ...AccountLoginCluster.Metadata, ...AccountLoginCluster.BaseComponent };
+    const cluster = Cluster({ ...AccountLoginCluster.Metadata, ...AccountLoginCluster.BaseComponent });
     return cluster as unknown as AccountLoginCluster.Type;
 };
 
@@ -88,6 +88,7 @@ export const TlvLoginRequest = TlvObject({
 export namespace AccountLoginCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

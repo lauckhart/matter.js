@@ -45,7 +45,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Type", id: 0x0, type: "enum8", access: "R V", conformance: "M",
-            constraint: "desc", quality: "F",
+            constraint: "desc", default: 0, quality: "F",
             details: "The Type attribute identifies the type of window covering being controlled by this endpoint and " +
                      "SHALL be set to one of the non-reserved values in the table below.",
             xref: { document: "cluster", section: "5.3.5.1" },
@@ -67,7 +67,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PhysicalClosedLimitLift", id: 0x1, type: "uint16", access: "R V",
-            conformance: "[LF & PA_LF]", quality: "F",
+            conformance: "[LF & PA_LF]", default: 0, quality: "F",
             details: "The PhysicalClosedLimitLift attribute identifies the maximum possible encoder position possible (in " +
                      "centimeters) to position the height of the window covering Lift.",
             xref: { document: "cluster", section: "5.3.5.2" }
@@ -75,7 +75,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PhysicalClosedLimitTilt", id: 0x2, type: "uint16", access: "R V",
-            conformance: "[TL & PA_TL]", quality: "F",
+            conformance: "[TL & PA_TL]", default: 0, quality: "F",
             details: "The PhysicalClosedLimitTilt attribute identifies the maximum possible encoder position possible " +
                      "(tenth of a degrees) to position the angle of the window covering Tilt.",
             xref: { document: "cluster", section: "5.3.5.3" }
@@ -101,7 +101,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "NumberOfActuationsLift", id: 0x5, type: "uint16", access: "R V",
-            conformance: "[LF]", quality: "N",
+            conformance: "[LF]", default: 0, quality: "N",
             details: "The NumberOfActuationsLift attribute identifies the total number of lift/slide actuations applied " +
                      "to the Window Covering since the device was installed.",
             xref: { document: "cluster", section: "5.3.5.6" }
@@ -109,7 +109,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "NumberOfActuationsTilt", id: 0x6, type: "uint16", access: "R V",
-            conformance: "[TL]", quality: "N",
+            conformance: "[TL]", default: 0, quality: "N",
             details: "The NumberOfActuationsTilt attribute identifies the total number of tilt actuations applied to the " +
                      "Window Covering since the device was installed.",
             xref: { document: "cluster", section: "5.3.5.7" }
@@ -156,7 +156,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OperationalStatus", id: 0xa, type: "map8", access: "R V", conformance: "M",
-            quality: "P",
+            default: 0, quality: "P",
             details: "The OperationalStatus attribute keeps track of currently ongoing operations and applies to all type " +
                      "of devices. See below for details about the meaning of individual bits.",
             xref: { document: "cluster", section: "5.3.5.15" },
@@ -185,7 +185,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "EndProductType", id: 0xd, type: "enum8", access: "R V", conformance: "M",
-            constraint: "desc", quality: "F",
+            constraint: "desc", default: 0, quality: "F",
             details: "The EndProductType attribute identifies the product type in complement of the main category " +
                      "indicated by the Type attribute. The window covering SHALL set this value to one of the values in " +
                      "the table below.",
@@ -238,7 +238,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledOpenLimitLift", id: 0x10, type: "uint16", access: "R V",
-            conformance: "LF & PA_LF", constraint: "0 to 65534", quality: "N",
+            conformance: "LF & PA_LF", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledOpenLimitLift attribute identifies the Open Limit for Lifting the Window Covering " +
                      "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.17" }
@@ -246,7 +246,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitLift", id: 0x11, type: "uint16", access: "R V",
-            conformance: "LF & PA_LF", constraint: "0 to 65534", quality: "N",
+            conformance: "LF & PA_LF", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering " +
                      "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.18" }
@@ -254,7 +254,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledOpenLimitTilt", id: 0x12, type: "uint16", access: "R V",
-            conformance: "TL & PA_TL", constraint: "0 to 65534", quality: "N",
+            conformance: "TL & PA_TL", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledOpenLimitTilt attribute identifies the Open Limit for Tilting the Window Covering " +
                      "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.19" }
@@ -262,7 +262,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16", access: "R V",
-            conformance: "TL & PA_TL", constraint: "0 to 65534", quality: "N",
+            conformance: "TL & PA_TL", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering " +
                      "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.20" }
@@ -283,7 +283,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Mode", id: 0x17, type: "map8", access: "RW VM", conformance: "M",
-            quality: "N",
+            default: 0, quality: "N",
             details: "The Mode attribute allows configuration of the Window Covering, such as: reversing the motor " +
                      "direction, placing the Window Covering into calibration mode, placing the motor into maintenance " +
                      "mode, disabling the network, and disabling status LEDs. See below for details.",
@@ -308,7 +308,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SafetyStatus", id: 0x1a, type: "map16", access: "R V", conformance: "O",
-            constraint: "desc", quality: "P",
+            constraint: "desc", default: 0, quality: "P",
             details: "The SafetyStatus attribute reflects the state of the safety sensors and the common issues " +
                      "preventing movements. By default for nominal operation all flags are cleared (0). A device might " +
                      "support none, one or several bit flags from this attribute (all optional). See below for details " +

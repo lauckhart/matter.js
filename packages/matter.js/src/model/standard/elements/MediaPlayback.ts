@@ -35,14 +35,14 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentState", id: 0x0, type: "PlaybackStateEnum", access: "R V",
-            conformance: "M", constraint: "desc",
+            conformance: "M", constraint: "desc", default: 0,
             details: "This SHALL indicate the current playback state of media.",
             xref: { document: "cluster", section: "6.10.3.1" }
         },
 
         {
             tag: "attribute", name: "StartTime", id: 0x1, type: "epoch-us", access: "R V", conformance: "AS",
-            constraint: "desc", quality: "X",
+            constraint: "desc", default: 0, quality: "X",
             details: "This SHALL indicate the start time of the media, in case the media has a fixed start time (for " +
                      "example, live stream or television broadcast), or null when start time does not apply to the current",
             xref: { document: "cluster", section: "6.10.3.2" }
@@ -50,7 +50,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Duration", id: 0x2, type: "uint64", access: "R V", conformance: "AS",
-            constraint: "desc", quality: "X",
+            constraint: "desc", default: 0, quality: "X",
             details: "This SHALL indicate the duration, in milliseconds, of the current media being played back or null " +
                      "when duration is not applicable (for example, in live streaming content with no known duration). " +
                      "This attribute SHALL never be 0.",
@@ -73,7 +73,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PlaybackSpeed", id: 0x4, type: "single", access: "R V", conformance: "AS",
-            constraint: "desc",
+            constraint: "desc", default: 0,
             details: "This SHALL indicate the speed at which the current media is being played. The new PlaybackSpeed",
             xref: { document: "cluster", section: "6.10.3.5" }
         },

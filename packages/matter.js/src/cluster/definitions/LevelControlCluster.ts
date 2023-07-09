@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -29,11 +29,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
  */
 export function LevelControlCluster<T extends LevelControlCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...LevelControlCluster.Metadata,
         supportedFeatures: BitFlags(LevelControlCluster.Metadata.features, ...features),
         ...LevelControlCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, LevelControlCluster.LightingComponent, { lighting: true });
     extendCluster(cluster, LevelControlCluster.FrequencyComponent, { frequency: true });
     return cluster as unknown as LevelControlCluster.Type<BitFlags<typeof LevelControlCluster.Metadata.features, T>>;
@@ -64,7 +64,7 @@ export const TlvMoveToLevelRequest = TlvObject({
     optionsOverride: TlvField(3, TlvUInt8)
 });
 
-export const enum TlvMoveMode {
+export const enum MoveMode {
     Up = 0,
     Down = 1
 };
@@ -80,7 +80,7 @@ export const TlvMoveRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2.1
      */
-    moveMode: TlvField(0, TlvEnum<TlvMoveMode>()),
+    moveMode: TlvField(0, TlvEnum<MoveMode>()),
 
     /**
      * The Rate field specifies the rate of movement in units per second. The actual rate of movement SHOULD be as
@@ -98,7 +98,7 @@ export const TlvMoveRequest = TlvObject({
     optionsOverride: TlvField(3, TlvUInt8)
 });
 
-export const enum TlvStepMode {
+export const enum StepMode {
     Up = 0,
     Down = 1
 };
@@ -109,7 +109,7 @@ export const enum TlvStepMode {
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.3
  */
 export const TlvStepRequest = TlvObject({
-    stepMode: TlvField(0, TlvEnum<TlvStepMode>()),
+    stepMode: TlvField(0, TlvEnum<StepMode>()),
     stepSize: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvNullable(TlvUInt16)),
     optionsMask: TlvField(3, TlvUInt8),
@@ -141,7 +141,7 @@ export const TlvMoveToLevelWithOnOffRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
  */
 export const TlvMoveWithOnOffRequest = TlvObject({
-    moveMode: TlvField(0, TlvEnum<TlvMoveMode>()),
+    moveMode: TlvField(0, TlvEnum<MoveMode>()),
     rate: TlvField(1, TlvNullable(TlvUInt8)),
     optionsMask: TlvField(2, TlvLevelControlOptions),
     optionsOverride: TlvField(3, TlvLevelControlOptions)
@@ -151,7 +151,7 @@ export const TlvMoveWithOnOffRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
  */
 export const TlvStepWithOnOffRequest = TlvObject({
-    stepMode: TlvField(0, TlvEnum<TlvStepMode>()),
+    stepMode: TlvField(0, TlvEnum<StepMode>()),
     stepSize: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvNullable(TlvUInt16)),
     optionsMask: TlvField(3, TlvLevelControlOptions),
@@ -205,6 +205,7 @@ export namespace LevelControlCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { lighting: true } ? typeof LightingComponent : {})
@@ -256,21 +257,25 @@ export namespace LevelControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.1
              */
-            currentLevel: Attribute(0, TlvNullable(TlvUInt8), { scene: true, persistent: true, readAcl: AccessLevel.View }),
+            currentLevel: Attribute(
+                0,
+                TlvNullable(TlvUInt8),
+                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The MinLevel attribute indicates the minimum value of CurrentLevel that is capable of being assigned.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.3
              */
-            minLevel: OptionalAttribute(2, TlvUInt8, { readAcl: AccessLevel.View }),
+            minLevel: OptionalAttribute(2, TlvUInt8, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The MaxLevel attribute indicates the maximum value of CurrentLevel that is capable of being assigned.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.4
              */
-            maxLevel: OptionalAttribute(3, TlvUInt8.bound({ max: 254 }), { readAcl: AccessLevel.View }),
+            maxLevel: OptionalAttribute(3, TlvUInt8.bound({ max: 254 }), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The Options attribute is meant to be changed only during commissioning. The Options attribute is a
@@ -293,7 +298,7 @@ export namespace LevelControlCluster {
             onOffTransitionTime: OptionalWritableAttribute(
                 16,
                 TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -413,7 +418,7 @@ export namespace LevelControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.2
              */
-            remainingTime: Attribute(1, TlvUInt16, { readAcl: AccessLevel.View }),
+            remainingTime: Attribute(1, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The StartUpCurrentLevel attribute SHALL define the desired startup level for a device when it is
@@ -441,7 +446,7 @@ export namespace LevelControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.5
              */
-            currentFrequency: Attribute(4, TlvUInt16, { scene: true, readAcl: AccessLevel.View }),
+            currentFrequency: Attribute(4, TlvUInt16, { scene: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The MinFrequency attribute indicates the minimum value of CurrentFrequency that is capable of being
@@ -449,7 +454,7 @@ export namespace LevelControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.6
              */
-            minFrequency: Attribute(5, TlvUInt16, { readAcl: AccessLevel.View }),
+            minFrequency: Attribute(5, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being
@@ -457,7 +462,7 @@ export namespace LevelControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.7
              */
-            maxFrequency: Attribute(6, TlvUInt16, { readAcl: AccessLevel.View })
+            maxFrequency: Attribute(6, TlvUInt16, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

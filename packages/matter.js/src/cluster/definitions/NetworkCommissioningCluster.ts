@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, FixedAttribute, AccessLevel, Attribute, WritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvEnum, TlvInt32, TlvUInt64, TlvBitmap, TlvUInt16, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -32,11 +32,11 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.8
  */
 export function NetworkCommissioningCluster<T extends NetworkCommissioningCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...NetworkCommissioningCluster.Metadata,
         supportedFeatures: BitFlags(NetworkCommissioningCluster.Metadata.features, ...features),
         ...NetworkCommissioningCluster.BaseComponent
-    };
+    });
 
     extendCluster(
         cluster,
@@ -84,7 +84,7 @@ export const TlvNetworkInfoStruct = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.3
  */
-export const enum TlvNetworkCommissioningStatusEnum {
+export const enum NetworkCommissioningStatusEnum {
     Success = 0,
     OutOfRange = 1,
     BoundsExceeded = 2,
@@ -159,7 +159,7 @@ export const TlvWiFiSecurityBitmapBits = {
 };
 
 export const TlvWiFiSecurityBitmap = TlvBitmap(TlvUInt8, TlvWiFiSecurityBitmapBits);
-export const enum TlvWiFiBand {
+export const enum WiFiBand {
     "2G4" = 0,
     "3G65" = 1,
     "5G" = 2,
@@ -184,7 +184,7 @@ export const TlvWiFiInterfaceScanResultStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.5.1
      */
-    wiFiBand: TlvOptionalField(4, TlvEnum<TlvWiFiBand>()),
+    wiFiBand: TlvOptionalField(4, TlvEnum<WiFiBand>()),
 
     /**
      * This field, if present, SHALL denote the signal strength in dBm of the associated scan result.
@@ -229,7 +229,7 @@ export const TlvScanNetworksResponseRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.2.1
      */
-    networkingStatus: TlvField(0, TlvEnum<TlvNetworkCommissioningStatusEnum>()),
+    networkingStatus: TlvField(0, TlvEnum<NetworkCommissioningStatusEnum>()),
 
     /**
      * This field, if present and non-empty, MAY contain error information which MAY be communicated to the user in
@@ -277,7 +277,7 @@ export const TlvRemoveNetworkRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.8
  */
 export const TlvNetworkConfigResponseRequest = TlvObject({
-    networkingStatus: TlvField(0, TlvEnum<TlvNetworkCommissioningStatusEnum>()),
+    networkingStatus: TlvField(0, TlvEnum<NetworkCommissioningStatusEnum>()),
     debugText: TlvOptionalField(1, TlvString.bound({ maxLength: 512 })),
 
     /**
@@ -307,7 +307,7 @@ export const TlvConnectNetworkRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.10
  */
 export const TlvConnectNetworkResponseRequest = TlvObject({
-    networkingStatus: TlvField(0, TlvEnum<TlvNetworkCommissioningStatusEnum>()),
+    networkingStatus: TlvField(0, TlvEnum<NetworkCommissioningStatusEnum>()),
     debugText: TlvOptionalField(1, TlvString),
 
     /**
@@ -396,6 +396,7 @@ export namespace NetworkCommissioningCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { wiFiNetworkInterface: true } | { threadNetworkInterface: true } ? typeof WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent : {})
@@ -491,7 +492,7 @@ export namespace NetworkCommissioningCluster {
              */
             lastNetworkingStatus: Attribute(
                 5,
-                TlvNullable(TlvEnum<TlvNetworkCommissioningStatusEnum>()),
+                TlvNullable(TlvEnum<NetworkCommissioningStatusEnum>()),
                 { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
             ),
 

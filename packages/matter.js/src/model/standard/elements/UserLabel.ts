@@ -14,22 +14,12 @@ Matter.children.push({
     details: "The User Label Cluster provides a feature to tag an endpoint with zero or more labels.",
     xref: { document: "core", section: "9.9" },
 
-    children: [
-        {
-            tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "RW VM", conformance: "M",
-            constraint: "min 4", quality: "N",
-            details: "An implementation SHALL support at least 4 list entries per node for all User Label cluster " +
-                     "instances on the node.",
-            xref: { document: "core", section: "9.9.4.1" },
-            children: [ { tag: "datatype", name: "entry", type: "LabelStruct" } ]
-        },
-
-        {
-            tag: "datatype", name: "LabelStruct", type: "struct", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Label", type: "string", conformance: "M" },
-                { tag: "datatype", name: "Value", type: "string", conformance: "M" }
-            ]
-        }
-    ]
+    children: [ {
+        tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "RW VM", conformance: "M",
+        constraint: "min 4", default: [], quality: "N",
+        details: "An implementation SHALL support at least 4 list entries per node for all User Label cluster " +
+                 "instances on the node.",
+        xref: { document: "core", section: "9.9.4.1" },
+        children: [ { tag: "datatype", name: "entry", type: "LabelStruct" } ]
+    } ]
 });

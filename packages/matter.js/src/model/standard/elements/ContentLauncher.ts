@@ -34,7 +34,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AcceptHeader", id: 0x0, type: "list", access: "R V", conformance: "UP",
-            constraint: "max 100[max 1024]", quality: "N",
+            constraint: "max 100[max 1024]", default: [], quality: "N",
             details: "This list provides list of content types supported by the Video Player or Content App in the form " +
                      "of entries in the HTTP \"Accept\" request header.",
             xref: { document: "cluster", section: "6.7.3.1" },
@@ -43,7 +43,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SupportedStreamingProtocols", id: 0x1, type: "map32", access: "R V",
-            conformance: "UP", quality: "N",
+            conformance: "UP", default: 0, quality: "N",
             details: "This attribute provides information about supported streaming protocols.",
             xref: { document: "cluster", section: "6.7.3.2" }
         },
@@ -178,7 +178,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "ExternalIdList", id: 0x2, type: "list", conformance: "O",
+                    tag: "datatype", name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: [],
                     details: "This SHALL indicate the list of additional external content identifiers.",
                     xref: { document: "cluster", section: "6.7.5.3.3" },
                     children: [ { tag: "datatype", name: "entry", type: "AdditionalInfoStruct" } ]

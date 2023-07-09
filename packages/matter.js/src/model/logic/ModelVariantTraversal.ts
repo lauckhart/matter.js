@@ -147,8 +147,22 @@ export abstract class ModelVariantTraversal<S = void> {
                 // Visit children
                 const result = Array<S>();
                 for (const mapping of Object.values(mappings)) {
-                    for (const variants of mapping.slots) {
-                        const detail = this.createVariantDetail(variants);
+                    mappings: for (const childVariants of mapping.slots) {
+                        const detail = this.createVariantDetail(childVariants);
+
+                        // If a cluster child is defined directly in one variant but inherited in another, ignore the
+                        // direct variant so we will continue to properly reflect the inheritance structure
+                        if (variants.tag === ElementTag.Cluster) {
+                            for (const k in variants.map) {
+                                if (childVariants[k] === undefined) {
+                                    const inherited = variants.map[k].base?.member(detail.name, [ detail.tag ]);
+                                    if (inherited) {
+                                        continue mappings;
+                                    }
+                                }
+                            }
+                        }
+
                         result.push(this.visitVariants(detail));
                     }
                 }

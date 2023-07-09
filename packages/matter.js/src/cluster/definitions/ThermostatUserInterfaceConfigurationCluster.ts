@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, OptionalWritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, OptionalWritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 
 /**
@@ -21,10 +21,10 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5
  */
 export function ThermostatUserInterfaceConfigurationCluster() {
-    const cluster = {
+    const cluster = Cluster({
         ...ThermostatUserInterfaceConfigurationCluster.Metadata,
         ...ThermostatUserInterfaceConfigurationCluster.BaseComponent
-    };
+    });
     return cluster as unknown as ThermostatUserInterfaceConfigurationCluster.Type;
 };
 
@@ -33,7 +33,7 @@ export function ThermostatUserInterfaceConfigurationCluster() {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.1
  */
-export const enum TlvTemperatureDisplayMode {
+export const enum TemperatureDisplayMode {
     /**
      * Temperature displayed in °C
      */
@@ -50,7 +50,7 @@ export const enum TlvTemperatureDisplayMode {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.2
  */
-export const enum TlvKeypadLockout {
+export const enum KeypadLockout {
     /**
      * All functionality available to the user
      */
@@ -89,7 +89,7 @@ export const enum TlvKeypadLockout {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.3
  */
-export const enum TlvScheduleProgrammingVisibility {
+export const enum ScheduleProgrammingVisibility {
     /**
      * Local schedule programming functionality is enabled at the thermostat
      */
@@ -104,6 +104,7 @@ export const enum TlvScheduleProgrammingVisibility {
 export namespace ThermostatUserInterfaceConfigurationCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -131,8 +132,8 @@ export namespace ThermostatUserInterfaceConfigurationCluster {
              */
             temperatureDisplayMode: WritableAttribute(
                 0,
-                TlvEnum<TlvTemperatureDisplayMode>(),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                TlvEnum<TemperatureDisplayMode>(),
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -143,8 +144,8 @@ export namespace ThermostatUserInterfaceConfigurationCluster {
              */
             keypadLockout: WritableAttribute(
                 1,
-                TlvEnum<TlvKeypadLockout>(),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<KeypadLockout>(),
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -157,8 +158,8 @@ export namespace ThermostatUserInterfaceConfigurationCluster {
              */
             scheduleProgrammingVisibility: OptionalWritableAttribute(
                 2,
-                TlvEnum<TlvScheduleProgrammingVisibility>(),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<ScheduleProgrammingVisibility>(),
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         }
     });

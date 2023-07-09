@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, FabricScopedAttribute, AccessLevel, FixedAttribute, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FabricScopedAttribute, AccessLevel, FixedAttribute, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvByteString, TlvString } from "../../tlv/TlvString.js";
@@ -27,7 +27,7 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.17
  */
 export function OperationalCredentialsCluster() {
-    const cluster = { ...OperationalCredentialsCluster.Metadata, ...OperationalCredentialsCluster.BaseComponent };
+    const cluster = Cluster({ ...OperationalCredentialsCluster.Metadata, ...OperationalCredentialsCluster.BaseComponent });
     return cluster as unknown as OperationalCredentialsCluster.Type;
 };
 
@@ -140,7 +140,7 @@ export const TlvAttestationResponseRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.2
  */
-export const enum TlvCertificateChainTypeEnum {
+export const enum CertificateChainTypeEnum {
     DacCertificate = 1,
     PaiCertificate = 2
 };
@@ -152,7 +152,7 @@ export const enum TlvCertificateChainTypeEnum {
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
  */
 export const TlvCertificateChainRequestRequest = TlvObject({
-    certificateType: TlvField(0, TlvEnum<TlvCertificateChainTypeEnum>())
+    certificateType: TlvField(0, TlvEnum<CertificateChainTypeEnum>())
 });
 
 /**
@@ -237,7 +237,7 @@ export const TlvAddNocRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.3
  */
-export const enum TlvNodeOperationalCertStatusEnum {
+export const enum NodeOperationalCertStatusEnum {
     Ok = 0,
     InvalidPublicKey = 1,
     InvalidNodeOpId = 2,
@@ -261,7 +261,7 @@ export const TlvNocResponseRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10.1
      */
-    statusCode: TlvField(0, TlvEnum<TlvNodeOperationalCertStatusEnum>()),
+    statusCode: TlvField(0, TlvEnum<NodeOperationalCertStatusEnum>()),
 
     /**
      * This field SHALL be present whenever StatusCode has a value of OK. If present, it SHALL contain the Fabric Index
@@ -322,6 +322,7 @@ export const TlvAddTrustedRootCertificateRequest = TlvObject({
 export namespace OperationalCredentialsCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -399,7 +400,7 @@ export namespace OperationalCredentialsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.6
              */
-            currentFabricIndex: Attribute(5, TlvUInt8, { readAcl: AccessLevel.View })
+            currentFabricIndex: Attribute(5, TlvUInt8, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

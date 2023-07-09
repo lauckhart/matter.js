@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, OptionalEvent, EventPriority, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, AccessLevel, OptionalEvent, EventPriority, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
@@ -32,11 +32,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.12
  */
 export function SoftwareDiagnosticsCluster<T extends SoftwareDiagnosticsCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...SoftwareDiagnosticsCluster.Metadata,
         supportedFeatures: BitFlags(SoftwareDiagnosticsCluster.Metadata.features, ...features),
         ...SoftwareDiagnosticsCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, SoftwareDiagnosticsCluster.WatermarksComponent, { watermarks: true });
     return cluster as unknown as SoftwareDiagnosticsCluster.Type<BitFlags<typeof SoftwareDiagnosticsCluster.Metadata.features, T>>;
 };
@@ -123,6 +123,7 @@ export namespace SoftwareDiagnosticsCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { watermarks: true } ? typeof WatermarksComponent : {});
@@ -170,7 +171,7 @@ export namespace SoftwareDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.2
              */
-            currentHeapFree: OptionalAttribute(1, TlvUInt64, { readAcl: AccessLevel.View }),
+            currentHeapFree: OptionalAttribute(1, TlvUInt64, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The CurrentHeapUsed attribute SHALL indicate the current amount of heap memory, in bytes, that is being
@@ -178,7 +179,7 @@ export namespace SoftwareDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.3
              */
-            currentHeapUsed: OptionalAttribute(2, TlvUInt64, { readAcl: AccessLevel.View })
+            currentHeapUsed: OptionalAttribute(2, TlvUInt64, { default: 0, readAcl: AccessLevel.View })
         },
 
         events: {
@@ -204,7 +205,7 @@ export namespace SoftwareDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.4
              */
-            currentHeapHighWatermark: Attribute(3, TlvUInt64, { readAcl: AccessLevel.View })
+            currentHeapHighWatermark: Attribute(3, TlvUInt64, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

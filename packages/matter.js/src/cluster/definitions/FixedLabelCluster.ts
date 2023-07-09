@@ -7,11 +7,10 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
-import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { TlvString } from "../../tlv/TlvString.js";
+import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
 
 /**
  * Fixed Label
@@ -23,15 +22,14 @@ import { TlvString } from "../../tlv/TlvString.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.8
  */
 export function FixedLabelCluster() {
-    const cluster = { ...FixedLabelCluster.Metadata, ...FixedLabelCluster.BaseComponent };
+    const cluster = Cluster({ ...FixedLabelCluster.Metadata, ...FixedLabelCluster.BaseComponent });
     return cluster as unknown as FixedLabelCluster.Type;
 };
-
-export const TlvLabelStruct = TlvObject({ label: TlvField(0, TlvString), value: TlvField(1, TlvString) });
 
 export namespace FixedLabelCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

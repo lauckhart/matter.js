@@ -7,9 +7,9 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 
@@ -24,11 +24,11 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
  */
 export function KeypadInputCluster() {
-    const cluster = { ...KeypadInputCluster.Metadata, ...KeypadInputCluster.BaseComponent };
+    const cluster = Cluster({ ...KeypadInputCluster.Metadata, ...KeypadInputCluster.BaseComponent });
     return cluster as unknown as KeypadInputCluster.Type;
 };
 
-export const enum TlvCecKeyCode {
+export const enum CecKeyCode {
     Select = 0,
     Up = 1,
     Down = 2,
@@ -128,13 +128,13 @@ export const TlvSendKeyRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1.1
      */
-    keyCode: TlvField(0, TlvEnum<TlvCecKeyCode>())
+    keyCode: TlvField(0, TlvEnum<CecKeyCode>())
 });
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.4.1
  */
-export const enum TlvStatusEnum {
+export const enum StatusEnum {
     /**
      * Command succeeded
      */
@@ -162,7 +162,7 @@ export const TlvSendKeyResponseRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2.1
      */
-    status: TlvField(0, TlvEnum<TlvStatusEnum>())
+    status: TlvField(0, TlvEnum<StatusEnum>())
 });
 
 export namespace KeypadInputCluster {
@@ -196,6 +196,7 @@ export namespace KeypadInputCluster {
 
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

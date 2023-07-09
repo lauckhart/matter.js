@@ -32,7 +32,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ChannelList", id: 0x0, type: "list", access: "R V", conformance: "CL",
-            constraint: "None",
+            constraint: "None", default: [],
             details: "This optional list provides the channels supported.",
             xref: { document: "cluster", section: "6.6.3.1" },
             children: [ { tag: "datatype", name: "entry", type: "ChannelInfoStruct" } ]

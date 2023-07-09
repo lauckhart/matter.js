@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, OptionalEvent, EventPriority, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, OptionalEvent, EventPriority, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvEnum, TlvUInt16, TlvInt8, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
@@ -32,11 +32,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.14
  */
 export function WiFiNetworkDiagnosticsCluster<T extends WiFiNetworkDiagnosticsCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...WiFiNetworkDiagnosticsCluster.Metadata,
         supportedFeatures: BitFlags(WiFiNetworkDiagnosticsCluster.Metadata.features, ...features),
         ...WiFiNetworkDiagnosticsCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, WiFiNetworkDiagnosticsCluster.ErrorCountsComponent, { errorCounts: true });
     extendCluster(cluster, WiFiNetworkDiagnosticsCluster.PacketCountsComponent, { packetCounts: true });
     return cluster as unknown as WiFiNetworkDiagnosticsCluster.Type<BitFlags<typeof WiFiNetworkDiagnosticsCluster.Metadata.features, T>>;
@@ -45,7 +45,7 @@ export function WiFiNetworkDiagnosticsCluster<T extends WiFiNetworkDiagnosticsCl
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.1
  */
-export const enum TlvSecurityTypeEnum {
+export const enum SecurityTypeEnum {
     Unspecified = 0,
     None = 1,
     Wep = 2,
@@ -57,7 +57,7 @@ export const enum TlvSecurityTypeEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.2
  */
-export const enum TlvWiFiVersionEnum {
+export const enum WiFiVersionEnum {
     A = 0,
     B = 1,
     G = 2,
@@ -85,7 +85,7 @@ export const TlvDisconnectionEvent = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.3
  */
-export const enum TlvAssociationFailureCauseEnum {
+export const enum AssociationFailureCauseEnum {
     Unknown = 0,
     AssociationFailed = 1,
     AuthenticationFailed = 2,
@@ -105,7 +105,7 @@ export const TlvAssociationFailureEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.14.8.2.1
      */
-    associationFailureCause: TlvField(0, TlvEnum<TlvAssociationFailureCauseEnum>()),
+    associationFailureCause: TlvField(0, TlvEnum<AssociationFailureCauseEnum>()),
 
     /**
      * The Status field SHALL be set to the Status Code value that was present in the last frame related to association
@@ -120,7 +120,7 @@ export const TlvAssociationFailureEvent = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.4
  */
-export const enum TlvConnectionStatusEnum {
+export const enum ConnectionStatusEnum {
     Connected = 0,
     NotConnected = 1
 };
@@ -131,7 +131,7 @@ export const enum TlvConnectionStatusEnum {
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.8.3
  */
-export const TlvConnectionStatusEvent = TlvObject({ connectionStatus: TlvField(0, TlvEnum<TlvConnectionStatusEnum>()) });
+export const TlvConnectionStatusEvent = TlvObject({ connectionStatus: TlvField(0, TlvEnum<ConnectionStatusEnum>()) });
 
 export namespace WiFiNetworkDiagnosticsCluster {
     /**
@@ -158,6 +158,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { errorCounts: true } ? typeof ErrorCountsComponent : {})
@@ -215,7 +216,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
              */
             securityType: Attribute(
                 1,
-                TlvNullable(TlvEnum<TlvSecurityTypeEnum>()),
+                TlvNullable(TlvEnum<SecurityTypeEnum>()),
                 { default: null, readAcl: AccessLevel.View }
             ),
 
@@ -225,11 +226,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.3
              */
-            wiFiVersion: Attribute(
-                2,
-                TlvNullable(TlvEnum<TlvWiFiVersionEnum>()),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            wiFiVersion: Attribute(2, TlvNullable(TlvEnum<WiFiVersionEnum>()), { default: null, readAcl: AccessLevel.View }),
 
             /**
              * The ChannelNumber attribute SHALL indicate the channel that Wi-Fi communication is currently operating
@@ -237,7 +234,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.4
              */
-            channelNumber: Attribute(3, TlvNullable(TlvUInt16), { readAcl: AccessLevel.View }),
+            channelNumber: Attribute(3, TlvNullable(TlvUInt16), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RSSI attribute SHALL indicate the current RSSI of the Node’s Wi-Fi radio in dBm.
@@ -256,7 +253,11 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.12
              */
-            currentMaxRate: OptionalAttribute(11, TlvNullable(TlvUInt64), { omitChanges: true, readAcl: AccessLevel.View })
+            currentMaxRate: OptionalAttribute(
+                11,
+                TlvNullable(TlvUInt64),
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            )
         },
 
         events: {
@@ -300,7 +301,11 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.6
              */
-            beaconLostCount: Attribute(5, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View }),
+            beaconLostCount: Attribute(
+                5,
+                TlvNullable(TlvUInt32),
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or egress, due
@@ -309,7 +314,11 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.13
              */
-            overrunCount: Attribute(12, TlvNullable(TlvUInt64), { omitChanges: true, readAcl: AccessLevel.View })
+            overrunCount: Attribute(
+                12,
+                TlvNullable(TlvUInt64),
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            )
         },
 
         commands: {
@@ -335,14 +344,22 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.7
              */
-            beaconRxCount: Attribute(6, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View }),
+            beaconRxCount: Attribute(
+                6,
+                TlvNullable(TlvUInt32),
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The PacketMulticastRxCount attribute SHALL indicate the number of multicast packets received by
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.8
              */
-            packetMulticastRxCount: Attribute(7, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View }),
+            packetMulticastRxCount: Attribute(
+                7,
+                TlvNullable(TlvUInt32),
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The PacketMulticastTxCount attribute SHALL indicate the number of multicast packets transmitted by the
@@ -350,21 +367,33 @@ export namespace WiFiNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.9
              */
-            packetMulticastTxCount: Attribute(8, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View }),
+            packetMulticastTxCount: Attribute(
+                8,
+                TlvNullable(TlvUInt32),
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The PacketUnicastRxCount attribute SHALL indicate the number of unicast packets received by the Node.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.10
              */
-            packetUnicastRxCount: Attribute(9, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View }),
+            packetUnicastRxCount: Attribute(
+                9,
+                TlvNullable(TlvUInt32),
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The PacketUnicastTxCount attribute SHALL indicate the number of unicast packets transmitted by the Node.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.11
              */
-            packetUnicastTxCount: Attribute(10, TlvNullable(TlvUInt32), { omitChanges: true, readAcl: AccessLevel.View })
+            packetUnicastTxCount: Attribute(
+                10,
+                TlvNullable(TlvUInt32),
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            )
         }
     });
 

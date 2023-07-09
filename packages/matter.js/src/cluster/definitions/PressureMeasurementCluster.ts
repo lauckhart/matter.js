@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -28,11 +28,11 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4
  */
 export function PressureMeasurementCluster<T extends PressureMeasurementCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...PressureMeasurementCluster.Metadata,
         supportedFeatures: BitFlags(PressureMeasurementCluster.Metadata.features, ...features),
         ...PressureMeasurementCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, PressureMeasurementCluster.ExtendedComponent, { extended: true });
     return cluster as unknown as PressureMeasurementCluster.Type<BitFlags<typeof PressureMeasurementCluster.Metadata.features, T>>;
 };
@@ -54,6 +54,7 @@ export namespace PressureMeasurementCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { extended: true } ? typeof ExtendedComponent : {});
@@ -111,7 +112,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { readAcl: AccessLevel.View })
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { default: 0, readAcl: AccessLevel.View })
         }
     });
 
@@ -125,7 +126,7 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.5
              */
-            scaledValue: Attribute(16, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            scaledValue: Attribute(16, TlvNullable(TlvInt16), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The null
@@ -133,7 +134,11 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.6
              */
-            minScaledValue: Attribute(17, TlvNullable(TlvInt16.bound({ min: -32767 })), { readAcl: AccessLevel.View }),
+            minScaledValue: Attribute(
+                17,
+                TlvNullable(TlvInt16.bound({ min: -32767 })),
+                { default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue SHALL be
@@ -141,7 +146,11 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.7
              */
-            maxScaledValue: Attribute(18, TlvNullable(TlvInt16.bound({ max: 32767 })), { readAcl: AccessLevel.View }),
+            maxScaledValue: Attribute(
+                18,
+                TlvNullable(TlvInt16.bound({ max: 32767 })),
+                { default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * This attribute indicates the magnitude of the possible error that is associated with ScaledValue. The
@@ -149,14 +158,18 @@ export namespace PressureMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.8
              */
-            scaledTolerance: OptionalAttribute(19, TlvUInt16.bound({ max: 2048 }), { readAcl: AccessLevel.View }),
+            scaledTolerance: OptionalAttribute(
+                19,
+                TlvUInt16.bound({ max: 2048 }),
+                { default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue Attribute).
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.9
              */
-            scale: Attribute(20, TlvInt8.bound({ min: -127, max: 127 }), { readAcl: AccessLevel.View })
+            scale: Attribute(20, TlvInt8.bound({ min: -127, max: 127 }), { default: 0, readAcl: AccessLevel.View })
         }
     });
 

@@ -46,7 +46,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Networks", id: 0x1, type: "list", access: "R A", conformance: "M",
-            constraint: "max MaxNetworks",
+            constraint: "max MaxNetworks", default: [],
             details: "This attribute SHALL indicate the network configurations that are usable on the network interface " +
                      "represented by this cluster server instance.",
             xref: { document: "core", section: "11.8.6.2" },

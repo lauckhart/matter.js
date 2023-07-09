@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, OptionalWritableFabricScopedAttribute, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableFabricScopedAttribute, AccessLevel, OptionalWritableFabricScopedAttribute, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt64, TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
@@ -26,14 +26,14 @@ import { TlvByteString } from "../../tlv/TlvString.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.10
  */
 export function AccessControlCluster() {
-    const cluster = { ...AccessControlCluster.Metadata, ...AccessControlCluster.BaseComponent };
+    const cluster = Cluster({ ...AccessControlCluster.Metadata, ...AccessControlCluster.BaseComponent });
     return cluster as unknown as AccessControlCluster.Type;
 };
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2
  */
-export const enum TlvAccessControlEntryPrivilegeEnum {
+export const enum AccessControlEntryPrivilegeEnum {
     View = 1,
     ProxyView = 2,
 
@@ -62,7 +62,7 @@ export const enum TlvAccessControlEntryPrivilegeEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.3
  */
-export const enum TlvAccessControlEntryAuthModeEnum {
+export const enum AccessControlEntryAuthModeEnum {
     Pase = 1,
     Case = 2,
     Group = 3
@@ -86,14 +86,14 @@ export const TlvAccessControlEntryStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.1
      */
-    privilege: TlvField(1, TlvEnum<TlvAccessControlEntryPrivilegeEnum>()),
+    privilege: TlvField(1, TlvEnum<AccessControlEntryPrivilegeEnum>()),
 
     /**
      * The AuthMode field SHALL specify the authentication mode required by this Access Control Entry.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.2
      */
-    authMode: TlvField(2, TlvEnum<TlvAccessControlEntryAuthModeEnum>()),
+    authMode: TlvField(2, TlvEnum<AccessControlEntryAuthModeEnum>()),
 
     /**
      * The subjects field SHALL specify a list of Subject IDs, to which this Access Control Entry grants access.
@@ -126,7 +126,7 @@ export const TlvAccessControlExtensionStruct = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.1
  */
-export const enum TlvChangeTypeEnum {
+export const enum ChangeTypeEnum {
     Changed = 0,
     Added = 1,
     Removed = 2
@@ -159,7 +159,7 @@ export const TlvAccessControlEntryChangedEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1.3
      */
-    changeType: TlvField(3, TlvEnum<TlvChangeTypeEnum>()),
+    changeType: TlvField(3, TlvEnum<ChangeTypeEnum>()),
 
     /**
      * The latest value of the changed entry.
@@ -178,13 +178,14 @@ export const TlvAccessControlEntryChangedEvent = TlvObject({
 export const TlvAccessControlExtensionChangedEvent = TlvObject({
     adminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
     adminPasscodeId: TlvField(2, TlvNullable(TlvUInt16)),
-    changeType: TlvField(3, TlvEnum<TlvChangeTypeEnum>()),
+    changeType: TlvField(3, TlvEnum<ChangeTypeEnum>()),
     latestValue: TlvField(4, TlvNullable(TlvAccessControlExtensionStruct))
 });
 
 export namespace AccessControlCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -22,13 +22,14 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.5
  */
 export function FlowMeasurementCluster() {
-    const cluster = { ...FlowMeasurementCluster.Metadata, ...FlowMeasurementCluster.BaseComponent };
+    const cluster = Cluster({ ...FlowMeasurementCluster.Metadata, ...FlowMeasurementCluster.BaseComponent });
     return cluster as unknown as FlowMeasurementCluster.Type;
 };
 
 export namespace FlowMeasurementCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -71,7 +72,7 @@ export namespace FlowMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.5.4.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { readAcl: AccessLevel.View })
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { default: 0, readAcl: AccessLevel.View })
         }
     });
 

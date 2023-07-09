@@ -156,7 +156,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PumpStatus", id: 0x10, type: "PumpStatusBitmap", access: "R V",
-            conformance: "O", constraint: "desc", quality: "P",
+            conformance: "O", constraint: "desc", default: 0, quality: "P",
             details: "This attribute specifies the activity status of the pump functions as listed in PumpStatusBitmap. " +
                      "Where a pump controller function is active, the corresponding bit SHALL be set to 1. Where a pump " +
                      "controller function is not active, the corresponding bit SHALL be set to 0.",
@@ -197,7 +197,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LifetimeRunningHours", id: 0x15, type: "uint24", access: "RW VM",
-            conformance: "O", quality: "X N",
+            conformance: "O", default: 0, quality: "X N",
             details: "This attribute specifies the accumulated number of hours that the pump has been powered and the " +
                      "motor has been running. It is updated dynamically as it increases. It is preserved over power " +
                      "cycles of the pump. If LifeTimeRunningHours rises above maximum value it “rolls over” and starts at " +
@@ -215,7 +215,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LifetimeEnergyConsumed", id: 0x17, type: "uint32", access: "RW VM",
-            conformance: "O", quality: "X N",
+            conformance: "O", default: 0, quality: "X N",
             details: "This attribute specifies the accumulated energy consumption of the pump through the entire lifetime " +
                      "of the pump in kWh. The value of the LifetimeEnergyConsumed attribute is updated dynamically as the " +
                      "energy consumption of the pump increases. If LifetimeEnergyConsumed rises above maximum value it " +
@@ -225,21 +225,21 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OperationMode", id: 0x20, type: "OperationModeEnum", access: "RW VM",
-            conformance: "M", constraint: "desc", quality: "N",
+            conformance: "M", constraint: "desc", default: 0, quality: "N",
             details: "This attribute specifies the operation mode of the pump as defined in OperationModeEnum.",
             xref: { document: "cluster", section: "4.2.7.22" }
         },
 
         {
             tag: "attribute", name: "ControlMode", id: 0x21, type: "ControlModeEnum", access: "RW VM",
-            conformance: "O", constraint: "desc", quality: "N",
+            conformance: "O", constraint: "desc", default: 0, quality: "N",
             details: "This attribute specifies the control mode of the pump as defined in ControlModeEnum.",
             xref: { document: "cluster", section: "4.2.7.23" }
         },
 
         {
             tag: "attribute", name: "AlarmMask", id: 0x22, type: "map16", access: "R V", conformance: "D",
-            constraint: "desc", quality: "N",
+            constraint: "desc", default: 0, quality: "N",
             xref: { document: "cluster", section: "4.2.7" }
         },
         {

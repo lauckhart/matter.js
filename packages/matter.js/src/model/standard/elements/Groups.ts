@@ -18,14 +18,14 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.3.4" },
             children: [ {
-                tag: "datatype", name: "GN", id: 0x0, description: "GroupNames",
+                tag: "datatype", name: "GN", id: 0x0, default: 0, description: "GroupNames",
                 details: "The ability to store a name for a group."
             } ]
         },
 
         {
             tag: "attribute", name: "NameSupport", id: 0x0, type: "map8", access: "R V", conformance: "M",
-            constraint: "desc", quality: "F",
+            constraint: "desc", default: 0, quality: "F",
             details: "This attribute provides legacy, read-only access to whether the Group Names feature is supported. " +
                      "The most significant bit, bit 7, SHALL be equal to bit 0 of the FeatureMap attribute. All other " +
                      "bits SHALL be 0.",

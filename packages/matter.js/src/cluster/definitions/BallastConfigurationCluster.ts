@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt24 } from "../../tlv/TlvNumber.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -24,7 +24,7 @@ import { TlvString } from "../../tlv/TlvString.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3
  */
 export function BallastConfigurationCluster() {
-    const cluster = { ...BallastConfigurationCluster.Metadata, ...BallastConfigurationCluster.BaseComponent };
+    const cluster = Cluster({ ...BallastConfigurationCluster.Metadata, ...BallastConfigurationCluster.BaseComponent });
     return cluster as unknown as BallastConfigurationCluster.Type;
 };
 
@@ -57,6 +57,7 @@ export const TlvLampAlarmMode = TlvBitmap(TlvUInt8, TlvLampAlarmModeBits);
 export namespace BallastConfigurationCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -85,7 +86,7 @@ export namespace BallastConfigurationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.2
              */
-            physicalMaxLevel: Attribute(1, TlvUInt8.bound({ min: 1, max: 254 }), { readAcl: AccessLevel.View }),
+            physicalMaxLevel: Attribute(1, TlvUInt8.bound({ min: 1, max: 254 }), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The BallastStatus attribute specifies the activity status of the ballast functions. The usage of the
@@ -120,7 +121,7 @@ export namespace BallastConfigurationCluster {
             maxLevel: WritableAttribute(
                 17,
                 TlvUInt8.bound({ min: 1, max: 254 }),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -145,7 +146,7 @@ export namespace BallastConfigurationCluster {
             ballastFactorAdjustment: OptionalWritableAttribute(
                 21,
                 TlvNullable(TlvUInt8.bound({ min: 100 })),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -186,7 +187,7 @@ export namespace BallastConfigurationCluster {
             lampRatedHours: OptionalWritableAttribute(
                 50,
                 TlvNullable(TlvUInt24),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -199,7 +200,7 @@ export namespace BallastConfigurationCluster {
             lampBurnHours: OptionalWritableAttribute(
                 51,
                 TlvNullable(TlvUInt24),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -225,7 +226,7 @@ export namespace BallastConfigurationCluster {
             lampBurnHoursTripPoint: OptionalWritableAttribute(
                 53,
                 TlvNullable(TlvUInt24),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         }
     });

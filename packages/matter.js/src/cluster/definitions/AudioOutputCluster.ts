@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -30,11 +30,11 @@ import { TlvString } from "../../tlv/TlvString.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5
  */
 export function AudioOutputCluster<T extends AudioOutputCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...AudioOutputCluster.Metadata,
         supportedFeatures: BitFlags(AudioOutputCluster.Metadata.features, ...features),
         ...AudioOutputCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, AudioOutputCluster.NameUpdatesComponent, { nameUpdates: true });
     return cluster as unknown as AudioOutputCluster.Type<BitFlags<typeof AudioOutputCluster.Metadata.features, T>>;
 };
@@ -44,7 +44,7 @@ export function AudioOutputCluster<T extends AudioOutputCluster.Feature[]>(...fe
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.2
  */
-export const enum TlvOutputTypeEnum {
+export const enum OutputTypeEnum {
     /**
      * HDMI
      */
@@ -75,7 +75,7 @@ export const TlvOutputInfoStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.1.2
      */
-    outputType: TlvField(1, TlvEnum<TlvOutputTypeEnum>()),
+    outputType: TlvField(1, TlvEnum<OutputTypeEnum>()),
 
     /**
      * The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be blank, but
@@ -115,6 +115,7 @@ export namespace AudioOutputCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { nameUpdates: true } ? typeof NameUpdatesComponent : {});
@@ -156,7 +157,7 @@ export namespace AudioOutputCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.3.2
              */
-            currentOutput: Attribute(1, TlvUInt8, { readAcl: AccessLevel.View })
+            currentOutput: Attribute(1, TlvUInt8, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {
