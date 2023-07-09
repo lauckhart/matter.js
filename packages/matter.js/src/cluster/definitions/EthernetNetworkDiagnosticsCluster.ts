@@ -21,11 +21,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be
  * used by a Node to assist a user or Administrative Node in diagnosing potential problems.
  *
- * Use this factory function to create a EthernetNetworkDiagnostics cluster supporting a specific set of features.
+ * Use this factory function to create an EthernetNetworkDiagnostics cluster supporting a specific set of features.
  * Include each {@link EthernetNetworkDiagnosticsCluster.Feature} you wish to support.
  *
  * @param features a list of {@link EthernetNetworkDiagnosticsCluster.Feature} to support
- * @returns a EthernetNetworkDiagnostics cluster with specified features enabled
+ * @returns an EthernetNetworkDiagnostics cluster with specified features enabled
  * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.15

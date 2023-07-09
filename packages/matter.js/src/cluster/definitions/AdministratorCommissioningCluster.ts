@@ -21,11 +21,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * Commands to trigger a Node to allow a new Administrator to commission it.
  *
- * Use this factory function to create a AdministratorCommissioning cluster supporting a specific set of features.
+ * Use this factory function to create an AdministratorCommissioning cluster supporting a specific set of features.
  * Include each {@link AdministratorCommissioningCluster.Feature} you wish to support.
  *
  * @param features a list of {@link AdministratorCommissioningCluster.Feature} to support
- * @returns a AdministratorCommissioning cluster with specified features enabled
+ * @returns an AdministratorCommissioning cluster with specified features enabled
  * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.18

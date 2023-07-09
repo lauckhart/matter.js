@@ -21,11 +21,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * Attributes and commands for switching devices between 'On' and 'Off' states.
  *
- * Use this factory function to create a OnOff cluster supporting a specific set of features.  Include each
+ * Use this factory function to create an OnOff cluster supporting a specific set of features.  Include each
  * {@link OnOffCluster.Feature} you wish to support.
  *
  * @param features a list of {@link OnOffCluster.Feature} to support
- * @returns a OnOff cluster with specified features enabled
+ * @returns an OnOff cluster with specified features enabled
  * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5

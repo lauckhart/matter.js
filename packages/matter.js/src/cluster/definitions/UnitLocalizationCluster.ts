@@ -21,11 +21,11 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * audibly convey measurable values to the user need a mechanism by which they can be configured to use a user’s
  * preferred unit.
  *
- * Use this factory function to create a UnitLocalization cluster supporting a specific set of features.  Include each
+ * Use this factory function to create an UnitLocalization cluster supporting a specific set of features.  Include each
  * {@link UnitLocalizationCluster.Feature} you wish to support.
  *
  * @param features a list of {@link UnitLocalizationCluster.Feature} to support
- * @returns a UnitLocalization cluster with specified features enabled
+ * @returns an UnitLocalization cluster with specified features enabled
  * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.5

@@ -69,6 +69,20 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
     }
 }
 
+function withArticle(what: string) {
+    switch (what[0].toLowerCase()) {
+        case 'a':
+        case 'e':
+        case 'i':
+        case 'o':
+        case 'u':
+            return `an ${what}`;
+
+        default:
+            return `a ${what}`;
+    }
+}
+
 function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
     let factoryFunction;
     if (variance.componentized) {
@@ -76,15 +90,15 @@ function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: Clu
             .document(
                 cluster,
                 [
-                    `Use this factory function to create a ${cluster.name} cluster supporting a specific set of features.  Include each {@link ${file.clusterName}.Feature} you wish to support.`,
+                    `Use this factory function to create ${withArticle(cluster.name)} cluster supporting a specific set of features.  Include each {@link ${file.clusterName}.Feature} you wish to support.`,
                     `@param features a list of {@link ${file.clusterName}.Feature} to support`,
-                    `@returns a ${cluster.name} cluster with specified features enabled`,
+                    `@returns ${withArticle(cluster.name)} cluster with specified features enabled`,
                     "@throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification"
                 ].join("\n")
             );
     } else {
         factoryFunction = file.types.statements(`export function ${file.clusterName}() {`, "}")
-            .document(cluster, `This function creates a ${cluster.name} cluster.`);
+            .document(cluster, `This function creates ${withArticle(cluster.name)} cluster.`);
     }
 
     const base = factoryFunction.expressions(`const cluster = Cluster({`, "})");
