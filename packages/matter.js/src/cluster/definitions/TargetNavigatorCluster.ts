@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -25,7 +25,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
  */
 export function TargetNavigatorCluster() {
-    const cluster = { ...TargetNavigatorCluster.Metadata, ...TargetNavigatorCluster.BaseComponent };
+    const cluster = Cluster({ ...TargetNavigatorCluster.Metadata, ...TargetNavigatorCluster.BaseComponent });
     return cluster as unknown as TargetNavigatorCluster.Type;
 };
 
@@ -75,7 +75,7 @@ export const TlvNavigateTargetRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.5.2
  */
-export const enum TlvStatusEnum {
+export const enum StatusEnum {
     /**
      * Command succeeded
      */
@@ -103,7 +103,7 @@ export const TlvNavigateTargetResponseRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2.1
      */
-    status: TlvField(0, TlvEnum<TlvStatusEnum>()),
+    status: TlvField(0, TlvEnum<StatusEnum>()),
 
     /**
      * This SHALL indicate Optional app-specific data.
@@ -116,6 +116,7 @@ export const TlvNavigateTargetResponseRequest = TlvObject({
 export namespace TargetNavigatorCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -146,7 +147,7 @@ export namespace TargetNavigatorCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.2
              */
-            currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View })
+            currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

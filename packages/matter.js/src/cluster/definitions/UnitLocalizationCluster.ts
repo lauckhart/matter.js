@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -31,11 +31,11 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.5
  */
 export function UnitLocalizationCluster<T extends UnitLocalizationCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...UnitLocalizationCluster.Metadata,
         supportedFeatures: BitFlags(UnitLocalizationCluster.Metadata.features, ...features),
         ...UnitLocalizationCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, UnitLocalizationCluster.TemperatureUnitComponent, { temperatureUnit: true });
     return cluster as unknown as UnitLocalizationCluster.Type<BitFlags<typeof UnitLocalizationCluster.Metadata.features, T>>;
 };
@@ -43,7 +43,7 @@ export function UnitLocalizationCluster<T extends UnitLocalizationCluster.Featur
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.5.5.1
  */
-export const enum TlvTempUnitEnum {
+export const enum TempUnitEnum {
     Fahrenheit = 0,
     Celsius = 1,
     Kelvin = 2
@@ -66,6 +66,7 @@ export namespace UnitLocalizationCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { temperatureUnit: true } ? typeof TemperatureUnitComponent : {});
@@ -109,7 +110,7 @@ export namespace UnitLocalizationCluster {
              */
             temperatureUnit: WritableAttribute(
                 0,
-                TlvNullable(TlvEnum<TlvTempUnitEnum>()),
+                TlvNullable(TlvEnum<TempUnitEnum>()),
                 { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         }

@@ -41,7 +41,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Tolerance", id: 0x3, type: "uint16", access: "R V", conformance: "O",
-            constraint: "0 to 2048",
+            constraint: "0 to 2048", default: 0,
             details: "See Measured Value.",
             xref: { document: "cluster", section: "2.3.4.4" }
         }

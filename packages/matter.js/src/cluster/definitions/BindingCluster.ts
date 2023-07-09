@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableFabricScopedAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt64, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
@@ -24,7 +24,7 @@ import { TlvUInt64, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.6
  */
 export function BindingCluster() {
-    const cluster = { ...BindingCluster.Metadata, ...BindingCluster.BaseComponent };
+    const cluster = Cluster({ ...BindingCluster.Metadata, ...BindingCluster.BaseComponent });
     return cluster as unknown as BindingCluster.Type;
 };
 
@@ -68,6 +68,7 @@ export const TlvTargetStruct = TlvObject({
 export namespace BindingCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

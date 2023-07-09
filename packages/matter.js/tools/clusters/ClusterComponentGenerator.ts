@@ -64,7 +64,7 @@ export class ClusterComponentGenerator {
             const factory = factoryParts.join("");
             this.file.addImport("cluster/Cluster", factory);
 
-            const tlvType = this.tlv.reference(model);
+            const tlvType = this.tlv.reference(model, this.cluster);
 
             const block = add(factory);
             block.atom(model.id);
@@ -115,7 +115,7 @@ export class ClusterComponentGenerator {
 
             const block = add(factory);
             block.atom(model.id);
-            block.atom(this.tlv.reference(model));
+            block.atom(this.tlv.reference(model, this.cluster));
 
             // Note - we end up mapping "status" response type to TlvNoResponse.
             // Technically "no response" and "status response" are different things
@@ -127,7 +127,7 @@ export class ClusterComponentGenerator {
             }
             if (responseModel) {
                 block.atom(responseModel.id);
-                block.atom(this.tlv.reference(responseModel));
+                block.atom(this.tlv.reference(responseModel, this.cluster));
             } else {
                 this.file.addImport("cluster/Cluster", "TlvNoResponse");
                 block.atom(model.id);
@@ -150,7 +150,7 @@ export class ClusterComponentGenerator {
             const block = add(factory);
             block.atom(model.id);
             block.atom(`EventPriority.${priority}`);
-            block.atom(this.tlv.reference(model));
+            block.atom(this.tlv.reference(model, this.cluster));
         });
 
         return block;

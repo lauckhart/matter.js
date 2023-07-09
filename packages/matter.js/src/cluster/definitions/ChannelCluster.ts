@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -31,11 +31,11 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6
  */
 export function ChannelCluster<T extends ChannelCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...ChannelCluster.Metadata,
         supportedFeatures: BitFlags(ChannelCluster.Metadata.features, ...features),
         ...ChannelCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, ChannelCluster.ChannelListComponent, { channelList: true });
     extendCluster(cluster, ChannelCluster.LineupInfoComponent, { lineupInfo: true });
     extendCluster(cluster, ChannelCluster.ChannelListOrLineupInfoComponent, { channelList: true }, { lineupInfo: true });
@@ -129,7 +129,7 @@ export const TlvSkipChannelRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.3
  */
-export const enum TlvLineupInfoTypeEnum {
+export const enum LineupInfoTypeEnum {
     /**
      * MultiSystemOperator
      */
@@ -158,7 +158,7 @@ export const TlvLineupInfoStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.2.4
      */
-    lineupInfoType: TlvField(3, TlvEnum<TlvLineupInfoTypeEnum>())
+    lineupInfoType: TlvField(3, TlvEnum<LineupInfoTypeEnum>())
 });
 
 /**
@@ -178,7 +178,7 @@ export const TlvChangeChannelRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.4
  */
-export const enum TlvStatusEnum {
+export const enum StatusEnum {
     /**
      * Command succeeded
      */
@@ -207,7 +207,7 @@ export const TlvChangeChannelResponseRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.2.1
      */
-    status: TlvField(0, TlvEnum<TlvStatusEnum>()),
+    status: TlvField(0, TlvEnum<StatusEnum>()),
 
     /**
      * This SHALL indicate Optional app-specific data.
@@ -241,6 +241,7 @@ export namespace ChannelCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { channelList: true } ? typeof ChannelListComponent : {})

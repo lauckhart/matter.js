@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -18,13 +18,14 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.6
  */
 export function SoilMoistureMeasurementCluster() {
-    const cluster = { ...SoilMoistureMeasurementCluster.Metadata, ...SoilMoistureMeasurementCluster.BaseComponent };
+    const cluster = Cluster({ ...SoilMoistureMeasurementCluster.Metadata, ...SoilMoistureMeasurementCluster.BaseComponent });
     return cluster as unknown as SoilMoistureMeasurementCluster.Type;
 };
 
 export namespace SoilMoistureMeasurementCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

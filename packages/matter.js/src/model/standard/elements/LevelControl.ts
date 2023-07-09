@@ -26,11 +26,11 @@ Matter.children.push({
                     details: "Dependency with the On/Off cluster"
                 },
                 {
-                    tag: "datatype", name: "LT", id: 0x1, description: "Lighting",
+                    tag: "datatype", name: "LT", id: 0x1, default: 0, description: "Lighting",
                     details: "Behavior that supports lighting applications"
                 },
                 {
-                    tag: "datatype", name: "FQ", id: 0x2, description: "Frequency",
+                    tag: "datatype", name: "FQ", id: 0x2, default: 0, description: "Frequency",
                     details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
                              "frequency control."
                 }
@@ -39,7 +39,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
-            constraint: "MinLevel to MaxLevel", quality: "X N S",
+            constraint: "MinLevel to MaxLevel", default: 0, quality: "X N S",
             details: "The CurrentLevel attribute represents the current level of this device. The meaning of 'level' is " +
                      "device dependent.",
             xref: { document: "cluster", section: "1.6.5.1" }
@@ -47,6 +47,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RemainingTime", id: 0x1, type: "uint16", access: "R V", conformance: "LT",
+            default: 0,
             details: "The RemainingTime attribute represents the time remaining until the current command is complete - " +
                      "it is specified in 1/10ths of a second.",
             xref: { document: "cluster", section: "1.6.5.2" }
@@ -54,6 +55,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinLevel", id: 0x2, type: "uint8", access: "R V", conformance: "O",
+            default: 0,
             details: "The MinLevel attribute indicates the minimum value of CurrentLevel that is capable of being " +
                      "assigned.",
             xref: { document: "cluster", section: "1.6.5.3" }
@@ -61,7 +63,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxLevel", id: 0x3, type: "uint8", access: "R V", conformance: "O",
-            constraint: "MinLevel to 254",
+            constraint: "MinLevel to 254", default: 0,
             details: "The MaxLevel attribute indicates the maximum value of CurrentLevel that is capable of being " +
                      "assigned.",
             xref: { document: "cluster", section: "1.6.5.4" }
@@ -69,7 +71,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentFrequency", id: 0x4, type: "uint16", access: "R V",
-            conformance: "FQ", constraint: "MinFrequency to MaxFrequency", quality: "S P",
+            conformance: "FQ", constraint: "MinFrequency to MaxFrequency", default: 0, quality: "S P",
             details: "The CurrentFrequency attribute represents the frequency at which the device is at CurrentLevel. A " +
                      "CurrentFrequency of 0 is unknown.",
             xref: { document: "cluster", section: "1.6.5.5" }
@@ -77,7 +79,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinFrequency", id: 0x5, type: "uint16", access: "R V", conformance: "FQ",
-            constraint: "0 to MaxFrequency",
+            constraint: "0 to MaxFrequency", default: 0,
             details: "The MinFrequency attribute indicates the minimum value of CurrentFrequency that is capable of being " +
                      "assigned. MinFrequency SHALL be less than or equal to MaxFrequency. A value of 0 indicates " +
                      "undefined.",
@@ -86,7 +88,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxFrequency", id: 0x6, type: "uint16", access: "R V", conformance: "FQ",
-            constraint: "min MinFrequency",
+            constraint: "min MinFrequency", default: 0,
             details: "The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being " +
                      "assigned. MaxFrequency SHALL be greater than or equal to MinFrequency. A value of 0 indicates " +
                      "undefined.",
@@ -95,7 +97,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OnOffTransitionTime", id: 0x10, type: "uint16", access: "RW VO",
-            conformance: "O",
+            conformance: "O", default: 0,
             details: "The OnOffTransitionTime attribute represents the time taken to move to or from the target level " +
                      "when On or Off commands are received by an On/Off cluster on the same endpoint. It is specified in " +
                      "1/10ths of a second.",
@@ -142,7 +144,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Options", id: 0xf, type: "map8", access: "RW VO", conformance: "M",
-            constraint: "desc",
+            constraint: "desc", default: 0,
             details: "The Options attribute is meant to be changed only during commissioning. The Options attribute is a " +
                      "bitmap that determines the default behavior of some cluster commands. Each command that is " +
                      "dependent on the Options attribute SHALL first construct a temporary Options bitmap that is in " +
@@ -173,8 +175,14 @@ Matter.children.push({
             children: [
                 { tag: "datatype", name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" },
                 { tag: "datatype", name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
+                {
+                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
+                    default: 0
+                },
+                {
+                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                    constraint: "desc", default: 0
+                }
             ]
         },
 
@@ -204,8 +212,14 @@ Matter.children.push({
                     xref: { document: "cluster", section: "1.6.6.2.2" }
                 },
 
-                { tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc" },
-                { tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M", constraint: "desc" }
+                {
+                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
+                    default: 0
+                },
+                {
+                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                    constraint: "desc", default: 0
+                }
             ]
         },
 
@@ -219,8 +233,14 @@ Matter.children.push({
                 { tag: "datatype", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc" },
-                { tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M", constraint: "desc" }
+                {
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
+                    default: 0
+                },
+                {
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    constraint: "desc", default: 0
+                }
             ]
         },
 
@@ -229,9 +249,16 @@ Matter.children.push({
             response: "status",
             details: "The Stop command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.6.6.4" },
+
             children: [
-                { tag: "datatype", name: "OptionsMask", id: 0x0, type: "map8", conformance: "M", constraint: "desc" },
-                { tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M", constraint: "desc" }
+                {
+                    tag: "datatype", name: "OptionsMask", id: 0x0, type: "map8", conformance: "M", constraint: "desc",
+                    default: 0
+                },
+                {
+                    tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M",
+                    constraint: "desc", default: 0
+                }
             ]
         },
 
@@ -290,7 +317,7 @@ Matter.children.push({
             direction: "request", response: "status",
             details: "The MoveToClosestFrequency command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.6.6.5" },
-            children: [ { tag: "datatype", name: "Frequency", id: 0x0, type: "uint16", conformance: "M" } ]
+            children: [ { tag: "datatype", name: "Frequency", id: 0x0, type: "uint16", conformance: "M", default: 0 } ]
         },
 
         {

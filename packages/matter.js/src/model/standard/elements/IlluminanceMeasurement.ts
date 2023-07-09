@@ -18,7 +18,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
-            constraint: "0, MinMeasuredValue to MaxMeasuredValue", quality: "X P",
+            constraint: "0, MinMeasuredValue to MaxMeasuredValue", default: 0, quality: "X P",
             details: "The MeasuredValue attribute represents the illuminance in Lux (symbol lx) as follows:",
             xref: { document: "cluster", section: "2.2.5.1" }
         },

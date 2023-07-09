@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -22,7 +22,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2
  */
 export function IlluminanceMeasurementCluster() {
-    const cluster = { ...IlluminanceMeasurementCluster.Metadata, ...IlluminanceMeasurementCluster.BaseComponent };
+    const cluster = Cluster({ ...IlluminanceMeasurementCluster.Metadata, ...IlluminanceMeasurementCluster.BaseComponent });
     return cluster as unknown as IlluminanceMeasurementCluster.Type;
 };
 
@@ -32,7 +32,7 @@ export function IlluminanceMeasurementCluster() {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.5
  */
-export const enum TlvLightSensorType {
+export const enum LightSensorType {
     Photodiode = 0,
     Cmos = 1
 };
@@ -40,6 +40,7 @@ export const enum TlvLightSensorType {
 export namespace IlluminanceMeasurementCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -59,7 +60,7 @@ export namespace IlluminanceMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.1
              */
-            measuredValue: Attribute(0, TlvNullable(TlvUInt16), { readAcl: AccessLevel.View }),
+            measuredValue: Attribute(0, TlvNullable(TlvUInt16), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. A
@@ -92,7 +93,7 @@ export namespace IlluminanceMeasurementCluster {
              */
             lightSensorType: OptionalAttribute(
                 4,
-                TlvNullable(TlvEnum<TlvLightSensorType>()),
+                TlvNullable(TlvEnum<LightSensorType>()),
                 { default: 255, readAcl: AccessLevel.View }
             )
         }

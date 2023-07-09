@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalWritableAttribute, WritableAttribute, FixedAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalWritableAttribute, WritableAttribute, FixedAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvBitmap, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -33,11 +33,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2
  */
 export function DoorLockCluster<T extends DoorLockCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...DoorLockCluster.Metadata,
         supportedFeatures: BitFlags(DoorLockCluster.Metadata.features, ...features),
         ...DoorLockCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, DoorLockCluster.DoorPositionSensorComponent, { doorPositionSensor: true });
     extendCluster(cluster, DoorLockCluster.LoggingComponent, { logging: true });
     extendCluster(cluster, DoorLockCluster.UserComponent, { user: true });
@@ -83,7 +83,7 @@ export function DoorLockCluster<T extends DoorLockCluster.Feature[]>(...features
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.1
  */
-export const enum TlvLockState {
+export const enum LockState {
     /**
      * Lock state is not fully locked
      */
@@ -105,7 +105,7 @@ export const enum TlvLockState {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.2
  */
-export const enum TlvLockType {
+export const enum LockType {
     /**
      * Physical lock type is dead bolt
      */
@@ -256,7 +256,7 @@ export const TlvUnlockWithTimeoutRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.1
  */
-export const enum TlvAlarmCodeEnum {
+export const enum AlarmCodeEnum {
     /**
      * Locking Mechanism Jammed
      */
@@ -310,7 +310,7 @@ export const TlvDoorLockAlarmEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.1.1
      */
-    alarmCode: TlvField(0, TlvEnum<TlvAlarmCodeEnum>())
+    alarmCode: TlvField(0, TlvEnum<AlarmCodeEnum>())
 });
 
 /**
@@ -318,7 +318,7 @@ export const TlvDoorLockAlarmEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.10
  */
-export const enum TlvLockOperationTypeEnum {
+export const enum LockOperationTypeEnum {
     Lock = 0,
     Unlock = 1,
     NonAccessUserEvent = 2,
@@ -330,7 +330,7 @@ export const enum TlvLockOperationTypeEnum {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.13
  */
-export const enum TlvOperationSourceEnum {
+export const enum OperationSourceEnum {
     Unspecified = 0,
     Manual = 1,
     ProprietaryRemote = 2,
@@ -348,7 +348,7 @@ export const enum TlvOperationSourceEnum {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.4
  */
-export const enum TlvCredentialTypeEnum {
+export const enum CredentialTypeEnum {
     ProgrammingPin = 0,
     Pin = 1,
     Rfid = 2,
@@ -369,7 +369,7 @@ export const TlvCredentialStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.3.1
      */
-    credentialType: TlvField(0, TlvEnum<TlvCredentialTypeEnum>()),
+    credentialType: TlvField(0, TlvEnum<CredentialTypeEnum>()),
 
     /**
      * This is the index of the specific credential used to authorize the lock operation in the list of credentials
@@ -393,14 +393,14 @@ export const TlvLockOperationEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.3.1
      */
-    lockOperationType: TlvField(0, TlvEnum<TlvLockOperationTypeEnum>()),
+    lockOperationType: TlvField(0, TlvEnum<LockOperationTypeEnum>()),
 
     /**
      * The source of the lock operation that was performed.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.3.2
      */
-    operationSource: TlvField(1, TlvEnum<TlvOperationSourceEnum>()),
+    operationSource: TlvField(1, TlvEnum<OperationSourceEnum>()),
 
     /**
      * The lock UserIndex who performed the lock operation. This SHALL be null if there is no user index that can be
@@ -441,7 +441,7 @@ export const TlvLockOperationEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.11
  */
-export const enum TlvOperationErrorEnum {
+export const enum OperationErrorEnum {
     Unspecified = 0,
     InvalidCredential = 1,
     DisabledUserDenied = 2,
@@ -460,21 +460,21 @@ export const TlvLockOperationErrorEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.4.1
      */
-    lockOperationType: TlvField(0, TlvEnum<TlvLockOperationTypeEnum>()),
+    lockOperationType: TlvField(0, TlvEnum<LockOperationTypeEnum>()),
 
     /**
      * The source of the lock operation that was performed.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.4.2
      */
-    operationSource: TlvField(1, TlvEnum<TlvOperationSourceEnum>()),
+    operationSource: TlvField(1, TlvEnum<OperationSourceEnum>()),
 
     /**
      * The lock operation error triggered when the operation was performed.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.4.3
      */
-    operationError: TlvField(2, TlvEnum<TlvOperationErrorEnum>()),
+    operationError: TlvField(2, TlvEnum<OperationErrorEnum>()),
 
     /**
      * The lock UserIndex who performed the lock operation. This SHALL be null if there is no user id that can be
@@ -514,7 +514,7 @@ export const TlvLockOperationErrorEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.7
  */
-export const enum TlvDoorStateEnum {
+export const enum DoorStateEnum {
     /**
      * Door state is open
      */
@@ -558,7 +558,7 @@ export const TlvDoorStateChangeEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.2.1
      */
-    doorState: TlvField(0, TlvEnum<TlvDoorStateEnum>())
+    doorState: TlvField(0, TlvEnum<DoorStateEnum>())
 });
 
 /**
@@ -575,7 +575,7 @@ export const TlvCredentialRulesSupport = TlvBitmap(TlvUInt8, TlvCredentialRulesS
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.5
  */
-export const enum TlvDataOperationTypeEnum {
+export const enum DataOperationTypeEnum {
     /**
      * Data is being added or was added
      */
@@ -597,7 +597,7 @@ export const enum TlvDataOperationTypeEnum {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.15
  */
-export const enum TlvUserStatusEnum {
+export const enum UserStatusEnum {
     Available = 0,
     OccupiedEnabled = 1,
     OccupiedDisabled = 3
@@ -608,7 +608,7 @@ export const enum TlvUserStatusEnum {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.16
  */
-export const enum TlvUserTypeEnum {
+export const enum UserTypeEnum {
     /**
      * User has access 24/7 provided proper PIN or RFID is supplied (e.g., owner).
      *
@@ -698,7 +698,7 @@ export const enum TlvUserTypeEnum {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.2
  */
-export const enum TlvCredentialRuleEnum {
+export const enum CredentialRuleEnum {
     Single = 0,
     Dual = 1,
     Tri = 2
@@ -708,13 +708,13 @@ export const enum TlvCredentialRuleEnum {
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvSetUserRequest = TlvObject({
-    operationType: TlvField(0, TlvEnum<TlvDataOperationTypeEnum>()),
+    operationType: TlvField(0, TlvEnum<DataOperationTypeEnum>()),
     userIndex: TlvField(1, TlvUInt16),
     userName: TlvField(2, TlvNullable(TlvString)),
     userUniqueId: TlvField(3, TlvNullable(TlvUInt32)),
-    userStatus: TlvField(4, TlvNullable(TlvEnum<TlvUserStatusEnum>())),
-    userType: TlvField(5, TlvNullable(TlvEnum<TlvUserTypeEnum>())),
-    credentialRule: TlvField(6, TlvNullable(TlvEnum<TlvCredentialRuleEnum>()))
+    userStatus: TlvField(4, TlvNullable(TlvEnum<UserStatusEnum>())),
+    userType: TlvField(5, TlvNullable(TlvEnum<UserTypeEnum>())),
+    credentialRule: TlvField(6, TlvNullable(TlvEnum<CredentialRuleEnum>()))
 });
 
 /**
@@ -729,9 +729,9 @@ export const TlvGetUserResponseRequest = TlvObject({
     userIndex: TlvField(0, TlvUInt16),
     userName: TlvField(1, TlvNullable(TlvString)),
     userUniqueId: TlvField(2, TlvNullable(TlvUInt32)),
-    userStatus: TlvField(3, TlvNullable(TlvEnum<TlvUserStatusEnum>())),
-    userType: TlvField(4, TlvNullable(TlvEnum<TlvUserTypeEnum>())),
-    credentialRule: TlvField(5, TlvNullable(TlvEnum<TlvCredentialRuleEnum>())),
+    userStatus: TlvField(3, TlvNullable(TlvEnum<UserStatusEnum>())),
+    userType: TlvField(4, TlvNullable(TlvEnum<UserTypeEnum>())),
+    credentialRule: TlvField(5, TlvNullable(TlvEnum<CredentialRuleEnum>())),
     credentials: TlvField(6, TlvNullable(TlvCredentialStruct)),
     creatorFabricIndex: TlvField(7, TlvNullable(TlvUInt8)),
     lastModifiedFabricIndex: TlvField(8, TlvNullable(TlvUInt8)),
@@ -747,15 +747,15 @@ export const TlvClearUserRequest = TlvObject({ userIndex: TlvField(0, TlvUInt16)
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvSetCredentialRequest = TlvObject({
-    operationType: TlvField(0, TlvEnum<TlvDataOperationTypeEnum>()),
+    operationType: TlvField(0, TlvEnum<DataOperationTypeEnum>()),
     credential: TlvField(1, TlvCredentialStruct),
     credentialData: TlvField(2, TlvByteString),
     userIndex: TlvField(3, TlvNullable(TlvUInt16)),
-    userStatus: TlvField(4, TlvNullable(TlvEnum<TlvUserStatusEnum>())),
-    userType: TlvField(5, TlvNullable(TlvEnum<TlvUserTypeEnum>()))
+    userStatus: TlvField(4, TlvNullable(TlvEnum<UserStatusEnum>())),
+    userType: TlvField(5, TlvNullable(TlvEnum<UserTypeEnum>()))
 });
 
-export const enum TlvDlStatus {
+export const enum DlStatus {
     Success = 0,
     Failure = 1,
     Duplicate = 2,
@@ -769,7 +769,7 @@ export const enum TlvDlStatus {
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvSetCredentialResponseRequest = TlvObject({
-    status: TlvField(0, TlvEnum<TlvDlStatus>()),
+    status: TlvField(0, TlvEnum<DlStatus>()),
     userIndex: TlvField(1, TlvNullable(TlvUInt16)),
     nextCredentialIndex: TlvField(2, TlvNullable(TlvUInt16))
 });
@@ -800,7 +800,7 @@ export const TlvClearCredentialRequest = TlvObject({ credential: TlvField(0, Tlv
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.9
  */
-export const enum TlvLockDataTypeEnum {
+export const enum LockDataTypeEnum {
     /**
      * Unspecified or manufacturer specific lock user data added, cleared, or modified.
      */
@@ -868,21 +868,21 @@ export const TlvLockUserChangeEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.5.1
      */
-    lockDataType: TlvField(0, TlvEnum<TlvLockDataTypeEnum>()),
+    lockDataType: TlvField(0, TlvEnum<LockDataTypeEnum>()),
 
     /**
      * The data operation performed on the lock data type changed.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.5.2
      */
-    dataOperationType: TlvField(1, TlvEnum<TlvDataOperationTypeEnum>()),
+    dataOperationType: TlvField(1, TlvEnum<DataOperationTypeEnum>()),
 
     /**
      * The source of the user data change.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.5.3
      */
-    operationSource: TlvField(2, TlvEnum<TlvOperationSourceEnum>()),
+    operationSource: TlvField(2, TlvEnum<OperationSourceEnum>()),
 
     /**
      * The lock UserIndex associated with the change (if any). This SHALL be null if there is no specific user
@@ -964,7 +964,7 @@ export const TlvGetWeekDayScheduleRequest = TlvObject({
 export const TlvGetWeekDayScheduleResponseRequest = TlvObject({
     weekDayIndex: TlvField(0, TlvUInt8),
     userIndex: TlvField(1, TlvUInt16),
-    status: TlvField(2, TlvEnum<TlvDlStatus>()),
+    status: TlvField(2, TlvEnum<DlStatus>()),
     daysMask: TlvOptionalField(3, TlvDaysMaskMap),
     startHour: TlvOptionalField(4, TlvUInt8),
     startMinute: TlvOptionalField(5, TlvUInt8),
@@ -1004,7 +1004,7 @@ export const TlvGetYearDayScheduleRequest = TlvObject({
 export const TlvGetYearDayScheduleResponseRequest = TlvObject({
     yearDayIndex: TlvField(0, TlvUInt8),
     userIndex: TlvField(1, TlvUInt16),
-    status: TlvField(2, TlvEnum<TlvDlStatus>()),
+    status: TlvField(2, TlvEnum<DlStatus>()),
     localStartTime: TlvOptionalField(3, TlvUInt32),
     localEndTime: TlvOptionalField(4, TlvUInt32)
 });
@@ -1022,7 +1022,7 @@ export const TlvClearYearDayScheduleRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12
  */
-export const enum TlvOperatingModeEnum {
+export const enum OperatingModeEnum {
     /**
      * The lock operates normally. All interfaces are enabled.
      *
@@ -1070,7 +1070,7 @@ export const TlvSetHolidayScheduleRequest = TlvObject({
     holidayIndex: TlvField(0, TlvUInt8),
     localStartTime: TlvField(1, TlvUInt32),
     localEndTime: TlvField(2, TlvUInt32),
-    operatingMode: TlvField(3, TlvEnum<TlvOperatingModeEnum>())
+    operatingMode: TlvField(3, TlvEnum<OperatingModeEnum>())
 });
 
 /**
@@ -1083,10 +1083,10 @@ export const TlvGetHolidayScheduleRequest = TlvObject({ holidayIndex: TlvField(0
  */
 export const TlvGetHolidayScheduleResponseRequest = TlvObject({
     holidayIndex: TlvField(0, TlvUInt8),
-    status: TlvField(1, TlvEnum<TlvDlStatus>()),
+    status: TlvField(1, TlvEnum<DlStatus>()),
     localStartTime: TlvOptionalField(2, TlvUInt32),
     localEndTime: TlvOptionalField(3, TlvUInt32),
-    operatingMode: TlvOptionalField(4, TlvEnum<TlvOperatingModeEnum>())
+    operatingMode: TlvOptionalField(4, TlvEnum<OperatingModeEnum>())
 });
 
 /**
@@ -1298,6 +1298,7 @@ export namespace DoorLockCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { doorPositionSensor: true } ? typeof DoorPositionSensorComponent : {})
@@ -1426,14 +1427,14 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.1
              */
-            lockState: Attribute(0, TlvNullable(TlvEnum<TlvLockState>()), { scene: true, readAcl: AccessLevel.View }),
+            lockState: Attribute(0, TlvNullable(TlvEnum<LockState>()), { scene: true, readAcl: AccessLevel.View }),
 
             /**
              * The LockType attribute is indicated by an enumeration:
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.2
              */
-            lockType: Attribute(1, TlvEnum<TlvLockType>(), { readAcl: AccessLevel.View }),
+            lockType: Attribute(1, TlvEnum<LockType>(), { readAcl: AccessLevel.View }),
 
             /**
              * The ActuatorEnabled attribute indicates if the lock is currently able to (Enabled) or not able to
@@ -1463,7 +1464,7 @@ export namespace DoorLockCluster {
             ledSettings: OptionalWritableAttribute(
                 34,
                 TlvUInt8,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -1488,7 +1489,7 @@ export namespace DoorLockCluster {
             soundVolume: OptionalWritableAttribute(
                 36,
                 TlvUInt8,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -1496,7 +1497,11 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.23
              */
-            operatingMode: WritableAttribute(37, TlvUInt8, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }),
+            operatingMode: WritableAttribute(
+                37,
+                TlvUInt8,
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+            ),
 
             /**
              * This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All
@@ -1718,7 +1723,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.8
              */
-            numberOfLogRecordsSupported: FixedAttribute(16, TlvUInt16, { readAcl: AccessLevel.View }),
+            numberOfLogRecordsSupported: FixedAttribute(16, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * Enable/disable event logging. When event logging is enabled, all event messages are stored on the lock
@@ -1758,7 +1763,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.9
              */
-            numberOfTotalUsersSupported: FixedAttribute(17, TlvUInt16, { readAcl: AccessLevel.View }),
+            numberOfTotalUsersSupported: FixedAttribute(17, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.
@@ -1776,7 +1781,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.20
              */
-            numberOfCredentialsSupportedPerUser: FixedAttribute(28, TlvUInt8, { readAcl: AccessLevel.View }),
+            numberOfCredentialsSupportedPerUser: FixedAttribute(28, TlvUInt8, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * Number of minutes a PIN, RFID, Fingerprint, or other credential associated with a user of type
@@ -1860,7 +1865,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.10
              */
-            numberOfPinUsersSupported: FixedAttribute(18, TlvUInt16, { readAcl: AccessLevel.View }),
+            numberOfPinUsersSupported: FixedAttribute(18, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * An 8 bit value indicates the maximum length in bytes of a PIN Code on this device.
@@ -1901,7 +1906,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.11
              */
-            numberOfRfidUsersSupported: FixedAttribute(19, TlvUInt16, { readAcl: AccessLevel.View }),
+            numberOfRfidUsersSupported: FixedAttribute(19, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * An 8 bit value indicates the maximum length in bytes of a RFID Code on this device. The value depends on
@@ -1933,7 +1938,11 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.12
              */
-            numberOfWeekDaySchedulesSupportedPerUser: FixedAttribute(20, TlvUInt8, { readAcl: AccessLevel.View })
+            numberOfWeekDaySchedulesSupportedPerUser: FixedAttribute(
+                20,
+                TlvUInt8,
+                { default: 0, readAcl: AccessLevel.View }
+            )
         },
 
         commands: {
@@ -1969,7 +1978,11 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.13
              */
-            numberOfYearDaySchedulesSupportedPerUser: FixedAttribute(21, TlvUInt8, { readAcl: AccessLevel.View })
+            numberOfYearDaySchedulesSupportedPerUser: FixedAttribute(
+                21,
+                TlvUInt8,
+                { default: 0, readAcl: AccessLevel.View }
+            )
         },
 
         commands: {
@@ -2005,7 +2018,7 @@ export namespace DoorLockCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.14
              */
-            numberOfHolidaySchedulesSupported: FixedAttribute(22, TlvUInt8, { readAcl: AccessLevel.View })
+            numberOfHolidaySchedulesSupported: FixedAttribute(22, TlvUInt8, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

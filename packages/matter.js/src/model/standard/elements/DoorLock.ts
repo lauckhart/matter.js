@@ -176,49 +176,49 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "NumberOfLogRecordsSupported", id: 0x10, type: "uint16", access: "R V",
-            conformance: "LOG", quality: "F",
+            conformance: "LOG", default: 0, quality: "F",
             details: "The number of available log records.",
             xref: { document: "cluster", section: "5.2.3.8" }
         },
 
         {
             tag: "attribute", name: "NumberOfTotalUsersSupported", id: 0x11, type: "uint16", access: "R V",
-            conformance: "USR", quality: "F",
+            conformance: "USR", default: 0, quality: "F",
             details: "Number of total users supported by the lock.",
             xref: { document: "cluster", section: "5.2.3.9" }
         },
 
         {
             tag: "attribute", name: "NumberOfPinUsersSupported", id: 0x12, type: "uint16", access: "R V",
-            conformance: "PIN", quality: "F",
+            conformance: "PIN", default: 0, quality: "F",
             details: "The number of PIN users supported.",
             xref: { document: "cluster", section: "5.2.3.10" }
         },
 
         {
             tag: "attribute", name: "NumberOfRfidUsersSupported", id: 0x13, type: "uint16", access: "R V",
-            conformance: "RID", quality: "F",
+            conformance: "RID", default: 0, quality: "F",
             details: "The number of RFID users supported.",
             xref: { document: "cluster", section: "5.2.3.11" }
         },
 
         {
             tag: "attribute", name: "NumberOfWeekDaySchedulesSupportedPerUser", id: 0x14, type: "uint8",
-            access: "R V", conformance: "WDSCH", quality: "F",
+            access: "R V", conformance: "WDSCH", default: 0, quality: "F",
             details: "The number of configurable week day schedule supported per user.",
             xref: { document: "cluster", section: "5.2.3.12" }
         },
 
         {
             tag: "attribute", name: "NumberOfYearDaySchedulesSupportedPerUser", id: 0x15, type: "uint8",
-            access: "R V", conformance: "YDSCH", quality: "F",
+            access: "R V", conformance: "YDSCH", default: 0, quality: "F",
             details: "The number of configurable year day schedule supported per user.",
             xref: { document: "cluster", section: "5.2.3.13" }
         },
 
         {
             tag: "attribute", name: "NumberOfHolidaySchedulesSupported", id: 0x16, type: "uint8", access: "R V",
-            conformance: "HDSCH", quality: "F",
+            conformance: "HDSCH", default: 0, quality: "F",
             details: "The number of holiday schedules supported for the entire door lock device.",
             xref: { document: "cluster", section: "5.2.3.14" }
         },
@@ -269,7 +269,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "NumberOfCredentialsSupportedPerUser", id: 0x1c, type: "uint8",
-            access: "R V", conformance: "USR", quality: "F",
+            access: "R V", conformance: "USR", default: 0, quality: "F",
             details: "The number of credentials that could be assigned for each user.",
             xref: { document: "cluster", section: "5.2.3.20" }
         },
@@ -295,7 +295,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LedSettings", id: 0x22, type: "uint8", access: "R[W] VM", conformance: "O",
-            constraint: "desc", quality: "P",
+            constraint: "desc", default: 0, quality: "P",
             details: "The settings for the LED support three different modes, shown below:",
             xref: { document: "cluster", section: "5.2.3.25" }
         },
@@ -311,7 +311,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SoundVolume", id: 0x24, type: "uint8", access: "R[W] VM", conformance: "O",
-            constraint: "desc", quality: "P",
+            constraint: "desc", default: 0, quality: "P",
             details: "The sound volume on a door lock has four possible settings: silent, low, high and medium volumes, " +
                      "shown below:",
             xref: { document: "cluster", section: "5.2.3.27" }
@@ -319,7 +319,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OperatingMode", id: 0x25, type: "enum8", access: "R[W] VM",
-            conformance: "M", constraint: "desc", quality: "P",
+            conformance: "M", constraint: "desc", default: 0, quality: "P",
             details: "The current operating mode of the lock (see OperatingModeEnum).",
             xref: { document: "cluster", section: "5.2.3.23" }
         },
@@ -343,7 +343,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "DefaultConfigurationRegister", id: 0x27, type: "map16", access: "R V",
-            conformance: "O", quality: "P",
+            conformance: "O", default: 0, quality: "P",
             details: "This attribute represents the default configurations as they are physically set on the device " +
                      "(example: hardware dip switch setting, etc…) and represents the default setting for some of the " +
                      "attributes within this cluster (for example: LED, Auto Lock, Sound Volume, and Operating Mode " +
@@ -395,7 +395,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LocalProgrammingFeatures", id: 0x2c, type: "map8", access: "R[W] VA",
-            conformance: "O", quality: "P",
+            conformance: "O", default: 0, quality: "P",
             details: "The local programming features that will be disabled when EnableLocalProgramming attribute is set " +
                      "to False. If a door lock doesn’t support disabling one aspect of local programming it SHALL return " +
                      "CONSTRAINT_ERROR during a write operation of this attribute. If the EnableLocalProgramming " +
@@ -1252,7 +1252,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "CredentialIndex", id: 0x1, type: "uint16", conformance: "M",
+                    tag: "datatype", name: "CredentialIndex", id: 0x1, type: "uint16", conformance: "M", default: 0,
                     details: "This is the index of the specific credential used to authorize the lock operation in the list of " +
                              "credentials identified by CredentialType (e.g. schedule, PIN, RFID, etc.). This SHALL be set to 0 " +
                              "if CredentialType is ProgrammingPIN or does not correspond to a list that can be indexed into.",

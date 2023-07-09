@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, Attribute, OptionalCommand, TlvNoResponse, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableFabricScopedAttribute, AccessLevel, Attribute, OptionalCommand, TlvNoResponse, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt64, TlvUInt16, TlvEnum, TlvUInt8, TlvUInt32, TlvInt64 } from "../../tlv/TlvNumber.js";
@@ -26,7 +26,10 @@ import { TlvByteString } from "../../tlv/TlvString.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7
  */
 export function OtaSoftwareUpdateRequestorCluster() {
-    const cluster = { ...OtaSoftwareUpdateRequestorCluster.Metadata, ...OtaSoftwareUpdateRequestorCluster.BaseComponent };
+    const cluster = Cluster({
+        ...OtaSoftwareUpdateRequestorCluster.Metadata,
+        ...OtaSoftwareUpdateRequestorCluster.BaseComponent
+    });
     return cluster as unknown as OtaSoftwareUpdateRequestorCluster.Type;
 };
 
@@ -43,7 +46,7 @@ export const TlvProviderLocationStruct = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.5
  */
-export const enum TlvUpdateStateEnum {
+export const enum UpdateStateEnum {
     Unknown = 0,
     Idle = 1,
     Querying = 2,
@@ -58,7 +61,7 @@ export const enum TlvUpdateStateEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.1
  */
-export const enum TlvAnnouncementReasonEnum {
+export const enum AnnouncementReasonEnum {
     SimpleAnnouncement = 0,
     UpdateAvailable = 1,
     UrgentUpdateAvailable = 2
@@ -72,7 +75,7 @@ export const enum TlvAnnouncementReasonEnum {
 export const TlvAnnounceOtaProviderRequest = TlvObject({
     providerNodeId: TlvField(0, TlvUInt64),
     vendorId: TlvField(1, TlvUInt16),
-    announcementReason: TlvField(2, TlvEnum<TlvAnnouncementReasonEnum>()),
+    announcementReason: TlvField(2, TlvEnum<AnnouncementReasonEnum>()),
     metadataForNode: TlvOptionalField(3, TlvByteString.bound({ maxLength: 512 })),
     endpoint: TlvField(4, TlvUInt16)
 });
@@ -80,7 +83,7 @@ export const TlvAnnounceOtaProviderRequest = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.15
  */
-export const enum TlvChangeReasonEnum {
+export const enum ChangeReasonEnum {
     Unknown = 0,
     Success = 1,
     Failure = 2,
@@ -95,9 +98,9 @@ export const enum TlvChangeReasonEnum {
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.1
  */
 export const TlvStateTransitionEvent = TlvObject({
-    previousState: TlvField(0, TlvEnum<TlvUpdateStateEnum>()),
-    newState: TlvField(1, TlvEnum<TlvUpdateStateEnum>()),
-    reason: TlvField(2, TlvEnum<TlvChangeReasonEnum>()),
+    previousState: TlvField(0, TlvEnum<UpdateStateEnum>()),
+    newState: TlvField(1, TlvEnum<UpdateStateEnum>()),
+    reason: TlvField(2, TlvEnum<ChangeReasonEnum>()),
     targetSoftwareVersion: TlvField(3, TlvNullable(TlvUInt32))
 });
 
@@ -127,6 +130,7 @@ export const TlvDownloadErrorEvent = TlvObject({
 export namespace OtaSoftwareUpdateRequestorCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -170,7 +174,7 @@ export namespace OtaSoftwareUpdateRequestorCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.3
              */
-            updateState: Attribute(2, TlvEnum<TlvUpdateStateEnum>(), { readAcl: AccessLevel.View }),
+            updateState: Attribute(2, TlvEnum<UpdateStateEnum>(), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This field SHALL reflect the percentage value of progress, relative to the current UpdateState, if

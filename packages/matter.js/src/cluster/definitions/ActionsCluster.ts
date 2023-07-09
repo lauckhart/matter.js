@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, OptionalCommand, TlvNoResponse, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, OptionalCommand, TlvNoResponse, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum, TlvBitmap, TlvUInt32 } from "../../tlv/TlvNumber.js";
@@ -26,14 +26,14 @@ import { BitFlag } from "../../schema/BitmapSchema.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.14
  */
 export function ActionsCluster() {
-    const cluster = { ...ActionsCluster.Metadata, ...ActionsCluster.BaseComponent };
+    const cluster = Cluster({ ...ActionsCluster.Metadata, ...ActionsCluster.BaseComponent });
     return cluster as unknown as ActionsCluster.Type;
 };
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2
  */
-export const enum TlvActionTypeEnum {
+export const enum ActionTypeEnum {
     Other = 0,
 
     /**
@@ -150,7 +150,7 @@ export const TlvCommandBits = TlvBitmap(TlvUInt16, TlvCommandBitsBits);
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.3
  */
-export const enum TlvActionStateEnum {
+export const enum ActionStateEnum {
     Inactive = 0,
     Active = 1,
     Paused = 2,
@@ -185,7 +185,7 @@ export const TlvActionStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.3
      */
-    type: TlvField(2, TlvEnum<TlvActionTypeEnum>()),
+    type: TlvField(2, TlvEnum<ActionTypeEnum>()),
 
     /**
      * This field SHALL provide a reference to the associated endpoint list, which specifies the endpoints on this Node
@@ -207,13 +207,13 @@ export const TlvActionStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.6
      */
-    state: TlvField(5, TlvEnum<TlvActionStateEnum>())
+    state: TlvField(5, TlvEnum<ActionStateEnum>())
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.5
  */
-export const enum TlvEndpointListTypeEnum {
+export const enum EndpointListTypeEnum {
     /**
      * This value is provided for the case of an endpoint list which is tied specifically to this action i.e. not
      * independently created by the user. For Type=Other the Name MAY be empty. A Matter controller would typically not
@@ -251,7 +251,7 @@ export const enum TlvEndpointListTypeEnum {
 export const TlvEndpointListStruct = TlvObject({
     endpointListId: TlvField(0, TlvUInt16),
     name: TlvField(1, TlvString.bound({ maxLength: 32 })),
-    type: TlvField(2, TlvEnum<TlvEndpointListTypeEnum>()),
+    type: TlvField(2, TlvEnum<EndpointListTypeEnum>()),
 
     /**
      * This field SHALL provide a list of endpoint numbers.
@@ -416,13 +416,13 @@ export const TlvStateChangedEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.1.2
      */
-    newState: TlvField(2, TlvEnum<TlvActionStateEnum>())
+    newState: TlvField(2, TlvEnum<ActionStateEnum>())
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.4
  */
-export const enum TlvActionErrorEnum {
+export const enum ActionErrorEnum {
     Unknown = 0,
     Interrupted = 1
 };
@@ -436,19 +436,20 @@ export const enum TlvActionErrorEnum {
 export const TlvActionFailedEvent = TlvObject({
     actionId: TlvField(0, TlvUInt16),
     invokeId: TlvField(1, TlvUInt32),
-    newState: TlvField(2, TlvEnum<TlvActionStateEnum>()),
+    newState: TlvField(2, TlvEnum<ActionStateEnum>()),
 
     /**
      * This field SHALL be set to indicate the reason for non-successful progress of the action.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.2.1
      */
-    error: TlvField(3, TlvEnum<TlvActionErrorEnum>())
+    error: TlvField(3, TlvEnum<ActionErrorEnum>())
 });
 
 export namespace ActionsCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

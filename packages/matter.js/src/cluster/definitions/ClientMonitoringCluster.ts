@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { GlobalAttributes, Attribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt32, TlvUInt16, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -21,7 +21,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * This function creates a ClientMonitoring cluster.
  */
 export function ClientMonitoringCluster() {
-    const cluster = { ...ClientMonitoringCluster.Metadata, ...ClientMonitoringCluster.BaseComponent };
+    const cluster = Cluster({ ...ClientMonitoringCluster.Metadata, ...ClientMonitoringCluster.BaseComponent });
     return cluster as unknown as ClientMonitoringCluster.Type;
 };
 
@@ -40,6 +40,7 @@ export const TlvUnregisterClientMonitoringRequest = TlvObject({
 export namespace ClientMonitoringCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -54,7 +55,7 @@ export namespace ClientMonitoringCluster {
         attributes: {
             idleModeInterval: Attribute(0, TlvUInt32, { default: 18 }),
             activeModeInterval: Attribute(1, TlvUInt32, { default: 18 }),
-            activeModeThreshold: Attribute(2, TlvUInt16),
+            activeModeThreshold: Attribute(2, TlvUInt16, { default: 0 }),
             expectedClients: Attribute(3, TlvArray(TlvMonitoringRegistration), { default: [] })
         },
 

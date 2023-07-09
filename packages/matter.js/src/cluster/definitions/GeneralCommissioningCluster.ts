@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, FixedAttribute, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, FixedAttribute, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt64, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -25,7 +25,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.9
  */
 export function GeneralCommissioningCluster() {
-    const cluster = { ...GeneralCommissioningCluster.Metadata, ...GeneralCommissioningCluster.BaseComponent };
+    const cluster = Cluster({ ...GeneralCommissioningCluster.Metadata, ...GeneralCommissioningCluster.BaseComponent });
     return cluster as unknown as GeneralCommissioningCluster.Type;
 };
 
@@ -59,7 +59,7 @@ export const TlvBasicCommissioningInfo = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.2
  */
-export const enum TlvRegulatoryLocationTypeEnum {
+export const enum RegulatoryLocationTypeEnum {
     Indoor = 0,
     Outdoor = 1,
     IndoorOutdoor = 2
@@ -80,7 +80,7 @@ export const TlvArmFailSafeRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.1
  */
-export const enum TlvCommissioningErrorEnum {
+export const enum CommissioningErrorEnum {
     Ok = 0,
     ValueOutsideRange = 1,
     InvalidAuthentication = 2,
@@ -98,7 +98,7 @@ export const TlvArmFailSafeResponseRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.3.1
      */
-    errorCode: TlvField(0, TlvEnum<TlvCommissioningErrorEnum>()),
+    errorCode: TlvField(0, TlvEnum<CommissioningErrorEnum>()),
 
     /**
      * See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.
@@ -115,7 +115,7 @@ export const TlvArmFailSafeResponseRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.4
  */
 export const TlvSetRegulatoryConfigRequest = TlvObject({
-    newRegulatoryConfig: TlvField(0, TlvEnum<TlvRegulatoryLocationTypeEnum>()),
+    newRegulatoryConfig: TlvField(0, TlvEnum<RegulatoryLocationTypeEnum>()),
     countryCode: TlvField(1, TlvString.bound({ minLength: 2, maxLength: 2 })),
     breadcrumb: TlvField(2, TlvUInt64)
 });
@@ -126,7 +126,7 @@ export const TlvSetRegulatoryConfigRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.5
  */
 export const TlvSetRegulatoryConfigResponseRequest = TlvObject({
-    errorCode: TlvField(0, TlvEnum<TlvCommissioningErrorEnum>()),
+    errorCode: TlvField(0, TlvEnum<CommissioningErrorEnum>()),
     debugText: TlvField(1, TlvString)
 });
 
@@ -136,13 +136,14 @@ export const TlvSetRegulatoryConfigResponseRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.7
  */
 export const TlvCommissioningCompleteResponseRequest = TlvObject({
-    errorCode: TlvField(0, TlvEnum<TlvCommissioningErrorEnum>()),
+    errorCode: TlvField(0, TlvEnum<CommissioningErrorEnum>()),
     debugText: TlvField(1, TlvString)
 });
 
 export namespace GeneralCommissioningCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -165,7 +166,11 @@ export namespace GeneralCommissioningCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.1
              */
-            breadcrumb: WritableAttribute(0, TlvUInt64, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }),
+            breadcrumb: WritableAttribute(
+                0,
+                TlvUInt64,
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Administer }
+            ),
 
             /**
              * This attribute SHALL describe critical parameters needed at the beginning of commissioning flow. See
@@ -180,7 +185,7 @@ export namespace GeneralCommissioningCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.3
              */
-            regulatoryConfig: Attribute(2, TlvEnum<TlvRegulatoryLocationTypeEnum>(), { readAcl: AccessLevel.View }),
+            regulatoryConfig: Attribute(2, TlvEnum<RegulatoryLocationTypeEnum>(), { readAcl: AccessLevel.View }),
 
             /**
              * LocationCapability is statically set by the manufacturer and indicates if this Node needs to be told an
@@ -193,7 +198,7 @@ export namespace GeneralCommissioningCluster {
              */
             locationCapability: FixedAttribute(
                 3,
-                TlvEnum<TlvRegulatoryLocationTypeEnum>(),
+                TlvEnum<RegulatoryLocationTypeEnum>(),
                 { default: 2, readAcl: AccessLevel.View }
             ),
 

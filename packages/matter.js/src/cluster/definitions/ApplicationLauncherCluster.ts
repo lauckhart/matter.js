@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -31,11 +31,11 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4
  */
 export function ApplicationLauncherCluster<T extends ApplicationLauncherCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...ApplicationLauncherCluster.Metadata,
         supportedFeatures: BitFlags(ApplicationLauncherCluster.Metadata.features, ...features),
         ...ApplicationLauncherCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, ApplicationLauncherCluster.ApplicationPlatformComponent, { applicationPlatform: true });
     return cluster as unknown as ApplicationLauncherCluster.Type<BitFlags<typeof ApplicationLauncherCluster.Metadata.features, T>>;
 };
@@ -97,7 +97,7 @@ export const TlvLaunchAppRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.5.1
  */
-export const enum TlvStatusEnum {
+export const enum StatusEnum {
     /**
      * Command succeeded
      */
@@ -125,7 +125,7 @@ export const TlvLauncherResponseRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4.1
      */
-    status: TlvField(0, TlvEnum<TlvStatusEnum>()),
+    status: TlvField(0, TlvEnum<StatusEnum>()),
 
     /**
      * This SHALL specify Optional app-specific data.
@@ -181,6 +181,7 @@ export namespace ApplicationLauncherCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { applicationPlatform: true } ? typeof ApplicationPlatformComponent : {});

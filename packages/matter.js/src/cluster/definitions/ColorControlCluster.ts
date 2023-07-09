@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalAttribute, AccessLevel, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, AccessLevel, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap, TlvInt16 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -30,11 +30,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2
  */
 export function ColorControlCluster<T extends ColorControlCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...ColorControlCluster.Metadata,
         supportedFeatures: BitFlags(ColorControlCluster.Metadata.features, ...features),
         ...ColorControlCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, ColorControlCluster.HueSaturationComponent, { hueSaturation: true });
     extendCluster(cluster, ColorControlCluster.XyComponent, { xy: true });
     extendCluster(cluster, ColorControlCluster.ColorTemperatureComponent, { colorTemperature: true });
@@ -50,7 +50,7 @@ export function ColorControlCluster<T extends ColorControlCluster.Feature[]>(...
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.6
  */
-export const enum TlvDriftCompensation {
+export const enum DriftCompensation {
     None = 0,
     OtherUnknown = 1,
     TemperatureMonitoring = 2,
@@ -63,7 +63,7 @@ export const enum TlvDriftCompensation {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.9
  */
-export const enum TlvColorMode {
+export const enum ColorMode {
     CurrentHueAndCurrentSaturation = 0,
     CurrentXAndCurrentY = 1,
     ColorTemperatureMireds = 2
@@ -88,7 +88,7 @@ export const TlvOptions = TlvBitmap(TlvUInt8, TlvOptionsBits);
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.12
  */
-export const enum TlvEnhancedColorMode {
+export const enum EnhancedColorMode {
     CurrentHueAndCurrentSaturation = 0,
     CurrentXAndCurrentY = 1,
     ColorTemperatureMireds = 2,
@@ -98,7 +98,7 @@ export const enum TlvEnhancedColorMode {
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.2
  */
-export const enum TlvColorControlDirection {
+export const enum ColorControlDirection {
     ShortestDistance = 0,
     LongestDistance = 1,
     Up = 2,
@@ -123,7 +123,7 @@ export const TlvMoveToHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.2
      */
-    direction: TlvField(1, TlvEnum<TlvColorControlDirection>()),
+    direction: TlvField(1, TlvEnum<ColorControlDirection>()),
 
     /**
      * The TransitionTime field specifies, in 1/10ths of a second, the time that SHALL be taken to move to the new hue.
@@ -139,7 +139,7 @@ export const TlvMoveToHueRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.5.1
  */
-export const enum TlvMoveMode {
+export const enum MoveMode {
     Stop = 0,
     Up = 1,
     Down = 3
@@ -157,7 +157,7 @@ export const TlvMoveHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.5.1
      */
-    moveMode: TlvField(0, TlvEnum<TlvMoveMode>()),
+    moveMode: TlvField(0, TlvEnum<MoveMode>()),
 
     /**
      * The Rate field specifies the rate of movement in steps per second. A step is a change in the device’s hue of one
@@ -176,7 +176,7 @@ export const TlvMoveHueRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.6.1
  */
-export const enum TlvStepMode {
+export const enum StepMode {
     Up = 1,
     Down = 3
 };
@@ -192,7 +192,7 @@ export const TlvStepHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.6.1
      */
-    stepMode: TlvField(0, TlvEnum<TlvStepMode>()),
+    stepMode: TlvField(0, TlvEnum<StepMode>()),
 
     /**
      * The change to be added to (or subtracted from) the current value of the device’s hue.
@@ -237,7 +237,7 @@ export const TlvMoveSaturationRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.8.1
      */
-    moveMode: TlvField(0, TlvEnum<TlvMoveMode>()),
+    moveMode: TlvField(0, TlvEnum<MoveMode>()),
 
     /**
      * The Rate field specifies the rate of movement in steps per second. A step is a change in the device’s
@@ -261,7 +261,7 @@ export const TlvStepSaturationRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.9.1
      */
-    stepMode: TlvField(0, TlvEnum<TlvStepMode>()),
+    stepMode: TlvField(0, TlvEnum<StepMode>()),
 
     /**
      * The change to be added to (or subtracted from) the current value of the device’s saturation.
@@ -480,7 +480,7 @@ export const TlvEnhancedMoveToHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.15.2
      */
-    direction: TlvField(1, TlvEnum<TlvColorControlDirection>()),
+    direction: TlvField(1, TlvEnum<ColorControlDirection>()),
 
     /**
      * This field is identical to the TransitionTime field of the MoveToHue command of the Color Control cluster (see
@@ -507,7 +507,7 @@ export const TlvEnhancedMoveHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.16.1
      */
-    moveMode: TlvField(0, TlvEnum<TlvMoveMode>()),
+    moveMode: TlvField(0, TlvEnum<MoveMode>()),
 
     /**
      * The Rate field specifies the rate of movement in steps per second. A step is a change in the extended hue of a
@@ -536,7 +536,7 @@ export const TlvEnhancedStepHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.17.1
      */
-    stepMode: TlvField(0, TlvEnum<TlvStepMode>()),
+    stepMode: TlvField(0, TlvEnum<StepMode>()),
 
     /**
      * The StepSize field specifies the change to be added to (or subtracted from) the current value of the device’s
@@ -615,7 +615,7 @@ export const TlvUpdateFlags = TlvBitmap(TlvUInt8, TlvUpdateFlagsBits);
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.2
  */
-export const enum TlvAction {
+export const enum Action {
     DeActivateTheColorLoop = 0,
     ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField = 1,
     ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute = 2
@@ -628,7 +628,7 @@ export const enum TlvAction {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.3
  */
-export const enum TlvColorLoopSetDirection {
+export const enum ColorLoopSetDirection {
     DecrementTheHueInTheColorLoop = 0,
     IncrementTheHueInTheColorLoop = 1
 };
@@ -655,7 +655,7 @@ export const TlvColorLoopSetRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.2
      */
-    action: TlvField(1, TlvEnum<TlvAction>()),
+    action: TlvField(1, TlvEnum<Action>()),
 
     /**
      * The Direction field specifies the direction for the color loop if the Update Direction field of the UpdateFlags
@@ -664,7 +664,7 @@ export const TlvColorLoopSetRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.3
      */
-    direction: TlvField(2, TlvEnum<TlvColorLoopSetDirection>()),
+    direction: TlvField(2, TlvEnum<ColorLoopSetDirection>()),
 
     /**
      * The Time field specifies the number of seconds over which to perform a full color loop if the UpdateTime
@@ -735,6 +735,7 @@ export namespace ColorControlCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { hueSaturation: true } ? typeof HueSaturationComponent : {})
@@ -803,7 +804,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.3
              */
-            remainingTime: OptionalAttribute(2, TlvUInt16.bound({ max: 65534 }), { readAcl: AccessLevel.View }),
+            remainingTime: OptionalAttribute(2, TlvUInt16.bound({ max: 65534 }), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The DriftCompensation attribute indicates what mechanism, if any, is in use for compensation for
@@ -812,7 +813,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.6
              */
-            driftCompensation: OptionalAttribute(5, TlvEnum<TlvDriftCompensation>(), { readAcl: AccessLevel.View }),
+            driftCompensation: OptionalAttribute(5, TlvEnum<DriftCompensation>(), { readAcl: AccessLevel.View }),
 
             /**
              * The CompensationText attribute holds a textual indication of what mechanism, if any, is in use to
@@ -826,7 +827,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.9
              */
-            colorMode: Attribute(8, TlvEnum<TlvColorMode>(), { persistent: true, default: 1, readAcl: AccessLevel.View }),
+            colorMode: Attribute(8, TlvEnum<ColorMode>(), { persistent: true, default: 1, readAcl: AccessLevel.View }),
 
             /**
              * The Options attribute is meant to be changed only during commissioning. The Options attribute is a
@@ -1071,7 +1072,7 @@ export namespace ColorControlCluster {
              */
             enhancedColorMode: Attribute(
                 16385,
-                TlvEnum<TlvEnhancedColorMode>(),
+                TlvEnum<EnhancedColorMode>(),
                 { persistent: true, default: 1, readAcl: AccessLevel.View }
             ),
 
@@ -1096,7 +1097,11 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.1
              */
-            currentHue: Attribute(0, TlvUInt8.bound({ max: 254 }), { persistent: true, readAcl: AccessLevel.View }),
+            currentHue: Attribute(
+                0,
+                TlvUInt8.bound({ max: 254 }),
+                { persistent: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The CurrentSaturation attribute holds the current saturation value of the light. It is updated as fast
@@ -1107,7 +1112,7 @@ export namespace ColorControlCluster {
             currentSaturation: Attribute(
                 1,
                 TlvUInt8.bound({ max: 254 }),
-                { scene: true, persistent: true, readAcl: AccessLevel.View }
+                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
             )
         },
 
@@ -1221,7 +1226,11 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.8
              */
-            colorTemperatureMireds: Attribute(7, TlvUInt16, { scene: true, persistent: true, readAcl: AccessLevel.View }),
+            colorTemperatureMireds: Attribute(
+                7,
+                TlvUInt16,
+                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The ColorTempPhysicalMinMireds attribute indicates the minimum mired value supported by the hardware.
@@ -1230,7 +1239,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.19
              */
-            colorTempPhysicalMinMireds: Attribute(16395, TlvUInt16, { readAcl: AccessLevel.View }),
+            colorTempPhysicalMinMireds: Attribute(16395, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The ColorTempPhysicalMaxMireds attribute indicates the maximum mired value supported by the hardware.
@@ -1304,7 +1313,11 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.11
              */
-            enhancedCurrentHue: Attribute(16384, TlvUInt16, { scene: true, persistent: true, readAcl: AccessLevel.View })
+            enhancedCurrentHue: Attribute(
+                16384,
+                TlvUInt16,
+                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
+            )
         },
 
         commands: {
@@ -1352,7 +1365,11 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.13
              */
-            colorLoopActive: Attribute(16386, TlvUInt8, { scene: true, persistent: true, readAcl: AccessLevel.View }),
+            colorLoopActive: Attribute(
+                16386,
+                TlvUInt8,
+                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The ColorLoopDirection attribute specifies the current direction of the color loop. If this attribute
@@ -1361,7 +1378,11 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.14
              */
-            colorLoopDirection: Attribute(16387, TlvUInt8, { scene: true, persistent: true, readAcl: AccessLevel.View }),
+            colorLoopDirection: Attribute(
+                16387,
+                TlvUInt8,
+                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The ColorLoopTime attribute specifies the number of seconds it SHALL take to perform a full color loop,
@@ -1390,7 +1411,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.17
              */
-            colorLoopStoredEnhancedHue: Attribute(16390, TlvUInt16, { readAcl: AccessLevel.View })
+            colorLoopStoredEnhancedHue: Attribute(16390, TlvUInt16, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

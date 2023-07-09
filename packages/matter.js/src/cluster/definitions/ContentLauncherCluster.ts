@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvUInt32, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -31,11 +31,11 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7
  */
 export function ContentLauncherCluster<T extends ContentLauncherCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...ContentLauncherCluster.Metadata,
         supportedFeatures: BitFlags(ContentLauncherCluster.Metadata.features, ...features),
         ...ContentLauncherCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, ContentLauncherCluster.UrlPlaybackComponent, { urlPlayback: true });
     extendCluster(cluster, ContentLauncherCluster.ContentSearchComponent, { contentSearch: true });
 
@@ -52,7 +52,7 @@ export function ContentLauncherCluster<T extends ContentLauncherCluster.Feature[
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9
  */
-export const enum TlvMetricTypeEnum {
+export const enum MetricTypeEnum {
     /**
      * This value is used for dimensions defined in a number of Pixels.
      *
@@ -97,7 +97,7 @@ export const TlvDimensionStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.8.3
      */
-    metric: TlvField(2, TlvEnum<TlvMetricTypeEnum>())
+    metric: TlvField(2, TlvEnum<MetricTypeEnum>())
 });
 
 /**
@@ -218,7 +218,7 @@ export const TlvLaunchUrlRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.1
  */
-export const enum TlvStatusEnum {
+export const enum StatusEnum {
     /**
      * Command succeeded
      */
@@ -246,7 +246,7 @@ export const TlvLauncherResponseRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3.1
      */
-    status: TlvField(0, TlvEnum<TlvStatusEnum>()),
+    status: TlvField(0, TlvEnum<StatusEnum>()),
 
     /**
      * This SHALL indicate Optional app-specific data.
@@ -259,7 +259,7 @@ export const TlvLauncherResponseRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.4
  */
-export const enum TlvParameterEnum {
+export const enum ParameterEnum {
     /**
      * Actor represents an actor credited in video media content; for example, “Gaby sHoffman”
      */
@@ -371,7 +371,7 @@ export const TlvParameterStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.3.1
      */
-    type: TlvField(0, TlvEnum<TlvParameterEnum>()),
+    type: TlvField(0, TlvEnum<ParameterEnum>()),
 
     /**
      * This SHALL indicate the entity value, which is a search string, ex. “Manchester by the Sea”.
@@ -458,6 +458,7 @@ export namespace ContentLauncherCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { urlPlayback: true } ? typeof UrlPlaybackComponent : {})

@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, Attribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, FixedAttribute, Attribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 
@@ -33,11 +33,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11
  */
 export function SwitchCluster<T extends SwitchCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...SwitchCluster.Metadata,
         supportedFeatures: BitFlags(SwitchCluster.Metadata.features, ...features),
         ...SwitchCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, SwitchCluster.MomentarySwitchMultiPressComponent, { momentarySwitchMultiPress: true });
     extendCluster(cluster, SwitchCluster.LatchingSwitchComponent, { latchingSwitch: true });
     extendCluster(cluster, SwitchCluster.MomentarySwitchComponent, { momentarySwitch: true });
@@ -155,6 +155,7 @@ export namespace SwitchCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { momentarySwitchMultiPress: true } ? typeof MomentarySwitchMultiPressComponent : {})
@@ -229,7 +230,7 @@ export namespace SwitchCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.2
              */
-            currentPosition: Attribute(1, TlvUInt8, { persistent: true })
+            currentPosition: Attribute(1, TlvUInt8, { persistent: true, default: 0 })
         }
     });
 

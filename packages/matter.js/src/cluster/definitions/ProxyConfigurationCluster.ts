@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -24,7 +24,7 @@ import { TlvUInt64 } from "../../tlv/TlvNumber.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.14
  */
 export function ProxyConfigurationCluster() {
-    const cluster = { ...ProxyConfigurationCluster.Metadata, ...ProxyConfigurationCluster.BaseComponent };
+    const cluster = Cluster({ ...ProxyConfigurationCluster.Metadata, ...ProxyConfigurationCluster.BaseComponent });
     return cluster as unknown as ProxyConfigurationCluster.Type;
 };
 
@@ -41,6 +41,7 @@ export const TlvConfigurationStruct = TlvObject({
 export namespace ProxyConfigurationCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

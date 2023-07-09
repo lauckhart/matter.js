@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { GlobalAttributes, OptionalWritableAttribute, WritableAttribute, OptionalAttribute, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalWritableAttribute, WritableAttribute, OptionalAttribute, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvUInt8, TlvUInt32 } from "../../tlv/TlvNumber.js";
@@ -20,13 +20,14 @@ import { TlvUInt8, TlvUInt32 } from "../../tlv/TlvNumber.js";
  * This function creates a BinaryInputBasic cluster.
  */
 export function BinaryInputBasicCluster() {
-    const cluster = { ...BinaryInputBasicCluster.Metadata, ...BinaryInputBasicCluster.BaseComponent };
+    const cluster = Cluster({ ...BinaryInputBasicCluster.Metadata, ...BinaryInputBasicCluster.BaseComponent });
     return cluster as unknown as BinaryInputBasicCluster.Type;
 };
 
 export namespace BinaryInputBasicCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -42,9 +43,9 @@ export namespace BinaryInputBasicCluster {
         description: OptionalWritableAttribute(28, TlvString, { default: "" }),
         inactiveText: OptionalWritableAttribute(46, TlvString, { default: "" }),
         outOfService: WritableAttribute(81, TlvBoolean, { default: true }),
-        polarity: OptionalAttribute(84, TlvUInt8),
+        polarity: OptionalAttribute(84, TlvUInt8, { default: 0 }),
         presentValue: WritableAttribute(85, TlvBoolean),
-        reliability: OptionalWritableAttribute(103, TlvUInt8),
+        reliability: OptionalWritableAttribute(103, TlvUInt8, { default: 0 }),
         statusFlags: Attribute(111, TlvUInt8),
         applicationType: OptionalAttribute(256, TlvUInt32)
     } });

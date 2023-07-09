@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -29,11 +29,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2
  */
 export function IdentifyCluster<T extends IdentifyCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...IdentifyCluster.Metadata,
         supportedFeatures: BitFlags(IdentifyCluster.Metadata.features, ...features),
         ...IdentifyCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, IdentifyCluster.QueryComponent, { query: true });
     return cluster as unknown as IdentifyCluster.Type<BitFlags<typeof IdentifyCluster.Metadata.features, T>>;
 };
@@ -44,7 +44,7 @@ export function IdentifyCluster<T extends IdentifyCluster.Feature[]>(...features
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
  */
-export const enum TlvIdentifyType {
+export const enum IdentifyType {
     /**
      * No presentation.
      */
@@ -89,7 +89,7 @@ export const TlvIdentifyRequest = TlvObject({ identifyTime: TlvField(0, TlvUInt1
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.1
  */
-export const enum TlvEffectIdentifier {
+export const enum EffectIdentifier {
     /**
      * e.g., Light is turned on/off once.
      */
@@ -130,7 +130,7 @@ export const enum TlvEffectIdentifier {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.2
  */
-export const enum TlvEffectVariant {
+export const enum EffectVariant {
     Default = 0
 };
 
@@ -151,7 +151,7 @@ export const TlvTriggerEffectRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.1
      */
-    effectIdentifier: TlvField(0, TlvEnum<TlvEffectIdentifier>()),
+    effectIdentifier: TlvField(0, TlvEnum<EffectIdentifier>()),
 
     /**
      * This field is used to indicate which variant of the effect, indicated in the EffectIdentifier field, SHOULD be
@@ -160,7 +160,7 @@ export const TlvTriggerEffectRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.2
      */
-    effectVariant: TlvField(1, TlvEnum<TlvEffectVariant>())
+    effectVariant: TlvField(1, TlvEnum<EffectVariant>())
 });
 
 /**
@@ -196,6 +196,7 @@ export namespace IdentifyCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { query: true } ? typeof QueryComponent : {});
@@ -231,7 +232,11 @@ export namespace IdentifyCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
              */
-            identifyTime: WritableAttribute(0, TlvUInt16, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }),
+            identifyTime: WritableAttribute(
+                0,
+                TlvUInt16,
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+            ),
 
             /**
              * This attribute specifies how the identification state is presented to the user. This field SHALL contain
@@ -239,7 +244,7 @@ export namespace IdentifyCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
              */
-            identifyType: Attribute(1, TlvEnum<TlvIdentifyType>(), { readAcl: AccessLevel.View })
+            identifyType: Attribute(1, TlvEnum<IdentifyType>(), { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

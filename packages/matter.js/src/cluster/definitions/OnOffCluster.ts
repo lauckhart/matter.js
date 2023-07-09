@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, Command, TlvNoResponse, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
@@ -31,11 +31,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5
  */
 export function OnOffCluster<T extends OnOffCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...OnOffCluster.Metadata,
         supportedFeatures: BitFlags(OnOffCluster.Metadata.features, ...features),
         ...OnOffCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, OnOffCluster.LevelControlForLightingComponent, { levelControlForLighting: true });
     return cluster as unknown as OnOffCluster.Type<BitFlags<typeof OnOffCluster.Metadata.features, T>>;
 };
@@ -43,7 +43,7 @@ export function OnOffCluster<T extends OnOffCluster.Feature[]>(...features: [ ..
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.5.1
  */
-export const enum TlvStartUpOnOffEnum {
+export const enum StartUpOnOffEnum {
     /**
      * Set the OnOff attribute to FALSE
      */
@@ -61,7 +61,7 @@ export const enum TlvStartUpOnOffEnum {
     Toggle = 2
 };
 
-export const enum TlvOnOffEffectIdentifier {
+export const enum OnOffEffectIdentifier {
     DelayedAllOff = 0,
     DyingLight = 1
 };
@@ -80,7 +80,7 @@ export const TlvOffWithEffectRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.4.1
      */
-    effectIdentifier: TlvField(0, TlvEnum<TlvOnOffEffectIdentifier>()),
+    effectIdentifier: TlvField(0, TlvEnum<OnOffEffectIdentifier>()),
 
     /**
      * The EffectVariant field is used to indicate which variant of the effect, indicated in the EffectIdentifier
@@ -151,6 +151,7 @@ export namespace OnOffCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { levelControlForLighting: true } ? typeof LevelControlForLightingComponent : {});
@@ -239,7 +240,7 @@ export namespace OnOffCluster {
             onTime: WritableAttribute(
                 16385,
                 TlvNullable(TlvUInt16),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -255,7 +256,7 @@ export namespace OnOffCluster {
             offWaitTime: WritableAttribute(
                 16386,
                 TlvNullable(TlvUInt16),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -268,7 +269,7 @@ export namespace OnOffCluster {
              */
             startUpOnOff: WritableAttribute(
                 16387,
-                TlvNullable(TlvEnum<TlvStartUpOnOffEnum>()),
+                TlvNullable(TlvEnum<StartUpOnOffEnum>()),
                 { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         },

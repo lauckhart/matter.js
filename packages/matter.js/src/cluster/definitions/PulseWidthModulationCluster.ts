@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -30,11 +30,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
  */
 export function PulseWidthModulationCluster<T extends PulseWidthModulationCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...PulseWidthModulationCluster.Metadata,
         supportedFeatures: BitFlags(PulseWidthModulationCluster.Metadata.features, ...features),
         ...PulseWidthModulationCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, PulseWidthModulationCluster.LightingComponent, { lighting: true });
     extendCluster(cluster, PulseWidthModulationCluster.FrequencyComponent, { frequency: true });
     return cluster as unknown as PulseWidthModulationCluster.Type<BitFlags<typeof PulseWidthModulationCluster.Metadata.features, T>>;
@@ -70,7 +70,7 @@ export const TlvMoveToLevelRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2.1
  */
-export const enum TlvMoveMode {
+export const enum MoveMode {
     Up = 0,
     Down = 1
 };
@@ -86,7 +86,7 @@ export const TlvMoveRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2.1
      */
-    moveMode: TlvField(0, TlvEnum<TlvMoveMode>()),
+    moveMode: TlvField(0, TlvEnum<MoveMode>()),
 
     /**
      * The Rate field specifies the rate of movement in units per second. The actual rate of movement SHOULD be as
@@ -163,6 +163,7 @@ export namespace PulseWidthModulationCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { lighting: true } ? typeof LightingComponent : {})
@@ -255,7 +256,7 @@ export namespace PulseWidthModulationCluster {
             onOffTransitionTime: OptionalWritableAttribute(
                 16,
                 TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -375,7 +376,7 @@ export namespace PulseWidthModulationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.2
              */
-            remainingTime: Attribute(1, TlvUInt16, { readAcl: AccessLevel.View }),
+            remainingTime: Attribute(1, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The StartUpCurrentLevel attribute SHALL define the desired startup level for a device when it is
@@ -403,7 +404,7 @@ export namespace PulseWidthModulationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.5
              */
-            currentFrequency: Attribute(4, TlvUInt16, { scene: true, readAcl: AccessLevel.View }),
+            currentFrequency: Attribute(4, TlvUInt16, { scene: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The MinFrequency attribute indicates the minimum value of CurrentFrequency that is capable of being
@@ -411,7 +412,7 @@ export namespace PulseWidthModulationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.6
              */
-            minFrequency: Attribute(5, TlvUInt16, { readAcl: AccessLevel.View }),
+            minFrequency: Attribute(5, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being
@@ -419,7 +420,7 @@ export namespace PulseWidthModulationCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.7
              */
-            maxFrequency: Attribute(6, TlvUInt16, { readAcl: AccessLevel.View })
+            maxFrequency: Attribute(6, TlvUInt16, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

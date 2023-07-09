@@ -17,7 +17,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW F VA",
-            conformance: "M", constraint: "desc",
+            conformance: "M", constraint: "desc", default: [],
             details: "This field is a list of ProviderLocationStruct whose entries SHALL be set by Administrators, either " +
                      "during Commissioning or at a later time, to set the Provider Location for the default OTA Provider " +
                      "Node to use for software updates on a given Fabric.",
@@ -37,7 +37,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UpdateState", id: 0x2, type: "UpdateStateEnum", access: "R V",
-            conformance: "M",
+            conformance: "M", default: 0,
             details: "This field SHALL reflect the current state of the OTA Requestor with regards to obtaining software " +
                      "updates. See Section 11.19.7.4.2, “UpdateStateEnum” for possible values.",
             xref: { document: "core", section: "11.19.7.5.3" }
@@ -58,7 +58,7 @@ Matter.children.push({
             xref: { document: "core", section: "11.19.7.7.1" },
 
             children: [
-                { tag: "datatype", name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M" },
+                { tag: "datatype", name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M", default: 0 },
                 { tag: "datatype", name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M" },
                 { tag: "datatype", name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M" },
                 {

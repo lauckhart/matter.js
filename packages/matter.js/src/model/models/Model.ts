@@ -345,8 +345,8 @@ export abstract class Model {
     /**
      * Search the inheritance chain for a child property.
      */
-    member(key: ModelTraversal.ElementSelector): Model | undefined {
-        return new ModelTraversal().findMember(this, key, [ ElementTag.Datatype, ElementTag.Attribute ]);
+    member(key: ModelTraversal.ElementSelector, allowedTags = [ ElementTag.Datatype, ElementTag.Attribute ]): Model | undefined {
+        return new ModelTraversal().findMember(this, key, allowedTags);
     }
 
     /**

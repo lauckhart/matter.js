@@ -17,6 +17,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "Breadcrumb", id: 0x0, type: "uint64", access: "RW VA", conformance: "M",
+            default: 0,
             details: "This attribute allows for the storage of a client-provided small payload which Administrators and " +
                      "Commissioners MAY write and then subsequently read, to keep track of their own progress. This MAY " +
                      "be used by the Commissioner to avoid repeating already-executed actions upon re-establishing a " +
@@ -77,6 +78,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M",
+                    default: 0,
                     details: "This field SHALL contain the result of the operation, based on the behavior specified in the " +
                              "functional description of the ArmFailSafe command.",
                     xref: { document: "core", section: "11.9.6.3.1" }
@@ -113,8 +115,12 @@ Matter.children.push({
             direction: "response",
             details: "The data for this command is as follows:",
             xref: { document: "core", section: "11.9.6.5" },
+
             children: [
-                { tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M" },
+                {
+                    tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M",
+                    default: 0
+                },
                 { tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "" }
             ]
         },
@@ -131,8 +137,12 @@ Matter.children.push({
             direction: "response",
             details: "The data for this command is as follows:",
             xref: { document: "core", section: "11.9.6.7" },
+
             children: [
-                { tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M" },
+                {
+                    tag: "datatype", name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M",
+                    default: 0
+                },
                 { tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "" }
             ]
         },

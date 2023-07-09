@@ -17,7 +17,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "ActionList", id: 0x0, type: "list", access: "R V", conformance: "M",
-            constraint: "max 256",
+            constraint: "max 256", default: [],
             details: "The ActionList attribute holds the list of actions. Each entry SHALL have an unique ActionID, and " +
                      "its EndpointListID SHALL exist in the EndpointLists attribute.",
             xref: { document: "core", section: "9.14.5.1" },
@@ -26,7 +26,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "EndpointLists", id: 0x1, type: "list", access: "R V", conformance: "M",
-            constraint: "max 256",
+            constraint: "max 256", default: [],
             details: "The EndpointLists attribute holds the list of endpoint lists. Each entry SHALL have an unique " +
                      "EndpointListID.",
             xref: { document: "core", section: "9.14.5.2" },

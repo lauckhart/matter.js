@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { GlobalAttributes, Attribute, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, WritableAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 
 /**
@@ -18,17 +18,20 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
  * This function creates a OnOffSwitchConfiguration cluster.
  */
 export function OnOffSwitchConfigurationCluster() {
-    const cluster = { ...OnOffSwitchConfigurationCluster.Metadata, ...OnOffSwitchConfigurationCluster.BaseComponent };
+    const cluster = Cluster({
+        ...OnOffSwitchConfigurationCluster.Metadata,
+        ...OnOffSwitchConfigurationCluster.BaseComponent
+    });
     return cluster as unknown as OnOffSwitchConfigurationCluster.Type;
 };
 
-export const enum TlvSwitchType {
+export const enum SwitchType {
     Toggle = 0,
     Momentary = 1,
     MultiFunction = 2
 };
 
-export const enum TlvSwitchActions {
+export const enum SwitchActions {
     On = 0,
     Off = 1,
     Toggle = 2
@@ -37,6 +40,7 @@ export const enum TlvSwitchActions {
 export namespace OnOffSwitchConfigurationCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -48,8 +52,8 @@ export namespace OnOffSwitchConfigurationCluster {
      * A OnOffSwitchConfigurationCluster supports these elements for all feature combinations.
      */
     export const BaseComponent = ClusterComponent({ attributes: {
-        switchType: Attribute(0, TlvEnum<TlvSwitchType>()),
-        switchActions: WritableAttribute(16, TlvEnum<TlvSwitchActions>())
+        switchType: Attribute(0, TlvEnum<SwitchType>()),
+        switchActions: WritableAttribute(16, TlvEnum<SwitchActions>(), { default: 0 })
     } });
 
     /**

@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, FixedAttribute, AccessLevel, WritableAttribute, OptionalFixedAttribute, OptionalWritableAttribute, OptionalAttribute, Event, EventPriority, OptionalEvent, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { FixedAttribute, AccessLevel, WritableAttribute, OptionalFixedAttribute, OptionalWritableAttribute, OptionalAttribute, Event, EventPriority, OptionalEvent, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvUInt32, TlvEnum, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -28,7 +28,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.1
  */
 export function BasicInformationCluster() {
-    const cluster = { ...BasicInformationCluster.Metadata, ...BasicInformationCluster.BaseComponent };
+    const cluster = Cluster({ ...BasicInformationCluster.Metadata, ...BasicInformationCluster.BaseComponent });
     return cluster as unknown as BasicInformationCluster.Type;
 };
 
@@ -54,7 +54,7 @@ export const TlvCapabilityMinimaStruct = TlvObject({
     subscriptionsPerFabric: TlvField(1, TlvUInt16.bound({ min: 3 }))
 });
 
-export const enum TlvProductFinishEnum {
+export const enum ProductFinishEnum {
     Other = 0,
     Matte = 1,
     Satin = 2,
@@ -63,7 +63,7 @@ export const enum TlvProductFinishEnum {
     Fabric = 5
 };
 
-export const enum TlvColorEnum {
+export const enum ColorEnum {
     Black = 0,
     Navy = 1,
     Green = 2,
@@ -88,8 +88,8 @@ export const enum TlvColorEnum {
 };
 
 export const TlvProductAppearanceStruct = TlvObject({
-    finish: TlvField(0, TlvEnum<TlvProductFinishEnum>()),
-    primaryColor: TlvField(1, TlvNullable(TlvEnum<TlvColorEnum>()))
+    finish: TlvField(0, TlvEnum<ProductFinishEnum>()),
+    primaryColor: TlvField(1, TlvNullable(TlvEnum<ColorEnum>()))
 });
 
 /**
@@ -143,6 +143,7 @@ export const TlvReachableChangedEvent = TlvObject({
 export namespace BasicInformationCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -232,7 +233,7 @@ export namespace BasicInformationCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.8
              */
-            hardwareVersion: FixedAttribute(7, TlvUInt16, { readAcl: AccessLevel.View }),
+            hardwareVersion: FixedAttribute(7, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL specify the version number of the hardware of the Node. The meaning of its value,
@@ -256,7 +257,7 @@ export namespace BasicInformationCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.10
              */
-            softwareVersion: FixedAttribute(9, TlvUInt32, { readAcl: AccessLevel.View }),
+            softwareVersion: FixedAttribute(9, TlvUInt32, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL contain a current human-readable representation for the software running on the

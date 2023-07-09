@@ -32,7 +32,9 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
     const illegal = variance.illegal.map(bitmap => translateBitmap(bitmap, featureNames));
 
     // Generate the factory function
-    generateFactory(file, cluster, variance, featureNames, illegal);
+    if (cluster.id !== undefined) {
+        generateFactory(file, cluster, variance, featureNames, illegal);
+    }
 
     const ns = file.statements(`export namespace ${file.clusterName} {`, "}");
 
@@ -47,11 +49,13 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
         }
     }
 
-    // Generate the conditional type that defines cluster structure
-    generateType(ns, variance, featureNames, illegal);
+    if (cluster.id !== undefined) {
+        // Generate the conditional type that defines cluster structure
+        generateType(ns, variance, featureNames, illegal);
 
-    // Generate metadata
-    generateMetadata(ns, cluster);
+        // Generate metadata
+        generateMetadata(ns, cluster);
+    }
 
     // Generate components
     const gen = new ClusterComponentGenerator(ns, cluster);
@@ -59,8 +63,10 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
         gen.defineComponent(component);
     }
 
-    // Generate the "complete" cluster
-    generateExhaustive(ns, cluster, variance);
+    if (cluster.id !== undefined) {
+        // Generate the "complete" cluster
+        generateExhaustive(ns, cluster, variance);
+    }
 }
 
 function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
@@ -81,7 +87,7 @@ function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: Clu
             .document(cluster, `This function creates a ${cluster.name} cluster.`);
     }
 
-    const base = factoryFunction.expressions(`const cluster = {`, "}");
+    const base = factoryFunction.expressions(`const cluster = Cluster({`, "})");
     base.atom(`...${file.clusterName}.Metadata`);
     if (variance.componentized) {
         file.addImport("schema/BitmapSchema", "BitFlags");
@@ -121,17 +127,20 @@ function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: Clu
 function generateType(ns: Block, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
     let factoryType;
 
+    ns.file.addImport("cluster/Cluster", "GlobalAttributes");
     if (variance.componentized) {
         ns.file.addImport("schema/BitmapSchema", "TypeFromPartialBitSchema");
         factoryType = Array<string>(
             "export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = ",
             "    typeof Metadata",
+            "    & { attributes: GlobalAttributes<typeof Metadata.features> }",
             "    & { supportedFeatures: T }"
         );
     } else {
         factoryType = Array<string>(
             "export type Type = ",
-            "    typeof Metadata"
+            "    typeof Metadata",
+            "    & { attributes: GlobalAttributes<{}> }"
         )
     }
 

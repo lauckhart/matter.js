@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt32, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -21,11 +21,11 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  * This function creates a FaultInjection cluster.
  */
 export function FaultInjectionCluster() {
-    const cluster = { ...FaultInjectionCluster.Metadata, ...FaultInjectionCluster.BaseComponent };
+    const cluster = Cluster({ ...FaultInjectionCluster.Metadata, ...FaultInjectionCluster.BaseComponent });
     return cluster as unknown as FaultInjectionCluster.Type;
 };
 
-export const enum TlvFaultType {
+export const enum FaultType {
     Unspecified = 0,
     SystemFault = 1,
     InetFault = 2,
@@ -34,7 +34,7 @@ export const enum TlvFaultType {
 };
 
 export const TlvFailAtFaultRequest = TlvObject({
-    type: TlvField(0, TlvEnum<TlvFaultType>()),
+    type: TlvField(0, TlvEnum<FaultType>()),
     id: TlvField(1, TlvUInt32),
     numCallsToSkip: TlvField(2, TlvUInt32),
     numCallsToFail: TlvField(3, TlvUInt32),
@@ -42,7 +42,7 @@ export const TlvFailAtFaultRequest = TlvObject({
 });
 
 export const TlvFailRandomlyAtFaultRequest = TlvObject({
-    type: TlvField(0, TlvEnum<TlvFaultType>()),
+    type: TlvField(0, TlvEnum<FaultType>()),
     id: TlvField(1, TlvUInt32),
     percentage: TlvField(2, TlvUInt8)
 });
@@ -50,6 +50,7 @@ export const TlvFailRandomlyAtFaultRequest = TlvObject({
 export namespace FaultInjectionCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

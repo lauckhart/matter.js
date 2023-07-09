@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableFixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableFixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt64 } from "../../tlv/TlvNumber.js";
@@ -24,7 +24,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.15
  */
 export function ValidProxiesCluster() {
-    const cluster = { ...ValidProxiesCluster.Metadata, ...ValidProxiesCluster.BaseComponent };
+    const cluster = Cluster({ ...ValidProxiesCluster.Metadata, ...ValidProxiesCluster.BaseComponent });
     return cluster as unknown as ValidProxiesCluster.Type;
 };
 
@@ -38,6 +38,7 @@ export const TlvValidProxyStruct = TlvObject({ nodeId: TlvField(1, TlvUInt64) })
 export namespace ValidProxiesCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

@@ -43,7 +43,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Granularity", id: 0x1, type: "GranularityEnum", access: "R V",
-            conformance: "M", constraint: "desc",
+            conformance: "M", constraint: "desc", default: 0,
             details: "The granularity of the error that the server is willing to guarantee on the time synchronization. " +
                      "It is of type GranularityEnum.",
             xref: { document: "core", section: "11.16.8.2" }
@@ -51,7 +51,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", access: "R V",
-            conformance: "O", constraint: "desc",
+            conformance: "O", constraint: "desc", default: 0,
             details: "The server’s time source. This attribute indicates what method the server is using to sync, whether " +
                      "the source uses NTS or not and whether the source is internal or external to the Fabric. This " +
                      "attribute MAY be used by a client to determine its level of trust in the UTCTime. It is of type " +
@@ -94,7 +94,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "DstOffset", id: 0x6, type: "list", access: "RW VM", conformance: "TZ",
-            constraint: "max 20",
+            constraint: "max 20", default: [],
             details: "A list of offsets to apply for daylight savings time, and their validity period. List entries SHALL " +
                      "be sorted by ValidStarting time.",
             xref: { document: "core", section: "11.16.8.7" },
@@ -103,7 +103,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LocalTime", id: 0x7, type: "epoch-us", access: "R V", conformance: "TZ",
-            quality: "X C",
+            default: 0, quality: "X C",
             details: "The computed current local time of the server as a epoch-us (Epoch Time in Microseconds). The local " +
                      "time offset of the value is the sum of the currently used TimeZoneEntry’s offset and the currently " +
                      "used DST offset, if any.",
@@ -160,20 +160,21 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M",
+                    tag: "datatype", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", default: 0,
                     details: "This SHALL give the Client’s UTC Time.",
                     xref: { document: "core", section: "11.16.9.1.1" }
                 },
 
                 {
                     tag: "datatype", name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M",
+                    default: 0,
                     details: "This SHALL give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity " +
                              "Attribute”.",
                     xref: { document: "core", section: "11.16.9.1.2" }
                 },
 
                 {
-                    tag: "datatype", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O",
+                    tag: "datatype", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: 0,
                     details: "This SHALL give the Client’s TimeSource, as described in Section 11.16.8.3, “TimeSource Attribute”.",
                     xref: { document: "core", section: "11.16.9.1.3" }
                 }

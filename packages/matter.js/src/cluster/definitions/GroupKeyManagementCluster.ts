@@ -7,9 +7,9 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, FabricScopedAttribute, FixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { WritableFabricScopedAttribute, AccessLevel, FabricScopedAttribute, FixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
@@ -26,7 +26,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.2
  */
 export function GroupKeyManagementCluster() {
-    const cluster = { ...GroupKeyManagementCluster.Metadata, ...GroupKeyManagementCluster.BaseComponent };
+    const cluster = Cluster({ ...GroupKeyManagementCluster.Metadata, ...GroupKeyManagementCluster.BaseComponent });
     return cluster as unknown as GroupKeyManagementCluster.Type;
 };
 
@@ -76,7 +76,7 @@ export const TlvGroupInfoMapStruct = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.1
  */
-export const enum TlvGroupKeySecurityPolicyEnum {
+export const enum GroupKeySecurityPolicyEnum {
     TrustFirst = 0,
     CacheAndSync = 1
 };
@@ -84,7 +84,7 @@ export const enum TlvGroupKeySecurityPolicyEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.2
  */
-export const enum TlvGroupKeyMulticastPolicyEnum {
+export const enum GroupKeyMulticastPolicyEnum {
     /**
      * The 16-bit Group Identifier of the Multicast Address SHALL be the Group ID of the group.
      *
@@ -114,7 +114,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.1
      */
-    groupKeySecurityPolicy: TlvField(1, TlvEnum<TlvGroupKeySecurityPolicyEnum>()),
+    groupKeySecurityPolicy: TlvField(1, TlvEnum<GroupKeySecurityPolicyEnum>()),
 
     /**
      * This field, if not null, SHALL be the root credential used in the derivation of an operational group key for
@@ -170,7 +170,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.8
      */
-    groupKeyMulticastPolicy: TlvOptionalField(8, TlvEnum<TlvGroupKeyMulticastPolicyEnum>())
+    groupKeyMulticastPolicy: TlvOptionalField(8, TlvEnum<GroupKeyMulticastPolicyEnum>())
 });
 
 /**
@@ -235,6 +235,7 @@ export namespace GroupKeyManagementCluster {
 
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -292,7 +293,7 @@ export namespace GroupKeyManagementCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.3
              */
-            maxGroupsPerFabric: FixedAttribute(2, TlvUInt16),
+            maxGroupsPerFabric: FixedAttribute(2, TlvUInt16, { default: 0 }),
 
             /**
              * This attribute SHALL indicate the maximum number of group key sets this node supports per fabric. The

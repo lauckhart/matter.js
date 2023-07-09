@@ -27,7 +27,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentTarget", id: 0x1, type: "uint8", access: "R V", conformance: "O",
-            constraint: "desc", quality: "X",
+            constraint: "desc", default: 0, quality: "X",
             details: "The CurrentTarget attribute SHALL represent the Identifier for the target which is currently in " +
                      "foreground on the corresponding Endpoint (Video Player or Content App), or null to indicate that no " +
                      "target is in the foreground.",

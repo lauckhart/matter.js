@@ -50,21 +50,21 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Tolerance", id: 0x3, type: "uint16", access: "R V", conformance: "O",
-            constraint: "0 to 2048",
+            constraint: "0 to 2048", default: 0,
             details: "This attribute indicates the magnitude of the possible error that is associated with ScaledValue.",
             xref: { document: "cluster", section: "2.4.5.4" }
         },
 
         {
             tag: "attribute", name: "ScaledValue", id: 0x10, type: "int16", access: "R V", conformance: "EXT",
-            constraint: "MinScaledValue to MaxScaledValue", quality: "X",
+            constraint: "MinScaledValue to MaxScaledValue", default: 0, quality: "X",
             details: "ScaledValue represents the pressure in Pascals as follows:",
             xref: { document: "cluster", section: "2.4.5.5" }
         },
 
         {
             tag: "attribute", name: "MinScaledValue", id: 0x11, type: "int16", access: "R V",
-            conformance: "EXT", constraint: "-32767 to MaxScaledValue1", quality: "X",
+            conformance: "EXT", constraint: "-32767 to MaxScaledValue1", default: 0, quality: "X",
             details: "The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The " +
                      "null value indicates that the value is not available.",
             xref: { document: "cluster", section: "2.4.5.6" }
@@ -72,7 +72,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxScaledValue", id: 0x12, type: "int16", access: "R V",
-            conformance: "EXT", constraint: "MinScaledValue1 to 32767", quality: "X",
+            conformance: "EXT", constraint: "MinScaledValue1 to 32767", default: 0, quality: "X",
             details: "This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue " +
                      "SHALL be greater than MinScaledValue.",
             xref: { document: "cluster", section: "2.4.5.7" }
@@ -80,7 +80,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ScaledTolerance", id: 0x13, type: "uint16", access: "R V",
-            conformance: "[EXT]", constraint: "0 to 2048", quality: "P",
+            conformance: "[EXT]", constraint: "0 to 2048", default: 0, quality: "P",
             details: "This attribute indicates the magnitude of the possible error that is associated with ScaledValue. " +
                      "The true value is located in the range",
             xref: { document: "cluster", section: "2.4.5.8" }
@@ -88,7 +88,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Scale", id: 0x14, type: "int8", access: "R V", conformance: "EXT",
-            constraint: "-127 to 127",
+            constraint: "-127 to 127", default: 0,
             details: "This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue " +
                      "Attribute).",
             xref: { document: "cluster", section: "2.4.5.9" }

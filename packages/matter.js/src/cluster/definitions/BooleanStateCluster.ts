@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalEvent, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalEvent, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 
@@ -22,7 +22,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7
  */
 export function BooleanStateCluster() {
-    const cluster = { ...BooleanStateCluster.Metadata, ...BooleanStateCluster.BaseComponent };
+    const cluster = Cluster({ ...BooleanStateCluster.Metadata, ...BooleanStateCluster.BaseComponent });
     return cluster as unknown as BooleanStateCluster.Type;
 };
 
@@ -36,6 +36,7 @@ export const TlvStateChangeEvent = TlvObject({ stateValue: TlvField(0, TlvBoolea
 export namespace BooleanStateCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**

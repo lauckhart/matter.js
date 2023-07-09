@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, FixedAttribute, OptionalAttribute, OptionalFixedAttribute, OptionalEvent, EventPriority, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, FixedAttribute, OptionalAttribute, OptionalFixedAttribute, OptionalEvent, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -33,11 +33,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.7
  */
 export function PowerSourceCluster<T extends PowerSourceCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...PowerSourceCluster.Metadata,
         supportedFeatures: BitFlags(PowerSourceCluster.Metadata.features, ...features),
         ...PowerSourceCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, PowerSourceCluster.WiredComponent, { wired: true });
     extendCluster(cluster, PowerSourceCluster.BatteryComponent, { battery: true });
     extendCluster(cluster, PowerSourceCluster.ReplaceableComponent, { replaceable: true });
@@ -48,7 +48,7 @@ export function PowerSourceCluster<T extends PowerSourceCluster.Feature[]>(...fe
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.4
  */
-export const enum TlvPowerSourceStatusEnum {
+export const enum PowerSourceStatusEnum {
     Unspecified = 0,
     Active = 1,
     Standby = 2,
@@ -58,7 +58,7 @@ export const enum TlvPowerSourceStatusEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.5
  */
-export const enum TlvWiredCurrentTypeEnum {
+export const enum WiredCurrentTypeEnum {
     Ac = 0,
     Dc = 1
 };
@@ -66,7 +66,7 @@ export const enum TlvWiredCurrentTypeEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.1
  */
-export const enum TlvWiredFaultEnum {
+export const enum WiredFaultEnum {
     Unspecified = 0,
     OverVoltage = 1,
     UnderVoltage = 2
@@ -85,7 +85,7 @@ export const TlvWiredFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.1.1
      */
-    current: TlvField(0, TlvArray(TlvEnum<TlvWiredFaultEnum>())),
+    current: TlvField(0, TlvArray(TlvEnum<WiredFaultEnum>())),
 
     /**
      * This field SHALL represent the set of faults detected prior to this change event, as per Section 11.7.6.11,
@@ -93,13 +93,13 @@ export const TlvWiredFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.1.2
      */
-    previous: TlvField(1, TlvArray(TlvEnum<TlvWiredFaultEnum>()))
+    previous: TlvField(1, TlvArray(TlvEnum<WiredFaultEnum>()))
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.6
  */
-export const enum TlvBatChargeLevelEnum {
+export const enum BatChargeLevelEnum {
     Ok = 0,
     Warning = 1,
     Critical = 2
@@ -108,7 +108,7 @@ export const enum TlvBatChargeLevelEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.7
  */
-export const enum TlvBatReplaceabilityEnum {
+export const enum BatReplaceabilityEnum {
     Unspecified = 0,
     NotReplaceable = 1,
     UserReplaceable = 2,
@@ -118,7 +118,7 @@ export const enum TlvBatReplaceabilityEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.2
  */
-export const enum TlvBatFaultEnum {
+export const enum BatFaultEnum {
     Unspecified = 0,
     OverTemp = 1,
     UnderTemp = 2
@@ -131,14 +131,14 @@ export const enum TlvBatFaultEnum {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.2
  */
 export const TlvBatFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<TlvBatFaultEnum>())),
-    previous: TlvField(1, TlvArray(TlvEnum<TlvBatFaultEnum>()))
+    current: TlvField(0, TlvArray(TlvEnum<BatFaultEnum>())),
+    previous: TlvField(1, TlvArray(TlvEnum<BatFaultEnum>()))
 });
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.8
  */
-export const enum TlvBatCommonDesignationEnum {
+export const enum BatCommonDesignationEnum {
     Unspecified = 0,
     Aaa = 1,
     Aa = 2,
@@ -160,8 +160,8 @@ export const enum TlvBatCommonDesignationEnum {
     Ba5800 = 18,
     Duplex = 19,
     "4Sr44" = 20,
-    "523" = 21,
-    "531" = 22,
+    E523 = 21,
+    E531 = 22,
     "15V0" = 23,
     "22V5" = 24,
     "30V0" = 25,
@@ -201,31 +201,31 @@ export const enum TlvBatCommonDesignationEnum {
     A312 = 59,
     A675 = 60,
     Ac41E = 61,
-    "10180" = 62,
-    "10280" = 63,
-    "10440" = 64,
-    "14250" = 65,
-    "14430" = 66,
-    "14500" = 67,
-    "14650" = 68,
-    "15270" = 69,
-    "16340" = 70,
+    E10180 = 62,
+    E10280 = 63,
+    E10440 = 64,
+    E14250 = 65,
+    E14430 = 66,
+    E14500 = 67,
+    E14650 = 68,
+    E15270 = 69,
+    E16340 = 70,
     Rcr123A = 71,
-    "17500" = 72,
-    "17670" = 73,
-    "18350" = 74,
-    "18500" = 75,
-    "18650" = 76,
-    "19670" = 77,
-    "25500" = 78,
-    "26650" = 79,
-    "32600" = 80
+    E17500 = 72,
+    E17670 = 73,
+    E18350 = 74,
+    E18500 = 75,
+    E18650 = 76,
+    E19670 = 77,
+    E25500 = 78,
+    E26650 = 79,
+    E32600 = 80
 };
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.9
  */
-export const enum TlvBatApprovedChemistryEnum {
+export const enum BatApprovedChemistryEnum {
     Unspecified = 0,
     Alkaline = 1,
     LithiumCarbonFluoride = 2,
@@ -264,7 +264,7 @@ export const enum TlvBatApprovedChemistryEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.10
  */
-export const enum TlvBatChargeStateEnum {
+export const enum BatChargeStateEnum {
     Unknown = 0,
     IsCharging = 1,
     IsAtFullCharge = 2,
@@ -274,7 +274,7 @@ export const enum TlvBatChargeStateEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.3
  */
-export const enum TlvBatChargeFaultEnum {
+export const enum BatChargeFaultEnum {
     Unspecified = 0,
     AmbientTooHot = 1,
     AmbientTooCold = 2,
@@ -294,8 +294,8 @@ export const enum TlvBatChargeFaultEnum {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.3
  */
 export const TlvBatChargeFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<TlvBatChargeFaultEnum>())),
-    previous: TlvField(1, TlvArray(TlvEnum<TlvBatChargeFaultEnum>()))
+    current: TlvField(0, TlvArray(TlvEnum<BatChargeFaultEnum>())),
+    previous: TlvField(1, TlvArray(TlvEnum<BatChargeFaultEnum>()))
 });
 
 export namespace PowerSourceCluster {
@@ -336,6 +336,7 @@ export namespace PowerSourceCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { wired: true } ? typeof WiredComponent : {})
@@ -395,7 +396,7 @@ export namespace PowerSourceCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.1
              */
-            status: Attribute(0, TlvEnum<TlvPowerSourceStatusEnum>(), { readAcl: AccessLevel.View }),
+            status: Attribute(0, TlvEnum<PowerSourceStatusEnum>(), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL indicate the relative preference with which the Node will select this source to
@@ -456,7 +457,7 @@ export namespace PowerSourceCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.6
              */
-            wiredCurrentType: FixedAttribute(5, TlvEnum<TlvWiredCurrentTypeEnum>(), { readAcl: AccessLevel.View }),
+            wiredCurrentType: FixedAttribute(5, TlvEnum<WiredCurrentTypeEnum>(), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL indicate the assessed instantaneous current draw of the Node on the hard- wired
@@ -509,7 +510,7 @@ export namespace PowerSourceCluster {
              */
             activeWiredFaults: OptionalAttribute(
                 10,
-                TlvArray(TlvEnum<TlvWiredFaultEnum>()),
+                TlvArray(TlvEnum<WiredFaultEnum>()),
                 { default: [], readAcl: AccessLevel.View }
             )
         },
@@ -572,7 +573,7 @@ export namespace PowerSourceCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.15
              */
-            batChargeLevel: Attribute(14, TlvEnum<TlvBatChargeLevelEnum>(), { readAcl: AccessLevel.View }),
+            batChargeLevel: Attribute(14, TlvEnum<BatChargeLevelEnum>(), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL indicate if the battery needs to be replaced. Replacement MAY be simple routine
@@ -588,7 +589,7 @@ export namespace PowerSourceCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.17
              */
-            batReplaceability: FixedAttribute(16, TlvEnum<TlvBatReplaceabilityEnum>(), { readAcl: AccessLevel.View }),
+            batReplaceability: FixedAttribute(16, TlvEnum<BatReplaceabilityEnum>(), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL indicate whether the Node detects that the batteries are properly installed.
@@ -612,7 +613,7 @@ export namespace PowerSourceCluster {
              */
             activeBatFaults: OptionalAttribute(
                 18,
-                TlvArray(TlvEnum<TlvBatFaultEnum>()),
+                TlvArray(TlvEnum<BatFaultEnum>()),
                 { default: [], readAcl: AccessLevel.View }
             )
         },
@@ -650,7 +651,7 @@ export namespace PowerSourceCluster {
              */
             batCommonDesignation: OptionalFixedAttribute(
                 20,
-                TlvEnum<TlvBatCommonDesignationEnum>(),
+                TlvEnum<BatCommonDesignationEnum>(),
                 { readAcl: AccessLevel.View }
             ),
 
@@ -682,7 +683,7 @@ export namespace PowerSourceCluster {
              */
             batApprovedChemistry: OptionalFixedAttribute(
                 23,
-                TlvEnum<TlvBatApprovedChemistryEnum>(),
+                TlvEnum<BatApprovedChemistryEnum>(),
                 { readAcl: AccessLevel.View }
             ),
 
@@ -715,7 +716,7 @@ export namespace PowerSourceCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.27
              */
-            batChargeState: Attribute(26, TlvEnum<TlvBatChargeStateEnum>(), { readAcl: AccessLevel.View }),
+            batChargeState: Attribute(26, TlvEnum<BatChargeStateEnum>(), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL indicate the estimated time in seconds before the battery source will be at full
@@ -764,7 +765,7 @@ export namespace PowerSourceCluster {
              */
             activeBatChargeFaults: OptionalAttribute(
                 30,
-                TlvArray(TlvEnum<TlvBatChargeFaultEnum>()),
+                TlvArray(TlvEnum<BatChargeFaultEnum>()),
                 { default: [], readAcl: AccessLevel.View }
             )
         },

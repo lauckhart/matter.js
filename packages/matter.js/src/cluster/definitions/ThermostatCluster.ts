@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, OptionalWritableAttribute, WritableAttribute, Command, TlvNoResponse, OptionalCommand, OptionalFixedAttribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, OptionalWritableAttribute, WritableAttribute, Command, TlvNoResponse, OptionalCommand, OptionalFixedAttribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16, TlvUInt32, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -30,11 +30,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3
  */
 export function ThermostatCluster<T extends ThermostatCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...ThermostatCluster.Metadata,
         supportedFeatures: BitFlags(ThermostatCluster.Metadata.features, ...features),
         ...ThermostatCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, ThermostatCluster.OccupancyComponent, { occupancy: true });
     extendCluster(cluster, ThermostatCluster.HeatingComponent, { heating: true });
     extendCluster(cluster, ThermostatCluster.CoolingComponent, { cooling: true });
@@ -84,7 +84,7 @@ export const TlvRemoteSensing = TlvBitmap(TlvUInt8, TlvRemoteSensingBits);
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.23
  */
-export const enum TlvControlSequenceOfOperation {
+export const enum ControlSequenceOfOperation {
     /**
      * Heat and Emergency are not possible
      */
@@ -122,7 +122,7 @@ export const enum TlvControlSequenceOfOperation {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.24
  */
-export const enum TlvSystemMode {
+export const enum SystemMode {
     /**
      * The Thermostat does not generate demand for Cooling or Heating
      */
@@ -182,7 +182,7 @@ export const TlvAlarmMask = TlvBitmap(TlvUInt8, TlvAlarmMaskBits);
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.30
  */
-export const enum TlvTemperatureSetpointHold {
+export const enum TemperatureSetpointHold {
     /**
      * Follow scheduling program
      */
@@ -277,7 +277,7 @@ export const TlvThermostatRunningState = TlvBitmap(TlvUInt16, TlvThermostatRunni
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.34
  */
-export const enum TlvSetpointChangeSource {
+export const enum SetpointChangeSource {
     /**
      * Manual, user-initiated setpoint change via the thermostat
      */
@@ -300,7 +300,7 @@ export const enum TlvSetpointChangeSource {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.44
  */
-export const enum TlvAcType {
+export const enum AcType {
     /**
      * Unknown AC Type
      */
@@ -332,7 +332,7 @@ export const enum TlvAcType {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.46
  */
-export const enum TlvAcRefrigerantType {
+export const enum AcRefrigerantType {
     /**
      * Unknown Refrigerant Type
      */
@@ -359,7 +359,7 @@ export const enum TlvAcRefrigerantType {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.47
  */
-export const enum TlvAcCompressorType {
+export const enum AcCompressorType {
     /**
      * Unknown compressor type
      */
@@ -421,7 +421,7 @@ export const TlvAcErrorCode = TlvBitmap(TlvUInt32, TlvAcErrorCodeBits);
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.49
  */
-export const enum TlvAcLouverPosition {
+export const enum AcLouverPosition {
     /**
      * Fully Closed
      */
@@ -453,14 +453,14 @@ export const enum TlvAcLouverPosition {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.51
  */
-export const enum TlvAcCapacityFormat {
+export const enum AcCapacityFormat {
     /**
      * British Thermal Unit per Hour
      */
     BtUh = 0
 };
 
-export const enum TlvSetpointAdjustMode {
+export const enum SetpointAdjustMode {
     Heat = 0,
     Cool = 1,
     Both = 2
@@ -470,7 +470,7 @@ export const enum TlvSetpointAdjustMode {
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
  */
 export const TlvSetpointRaiseLowerRequest = TlvObject({
-    mode: TlvField(0, TlvEnum<TlvSetpointAdjustMode>()),
+    mode: TlvField(0, TlvEnum<SetpointAdjustMode>()),
     amount: TlvField(1, TlvInt8)
 });
 
@@ -487,7 +487,7 @@ export const TlvOccupancy = TlvBitmap(TlvUInt8, TlvOccupancyBits);
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7
  */
-export const enum TlvThermostatRunningMode {
+export const enum ThermostatRunningMode {
     Off = 0,
     Cool = 3,
     Heat = 4
@@ -499,7 +499,7 @@ export const enum TlvThermostatRunningMode {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.27
  */
-export const enum TlvStartOfWeek {
+export const enum StartOfWeek {
     Sunday = 0,
     Monday = 1,
     Tuesday = 2,
@@ -631,6 +631,7 @@ export namespace ThermostatCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { occupancy: true } ? typeof OccupancyComponent : {})
@@ -746,7 +747,7 @@ export namespace ThermostatCluster {
              */
             controlSequenceOfOperation: WritableAttribute(
                 27,
-                TlvEnum<TlvControlSequenceOfOperation>(),
+                TlvEnum<ControlSequenceOfOperation>(),
                 { persistent: true, default: 4, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
@@ -758,7 +759,7 @@ export namespace ThermostatCluster {
              */
             systemMode: WritableAttribute(
                 28,
-                TlvEnum<TlvSystemMode>(),
+                TlvEnum<SystemMode>(),
                 { scene: true, persistent: true, default: 1, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
@@ -782,8 +783,8 @@ export namespace ThermostatCluster {
              */
             temperatureSetpointHold: OptionalWritableAttribute(
                 35,
-                TlvEnum<TlvTemperatureSetpointHold>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<TemperatureSetpointHold>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -796,7 +797,7 @@ export namespace ThermostatCluster {
             temperatureSetpointHoldDuration: OptionalWritableAttribute(
                 36,
                 TlvNullable(TlvUInt16.bound({ max: 1440 })),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -827,7 +828,11 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.34
              */
-            setpointChangeSource: OptionalAttribute(48, TlvEnum<TlvSetpointChangeSource>(), { readAcl: AccessLevel.View }),
+            setpointChangeSource: OptionalAttribute(
+                48,
+                TlvEnum<SetpointChangeSource>(),
+                { default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * This attribute specifies the delta between the current active OccupiedCoolingSetpoint or
@@ -849,7 +854,7 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.36
              */
-            setpointChangeSourceTimestamp: OptionalAttribute(50, TlvUInt32, { readAcl: AccessLevel.View }),
+            setpointChangeSourceTimestamp: OptionalAttribute(50, TlvUInt32, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This attribute specifies the delta between the LocalTemperature Value and the OccupiedHeatingSetpoint or
@@ -871,8 +876,8 @@ export namespace ThermostatCluster {
              */
             acType: OptionalWritableAttribute(
                 64,
-                TlvEnum<TlvAcType>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<AcType>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -884,7 +889,7 @@ export namespace ThermostatCluster {
             acCapacity: OptionalWritableAttribute(
                 65,
                 TlvUInt16,
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -894,8 +899,8 @@ export namespace ThermostatCluster {
              */
             acRefrigerantType: OptionalWritableAttribute(
                 66,
-                TlvEnum<TlvAcRefrigerantType>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<AcRefrigerantType>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -905,8 +910,8 @@ export namespace ThermostatCluster {
              */
             acCompressorType: OptionalWritableAttribute(
                 67,
-                TlvEnum<TlvAcCompressorType>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<AcCompressorType>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -928,8 +933,8 @@ export namespace ThermostatCluster {
              */
             acLouverPosition: OptionalWritableAttribute(
                 69,
-                TlvEnum<TlvAcLouverPosition>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<AcLouverPosition>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -947,8 +952,8 @@ export namespace ThermostatCluster {
              */
             acCapacityFormat: OptionalWritableAttribute(
                 71,
-                TlvEnum<TlvAcCapacityFormat>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<AcCapacityFormat>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         },
 
@@ -1155,7 +1160,7 @@ export namespace ThermostatCluster {
             localTemperatureCalibration: OptionalWritableAttribute(
                 16,
                 TlvInt8.bound({ min: -25, max: 25 }),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         }
     });
@@ -1180,7 +1185,11 @@ export namespace ThermostatCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7
              */
-            thermostatRunningMode: OptionalAttribute(30, TlvEnum<TlvThermostatRunningMode>(), { readAcl: AccessLevel.View })
+            thermostatRunningMode: OptionalAttribute(
+                30,
+                TlvEnum<ThermostatRunningMode>(),
+                { default: 0, readAcl: AccessLevel.View }
+            )
         }
     });
 
@@ -1195,21 +1204,21 @@ export namespace ThermostatCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.27
              */
-            startOfWeek: FixedAttribute(32, TlvEnum<TlvStartOfWeek>(), { readAcl: AccessLevel.View }),
+            startOfWeek: FixedAttribute(32, TlvEnum<StartOfWeek>(), { readAcl: AccessLevel.View }),
 
             /**
              * This attribute determines how many weekly schedule transitions the thermostat is capable of handling.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.28
              */
-            numberOfWeeklyTransitions: FixedAttribute(33, TlvUInt8, { readAcl: AccessLevel.View }),
+            numberOfWeeklyTransitions: FixedAttribute(33, TlvUInt8, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This attribute determines how many daily schedule transitions the thermostat is capable of handling.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.29
              */
-            numberOfDailyTransitions: FixedAttribute(34, TlvUInt8, { readAcl: AccessLevel.View })
+            numberOfDailyTransitions: FixedAttribute(34, TlvUInt8, { default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {

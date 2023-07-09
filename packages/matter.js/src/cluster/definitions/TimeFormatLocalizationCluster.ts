@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -31,11 +31,11 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.4
  */
 export function TimeFormatLocalizationCluster<T extends TimeFormatLocalizationCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...TimeFormatLocalizationCluster.Metadata,
         supportedFeatures: BitFlags(TimeFormatLocalizationCluster.Metadata.features, ...features),
         ...TimeFormatLocalizationCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, TimeFormatLocalizationCluster.CalendarFormatComponent, { calendarFormat: true });
     return cluster as unknown as TimeFormatLocalizationCluster.Type<BitFlags<typeof TimeFormatLocalizationCluster.Metadata.features, T>>;
 };
@@ -43,7 +43,7 @@ export function TimeFormatLocalizationCluster<T extends TimeFormatLocalizationCl
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.1
  */
-export const enum TlvHourFormatEnum {
+export const enum HourFormatEnum {
     "12Hr" = 0,
     "24Hr" = 1
 };
@@ -51,7 +51,7 @@ export const enum TlvHourFormatEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.2
  */
-export const enum TlvCalendarTypeEnum {
+export const enum CalendarTypeEnum {
     Buddhist = 0,
     Chinese = 1,
     Coptic = 2,
@@ -83,6 +83,7 @@ export namespace TimeFormatLocalizationCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { calendarFormat: true } ? typeof CalendarFormatComponent : {});
@@ -120,7 +121,7 @@ export namespace TimeFormatLocalizationCluster {
              */
             hourFormat: WritableAttribute(
                 0,
-                TlvNullable(TlvEnum<TlvHourFormatEnum>()),
+                TlvNullable(TlvEnum<HourFormatEnum>()),
                 { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             )
         }
@@ -140,7 +141,7 @@ export namespace TimeFormatLocalizationCluster {
              */
             activeCalendarType: WritableAttribute(
                 1,
-                TlvNullable(TlvEnum<TlvCalendarTypeEnum>()),
+                TlvNullable(TlvEnum<CalendarTypeEnum>()),
                 { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
             ),
 
@@ -154,7 +155,7 @@ export namespace TimeFormatLocalizationCluster {
              */
             supportedCalendarTypes: FixedAttribute(
                 2,
-                TlvArray(TlvEnum<TlvCalendarTypeEnum>()),
+                TlvArray(TlvEnum<CalendarTypeEnum>()),
                 { default: [], readAcl: AccessLevel.View }
             )
         }

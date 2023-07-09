@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -31,11 +31,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.18
  */
 export function AdministratorCommissioningCluster<T extends AdministratorCommissioningCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...AdministratorCommissioningCluster.Metadata,
         supportedFeatures: BitFlags(AdministratorCommissioningCluster.Metadata.features, ...features),
         ...AdministratorCommissioningCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, AdministratorCommissioningCluster.BasicComponent, { basic: true });
     return cluster as unknown as AdministratorCommissioningCluster.Type<BitFlags<typeof AdministratorCommissioningCluster.Metadata.features, T>>;
 };
@@ -43,7 +43,7 @@ export function AdministratorCommissioningCluster<T extends AdministratorCommiss
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.18.5.1
  */
-export const enum TlvCommissioningWindowStatusEnum {
+export const enum CommissioningWindowStatusEnum {
     WindowNotOpen = 0,
     EnhancedWindowOpen = 1,
     BasicWindowOpen = 2
@@ -82,6 +82,7 @@ export namespace AdministratorCommissioningCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { basic: true } ? typeof BasicComponent : {});
@@ -117,7 +118,7 @@ export namespace AdministratorCommissioningCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.18.7.1
              */
-            windowStatus: Attribute(0, TlvEnum<TlvCommissioningWindowStatusEnum>(), { readAcl: AccessLevel.View }),
+            windowStatus: Attribute(0, TlvEnum<CommissioningWindowStatusEnum>(), { readAcl: AccessLevel.View }),
 
             /**
              * When the WindowStatus attribute is not set to WindowNotOpen, this attribute SHALL indicate the

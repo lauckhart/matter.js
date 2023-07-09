@@ -73,6 +73,8 @@ export interface ConditionalWritableFabricScopedAttribute<T, F extends BitSchema
 
 export interface FixedAttribute<T, F extends BitSchema> extends Attribute<T, F> { fixed: true }
 
+export interface WritableFixedAttribute<T, F extends BitSchema> extends WritableAttribute<T, F> { fixed: true }
+
 export interface OptionalFixedAttribute<T, F extends BitSchema> extends OptionalAttribute<T, F> { fixed: true }
 
 export interface ConditionalFixedAttribute<T, F extends BitSchema> extends OptionalFixedAttribute<T, F> {
@@ -354,6 +356,29 @@ export const FixedAttribute = <T, V extends T, F extends BitSchema>(id: number, 
     schema,
     optional: false,
     writable: false,
+    fixed: true,
+    scene,
+    persistent,
+    fabricScoped: false,
+    omitChanges,
+    default: conformanceValue,
+    readAcl,
+    isConditional: false,
+    optionalIf: [],
+    mandatoryIf: [],
+});
+
+export const WritableFixedAttribute = <T, V extends T, F extends BitSchema>(id: number, schema: TlvSchema<T>, {
+    scene = false,
+    persistent = false,
+    omitChanges = false,
+    default: conformanceValue,
+    readAcl = AccessLevel.View,
+}: AttributeOptions<V> = {}): FixedAttribute<T, F> => ({
+    id,
+    schema,
+    optional: false,
+    writable: true,
     fixed: true,
     scene,
     persistent,

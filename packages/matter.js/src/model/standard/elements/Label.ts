@@ -15,6 +15,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "LabelList", id: 0x0, type: "list", conformance: "M", constraint: "Derived",
+            default: [],
             details: "This is a list of string tuples. Each entry is a LabelStruct.",
             xref: { document: "core", section: "9.7.5.1" },
             children: [ { tag: "datatype", name: "entry", type: "LabelStruct" } ]

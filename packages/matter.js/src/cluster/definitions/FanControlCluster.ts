@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { WritableAttribute, AccessLevel, Attribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, Attribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -28,11 +28,11 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4
  */
 export function FanControlCluster<T extends FanControlCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...FanControlCluster.Metadata,
         supportedFeatures: BitFlags(FanControlCluster.Metadata.features, ...features),
         ...FanControlCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, FanControlCluster.MultiSpeedComponent, { multiSpeed: true });
     extendCluster(cluster, FanControlCluster.RockingComponent, { rocking: true });
     extendCluster(cluster, FanControlCluster.WindComponent, { wind: true });
@@ -45,7 +45,7 @@ export function FanControlCluster<T extends FanControlCluster.Feature[]>(...feat
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.1
  */
-export const enum TlvFanMode {
+export const enum FanMode {
     /**
      * Setting the attribute value to Off SHALL set the values of these attributes to 0 (zero):
      *
@@ -73,7 +73,7 @@ export const enum TlvFanMode {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.2
  */
-export const enum TlvFanModeSequence {
+export const enum FanModeSequence {
     OffLowMedHigh = 0,
     OffLowHigh = 1,
     OffLowMedHighAuto = 2,
@@ -162,6 +162,7 @@ export namespace FanControlCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { multiSpeed: true } ? typeof MultiSpeedComponent : {})
@@ -223,8 +224,8 @@ export namespace FanControlCluster {
              */
             fanMode: WritableAttribute(
                 0,
-                TlvEnum<TlvFanMode>(),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                TlvEnum<FanMode>(),
+                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -234,7 +235,7 @@ export namespace FanControlCluster {
              */
             fanModeSequence: WritableAttribute(
                 1,
-                TlvEnum<TlvFanModeSequence>(),
+                TlvEnum<FanModeSequence>(),
                 { persistent: true, default: 2, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
@@ -248,7 +249,7 @@ export namespace FanControlCluster {
             percentSetting: WritableAttribute(
                 2,
                 TlvNullable(TlvUInt8.bound({ max: 100 })),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -257,7 +258,7 @@ export namespace FanControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.4
              */
-            percentCurrent: Attribute(3, TlvUInt8.bound({ max: 100 }), { readAcl: AccessLevel.View })
+            percentCurrent: Attribute(3, TlvUInt8.bound({ max: 100 }), { default: 0, readAcl: AccessLevel.View })
         }
     });
 
@@ -285,7 +286,7 @@ export namespace FanControlCluster {
             speedSetting: WritableAttribute(
                 5,
                 TlvNullable(TlvUInt8),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
             ),
 
             /**
@@ -294,7 +295,7 @@ export namespace FanControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.7
              */
-            speedCurrent: Attribute(6, TlvUInt8, { readAcl: AccessLevel.View })
+            speedCurrent: Attribute(6, TlvUInt8, { default: 0, readAcl: AccessLevel.View })
         }
     });
 

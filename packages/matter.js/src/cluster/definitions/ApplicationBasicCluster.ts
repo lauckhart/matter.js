@@ -7,8 +7,8 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, OptionalFixedAttribute, AccessLevel, FixedAttribute, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { OptionalFixedAttribute, AccessLevel, FixedAttribute, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -25,7 +25,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3
  */
 export function ApplicationBasicCluster() {
-    const cluster = { ...ApplicationBasicCluster.Metadata, ...ApplicationBasicCluster.BaseComponent };
+    const cluster = Cluster({ ...ApplicationBasicCluster.Metadata, ...ApplicationBasicCluster.BaseComponent });
     return cluster as unknown as ApplicationBasicCluster.Type;
 };
 
@@ -55,7 +55,7 @@ export const TlvApplicationStruct = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.4.2
  */
-export const enum TlvApplicationStatusEnum {
+export const enum ApplicationStatusEnum {
     /**
      * Application is not running.
      */
@@ -80,6 +80,7 @@ export const enum TlvApplicationStatusEnum {
 export namespace ApplicationBasicCluster {
     export type Type = 
         typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
 
     /**
@@ -111,7 +112,7 @@ export namespace ApplicationBasicCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.2
              */
-            vendorId: OptionalFixedAttribute(1, TlvUInt16, { readAcl: AccessLevel.View }),
+            vendorId: OptionalFixedAttribute(1, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL specify a human readable (displayable) name of the Content App assigned by the
@@ -129,7 +130,7 @@ export namespace ApplicationBasicCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.4
              */
-            productId: OptionalFixedAttribute(3, TlvUInt16, { readAcl: AccessLevel.View }),
+            productId: OptionalFixedAttribute(3, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL specify a Content App which consists of an Application ID using a specified catalog.
@@ -143,7 +144,7 @@ export namespace ApplicationBasicCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.6
              */
-            status: Attribute(5, TlvEnum<TlvApplicationStatusEnum>(), { default: 1, readAcl: AccessLevel.View }),
+            status: Attribute(5, TlvEnum<ApplicationStatusEnum>(), { default: 1, readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL specify a human readable (displayable) version of the Content App assigned by the

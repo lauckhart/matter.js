@@ -43,7 +43,7 @@ Matter.children.push({
         },
         { tag: "attribute", name: "Location", id: 0x6, conformance: "X", xref: { document: "core", section: "9.13.4" } },
         {
-            tag: "attribute", name: "HardwareVersion", id: 0x7, type: "uint16", conformance: "O",
+            tag: "attribute", name: "HardwareVersion", id: 0x7, type: "uint16", conformance: "O", default: 0,
             xref: { document: "core", section: "9.13.4" }
         },
         {
@@ -51,7 +51,7 @@ Matter.children.push({
             xref: { document: "core", section: "9.13.4" }
         },
         {
-            tag: "attribute", name: "SoftwareVersion", id: 0x9, type: "uint32", conformance: "O",
+            tag: "attribute", name: "SoftwareVersion", id: 0x9, type: "uint32", conformance: "O", default: 0,
             xref: { document: "core", section: "9.13.4" }
         },
         {

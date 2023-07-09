@@ -224,6 +224,9 @@ export namespace Metatype {
                 if (value === "empty" || value === "[]" || value === "{}") {
                     return [];
                 }
+                if (Array.isArray(value) && !value.length) {
+                    return value;
+                }
 
                 // The only supported literal is an empty array
                 return FieldValue.Invalid;

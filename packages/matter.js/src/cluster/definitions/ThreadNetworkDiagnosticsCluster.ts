@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { Attribute, AccessLevel, OptionalAttribute, OptionalEvent, EventPriority, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, OptionalEvent, EventPriority, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum, TlvUInt64, TlvUInt32, TlvUInt8, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -34,11 +34,11 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.13
  */
 export function ThreadNetworkDiagnosticsCluster<T extends ThreadNetworkDiagnosticsCluster.Feature[]>(...features: [ ...T ]) {
-    const cluster = {
+    const cluster = Cluster({
         ...ThreadNetworkDiagnosticsCluster.Metadata,
         supportedFeatures: BitFlags(ThreadNetworkDiagnosticsCluster.Metadata.features, ...features),
         ...ThreadNetworkDiagnosticsCluster.BaseComponent
-    };
+    });
     extendCluster(cluster, ThreadNetworkDiagnosticsCluster.ErrorCountsComponent, { errorCounts: true });
     extendCluster(cluster, ThreadNetworkDiagnosticsCluster.MleCountsComponent, { mleCounts: true });
     extendCluster(cluster, ThreadNetworkDiagnosticsCluster.MacCountsComponent, { macCounts: true });
@@ -48,7 +48,7 @@ export function ThreadNetworkDiagnosticsCluster<T extends ThreadNetworkDiagnosti
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.3
  */
-export const enum TlvRoutingRoleEnum {
+export const enum RoutingRoleEnum {
     Unspecified = 0,
     Unassigned = 1,
     SleepyEndDevice = 2,
@@ -351,7 +351,7 @@ export const TlvOperationalDatasetComponents = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.1
  */
-export const enum TlvNetworkFaultEnum {
+export const enum NetworkFaultEnum {
     Unspecified = 0,
     LinkDown = 1,
     HardwareFailure = 2,
@@ -361,7 +361,7 @@ export const enum TlvNetworkFaultEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.2
  */
-export const enum TlvConnectionStatusEnum {
+export const enum ConnectionStatusEnum {
     Connected = 0,
     NotConnected = 1
 };
@@ -371,7 +371,7 @@ export const enum TlvConnectionStatusEnum {
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.2
  */
-export const TlvConnectionStatusEvent = TlvObject({ connectionStatus: TlvField(0, TlvEnum<TlvConnectionStatusEnum>()) });
+export const TlvConnectionStatusEvent = TlvObject({ connectionStatus: TlvField(0, TlvEnum<ConnectionStatusEnum>()) });
 
 /**
  * The NetworkFaultChange Event SHALL indicate a change in the set of network faults currently detected by the Node.
@@ -384,7 +384,7 @@ export const TlvNetworkFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.1.1
      */
-    current: TlvField(0, TlvArray(TlvEnum<TlvNetworkFaultEnum>())),
+    current: TlvField(0, TlvArray(TlvEnum<NetworkFaultEnum>())),
 
     /**
      * This field SHALL represent the set of faults detected prior to this change event, as per Section 11.13.5.1,
@@ -392,7 +392,7 @@ export const TlvNetworkFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.1.2
      */
-    previous: TlvField(1, TlvArray(TlvEnum<TlvNetworkFaultEnum>()))
+    previous: TlvField(1, TlvArray(TlvEnum<NetworkFaultEnum>()))
 });
 
 export namespace ThreadNetworkDiagnosticsCluster {
@@ -434,6 +434,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
 
     export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
         typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }
         & typeof BaseComponent
         & (T extends { errorCounts: true } ? typeof ErrorCountsComponent : {})
@@ -504,7 +505,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.2
              */
-            routingRole: Attribute(1, TlvNullable(TlvEnum<TlvRoutingRoleEnum>()), { readAcl: AccessLevel.View }),
+            routingRole: Attribute(1, TlvNullable(TlvEnum<RoutingRoleEnum>()), { readAcl: AccessLevel.View }),
 
             /**
              * The NetworkName attribute SHALL indicate a human-readable (displayable) name for the Thread network that
@@ -525,7 +526,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.4
              */
-            panId: Attribute(3, TlvNullable(TlvUInt16), { readAcl: AccessLevel.View }),
+            panId: Attribute(3, TlvNullable(TlvUInt16), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The ExtendedPanId attribute SHALL indicate the unique 64-bit identifier of the Node on the Thread
@@ -534,7 +535,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.5
              */
-            extendedPanId: Attribute(4, TlvNullable(TlvUInt64), { readAcl: AccessLevel.View }),
+            extendedPanId: Attribute(4, TlvNullable(TlvUInt64), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The MeshLocalPrefix attribute SHALL indicate the mesh-local IPv6 prefix for the Thread network that the
@@ -606,21 +607,21 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.57
              */
-            activeTimestamp: OptionalAttribute(56, TlvNullable(TlvUInt64), { readAcl: AccessLevel.View }),
+            activeTimestamp: OptionalAttribute(56, TlvNullable(TlvUInt64), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL be null when there is no dataset configured.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.58
              */
-            pendingTimestamp: OptionalAttribute(57, TlvNullable(TlvUInt64), { readAcl: AccessLevel.View }),
+            pendingTimestamp: OptionalAttribute(57, TlvNullable(TlvUInt64), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * This attribute SHALL be null when there is no dataset configured.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.59
              */
-            delay: OptionalAttribute(58, TlvNullable(TlvUInt32), { readAcl: AccessLevel.View }),
+            delay: OptionalAttribute(58, TlvNullable(TlvUInt32), { default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The SecurityPolicy attribute indicates the current security policies for the Thread partition to which a
@@ -664,7 +665,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              */
             activeNetworkFaults: Attribute(
                 62,
-                TlvArray(TlvEnum<TlvNetworkFaultEnum>()),
+                TlvArray(TlvEnum<NetworkFaultEnum>()),
                 { default: [], readAcl: AccessLevel.View }
             )
         },
@@ -700,7 +701,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.7
              */
-            overrunCount: Attribute(6, TlvUInt64, { omitChanges: true, readAcl: AccessLevel.View })
+            overrunCount: Attribute(6, TlvUInt64, { omitChanges: true, default: 0, readAcl: AccessLevel.View })
         },
 
         commands: {
@@ -725,7 +726,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.15
              */
-            detachedRoleCount: OptionalAttribute(14, TlvUInt16, { omitChanges: true, readAcl: AccessLevel.View }),
+            detachedRoleCount: OptionalAttribute(
+                14,
+                TlvUInt16,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The ChildRoleCount attribute SHALL indicate the number of times the Node entered the
@@ -734,7 +739,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.16
              */
-            childRoleCount: OptionalAttribute(15, TlvUInt16, { omitChanges: true, readAcl: AccessLevel.View }),
+            childRoleCount: OptionalAttribute(15, TlvUInt16, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RouterRoleCount attribute SHALL indicate the number of times the Node entered the
@@ -743,7 +748,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.17
              */
-            routerRoleCount: OptionalAttribute(16, TlvUInt16, { omitChanges: true, readAcl: AccessLevel.View }),
+            routerRoleCount: OptionalAttribute(16, TlvUInt16, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The LeaderRoleCount attribute SHALL indicate the number of times the Node entered the
@@ -752,7 +757,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.18
              */
-            leaderRoleCount: OptionalAttribute(17, TlvUInt16, { omitChanges: true, readAcl: AccessLevel.View }),
+            leaderRoleCount: OptionalAttribute(17, TlvUInt16, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The AttachAttemptCount attribute SHALL indicate the number of attempts that have been made to attach to
@@ -761,7 +766,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.19
              */
-            attachAttemptCount: OptionalAttribute(18, TlvUInt16, { omitChanges: true, readAcl: AccessLevel.View }),
+            attachAttemptCount: OptionalAttribute(
+                18,
+                TlvUInt16,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The PartitionIdChangeCount attribute SHALL indicate the number of times that the Thread network that the
@@ -769,7 +778,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.20
              */
-            partitionIdChangeCount: OptionalAttribute(19, TlvUInt16, { omitChanges: true, readAcl: AccessLevel.View }),
+            partitionIdChangeCount: OptionalAttribute(
+                19,
+                TlvUInt16,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The BetterPartitionAttachAttemptCount attribute SHALL indicate the number of times a Node has attempted
@@ -781,7 +794,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
             betterPartitionAttachAttemptCount: OptionalAttribute(
                 20,
                 TlvUInt16,
-                { omitChanges: true, readAcl: AccessLevel.View }
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
             ),
 
             /**
@@ -790,7 +803,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.22
              */
-            parentChangeCount: OptionalAttribute(21, TlvUInt16, { omitChanges: true, readAcl: AccessLevel.View })
+            parentChangeCount: OptionalAttribute(
+                21,
+                TlvUInt16,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            )
         }
     });
 
@@ -807,7 +824,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.23
              */
-            txTotalCount: OptionalAttribute(22, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txTotalCount: OptionalAttribute(22, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxUnicastCount attribute SHALL indicate the total number of unique unicast MAC frame transmission
@@ -817,7 +834,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.24
              */
-            txUnicastCount: OptionalAttribute(23, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txUnicastCount: OptionalAttribute(23, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxBroadcastCount attribute SHALL indicate the total number of unique broadcast MAC frame
@@ -827,7 +844,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.25
              */
-            txBroadcastCount: OptionalAttribute(24, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txBroadcastCount: OptionalAttribute(24, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxAckRequestedCount attribute SHALL indicate the total number of unique MAC frame transmission
@@ -837,7 +854,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.26
              */
-            txAckRequestedCount: OptionalAttribute(25, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txAckRequestedCount: OptionalAttribute(
+                25,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The TxAckedCount attribute SHALL indicate the total number of unique MAC frame transmission requests
@@ -847,7 +868,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.27
              */
-            txAckedCount: OptionalAttribute(26, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txAckedCount: OptionalAttribute(26, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxNoAckRequestedCount attribute SHALL indicate the total number of unique MAC frame transmission
@@ -857,7 +878,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.28
              */
-            txNoAckRequestedCount: OptionalAttribute(27, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txNoAckRequestedCount: OptionalAttribute(
+                27,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The TxDataCount attribute SHALL indicate the total number of unique MAC Data frame transmission
@@ -867,7 +892,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.29
              */
-            txDataCount: OptionalAttribute(28, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txDataCount: OptionalAttribute(28, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxDataPollCount attribute SHALL indicate the total number of unique MAC Data Poll frame transmission
@@ -877,7 +902,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.30
              */
-            txDataPollCount: OptionalAttribute(29, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txDataPollCount: OptionalAttribute(29, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxBeaconCount attribute SHALL indicate the total number of unique MAC Beacon frame transmission
@@ -886,7 +911,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.31
              */
-            txBeaconCount: OptionalAttribute(30, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txBeaconCount: OptionalAttribute(30, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxBeaconRequestCount attribute SHALL indicate the total number of unique MAC Beacon Request frame
@@ -896,7 +921,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.32
              */
-            txBeaconRequestCount: OptionalAttribute(31, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txBeaconRequestCount: OptionalAttribute(
+                31,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The TxOtherCount attribute SHALL indicate the total number of unique MAC frame transmission requests
@@ -906,7 +935,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.33
              */
-            txOtherCount: OptionalAttribute(32, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txOtherCount: OptionalAttribute(32, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxRetryCount attribute SHALL indicate the total number of MAC retransmission attempts. The
@@ -916,7 +945,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.34
              */
-            txRetryCount: OptionalAttribute(33, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txRetryCount: OptionalAttribute(33, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxDirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC transmission
@@ -926,7 +955,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.35
              */
-            txDirectMaxRetryExpiryCount: OptionalAttribute(34, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txDirectMaxRetryExpiryCount: OptionalAttribute(
+                34,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The TxIndirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC transmission
@@ -939,7 +972,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
             txIndirectMaxRetryExpiryCount: OptionalAttribute(
                 35,
                 TlvUInt32,
-                { omitChanges: true, readAcl: AccessLevel.View }
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
             ),
 
             /**
@@ -949,7 +982,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.37
              */
-            txErrCcaCount: OptionalAttribute(36, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txErrCcaCount: OptionalAttribute(36, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxErrAbortCount attribute SHALL indicate the total number of unique MAC transmission request
@@ -958,7 +991,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.38
              */
-            txErrAbortCount: OptionalAttribute(37, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txErrAbortCount: OptionalAttribute(37, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The TxErrBusyChannelCount attribute SHALL indicate the total number of unique MAC transmission request
@@ -968,7 +1001,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.39
              */
-            txErrBusyChannelCount: OptionalAttribute(38, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            txErrBusyChannelCount: OptionalAttribute(
+                38,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The RxTotalCount attribute SHALL indicate the total number of received unique MAC frames. This value
@@ -976,7 +1013,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.40
              */
-            rxTotalCount: OptionalAttribute(39, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxTotalCount: OptionalAttribute(39, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxUnicastCount attribute SHALL indicate the total number of received unique unicast MAC frames. This
@@ -984,7 +1021,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.41
              */
-            rxUnicastCount: OptionalAttribute(40, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxUnicastCount: OptionalAttribute(40, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxBroadcastCount attribute SHALL indicate the total number of received unique broadcast MAC frames.
@@ -992,7 +1029,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.42
              */
-            rxBroadcastCount: OptionalAttribute(41, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxBroadcastCount: OptionalAttribute(41, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxDataCount attribute SHALL indicate the total number of received unique MAC Data frames. This value
@@ -1000,7 +1037,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.43
              */
-            rxDataCount: OptionalAttribute(42, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxDataCount: OptionalAttribute(42, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxDataPollCount attribute SHALL indicate the total number of received unique MAC Data Poll frames.
@@ -1008,7 +1045,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.44
              */
-            rxDataPollCount: OptionalAttribute(43, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxDataPollCount: OptionalAttribute(43, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxBeaconCount attribute SHALL indicate the total number of received unique MAC Beacon frames. This
@@ -1016,7 +1053,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.45
              */
-            rxBeaconCount: OptionalAttribute(44, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxBeaconCount: OptionalAttribute(44, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxBeaconRequestCount attribute SHALL indicate the total number of received unique MAC Beacon Request
@@ -1024,7 +1061,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.46
              */
-            rxBeaconRequestCount: OptionalAttribute(45, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxBeaconRequestCount: OptionalAttribute(
+                45,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The RxOtherCount attribute SHALL indicate the total number of received unique MAC frame requests that
@@ -1032,7 +1073,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.47
              */
-            rxOtherCount: OptionalAttribute(46, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxOtherCount: OptionalAttribute(46, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxAddressFilteredCount attribute SHALL indicate the total number of received unique MAC frame
@@ -1041,7 +1082,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.48
              */
-            rxAddressFilteredCount: OptionalAttribute(47, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxAddressFilteredCount: OptionalAttribute(
+                47,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The RxDestAddrFilteredCount attribute SHALL indicate the total number of received unique MAC frame
@@ -1050,7 +1095,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.49
              */
-            rxDestAddrFilteredCount: OptionalAttribute(48, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxDestAddrFilteredCount: OptionalAttribute(
+                48,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The RxDuplicatedCount attribute SHALL indicate the total number of received MAC frame requests that have
@@ -1059,7 +1108,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.50
              */
-            rxDuplicatedCount: OptionalAttribute(49, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxDuplicatedCount: OptionalAttribute(
+                49,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The RxErrNoFrameCount attribute SHALL indicate the total number of received unique MAC frame requests
@@ -1068,7 +1121,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.51
              */
-            rxErrNoFrameCount: OptionalAttribute(50, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxErrNoFrameCount: OptionalAttribute(
+                50,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The RxErrUnknownNeighborCount attribute SHALL indicate the total number of received unique MAC frame
@@ -1077,7 +1134,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.52
              */
-            rxErrUnknownNeighborCount: OptionalAttribute(51, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxErrUnknownNeighborCount: OptionalAttribute(
+                51,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The RxErrInvalidScrAddrCount attribute SHALL indicate the total number of received unique MAC frame
@@ -1086,7 +1147,11 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.53
              */
-            rxErrInvalidScrAddrCount: OptionalAttribute(52, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxErrInvalidScrAddrCount: OptionalAttribute(
+                52,
+                TlvUInt32,
+                { omitChanges: true, default: 0, readAcl: AccessLevel.View }
+            ),
 
             /**
              * The RxErrSecCount attribute SHALL indicate the total number of received unique MAC frame requests that
@@ -1095,7 +1160,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.54
              */
-            rxErrSecCount: OptionalAttribute(53, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxErrSecCount: OptionalAttribute(53, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxErrFcsCount attribute SHALL indicate the total number of received unique MAC frame requests that
@@ -1104,7 +1169,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.55
              */
-            rxErrFcsCount: OptionalAttribute(54, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View }),
+            rxErrFcsCount: OptionalAttribute(54, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View }),
 
             /**
              * The RxErrOtherCount attribute SHALL indicate the total number of received unique MAC frame requests that
@@ -1113,7 +1178,7 @@ export namespace ThreadNetworkDiagnosticsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.56
              */
-            rxErrOtherCount: OptionalAttribute(55, TlvUInt32, { omitChanges: true, readAcl: AccessLevel.View })
+            rxErrOtherCount: OptionalAttribute(55, TlvUInt32, { omitChanges: true, default: 0, readAcl: AccessLevel.View })
         }
     });
 
