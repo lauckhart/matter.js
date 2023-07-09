@@ -54,15 +54,16 @@ export function ValidateModel(model: Model) {
             }
         }
 
-        logger.debug(
-            `${model.valid ? "✔": "✘"} ${model.name}`,
-            Logger.dict({
-                tag: model.tag,
-                children: model.children.length || undefined,
-                id: model.id ? `0x${model.id?.toString(16)}` : undefined,
-                xref: model.xref
-            })
-        );
+        // Need another logging level before enabling this
+        // logger.debug(
+        //     `${model.valid ? "✔": "✘"} ${model.name}`,
+        //     Logger.dict({
+        //         tag: model.tag,
+        //         children: model.children.length || undefined,
+        //         id: model.id ? `0x${model.id?.toString(16)}` : undefined,
+        //         xref: model.xref
+        //     })
+        // );
 
         Logger.nest(() => {
             model.children.forEach(validate);

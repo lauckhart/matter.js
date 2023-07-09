@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { describeList } from "../../../../tools/util/string.js";
+import { describeList } from "../../../util/String.js";
 import { ClusterModel } from "../../models/index.js";
 import { InferredComponent, InferredComponents } from "./InferredComponents.js";
 
@@ -27,7 +27,7 @@ export type NamedComponents = NamedComponent[];
 export function NamedComponents(cluster: ClusterModel, inferredComponents: InferredComponents): NamedComponents {
     const namedComponents = [] as NamedComponents;
     const namedComponentMap = {} as { [name: string]: NamedComponent };
-    const featureNames = Object.fromEntries(cluster.features.map(f => [ f.name, f.description ]));
+    const featureNames = Object.fromEntries(cluster.features.map(f => [ f.name, f.description || f.name ]));
 
     for (const elementVariance of inferredComponents) {
         let name;

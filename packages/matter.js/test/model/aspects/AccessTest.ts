@@ -42,7 +42,13 @@ describe("Access", () => {
 
     describe("illegal flag", () => {
         it("records error", () => {
-            expect(new Access("Z").errors).toEqual([ `Access "Z": Unknown flag "Z"` ]);
+            expect(new Access("Z").errors).toEqual([
+                {
+                    code: "UNKNOWN_ACCESS_FLAG",
+                    message: 'Unknown flag "Z"',
+                    source: 'Access "Z"'
+                }
+            ]);
         });
     })
 })
