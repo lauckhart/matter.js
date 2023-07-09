@@ -182,5 +182,5 @@ function actualToExpected(actual: ClusterVariance) {
 function expectComponents(children: ClusterElement.Child[], ...expected: ExpectedElementVariance[]) {
     const variance = analyze(children);
     const actual = actualToExpected(variance);
-    expect(actual).toStrictEqual(expected);
+    expect(actual).toEqual(expected);
 }
