@@ -21,11 +21,11 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  *
  * This cluster provides an interface for launching content on a media player device such as a TV or Speaker.
  *
- * Use this factory function to create a ApplicationLauncher cluster supporting a specific set of features.  Include
+ * Use this factory function to create an ApplicationLauncher cluster supporting a specific set of features.  Include
  * each {@link ApplicationLauncherCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ApplicationLauncherCluster.Feature} to support
- * @returns a ApplicationLauncher cluster with specified features enabled
+ * @returns an ApplicationLauncher cluster with specified features enabled
  * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4

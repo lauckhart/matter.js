@@ -20,11 +20,11 @@ import { TlvString } from "../../tlv/TlvString.js";
  *
  * This cluster provides an interface for controlling the Output on a media device such as a TV.
  *
- * Use this factory function to create a AudioOutput cluster supporting a specific set of features.  Include each
+ * Use this factory function to create an AudioOutput cluster supporting a specific set of features.  Include each
  * {@link AudioOutputCluster.Feature} you wish to support.
  *
  * @param features a list of {@link AudioOutputCluster.Feature} to support
- * @returns a AudioOutput cluster with specified features enabled
+ * @returns an AudioOutput cluster with specified features enabled
  * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5
