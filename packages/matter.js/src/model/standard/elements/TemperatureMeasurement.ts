@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "TemperatureMeasurement", id: 0x402, classification: "application",
     description: "Temperature Measurement",
     details: "Attributes and commands for configuring the measurement of temperature, and reporting temperature " +
-        "measurements.",
+             "measurements.",
     xref: { document: "cluster", section: "2.3" },
 
     children: [
@@ -27,7 +27,7 @@ Matter.children.push({
             tag: "attribute", name: "MinMeasuredValue", id: 0x1, type: "int16", access: "R V", conformance: "M",
             constraint: "-27315 to MaxMeasuredValue1", default: 32768, quality: "X",
             details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of " +
-                "being measured. See Measured Value for more details.",
+                     "being measured. See Measured Value for more details.",
             xref: { document: "cluster", section: "2.3.4.2" }
         },
 
@@ -35,7 +35,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxMeasuredValue", id: 0x2, type: "int16", access: "R V", conformance: "M",
             constraint: "MinMeasuredValue1 to 32767", default: 32768, quality: "X",
             details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that is capable of " +
-                "being measured. See Measured Value for more details.",
+                     "being measured. See Measured Value for more details.",
             xref: { document: "cluster", section: "2.3.4.3" }
         },
 

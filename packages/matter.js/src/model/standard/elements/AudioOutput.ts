@@ -18,10 +18,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.5.2" },
-            children: [{
+            children: [ {
                 tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
                 details: "Supports updates to output names"
-            }]
+            } ]
         },
 
         {
@@ -29,7 +29,7 @@ Matter.children.push({
             constraint: "None",
             details: "This list provides the outputs supported by the device.",
             xref: { document: "cluster", section: "6.5.3.1" },
-            children: [{ tag: "datatype", name: "entry", type: "OutputInfoStruct" }]
+            children: [ { tag: "datatype", name: "entry", type: "OutputInfoStruct" } ]
         },
 
         {
@@ -43,7 +43,7 @@ Matter.children.push({
             tag: "command", name: "SelectOutput", id: 0x0, access: "O", conformance: "M", direction: "request",
             response: "status",
             xref: { document: "cluster", section: "6.5.4" },
-            children: [{ tag: "datatype", name: "Index", type: "uint8", conformance: "M" }]
+            children: [ { tag: "datatype", name: "Index", type: "uint8", conformance: "M" } ]
         },
 
         {
@@ -79,7 +79,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "M",
                     details: "The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be " +
-                        "blank, but SHOULD be provided when known.",
+                             "blank, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.5.5.1.3" }
                 }
             ]

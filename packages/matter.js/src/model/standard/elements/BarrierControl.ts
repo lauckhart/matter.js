@@ -34,7 +34,7 @@ Matter.children.push({
         { tag: "attribute", name: "BarrierPosition", id: 0xa, type: "uint8", conformance: "M" },
         {
             tag: "command", name: "BarrierControlGoToPercent", id: 0x0, conformance: "M", direction: "request",
-            children: [{ tag: "datatype", name: "PercentOpen", type: "uint8", conformance: "M" }]
+            children: [ { tag: "datatype", name: "PercentOpen", type: "uint8", conformance: "M" } ]
         },
         { tag: "command", name: "BarrierControlStop", id: 0x1, conformance: "M", direction: "request" }
     ]

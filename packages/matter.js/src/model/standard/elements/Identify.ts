@@ -17,17 +17,17 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.2.4" },
-            children: [{
+            children: [ {
                 tag: "datatype", name: "QRY", id: 0x0, description: "Query",
                 details: "Multicast query for identification state"
-            }]
+            } ]
         },
 
         {
             tag: "attribute", name: "IdentifyTime", id: 0x0, type: "uint16", access: "RW VO", conformance: "M",
             default: 0,
             details: "This attribute specifies the remaining length of time, in seconds, that the endpoint will continue " +
-                "to identify itself.",
+                     "to identify itself.",
             xref: { document: "cluster", section: "1.2.5.1" }
         },
 
@@ -35,7 +35,7 @@ Matter.children.push({
             tag: "attribute", name: "IdentifyType", id: 0x1, type: "enum8", access: "R V", conformance: "M",
             constraint: "desc", default: 0,
             details: "This attribute specifies how the identification state is presented to the user. This field SHALL " +
-                "contain one of the values listed below:",
+                     "contain one of the values listed below:",
             xref: { document: "cluster", section: "1.2.5.2" },
 
             children: [
@@ -58,16 +58,16 @@ Matter.children.push({
             tag: "command", name: "Identify", id: 0x0, access: "M", conformance: "M", direction: "request",
             response: "status",
             details: "This command starts or stops the receiving device identifying itself. This command SHALL have the " +
-                "following data fields:",
+                     "following data fields:",
             xref: { document: "cluster", section: "1.2.6.1" },
-            children: [{ tag: "datatype", name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" }]
+            children: [ { tag: "datatype", name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" } ]
         },
 
         {
             tag: "command", name: "IdentifyQuery", id: 0x1, access: "M", conformance: "QRY",
             direction: "request", response: "IdentifyQueryResponse",
             details: "This command allows the sending device to request the target or targets to respond if they are " +
-                "currently identifying themselves.",
+                     "currently identifying themselves.",
             xref: { document: "cluster", section: "1.2.6.2" }
         },
 
@@ -76,11 +76,11 @@ Matter.children.push({
             direction: "request", response: "status",
 
             details: "This command allows the support of feedback to the user, such as a certain light effect. It is used " +
-                "to allow an implementation to provide visual feedback to the user under certain circumstances such " +
-                "as a color light turning green when it has successfully connected to a network. The use of this " +
-                "command and the effects themselves are entirely up to the implementer to use whenever a visual " +
-                "feedback is useful but it is not the same as and does not replace the identify mechanism used " +
-                "during commissioning.",
+                     "to allow an implementation to provide visual feedback to the user under certain circumstances such " +
+                     "as a color light turning green when it has successfully connected to a network. The use of this " +
+                     "command and the effects themselves are entirely up to the implementer to use whenever a visual " +
+                     "feedback is useful but it is not the same as and does not replace the identify mechanism used " +
+                     "during commissioning.",
 
             xref: { document: "cluster", section: "1.2.6.3" },
 
@@ -89,8 +89,8 @@ Matter.children.push({
                     tag: "datatype", name: "EffectIdentifier", id: 0x0, type: "enum8", conformance: "M",
                     constraint: "desc",
                     details: "This field specifies the identify effect to use. All values of the EffectIdentifier SHALL be " +
-                        "supported. Implementors MAY deviate from the example light effects in the table below, but they " +
-                        "SHOULD indicate during testing how they handle each effect.",
+                             "supported. Implementors MAY deviate from the example light effects in the table below, but they " +
+                             "SHOULD indicate during testing how they handle each effect.",
                     xref: { document: "cluster", section: "1.2.6.3.1" },
 
                     children: [
@@ -125,10 +125,10 @@ Matter.children.push({
                     tag: "datatype", name: "EffectVariant", id: 0x1, type: "enum8", conformance: "M",
                     constraint: "desc",
                     details: "This field is used to indicate which variant of the effect, indicated in the EffectIdentifier " +
-                        "field, SHOULD be triggered. If a device does not support the given variant, it SHALL use the " +
-                        "default variant. This field SHALL contain one of the values listed below:",
+                             "field, SHOULD be triggered. If a device does not support the given variant, it SHALL use the " +
+                             "default variant. This field SHALL contain one of the values listed below:",
                     xref: { document: "cluster", section: "1.2.6.3.2" },
-                    children: [{ tag: "datatype", name: "Default", id: 0x0, conformance: "M" }]
+                    children: [ { tag: "datatype", name: "Default", id: 0x0, conformance: "M" } ]
                 }
             ]
         },
@@ -136,15 +136,15 @@ Matter.children.push({
         {
             tag: "command", name: "IdentifyQueryResponse", id: 0x0, conformance: "QRY", direction: "response",
             details: "This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery " +
-                "Command, in the case that the device is currently identifying itself.",
+                     "Command, in the case that the device is currently identifying itself.",
             xref: { document: "cluster", section: "1.2.6.4" },
 
-            children: [{
+            children: [ {
                 tag: "datatype", name: "Timeout", id: 0x0, type: "uint16", conformance: "M",
                 details: "This field contains the current value of the IdentifyTime attribute, and specifies the length of " +
-                    "time, in seconds, that the device will continue to identify itself.",
+                         "time, in seconds, that the device will continue to identify itself.",
                 xref: { document: "cluster", section: "1.2.6.4.1" }
-            }]
+            } ]
         }
     ]
 });

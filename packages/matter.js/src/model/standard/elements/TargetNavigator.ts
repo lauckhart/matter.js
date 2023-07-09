@@ -12,25 +12,25 @@ Matter.children.push({
     tag: "cluster", name: "TargetNavigator", id: 0x505, classification: "application",
     description: "Target Navigator",
     details: "This cluster provides an interface for UX navigation within a set of targets on a device or " +
-        "endpoint.",
+             "endpoint.",
     xref: { document: "cluster", section: "6.11" },
 
     children: [
         {
             tag: "attribute", name: "TargetList", id: 0x0, type: "list", access: "R V", conformance: "M",
             details: "The TargetList attribute SHALL represent a list of targets that can be navigated to within the " +
-                "experience presented to the user by the Endpoint (Video Player or Content App). The list SHALL not " +
-                "contain any entries with the same Identifier in the TargetInfoStruct object.",
+                     "experience presented to the user by the Endpoint (Video Player or Content App). The list SHALL not " +
+                     "contain any entries with the same Identifier in the TargetInfoStruct object.",
             xref: { document: "cluster", section: "6.11.3.1" },
-            children: [{ tag: "datatype", name: "entry", type: "TargetInfoStruct" }]
+            children: [ { tag: "datatype", name: "entry", type: "TargetInfoStruct" } ]
         },
 
         {
             tag: "attribute", name: "CurrentTarget", id: 0x1, type: "uint8", access: "R V", conformance: "O",
             constraint: "desc", default: 0, quality: "X",
             details: "The CurrentTarget attribute SHALL represent the Identifier for the target which is currently in " +
-                "foreground on the corresponding Endpoint (Video Player or Content App), or null to indicate that no " +
-                "target is in the foreground.",
+                     "foreground on the corresponding Endpoint (Video Player or Content App), or null to indicate that no " +
+                     "target is in the foreground.",
             xref: { document: "cluster", section: "6.11.3.2" }
         },
 
@@ -44,8 +44,8 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Target", id: 0x0, type: "uint8", conformance: "M",
                     details: "This SHALL indicate the Identifier for the target for UX navigation. The Target SHALL be an " +
-                        "Identifier value contained within one of the TargetInfoStruct objects in the TargetList attribute " +
-                        "list.",
+                             "Identifier value contained within one of the TargetInfoStruct objects in the TargetList attribute " +
+                             "list.",
                     xref: { document: "cluster", section: "6.11.4.1.1" }
                 },
 

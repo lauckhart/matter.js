@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "ThreadNetworkDiagnostics", id: 0x35, classification: "node",
     description: "Thread Network Diagnostics",
     details: "The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
-        "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
+             "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
     xref: { document: "core", section: "11.13" },
 
     children: [
@@ -24,12 +24,12 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
                     details: "Server supports the counts for the number of received and transmitted packets on the Thread " +
-                        "interface."
+                             "interface."
                 },
                 {
                     tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
                     details: "Server supports the counts for the number of errors that have occurred during the reception and " +
-                        "transmission of packets on the Thread interface."
+                             "transmission of packets on the Thread interface."
                 },
                 {
                     tag: "datatype", name: "MLECNT", id: 0x2, description: "MleCounts",
@@ -46,8 +46,8 @@ Matter.children.push({
             tag: "attribute", name: "Channel", id: 0x0, type: "uint16", access: "R V", conformance: "M",
             quality: "X",
             details: "The Channel attribute SHALL indicate the 802.15.4 channel number configured on the Node’s Thread " +
-                "interface (that is, the Active Operational Dataset’s current Channel value). A value of null SHALL " +
-                "indicate that the Thread interface is not currently configured or operational.",
+                     "interface (that is, the Active Operational Dataset’s current Channel value). A value of null SHALL " +
+                     "indicate that the Thread interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.1" }
         },
 
@@ -55,9 +55,9 @@ Matter.children.push({
             tag: "attribute", name: "RoutingRole", id: 0x1, type: "RoutingRoleEnum", access: "R V",
             conformance: "M", quality: "X",
             details: "The RoutingRole attribute SHALL indicate the role that this Node has within the routing of messages " +
-                "through the Thread network, as defined by RoutingRoleEnum. The potential roles are defined in the " +
-                "following table. A value of null SHALL indicate that the Thread interface is not currently " +
-                "configured or operational.",
+                     "through the Thread network, as defined by RoutingRoleEnum. The potential roles are defined in the " +
+                     "following table. A value of null SHALL indicate that the Thread interface is not currently " +
+                     "configured or operational.",
             xref: { document: "core", section: "11.13.6.2" }
         },
 
@@ -65,8 +65,8 @@ Matter.children.push({
             tag: "attribute", name: "NetworkName", id: 0x2, type: "string", access: "R V", conformance: "M",
             constraint: "max 16", default: "", quality: "X",
             details: "The NetworkName attribute SHALL indicate a human-readable (displayable) name for the Thread network " +
-                "that the Node has been configured to join to. A value of null SHALL indicate that the Thread " +
-                "interface is not currently configured or operational.",
+                     "that the Node has been configured to join to. A value of null SHALL indicate that the Thread " +
+                     "interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.3" }
         },
 
@@ -74,7 +74,7 @@ Matter.children.push({
             tag: "attribute", name: "PanId", id: 0x3, type: "uint16", access: "R V", conformance: "M",
             default: 0, quality: "X",
             details: "The PanId attribute SHALL indicate the 16-bit identifier of the Node on the Thread network. A value " +
-                "of null SHALL indicate that the Thread interface is not currently configured or operational.",
+                     "of null SHALL indicate that the Thread interface is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.4" }
         },
 
@@ -82,8 +82,8 @@ Matter.children.push({
             tag: "attribute", name: "ExtendedPanId", id: 0x4, type: "uint64", access: "R V", conformance: "M",
             default: 0, quality: "X",
             details: "The ExtendedPanId attribute SHALL indicate the unique 64-bit identifier of the Node on the Thread " +
-                "network. A value of null SHALL indicate that the Thread interface is not currently configured or " +
-                "operational.",
+                     "network. A value of null SHALL indicate that the Thread interface is not currently configured or " +
+                     "operational.",
             xref: { document: "core", section: "11.13.6.5" }
         },
 
@@ -91,8 +91,8 @@ Matter.children.push({
             tag: "attribute", name: "MeshLocalPrefix", id: 0x5, type: "ipv6pre", access: "R V",
             conformance: "M", quality: "X",
             details: "The MeshLocalPrefix attribute SHALL indicate the mesh-local IPv6 prefix for the Thread network that " +
-                "the Node has been configured to join to. A value of null SHALL indicate that the Thread interface " +
-                "is not currently configured or operational.",
+                     "the Node has been configured to join to. A value of null SHALL indicate that the Thread interface " +
+                     "is not currently configured or operational.",
             xref: { document: "core", section: "11.13.6.6" }
         },
 
@@ -100,8 +100,8 @@ Matter.children.push({
             tag: "attribute", name: "OverrunCount", id: 0x6, type: "uint64", access: "R V",
             conformance: "ERRCNT", default: 0, quality: "C",
             details: "The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or " +
-                "egress, due to lack of buffer memory to retain all packets on the ethernet network interface. The " +
-                "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+                     "egress, due to lack of buffer memory to retain all packets on the ethernet network interface. The " +
+                     "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
             xref: { document: "core", section: "11.13.6.7" }
         },
 
@@ -109,25 +109,25 @@ Matter.children.push({
             tag: "attribute", name: "NeighborTable", id: 0x7, type: "list", access: "R V", conformance: "M",
             default: [],
             details: "The NeighborTable attribute SHALL indicate the current list of Nodes that comprise the neighbor " +
-                "table on the Node.",
+                     "table on the Node.",
             xref: { document: "core", section: "11.13.6.8" },
-            children: [{ tag: "datatype", name: "entry", type: "NeighborTableStruct" }]
+            children: [ { tag: "datatype", name: "entry", type: "NeighborTableStruct" } ]
         },
 
         {
             tag: "attribute", name: "RouteTable", id: 0x8, type: "list", access: "R V", conformance: "M",
             default: [],
             details: "The RouteTable attribute SHALL indicate the current list of router capable Nodes for which routes " +
-                "have been established.",
+                     "have been established.",
             xref: { document: "core", section: "11.13.6.9" },
-            children: [{ tag: "datatype", name: "entry", type: "RouteTableStruct" }]
+            children: [ { tag: "datatype", name: "entry", type: "RouteTableStruct" } ]
         },
 
         {
             tag: "attribute", name: "PartitionId", id: 0x9, type: "uint32", access: "R V", conformance: "M",
             quality: "X",
             details: "The PartitionId attribute SHALL indicate the Thread Leader Partition Id for the Thread network to " +
-                "which the Node is joined. This attribute SHALL be null if not attached to a Thread network.",
+                     "which the Node is joined. This attribute SHALL be null if not attached to a Thread network.",
             xref: { document: "core", section: "11.13.6.10" }
         },
 
@@ -135,7 +135,7 @@ Matter.children.push({
             tag: "attribute", name: "Weighting", id: 0xa, type: "uint8", access: "R V", conformance: "M",
             quality: "X",
             details: "The Weighting attribute SHALL indicate the Thread Leader Weight used when operating in the Leader " +
-                "role. This attribute SHALL be null if not attached to a Thread network.",
+                     "role. This attribute SHALL be null if not attached to a Thread network.",
             xref: { document: "core", section: "11.13.6.11" }
         },
 
@@ -143,7 +143,7 @@ Matter.children.push({
             tag: "attribute", name: "DataVersion", id: 0xb, type: "uint8", access: "R V", conformance: "M",
             quality: "X",
             details: "The DataVersion attribute SHALL indicate the full Network Data Version the Node currently uses. " +
-                "This attribute SHALL be null if not attached to a Thread network.",
+                     "This attribute SHALL be null if not attached to a Thread network.",
             xref: { document: "core", section: "11.13.6.12" }
         },
 
@@ -158,8 +158,8 @@ Matter.children.push({
             tag: "attribute", name: "LeaderRouterId", id: 0xd, type: "uint8", access: "R V", conformance: "M",
             quality: "X",
             details: "The LeaderRouterId attribute SHALL indicate the 8-bit LeaderRouterId the Node shall attempt to " +
-                "utilize upon becoming a router or leader on the Thread network. This attribute SHALL be null if not " +
-                "attached to a Thread network.",
+                     "utilize upon becoming a router or leader on the Thread network. This attribute SHALL be null if not " +
+                     "attached to a Thread network.",
             xref: { document: "core", section: "11.13.6.14" }
         },
 
@@ -167,8 +167,8 @@ Matter.children.push({
             tag: "attribute", name: "DetachedRoleCount", id: 0xe, type: "uint16", access: "R V",
             conformance: "[MLECNT]", default: 0, quality: "C",
             details: "The DetachedRoleCount attribute SHALL indicate the number of times the Node entered the " +
-                "OT_DEVICE_ROLE_DETACHED role as specified within the Thread specification. This value SHALL only be " +
-                "reset upon a Node reboot.",
+                     "OT_DEVICE_ROLE_DETACHED role as specified within the Thread specification. This value SHALL only be " +
+                     "reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.15" }
         },
 
@@ -176,8 +176,8 @@ Matter.children.push({
             tag: "attribute", name: "ChildRoleCount", id: 0xf, type: "uint16", access: "R V",
             conformance: "[MLECNT]", default: 0, quality: "C",
             details: "The ChildRoleCount attribute SHALL indicate the number of times the Node entered the " +
-                "OT_DEVICE_ROLE_CHILD role as specified within the Thread specification. This value SHALL only be " +
-                "reset upon a Node reboot.",
+                     "OT_DEVICE_ROLE_CHILD role as specified within the Thread specification. This value SHALL only be " +
+                     "reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.16" }
         },
 
@@ -185,8 +185,8 @@ Matter.children.push({
             tag: "attribute", name: "RouterRoleCount", id: 0x10, type: "uint16", access: "R V",
             conformance: "[MLECNT]", default: 0, quality: "C",
             details: "The RouterRoleCount attribute SHALL indicate the number of times the Node entered the " +
-                "OT_DEVICE_ROLE_ROUTER role as specified within the Thread specification. This value SHALL only be " +
-                "reset upon a Node reboot.",
+                     "OT_DEVICE_ROLE_ROUTER role as specified within the Thread specification. This value SHALL only be " +
+                     "reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.17" }
         },
 
@@ -194,8 +194,8 @@ Matter.children.push({
             tag: "attribute", name: "LeaderRoleCount", id: 0x11, type: "uint16", access: "R V",
             conformance: "[MLECNT]", default: 0, quality: "C",
             details: "The LeaderRoleCount attribute SHALL indicate the number of times the Node entered the " +
-                "OT_DEVICE_ROLE_LEADER role as specified within the Thread specification. This value SHALL only be " +
-                "reset upon a Node reboot.",
+                     "OT_DEVICE_ROLE_LEADER role as specified within the Thread specification. This value SHALL only be " +
+                     "reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.18" }
         },
 
@@ -203,8 +203,8 @@ Matter.children.push({
             tag: "attribute", name: "AttachAttemptCount", id: 0x12, type: "uint16", access: "R V",
             conformance: "[MLECNT]", default: 0, quality: "C",
             details: "The AttachAttemptCount attribute SHALL indicate the number of attempts that have been made to " +
-                "attach to a Thread network while the Node was detached from all Thread networks. This value SHALL " +
-                "only be reset upon a Node reboot.",
+                     "attach to a Thread network while the Node was detached from all Thread networks. This value SHALL " +
+                     "only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.19" }
         },
 
@@ -212,8 +212,8 @@ Matter.children.push({
             tag: "attribute", name: "PartitionIdChangeCount", id: 0x13, type: "uint16", access: "R V",
             conformance: "[MLECNT]", default: 0, quality: "C",
             details: "The PartitionIdChangeCount attribute SHALL indicate the number of times that the Thread network " +
-                "that the Node is connected to has changed its Partition ID. This value SHALL only be reset upon a " +
-                "Node reboot.",
+                     "that the Node is connected to has changed its Partition ID. This value SHALL only be reset upon a " +
+                     "Node reboot.",
             xref: { document: "core", section: "11.13.6.20" }
         },
 
@@ -221,8 +221,8 @@ Matter.children.push({
             tag: "attribute", name: "BetterPartitionAttachAttemptCount", id: 0x14, type: "uint16",
             access: "R V", conformance: "[MLECNT]", default: 0, quality: "C",
             details: "The BetterPartitionAttachAttemptCount attribute SHALL indicate the number of times a Node has " +
-                "attempted to attach to a different Thread partition that it has determined is better than the " +
-                "partition it is currently attached to. This value SHALL only be reset upon a Node reboot.",
+                     "attempted to attach to a different Thread partition that it has determined is better than the " +
+                     "partition it is currently attached to. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.21" }
         },
 
@@ -230,7 +230,7 @@ Matter.children.push({
             tag: "attribute", name: "ParentChangeCount", id: 0x15, type: "uint16", access: "R V",
             conformance: "[MLECNT]", default: 0, quality: "C",
             details: "The ParentChangeCount attribute SHALL indicate the number of times a Node has changed its parent. " +
-                "This value SHALL only be reset upon a Node reboot.",
+                     "This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.22" }
         },
 
@@ -238,9 +238,9 @@ Matter.children.push({
             tag: "attribute", name: "TxTotalCount", id: 0x16, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxTotalCount attribute SHALL indicate the total number of unique MAC frame transmission " +
-                "requests. The TxTotalCount attribute SHALL only be incremented by 1 for each MAC transmission " +
-                "request regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions. This value " +
-                "SHALL only be reset upon a Node reboot.",
+                     "requests. The TxTotalCount attribute SHALL only be incremented by 1 for each MAC transmission " +
+                     "request regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions. This value " +
+                     "SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.23" }
         },
 
@@ -248,9 +248,9 @@ Matter.children.push({
             tag: "attribute", name: "TxUnicastCount", id: 0x17, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxUnicastCount attribute SHALL indicate the total number of unique unicast MAC frame " +
-                "transmission requests. The TxUnicastCount attribute SHALL only be incremented by 1 for each unicast " +
-                "MAC transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
-                "retransmissions. This value SHALL only be reset upon a Node reboot.",
+                     "transmission requests. The TxUnicastCount attribute SHALL only be incremented by 1 for each unicast " +
+                     "MAC transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
+                     "retransmissions. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.24" }
         },
 
@@ -258,9 +258,9 @@ Matter.children.push({
             tag: "attribute", name: "TxBroadcastCount", id: 0x18, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxBroadcastCount attribute SHALL indicate the total number of unique broadcast MAC frame " +
-                "transmission requests. The TxBroadcastCount attribute SHALL only be incremented by 1 for each " +
-                "broadcast MAC transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
-                "retransmissions. This value SHALL only be reset upon a Node reboot.",
+                     "transmission requests. The TxBroadcastCount attribute SHALL only be incremented by 1 for each " +
+                     "broadcast MAC transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
+                     "retransmissions. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.25" }
         },
 
@@ -268,10 +268,10 @@ Matter.children.push({
             tag: "attribute", name: "TxAckRequestedCount", id: 0x19, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxAckRequestedCount attribute SHALL indicate the total number of unique MAC frame transmission " +
-                "requests with requested acknowledgment. The TxAckRequestedCount attribute SHALL only be incremented " +
-                "by 1 for each MAC transmission request with requested acknowledgment regardless of the amount of " +
-                "CCA failures, CSMA-CA attempts, or retransmissions. This value SHALL only be reset upon a Node " +
-                "reboot.",
+                     "requests with requested acknowledgment. The TxAckRequestedCount attribute SHALL only be incremented " +
+                     "by 1 for each MAC transmission request with requested acknowledgment regardless of the amount of " +
+                     "CCA failures, CSMA-CA attempts, or retransmissions. This value SHALL only be reset upon a Node " +
+                     "reboot.",
             xref: { document: "core", section: "11.13.6.26" }
         },
 
@@ -279,9 +279,9 @@ Matter.children.push({
             tag: "attribute", name: "TxAckedCount", id: 0x1a, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxAckedCount attribute SHALL indicate the total number of unique MAC frame transmission " +
-                "requests that were acked. The TxAckedCount attribute SHALL only be incremented by 1 for each MAC " +
-                "transmission request that is acked regardless of the amount of CCA failures, CSMA-CA attempts, or " +
-                "retransmissions. This value SHALL only be reset upon a Node reboot.",
+                     "requests that were acked. The TxAckedCount attribute SHALL only be incremented by 1 for each MAC " +
+                     "transmission request that is acked regardless of the amount of CCA failures, CSMA-CA attempts, or " +
+                     "retransmissions. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.27" }
         },
 
@@ -289,9 +289,9 @@ Matter.children.push({
             tag: "attribute", name: "TxNoAckRequestedCount", id: 0x1b, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxNoAckRequestedCount attribute SHALL indicate the total number of unique MAC frame " +
-                "transmission requests without requested acknowledgment. The TxNoAckRequestedCount attribute SHALL " +
-                "only be incremented by 1 for each MAC transmission request that is does not request acknowledgement " +
-                "regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions.",
+                     "transmission requests without requested acknowledgment. The TxNoAckRequestedCount attribute SHALL " +
+                     "only be incremented by 1 for each MAC transmission request that is does not request acknowledgement " +
+                     "regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions.",
             xref: { document: "core", section: "11.13.6.28" }
         },
 
@@ -299,9 +299,9 @@ Matter.children.push({
             tag: "attribute", name: "TxDataCount", id: 0x1c, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxDataCount attribute SHALL indicate the total number of unique MAC Data frame transmission " +
-                "requests. The TxDataCount attribute SHALL only be incremented by 1 for each MAC Data frame " +
-                "transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
-                "retransmissions. This value SHALL only be reset upon a Node reboot.",
+                     "requests. The TxDataCount attribute SHALL only be incremented by 1 for each MAC Data frame " +
+                     "transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
+                     "retransmissions. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.29" }
         },
 
@@ -309,9 +309,9 @@ Matter.children.push({
             tag: "attribute", name: "TxDataPollCount", id: 0x1d, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxDataPollCount attribute SHALL indicate the total number of unique MAC Data Poll frame " +
-                "transmission requests. The TxDataPollCount attribute SHALL only be incremented by 1 for each MAC " +
-                "Data Poll frame transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
-                "retransmissions. This value SHALL only be reset upon a Node reboot.",
+                     "transmission requests. The TxDataPollCount attribute SHALL only be incremented by 1 for each MAC " +
+                     "Data Poll frame transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or " +
+                     "retransmissions. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.30" }
         },
 
@@ -319,8 +319,8 @@ Matter.children.push({
             tag: "attribute", name: "TxBeaconCount", id: 0x1e, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxBeaconCount attribute SHALL indicate the total number of unique MAC Beacon frame transmission " +
-                "requests. The TxBeaconCount attribute SHALL only be incremented by 1 for each MAC Beacon frame " +
-                "transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions.",
+                     "requests. The TxBeaconCount attribute SHALL only be incremented by 1 for each MAC Beacon frame " +
+                     "transmission request regardless of the amount of CCA failures, CSMA-CA attempts, or retransmissions.",
             xref: { document: "core", section: "11.13.6.31" }
         },
 
@@ -328,9 +328,9 @@ Matter.children.push({
             tag: "attribute", name: "TxBeaconRequestCount", id: 0x1f, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxBeaconRequestCount attribute SHALL indicate the total number of unique MAC Beacon Request " +
-                "frame transmission requests. The TxBeaconRequestCount attribute SHALL only be incremented by 1 for " +
-                "each MAC Beacon Request frame transmission request regardless of the amount of CCA failures, " +
-                "CSMA-CA attempts, or retransmissions. This value SHALL only be reset upon a Node reboot.",
+                     "frame transmission requests. The TxBeaconRequestCount attribute SHALL only be incremented by 1 for " +
+                     "each MAC Beacon Request frame transmission request regardless of the amount of CCA failures, " +
+                     "CSMA-CA attempts, or retransmissions. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.32" }
         },
 
@@ -338,9 +338,9 @@ Matter.children.push({
             tag: "attribute", name: "TxOtherCount", id: 0x20, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxOtherCount attribute SHALL indicate the total number of unique MAC frame transmission " +
-                "requests that are not counted by any other attribute. The TxOtherCount attribute SHALL only be " +
-                "incremented by 1 for each MAC frame transmission request regardless of the amount of CCA failures, " +
-                "CSMA-CA attempts, or retransmissions. This value SHALL only be reset upon a Node reboot.",
+                     "requests that are not counted by any other attribute. The TxOtherCount attribute SHALL only be " +
+                     "incremented by 1 for each MAC frame transmission request regardless of the amount of CCA failures, " +
+                     "CSMA-CA attempts, or retransmissions. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.33" }
         },
 
@@ -348,9 +348,9 @@ Matter.children.push({
             tag: "attribute", name: "TxRetryCount", id: 0x21, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxRetryCount attribute SHALL indicate the total number of MAC retransmission attempts. The " +
-                "TxRetryCount attribute SHALL only be incremented by 1 for each retransmission attempt that may be " +
-                "triggered by lack of acknowledgement, CSMA/CA failure, or other type of transmission error. This " +
-                "value SHALL only be reset upon a Node reboot.",
+                     "TxRetryCount attribute SHALL only be incremented by 1 for each retransmission attempt that may be " +
+                     "triggered by lack of acknowledgement, CSMA/CA failure, or other type of transmission error. This " +
+                     "value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.34" }
         },
 
@@ -358,10 +358,10 @@ Matter.children.push({
             tag: "attribute", name: "TxDirectMaxRetryExpiryCount", id: 0x22, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxDirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC " +
-                "transmission packets that meet maximal retry limit for direct packets. The " +
-                "TxDirectMaxRetryExpiryCount attribute SHALL only be incremented by 1 for each unique MAC " +
-                "transmission packets that meets the maximal retry limit for direct packets. This value SHALL only " +
-                "be reset upon a Node reboot.",
+                     "transmission packets that meet maximal retry limit for direct packets. The " +
+                     "TxDirectMaxRetryExpiryCount attribute SHALL only be incremented by 1 for each unique MAC " +
+                     "transmission packets that meets the maximal retry limit for direct packets. This value SHALL only " +
+                     "be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.35" }
         },
 
@@ -369,10 +369,10 @@ Matter.children.push({
             tag: "attribute", name: "TxIndirectMaxRetryExpiryCount", id: 0x23, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxIndirectMaxRetryExpiryCount attribute SHALL indicate the total number of unique MAC " +
-                "transmission packets that meet maximal retry limit for indirect packets. The " +
-                "TxIndirectMaxRetryExpiryCount attribute SHALL only be incremented by 1 for each unique MAC " +
-                "transmission packets that meets the maximal retry limit for indirect packets. This value SHALL only " +
-                "be reset upon a Node reboot.",
+                     "transmission packets that meet maximal retry limit for indirect packets. The " +
+                     "TxIndirectMaxRetryExpiryCount attribute SHALL only be incremented by 1 for each unique MAC " +
+                     "transmission packets that meets the maximal retry limit for indirect packets. This value SHALL only " +
+                     "be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.36" }
         },
 
@@ -380,8 +380,8 @@ Matter.children.push({
             tag: "attribute", name: "TxErrCcaCount", id: 0x24, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxErrCcaCount attribute SHALL indicate the total number of CCA failures. The TxErrCcaCount " +
-                "attribute SHALL only be incremented by 1 for each instance of a CCA failure. This value SHALL only " +
-                "be reset upon a Node reboot.",
+                     "attribute SHALL only be incremented by 1 for each instance of a CCA failure. This value SHALL only " +
+                     "be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.37" }
         },
 
@@ -389,8 +389,8 @@ Matter.children.push({
             tag: "attribute", name: "TxErrAbortCount", id: 0x25, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxErrAbortCount attribute SHALL indicate the total number of unique MAC transmission request " +
-                "failures caused by an abort error. The TxErrAbortCount attribute SHALL only be incremented by 1 for " +
-                "each unique MAC transmission request failure caused by an abort error.",
+                     "failures caused by an abort error. The TxErrAbortCount attribute SHALL only be incremented by 1 for " +
+                     "each unique MAC transmission request failure caused by an abort error.",
             xref: { document: "core", section: "11.13.6.38" }
         },
 
@@ -398,9 +398,9 @@ Matter.children.push({
             tag: "attribute", name: "TxErrBusyChannelCount", id: 0x26, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The TxErrBusyChannelCount attribute SHALL indicate the total number of unique MAC transmission " +
-                "request failures caused by an error as the result of a busy channel (a CSMA/CA fail). The " +
-                "TxErrBusyChannelCount attribute SHALL only be incremented by 1 for each unique MAC transmission " +
-                "request failure caused by a busy channel such as a CSMA/CA failure.",
+                     "request failures caused by an error as the result of a busy channel (a CSMA/CA fail). The " +
+                     "TxErrBusyChannelCount attribute SHALL only be incremented by 1 for each unique MAC transmission " +
+                     "request failure caused by a busy channel such as a CSMA/CA failure.",
             xref: { document: "core", section: "11.13.6.39" }
         },
 
@@ -408,7 +408,7 @@ Matter.children.push({
             tag: "attribute", name: "RxTotalCount", id: 0x27, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxTotalCount attribute SHALL indicate the total number of received unique MAC frames. This " +
-                "value SHALL only be reset upon a Node reboot.",
+                     "value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.40" }
         },
 
@@ -416,7 +416,7 @@ Matter.children.push({
             tag: "attribute", name: "RxUnicastCount", id: 0x28, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxUnicastCount attribute SHALL indicate the total number of received unique unicast MAC frames. " +
-                "This value SHALL only be reset upon a Node reboot.",
+                     "This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.41" }
         },
 
@@ -424,7 +424,7 @@ Matter.children.push({
             tag: "attribute", name: "RxBroadcastCount", id: 0x29, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxBroadcastCount attribute SHALL indicate the total number of received unique broadcast MAC " +
-                "frames. This value SHALL only be reset upon a Node reboot.",
+                     "frames. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.42" }
         },
 
@@ -432,7 +432,7 @@ Matter.children.push({
             tag: "attribute", name: "RxDataCount", id: 0x2a, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxDataCount attribute SHALL indicate the total number of received unique MAC Data frames. This " +
-                "value SHALL only be reset upon a Node reboot.",
+                     "value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.43" }
         },
 
@@ -440,7 +440,7 @@ Matter.children.push({
             tag: "attribute", name: "RxDataPollCount", id: 0x2b, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxDataPollCount attribute SHALL indicate the total number of received unique MAC Data Poll " +
-                "frames. This value SHALL only be reset upon a Node reboot.",
+                     "frames. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.44" }
         },
 
@@ -448,7 +448,7 @@ Matter.children.push({
             tag: "attribute", name: "RxBeaconCount", id: 0x2c, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxBeaconCount attribute SHALL indicate the total number of received unique MAC Beacon frames. " +
-                "This value SHALL only be reset upon a Node reboot.",
+                     "This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.45" }
         },
 
@@ -456,7 +456,7 @@ Matter.children.push({
             tag: "attribute", name: "RxBeaconRequestCount", id: 0x2d, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxBeaconRequestCount attribute SHALL indicate the total number of received unique MAC Beacon " +
-                "Request frames. This value SHALL only be reset upon a Node reboot.",
+                     "Request frames. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.46" }
         },
 
@@ -464,7 +464,7 @@ Matter.children.push({
             tag: "attribute", name: "RxOtherCount", id: 0x2e, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxOtherCount attribute SHALL indicate the total number of received unique MAC frame requests " +
-                "that are not counted by any other attribute. This value SHALL only be reset upon a Node reboot.",
+                     "that are not counted by any other attribute. This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.47" }
         },
 
@@ -472,8 +472,8 @@ Matter.children.push({
             tag: "attribute", name: "RxAddressFilteredCount", id: 0x2f, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxAddressFilteredCount attribute SHALL indicate the total number of received unique MAC frame " +
-                "requests that have been dropped as a result of MAC filtering. This value SHALL only be reset upon a " +
-                "Node reboot.",
+                     "requests that have been dropped as a result of MAC filtering. This value SHALL only be reset upon a " +
+                     "Node reboot.",
             xref: { document: "core", section: "11.13.6.48" }
         },
 
@@ -481,8 +481,8 @@ Matter.children.push({
             tag: "attribute", name: "RxDestAddrFilteredCount", id: 0x30, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxDestAddrFilteredCount attribute SHALL indicate the total number of received unique MAC frame " +
-                "requests that have been dropped as a result of a destination address check. This value SHALL only " +
-                "be reset upon a Node reboot.",
+                     "requests that have been dropped as a result of a destination address check. This value SHALL only " +
+                     "be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.49" }
         },
 
@@ -490,8 +490,8 @@ Matter.children.push({
             tag: "attribute", name: "RxDuplicatedCount", id: 0x31, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxDuplicatedCount attribute SHALL indicate the total number of received MAC frame requests that " +
-                "have been dropped as a result of being a duplicate of a previously received MAC frame request. This " +
-                "value SHALL only be reset upon a Node reboot.",
+                     "have been dropped as a result of being a duplicate of a previously received MAC frame request. This " +
+                     "value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.50" }
         },
 
@@ -499,8 +499,8 @@ Matter.children.push({
             tag: "attribute", name: "RxErrNoFrameCount", id: 0x32, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxErrNoFrameCount attribute SHALL indicate the total number of received unique MAC frame " +
-                "requests that have been dropped as a result of missing or malformed frame contents. This value " +
-                "SHALL only be reset upon a Node reboot.",
+                     "requests that have been dropped as a result of missing or malformed frame contents. This value " +
+                     "SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.51" }
         },
 
@@ -508,8 +508,8 @@ Matter.children.push({
             tag: "attribute", name: "RxErrUnknownNeighborCount", id: 0x33, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxErrUnknownNeighborCount attribute SHALL indicate the total number of received unique MAC " +
-                "frame requests that have been dropped as a result of originating from an unknown neighbor device. " +
-                "This value SHALL only be reset upon a Node reboot.",
+                     "frame requests that have been dropped as a result of originating from an unknown neighbor device. " +
+                     "This value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.52" }
         },
 
@@ -517,8 +517,8 @@ Matter.children.push({
             tag: "attribute", name: "RxErrInvalidScrAddrCount", id: 0x34, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxErrInvalidScrAddrCount attribute SHALL indicate the total number of received unique MAC frame " +
-                "requests that have been dropped as a result of containing an invalid source address. This value " +
-                "SHALL only be reset upon a Node reboot.",
+                     "requests that have been dropped as a result of containing an invalid source address. This value " +
+                     "SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.53" }
         },
 
@@ -526,8 +526,8 @@ Matter.children.push({
             tag: "attribute", name: "RxErrSecCount", id: 0x35, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxErrSecCount attribute SHALL indicate the total number of received unique MAC frame requests " +
-                "that have been dropped as a result of an error with the security of the received frame. This value " +
-                "SHALL only be reset upon a Node reboot.",
+                     "that have been dropped as a result of an error with the security of the received frame. This value " +
+                     "SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.54" }
         },
 
@@ -535,8 +535,8 @@ Matter.children.push({
             tag: "attribute", name: "RxErrFcsCount", id: 0x36, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxErrFcsCount attribute SHALL indicate the total number of received unique MAC frame requests " +
-                "that have been dropped as a result of an error with the FCS of the received frame. This value SHALL " +
-                "only be reset upon a Node reboot.",
+                     "that have been dropped as a result of an error with the FCS of the received frame. This value SHALL " +
+                     "only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.55" }
         },
 
@@ -544,8 +544,8 @@ Matter.children.push({
             tag: "attribute", name: "RxErrOtherCount", id: 0x37, type: "uint32", access: "R V",
             conformance: "[MACCNT]", default: 0, quality: "C",
             details: "The RxErrOtherCount attribute SHALL indicate the total number of received unique MAC frame requests " +
-                "that have been dropped as a result of an error that is not counted by any other attribute. This " +
-                "value SHALL only be reset upon a Node reboot.",
+                     "that have been dropped as a result of an error that is not counted by any other attribute. This " +
+                     "value SHALL only be reset upon a Node reboot.",
             xref: { document: "core", section: "11.13.6.56" }
         },
 
@@ -574,7 +574,7 @@ Matter.children.push({
             tag: "attribute", name: "SecurityPolicy", id: 0x3b, type: "SecurityPolicy", access: "R V",
             conformance: "M", quality: "X",
             details: "The SecurityPolicy attribute indicates the current security policies for the Thread partition to " +
-                "which a Node is connected. This attribute SHALL be null when there is no dataset configured.",
+                     "which a Node is connected. This attribute SHALL be null when there is no dataset configured.",
             xref: { document: "core", section: "11.13.6.60" }
         },
 
@@ -582,10 +582,10 @@ Matter.children.push({
             tag: "attribute", name: "ChannelPage0Mask", id: 0x3c, type: "octstr", access: "R V",
             conformance: "M", constraint: "4", quality: "X",
             details: "The ChannelPage0Mask attribute indicates the channels within channel page 0, in the 2.4GHz ISM " +
-                "band. The channels are represented in most significant bit order, with bit value 1 meaning " +
-                "selected, bit value 0 meaning unselected. For example, the most significant bit of the left-most " +
-                "byte indicates channel 0. If channel 0 and channel 10 are selected, the mask would be: 80 20 00 00. " +
-                "This attribute SHALL be null when there is no dataset configured.",
+                     "band. The channels are represented in most significant bit order, with bit value 1 meaning " +
+                     "selected, bit value 0 meaning unselected. For example, the most significant bit of the left-most " +
+                     "byte indicates channel 0. If channel 0 and channel 10 are selected, the mask would be: 80 20 00 00. " +
+                     "This attribute SHALL be null when there is no dataset configured.",
             xref: { document: "core", section: "11.13.6.61" }
         },
 
@@ -593,7 +593,7 @@ Matter.children.push({
             tag: "attribute", name: "OperationalDatasetComponents", id: 0x3d,
             type: "OperationalDatasetComponents", access: "R V", conformance: "M", quality: "X",
             details: "The OperationalDatasetComponents attribute is a collection of flags to indicate the presence of " +
-                "various operationally acquired values.",
+                     "various operationally acquired values.",
             xref: { document: "core", section: "11.13.6.62" }
         },
 
@@ -602,13 +602,13 @@ Matter.children.push({
             conformance: "M", constraint: "max 4",
             details: "The ActiveNetworkFaults attribute SHALL indicate the set of faults currently detected by the Node.",
             xref: { document: "core", section: "11.13.6.63" },
-            children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
+            children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
         },
 
         {
             tag: "event", name: "ConnectionStatus", id: 0x0, access: "V", conformance: "O", priority: "info",
             details: "The ConnectionStatus Event SHALL indicate that a Node’s connection status to a Thread network has " +
-                "changed.",
+                     "changed.",
             xref: { document: "core", section: "11.13.8.2" },
             children: [
                 { tag: "datatype", name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" }
@@ -618,24 +618,24 @@ Matter.children.push({
         {
             tag: "event", name: "NetworkFaultChange", id: 0x1, access: "V", conformance: "O", priority: "info",
             details: "The NetworkFaultChange Event SHALL indicate a change in the set of network faults currently " +
-                "detected by the Node.",
+                     "detected by the Node.",
             xref: { document: "core", section: "11.13.8.1" },
 
             children: [
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
                     details: "This field SHALL represent the set of faults currently detected, as per Section 11.13.5.1, " +
-                        "“NetworkFaultEnum”.",
+                             "“NetworkFaultEnum”.",
                     xref: { document: "core", section: "11.13.8.1.1" },
-                    children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
+                    children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
                 },
 
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
                     details: "This field SHALL represent the set of faults detected prior to this change event, as per Section " +
-                        "11.13.5.1, “NetworkFaultEnum”.",
+                             "11.13.5.1, “NetworkFaultEnum”.",
                     xref: { document: "core", section: "11.13.8.1.2" },
-                    children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
+                    children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
                 }
             ]
         },
@@ -697,7 +697,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Age", id: 0x1, type: "uint32", conformance: "M",
                     details: "This field SHALL specify the duration of time, in seconds, since a frame has been received from the " +
-                        "neighboring Node.",
+                             "neighboring Node.",
                     xref: { document: "core", section: "11.13.5.4.2" }
                 },
 
@@ -710,21 +710,21 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "LinkFrameCounter", id: 0x3, type: "uint32", conformance: "M",
                     details: "This field SHALL specify the number of link layer frames that have been received from the " +
-                        "neighboring node. This field SHALL be reset to 0 upon a reboot of the Node.",
+                             "neighboring node. This field SHALL be reset to 0 upon a reboot of the Node.",
                     xref: { document: "core", section: "11.13.5.4.4" }
                 },
 
                 {
                     tag: "datatype", name: "MleFrameCounter", id: 0x4, type: "uint32", conformance: "M",
                     details: "This field SHALL specify the number of Mesh Link Establishment frames that have been received from " +
-                        "the neighboring node. This field SHALL be reset to 0 upon a reboot of the Node.",
+                             "the neighboring node. This field SHALL be reset to 0 upon a reboot of the Node.",
                     xref: { document: "core", section: "11.13.5.4.5" }
                 },
 
                 {
                     tag: "datatype", name: "Lqi", id: 0x5, type: "uint8", conformance: "M", constraint: "0 to 255",
                     details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
-                        "indicators, scaled from 0 to 255.",
+                             "indicators, scaled from 0 to 255.",
                     xref: { document: "core", section: "11.13.5.4.6" }
                 },
 
@@ -732,7 +732,7 @@ Matter.children.push({
                     tag: "datatype", name: "AverageRssi", id: 0x6, type: "int8", conformance: "M",
                     constraint: "-128 to 0", default: null, quality: "X",
                     details: "This field SHOULD specify the average RSSI across all received frames from the neighboring Node " +
-                        "since the receiving Node’s last reboot. If there is no known received frames this field SHOULD have",
+                             "since the receiving Node’s last reboot. If there is no known received frames this field SHOULD have",
                     xref: { document: "core", section: "11.13.5.4.7" }
                 },
 
@@ -740,8 +740,8 @@ Matter.children.push({
                     tag: "datatype", name: "LastRssi", id: 0x7, type: "int8", conformance: "M", constraint: "-128 to 0",
                     default: null, quality: "X",
                     details: "This field SHALL specify the RSSI of the most recently received frame from the neighboring Node. If " +
-                        "there is no known last received frame the LastRssi field SHOULD have the value of null. This field " +
-                        "SHALL have the units of dBm, having the range -128 dBm to 0 dBm.",
+                             "there is no known last received frame the LastRssi field SHOULD have the value of null. This field " +
+                             "SHALL have the units of dBm, having the range -128 dBm to 0 dBm.",
                     xref: { document: "core", section: "11.13.5.4.8" }
                 },
 
@@ -749,7 +749,7 @@ Matter.children.push({
                     tag: "datatype", name: "FrameErrorRate", id: 0x8, type: "uint8", conformance: "O",
                     constraint: "0 to 100", default: 0,
                     details: "This field SHALL specify the percentage of received frames from the neighboring Node that have " +
-                        "resulted in errors.",
+                             "resulted in errors.",
                     xref: { document: "core", section: "11.13.5.4.9" }
                 },
 
@@ -757,14 +757,14 @@ Matter.children.push({
                     tag: "datatype", name: "MessageErrorRate", id: 0x9, type: "uint8", conformance: "O",
                     constraint: "0 to 100", default: 0,
                     details: "This field SHALL specify the percentage of received messages from the neighboring Node that have " +
-                        "resulted in errors.",
+                             "resulted in errors.",
                     xref: { document: "core", section: "11.13.5.4.10" }
                 },
 
                 {
                     tag: "datatype", name: "RxOnWhenIdle", id: 0xa, type: "bool", conformance: "M",
                     details: "This field SHALL specify if the neighboring Node is capable of receiving frames while the Node is " +
-                        "in an idle state.",
+                             "in an idle state.",
                     xref: { document: "core", section: "11.13.5.4.11" }
                 },
 
@@ -777,14 +777,14 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "FullNetworkData", id: 0xc, type: "bool", conformance: "M",
                     details: "This field SHALL specify if the neighboring Node requires the full Network Data. If set to False, " +
-                        "the neighboring Node only requires the stable Network Data.",
+                             "the neighboring Node only requires the stable Network Data.",
                     xref: { document: "core", section: "11.13.5.4.13" }
                 },
 
                 {
                     tag: "datatype", name: "IsChild", id: 0xd, type: "bool", conformance: "M",
                     details: "This field SHALL specify if the neighboring Node is a direct child of the Node reporting the " +
-                        "NeighborTable attribute.",
+                             "NeighborTable attribute.",
                     xref: { document: "core", section: "11.13.5.4.14" }
                 }
             ]
@@ -793,7 +793,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "RouteTableStruct", type: "struct", conformance: "M",
             details: "This field shall specify the IEEE 802.15.4 extended address for the Node for which this route table " +
-                "entry corresponds.",
+                     "entry corresponds.",
             xref: { document: "core", section: "11.13.5.5" },
 
             children: [
@@ -808,29 +808,29 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "NextHop", id: 0x3, type: "uint8", conformance: "M",
                     details: "This field SHALL specify the Router ID for the next hop in the route to the Node for which this " +
-                        "route table entry corresponds.",
+                             "route table entry corresponds.",
                     xref: { document: "core", section: "11.13.5.5.2" }
                 },
 
                 {
                     tag: "datatype", name: "PathCost", id: 0x4, type: "uint8", conformance: "M",
                     details: "This Field SHALL specify the cost of the route to the Node for which this route table entry " +
-                        "corresponds.",
+                             "corresponds.",
                     xref: { document: "core", section: "11.13.5.5.3" }
                 },
 
                 {
                     tag: "datatype", name: "LqiIn", id: 0x5, type: "uint8", conformance: "M",
                     details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
-                        "indicators, scaled from 0 to 255, from the perspective of the Node reporting the neighbor table.",
+                             "indicators, scaled from 0 to 255, from the perspective of the Node reporting the neighbor table.",
                     xref: { document: "core", section: "11.13.5.5.4" }
                 },
 
                 {
                     tag: "datatype", name: "LqiOut", id: 0x6, type: "uint8", conformance: "M",
                     details: "This field SHALL specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
-                        "indicators, scaled from 0 to 255, from the perspective of the Node specified within the NextHop " +
-                        "field.",
+                             "indicators, scaled from 0 to 255, from the perspective of the Node specified within the NextHop " +
+                             "field.",
                     xref: { document: "core", section: "11.13.5.5.5" }
                 },
 
@@ -844,7 +844,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "LinkEstablished", id: 0x9, type: "bool", conformance: "M",
                     details: "This field SHALL specify if a link has been established to the Node for which this route table " +
-                        "entry corresponds.",
+                             "entry corresponds.",
                     xref: { document: "core", section: "11.13.5.5.7" }
                 }
             ]
@@ -858,14 +858,14 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "RotationTime", id: 0x0, type: "uint16", conformance: "M",
                     details: "This field SHALL specify the interval of time, in hours, that Thread security keys are rotated. " +
-                        "This attribute SHALL be null when there is no dataset configured.",
+                             "This attribute SHALL be null when there is no dataset configured.",
                     xref: { document: "core", section: "11.13.5.6.1" }
                 },
 
                 {
                     tag: "datatype", name: "Flags", id: 0x1, type: "uint16", conformance: "M",
                     details: "This field SHALL specify the flags as specified in Thread 1.3.0 section 8.10.1.15. This attribute " +
-                        "SHALL be null when there is no dataset configured.",
+                             "SHALL be null when there is no dataset configured.",
                     xref: { document: "core", section: "11.13.5.6.2" }
                 }
             ]
@@ -920,7 +920,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "ChannelPresent", id: 0x8, type: "bool", conformance: "M",
                     details: "This field SHALL be True if the Node has configured an operational channel for the Thread network, " +
-                        "else False.",
+                             "else False.",
                     xref: { document: "core", section: "11.13.5.7.9" }
                 },
 
@@ -933,7 +933,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "SecurityPolicyPresent", id: 0xa, type: "bool", conformance: "M",
                     details: "This field SHALL be True if the Node has been configured with the Thread network security policies, " +
-                        "else False.",
+                             "else False.",
                     xref: { document: "core", section: "11.13.5.7.11" }
                 },
 

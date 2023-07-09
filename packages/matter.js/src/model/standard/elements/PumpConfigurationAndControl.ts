@@ -55,7 +55,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxPressure", id: 0x0, type: "int16", access: "R V", conformance: "M",
             default: null, quality: "X F",
             details: "This attribute specifies the maximum pressure the pump can achieve. It is a physical limit, and " +
-                "does not apply to any specific control mode or operation mode.",
+                     "does not apply to any specific control mode or operation mode.",
             xref: { document: "cluster", section: "4.2.7.1" }
         },
 
@@ -63,7 +63,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxSpeed", id: 0x1, type: "uint16", access: "R V", conformance: "M",
             default: null, quality: "X F",
             details: "This attribute specifies the maximum speed the pump can achieve. It is a physical limit, and does " +
-                "not apply to any specific control mode or operation mode.",
+                     "not apply to any specific control mode or operation mode.",
             xref: { document: "cluster", section: "4.2.7.2" }
         },
 
@@ -71,7 +71,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxFlow", id: 0x2, type: "uint16", access: "R V", conformance: "M",
             default: null, quality: "X F",
             details: "This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does " +
-                "not apply to any specific control mode or operation mode.",
+                     "not apply to any specific control mode or operation mode.",
             xref: { document: "cluster", section: "4.2.7.3" }
         },
 
@@ -79,7 +79,7 @@ Matter.children.push({
             tag: "attribute", name: "MinConstPressure", id: 0x3, type: "int16", access: "R V",
             conformance: "PRSCONST, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the minimum pressure the pump can achieve when it is working with the " +
-                "ControlMode attribute set to ConstantPressure.",
+                     "ControlMode attribute set to ConstantPressure.",
             xref: { document: "cluster", section: "4.2.7.4" }
         },
 
@@ -87,7 +87,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxConstPressure", id: 0x4, type: "int16", access: "R V",
             conformance: "PRSCONST, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum pressure the pump can achieve when it is working with the " +
-                "ControlMode attribute set to ConstantPressure.",
+                     "ControlMode attribute set to ConstantPressure.",
             xref: { document: "cluster", section: "4.2.7.5" }
         },
 
@@ -95,7 +95,7 @@ Matter.children.push({
             tag: "attribute", name: "MinCompPressure", id: 0x5, type: "int16", access: "R V",
             conformance: "PRSCOMP, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the minimum compensated pressure the pump can achieve when it is working " +
-                "with the ControlMode attribute set to ProportionalPressure.",
+                     "with the ControlMode attribute set to ProportionalPressure.",
             xref: { document: "cluster", section: "4.2.7.6" }
         },
 
@@ -103,7 +103,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxCompPressure", id: 0x6, type: "int16", access: "R V",
             conformance: "PRSCOMP, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum compensated pressure the pump can achieve when it is working " +
-                "with the ControlMode attribute set to ProportionalPressure.",
+                     "with the ControlMode attribute set to ProportionalPressure.",
             xref: { document: "cluster", section: "4.2.7.7" }
         },
 
@@ -111,7 +111,7 @@ Matter.children.push({
             tag: "attribute", name: "MinConstSpeed", id: 0x7, type: "uint16", access: "R V",
             conformance: "SPD, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the minimum speed the pump can achieve when it is working with the " +
-                "ControlMode attribute set to ConstantSpeed.",
+                     "ControlMode attribute set to ConstantSpeed.",
             xref: { document: "cluster", section: "4.2.7.8" }
         },
 
@@ -119,7 +119,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxConstSpeed", id: 0x8, type: "uint16", access: "R V",
             conformance: "SPD, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum speed the pump can achieve when it is working with the " +
-                "ControlMode attribute set to ConstantSpeed.",
+                     "ControlMode attribute set to ConstantSpeed.",
             xref: { document: "cluster", section: "4.2.7.9" }
         },
 
@@ -134,7 +134,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxConstFlow", id: 0xa, type: "uint16", access: "R V",
             conformance: "FLW, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum flow the pump can achieve when it is working with the " +
-                "ControlMode attribute set to ConstantFlow.",
+                     "ControlMode attribute set to ConstantFlow.",
             xref: { document: "cluster", section: "4.2.7.11" }
         },
 
@@ -142,7 +142,7 @@ Matter.children.push({
             tag: "attribute", name: "MinConstTemp", id: 0xb, type: "int16", access: "R V",
             conformance: "TEMP, [AUTO]", constraint: "min -27315", default: null, quality: "X F",
             details: "This attribute specifies the minimum temperature the pump can maintain in the system when it is " +
-                "working with the ControlMode attribute set to ConstantTemperature.",
+                     "working with the ControlMode attribute set to ConstantTemperature.",
             xref: { document: "cluster", section: "4.2.7.12" }
         },
 
@@ -150,7 +150,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxConstTemp", id: 0xc, type: "int16", access: "R V",
             conformance: "TEMP, [AUTO]", constraint: "min -27315", default: null, quality: "X F",
             details: "This attribute specifies the maximum temperature the pump can maintain in the system when it is " +
-                "working with the ControlMode attribute set to ConstantTemperature.",
+                     "working with the ControlMode attribute set to ConstantTemperature.",
             xref: { document: "cluster", section: "4.2.7.13" }
         },
 
@@ -158,8 +158,8 @@ Matter.children.push({
             tag: "attribute", name: "PumpStatus", id: 0x10, type: "PumpStatusBitmap", access: "R V",
             conformance: "O", constraint: "desc", default: 0, quality: "P",
             details: "This attribute specifies the activity status of the pump functions as listed in PumpStatusBitmap. " +
-                "Where a pump controller function is active, the corresponding bit SHALL be set to 1. Where a pump " +
-                "controller function is not active, the corresponding bit SHALL be set to 0.",
+                     "Where a pump controller function is active, the corresponding bit SHALL be set to 1. Where a pump " +
+                     "controller function is not active, the corresponding bit SHALL be set to 0.",
             xref: { document: "cluster", section: "4.2.7.14" }
         },
 
@@ -167,7 +167,7 @@ Matter.children.push({
             tag: "attribute", name: "EffectiveOperationMode", id: 0x11, type: "OperationModeEnum",
             access: "R V", conformance: "M", constraint: "desc", quality: "N",
             details: "This attribute specifies current effective operation mode of the pump as defined in " +
-                "OperationModeEnum.",
+                     "OperationModeEnum.",
             xref: { document: "cluster", section: "4.2.7.15" }
         },
 
@@ -175,7 +175,7 @@ Matter.children.push({
             tag: "attribute", name: "EffectiveControlMode", id: 0x12, type: "ControlModeEnum", access: "R V",
             conformance: "M", constraint: "desc", quality: "N",
             details: "This attribute specifies the current effective control mode of the pump as defined in " +
-                "ControlModeEnum.",
+                     "ControlModeEnum.",
             xref: { document: "cluster", section: "4.2.7.16" }
         },
 
@@ -183,7 +183,7 @@ Matter.children.push({
             tag: "attribute", name: "Capacity", id: 0x13, type: "int16", access: "R V", conformance: "M",
             default: null, quality: "X P",
             details: "This attribute specifies the actual capacity of the pump as a percentage of the effective maximum " +
-                "setpoint value. It is updated dynamically as the speed of the pump changes.",
+                     "setpoint value. It is updated dynamically as the speed of the pump changes.",
             xref: { document: "cluster", section: "4.2.7.17" }
         },
 
@@ -191,7 +191,7 @@ Matter.children.push({
             tag: "attribute", name: "Speed", id: 0x14, type: "uint16", access: "R V", conformance: "O",
             default: null, quality: "X",
             details: "This attribute specifies the actual speed of the pump measured in RPM. It is updated dynamically as " +
-                "the speed of the pump changes.",
+                     "the speed of the pump changes.",
             xref: { document: "cluster", section: "4.2.7.18" }
         },
 
@@ -199,9 +199,9 @@ Matter.children.push({
             tag: "attribute", name: "LifetimeRunningHours", id: 0x15, type: "uint24", access: "RW VM",
             conformance: "O", default: 0, quality: "X N",
             details: "This attribute specifies the accumulated number of hours that the pump has been powered and the " +
-                "motor has been running. It is updated dynamically as it increases. It is preserved over power " +
-                "cycles of the pump. If LifeTimeRunningHours rises above maximum value it “rolls over” and starts at " +
-                "0 (zero).",
+                     "motor has been running. It is updated dynamically as it increases. It is preserved over power " +
+                     "cycles of the pump. If LifeTimeRunningHours rises above maximum value it “rolls over” and starts at " +
+                     "0 (zero).",
             xref: { document: "cluster", section: "4.2.7.19" }
         },
 
@@ -209,7 +209,7 @@ Matter.children.push({
             tag: "attribute", name: "Power", id: 0x16, type: "uint24", access: "R V", conformance: "O",
             default: null, quality: "X",
             details: "This attribute specifies the actual power consumption of the pump in Watts. The value of this " +
-                "attribute is updated dynamically as the power consumption of the pump changes.",
+                     "attribute is updated dynamically as the power consumption of the pump changes.",
             xref: { document: "cluster", section: "4.2.7.20" }
         },
 
@@ -217,9 +217,9 @@ Matter.children.push({
             tag: "attribute", name: "LifetimeEnergyConsumed", id: 0x17, type: "uint32", access: "RW VM",
             conformance: "O", default: 0, quality: "X N",
             details: "This attribute specifies the accumulated energy consumption of the pump through the entire lifetime " +
-                "of the pump in kWh. The value of the LifetimeEnergyConsumed attribute is updated dynamically as the " +
-                "energy consumption of the pump increases. If LifetimeEnergyConsumed rises above maximum value it " +
-                "“rolls over” and starts at 0 (zero).",
+                     "of the pump in kWh. The value of the LifetimeEnergyConsumed attribute is updated dynamically as the " +
+                     "energy consumption of the pump increases. If LifetimeEnergyConsumed rises above maximum value it " +
+                     "“rolls over” and starts at 0 (zero).",
             xref: { document: "cluster", section: "4.2.7.21" }
         },
 
@@ -345,9 +345,9 @@ Matter.children.push({
                     tag: "datatype", name: "LocalOverride", id: 0x10, conformance: "M",
                     description: "Device control is overridden by hardware, such as an external STOP button or via a local HMI.",
                     details: "While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing " +
-                        "OperationMode SHALL generate a FAILURE error status until LocalOverride is cleared on the physical " +
-                        "device. When LocalOverride is cleared, the device SHALL return to the operation mode set in " +
-                        "OperationMode.",
+                             "OperationMode SHALL generate a FAILURE error status until LocalOverride is cleared on the physical " +
+                             "device. When LocalOverride is cleared, the device SHALL return to the operation mode set in " +
+                             "OperationMode.",
                     xref: { document: "cluster", section: "4.2.6.1.3" }
                 },
 
@@ -357,8 +357,8 @@ Matter.children.push({
                     tag: "datatype", name: "RemotePressure", id: 0x40, conformance: "M",
                     description: "A remote pressure sensor is used as the sensor for the regulation of the pump.",
                     details: "If this bit is set, EffectiveControlMode is ConstantPressure and the setpoint for the pump is " +
-                        "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
-                        "MaxMeasuredValue]).",
+                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
+                             "MaxMeasuredValue]).",
                     xref: { document: "cluster", section: "4.2.6.1.4" }
                 },
 
@@ -366,8 +366,8 @@ Matter.children.push({
                     tag: "datatype", name: "RemoteFlow", id: 0x80, conformance: "M",
                     description: "A remote flow sensor is used as the sensor for the regulation of the pump.",
                     details: "If this bit is set, EffectiveControlMode is ConstantFlow, and the setpoint for the pump is " +
-                        "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
-                        "MaxMeasuredValue]).",
+                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
+                             "MaxMeasuredValue]).",
                     xref: { document: "cluster", section: "4.2.6.1.5" }
                 },
 
@@ -375,8 +375,8 @@ Matter.children.push({
                     tag: "datatype", name: "RemoteTemperature", id: 0x100, conformance: "M",
                     description: "A remote temperature sensor is used as the sensor for the regulation of the pump.",
                     details: "If this bit is set, EffectiveControlMode is ConstantTemperature, and the setpoint for the pump is " +
-                        "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
-                        "MaxMeasuredValue])",
+                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
+                             "MaxMeasuredValue])",
                     xref: { document: "cluster", section: "4.2.6.1.6" }
                 }
             ]
@@ -390,7 +390,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Normal", id: 0x0, conformance: "M",
                     details: "If the pump is running in this operation mode the setpoint is an internal variable which MAY be " +
-                        "controlled between 0% and 100%, e.g., by means of the Level Control cluster",
+                             "controlled between 0% and 100%, e.g., by means of the Level Control cluster",
                     xref: { document: "cluster", section: "4.2.6.2.1" }
                 },
 
@@ -408,50 +408,50 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "ConstantSpeed", id: 0x0, conformance: "SPD",
                     details: "The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – " +
-                        "MaxConstSpeed] attributes.",
+                             "MaxConstSpeed] attributes.",
                     xref: { document: "cluster", section: "4.2.6.3.1" }
                 },
 
                 {
                     tag: "datatype", name: "ConstantPressure", id: 0x1, conformance: "PRSCONST",
                     details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
-                        "In case of the internal pressure sensor, this will be the range derived from the [MinConstPressure " +
-                        "– MaxConstPressure] attributes. In case of a remote pressure sensor, this will be the range derived " +
-                        "from the [MinMeasuredValue – MaxMeasuredValue] attributes of the remote pressure sensor.",
+                             "In case of the internal pressure sensor, this will be the range derived from the [MinConstPressure " +
+                             "– MaxConstPressure] attributes. In case of a remote pressure sensor, this will be the range derived " +
+                             "from the [MinMeasuredValue – MaxMeasuredValue] attributes of the remote pressure sensor.",
                     xref: { document: "cluster", section: "4.2.6.3.2" }
                 },
 
                 {
                     tag: "datatype", name: "ProportionalPressure", id: 0x2, conformance: "PRSCOMP",
                     details: "The setpoint is interpreted as a percentage of the range derived of the [MinCompPressure – " +
-                        "MaxCompPressure] attributes. The internal setpoint will be lowered (compensated) dependent on the " +
-                        "flow in the pump (lower flow ⇒ lower internal setpoint).",
+                             "MaxCompPressure] attributes. The internal setpoint will be lowered (compensated) dependent on the " +
+                             "flow in the pump (lower flow ⇒ lower internal setpoint).",
                     xref: { document: "cluster", section: "4.2.6.3.3" }
                 },
 
                 {
                     tag: "datatype", name: "ConstantFlow", id: 0x3, conformance: "FLW",
                     details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
-                        "In case of the internal flow sensor, this will be the range derived from the [MinConstFlow – " +
-                        "MaxConstFlow] attributes. In case of a remote flow sensor, this will be the range derived from the " +
-                        "[MinMeasuredValue – MaxMeasuredValue] attributes of the remote flow sensor.",
+                             "In case of the internal flow sensor, this will be the range derived from the [MinConstFlow – " +
+                             "MaxConstFlow] attributes. In case of a remote flow sensor, this will be the range derived from the " +
+                             "[MinMeasuredValue – MaxMeasuredValue] attributes of the remote flow sensor.",
                     xref: { document: "cluster", section: "4.2.6.3.4" }
                 },
 
                 {
                     tag: "datatype", name: "ConstantTemperature", id: 0x5, conformance: "TEMP",
                     details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
-                        "In case of the internal temperature sensor, this will be the range derived from the [MinConstTemp – " +
-                        "MaxConstTemp] attributes. In case of a remote temperature sensor, this will be the range derived " +
-                        "from the [MinMeasuredValue – MaxMeasuredValue] attributes of the remote temperature sensor.",
+                             "In case of the internal temperature sensor, this will be the range derived from the [MinConstTemp – " +
+                             "MaxConstTemp] attributes. In case of a remote temperature sensor, this will be the range derived " +
+                             "from the [MinMeasuredValue – MaxMeasuredValue] attributes of the remote temperature sensor.",
                     xref: { document: "cluster", section: "4.2.6.3.5" }
                 },
 
                 {
                     tag: "datatype", name: "Automatic", id: 0x7, conformance: "AUTO",
                     details: "This behavior is manufacturer defined. The pump can be stopped by setting the setpoint of the level " +
-                        "control cluster to 0, or by using the On/Off cluster. If the pump is started (at any setpoint), the " +
-                        "speed of the pump is entirely determined by the pump.",
+                             "control cluster to 0, or by using the On/Off cluster. If the pump is started (at any setpoint), the " +
+                             "speed of the pump is entirely determined by the pump.",
                     xref: { document: "cluster", section: "4.2.6.3.6" }
                 }
             ]

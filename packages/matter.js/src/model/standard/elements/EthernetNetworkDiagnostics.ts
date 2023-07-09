@@ -12,8 +12,8 @@ Matter.children.push({
     tag: "cluster", name: "EthernetNetworkDiagnostics", id: 0x37, classification: "node",
     description: "Ethernet Network Diagnostics",
     details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics " +
-        "metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential " +
-        "problems.",
+             "metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential " +
+             "problems.",
     xref: { document: "core", section: "11.15" },
 
     children: [
@@ -25,12 +25,12 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
                     details: "Node makes available the counts for the number of received and transmitted packets on the ethernet " +
-                        "interface."
+                             "interface."
                 },
                 {
                     tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
                     details: "Node makes available the counts for the number of errors that have occurred during the reception " +
-                        "and transmission of packets on the ethernet interface."
+                             "and transmission of packets on the ethernet interface."
                 }
             ]
         },
@@ -39,8 +39,8 @@ Matter.children.push({
             tag: "attribute", name: "PhyRate", id: 0x0, type: "PHYRateEnum", access: "R V", conformance: "O",
             default: null, quality: "X",
             details: "The PHYRate attribute SHALL indicate the current nominal, usable speed at the top of the physical " +
-                "layer of the Node. A value of null SHALL indicate that the interface is not currently configured or " +
-                "operational.",
+                     "layer of the Node. A value of null SHALL indicate that the interface is not currently configured or " +
+                     "operational.",
             xref: { document: "core", section: "11.15.6.1" }
         },
 
@@ -48,8 +48,8 @@ Matter.children.push({
             tag: "attribute", name: "FullDuplex", id: 0x1, type: "bool", access: "R V", conformance: "O",
             default: null, quality: "X",
             details: "The FullDuplex attribute SHALL indicate if the Node is currently utilizing the full-duplex " +
-                "operating mode. A value of null SHALL indicate that the interface is not currently configured or " +
-                "operational.",
+                     "operating mode. A value of null SHALL indicate that the interface is not currently configured or " +
+                     "operational.",
             xref: { document: "core", section: "11.15.6.2" }
         },
 
@@ -57,8 +57,8 @@ Matter.children.push({
             tag: "attribute", name: "PacketRxCount", id: 0x2, type: "uint64", access: "R V",
             conformance: "PKTCNT", default: 0,
             details: "The PacketRxCount attribute SHALL indicate the number of packets that have been received on the " +
-                "ethernet network interface. The PacketRxCount attribute SHALL be reset to 0 upon a reboot of the " +
-                "Node.",
+                     "ethernet network interface. The PacketRxCount attribute SHALL be reset to 0 upon a reboot of the " +
+                     "Node.",
             xref: { document: "core", section: "11.15.6.3" }
         },
 
@@ -66,8 +66,8 @@ Matter.children.push({
             tag: "attribute", name: "PacketTxCount", id: 0x3, type: "uint64", access: "R V",
             conformance: "PKTCNT", default: 0, quality: "C",
             details: "The PacketTxCount attribute SHALL indicate the number of packets that have been successfully " +
-                "transferred on the ethernet network interface. The PacketTxCount attribute SHALL be reset to 0 upon " +
-                "a reboot of the Node.",
+                     "transferred on the ethernet network interface. The PacketTxCount attribute SHALL be reset to 0 upon " +
+                     "a reboot of the Node.",
             xref: { document: "core", section: "11.15.6.4" }
         },
 
@@ -75,8 +75,8 @@ Matter.children.push({
             tag: "attribute", name: "TxErrCount", id: 0x4, type: "uint64", access: "R V", conformance: "ERRCNT",
             default: 0, quality: "C",
             details: "The TxErrCount attribute SHALL indicate the number of failed packet transmissions that have " +
-                "occurred on the ethernet network interface. The TxErrCount attribute SHALL be reset to 0 upon a " +
-                "reboot of the Node.",
+                     "occurred on the ethernet network interface. The TxErrCount attribute SHALL be reset to 0 upon a " +
+                     "reboot of the Node.",
             xref: { document: "core", section: "11.15.6.5" }
         },
 
@@ -84,8 +84,8 @@ Matter.children.push({
             tag: "attribute", name: "CollisionCount", id: 0x5, type: "uint64", access: "R V",
             conformance: "ERRCNT", default: 0, quality: "C",
             details: "The CollisionCount attribute SHALL indicate the number of collisions that have occurred while " +
-                "attempting to transmit a packet on the ethernet network interface. The CollisionCount attribute " +
-                "SHALL be reset to 0 upon a reboot of the Node.",
+                     "attempting to transmit a packet on the ethernet network interface. The CollisionCount attribute " +
+                     "SHALL be reset to 0 upon a reboot of the Node.",
             xref: { document: "core", section: "11.15.6.6" }
         },
 
@@ -93,8 +93,8 @@ Matter.children.push({
             tag: "attribute", name: "OverrunCount", id: 0x6, type: "uint64", access: "R V",
             conformance: "ERRCNT", default: 0, quality: "C",
             details: "The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or " +
-                "egress, due to lack of buffer memory to retain all packets on the ethernet network interface. The " +
-                "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+                     "egress, due to lack of buffer memory to retain all packets on the ethernet network interface. The " +
+                     "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
             xref: { document: "core", section: "11.15.6.7" }
         },
 
@@ -102,8 +102,8 @@ Matter.children.push({
             tag: "attribute", name: "CarrierDetect", id: 0x7, type: "bool", access: "R V", conformance: "O",
             default: null, quality: "X C",
             details: "The CarrierDetect attribute SHALL indicate the value of the Carrier Detect control signal present " +
-                "on the ethernet network interface. A value of null SHALL indicate that the interface is not " +
-                "currently configured or operational.",
+                     "on the ethernet network interface. A value of null SHALL indicate that the interface is not " +
+                     "currently configured or operational.",
             xref: { document: "core", section: "11.15.6.8" }
         },
 
