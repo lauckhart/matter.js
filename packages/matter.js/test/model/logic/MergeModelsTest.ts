@@ -11,8 +11,8 @@ import { ClusterElement, ClusterModel, MatterElement, MatterModel } from "../../
 // without the global types in MatterModel so we fake that up even though we're
 // only actuall merge the input models
 function merge({ spec, chip }: { spec: MatterElement.Child, chip: MatterElement.Child }) {
-    const specMatter = new MatterModel({ name: "Spec", children: [ spec ]});
-    const chipMatter = new MatterModel({ name: "Chip", children: [ chip ]});
+    const specMatter = new MatterModel({ name: "Spec", children: [spec] });
+    const chipMatter = new MatterModel({ name: "Chip", children: [chip] });
 
     return MergeModels({
         spec: specMatter.children[specMatter.children.length - 1],

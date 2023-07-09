@@ -130,7 +130,7 @@ export const TlvNotifyUpdateAppliedRequest = TlvObject({
 });
 
 export namespace OtaSoftwareUpdateProviderCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

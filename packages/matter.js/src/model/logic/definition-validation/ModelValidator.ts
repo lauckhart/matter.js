@@ -43,7 +43,7 @@ export class ModelValidator<T extends Model> {
         this.model.error(code, message);
     }
 
-    protected validateStructure(requireId: boolean, ...childTypes: (new(...args: any) => Model)[]) {
+    protected validateStructure(requireId: boolean, ...childTypes: (new (...args: any) => Model)[]) {
         this.validateProperty({ name: "id", type: "number", required: requireId });
         if (this.model.children && childTypes.length) {
             let index = 0;
@@ -136,6 +136,6 @@ export class ModelValidator<T extends Model> {
 
 export namespace ModelValidator {
     export const validators = {} as {
-        [key in ElementTag]: new(model: any) => ModelValidator<any>
+        [key in ElementTag]: new (model: any) => ModelValidator<any>
     };
 }

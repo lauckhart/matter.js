@@ -41,7 +41,7 @@ export class Conformance extends Aspect<Conformance.Definition> {
             return;
         } else if (typeof definition === "string") {
             if (definition.toLowerCase() === "desc") {
-                this.ast ={ type: Conformance.Special.Desc };
+                this.ast = { type: Conformance.Special.Desc };
                 return;
             }
             ast = new Parser(this, definition).ast;
@@ -178,8 +178,8 @@ export namespace Conformance {
     export type Definition
         = Flag | Name | (Flag | Name)[] | { ast: Conformance.Ast } | string | undefined;
 
-    const BinaryOperators = new Set([ EQ, NE, OR, XOR, AND ]);
-    const OrXorAnd = new Set([ OR, XOR, AND ]);
+    const BinaryOperators = new Set([EQ, NE, OR, XOR, AND]);
+    const OrXorAnd = new Set([OR, XOR, AND]);
 
     // Serialize with parenthesis if necessary to make the expression atomic
     function serializeAtomic(ast: Ast, operators = BinaryOperators) {
@@ -222,7 +222,7 @@ export namespace Conformance {
                 break;
         }
     }
-    
+
     export function serialize(ast: Ast): string {
         switch (ast.type) {
             case Operator.OR:
@@ -244,7 +244,7 @@ export namespace Conformance {
 
             case Special.Desc:
                 return "desc";
-                    
+
             case Special.Choice:
                 let result = `${serializeAtomic(ast.param.expr)}.${ast.param.name}`;
                 if (ast.param.num > 1) {
@@ -254,7 +254,7 @@ export namespace Conformance {
                     result = `${result}+`;
                 }
                 return result;
-    
+
             case Special.Group:
                 return ast.param.map(d => serialize(d)).join(", ");
 
@@ -315,7 +315,7 @@ namespace Tokenizer {
             value: Conformance.Flag
         }
 
-        export type Special= {
+        export type Special = {
             type: TokenType.Special,
             value: Tokenizer.Special
         }
@@ -360,7 +360,7 @@ namespace Tokenizer {
         }
 
         function tokenizeName(): Token {
-            const name = [ current.value ];
+            const name = [current.value];
             while (isNameChar(peeked.value)) {
                 next();
                 name.push(current.value);
@@ -423,9 +423,9 @@ namespace Tokenizer {
                         }
                         num = FieldValue.Celsius(num);
                     }
-                    yield({ type: TokenType.Number, value: num });
+                    yield ({ type: TokenType.Number, value: num });
                     break;
-                    
+
                 case "!":
                 case ">":
                 case "<":
@@ -468,7 +468,7 @@ namespace Tokenizer {
                     break;
             }
             next();
-        }        
+        }
     }
 }
 
@@ -553,7 +553,7 @@ class Parser {
                     group.push(expr);
                 }
             }
-            
+
             if (this.atSpecial(Tokenizer.Special.Comma)) {
                 this.next();
             } else if (end && this.atSpecial(end)) {
@@ -591,7 +591,7 @@ class Parser {
         Parser.BinaryOperatorPrecedence.forEach(operators => {
             for (let i = 0; i < elements.length; i++) {
                 if (operators.indexOf(elements[i + 1] as Tokenizer.Special) !== -1) {
-                    const [ lhs, op, rhs ] = elements.splice(i, 3);
+                    const [lhs, op, rhs] = elements.splice(i, 3);
                     elements.splice(i, 0, {
                         type: op,
                         param: { lhs, rhs }
@@ -682,9 +682,9 @@ class Parser {
 namespace Parser {
     // Highest precedence first
     export const BinaryOperatorPrecedence = [
-        [ Tokenizer.Special.Or, Tokenizer.Special.Xor, Tokenizer.Special.And ],
-        [ Tokenizer.Special.GreaterThan, Tokenizer.Special.LessThan, Tokenizer.Special.GreaterThanOrEqual, Tokenizer.Special.LessThanOrEqual ],
-        [ Tokenizer.Special.Equal, Tokenizer.Special.NotEqual ]
+        [Tokenizer.Special.Or, Tokenizer.Special.Xor, Tokenizer.Special.And],
+        [Tokenizer.Special.GreaterThan, Tokenizer.Special.LessThan, Tokenizer.Special.GreaterThanOrEqual, Tokenizer.Special.LessThanOrEqual],
+        [Tokenizer.Special.Equal, Tokenizer.Special.NotEqual]
     ]
 
     export const BinaryOperators = new Set(BinaryOperatorPrecedence.flat());

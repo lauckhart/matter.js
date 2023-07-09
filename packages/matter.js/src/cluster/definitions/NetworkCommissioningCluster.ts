@@ -31,7 +31,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.8
  */
-export function NetworkCommissioningCluster<T extends NetworkCommissioningCluster.Feature[]>(...features: [ ...T ]) {
+export function NetworkCommissioningCluster<T extends NetworkCommissioningCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...NetworkCommissioningCluster.Metadata,
         supportedFeatures: BitFlags(NetworkCommissioningCluster.Metadata.features, ...features),
@@ -394,7 +394,7 @@ export namespace NetworkCommissioningCluster {
         EthernetNetworkInterface = "EthernetNetworkInterface"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

@@ -32,7 +32,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.16
  */
-export function TimeSyncCluster<T extends TimeSyncCluster.Feature[]>(...features: [ ...T ]) {
+export function TimeSyncCluster<T extends TimeSyncCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...TimeSyncCluster.Metadata,
         supportedFeatures: BitFlags(TimeSyncCluster.Metadata.features, ...features),
@@ -265,7 +265,7 @@ export namespace TimeSyncCluster {
         NtpServer = "NtpServer"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

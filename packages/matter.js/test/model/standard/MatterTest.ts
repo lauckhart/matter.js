@@ -30,7 +30,7 @@ describe("Matter", () => {
     })
 
     it("validates", () => {
-        expect(() => { validate() }).not.toThrow();        
+        expect(() => { validate() }).not.toThrow();
     })
 
     it("has not increased in errors", () => {

@@ -35,7 +35,7 @@ export function MergeModels(
      * Merge the fields (excluding children) of a specific model.
      */
     function merge(variants: VariantDetail): Model {
-        const variantValues = Object.fromEntries(Object.entries(variants.map).map(([variantName, variant]) => [ variantName, variant.valueOf() ]));
+        const variantValues = Object.fromEntries(Object.entries(variants.map).map(([variantName, variant]) => [variantName, variant.valueOf()]));
 
         const keys = new Set(
             Object.values(variantValues).flatMap(v => Object.keys(v))
@@ -43,7 +43,7 @@ export function MergeModels(
         keys.delete("children");
 
         const properties = Object.fromEntries(
-            [ ...keys ].map(k => [ k, visitor.pluck(variants.tag, k, variantValues) ])
+            [...keys].map(k => [k, visitor.pluck(variants.tag, k, variantValues)])
         );
 
         // Specialized support for type
@@ -82,7 +82,7 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
     pluck(
         tag: ElementTag | "*",
         fieldName: string,
-        variantValues: { [ variantName: string ]: { [fieldName: string ]: any }}
+        variantValues: { [variantName: string]: { [fieldName: string]: any } }
     ) {
         const variantPriorities = this.priority.get(tag, fieldName);
 
@@ -152,7 +152,7 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
  * Utility class for working with merge priorities.
  */
 class PriorityHandler {
-    constructor(private priorities: MergeModels.Priorities) {}
+    constructor(private priorities: MergeModels.Priorities) { }
 
     /**
      * Get the priority for a specific tag and field.
@@ -200,7 +200,7 @@ function reparentToCanonicalParent(priority: PriorityHandler, variants: VariantD
 
     // Now visit the tree and reparent as necessary
     const traversal = new MergeTraversal(priority, (variants, recurse) => {
-       // Determine the canonical type for this element
+        // Determine the canonical type for this element
         const type = traversal.chooseType(variants);
         if (!(type instanceof ValueModel)) {
             recurse();
@@ -270,20 +270,20 @@ export namespace MergeModels {
      */
     export const DefaultPriorities: Priorities = {
         "*": {
-            "*": [ "local", "chip", "spec" ],
+            "*": ["local", "chip", "spec"],
 
             // Prefer spec for elements that are insufficiently defined in
             // chip
-            "conformance": [ "local", "spec", "chip" ],
-            "constraint": [ "local", "spec", "chip" ],
-            "quality": [ "local", "spec", "chip" ],
-            "access": [ "local", "spec", "chip" ],
+            "conformance": ["local", "spec", "chip"],
+            "constraint": ["local", "spec", "chip"],
+            "quality": ["local", "spec", "chip"],
+            "access": ["local", "spec", "chip"],
 
             // Prefer spec for element names
-            "name": [ "local", "spec", "chip" ],
+            "name": ["local", "spec", "chip"],
 
             // Prefer spec for datatype names (must match element names)
-            "type": [ "local", "spec", "chip" ]
+            "type": ["local", "spec", "chip"]
         }
     }
 }

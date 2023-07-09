@@ -175,7 +175,7 @@ export class ByteArrayBitmapSchemaInternal<T extends BitSchema> extends Schema<T
 
 /** Create a partial bitmap from a flag sequence */
 export type FlagsToBitmap<T extends string[]> = {
-    [ name in Uncapitalize<T[number]> ]: true
+    [name in Uncapitalize<T[number]>]: true
 }
 
 /** Create a type with specified bit flags set */
@@ -183,9 +183,9 @@ export type BitFlags<T extends BitSchema, F extends Capitalize<Extract<keyof T, 
     Merge<{ [key in keyof T]: false }, FlagsToBitmap<F>>;
 
 /** Create a bitmap schema with a named subset of flags set */
-export function BitFlags<T extends BitSchema, F extends Capitalize<Extract<keyof T, string>>[]>(bitSchemas: T, ...flags: [ ...F ]) {
+export function BitFlags<T extends BitSchema, F extends Capitalize<Extract<keyof T, string>>[]>(bitSchemas: T, ...flags: [...F]) {
     return Object.fromEntries(Object.keys(bitSchemas).map(
-        ([name]) => [ name, !(flags.indexOf(capitalize(name as Extract<keyof T, string>)) == -1) ]
+        ([name]) => [name, !(flags.indexOf(capitalize(name as Extract<keyof T, string>)) == -1)]
     )) as BitFlags<T, F>;
 }
 

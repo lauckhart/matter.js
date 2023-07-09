@@ -17,7 +17,7 @@ export class ClusterFile extends TsFile {
     definedNames = new Set<string>();
 
     constructor(cluster: ClusterModel) {
-        const name =`${cluster.name}Cluster`;
+        const name = `${cluster.name}Cluster`;
         super(ClusterFile.createFilename(name));
         this.clusterName = name;
         this.types = this.section();

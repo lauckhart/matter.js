@@ -63,7 +63,7 @@ export type BaseElement = {
 
 export function BaseElement(tag: ElementTag, definition: BaseElement) {
     const result: any = { tag: tag };
-    for (const [ k, v ] of Object.entries(definition)) {
+    for (const [k, v] of Object.entries(definition)) {
         if (v !== undefined) {
             result[k] = v;
         }

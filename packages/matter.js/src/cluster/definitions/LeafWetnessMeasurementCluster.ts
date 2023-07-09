@@ -23,7 +23,7 @@ export function LeafWetnessMeasurementCluster() {
 }
 
 export namespace LeafWetnessMeasurementCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

@@ -28,7 +28,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
  */
-export function LevelControlCluster<T extends LevelControlCluster.Feature[]>(...features: [ ...T ]) {
+export function LevelControlCluster<T extends LevelControlCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...LevelControlCluster.Metadata,
         supportedFeatures: BitFlags(LevelControlCluster.Metadata.features, ...features),
@@ -203,7 +203,7 @@ export namespace LevelControlCluster {
         Frequency = "Frequency"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

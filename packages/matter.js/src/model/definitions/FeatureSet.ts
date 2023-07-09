@@ -33,7 +33,7 @@ export class FeatureSet extends Set<FeatureSet.Flag> {
      * Access features as an object mapping feature name -> true.
      */
     get record() {
-        return Object.fromEntries(this.map(f => [ f, true ]))
+        return Object.fromEntries(this.map(f => [f, true]))
     }
 
     map<T>(fn: (name: FeatureSet.Flag) => T): T[] {

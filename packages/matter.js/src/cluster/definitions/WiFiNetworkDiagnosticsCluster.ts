@@ -31,7 +31,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.14
  */
-export function WiFiNetworkDiagnosticsCluster<T extends WiFiNetworkDiagnosticsCluster.Feature[]>(...features: [ ...T ]) {
+export function WiFiNetworkDiagnosticsCluster<T extends WiFiNetworkDiagnosticsCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...WiFiNetworkDiagnosticsCluster.Metadata,
         supportedFeatures: BitFlags(WiFiNetworkDiagnosticsCluster.Metadata.features, ...features),
@@ -156,7 +156,7 @@ export namespace WiFiNetworkDiagnosticsCluster {
         ErrorCounts = "ErrorCounts"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

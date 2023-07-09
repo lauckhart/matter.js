@@ -27,7 +27,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4
  */
-export function PressureMeasurementCluster<T extends PressureMeasurementCluster.Feature[]>(...features: [ ...T ]) {
+export function PressureMeasurementCluster<T extends PressureMeasurementCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...PressureMeasurementCluster.Metadata,
         supportedFeatures: BitFlags(PressureMeasurementCluster.Metadata.features, ...features),
@@ -52,7 +52,7 @@ export namespace PressureMeasurementCluster {
         Extended = "Extended"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

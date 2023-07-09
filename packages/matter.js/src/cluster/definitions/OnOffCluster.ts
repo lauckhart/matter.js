@@ -30,7 +30,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5
  */
-export function OnOffCluster<T extends OnOffCluster.Feature[]>(...features: [ ...T ]) {
+export function OnOffCluster<T extends OnOffCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...OnOffCluster.Metadata,
         supportedFeatures: BitFlags(OnOffCluster.Metadata.features, ...features),
@@ -149,7 +149,7 @@ export namespace OnOffCluster {
         LevelControlForLighting = "LevelControlForLighting"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

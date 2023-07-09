@@ -12,8 +12,8 @@ import { wordWrap } from "../../util/string.js";
 export function generateElement(target: Block, element: AnyElement, prefix = "", suffix = "") {
     const block = target.expressions(`${prefix}{`, `}${suffix}`);
 
-    const fields = element.valueOf() as { [ name: string ]: any };
-    
+    const fields = element.valueOf() as { [name: string]: any };
+
     delete fields.tag;
     delete fields.xref;
     delete fields.children;
@@ -36,7 +36,7 @@ export function generateElement(target: Block, element: AnyElement, prefix = "",
         properties.push(`type: ${serialize((element as any).type)}`);
         delete fields.type;
     }
-    
+
     // Next: Other fields
     properties.push(
         ...Object.entries(fields)
@@ -51,7 +51,7 @@ export function generateElement(target: Block, element: AnyElement, prefix = "",
         length += property.length + (length ? 2 : 0);
         if (row.length && length >= 100) {
             block.atom(row.join(", "));
-            row = [ property ];
+            row = [property];
             length = property.length;
         } else {
             row.push(property);

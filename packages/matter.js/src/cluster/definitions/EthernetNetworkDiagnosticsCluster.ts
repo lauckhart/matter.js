@@ -30,7 +30,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.15
  */
-export function EthernetNetworkDiagnosticsCluster<T extends EthernetNetworkDiagnosticsCluster.Feature[]>(...features: [ ...T ]) {
+export function EthernetNetworkDiagnosticsCluster<T extends EthernetNetworkDiagnosticsCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...EthernetNetworkDiagnosticsCluster.Metadata,
         supportedFeatures: BitFlags(EthernetNetworkDiagnosticsCluster.Metadata.features, ...features),
@@ -88,7 +88,7 @@ export namespace EthernetNetworkDiagnosticsCluster {
         ErrorCounts = "ErrorCounts"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

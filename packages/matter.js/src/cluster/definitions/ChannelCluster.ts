@@ -30,7 +30,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6
  */
-export function ChannelCluster<T extends ChannelCluster.Feature[]>(...features: [ ...T ]) {
+export function ChannelCluster<T extends ChannelCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...ChannelCluster.Metadata,
         supportedFeatures: BitFlags(ChannelCluster.Metadata.features, ...features),
@@ -239,7 +239,7 @@ export namespace ChannelCluster {
         LineupInfo = "LineupInfo"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

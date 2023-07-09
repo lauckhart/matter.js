@@ -48,7 +48,7 @@ export const TlvFailRandomlyAtFaultRequest = TlvObject({
 });
 
 export namespace FaultInjectionCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
@@ -61,10 +61,12 @@ export namespace FaultInjectionCluster {
     /**
      * A FaultInjectionCluster supports these elements for all feature combinations.
      */
-    export const BaseComponent = ClusterComponent({ commands: {
-        failAtFault: Command(0, TlvFailAtFaultRequest, 0, TlvNoResponse),
-        failRandomlyAtFault: Command(1, TlvFailRandomlyAtFaultRequest, 1, TlvNoResponse)
-    } });
+    export const BaseComponent = ClusterComponent({
+        commands: {
+            failAtFault: Command(0, TlvFailAtFaultRequest, 0, TlvNoResponse),
+            failRandomlyAtFault: Command(1, TlvFailRandomlyAtFaultRequest, 1, TlvNoResponse)
+        }
+    });
 
     /**
      * This cluster supports all FaultInjection features.

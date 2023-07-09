@@ -26,7 +26,7 @@ export function ProxyDiscoveryCluster() {
 }
 
 export namespace ProxyDiscoveryCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

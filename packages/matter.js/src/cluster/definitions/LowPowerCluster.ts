@@ -26,7 +26,7 @@ export function LowPowerCluster() {
 }
 
 export namespace LowPowerCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

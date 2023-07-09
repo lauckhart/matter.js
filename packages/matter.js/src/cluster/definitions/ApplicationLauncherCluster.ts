@@ -30,7 +30,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4
  */
-export function ApplicationLauncherCluster<T extends ApplicationLauncherCluster.Feature[]>(...features: [ ...T ]) {
+export function ApplicationLauncherCluster<T extends ApplicationLauncherCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...ApplicationLauncherCluster.Metadata,
         supportedFeatures: BitFlags(ApplicationLauncherCluster.Metadata.features, ...features),
@@ -179,7 +179,7 @@ export namespace ApplicationLauncherCluster {
         ApplicationPlatform = "ApplicationPlatform"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

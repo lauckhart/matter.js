@@ -26,7 +26,7 @@ Matter.children.push({
             tag: "attribute", name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V",
             conformance: "M", constraint: "0 to MaxMeasuredValue1", quality: "X",
             details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
-                     "See Measured Value for more details.",
+                "See Measured Value for more details.",
             xref: { document: "cluster", section: "2.5.4.2" }
         },
 
@@ -34,7 +34,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V",
             conformance: "M", constraint: "MinMeasuredValue1 to 65534", quality: "X",
             details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
-                     "See Measured Value for more details.",
+                "See Measured Value for more details.",
             xref: { document: "cluster", section: "2.5.4.3" }
         },
 

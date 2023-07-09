@@ -27,7 +27,7 @@ export function UserLabelCluster() {
 }
 
 export namespace UserLabelCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

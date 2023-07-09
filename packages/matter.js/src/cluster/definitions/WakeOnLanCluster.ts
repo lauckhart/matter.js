@@ -26,7 +26,7 @@ export function WakeOnLanCluster() {
 }
 
 export namespace WakeOnLanCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

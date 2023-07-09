@@ -67,7 +67,7 @@ export const TlvOccupancySensorTypeBitmapBits = {
 export const TlvOccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, TlvOccupancySensorTypeBitmapBits);
 
 export namespace OccupancySensingCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

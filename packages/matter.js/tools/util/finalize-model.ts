@@ -41,7 +41,7 @@ function patchClusterTypes(cluster: ClusterModel) {
                 default:
                     return;
             }
-            
+
             const existing = datatypes[model.name];
             if (!existing || (existing.parent !== cluster && model.parent === cluster)) {
                 datatypes[model.name] = model;
@@ -109,7 +109,7 @@ export function finalizeModel(matter: MatterModel) {
     });
 
     logger.info(`validate ${matter.name}`);
-    
+
     return Logger.nest(() => {
         return ValidateModel(matter);
     });

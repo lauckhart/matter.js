@@ -65,7 +65,7 @@ export class MatterModel extends Model implements MatterElement {
     }
 
     constructor(definition: MatterElement.Properties = Matter, globals = Object.values(Globals)) {
-        const children = [ ...globals, ...(definition.children || []) ]
+        const children = [...globals, ...(definition.children || [])]
         super({ ...definition, children: children });
     }
 

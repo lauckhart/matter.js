@@ -86,7 +86,7 @@ export const TlvLoginRequest = TlvObject({
 });
 
 export namespace AccountLoginCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

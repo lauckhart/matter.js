@@ -21,7 +21,7 @@ const logger = Logger.get("generate-cluster");
 
 export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
     logger.info(`${cluster.name} → ${file.name}.ts`);
-    
+
     // Load features
     const features = cluster.features;
     const featureNames = {} as { [code: string]: string };
@@ -219,7 +219,7 @@ function generateExhaustive(ns: Block, cluster: ClusterModel, variance: ClusterV
                 if (pool) {
                     pool.push(component.name);
                 } else {
-                    elementSources[tag] = [ component.name ];
+                    elementSources[tag] = [component.name];
                 }
             }
         }

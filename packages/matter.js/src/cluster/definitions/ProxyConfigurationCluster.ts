@@ -39,7 +39,7 @@ export const TlvConfigurationStruct = TlvObject({
 });
 
 export namespace ProxyConfigurationCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

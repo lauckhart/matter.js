@@ -30,7 +30,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8
  */
-export function ModeSelectCluster<T extends ModeSelectCluster.Feature[]>(...features: [ ...T ]) {
+export function ModeSelectCluster<T extends ModeSelectCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...ModeSelectCluster.Metadata,
         supportedFeatures: BitFlags(ModeSelectCluster.Metadata.features, ...features),
@@ -123,7 +123,7 @@ export namespace ModeSelectCluster {
         OnOff = "OnOff"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

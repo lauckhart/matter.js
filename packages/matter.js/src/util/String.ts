@@ -81,7 +81,7 @@ export function serialize(value: any) {
         }
         return JSON.stringify(key);
     }
-    
+
     function serializeOne(value: any): string | undefined {
         if (value === undefined) {
             return;
@@ -135,7 +135,7 @@ export function serialize(value: any) {
             }
 
             const entries = Object.entries(value)
-                .map(([k, v]) => [ k, serializeOne(v) ])
+                .map(([k, v]) => [k, serializeOne(v)])
                 .filter(([_k, v]) => v !== undefined)
                 .map(([k, v]) => `${asValidKey(k ?? "")}: ${v}`);
 

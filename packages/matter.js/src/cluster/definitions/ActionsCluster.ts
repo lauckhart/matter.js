@@ -447,7 +447,7 @@ export const TlvActionFailedEvent = TlvObject({
 });
 
 export namespace ActionsCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

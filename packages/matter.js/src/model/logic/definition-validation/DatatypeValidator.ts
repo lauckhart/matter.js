@@ -10,9 +10,9 @@ import { ValueValidator } from "./ValueValidator.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[DatatypeElement.Tag] =
-class AttributeValidator extends ValueValidator<DatatypeModel> {
-    override validate() {
-        this.validateStructure(false, DatatypeModel);
-        super.validate();
+    class AttributeValidator extends ValueValidator<DatatypeModel> {
+        override validate() {
+            this.validateStructure(false, DatatypeModel);
+            super.validate();
+        }
     }
-}

@@ -23,7 +23,7 @@ export function Merge<
 export type ClassExtends<C> = { new(...args: any[]): C };
 
 /** Merge an array of objects into one.  Currently assumes unique elements */
-export type MergeAll<T> = T extends [ infer O extends Properties | undefined, ...infer R ]
+export type MergeAll<T> = T extends [infer O extends Properties | undefined, ...infer R]
     ? O extends undefined ? MergeAll<R> : O & MergeAll<R>
     : T extends []
     ? {}
@@ -34,11 +34,11 @@ export function MergeAll<T extends (Properties | undefined)[]>(...objects: reado
 }
 
 /** Pluck an item from an array of objects if present */
-export type Pluck<K, T extends readonly [ ...any ]>
-    = T extends [ infer O, ...infer R ]
+export type Pluck<K, T extends readonly [...any]>
+    = T extends [infer O, ...infer R]
     ? K extends keyof O
-        ? [ O[K], ...Pluck<K, R> ]
-        : Pluck<K, R>
+    ? [O[K], ...Pluck<K, R>]
+    : Pluck<K, R>
     : T extends []
     ? T
     : never;

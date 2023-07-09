@@ -39,7 +39,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
      */
     constructor(definition: string | Access.Definition) {
         super(definition);
-        
+
         if (Array.isArray(definition)) {
             this.set(definition.flat());
         } else if (typeof definition === "object") {
@@ -80,7 +80,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                         i += 2;
                     }
                     break;
-                
+
                 case '*':
                     // Deprecated syntax, again allow for *W when only R*W is
                     // legal
@@ -89,7 +89,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                         i++;
                     }
                     break;
-                
+
                 case " ":
                 case "\t":
                 case "\n":
@@ -329,15 +329,15 @@ export namespace Access {
     export const S = Fabric.Sensitive;
 
     export const V = Privilege.View;
-    export const O = [ Privilege.Operate ] as [ Privilege.Operate ];
-    export const M = [ Privilege.Manage ] as [ Privilege.Manage ];
-    export const A = [ Privilege.Administer ] as [ Privilege.Administer ];
-    export const VO = [ Privilege.View, Privilege.Operate ] as [ Privilege.View, Privilege.Operate ];
-    export const VM = [ Privilege.View, Privilege.Manage ] as [ Privilege.View, Privilege.Manage ];
-    export const VA = [ Privilege.View, Privilege.Administer ] as [ Privilege.View, Privilege.Administer ];
-    export const OM = [ Privilege.Operate, Privilege.Manage ] as [ Privilege.Operate, Privilege.Manage ];
-    export const OA = [ Privilege.Operate, Privilege.Administer ] as [ Privilege.Operate, Privilege.Administer ];
-    export const MA = [ Privilege.Manage, Privilege.Administer ] as [ Privilege.Manage, Privilege.Administer ];
+    export const O = [Privilege.Operate] as [Privilege.Operate];
+    export const M = [Privilege.Manage] as [Privilege.Manage];
+    export const A = [Privilege.Administer] as [Privilege.Administer];
+    export const VO = [Privilege.View, Privilege.Operate] as [Privilege.View, Privilege.Operate];
+    export const VM = [Privilege.View, Privilege.Manage] as [Privilege.View, Privilege.Manage];
+    export const VA = [Privilege.View, Privilege.Administer] as [Privilege.View, Privilege.Administer];
+    export const OM = [Privilege.Operate, Privilege.Manage] as [Privilege.Operate, Privilege.Manage];
+    export const OA = [Privilege.Operate, Privilege.Administer] as [Privilege.Operate, Privilege.Administer];
+    export const MA = [Privilege.Manage, Privilege.Administer] as [Privilege.Manage, Privilege.Administer];
 
     export const T = Timed.Required;
 

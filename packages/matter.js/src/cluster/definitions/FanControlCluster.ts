@@ -27,7 +27,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4
  */
-export function FanControlCluster<T extends FanControlCluster.Feature[]>(...features: [ ...T ]) {
+export function FanControlCluster<T extends FanControlCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...FanControlCluster.Metadata,
         supportedFeatures: BitFlags(FanControlCluster.Metadata.features, ...features),
@@ -160,7 +160,7 @@ export namespace FanControlCluster {
         Wind = "Wind"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

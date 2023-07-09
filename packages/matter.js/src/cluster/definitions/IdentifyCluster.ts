@@ -28,7 +28,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2
  */
-export function IdentifyCluster<T extends IdentifyCluster.Feature[]>(...features: [ ...T ]) {
+export function IdentifyCluster<T extends IdentifyCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...IdentifyCluster.Metadata,
         supportedFeatures: BitFlags(IdentifyCluster.Metadata.features, ...features),
@@ -194,7 +194,7 @@ export namespace IdentifyCluster {
         Query = "Query"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

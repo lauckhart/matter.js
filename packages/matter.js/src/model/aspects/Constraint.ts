@@ -157,7 +157,7 @@ export namespace Constraint {
                     }
 
                     const ast: Ast = {};
-                    
+
                     const min = parseBound("min", 0);
                     if (min !== undefined && min !== null) {
                         ast.min = min;
@@ -167,7 +167,7 @@ export namespace Constraint {
                     if (max !== undefined && max !== null) {
                         ast.max = max;
                     }
-                    
+
                     if ((ast.min !== undefined && ast.min !== null) || (ast.max !== undefined && ast.max !== null)) {
                         return ast;
                     }
@@ -247,7 +247,7 @@ export namespace Constraint {
                             parts.push(ast);
                         }
                         break;
-                    
+
                     case "]":
                         if (!depth) {
                             constraint.error("INVALID_CONSTRAINT", 'Unexpected "]"');
@@ -280,7 +280,7 @@ export namespace Constraint {
             if (parts.length < 2) {
                 return parts[0];
             }
-    
+
             return { parts: parts };
         }
 

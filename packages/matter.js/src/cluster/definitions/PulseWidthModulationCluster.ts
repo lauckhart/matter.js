@@ -29,7 +29,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
  */
-export function PulseWidthModulationCluster<T extends PulseWidthModulationCluster.Feature[]>(...features: [ ...T ]) {
+export function PulseWidthModulationCluster<T extends PulseWidthModulationCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...PulseWidthModulationCluster.Metadata,
         supportedFeatures: BitFlags(PulseWidthModulationCluster.Metadata.features, ...features),
@@ -161,7 +161,7 @@ export namespace PulseWidthModulationCluster {
         Frequency = "Frequency"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

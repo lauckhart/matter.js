@@ -39,14 +39,14 @@ export class ClusterComponentGenerator {
             .document(component.documentation);
         const mandatory = new Set(component.mandatory);
 
-        const elements = [ ...component.optional, ...component.mandatory ]
+        const elements = [...component.optional, ...component.mandatory]
             .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 
         this.defineTypedElements(AttributeModel, elements, block, (model, add) => {
             if (model.base instanceof AttributeModel && model.base.global) {
                 return;
             }
-    
+
             const factoryParts = Array<string>("Attribute");
             if (model.fixed) {
                 factoryParts.unshift("Fixed");
@@ -60,7 +60,7 @@ export class ClusterComponentGenerator {
             if (!mandatory.has(model)) {
                 factoryParts.unshift("Optional");
             }
-    
+
             const factory = factoryParts.join("");
             this.file.addImport("cluster/Cluster", factory);
 
@@ -69,7 +69,7 @@ export class ClusterComponentGenerator {
             const block = add(factory);
             block.atom(model.id);
             block.atom(tlvType);
-    
+
             const options = block.expressions("{", "}");
             if (model.quality.scene) {
                 options.atom("scene", true);
@@ -99,12 +99,12 @@ export class ClusterComponentGenerator {
                 options.remove();
             }
         });
-    
+
         this.defineTypedElements(CommandModel, elements, block, (model, add) => {
             if (!model.isRequest) {
                 return;
             }
-    
+
             let factory;
             if (mandatory.has(model)) {
                 factory = "Command";
@@ -144,7 +144,7 @@ export class ClusterComponentGenerator {
             }
             this.file.addImport("cluster/Cluster", factory);
             this.file.addImport("cluster/Cluster", "EventPriority");
-    
+
             const priority = camelize(model.priority ?? EventElement.Priority.Debug);
 
             const block = add(factory);
@@ -161,7 +161,7 @@ export class ClusterComponentGenerator {
         return `AccessLevel.${Access.PrivilegeName[privilege]}`
     }
 
-    private defineTypedElements<T extends (new(...args: any[]) => Model) & { Tag: ElementTag }>(
+    private defineTypedElements<T extends (new (...args: any[]) => Model) & { Tag: ElementTag }>(
         type: T,
         elements: ValueModel[],
         target: Block,

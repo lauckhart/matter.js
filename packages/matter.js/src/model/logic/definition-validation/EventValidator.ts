@@ -10,10 +10,10 @@ import { ValueValidator } from "./ValueValidator.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[EventElement.Tag] =
-class EventValidator extends ValueValidator<EventModel> {
-    override validate() {
-        this.validateStructure(true, DatatypeModel);
-        this.validateProperty({ name: "priority", type: EventElement.Priority, required: true })
-        super.validate();
+    class EventValidator extends ValueValidator<EventModel> {
+        override validate() {
+            this.validateStructure(true, DatatypeModel);
+            this.validateProperty({ name: "priority", type: EventElement.Priority, required: true })
+            super.validate();
+        }
     }
-}

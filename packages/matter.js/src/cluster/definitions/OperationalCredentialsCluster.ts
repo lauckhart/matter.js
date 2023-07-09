@@ -320,7 +320,7 @@ export const TlvAddTrustedRootCertificateRequest = TlvObject({
 });
 
 export namespace OperationalCredentialsCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

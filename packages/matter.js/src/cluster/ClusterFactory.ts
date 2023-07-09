@@ -9,7 +9,7 @@ import { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
 import { serialize } from "../util/String.js";
 import { Attributes, Cluster, Commands, Events } from "./Cluster.js";
 
-export class IllegalClusterError extends MatterError {}
+export class IllegalClusterError extends MatterError { }
 
 export type ClusterComponent<A extends Attributes, C extends Commands, E extends Events> = {
     readonly attributes: A,

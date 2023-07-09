@@ -35,7 +35,7 @@ describe("Model", () => {
             const parent = new ClusterModel({ name: "Foo" });
             parent.add({ tag: "datatype", name: "Bar" });
             const child = parent.children[0];
-            const parent2 = new ClusterModel({ name: "Foo2", children: [ child ] });
+            const parent2 = new ClusterModel({ name: "Foo2", children: [child] });
             expect(parent.children.length).toBe(0);
             expect(parent2.children.length).toBe(1);
             expect(child.parent).toBe(parent2);
@@ -167,16 +167,20 @@ describe("Model", () => {
 })
 
 namespace Fixtures {
-    export const globalStruct = new DatatypeModel({ name: "GlobalStruct", type: "struct", children: [
-        { tag: "datatype", name: "numField", type: "uint16" },
-        { tag: "datatype", name: "strField", type: "string" }
-    ]});
+    export const globalStruct = new DatatypeModel({
+        name: "GlobalStruct", type: "struct", children: [
+            { tag: "datatype", name: "numField", type: "uint16" },
+            { tag: "datatype", name: "strField", type: "string" }
+        ]
+    });
 
     export const cluster1StructFieldOverride = new DatatypeModel({ name: "strField" });
-    export const cluster1StructType = new DatatypeModel({ name: "ClusterDatatype", type: "GlobalStruct", children: [
-        { tag: "datatype", name: "numField2", type: "single" },
-        cluster1StructFieldOverride
-    ]});
+    export const cluster1StructType = new DatatypeModel({
+        name: "ClusterDatatype", type: "GlobalStruct", children: [
+            { tag: "datatype", name: "numField2", type: "single" },
+            cluster1StructFieldOverride
+        ]
+    });
 
     export const cluster1StructField1 = new DatatypeModel({ name: "structField", type: "ClusterDatatype" });
     export const cluster1StructAttr = new AttributeModel({ id: 3, name: "structAttr2", type: "ClusterDatatype" });
@@ -185,46 +189,58 @@ namespace Fixtures {
 
     export const feature = new DatatypeModel({ tag: "datatype", name: "PIN" });
 
-    export const cluster1 = new ClusterModel({ id: 1, name: "Cluster1", children: [
-        { tag: "attribute", id: 0xfffc, name: "FeatureMap", type: "FeatureMap", children: [
-            feature
-        ]},
-        { tag: "attribute", id: 1, name: "byteAttr", type: "uint8" },
-        { tag: "attribute", id: 2, name: "structAttr1", type: "struct", children: [
-            { tag: "datatype", name: "numField", type: "double" },
-            { tag: "datatype", name: "enumField", type: "GlobalEnum" },
-            cluster1StructField1
-        ]},
-        cluster1StructAttr,
-        cluster1StructType
-    ]});
+    export const cluster1 = new ClusterModel({
+        id: 1, name: "Cluster1", children: [
+            {
+                tag: "attribute", id: 0xfffc, name: "FeatureMap", type: "FeatureMap", children: [
+                    feature
+                ]
+            },
+            { tag: "attribute", id: 1, name: "byteAttr", type: "uint8" },
+            {
+                tag: "attribute", id: 2, name: "structAttr1", type: "struct", children: [
+                    { tag: "datatype", name: "numField", type: "double" },
+                    { tag: "datatype", name: "enumField", type: "GlobalEnum" },
+                    cluster1StructField1
+                ]
+            },
+            cluster1StructAttr,
+            cluster1StructType
+        ]
+    });
 
     export const cluster2StructFieldOverride = new DatatypeModel({ name: "strField" });
-    export const cluster2StructField = new DatatypeModel({ id: 1, name: "inheritedStruct", type: "ClusterDatatype", children: [
-        cluster2StructFieldOverride
-    ]});
+    export const cluster2StructField = new DatatypeModel({
+        id: 1, name: "inheritedStruct", type: "ClusterDatatype", children: [
+            cluster2StructFieldOverride
+        ]
+    });
     export const cluster2Attr1 = new AttributeModel({ id: 1, name: "byteAttr" });
     export const cluster2Attr2 = new AttributeModel({ id: 3, name: "structAttr2" });
 
-    export const enumValue2 = new DatatypeModel({ name: "Value2"});
+    export const enumValue2 = new DatatypeModel({ name: "Value2" });
 
     export const matter = new MatterModel({
         name: "Fake Matter",
         children: [
             cluster1,
-            { tag: "cluster", id: 2, name: "Cluster2", type: "Cluster1", children: [
-                cluster2StructField,
-                cluster2Attr1,
-                cluster2Attr2
-            ]},
+            {
+                tag: "cluster", id: 2, name: "Cluster2", type: "Cluster1", children: [
+                    cluster2StructField,
+                    cluster2Attr1,
+                    cluster2Attr2
+                ]
+            },
             { tag: "cluster", id: 3, name: "Cluster3" },
             globalAttr,
             { tag: "datatype", name: "GlobalByte", type: "uint8" },
             globalStruct,
-            { tag: "datatype", type: "enum16", name: "GlobalEnum", children: [
-                { tag: "datatype", name: "Value1" },
-                enumValue2
-            ]}
+            {
+                tag: "datatype", type: "enum16", name: "GlobalEnum", children: [
+                    { tag: "datatype", name: "Value1" },
+                    enumValue2
+                ]
+            }
         ]
     });
 }

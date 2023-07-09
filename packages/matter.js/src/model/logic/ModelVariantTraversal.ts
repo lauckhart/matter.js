@@ -64,7 +64,7 @@ export abstract class ModelVariantTraversal<S = void> {
      * of this list implies the priority used for choosing a name when multiple
      * model variants have different names.
      */
-    constructor(private sourceNames: string[]) {}
+    constructor(private sourceNames: string[]) { }
 
     /**
      * Initiate traversal.  The class is stateful so this call should not be
@@ -82,11 +82,11 @@ export abstract class ModelVariantTraversal<S = void> {
         this.visiting = true;
         try {
             return this.visitVariants(this.createVariantDetail(
-                Object.fromEntries(Object.entries(variants).map(([ sourceName, element ]) => {
+                Object.fromEntries(Object.entries(variants).map(([sourceName, element]) => {
                     if (!(element instanceof Model)) {
                         element = Model.create(element);
                     }
-                    return [ sourceName, element ];
+                    return [sourceName, element];
                 }))
             ));
         } finally {
@@ -143,7 +143,7 @@ export abstract class ModelVariantTraversal<S = void> {
 
                 // Group children across variants
                 const mappings = this.mapChildren(variants);
-        
+
                 // Visit children
                 const result = Array<S>();
                 for (const mapping of Object.values(mappings)) {
@@ -155,7 +155,7 @@ export abstract class ModelVariantTraversal<S = void> {
                         if (variants.tag === ElementTag.Cluster) {
                             for (const k in variants.map) {
                                 if (childVariants[k] === undefined) {
-                                    const inherited = variants.map[k].base?.member(detail.name, [ detail.tag ]);
+                                    const inherited = variants.map[k].base?.member(detail.name, [detail.tag]);
                                     if (inherited) {
                                         continue mappings;
                                     }
@@ -193,7 +193,7 @@ export abstract class ModelVariantTraversal<S = void> {
         const mappings = {} as { [tag: string]: ChildMapping };
 
         // Iterate over each model variant
-        for (const [ sourceName, variant ] of Object.entries(variants.map)) {
+        for (const [sourceName, variant] of Object.entries(variants.map)) {
             // For each child of this variant, associated it with a slot
             for (let i = 0; i < variant.children.length; i++) {
                 const child = variant.children[i];
@@ -258,8 +258,7 @@ export abstract class ModelVariantTraversal<S = void> {
      * Create a VariantDetail from a VariantMap.
      */
     private createVariantDetail(map: VariantMap):
-        VariantDetail
-    {
+        VariantDetail {
         let tag: ElementTag | undefined;
         let id: number | undefined;
         let name: string | undefined;
@@ -351,7 +350,7 @@ function inferEquivalentDatatypes(
     const traversal = new class extends ModelVariantTraversal {
         override visit(variants: VariantDetail, recurse: () => void[]) {
             let mapEntry: ModelNameMapping | undefined;
-            
+
             for (let priority = 0; priority < sourceNames.length; priority++) {
                 const sourceName = sourceNames[priority];
                 const variant = variants.map[sourceName];

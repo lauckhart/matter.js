@@ -53,7 +53,7 @@ export const TlvDeviceTypeStruct = TlvObject({
 });
 
 export namespace DescriptorCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

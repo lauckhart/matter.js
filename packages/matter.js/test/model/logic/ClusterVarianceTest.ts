@@ -19,14 +19,14 @@ describe("ClusterVariance", () => {
         it("classifies mandatory", () => {
             expectComponents(
                 attrs({ name: "attr", conformance: "M" }),
-                { mandatory: [ "attr" ] }
+                { mandatory: ["attr"] }
             )
         })
 
         it("classifies optional", () => {
             expectComponents(
                 attrs({ name: "attr", conformance: "O" }),
-                { optional: [ "attr" ] }
+                { optional: ["attr"] }
             )
         })
 
@@ -37,8 +37,8 @@ describe("ClusterVariance", () => {
                     { name: "attr2", conformance: "O" }
                 ),
                 {
-                    mandatory: [ "attr1" ],
-                    optional: [ "attr2" ]
+                    mandatory: ["attr1"],
+                    optional: ["attr2"]
                 }
             )
         })
@@ -46,14 +46,14 @@ describe("ClusterVariance", () => {
         it("ignores deprecation", () => {
             expectComponents(
                 attrs({ name: "attr", conformance: "D" }),
-                { optional: [ "attr" ] }
+                { optional: ["attr"] }
             )
         })
 
         it("ignores provisional", () => {
             expectComponents(
                 attrs({ name: "attr", conformance: "P, M" }),
-                { mandatory: [ "attr" ] }
+                { mandatory: ["attr"] }
             )
         })
     })
@@ -62,27 +62,27 @@ describe("ClusterVariance", () => {
         it("classifies mandatory by feature", () => {
             expectComponents(
                 attrs(
-                    [ "FOO" ],
+                    ["FOO"],
                     { name: "attr", conformance: "FOO" }
                 ),
-                { mandatory: [ "attr" ], condition: { allOf: [ "FOO" ] } }
+                { mandatory: ["attr"], condition: { allOf: ["FOO"] } }
             );
         })
 
         it("classifies optional by feature", () => {
             expectComponents(
                 attrs(
-                    [ "FOO" ],
+                    ["FOO"],
                     { name: "attr", conformance: "[FOO]" }
                 ),
-                { optional: [ "attr" ], condition: { allOf: [ "FOO" ] } }
+                { optional: ["attr"], condition: { allOf: ["FOO"] } }
             );
         })
 
         it("classifies by multiple features with mandatory and optional", () => {
             expectComponents(
                 attrs(
-                    [ "FOO", "BAR", "NOPE" ],
+                    ["FOO", "BAR", "NOPE"],
                     { name: "attr1", conformance: "M" },
                     { name: "attr2", conformance: "FOO" },
                     { name: "attr3", conformance: "[BAR]" },
@@ -91,17 +91,17 @@ describe("ClusterVariance", () => {
                     { name: "attr6", conformance: "M" }
                 ),
                 {
-                    mandatory: [ "attr1", "attr6" ],
-                    optional: [ "attr5" ],
+                    mandatory: ["attr1", "attr6"],
+                    optional: ["attr5"],
                 },
                 {
-                    mandatory: [ "attr2" ],
-                    optional: [ "attr4" ],
-                    condition: { allOf: [ "FOO" ] }
+                    mandatory: ["attr2"],
+                    optional: ["attr4"],
+                    condition: { allOf: ["FOO"] }
                 },
                 {
-                    optional: [ "attr3" ],
-                    condition: { allOf: [ "BAR" ] }
+                    optional: ["attr3"],
+                    condition: { allOf: ["BAR"] }
                 }
             )
         })
@@ -110,10 +110,10 @@ describe("ClusterVariance", () => {
     describe("complex variance", () => {
         it("parses FOO | BAR", () => {
             expectComponents(
-                attrs([ "FOO", "BAR" ], { name: "attr", conformance: "FOO | BAR" }),
+                attrs(["FOO", "BAR"], { name: "attr", conformance: "FOO | BAR" }),
                 {
-                    mandatory: [ "attr" ],
-                    condition: { anyOf: [ "FOO", "BAR" ] }
+                    mandatory: ["attr"],
+                    condition: { anyOf: ["FOO", "BAR"] }
                 }
             )
         })
@@ -153,7 +153,7 @@ function analyze(children: ClusterElement.Child[]) {
         name: "Cluster",
         children: children
     });
-    new MatterModel({ name: "Matter", children: [ cluster ]});
+    new MatterModel({ name: "Matter", children: [cluster] });
     return ClusterVariance(cluster);
 }
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export const TypeMap: { [name: string]: string} = {
+export const TypeMap: { [name: string]: string } = {
     BOOLEAN: "bool",
     BITMAP8: "map8",
     BITMAP16: "map16",
@@ -69,7 +69,7 @@ export const TypeMap: { [name: string]: string} = {
     HWADR: "hwadr"
 };
 
-export const ChildTypeMap: { [name: string]: string} = {
+export const ChildTypeMap: { [name: string]: string } = {
     map8: "INT8U",
     map16: "INT16U",
     map24: "INT24U",

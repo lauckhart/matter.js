@@ -31,7 +31,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10
  */
-export function MediaPlaybackCluster<T extends MediaPlaybackCluster.Feature[]>(...features: [ ...T ]) {
+export function MediaPlaybackCluster<T extends MediaPlaybackCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...MediaPlaybackCluster.Metadata,
         supportedFeatures: BitFlags(MediaPlaybackCluster.Metadata.features, ...features),
@@ -229,7 +229,7 @@ export namespace MediaPlaybackCluster {
         VariableSpeed = "VariableSpeed"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

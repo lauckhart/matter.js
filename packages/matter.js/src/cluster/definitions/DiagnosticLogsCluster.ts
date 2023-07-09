@@ -194,7 +194,7 @@ export const TlvRetrieveLogsResponseRequest = TlvObject({
 });
 
 export namespace DiagnosticLogsCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

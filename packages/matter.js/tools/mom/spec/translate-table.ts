@@ -29,14 +29,14 @@ export const Str = (el: HTMLElement) => {
     if (!text) {
         return "";
     }
-    
+
     return text
         // Remove leading and trailing whitespace
         .trim()
 
         // Remove soft hyphen and any surrounding whitespace
         .replace(/\s*\u00ad\s*/g, "")
-        
+
         // Collapse whitespace    
         .replace(/\s+/g, " ");
 }
@@ -47,7 +47,7 @@ export const NoSpace = (el: HTMLElement) => Str(el).replace(/\s/g, "");
 /** Number parsed as integer */
 export const Integer = (el: HTMLElement) => {
     const text = Str(el);
-    
+
     // Ignore range descriptions
     if (text.match(/ (?:-|to) /)) {
         return NaN;
@@ -131,22 +131,22 @@ export const UpperIdentifier = (el: HTMLElement) => Code(el).toUpperCase();
 
 /** Modifier that allows a value to be undefined */
 type Optional<T> = { option: "optional", wrapped: Alias<T> | Translator<T> };
-export const Optional = <T> (wrapped: Alias<T> | Translator<T>): Optional<T> =>
+export const Optional = <T>(wrapped: Alias<T> | Translator<T>): Optional<T> =>
     ({ option: "optional", wrapped });
 
 /** Modifier that maps one or more columns to a canonical name */
 type Alias<T> = { option: "alias", sources: string[], wrapped: Translator<T> };
-export const Alias = <T> (wrapped: Translator<T>, ...sources: string[]): Alias<T> =>
+export const Alias = <T>(wrapped: Translator<T>, ...sources: string[]): Alias<T> =>
     ({ option: "alias", sources, wrapped });
 
 /** Injects a column with a fixed value */
 type Constant<T> = { option: "constant", value: T };
-export const Constant = <T> (value: T): Constant<T> =>
+export const Constant = <T>(value: T): Constant<T> =>
     ({ option: "constant", value });
 
 /** Converts detail section into children */
 type ChildTranslator = (tag: string, parentRecord: any, definition: HtmlReference) => DatatypeElement[] | undefined;
-type Children = { option: "children", translator: ChildTranslator}
+type Children = { option: "children", translator: ChildTranslator }
 export const Children = (translator: ChildTranslator) =>
     ({ option: "children", translator });
 
@@ -196,18 +196,18 @@ export function translateTable<T extends TableSchema>(
     let childTranslator: ChildTranslator | undefined;
 
     nextField: for (const kv of Object.entries(schema)) {
-        const [ k ] = kv;
-        let [ , v] = kv;
+        const [k] = kv;
+        let [, v] = kv;
         while (typeof v === "object") {
             switch (v.option) {
                 case "optional":
                     optional.add(k);
                     v = v.wrapped;
                     break;
-                    
+
                 case "alias":
                     for (const source of v.sources) {
-                        aliases.push([ source, k ]);
+                        aliases.push([source, k]);
                     }
                     v = v.wrapped;
                     break;
@@ -305,7 +305,7 @@ function installPreciseDetails(
 ) {
     const lookup = Object.fromEntries(
         definitions.map((detail) =>
-            [ detail.name.toLowerCase(), detail ]
+            [detail.name.toLowerCase(), detail]
         )
     );
 
@@ -422,7 +422,7 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
 
         // If we found the ID, set the alias
         if (idIndex !== -1) {
-            ids = [ fields[idIndex] ];
+            ids = [fields[idIndex]];
         }
 
         // If we didn't find a preferred name, use the first namish column
@@ -438,7 +438,7 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
 
         // If we found the name, set the alias
         if (nameIndex !== -1) {
-            names = [ fields[nameIndex] ];
+            names = [fields[nameIndex]];
         }
     }
 

@@ -371,7 +371,7 @@ export namespace ScenesCluster {
         SceneNames = "SceneNames"
     }
 
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

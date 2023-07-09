@@ -20,7 +20,7 @@ const logger = Logger.get("load-chip");
 const auth = await loadAuth();
 const repo = new Repo("project-chip", "connectedhomeip", "v1.1-branch", readFileWithCache, auth);
 
-const parser = new(new JSDOM("").window.DOMParser)();
+const parser = new (new JSDOM("").window.DOMParser)();
 
 export async function loadChip(): Promise<ClusterElement[]> {
     const elements = Array<AnyElement>();
@@ -45,7 +45,7 @@ function installDatatypes(elements: AnyElement[]) {
     const globals = {} as { [name: string]: AnyElement };
     Object.values(Globals).forEach(g => globals[g.name] = g);
 
-    const datatypes = {} as { [ name: string ]: DatatypeElement }
+    const datatypes = {} as { [name: string]: DatatypeElement }
     elements.forEach(e => {
         if (e.tag === DatatypeElement.Tag) {
             datatypes[e.name] = e;
@@ -85,10 +85,10 @@ function installDatatypes(elements: AnyElement[]) {
 
             if (type) {
                 installChildren(type, c);
-    
+
                 if (type && !globals[type] && !alreadyInstalled.has(type)) {
                     alreadyInstalled.add(type);
-    
+
                     const datatype = datatypes[type];
                     if (datatype) {
                         if (!into.children) {
@@ -111,7 +111,7 @@ function installDatatypes(elements: AnyElement[]) {
 }
 
 async function loadDirectory(from: string, path: Directory, elements: AnyElement[]) {
-    logger.info(`index ${from}`);    
+    logger.info(`index ${from}`);
 
     for (const filename of await path.ls()) {
         if (!filename.endsWith(".xml")) continue;

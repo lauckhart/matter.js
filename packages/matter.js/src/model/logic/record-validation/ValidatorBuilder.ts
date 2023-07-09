@@ -36,7 +36,7 @@ export class ValidatorBuilder extends Array<string> {
             if (!aspects.length) {
                 continue;
             }
-    
+
             this.push(`v = record[${JSON.stringify(camelize(child.name, false))}]`);
 
             for (const aspect of aspects) {
@@ -50,7 +50,7 @@ export class ValidatorBuilder extends Array<string> {
                 addType(this, child);
             }
         }
-        
+
         if (this.hasChoices) {
             this.unshift("delete this.choices");
             this.push("this.checkChoices()");

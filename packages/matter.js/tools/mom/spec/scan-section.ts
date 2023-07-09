@@ -38,7 +38,7 @@ function convertTable(el: HTMLTableElement) {
         for (let i = 0; i < table.fields.length; i++) {
             row[table.fields[i]] = cells.item(i) as HTMLElement;
         }
-        
+
         table.rows.push(row);
     }
 
@@ -187,7 +187,7 @@ export function* scanSection(ref: HtmlReference) {
                         // Already faking; treat these like a sub-headings to our fake heading
                         yield* emit();
                         fakeSection.subsection++;
-                        currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}.${fakeSection.subsection}`}};
+                        currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}.${fakeSection.subsection}` } };
                         namesIdentified.add(text);
                         break;
                     } else if (text?.match(/^[a-z0-9]+(?:Enum|Struct| Attribute| Command| Event| Field| Value)$/i)) {

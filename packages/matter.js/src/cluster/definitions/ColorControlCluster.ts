@@ -29,7 +29,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2
  */
-export function ColorControlCluster<T extends ColorControlCluster.Feature[]>(...features: [ ...T ]) {
+export function ColorControlCluster<T extends ColorControlCluster.Feature[]>(...features: [...T]) {
     const cluster = Cluster({
         ...ColorControlCluster.Metadata,
         supportedFeatures: BitFlags(ColorControlCluster.Metadata.features, ...features),
@@ -733,7 +733,7 @@ export namespace ColorControlCluster {
         ColorTemperature = "ColorTemperature"
     }
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> = 
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
         typeof Metadata
         & { attributes: GlobalAttributes<typeof Metadata.features> }
         & { supportedFeatures: T }

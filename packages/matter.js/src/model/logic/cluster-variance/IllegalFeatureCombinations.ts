@@ -107,13 +107,13 @@ function addFeatureNode(feature: DatatypeModel, node: Conformance.Ast, illegal: 
             } else {
                 choice = choices[node.param.name] = {
                     exclusive: !node.param.orMore,
-                    features: [ feature.name ]
+                    features: [feature.name]
                 };
             }
             break;
 
         case Conformance.Special.Name:
-            illegal.push({ [node.param]: true, [feature.name]: false } );
+            illegal.push({ [node.param]: true, [feature.name]: false });
             break;
 
         case Conformance.Special.OptionalIf:

@@ -115,7 +115,7 @@ export namespace Metatype {
                 if (FieldValue.is(value, FieldValue.flags)) {
                     return value;
                 }
-                
+
                 const id = Number(value);
                 if (Number.isNaN(id)) {
                     // Key name
@@ -123,7 +123,7 @@ export namespace Metatype {
                 }
                 // Value
                 return id;
-            
+
             case Metatype.integer:
                 if (typeof value === "string") {
                     // Specialized support for percentages and temperatures

@@ -66,7 +66,7 @@ export const TlvTargetStruct = TlvObject({
 });
 
 export namespace BindingCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;

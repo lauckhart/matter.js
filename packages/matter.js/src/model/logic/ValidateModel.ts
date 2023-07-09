@@ -89,7 +89,7 @@ export namespace ValidateModel {
             return (this.invalidElementCount / this.elementCount * 100).toPrecision(2);
         }
 
-        constructor(public model: Model) {}
+        constructor(public model: Model) { }
 
         report() {
             if (this.errors.length) {
@@ -107,7 +107,7 @@ export namespace ValidateModel {
                         logger.error(`${code}: ${this.errorCounts[code]}`);
                     }
                 });
-        
+
                 logger.error(`*** Total ${this.errors.length} validation error${this.errors.length === 1 ? "" : "s"} ***`);
                 logger.error(`*** Total ${this.invalidElementCount} invalid element${this.invalidElementCount === 1 ? "" : "s"} (${this.invalidElementPercent}%) ***`);
             } else {

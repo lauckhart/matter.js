@@ -31,7 +31,7 @@ export function RelativeHumidityMeasurementCluster() {
 }
 
 export namespace RelativeHumidityMeasurementCluster {
-    export type Type = 
+    export type Type =
         typeof Metadata
         & { attributes: GlobalAttributes<{}> }
         & typeof BaseComponent;
