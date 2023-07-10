@@ -46,12 +46,7 @@ export namespace ProxyDiscoveryCluster {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.15.13.5
              */
-            proxyDiscoverRequest: Command(0, TlvNoArguments, 0, TlvNoResponse),
-
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.15.13.5
-             */
-            proxyDiscoverResponse: Command(1, TlvNoArguments, 1, TlvNoResponse)
+            proxyDiscoverRequest: Command(0, TlvNoArguments, 0, TlvNoResponse)
         }
     });
 

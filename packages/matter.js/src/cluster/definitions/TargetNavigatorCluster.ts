@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, OptionalAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, OptionalAttribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -93,7 +93,7 @@ export const enum Status {
 }
 
 /**
- * Input to the TargetNavigator navigateTargetResponse command
+ * This command shall be generated in response to NavigateTarget command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
  */
@@ -159,14 +159,7 @@ export namespace TargetNavigatorCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
              */
-            navigateTarget: Command(0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponse),
-
-            /**
-             * This command shall be generated in response to NavigateTarget command.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
-             */
-            navigateTargetResponse: Command(1, TlvNavigateTargetResponse, 1, TlvNoResponse)
+            navigateTarget: Command(0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponse)
         }
     });
 

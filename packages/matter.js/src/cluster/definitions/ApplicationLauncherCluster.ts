@@ -9,10 +9,11 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, OptionalAttribute, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, Command, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
+import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 
@@ -74,7 +75,7 @@ export const TlvApplicationStruct = TlvObject({
  */
 export const TlvApplicationEPStruct = TlvObject({
     application: TlvField(0, TlvApplicationStruct),
-    endpoint: TlvOptionalField(1, TlvUInt16)
+    endpoint: TlvOptionalField(1, TlvEndpointNumber)
 });
 
 /**
@@ -124,7 +125,7 @@ export const enum Status {
 }
 
 /**
- * Input to the ApplicationLauncher launcherResponse command
+ * This command shall be generated in response to LaunchApp/StopApp/HideApp commands.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4
  */
@@ -288,14 +289,7 @@ export namespace ApplicationLauncherCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3
              */
-            hideApp: Command(2, TlvHideAppRequest, 3, TlvLauncherResponse),
-
-            /**
-             * This command shall be generated in response to LaunchApp/StopApp/HideApp commands.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4
-             */
-            launcherResponse: Command(3, TlvLauncherResponse, 3, TlvNoResponse)
+            hideApp: Command(2, TlvHideAppRequest, 3, TlvLauncherResponse)
         }
     });
 

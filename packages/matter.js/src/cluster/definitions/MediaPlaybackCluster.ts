@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, Attribute, Command, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, Command, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt64, TlvFloat } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -106,7 +106,7 @@ export const enum Status {
 }
 
 /**
- * Input to the MediaPlayback playbackResponse command
+ * This command shall be generated in response to various Playback Commands.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12
  */
@@ -341,14 +341,7 @@ export namespace MediaPlaybackCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.10
              */
-            skipBackward: OptionalCommand(9, TlvSkipBackwardRequest, 10, TlvPlaybackResponse),
-
-            /**
-             * This command shall be generated in response to various Playback Commands.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12
-             */
-            playbackResponse: Command(10, TlvPlaybackResponse, 10, TlvNoResponse)
+            skipBackward: OptionalCommand(9, TlvSkipBackwardRequest, 10, TlvPlaybackResponse)
         }
     });
 

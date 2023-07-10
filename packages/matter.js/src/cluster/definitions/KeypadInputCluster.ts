@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Command, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -152,7 +152,7 @@ export const enum Status {
 }
 
 /**
- * Input to the KeypadInput sendKeyResponse command
+ * This command shall be generated in response to a SendKey command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
  */
@@ -247,14 +247,7 @@ export namespace KeypadInputCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
              */
-            sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponse),
-
-            /**
-             * This command shall be generated in response to a SendKey command.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
-             */
-            sendKeyResponse: Command(1, TlvSendKeyResponse, 1, TlvNoResponse)
+            sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponse)
         }
     });
 

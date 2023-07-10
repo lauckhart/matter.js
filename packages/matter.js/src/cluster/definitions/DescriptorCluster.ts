@@ -11,7 +11,10 @@ import { GlobalAttributes, FixedAttribute, Attribute, Cluster } from "../../clus
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvDeviceTypeId } from "../../datatype/DeviceTypeId.js";
+import { TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvClusterId } from "../../datatype/ClusterId.js";
+import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 
 /**
  * Descriptor
@@ -41,7 +44,7 @@ export const TlvDeviceTypeStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.5.4.1.1
      */
-    deviceType: TlvField(0, TlvUInt32),
+    deviceType: TlvField(0, TlvDeviceTypeId),
 
     /**
      * This is the implemented revision of the device type definition. The endpoint shall conform to this revision of
@@ -87,14 +90,14 @@ export namespace DescriptorCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.2
              */
-            serverList: FixedAttribute(1, TlvArray(TlvUInt32), { default: [] }),
+            serverList: FixedAttribute(1, TlvArray(TlvClusterId), { default: [] }),
 
             /**
              * This attribute shall list each cluster ID for the client clusters present on the endpoint instance.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.3
              */
-            clientList: FixedAttribute(2, TlvArray(TlvUInt32), { default: [] }),
+            clientList: FixedAttribute(2, TlvArray(TlvClusterId), { default: [] }),
 
             /**
              * This attribute indicates composition of the device type instance. Device type instance composition shall
@@ -103,7 +106,7 @@ export namespace DescriptorCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.4
              */
-            partsList: Attribute(3, TlvArray(TlvUInt16), { default: [] })
+            partsList: Attribute(3, TlvArray(TlvEndpointNumber), { default: [] })
         }
     });
 

@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Command, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
@@ -182,7 +182,8 @@ export const enum Status {
 }
 
 /**
- * Input to the DiagnosticLogs retrieveLogsResponse command
+ * This shall be generated as a response to the RetrieveLogsRequest. The data for this command is shown in the
+ * following.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2
  */
@@ -245,15 +246,7 @@ export namespace DiagnosticLogsCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
              */
-            retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponse),
-
-            /**
-             * This shall be generated as a response to the RetrieveLogsRequest. The data for this command is shown in
-             * the following.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2
-             */
-            retrieveLogsResponse: Command(1, TlvRetrieveLogsResponse, 1, TlvNoResponse)
+            retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponse)
         }
     });
 

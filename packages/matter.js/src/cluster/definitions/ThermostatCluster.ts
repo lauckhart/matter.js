@@ -568,18 +568,6 @@ export const TlvThermostatScheduleTransition = TlvObject({
 });
 
 /**
- * Input to the Thermostat getWeeklyScheduleResponse command
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
- */
-export const TlvGetWeeklyScheduleResponse = TlvObject({
-    numberOfTransitionsForSequence: TlvField(0, TlvUInt8),
-    dayOfWeekForSequence: TlvField(1, TlvDayOfWeek),
-    modeForSequence: TlvField(2, TlvModeForSequence),
-    transitions: TlvField(3, TlvThermostatScheduleTransition)
-});
-
-/**
  * Input to the Thermostat setWeeklySchedule command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
@@ -599,6 +587,16 @@ export const TlvSetWeeklyScheduleRequest = TlvObject({
 export const TlvGetWeeklyScheduleRequest = TlvObject({
     daysToReturn: TlvField(0, TlvDayOfWeek),
     modeToReturn: TlvField(1, TlvModeForSequence)
+});
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
+ */
+export const TlvGetWeeklyScheduleResponse = TlvObject({
+    numberOfTransitionsForSequence: TlvField(0, TlvUInt8),
+    dayOfWeekForSequence: TlvField(1, TlvDayOfWeek),
+    modeForSequence: TlvField(2, TlvModeForSequence),
+    transitions: TlvField(3, TlvThermostatScheduleTransition)
 });
 
 export namespace ThermostatCluster {
@@ -1089,11 +1087,6 @@ export namespace ThermostatCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
              */
-            getRelayStatusLogResponse: OptionalCommand(1, TlvNoArguments, 1, TlvNoResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
-             */
             getRelayStatusLog: OptionalCommand(4, TlvNoArguments, 1, TlvNoArguments)
         }
     });
@@ -1407,11 +1400,6 @@ export namespace ThermostatCluster {
         },
 
         commands: {
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
-             */
-            getWeeklyScheduleResponse: Command(0, TlvGetWeeklyScheduleResponse, 0, TlvNoResponse),
-
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
              */

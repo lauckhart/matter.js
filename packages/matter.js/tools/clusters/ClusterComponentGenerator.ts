@@ -221,7 +221,11 @@ export class ClusterComponentGenerator {
 
             case Metatype.integer:
             case Metatype.float:
-                return FieldValue.numericValue(def, model.type);
+                const id = FieldValue.numericValue(def, model.type);
+                if (id !== undefined && this.tlv.isSpecializedId(model)) {
+                    return { id };
+                }
+                return id;
 
             case Metatype.bitmap:
                 if (!FieldValue.is(def, FieldValue.flags)) {

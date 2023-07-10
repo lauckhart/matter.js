@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, FixedAttribute, AccessLevel, Attribute, WritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, FixedAttribute, AccessLevel, Attribute, WritableAttribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvEnum, TlvInt32, TlvUInt64, TlvBitmap, TlvUInt16, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -246,7 +246,13 @@ export const TlvThreadInterfaceScanResultStruct = TlvObject({
 });
 
 /**
- * Input to the NetworkCommissioning scanNetworksResponse command
+ * This command shall contain the status of the last ScanNetworks command, and the associated scan results if the
+ * operation was successful.
+ *
+ * Results are valid only if NetworkingStatus is Success.
+ *
+ * Before generating a ScanNetworksResponse, the server shall set the LastNetworkingStatus attribute value to the
+ * NetworkingStatus matching the response.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.2
  */
@@ -323,7 +329,31 @@ export const TlvRemoveNetworkRequest = TlvObject({
 });
 
 /**
- * Input to the NetworkCommissioning networkConfigResponse command
+ * This response command relates status information for some commands which require it as their response command. See
+ * each individual cluster server command for the situations that may cause a NetworkingStatus different than Success.
+ *
+ * Before generating a NetworkConfigResponse, the server shall set the LastNetworkingStatus attribute value to the
+ * NetworkingStatus matching the response.
+ *
+ * Before generating a NetworkConfigResponse, the server shall set the LastNetworkID attribute value to the NetworkID
+ * that was used in the command for which an invocation caused the response to be generated.
+ *
+ * The NetworkingStatus field shall indicate the status of the last operation attempting to modify the Networks
+ * attribute configuration, taking one of these values:
+ *
+ *   • Success: Operation succeeded.
+ *
+ *   • OutOfRange: Network identifier was invalid (e.g. empty, too long, etc).
+ *
+ *   • BoundsExceeded: Adding this network configuration would exceed the limit defined by Section 11.8.6.1,
+ *     “MaxNetworks Attribute”.
+ *
+ *   • NetworkIdNotFound: The network identifier was expected to be found, but was not found among the added network
+ *     configurations in Networks attribute.
+ *
+ *   • UnknownError: An internal error occurred during the operation.
+ *
+ * See Section 11.8.7.2.2, “DebugText Field” for usage.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.8
  */
@@ -352,7 +382,36 @@ export const TlvConnectNetworkRequest = TlvObject({
 });
 
 /**
- * Input to the NetworkCommissioning connectNetworkResponse command
+ * Before generating a ConnectNetworkResponse, the server shall:
+ *
+ *   • Set the LastNetworkingStatus attribute value to the NetworkingStatus matching the response.
+ *
+ *   • Set the LastNetworkID attribute value to the NetworkID that was used in the ConnectNetwork command which caused
+ *     the response to be generated.
+ *
+ *   • Set the LastConnectErrorValue attribute value to the ErrorValue matching the response, including setting it to
+ *     null if the ErrorValue is not applicable.
+ *
+ * The NetworkingStatus field shall indicate the status of the last connection attempt, taking one of these values:
+ *
+ *   • Success: Connection succeeded.
+ *
+ *   • NetworkNotFound: No instance of an explicitly-provided network identifier was found during the attempt to join
+ *     the network.
+ *
+ *   • OutOfRange: Network identifier was invalid (e.g. empty, too long, etc).
+ *
+ *   • NetworkIdNotFound: The network identifier was not found among the added network configurations in Networks
+ *     attribute.
+ *
+ *   • RegulatoryError: Could not connect to a network due to lack of regulatory configuration.
+ *
+ *   • UnknownError: An internal error occurred during the operation.
+ *
+ *   • Association errors (see also description of errors in Section 11.8.5.3, “NetworkCommissioningStatusEnum”):
+ *     AuthFailure, UnsupportedSecurity, OtherConnectionFailure, IPV6Failed, IPBindFailed
+ *
+ * See Section 11.8.7.2.2, “DebugText Field” for usage.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.10
  */
@@ -739,19 +798,6 @@ export namespace NetworkCommissioningCluster {
             scanNetworks: Command(0, TlvScanNetworksRequest, 1, TlvScanNetworksResponse),
 
             /**
-             * This command shall contain the status of the last ScanNetworks command, and the associated scan results
-             * if the operation was successful.
-             *
-             * Results are valid only if NetworkingStatus is Success.
-             *
-             * Before generating a ScanNetworksResponse, the server shall set the LastNetworkingStatus attribute value
-             * to the NetworkingStatus matching the response.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.2
-             */
-            scanNetworksResponse: Command(1, TlvScanNetworksResponse, 1, TlvNoResponse),
-
-            /**
              * This command shall remove the network configuration from the Cluster if there was already a network
              * configuration with the same NetworkID. The relative order of the entries in the Networks attribute list
              * shall remain unchanged, except for the removal of the requested network configuration.
@@ -775,38 +821,6 @@ export namespace NetworkCommissioningCluster {
              * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.7
              */
             removeNetwork: Command(4, TlvRemoveNetworkRequest, 5, TlvNetworkConfigResponse),
-
-            /**
-             * This response command relates status information for some commands which require it as their response
-             * command. See each individual cluster server command for the situations that may cause a NetworkingStatus
-             * different than Success.
-             *
-             * Before generating a NetworkConfigResponse, the server shall set the LastNetworkingStatus attribute value
-             * to the NetworkingStatus matching the response.
-             *
-             * Before generating a NetworkConfigResponse, the server shall set the LastNetworkID attribute value to the
-             * NetworkID that was used in the command for which an invocation caused the response to be generated.
-             *
-             * The NetworkingStatus field shall indicate the status of the last operation attempting to modify the
-             * Networks attribute configuration, taking one of these values:
-             *
-             *   • Success: Operation succeeded.
-             *
-             *   • OutOfRange: Network identifier was invalid (e.g. empty, too long, etc).
-             *
-             *   • BoundsExceeded: Adding this network configuration would exceed the limit defined by Section
-             *     11.8.6.1, “MaxNetworks Attribute”.
-             *
-             *   • NetworkIdNotFound: The network identifier was expected to be found, but was not found among the
-             *     added network configurations in Networks attribute.
-             *
-             *   • UnknownError: An internal error occurred during the operation.
-             *
-             * See Section 11.8.7.2.2, “DebugText Field” for usage.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.8
-             */
-            networkConfigResponse: Command(5, TlvNetworkConfigResponse, 5, TlvNoResponse),
 
             /**
              * This command shall attempt to connect to a network whose configuration was previously added by either
@@ -880,44 +894,6 @@ export namespace NetworkCommissioningCluster {
              * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.9
              */
             connectNetwork: Command(6, TlvConnectNetworkRequest, 7, TlvConnectNetworkResponse),
-
-            /**
-             * Before generating a ConnectNetworkResponse, the server shall:
-             *
-             *   • Set the LastNetworkingStatus attribute value to the NetworkingStatus matching the response.
-             *
-             *   • Set the LastNetworkID attribute value to the NetworkID that was used in the ConnectNetwork command
-             *     which caused the response to be generated.
-             *
-             *   • Set the LastConnectErrorValue attribute value to the ErrorValue matching the response, including
-             *     setting it to null if the ErrorValue is not applicable.
-             *
-             * The NetworkingStatus field shall indicate the status of the last connection attempt, taking one of these
-             * values:
-             *
-             *   • Success: Connection succeeded.
-             *
-             *   • NetworkNotFound: No instance of an explicitly-provided network identifier was found during the
-             *     attempt to join the network.
-             *
-             *   • OutOfRange: Network identifier was invalid (e.g. empty, too long, etc).
-             *
-             *   • NetworkIdNotFound: The network identifier was not found among the added network configurations in
-             *     Networks attribute.
-             *
-             *   • RegulatoryError: Could not connect to a network due to lack of regulatory configuration.
-             *
-             *   • UnknownError: An internal error occurred during the operation.
-             *
-             *   • Association errors (see also description of errors in Section 11.8.5.3,
-             *     “NetworkCommissioningStatusEnum”): AuthFailure, UnsupportedSecurity, OtherConnectionFailure,
-             *     IPV6Failed, IPBindFailed
-             *
-             * See Section 11.8.7.2.2, “DebugText Field” for usage.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.10
-             */
-            connectNetworkResponse: Command(7, TlvConnectNetworkResponse, 7, TlvNoResponse),
 
             /**
              * This command shall set the specific order of the network configuration selected by its NetworkID in the

@@ -17,7 +17,11 @@ export class CommandModel extends ValueModel implements CommandElement {
     response?: string
 
     get isRequest() {
-        return this.direction = CommandElement.Direction.Request;
+        return this.direction === CommandElement.Direction.Request;
+    }
+
+    get isResponse() {
+        return this.direction === CommandElement.Direction.Response;
     }
 
     get responseModel() {

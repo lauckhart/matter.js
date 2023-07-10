@@ -7,11 +7,11 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, WritableFixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, WritableFixedAttribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
@@ -33,7 +33,7 @@ export function ValidProxiesCluster() {
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.4.1
  */
-export const TlvValidProxyStruct = TlvObject({ nodeId: TlvField(1, TlvUInt64) });
+export const TlvValidProxyStruct = TlvObject({ nodeId: TlvField(1, TlvNodeId) });
 
 export namespace ValidProxiesCluster {
     export type Type =
@@ -65,12 +65,7 @@ export namespace ValidProxiesCluster {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.6
              */
-            getValidProxiesRequest: Command(0, TlvNoArguments, 1, TlvNoArguments),
-
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.6
-             */
-            getValidProxiesResponse: Command(1, TlvNoArguments, 1, TlvNoResponse)
+            getValidProxiesRequest: Command(0, TlvNoArguments, 1, TlvNoArguments)
         }
     });
 

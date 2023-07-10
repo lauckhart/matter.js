@@ -198,7 +198,7 @@ export const enum Status {
 }
 
 /**
- * Input to the Channel changeChannelResponse command
+ * This command shall be generated in response to a ChangeChannel command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.2
  */
@@ -358,14 +358,7 @@ export namespace ChannelCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.1
              */
-            changeChannel: Command(0, TlvChangeChannelRequest, 1, TlvChangeChannelResponse),
-
-            /**
-             * This command shall be generated in response to a ChangeChannel command.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.2
-             */
-            changeChannelResponse: Command(1, TlvChangeChannelResponse, 1, TlvNoResponse)
+            changeChannel: Command(0, TlvChangeChannelRequest, 1, TlvChangeChannelResponse)
         }
     });
 

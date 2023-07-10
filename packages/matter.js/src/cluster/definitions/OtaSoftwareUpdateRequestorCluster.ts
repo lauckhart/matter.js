@@ -11,9 +11,12 @@ import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, Attribute
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
-import { TlvUInt64, TlvUInt16, TlvEnum, TlvUInt8, TlvUInt32, TlvInt64 } from "../../tlv/TlvNumber.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
+import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
+import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvUInt64, TlvInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
 
 /**
@@ -39,8 +42,8 @@ export function OtaSoftwareUpdateRequestorCluster() {
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.20
  */
 export const TlvProviderLocationStruct = TlvObject({
-    providerNodeId: TlvField(1, TlvUInt64),
-    endpoint: TlvField(2, TlvUInt16)
+    providerNodeId: TlvField(1, TlvNodeId),
+    endpoint: TlvField(2, TlvEndpointNumber)
 });
 
 /**
@@ -73,11 +76,11 @@ export const enum AnnouncementReason {
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.6.1
  */
 export const TlvAnnounceOtaProviderRequest = TlvObject({
-    providerNodeId: TlvField(0, TlvUInt64),
-    vendorId: TlvField(1, TlvUInt16),
+    providerNodeId: TlvField(0, TlvNodeId),
+    vendorId: TlvField(1, TlvVendorId),
     announcementReason: TlvField(2, TlvEnum<AnnouncementReason>()),
     metadataForNode: TlvOptionalField(3, TlvByteString.bound({ maxLength: 512 })),
-    endpoint: TlvField(4, TlvUInt16)
+    endpoint: TlvField(4, TlvEndpointNumber)
 });
 
 /**

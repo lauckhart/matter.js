@@ -182,8 +182,16 @@ export class TlvGenerator {
         return tlv;
     }
 
+    /**
+     * Determine whether an integer type is one of our "object wrapped ID"
+     * things.
+     */
+    isSpecializedId(model: ValueModel) {
+        return !!IntegerGlobalMap[model.globalBase?.name as any];
+    }
+
     private integerTlv(metabase: ValueModel, model: ValueModel) {
-        const globalMapping = IntegerGlobalMap[model.globalBase?.type as any];
+        const globalMapping = IntegerGlobalMap[model.globalBase?.name as any];
         if (globalMapping) {
             return this.importTlv(...globalMapping);
         }
@@ -304,7 +312,7 @@ export class TlvGenerator {
         }
 
         // Specialize the name based on the model type
-        if (model instanceof CommandModel && model.isRequest && !(name.endsWith("Response"))) {
+        if (model instanceof CommandModel && model.isRequest) {
             name += "Request";
         }
         if (model instanceof EventModel) {
@@ -373,7 +381,12 @@ export class TlvGenerator {
                 break;
 
             case ElementTag.Command:
-                definition.document({ details: `Input to the ${scope.name} ${camelize(model.name, false)} command`, xref: model.xref });
+                if ((model as CommandModel).isResponse) {
+                    // Responses do not appear in the commands field
+                    definition.document(model);
+                } else {
+                    definition.document({ details: `Input to the ${scope.name} ${camelize(model.name, false)} command`, xref: model.xref });
+                }
                 break;
 
             case ElementTag.Event:

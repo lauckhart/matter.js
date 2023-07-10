@@ -15,6 +15,7 @@ import { TlvUInt16, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
+import { TlvVendorId } from "../../datatype/VendorId.js";
 
 /**
  * Mode Select
@@ -56,7 +57,7 @@ export const TlvSemanticTagStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.8.2.2
      */
-    mfgCode: TlvField(0, TlvNullable(TlvUInt16)),
+    mfgCode: TlvField(0, TlvNullable(TlvVendorId)),
 
     /**
      * This field shall indicate the semantic tag within a semantic tag namespace which is either manufacturer specific

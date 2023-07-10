@@ -11,7 +11,10 @@ import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, Cluster }
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvOptionalField } from "../../tlv/TlvObject.js";
-import { TlvUInt64, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
+import { TlvGroupId } from "../../datatype/GroupId.js";
+import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
+import { TlvClusterId } from "../../datatype/ClusterId.js";
 
 /**
  * Binding
@@ -37,7 +40,7 @@ export const TlvTargetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.1
      */
-    node: TlvOptionalField(1, TlvUInt64),
+    node: TlvOptionalField(1, TlvNodeId),
 
     /**
      * This field is the target group ID that represents remote endpoints. If the Endpoint field is present, this field
@@ -45,7 +48,7 @@ export const TlvTargetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.2
      */
-    group: TlvOptionalField(2, TlvUInt16),
+    group: TlvOptionalField(2, TlvGroupId),
 
     /**
      * This field is the remote endpoint that the local endpoint is bound to. If the Group field is present, this field
@@ -53,7 +56,7 @@ export const TlvTargetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.3
      */
-    endpoint: TlvOptionalField(3, TlvUInt16),
+    endpoint: TlvOptionalField(3, TlvEndpointNumber),
 
     /**
      * This field is the cluster ID (client & server) on the local and target endpoint(s). If this field is present,
@@ -62,7 +65,7 @@ export const TlvTargetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.4
      */
-    cluster: TlvOptionalField(4, TlvUInt32)
+    cluster: TlvOptionalField(4, TlvClusterId)
 });
 
 export namespace BindingCluster {

@@ -160,7 +160,8 @@ export const TlvTriggerEffectRequest = TlvObject({
 });
 
 /**
- * Input to the Identify identifyQueryResponse command
+ * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command, in the case
+ * that the device is currently identifying itself.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
  */
@@ -274,14 +275,6 @@ export namespace IdentifyCluster {
      */
     export const QueryComponent = ClusterComponent({
         commands: {
-            /**
-             * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command,
-             * in the case that the device is currently identifying itself.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
-             */
-            identifyQueryResponse: Command(0, TlvIdentifyQueryResponse, 0, TlvNoResponse),
-
             /**
              * This command allows the sending device to request the target or targets to respond if they are currently
              * identifying themselves.

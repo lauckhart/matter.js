@@ -13,8 +13,12 @@ import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvByteString, TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { TlvUInt16, TlvUInt64, TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
+import { TlvVendorId } from "../../datatype/VendorId.js";
+import { TlvFabricId } from "../../datatype/FabricId.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
+import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
+import { TlvSubjectId } from "../../datatype/SubjectId.js";
 
 /**
  * Operational Credentials
@@ -81,7 +85,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.2
      */
-    vendorId: TlvField(2, TlvUInt16),
+    vendorId: TlvField(2, TlvVendorId),
 
     /**
      * This field shall contain the FabricID allocated to the fabric referenced by FabricIndex. This field shall match
@@ -91,7 +95,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.3
      */
-    fabricId: TlvField(3, TlvUInt64),
+    fabricId: TlvField(3, TlvFabricId),
 
     /**
      * This field shall contain the NodeID in use within the fabric referenced by FabricIndex. This field shall match
@@ -99,7 +103,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.4
      */
-    nodeId: TlvField(4, TlvUInt64),
+    nodeId: TlvField(4, TlvNodeId),
 
     /**
      * This field shall contain a commissioner-set label for the fabric referenced by FabricIndex. This label is set by
@@ -120,7 +124,12 @@ export const TlvAttestationRequestRequest = TlvObject({
 });
 
 /**
- * Input to the OperationalCredentials attestationResponse command
+ * This command shall be generated in response to an Attestation Request command.
+ *
+ * See Section 11.17.4.7, “Attestation Information” for details about the generation of the fields within this response
+ * command.
+ *
+ * See Section F.2, “Device Attestation Response test vector” for an example computation of an AttestationResponse.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2
  */
@@ -160,7 +169,7 @@ export const enum CertificateChainType {
 export const TlvCertificateChainRequestRequest = TlvObject({ certificateType: TlvField(0, TlvEnum<CertificateChainType>()) });
 
 /**
- * Input to the OperationalCredentials certificateChainResponse command
+ * This command shall be generated in response to a CertificateChainRequest command.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.4
  */
@@ -185,7 +194,12 @@ export const TlvCsrRequestRequest = TlvObject({
 });
 
 /**
- * Input to the OperationalCredentials csrResponse command
+ * This command shall be generated in response to a CSRRequest Command.
+ *
+ * See Section 11.17.4.9, “NOCSR Information” for details about the generation of the fields within this response
+ * command.
+ *
+ * See Section F.3, “Node Operational CSR Response test vector” for an example computation of a CSRResponse.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.6
  */
@@ -248,7 +262,7 @@ export const TlvAddNocRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8.2
      */
-    caseAdminSubject: TlvField(3, TlvUInt64),
+    caseAdminSubject: TlvField(3, TlvSubjectId),
 
     /**
      * This field shall be set to the Vendor ID of the entity issuing the AddNOC command. This value shall NOT be one
@@ -339,7 +353,7 @@ export const TlvAddNocRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8.3
      */
-    adminVendorId: TlvField(4, TlvUInt16)
+    adminVendorId: TlvField(4, TlvVendorId)
 });
 
 /**
@@ -363,7 +377,17 @@ export const enum NodeOperationalCertStatus {
 }
 
 /**
- * Input to the OperationalCredentials nocResponse command
+ * This command shall be generated in response to the following commands:
+ *
+ *   • AddNOC
+ *
+ *   • UpdateNOC
+ *
+ *   • UpdateFabricLabel
+ *
+ *   • RemoveFabric
+ *
+ * It provides status information about the success or failure of those commands.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10
  */
@@ -552,32 +576,12 @@ export namespace OperationalCredentialsCluster {
             attestationRequest: Command(0, TlvAttestationRequestRequest, 1, TlvAttestationResponse),
 
             /**
-             * This command shall be generated in response to an Attestation Request command.
-             *
-             * See Section 11.17.4.7, “Attestation Information” for details about the generation of the fields within
-             * this response command.
-             *
-             * See Section F.2, “Device Attestation Response test vector” for an example computation of an
-             * AttestationResponse.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2
-             */
-            attestationResponse: Command(1, TlvAttestationResponse, 1, TlvNoResponse),
-
-            /**
              * If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall fail
              * with a Status Code of INVALID_COMMAND.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
              */
             certificateChainRequest: Command(2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponse),
-
-            /**
-             * This command shall be generated in response to a CertificateChainRequest command.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.4
-             */
-            certificateChainResponse: Command(3, TlvCertificateChainResponse, 3, TlvNoResponse),
 
             /**
              * This command shall be generated to execute the Node Operational CSR Procedure and subsequently return
@@ -609,18 +613,6 @@ export namespace OperationalCredentialsCluster {
              * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
              */
             csrRequest: Command(4, TlvCsrRequestRequest, 5, TlvCsrResponse),
-
-            /**
-             * This command shall be generated in response to a CSRRequest Command.
-             *
-             * See Section 11.17.4.9, “NOCSR Information” for details about the generation of the fields within this
-             * response command.
-             *
-             * See Section F.3, “Node Operational CSR Response test vector” for an example computation of a CSRResponse.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.6
-             */
-            csrResponse: Command(5, TlvCsrResponse, 5, TlvNoResponse),
 
             /**
              * This command shall add a new NOC chain to the device and commission a new Fabric association upon
@@ -695,23 +687,6 @@ export namespace OperationalCredentialsCluster {
              * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.9
              */
             updateNoc: Command(7, TlvUpdateNocRequest, 8, TlvNocResponse),
-
-            /**
-             * This command shall be generated in response to the following commands:
-             *
-             *   • AddNOC
-             *
-             *   • UpdateNOC
-             *
-             *   • UpdateFabricLabel
-             *
-             *   • RemoveFabric
-             *
-             * It provides status information about the success or failure of those commands.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10
-             */
-            nocResponse: Command(8, TlvNocResponse, 8, TlvNoResponse),
 
             /**
              * This command shall be used by an Administrator to set the user-visible Label field for a given Fabric,

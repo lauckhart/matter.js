@@ -12,6 +12,7 @@ import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/
 import { GlobalAttributes, Attribute, OptionalAttribute, WritableAttribute, AccessLevel, Command, TlvNoResponse, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt64, TlvEnum, TlvInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -354,7 +355,7 @@ export namespace TimeSyncCluster {
              */
             trustedTimeNodeId: WritableAttribute(
                 3,
-                TlvNullable(TlvUInt64),
+                TlvNullable(TlvNodeId),
                 { default: null, writeAcl: AccessLevel.Administer }
             )
         },

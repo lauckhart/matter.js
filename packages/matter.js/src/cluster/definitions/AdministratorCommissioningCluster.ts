@@ -12,6 +12,7 @@ import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/
 import { GlobalAttributes, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -154,7 +155,7 @@ export namespace AdministratorCommissioningCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.18.7.3
              */
-            adminVendorId: Attribute(2, TlvNullable(TlvUInt16))
+            adminVendorId: Attribute(2, TlvNullable(TlvVendorId))
         },
 
         commands: {
