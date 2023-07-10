@@ -10,6 +10,7 @@ import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { GlobalAttributes, OptionalAttribute, OptionalWritableAttribute, Attribute, OptionalEvent, EventPriority, Event, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvString } from "../../tlv/TlvString.js";
+import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -114,7 +115,7 @@ export namespace BridgedDeviceBasicInformationCluster {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
              */
-            vendorId: OptionalAttribute(2, TlvUInt16),
+            vendorId: OptionalAttribute(2, TlvVendorId),
 
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.4

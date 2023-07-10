@@ -11,6 +11,7 @@ import { GlobalAttributes, FixedAttribute, WritableAttribute, AccessLevel, Optio
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvUInt16, TlvUInt32, TlvEnum, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
+import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -177,7 +178,7 @@ export namespace BasicInformationCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.3
              */
-            vendorId: FixedAttribute(2, TlvUInt16),
+            vendorId: FixedAttribute(2, TlvVendorId),
 
             /**
              * This attribute shall specify a human readable (displayable) name of the model for the Node such as the

@@ -9,8 +9,8 @@
 import { GlobalAttributes, OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvUInt32, TlvInt16, TlvUInt16, TlvInt32, TlvInt8, TlvUInt8 } from "../../tlv/TlvNumber.js";
-import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 
 /**
  * Electrical Measurement
@@ -25,28 +25,6 @@ export function ElectricalMeasurementCluster() {
     const cluster = Cluster({ ...ElectricalMeasurementCluster.Metadata, ...ElectricalMeasurementCluster.BaseComponent });
     return cluster as unknown as ElectricalMeasurementCluster.Type;
 }
-
-/**
- * Input to the ElectricalMeasurement getProfileInfoResponseCommand command
- */
-export const TlvGetProfileInfoResponseCommandRequest = TlvObject({
-    profileCount: TlvField(0, TlvUInt8),
-    profileIntervalPeriod: TlvField(1, TlvUInt8),
-    maxNumberOfIntervals: TlvField(2, TlvUInt8),
-    listOfAttributes: TlvField(3, TlvUInt16)
-});
-
-/**
- * Input to the ElectricalMeasurement getMeasurementProfileResponseCommand command
- */
-export const TlvGetMeasurementProfileResponseCommandRequest = TlvObject({
-    startTime: TlvField(0, TlvUInt32),
-    status: TlvField(1, TlvUInt8),
-    profileIntervalPeriod: TlvField(2, TlvUInt8),
-    numberOfIntervalsDelivered: TlvField(3, TlvUInt8),
-    attributeId: TlvField(4, TlvUInt16),
-    intervals: TlvField(5, TlvUInt8)
-});
 
 /**
  * Input to the ElectricalMeasurement getMeasurementProfileCommand command
@@ -204,16 +182,7 @@ export namespace ElectricalMeasurementCluster {
         },
 
         commands: {
-            getProfileInfoResponseCommand: OptionalCommand(0, TlvGetProfileInfoResponseCommandRequest, 0, TlvNoResponse),
             getProfileInfoCommand: OptionalCommand(0, TlvNoArguments, 0, TlvNoResponse),
-
-            getMeasurementProfileResponseCommand: OptionalCommand(
-                1,
-                TlvGetMeasurementProfileResponseCommandRequest,
-                1,
-                TlvNoResponse
-            ),
-
             getMeasurementProfileCommand: OptionalCommand(1, TlvGetMeasurementProfileCommandRequest, 1, TlvNoResponse)
         }
     });

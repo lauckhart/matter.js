@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvUInt32, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -243,7 +243,9 @@ export const enum Status {
 }
 
 /**
- * Input to the ContentLauncher launcherResponse command
+ * This command shall be generated in response to LaunchContent and LaunchURL commands.
+ *
+ * WARNING TODO: Data in table above needs a max size
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3
  */
@@ -557,18 +559,7 @@ export namespace ContentLauncherCluster {
     /**
      * A ContentLauncherCluster supports these elements if it supports features ContentSearch or UrlPlayback.
      */
-    export const ContentSearchOrUrlPlaybackComponent = ClusterComponent({
-        commands: {
-            /**
-             * This command shall be generated in response to LaunchContent and LaunchURL commands.
-             *
-             * WARNING TODO: Data in table above needs a max size
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3
-             */
-            launcherResponse: Command(2, TlvLauncherResponse, 2, TlvNoResponse)
-        }
-    });
+    export const ContentSearchOrUrlPlaybackComponent = ClusterComponent({});
 
     /**
      * This cluster supports all ContentLauncher features. It may support illegal feature combinations.

@@ -12,7 +12,9 @@ import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.
 import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
+import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvUInt16, TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 
@@ -39,7 +41,7 @@ export const TlvGroupKeyMapStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.3.1
      */
-    groupId: TlvField(1, TlvUInt16),
+    groupId: TlvField(1, TlvGroupId),
 
     /**
      * This field references the set of group keys that generate operational group keys for use with this
@@ -59,14 +61,14 @@ export const TlvGroupKeyMapStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.5
  */
 export const TlvGroupInfoMapStruct = TlvObject({
-    groupId: TlvField(1, TlvUInt16),
+    groupId: TlvField(1, TlvGroupId),
 
     /**
      * This field provides the list of Endpoint IDs on the Node to which messages to this group shall be forwarded.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.5.1
      */
-    endpoints: TlvField(2, TlvArray(TlvUInt16)),
+    endpoints: TlvField(2, TlvArray(TlvEndpointNumber)),
 
     /**
      * This field provides a name for the group. This field shall contain the last GroupName written for a given
@@ -203,7 +205,9 @@ export const TlvKeySetWriteRequest = TlvObject({ groupKeySet: TlvField(0, TlvGro
 export const TlvKeySetReadRequest = TlvObject({ groupKeySetId: TlvField(0, TlvUInt16) });
 
 /**
- * Input to the GroupKeyManagement keySetReadResponse command
+ * This command shall be generated in response to the KeySetRead command, if a valid Group Key Set was found. It shall
+ * contain the configuration of the requested Group Key Set, with the EpochKey0, EpochKey1 and EpochKey2 key contents
+ * replaced by null.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.3
  */
@@ -224,7 +228,14 @@ export const TlvKeySetRemoveRequest = TlvObject({ groupKeySetId: TlvField(0, Tlv
 export const TlvKeySetReadAllIndicesRequest = TlvObject({ groupKeySetIDs: TlvField(0, TlvUInt16) });
 
 /**
- * Input to the GroupKeyManagement keySetReadAllIndicesResponse command
+ * This command shall be generated in response to KeySetReadAllIndices and it shall contain the list of GroupKeySetID
+ * for all Group Key Sets associated with the scoped Fabric.
+ *
+ * GroupKeySetIDs
+ *
+ * This field references the set of group keys that generate operational group keys for use with the accessing fabric.
+ *
+ * Each entry in GroupKeySetIDs is a GroupKeySetID field.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.6
  */
@@ -381,15 +392,6 @@ export namespace GroupKeyManagementCluster {
             keySetRead: Command(1, TlvKeySetReadRequest, 2, TlvKeySetReadResponse),
 
             /**
-             * This command shall be generated in response to the KeySetRead command, if a valid Group Key Set was
-             * found. It shall contain the configuration of the requested Group Key Set, with the EpochKey0, EpochKey1
-             * and EpochKey2 key contents replaced by null.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.3
-             */
-            keySetReadResponse: Command(2, TlvKeySetReadResponse, 2, TlvNoResponse),
-
-            /**
              * This command is used by Administrators to remove all state of a given Group Key Set.
              *
              * Effect on Receipt
@@ -425,22 +427,7 @@ export namespace GroupKeyManagementCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
              */
-            keySetReadAllIndices: Command(4, TlvKeySetReadAllIndicesRequest, 5, TlvKeySetReadAllIndicesResponse),
-
-            /**
-             * This command shall be generated in response to KeySetReadAllIndices and it shall contain the list of
-             * GroupKeySetID for all Group Key Sets associated with the scoped Fabric.
-             *
-             * GroupKeySetIDs
-             *
-             * This field references the set of group keys that generate operational group keys for use with the
-             * accessing fabric.
-             *
-             * Each entry in GroupKeySetIDs is a GroupKeySetID field.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.6
-             */
-            keySetReadAllIndicesResponse: Command(5, TlvKeySetReadAllIndicesResponse, 5, TlvNoResponse)
+            keySetReadAllIndices: Command(4, TlvKeySetReadAllIndicesRequest, 5, TlvKeySetReadAllIndicesResponse)
         }
     });
 

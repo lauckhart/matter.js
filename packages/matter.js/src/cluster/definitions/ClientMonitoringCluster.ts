@@ -11,6 +11,7 @@ import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.
 import { TlvUInt32, TlvUInt16, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
@@ -25,13 +26,13 @@ export function ClientMonitoringCluster() {
     return cluster as unknown as ClientMonitoringCluster.Type;
 }
 
-export const TlvMonitoringRegistration = TlvObject({ clientNodeId: TlvField(1, TlvUInt64), iCid: TlvField(2, TlvUInt64) });
+export const TlvMonitoringRegistration = TlvObject({ clientNodeId: TlvField(1, TlvNodeId), iCid: TlvField(2, TlvUInt64) });
 
 /**
  * Input to the ClientMonitoring registerClientMonitoring command
  */
 export const TlvRegisterClientMonitoringRequest = TlvObject({
-    clientNodeId: TlvField(0, TlvUInt64),
+    clientNodeId: TlvField(0, TlvNodeId),
     iCid: TlvField(1, TlvUInt64)
 });
 
@@ -39,7 +40,7 @@ export const TlvRegisterClientMonitoringRequest = TlvObject({
  * Input to the ClientMonitoring unregisterClientMonitoring command
  */
 export const TlvUnregisterClientMonitoringRequest = TlvObject({
-    clientNodeId: TlvField(0, TlvUInt64),
+    clientNodeId: TlvField(0, TlvNodeId),
     iCid: TlvField(1, TlvUInt64)
 });
 

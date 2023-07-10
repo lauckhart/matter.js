@@ -10,11 +10,12 @@ import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specificat
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { GlobalAttributes, Attribute, OptionalWritableAttribute, AccessLevel, WritableAttribute, FixedAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
-import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvBitmap, TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
@@ -446,7 +447,7 @@ export const TlvLockOperationEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.3.5
      */
-    sourceNode: TlvField(4, TlvNullable(TlvUInt64)),
+    sourceNode: TlvField(4, TlvNullable(TlvNodeId)),
 
     /**
      * The list of credentials used in performing the lock operation. This shall be null if no credentials were
@@ -521,7 +522,7 @@ export const TlvLockOperationErrorEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.4.6
      */
-    sourceNode: TlvField(5, TlvNullable(TlvUInt64)),
+    sourceNode: TlvField(5, TlvNullable(TlvNodeId)),
 
     /**
      * The list of credentials used in performing the lock operation. This shall be null if no credentials were
@@ -756,8 +757,6 @@ export const TlvSetUserRequest = TlvObject({
 export const TlvGetUserRequest = TlvObject({ userIndex: TlvField(0, TlvUInt16) });
 
 /**
- * Input to the DoorLock getUserResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvGetUserResponse = TlvObject({
@@ -805,8 +804,6 @@ export const enum DlStatus {
 }
 
 /**
- * Input to the DoorLock setCredentialResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvSetCredentialResponse = TlvObject({
@@ -823,8 +820,6 @@ export const TlvSetCredentialResponse = TlvObject({
 export const TlvGetCredentialStatusRequest = TlvObject({ credential: TlvField(0, TlvCredentialStruct) });
 
 /**
- * Input to the DoorLock getCredentialStatusResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvGetCredentialStatusResponse = TlvObject({
@@ -954,7 +949,7 @@ export const TlvLockUserChangeEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.5.6
      */
-    sourceNode: TlvField(5, TlvNullable(TlvUInt64)),
+    sourceNode: TlvField(5, TlvNullable(TlvNodeId)),
 
     /**
      * This is the index of the specific item that was changed (e.g. schedule, PIN, RFID, etc.) in the list of items
@@ -1015,8 +1010,6 @@ export const TlvGetWeekDayScheduleRequest = TlvObject({
 });
 
 /**
- * Input to the DoorLock getWeekDayScheduleResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvGetWeekDayScheduleResponse = TlvObject({
@@ -1063,8 +1056,6 @@ export const TlvGetYearDayScheduleRequest = TlvObject({
 });
 
 /**
- * Input to the DoorLock getYearDayScheduleResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvGetYearDayScheduleResponse = TlvObject({
@@ -1158,8 +1149,6 @@ export const TlvSetHolidayScheduleRequest = TlvObject({
 export const TlvGetHolidayScheduleRequest = TlvObject({ holidayIndex: TlvField(0, TlvUInt8) });
 
 /**
- * Input to the DoorLock getHolidayScheduleResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
  */
 export const TlvGetHolidayScheduleResponse = TlvObject({
@@ -1845,12 +1834,7 @@ export namespace DoorLockCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
              */
-            getLogRecord: Command(4, TlvNoArguments, 4, TlvNoArguments),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
-            getLogRecordResponse: Command(4, TlvNoArguments, 4, TlvNoResponse)
+            getLogRecord: Command(4, TlvNoArguments, 4, TlvNoArguments)
         }
     });
 
@@ -1920,11 +1904,6 @@ export namespace DoorLockCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
              */
-            getUserResponse: Command(28, TlvGetUserResponse, 28, TlvNoResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
             clearUser: Command(29, TlvClearUserRequest, 29, TlvNoResponse),
 
             /**
@@ -1935,17 +1914,7 @@ export namespace DoorLockCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
              */
-            setCredentialResponse: Command(35, TlvSetCredentialResponse, 35, TlvNoResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
             getCredentialStatus: Command(36, TlvGetCredentialStatusRequest, 37, TlvGetCredentialStatusResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
-            getCredentialStatusResponse: Command(37, TlvGetCredentialStatusResponse, 37, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -2071,11 +2040,6 @@ export namespace DoorLockCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
              */
-            getWeekDayScheduleResponse: Command(12, TlvGetWeekDayScheduleResponse, 12, TlvNoResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
             clearWeekDaySchedule: Command(13, TlvClearWeekDayScheduleRequest, 13, TlvNoResponse)
         }
     });
@@ -2107,11 +2071,6 @@ export namespace DoorLockCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
              */
-            getYearDayScheduleResponse: Command(15, TlvGetYearDayScheduleResponse, 15, TlvNoResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
             clearYearDaySchedule: Command(16, TlvClearYearDayScheduleRequest, 16, TlvNoResponse)
         }
     });
@@ -2139,11 +2098,6 @@ export namespace DoorLockCluster {
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
              */
             getHolidaySchedule: Command(18, TlvGetHolidayScheduleRequest, 18, TlvGetHolidayScheduleResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
-            getHolidayScheduleResponse: Command(18, TlvGetHolidayScheduleResponse, 18, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -2311,18 +2265,6 @@ export namespace DoorLockCluster {
                     writeAcl: AccessLevel.Administer
                 }
             )
-        },
-
-        commands: {
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
-            operatingEventNotification: OptionalCommand(32, TlvNoArguments, 32, TlvNoResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
-            programmingEventNotification: OptionalCommand(33, TlvNoArguments, 33, TlvNoResponse)
         }
     });
 
@@ -2374,11 +2316,6 @@ export namespace DoorLockCluster {
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
              */
-            getPinCodeResponse: Command(6, TlvNoArguments, 6, TlvNoResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
             clearPinCode: Command(7, TlvNoArguments, 7, TlvNoResponse),
 
             /**
@@ -2419,19 +2356,7 @@ export namespace DoorLockCluster {
     /**
      * A DoorLockCluster supports these elements if doesn't support feature USR.
      */
-    export const NotUserComponent = ClusterComponent({
-        commands: {
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
-            getUserStatusResponse: Command(10, TlvNoArguments, 10, TlvNoResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
-            getUserTypeResponse: Command(21, TlvNoArguments, 21, TlvNoResponse)
-        }
-    });
+    export const NotUserComponent = ClusterComponent({});
 
     /**
      * A DoorLockCluster supports these elements if it supports feature RfidCredential and it doesn't support feature
@@ -2448,11 +2373,6 @@ export namespace DoorLockCluster {
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
              */
             getRfidCode: Command(23, TlvNoArguments, 23, TlvNoArguments),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-             */
-            getRfidCodeResponse: Command(23, TlvNoArguments, 23, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4

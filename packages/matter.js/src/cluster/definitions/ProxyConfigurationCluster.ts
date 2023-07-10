@@ -12,7 +12,7 @@ import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
-import { TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
 
 /**
  * Proxy Configuration
@@ -43,7 +43,7 @@ export function ProxyConfigurationCluster() {
  */
 export const TlvConfigurationStruct = TlvObject({
     proxyAllNodes: TlvField(1, TlvBoolean),
-    sourceList: TlvField(2, TlvArray(TlvUInt64))
+    sourceList: TlvField(2, TlvArray(TlvNodeId))
 });
 
 export namespace ProxyConfigurationCluster {

@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, WritableAttribute, AccessLevel, FixedAttribute, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, WritableAttribute, AccessLevel, FixedAttribute, Attribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvUInt64, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -93,8 +93,6 @@ export const enum CommissioningError {
 }
 
 /**
- * Input to the GeneralCommissioning armFailSafeResponse command
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.3
  */
 export const TlvArmFailSafeResponse = TlvObject({
@@ -126,7 +124,10 @@ export const TlvSetRegulatoryConfigRequest = TlvObject({
 });
 
 /**
- * Input to the GeneralCommissioning setRegulatoryConfigResponse command
+ * This field shall contain the result of the operation, based on the behavior specified in the functional description
+ * of the SetRegulatoryConfig command.
+ *
+ * See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.5
  */
@@ -136,7 +137,10 @@ export const TlvSetRegulatoryConfigResponse = TlvObject({
 });
 
 /**
- * Input to the GeneralCommissioning commissioningCompleteResponse command
+ * This field shall contain the result of the operation, based on the behavior specified in the functional description
+ * of the CommissioningComplete command.
+ *
+ * See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.7
  */
@@ -358,11 +362,6 @@ export namespace GeneralCommissioningCluster {
             armFailSafe: Command(0, TlvArmFailSafeRequest, 1, TlvArmFailSafeResponse),
 
             /**
-             * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.3
-             */
-            armFailSafeResponse: Command(1, TlvArmFailSafeResponse, 1, TlvNoResponse),
-
-            /**
              * This shall add or update the regulatory configuration in the RegulatoryConfig Attribute to the value
              * provided in the NewRegulatoryConfig field.
              *
@@ -398,16 +397,6 @@ export namespace GeneralCommissioningCluster {
              * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.4
              */
             setRegulatoryConfig: Command(2, TlvSetRegulatoryConfigRequest, 3, TlvSetRegulatoryConfigResponse),
-
-            /**
-             * This field shall contain the result of the operation, based on the behavior specified in the functional
-             * description of the SetRegulatoryConfig command.
-             *
-             * See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.5
-             */
-            setRegulatoryConfigResponse: Command(3, TlvSetRegulatoryConfigResponse, 3, TlvNoResponse),
 
             /**
              * This command has no data.
@@ -465,17 +454,7 @@ export namespace GeneralCommissioningCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.6
              */
-            commissioningComplete: Command(4, TlvNoArguments, 5, TlvCommissioningCompleteResponse),
-
-            /**
-             * This field shall contain the result of the operation, based on the behavior specified in the functional
-             * description of the CommissioningComplete command.
-             *
-             * See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.7
-             */
-            commissioningCompleteResponse: Command(5, TlvCommissioningCompleteResponse, 5, TlvNoResponse)
+            commissioningComplete: Command(4, TlvNoArguments, 5, TlvCommissioningCompleteResponse)
         }
     });
 

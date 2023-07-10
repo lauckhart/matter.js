@@ -10,8 +10,9 @@ import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specificat
 import { GlobalAttributes, FixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
+import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -56,35 +57,32 @@ export const TlvNameSupport = TlvBitmap(TlvUInt8, NameSupportBits);
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.1
  */
 export const TlvAddGroupRequest = TlvObject({
-    groupId: TlvField(0, TlvUInt16.bound({ min: 1 })),
+    groupId: TlvField(0, TlvGroupId),
     groupName: TlvField(1, TlvString.bound({ maxLength: 16 }))
 });
 
 /**
- * Input to the Groups addGroupResponse command
+ * The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.7
  */
-export const TlvAddGroupResponse = TlvObject({
-    status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16.bound({ min: 1 }))
-});
+export const TlvAddGroupResponse = TlvObject({ status: TlvField(0, TlvUInt8), groupId: TlvField(1, TlvGroupId) });
 
 /**
  * Input to the Groups viewGroup command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.2
  */
-export const TlvViewGroupRequest = TlvObject({ groupId: TlvField(0, TlvUInt16.bound({ min: 1 })) });
+export const TlvViewGroupRequest = TlvObject({ groupId: TlvField(0, TlvGroupId) });
 
 /**
- * Input to the Groups viewGroupResponse command
+ * The ViewGroupResponse command is sent by the Groups cluster server in response to a ViewGroup command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.8
  */
 export const TlvViewGroupResponse = TlvObject({
     status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16.bound({ min: 1 })),
+    groupId: TlvField(1, TlvGroupId),
     groupName: TlvField(2, TlvString.bound({ maxLength: 16 }))
 });
 
@@ -93,16 +91,38 @@ export const TlvViewGroupResponse = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.3
  */
-export const TlvGetGroupMembershipRequest = TlvObject({ groupList: TlvField(0, TlvArray(TlvUInt16)) });
+export const TlvGetGroupMembershipRequest = TlvObject({ groupList: TlvField(0, TlvArray(TlvGroupId)) });
 
 /**
- * Input to the Groups getGroupMembershipResponse command
+ * The GetGroupMembershipResponse command is sent by the Groups cluster server in response to a GetGroupMembership
+ * command.
+ *
+ * The fields of the GetGroupMembershipResponse command have the following semantics:
+ *
+ * The Capacity field shall contain the remaining capacity of the Group Table of the node. The following values apply:
+ *
+ *   • 0 - No further groups MAY be added.
+ *
+ *   • 0 < Capacity < 0xfe - Capacity holds the number of groups that MAY be added.
+ *
+ *   • 0xfe - At least 1 further group MAY be added (exact number is unknown).
+ *
+ *   • null - It is unknown if any further groups MAY be added.
+ *
+ * The GroupList field shall contain either the group IDs of all the groups in the Group Table for which the server
+ * endpoint is a member of the group (in the case where the GroupList field of the received GetGroupMembership command
+ * was empty), or the group IDs of all the groups in the Group Table for which the server endpoint is a member of the
+ * group and for which the group ID was included in the the GroupList field of the received GetGroupMembership command
+ * (in the case where the GroupList field of the received GetGroupMembership command was not empty).
+ *
+ * Zigbee: If the total number of groups will cause the maximum payload length of a frame to be exceeded, then the
+ * GroupList field shall contain only as many groups as will fit.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.9
  */
 export const TlvGetGroupMembershipResponse = TlvObject({
     capacity: TlvField(0, TlvNullable(TlvUInt8)),
-    groupList: TlvField(1, TlvArray(TlvUInt16))
+    groupList: TlvField(1, TlvArray(TlvGroupId))
 });
 
 /**
@@ -110,17 +130,14 @@ export const TlvGetGroupMembershipResponse = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.4
  */
-export const TlvRemoveGroupRequest = TlvObject({ groupId: TlvField(0, TlvUInt16.bound({ min: 1 })) });
+export const TlvRemoveGroupRequest = TlvObject({ groupId: TlvField(0, TlvGroupId) });
 
 /**
- * Input to the Groups removeGroupResponse command
+ * The RemoveGroupResponse command is generated by the server in response to the receipt of a RemoveGroup command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.10
  */
-export const TlvRemoveGroupResponse = TlvObject({
-    status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16.bound({ min: 1 }))
-});
+export const TlvRemoveGroupResponse = TlvObject({ status: TlvField(0, TlvUInt8), groupId: TlvField(1, TlvGroupId) });
 
 /**
  * Input to the Groups addGroupIfIdentifying command
@@ -128,7 +145,7 @@ export const TlvRemoveGroupResponse = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.6
  */
 export const TlvAddGroupIfIdentifyingRequest = TlvObject({
-    groupId: TlvField(0, TlvUInt16.bound({ min: 1 })),
+    groupId: TlvField(0, TlvGroupId),
     groupName: TlvField(1, TlvString.bound({ maxLength: 16 }))
 });
 
@@ -197,26 +214,12 @@ export namespace GroupsCluster {
             addGroup: Command(0, TlvAddGroupRequest, 0, TlvAddGroupResponse),
 
             /**
-             * The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.7
-             */
-            addGroupResponse: Command(0, TlvAddGroupResponse, 0, TlvNoResponse),
-
-            /**
              * The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse
              * command containing the name string for a particular group.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.2
              */
             viewGroup: Command(1, TlvViewGroupRequest, 1, TlvViewGroupResponse),
-
-            /**
-             * The ViewGroupResponse command is sent by the Groups cluster server in response to a ViewGroup command.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.8
-             */
-            viewGroupResponse: Command(1, TlvViewGroupResponse, 1, TlvNoResponse),
 
             /**
              * The GetGroupMembership command allows a client to inquire about the group membership of the server
@@ -227,51 +230,12 @@ export namespace GroupsCluster {
             getGroupMembership: Command(2, TlvGetGroupMembershipRequest, 2, TlvGetGroupMembershipResponse),
 
             /**
-             * The GetGroupMembershipResponse command is sent by the Groups cluster server in response to a
-             * GetGroupMembership command.
-             *
-             * The fields of the GetGroupMembershipResponse command have the following semantics:
-             *
-             * The Capacity field shall contain the remaining capacity of the Group Table of the node. The following
-             * values apply:
-             *
-             *   • 0 - No further groups MAY be added.
-             *
-             *   • 0 < Capacity < 0xfe - Capacity holds the number of groups that MAY be added.
-             *
-             *   • 0xfe - At least 1 further group MAY be added (exact number is unknown).
-             *
-             *   • null - It is unknown if any further groups MAY be added.
-             *
-             * The GroupList field shall contain either the group IDs of all the groups in the Group Table for which
-             * the server endpoint is a member of the group (in the case where the GroupList field of the received
-             * GetGroupMembership command was empty), or the group IDs of all the groups in the Group Table for which
-             * the server endpoint is a member of the group and for which the group ID was included in the the
-             * GroupList field of the received GetGroupMembership command (in the case where the GroupList field of the
-             * received GetGroupMembership command was not empty).
-             *
-             * Zigbee: If the total number of groups will cause the maximum payload length of a frame to be exceeded,
-             * then the GroupList field shall contain only as many groups as will fit.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.9
-             */
-            getGroupMembershipResponse: Command(2, TlvGetGroupMembershipResponse, 2, TlvNoResponse),
-
-            /**
              * The RemoveGroup command allows a client to request that the server removes the membership for the server
              * endpoint, if any, in a particular group.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.4
              */
             removeGroup: Command(3, TlvRemoveGroupRequest, 3, TlvRemoveGroupResponse),
-
-            /**
-             * The RemoveGroupResponse command is generated by the server in response to the receipt of a RemoveGroup
-             * command.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.10
-             */
-            removeGroupResponse: Command(3, TlvRemoveGroupResponse, 3, TlvNoResponse),
 
             /**
              * The RemoveAllGroups command allows a client to direct the server to remove all group associations for

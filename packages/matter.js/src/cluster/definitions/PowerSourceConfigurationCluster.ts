@@ -10,7 +10,7 @@ import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { GlobalAttributes, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
-import { TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 
 /**
  * Power Source Configuration
@@ -60,7 +60,7 @@ export namespace PowerSourceConfigurationCluster {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.6.4.1
              */
-            sources: Attribute(0, TlvArray(TlvUInt16), { persistent: true, default: [] })
+            sources: Attribute(0, TlvArray(TlvEndpointNumber), { persistent: true, default: [] })
         }
     });
 

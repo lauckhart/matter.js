@@ -11,9 +11,14 @@ import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, OptionalW
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { TlvEnum, TlvUInt64, TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvSubjectId } from "../../datatype/SubjectId.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { TlvClusterId } from "../../datatype/ClusterId.js";
+import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
+import { TlvDeviceTypeId } from "../../datatype/DeviceTypeId.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
 
 /**
  * Access Control
@@ -76,9 +81,9 @@ export const enum AccessControlEntryAuthMode {
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.4
  */
 export const TlvAccessControlTargetStruct = TlvObject({
-    cluster: TlvField(0, TlvNullable(TlvUInt32)),
-    endpoint: TlvField(1, TlvNullable(TlvUInt16)),
-    deviceType: TlvField(2, TlvNullable(TlvUInt32))
+    cluster: TlvField(0, TlvNullable(TlvClusterId)),
+    endpoint: TlvField(1, TlvNullable(TlvEndpointNumber)),
+    deviceType: TlvField(2, TlvNullable(TlvDeviceTypeId))
 });
 
 /**
@@ -154,7 +159,7 @@ export const TlvAccessControlEntryStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.5.3
      */
-    subjects: TlvField(3, TlvNullable(TlvArray(TlvUInt64))),
+    subjects: TlvField(3, TlvNullable(TlvArray(TlvSubjectId))),
 
     /**
      * The targets field shall specify a list of AccessControlTargetStruct, which define the clusters on this Node to
@@ -223,7 +228,7 @@ export const TlvAccessControlEntryChangedEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1.1
      */
-    adminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
+    adminNodeId: TlvField(1, TlvNullable(TlvNodeId)),
 
     /**
      * The Passcode ID of the Administrator that made the change, if the change occurred via a PASE session. Non-zero
@@ -260,7 +265,7 @@ export const TlvAccessControlEntryChangedEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.2
  */
 export const TlvAccessControlExtensionChangedEvent = TlvObject({
-    adminNodeId: TlvField(1, TlvNullable(TlvUInt64)),
+    adminNodeId: TlvField(1, TlvNullable(TlvNodeId)),
     adminPasscodeId: TlvField(2, TlvNullable(TlvUInt16)),
     changeType: TlvField(3, TlvEnum<ChangeType>()),
     latestValue: TlvField(4, TlvNullable(TlvAccessControlExtensionStruct))

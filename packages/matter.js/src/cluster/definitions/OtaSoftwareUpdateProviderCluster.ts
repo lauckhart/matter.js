@@ -10,6 +10,7 @@ import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
+import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -52,7 +53,7 @@ export const enum DownloadProtocol {
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
  */
 export const TlvQueryImageRequest = TlvObject({
-    vendorId: TlvField(0, TlvUInt16),
+    vendorId: TlvField(0, TlvVendorId),
     productId: TlvField(1, TlvUInt16),
     softwareVersion: TlvField(2, TlvUInt32),
     protocolsSupported: TlvField(3, TlvArray(TlvEnum<DownloadProtocol>())),
@@ -75,8 +76,6 @@ export const enum Status {
 }
 
 /**
- * Input to the OtaSoftwareUpdateProvider queryImageResponse command
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
  */
 export const TlvQueryImageResponse = TlvObject({
@@ -113,8 +112,6 @@ export const enum ApplyUpdateAction {
 }
 
 /**
- * Input to the OtaSoftwareUpdateProvider applyUpdateResponse command
- *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
  */
 export const TlvApplyUpdateResponse = TlvObject({
@@ -159,11 +156,6 @@ export namespace OtaSoftwareUpdateProviderCluster {
             queryImage: Command(0, TlvQueryImageRequest, 1, TlvQueryImageResponse),
 
             /**
-             * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
-             */
-            queryImageResponse: Command(1, TlvQueryImageResponse, 1, TlvNoResponse),
-
-            /**
              * This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”. This
              * field MAY be used by the OTA Provider to track minimal lifecycle state to allow finer-grained scheduling
              * of the application of Software Images by OTA Requestors.
@@ -171,11 +163,6 @@ export namespace OtaSoftwareUpdateProviderCluster {
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
              */
             applyUpdateRequest: Command(2, TlvApplyUpdateRequestRequest, 3, TlvApplyUpdateResponse),
-
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
-             */
-            applyUpdateResponse: Command(3, TlvApplyUpdateResponse, 3, TlvNoResponse),
 
             /**
              * This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”.

@@ -14,6 +14,7 @@ import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum, TlvBitmap, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
+import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 
 /**
  * Actions
@@ -300,7 +301,7 @@ export const TlvEndpointListStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.7.1
      */
-    endpoints: TlvField(3, TlvArray(TlvUInt16))
+    endpoints: TlvField(3, TlvArray(TlvEndpointNumber))
 });
 
 /**

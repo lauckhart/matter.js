@@ -10,12 +10,15 @@ import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specificat
 import { GlobalAttributes, Attribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { TlvUInt8, TlvUInt16, TlvBitmap, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
+import { TlvUInt8, TlvBitmap, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
+import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
+import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
+import { TlvClusterId } from "../../datatype/ClusterId.js";
 import { TlvAny } from "../../tlv/TlvAny.js";
 
 /**
@@ -83,7 +86,7 @@ export const TlvAttributeValuePair = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.6.2
  */
 export const TlvExtensionFieldSet = TlvObject({
-    clusterId: TlvField(0, TlvUInt32),
+    clusterId: TlvField(0, TlvClusterId),
     attributeValueList: TlvField(1, TlvArray(TlvAttributeValuePair))
 });
 
@@ -93,7 +96,7 @@ export const TlvExtensionFieldSet = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.2
  */
 export const TlvAddSceneRequest = TlvObject({
-    groupId: TlvField(0, TlvUInt16),
+    groupId: TlvField(0, TlvGroupId),
     sceneId: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvUInt16),
     sceneName: TlvField(3, TlvString.bound({ maxLength: 16 })),
@@ -101,13 +104,11 @@ export const TlvAddSceneRequest = TlvObject({
 });
 
 /**
- * Input to the Scenes addSceneResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.12
  */
 export const TlvAddSceneResponse = TlvObject({
     status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16),
+    groupId: TlvField(1, TlvGroupId),
     sceneId: TlvField(2, TlvUInt8)
 });
 
@@ -116,16 +117,14 @@ export const TlvAddSceneResponse = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.3
  */
-export const TlvViewSceneRequest = TlvObject({ groupId: TlvField(0, TlvUInt16), sceneId: TlvField(1, TlvUInt8) });
+export const TlvViewSceneRequest = TlvObject({ groupId: TlvField(0, TlvGroupId), sceneId: TlvField(1, TlvUInt8) });
 
 /**
- * Input to the Scenes viewSceneResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.13
  */
 export const TlvViewSceneResponse = TlvObject({
     status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16),
+    groupId: TlvField(1, TlvGroupId),
     sceneId: TlvField(2, TlvUInt8),
     transitionTime: TlvOptionalField(3, TlvUInt16),
     sceneName: TlvOptionalField(4, TlvString.bound({ maxLength: 16 })),
@@ -137,16 +136,14 @@ export const TlvViewSceneResponse = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.4
  */
-export const TlvRemoveSceneRequest = TlvObject({ groupId: TlvField(0, TlvUInt16), sceneId: TlvField(1, TlvUInt8) });
+export const TlvRemoveSceneRequest = TlvObject({ groupId: TlvField(0, TlvGroupId), sceneId: TlvField(1, TlvUInt8) });
 
 /**
- * Input to the Scenes removeSceneResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.14
  */
 export const TlvRemoveSceneResponse = TlvObject({
     status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16),
+    groupId: TlvField(1, TlvGroupId),
     sceneId: TlvField(2, TlvUInt8)
 });
 
@@ -155,30 +152,26 @@ export const TlvRemoveSceneResponse = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.5
  */
-export const TlvRemoveAllScenesRequest = TlvObject({ groupId: TlvField(0, TlvUInt16) });
+export const TlvRemoveAllScenesRequest = TlvObject({ groupId: TlvField(0, TlvGroupId) });
 
 /**
- * Input to the Scenes removeAllScenesResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.15
  */
-export const TlvRemoveAllScenesResponse = TlvObject({ status: TlvField(0, TlvUInt8), groupId: TlvField(1, TlvUInt16) });
+export const TlvRemoveAllScenesResponse = TlvObject({ status: TlvField(0, TlvUInt8), groupId: TlvField(1, TlvGroupId) });
 
 /**
  * Input to the Scenes storeScene command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.6
  */
-export const TlvStoreSceneRequest = TlvObject({ groupId: TlvField(0, TlvUInt16), sceneId: TlvField(1, TlvUInt8) });
+export const TlvStoreSceneRequest = TlvObject({ groupId: TlvField(0, TlvGroupId), sceneId: TlvField(1, TlvUInt8) });
 
 /**
- * Input to the Scenes storeSceneResponse command
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.16
  */
 export const TlvStoreSceneResponse = TlvObject({
     status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16),
+    groupId: TlvField(1, TlvGroupId),
     sceneId: TlvField(2, TlvUInt8)
 });
 
@@ -188,7 +181,7 @@ export const TlvStoreSceneResponse = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.7
  */
 export const TlvRecallSceneRequest = TlvObject({
-    groupId: TlvField(0, TlvUInt16),
+    groupId: TlvField(0, TlvGroupId),
     sceneId: TlvField(1, TlvUInt8),
     transitionTime: TlvOptionalField(2, TlvNullable(TlvUInt16))
 });
@@ -198,17 +191,38 @@ export const TlvRecallSceneRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.8
  */
-export const TlvGetSceneMembershipRequest = TlvObject({ groupId: TlvField(0, TlvUInt16) });
+export const TlvGetSceneMembershipRequest = TlvObject({ groupId: TlvField(0, TlvGroupId) });
 
 /**
- * Input to the Scenes getSceneMembershipResponse command
+ * The fields of the get scene membership response command have the following semantics:
+ *
+ * The Capacity field shall contain the remaining capacity of the Scene Table of the server (for all groups). The
+ * following values apply:
+ *
+ *   • 0 - No further scenes MAY be added.
+ *
+ *   • 0 < Capacity < 0xfe - Capacity holds the number of scenes that MAY be added.
+ *
+ *   • 0xfe - At least 1 further scene MAY be added (exact number is unknown).
+ *
+ *   • null - It is unknown if any further scenes MAY be added.
+ *
+ * The Status field shall contain SUCCESS or ILLEGAL_COMMAND (the endpoint is not a member of the group) as appropriate.
+ *
+ * The GroupID field shall be set to the corresponding field of the received GetSceneMembership command.
+ *
+ * If the status is not SUCCESS then the SceneList field shall be omitted, else the SceneList field shall contain the
+ * identifiers of all the scenes in the Scene Table with the corresponding Group ID.
+ *
+ * Zigbee: If the total number of scenes associated with this Group ID will cause the maximum payload length of a frame
+ * to be exceeded, then the SceneList field shall contain only as many scenes as will fit.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.17
  */
 export const TlvGetSceneMembershipResponse = TlvObject({
     status: TlvField(0, TlvUInt8),
     capacity: TlvField(1, TlvNullable(TlvUInt8)),
-    groupId: TlvField(2, TlvUInt16),
+    groupId: TlvField(2, TlvGroupId),
     sceneList: TlvOptionalField(3, TlvArray(TlvUInt8))
 });
 
@@ -218,7 +232,7 @@ export const TlvGetSceneMembershipResponse = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.9
  */
 export const TlvEnhancedAddSceneRequest = TlvObject({
-    groupId: TlvField(0, TlvUInt16),
+    groupId: TlvField(0, TlvGroupId),
     sceneId: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvUInt16),
     sceneName: TlvField(3, TlvString),
@@ -226,13 +240,16 @@ export const TlvEnhancedAddSceneRequest = TlvObject({
 });
 
 /**
- * Input to the Scenes enhancedAddSceneResponse command
+ * The EnhancedAddSceneResponse command allows a server to respond to an EnhancedAddScene command, see EnhancedAddScene
+ * Command.
+ *
+ * This command shall have the same data fields as the AddSceneResponse command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.18
  */
 export const TlvEnhancedAddSceneResponse = TlvObject({
     status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16),
+    groupId: TlvField(1, TlvGroupId),
     sceneId: TlvField(2, TlvUInt8)
 });
 
@@ -241,16 +258,21 @@ export const TlvEnhancedAddSceneResponse = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.10
  */
-export const TlvEnhancedViewSceneRequest = TlvObject({ groupId: TlvField(0, TlvUInt16), sceneId: TlvField(1, TlvUInt8) });
+export const TlvEnhancedViewSceneRequest = TlvObject({ groupId: TlvField(0, TlvGroupId), sceneId: TlvField(1, TlvUInt8) });
 
 /**
- * Input to the Scenes enhancedViewSceneResponse command
+ * The EnhancedViewSceneResponse command allows a server to respond to an EnhancedViewScene command using a finer scene
+ * transition time.
+ *
+ * This command shall have the same data fields as the ViewSceneResponse command, with the following difference:
+ *
+ * The TransitionTime field shall be measured in tenths of a second rather than in seconds.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.19
  */
 export const TlvEnhancedViewSceneResponse = TlvObject({
     status: TlvField(0, TlvUInt8),
-    groupId: TlvField(1, TlvUInt16),
+    groupId: TlvField(1, TlvGroupId),
     sceneId: TlvField(2, TlvUInt8),
     transitionTime: TlvOptionalField(3, TlvUInt16),
     sceneName: TlvOptionalField(4, TlvString),
@@ -296,7 +318,7 @@ export const TlvCopySceneRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11.2
      */
-    groupIdentifierFrom: TlvField(1, TlvUInt16),
+    groupIdentifierFrom: TlvField(1, TlvGroupId),
 
     /**
      * The SceneIdentifierFrom field specifies the identifier of the scene from which the scene is to be copied.
@@ -313,7 +335,7 @@ export const TlvCopySceneRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11.4
      */
-    groupIdentifierTo: TlvField(3, TlvUInt16),
+    groupIdentifierTo: TlvField(3, TlvGroupId),
 
     /**
      * The SceneIdentifierTo field specifies the identifier of the scene to which the scene is to be copied. Together
@@ -325,7 +347,7 @@ export const TlvCopySceneRequest = TlvObject({
 });
 
 /**
- * Input to the Scenes copySceneResponse command
+ * The CopySceneResponse command allows a server to respond to a CopyScene command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.20
  */
@@ -345,7 +367,7 @@ export const TlvCopySceneResponse = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.20.2
      */
-    groupIdentifierFrom: TlvField(1, TlvUInt16),
+    groupIdentifierFrom: TlvField(1, TlvGroupId),
 
     /**
      * The SceneIdentifierFrom field is specifies the identifier of the scene from which the scene was copied, as
@@ -422,7 +444,7 @@ export namespace ScenesCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.3
              */
-            currentGroup: Attribute(2, TlvUInt16, { default: 0 }),
+            currentGroup: Attribute(2, TlvGroupId, { default: { id: 0 } }),
 
             /**
              * The SceneValid attribute indicates whether the state of the server corresponds to that associated with
@@ -455,7 +477,7 @@ export namespace ScenesCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.6
              */
-            lastConfiguredBy: OptionalAttribute(5, TlvNullable(TlvUInt64), { default: null })
+            lastConfiguredBy: OptionalAttribute(5, TlvNullable(TlvNodeId), { default: null })
         },
 
         commands: {
@@ -469,19 +491,9 @@ export namespace ScenesCluster {
             addScene: Command(0, TlvAddSceneRequest, 0, TlvAddSceneResponse),
 
             /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.12
-             */
-            addSceneResponse: Command(0, TlvAddSceneResponse, 0, TlvNoResponse),
-
-            /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.3
              */
             viewScene: Command(1, TlvViewSceneRequest, 1, TlvViewSceneResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.13
-             */
-            viewSceneResponse: Command(1, TlvViewSceneResponse, 1, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.4
@@ -489,29 +501,14 @@ export namespace ScenesCluster {
             removeScene: Command(2, TlvRemoveSceneRequest, 2, TlvRemoveSceneResponse),
 
             /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.14
-             */
-            removeSceneResponse: Command(2, TlvRemoveSceneResponse, 2, TlvNoResponse),
-
-            /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.5
              */
             removeAllScenes: Command(3, TlvRemoveAllScenesRequest, 3, TlvRemoveAllScenesResponse),
 
             /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.15
-             */
-            removeAllScenesResponse: Command(3, TlvRemoveAllScenesResponse, 3, TlvNoResponse),
-
-            /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.6
              */
             storeScene: Command(4, TlvStoreSceneRequest, 4, TlvStoreSceneResponse),
-
-            /**
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.16
-             */
-            storeSceneResponse: Command(4, TlvStoreSceneResponse, 4, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.7
@@ -528,35 +525,6 @@ export namespace ScenesCluster {
             getSceneMembership: Command(6, TlvGetSceneMembershipRequest, 6, TlvGetSceneMembershipResponse),
 
             /**
-             * The fields of the get scene membership response command have the following semantics:
-             *
-             * The Capacity field shall contain the remaining capacity of the Scene Table of the server (for all
-             * groups). The following values apply:
-             *
-             *   • 0 - No further scenes MAY be added.
-             *
-             *   • 0 < Capacity < 0xfe - Capacity holds the number of scenes that MAY be added.
-             *
-             *   • 0xfe - At least 1 further scene MAY be added (exact number is unknown).
-             *
-             *   • null - It is unknown if any further scenes MAY be added.
-             *
-             * The Status field shall contain SUCCESS or ILLEGAL_COMMAND (the endpoint is not a member of the group) as
-             * appropriate.
-             *
-             * The GroupID field shall be set to the corresponding field of the received GetSceneMembership command.
-             *
-             * If the status is not SUCCESS then the SceneList field shall be omitted, else the SceneList field shall
-             * contain the identifiers of all the scenes in the Scene Table with the corresponding Group ID.
-             *
-             * Zigbee: If the total number of scenes associated with this Group ID will cause the maximum payload
-             * length of a frame to be exceeded, then the SceneList field shall contain only as many scenes as will fit.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.17
-             */
-            getSceneMembershipResponse: Command(6, TlvGetSceneMembershipResponse, 6, TlvNoResponse),
-
-            /**
              * The EnhancedAddScene command allows a scene to be added using a finer scene transition time than the
              * AddScene command.
              *
@@ -569,16 +537,6 @@ export namespace ScenesCluster {
             enhancedAddScene: OptionalCommand(64, TlvEnhancedAddSceneRequest, 64, TlvEnhancedAddSceneResponse),
 
             /**
-             * The EnhancedAddSceneResponse command allows a server to respond to an EnhancedAddScene command, see
-             * EnhancedAddScene Command.
-             *
-             * This command shall have the same data fields as the AddSceneResponse command.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.18
-             */
-            enhancedAddSceneResponse: OptionalCommand(64, TlvEnhancedAddSceneResponse, 64, TlvNoResponse),
-
-            /**
              * The EnhancedViewScene command allows a scene to be retrieved using a finer scene transition time than
              * the ViewScene command.
              *
@@ -589,32 +547,12 @@ export namespace ScenesCluster {
             enhancedViewScene: OptionalCommand(65, TlvEnhancedViewSceneRequest, 65, TlvEnhancedViewSceneResponse),
 
             /**
-             * The EnhancedViewSceneResponse command allows a server to respond to an EnhancedViewScene command using a
-             * finer scene transition time.
-             *
-             * This command shall have the same data fields as the ViewSceneResponse command, with the following
-             * difference:
-             *
-             * The TransitionTime field shall be measured in tenths of a second rather than in seconds.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.19
-             */
-            enhancedViewSceneResponse: OptionalCommand(65, TlvEnhancedViewSceneResponse, 65, TlvNoResponse),
-
-            /**
              * The CopyScene command allows a client to efficiently copy scenes from one group/scene identifier pair to
              * another group/scene identifier pair.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11
              */
-            copyScene: OptionalCommand(66, TlvCopySceneRequest, 66, TlvCopySceneResponse),
-
-            /**
-             * The CopySceneResponse command allows a server to respond to a CopyScene command.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.20
-             */
-            copySceneResponse: OptionalCommand(66, TlvCopySceneResponse, 66, TlvNoResponse)
+            copyScene: OptionalCommand(66, TlvCopySceneRequest, 66, TlvCopySceneResponse)
         }
     });
 

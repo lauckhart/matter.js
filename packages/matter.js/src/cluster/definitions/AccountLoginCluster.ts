@@ -46,7 +46,8 @@ export const TlvGetSetupPinRequest = TlvObject({
 });
 
 /**
- * Input to the AccountLogin getSetupPinResponse command
+ * This message is sent in response to the GetSetupPIN command, and contains the Setup PIN code, or null when the
+ * account identified in the request does not match the active account of the running Content App.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2
  */
@@ -147,14 +148,6 @@ export namespace AccountLoginCluster {
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.1
              */
             getSetupPin: Command(0, TlvGetSetupPinRequest, 1, TlvGetSetupPinResponse),
-
-            /**
-             * This message is sent in response to the GetSetupPIN command, and contains the Setup PIN code, or null
-             * when the account identified in the request does not match the active account of the running Content App.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2
-             */
-            getSetupPinResponse: Command(1, TlvGetSetupPinResponse, 1, TlvNoResponse),
 
             /**
              * The purpose of this command is to allow the Content App to assume the user account of a given
