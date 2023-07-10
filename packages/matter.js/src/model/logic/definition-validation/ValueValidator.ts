@@ -5,7 +5,7 @@
  */
 
 import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
-import { DefinitionError, Metatype } from "../../definitions/index.js";
+import { DefinitionError, FieldValue, Metatype } from "../../definitions/index.js";
 import { CommandElement, DatatypeElement } from "../../elements/index.js";
 import { ClusterModel, ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
@@ -23,11 +23,12 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         this.validateProperty({ name: "quality", type: Quality });
         this.validateProperty({ name: "metatype", type: Metatype });
 
-        this.model.conformance.validateReferences((type, name) => {
-            if (type == "name") {
+        this.model.conformance.validateReferences((name) => {
+            // Features are all caps, other names are field references
+            if (name.match(/^[A-Z_$]+$/)) {
                 // Feature lookup
                 const cluster = this.model.owner(ClusterModel);
-                return !!cluster?.features.find(f => f.name == name);
+                return !!cluster?.features.find(f => f.name === name);
             } else {
                 // Field lookup
                 return !!this.model.parent?.member(name);
@@ -53,7 +54,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
     }
 
     private validateType() {
-        if (this.model.effectiveType == undefined) {
+        if (this.model.effectiveType === undefined) {
             if (this.model.metatype) {
                 // Not a derivative type
                 return;
@@ -71,19 +72,26 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         }
 
         const base = this.model.base;
-        if (base == undefined) {
+        if (base === undefined) {
             // Error is reported as ModelValidator TYPE_UNKNOWN
             return;
         }
 
-        const metatype = this.model.effectiveMetatype;
-        if (metatype == undefined) {
+        const metabase = this.model.metabase;
+        if (metabase === undefined) {
             this.error("METATYPE_UNKNOWN", `No metatype for ${this.model.type}`);
+            return;
+        }
+        const metatype = metabase.metatype;
+        if (metatype === undefined) {
+            // This shouldn't happen because the presence of the metatype is
+            // what makes it a metabase.  But eslint doesn't know that
+            this.error("METATYPE_MISSING", `Metabase ${metabase.name} has no metatype`);
             return;
         }
 
         let def = this.model.default;
-        if (def == undefined) {
+        if (def === undefined) {
             return;
         }
 
@@ -92,23 +100,25 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         }
 
         // Convert value to proper type if possible
-        def = Metatype.cast(metatype, def);
-        if (def == Metatype.Invalid) {
+        const cast = Metatype.cast(metatype, def);
+        if (cast === FieldValue.Invalid) {
             this.error("INVALID_VALUE", `Value "${def}" is not a ${metatype}`);
             return;
         }
+        def = cast;
 
         // For bitmaps and enums, convert string name to numeric ID
-        if (metatype == Metatype.bitmap || metatype == Metatype.enum) {
-            if (typeof def == "string") {
+        if (metatype === Metatype.bitmap || metatype === Metatype.enum) {
+            if (typeof def === "string") {
                 let member = this.model.member(def);
 
                 // If the name didn't match, try case-insensitive search
                 if (!member) {
-                    member = this.model.member(model => model.name.toLowerCase() == def.toLowerCase());
+                    // Cast of def to string should be unnecessary here, TS bug?
+                    member = this.model.member(model => model.name.toLowerCase() === (def as string).toLowerCase());
                 }
 
-                if (member && member.effectiveId != undefined) {
+                if (member && member.effectiveId !== undefined) {
                     def = member.effectiveId;
                 } else {
                     this.error("INVALID_ENTRY", `"${def}" is not in ${metatype} ${this.model.type}`);
@@ -117,7 +127,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         }
 
         // If default bitmap values are numeric, convert them to a flag array
-        if (metatype == Metatype.bitmap && typeof def == "number") {
+        if (metatype === Metatype.bitmap && typeof def === "number") {
             const flags = Array<string>();
 
             for (let bit = 1; bit <= def; bit <<= 1) {
@@ -137,7 +147,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             }
 
             if (flags.length) {
-                def = flags;
+                def = FieldValue.Flags(flags);
             }
         }
 
@@ -159,8 +169,8 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             case Metatype.bitmap:
                 if (!this.model.children.length && !this.model.global) {
                     if (
-                        this.model.parent?.tag == CommandElement.Tag
-                        || this.model.parent?.tag == DatatypeElement.Tag
+                        this.model.parent?.tag === CommandElement.Tag
+                        || this.model.parent?.tag === DatatypeElement.Tag
                     ) {
                         // The specification defines some fields as enums without specific values, so
                         // allow this under command and datatype fields
@@ -203,8 +213,8 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
     private validateSpecialDefault(metatype: Metatype, def: any) {
         // Special "reference" object referencing another field by name
-        if (typeof def == "object" && def.reference) {
-            const reference = def.reference;
+        if (typeof def === "object" && FieldValue.is(def, FieldValue.reference)) {
+            const reference = (def as FieldValue.Reference).name;
             const other = this.model.parent?.member(reference);
             if (!other) {
                 this.error("MEMBER_UNKNOWN", `Default value references unknown property ${reference}`);
@@ -214,19 +224,19 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
         // If the default value is a string referencing another field, convert
         // to a reference object
-        if (typeof def == "string") {
+        if (typeof def === "string") {
             const other = this.model.parent?.member(def);
             if (other) {
-                this.model.default = { reference: other.name };
+                this.model.default = FieldValue.Reference(other.name);
                 return true;
             }
         }
 
         // If the default value for bitmaps is an array, treat as a set of
         // flag names or IDs; validate as such
-        if (metatype == Metatype.bitmap && Array.isArray(def)) {
+        if (metatype === Metatype.bitmap && Array.isArray(def)) {
             for (const value of def) {
-                if (typeof value != "string" && typeof value != "number") {
+                if (typeof value !== "string" && typeof value !== "number") {
                     this.error("INVALID_BIT_FLAG", `Default bit flag ${def} is not a string or number`);
                     continue;
                 }

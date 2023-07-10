@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../common/index.js";
+import { InternalError } from "../../common/InternalError.js";
 import { ElementTag, Metatype } from "../definitions/index.js";
 import { AnyElement } from "../elements/index.js";
 import { Model, ValueModel } from "../models/index.js";
@@ -21,7 +21,7 @@ export function MergeModels(
     const visitor = new MergeTraversal<Model>(priority, (variants, recurse) => {
         const merged = merge(variants);
 
-        if (variants.tag == ElementTag.Cluster) {
+        if (variants.tag === ElementTag.Cluster) {
             reparentToCanonicalParent(priority, variants);
         }
 
@@ -35,7 +35,7 @@ export function MergeModels(
      * Merge the fields (excluding children) of a specific model.
      */
     function merge(variants: VariantDetail): Model {
-        const variantValues = Object.fromEntries(Object.entries(variants.map).map(([variantName, variant]) => [ variantName, variant.valueOf() ]));
+        const variantValues = Object.fromEntries(Object.entries(variants.map).map(([variantName, variant]) => [variantName, variant.valueOf()]));
 
         const keys = new Set(
             Object.values(variantValues).flatMap(v => Object.keys(v))
@@ -43,13 +43,13 @@ export function MergeModels(
         keys.delete("children");
 
         const properties = Object.fromEntries(
-            [ ...keys ].map(k => [ k, visitor.pluck(variants.tag, k, variantValues) ])
+            [...keys].map(k => [k, visitor.pluck(variants.tag, k, variantValues)])
         );
 
         // Specialized support for type
         if (properties.type) {
             const type = visitor.chooseType(variants);
-            if (type?.type != undefined) {
+            if (type?.type !== undefined && type?.type !== null) {
                 properties.type = type.type;
             }
         }
@@ -82,13 +82,12 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
     pluck(
         tag: ElementTag | "*",
         fieldName: string,
-        variantValues: { [ variantName: string ]: { [fieldName: string ]: any }}
+        variantValues: { [variantName: string]: { [fieldName: string]: any } }
     ) {
         const variantPriorities = this.priority.get(tag, fieldName);
 
         for (const variantName of variantPriorities) {
-            let variantValue = variantValues[variantName]?.[fieldName];
-
+            const variantValue = variantValues[variantName]?.[fieldName];
             if (variantValue !== undefined) {
                 return variantValue;
             }
@@ -130,9 +129,9 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
                     // useful
                     overridePriority = true;
                 }
-            } else if (metatype == Metatype.integer) {
+            } else if (metatype === Metatype.integer) {
                 const variantMetatype = variant.effectiveMetatype;
-                if (variantMetatype == Metatype.enum || variantMetatype == Metatype.bitmap) {
+                if (variantMetatype === Metatype.enum || variantMetatype === Metatype.bitmap) {
                     // Even though this is not the highest priority type, it's
                     // more specific
                     overridePriority = true;
@@ -147,13 +146,13 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
 
         return type;
     }
-};
+}
 
 /**
  * Utility class for working with merge priorities.
  */
 class PriorityHandler {
-    constructor(private priorities: MergeModels.Priorities) {}
+    constructor(private priorities: MergeModels.Priorities) { }
 
     /**
      * Get the priority for a specific tag and field.
@@ -186,8 +185,8 @@ class PriorityHandler {
  * move the children from MyPropertyEnum into MyPropertyAttribute if the final
  * type will be enum8 rather than MyPropertyEnum.
  *
- * To keep things simple we just do this in a separate preprocessing pass
- * before performing the actual merge.
+ * To keep things simple we do this in a separate preprocessing pass before
+ * performing the actual merge.
  * 
  * Another simplifying assumption we make is that we will only ever move
  * children *into* the direct parent from the cluster-scoped type, not the
@@ -201,7 +200,7 @@ function reparentToCanonicalParent(priority: PriorityHandler, variants: VariantD
 
     // Now visit the tree and reparent as necessary
     const traversal = new MergeTraversal(priority, (variants, recurse) => {
-       // Determine the canonical type for this element
+        // Determine the canonical type for this element
         const type = traversal.chooseType(variants);
         if (!(type instanceof ValueModel)) {
             recurse();
@@ -216,14 +215,14 @@ function reparentToCanonicalParent(priority: PriorityHandler, variants: VariantD
                 // Skip if this is the canonical variant or this variant
                 // already has children
                 const variant = variants.map[variantName];
-                if (variant == type || variant.children.length) {
+                if (variant === type || variant.children.length) {
                     continue;
                 }
 
                 // Skip if the base type is not local to the cluster or doesn't
                 // have children
                 const base = variant.base;
-                if (!(base instanceof ValueModel) || base.parent?.tag != ElementTag.Cluster || !base.children.length) {
+                if (!(base instanceof ValueModel) || base.parent?.tag !== ElementTag.Cluster || !base.children.length) {
                     continue;
                 }
 
@@ -271,19 +270,20 @@ export namespace MergeModels {
      */
     export const DefaultPriorities: Priorities = {
         "*": {
-            "*": [ "local", "chip", "spec" ],
+            "*": ["local", "chip", "spec"],
 
             // Prefer spec for elements that are insufficiently defined in
             // chip
-            "conformance": [ "local", "spec", "chip" ],
-            "constraint": [ "local", "spec", "chip" ],
-            "quality": [ "local", "spec", "chip" ],
+            "conformance": ["local", "spec", "chip"],
+            "constraint": ["local", "spec", "chip"],
+            "quality": ["local", "spec", "chip"],
+            "access": ["local", "spec", "chip"],
 
             // Prefer spec for element names
-            "name": [ "local", "spec", "chip" ],
+            "name": ["local", "spec", "chip"],
 
             // Prefer spec for datatype names (must match element names)
-            "type": [ "local", "spec", "chip" ]
+            "type": ["local", "spec", "chip"]
         }
     }
 }

@@ -9,10 +9,10 @@ import { EndpointModel, NodeModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[NodeElement.Tag] =
-class AttributeValidator extends ModelValidator<NodeModel> {
-    override validate() {
-        this.validateStructure(true, EndpointModel);
+    class AttributeValidator extends ModelValidator<NodeModel> {
+        override validate() {
+            this.validateStructure(true, EndpointModel);
 
-        super.validate();
+            super.validate();
+        }
     }
-}

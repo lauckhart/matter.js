@@ -29,7 +29,7 @@ export function parseHeading(e: Node | null) {
         return undefined;
     }
 
-    const parsed = /^([\d\.]+)\. (.+)$/.exec(heading);
+    const parsed = /^([\d.]+)\. (.+)$/.exec(heading);
     if (!parsed) {
         return;
     }
@@ -71,7 +71,7 @@ export function scanIndex(path: string) {
         logger.error(`version element unrecognized`)
         return;
     }
-    const version = versionEl.textContent.replace(/.*version ([\d\.]+).*/i, "$1");
+    const version = versionEl.textContent.replace(/.*version ([\d.]+).*/i, "$1");
 
     logger.info("recognized", Logger.dict({ doc: spec, version: version }));
 
@@ -87,7 +87,7 @@ export function scanIndex(path: string) {
         };
 
         // Proxy discovery heading got a little bit lost so fake it up
-        if (spec == "core" && heading.section == "9.15.12" && heading.name == "Clusters") {
+        if (spec === "core" && heading.section === "9.15.12" && heading.name === "Clusters") {
             result.clusters.push({
                 name: "Proxy Discovery",
                 path: a.href,
@@ -107,7 +107,7 @@ export function scanIndex(path: string) {
             }
 
             const name = heading.name.slice(0, heading.name.length - 8);
-            if (FAKE_CLUSTER_NAMES.indexOf(name) != -1) {
+            if (FAKE_CLUSTER_NAMES.indexOf(name) !== -1) {
                 return;
             }
 
@@ -121,9 +121,9 @@ export function scanIndex(path: string) {
 
         // Cluster spec convention is one cluster per sub-section except the
         // first sub-section which summarizes the section
-        if (spec == "cluster") {
+        if (spec === "cluster") {
             const sectionPath = heading.section.split(".");
-            if (sectionPath.length == 2 && sectionPath[1] != "1") {
+            if (sectionPath.length === 2 && sectionPath[1] !== "1") {
                 const cluster = {
                     name: heading.name,
                     path: a.href,
@@ -134,6 +134,6 @@ export function scanIndex(path: string) {
             return;
         }
     });
-    
+
     return result;
 }

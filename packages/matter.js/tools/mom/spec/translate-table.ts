@@ -4,149 +4,35 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { camelize } from "../../../src/util/String.js";
 import { HtmlReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, DatatypeElement, Specification } from "../../../src/model/index.js";
-import { WORDS } from "../../util/words.js";
+import { Str } from "./html-translators.js";
+import { addDetails } from "./extract-details.js";
 
 const logger = Logger.get("translate-table");
 
-/** Generic type of table cell "translators" such as those that follow */
+/** Generic type of table cell "translators" such as those in html-translators */
 type Translator<T> = (el: HTMLElement) => T;
-
-/** String, trimmed with whitespace collapsed */
-export const Str = (el: HTMLElement) => {
-    // Remove footnote references
-    for (const child of el.querySelectorAll("span")) {
-        if (child.textContent?.match(/^[*0-9]$/)) {
-            child.remove();
-        }
-    }
-
-    const text = el.textContent
-
-    if (!text) {
-        return "";
-    }
-    
-    return text
-        // Remove leading and trailing whitespace
-        .trim()
-
-        // Remove soft hyphen and any surrounding whitespace
-        .replace(/\s*\u00ad\s*/g, "")
-        
-        // Collapse whitespace    
-        .replace(/\s+/g, " ");
-}
-
-/** String with no space at all */
-export const NoSpace = (el: HTMLElement) => Str(el).replace(/\s/g, "");
-
-/** Number parsed as integer */
-export const Integer = (el: HTMLElement) => {
-    const text = Str(el);
-    
-    // Ignore range descriptions
-    if (text.match(/ (?:-|to) /)) {
-        return NaN;
-    }
-
-    return Number.parseInt(NoSpace(el));
-}
-
-/** Number encoded as BIT(n) */
-export const Bit = (el: HTMLElement) => {
-    const text = Str(el).replace(/bit\((\d+)\)/i, "$1");
-    return Number.parseInt(text);
-}
-
-/**
- * DSL or identifier.  Note we replace "Fo o" with "Foo" because space errors
- * are very common in the PDFs, especially in narrow columns and we don't want
- * to end up with FoO
- */
-export const Code = (el: HTMLElement) => {
-    let str = Str(el);
-
-    // Use the english dictionary to heuristically repair whitespace errors
-    let parts = str.split(/\s+/);
-    for (let i = 0; i < parts.length - 1; i++) {
-        // If the current word is all uppercase, assume it's a standalone
-        // identifier
-        if (parts[i].match(/^[A-Z_]+$/)) {
-            continue;
-        }
-
-        // If a word starts with lowercase, see if it's a word when
-        // concatenated with the previous word
-        if (parts[i + 1].match(/^[a-z]/)) {
-            // Get beginning of word from current part
-            const beginning = parts[i].replace(/^.*([A-Z])/, "$1");
-
-            // Get ending of word from next part
-            const ending = parts[i + 1].replace(/^([a-z]+).*/, "$1");
-
-            // If the concatenation is a word, assume it should be joined
-            if (WORDS.has(`${beginning}${ending}`.toLowerCase())) {
-                parts[i] = `${parts[i]}${parts[i + 1]}`;
-                parts.splice(i + 1, 1);
-
-                // Redo check from current point
-                i--;
-            }
-        }
-    }
-    str = parts.join(" ");
-
-    return str;
-}
-
-/** Camelized identifier */
-export const Identifier = (el: HTMLElement) => {
-    let str = Code(el);
-
-    // If there are multiple paragraphs, only use the first if there is space
-    // in the string
-    if (str.indexOf(" ") != -1 && el.childNodes.length > 1) {
-        const limited = Str(el.firstChild as HTMLElement);
-        if (limited.length) {
-            str = limited;
-        }
-    }
-
-    // Strip everything following a subset of characters known to be inside
-    // what is properly a "key"
-    str = str.replace(/^([a-z0-9 _:,\/\-\$]+).*/i, "$1");
-
-    return camelize(str, true);
-}
-
-/** Identifier, all lowercase.  Used for matching so "_" removed */
-export const LowerIdentifier = (el: HTMLElement) => Identifier(el).toLowerCase();
-
-/** Identifier, all uppercase.  Used for naming so "_" left in */
-export const UpperIdentifier = (el: HTMLElement) => Code(el).toUpperCase();
 
 /** Modifier that allows a value to be undefined */
 type Optional<T> = { option: "optional", wrapped: Alias<T> | Translator<T> };
-export const Optional = <T> (wrapped: Alias<T> | Translator<T>): Optional<T> =>
+export const Optional = <T>(wrapped: Alias<T> | Translator<T>): Optional<T> =>
     ({ option: "optional", wrapped });
 
 /** Modifier that maps one or more columns to a canonical name */
 type Alias<T> = { option: "alias", sources: string[], wrapped: Translator<T> };
-export const Alias = <T> (wrapped: Translator<T>, ...sources: string[]): Alias<T> =>
+export const Alias = <T>(wrapped: Translator<T>, ...sources: string[]): Alias<T> =>
     ({ option: "alias", sources, wrapped });
 
 /** Injects a column with a fixed value */
-type Constant<T> = { option: "constant", value: any };
-export const Constant = <T> (value: T): Constant<T> =>
+type Constant<T> = { option: "constant", value: T };
+export const Constant = <T>(value: T): Constant<T> =>
     ({ option: "constant", value });
 
 /** Converts detail section into children */
 type ChildTranslator = (tag: string, parentRecord: any, definition: HtmlReference) => DatatypeElement[] | undefined;
-type Children = { option: "children", translator: ChildTranslator}
+type Children = { option: "children", translator: ChildTranslator }
 export const Children = (translator: ChildTranslator) =>
     ({ option: "children", translator });
 
@@ -169,7 +55,7 @@ type TableRecord<T extends TableSchema> = {
     [name in keyof T]: FieldType<T[name]>
 } & { xref?: Specification.CrossReference, name?: string, details?: string };
 
-const has = (object: Object, name: string) =>
+const has = (object: object, name: string) =>
     !!Object.getOwnPropertyDescriptor(object, name);
 
 /** Translates an array of key => HTMLElement records into a proper TS type */
@@ -187,25 +73,27 @@ export function translateTable<T extends TableSchema>(
         return [];
     }
 
-    let missing = new Set<string>();
+    const missing = new Set<string>();
     const result = Array<TableRecord<T>>();
 
     const aliases = Array<[string, string]>();
-    const optional = new Set<String>();
+    const optional = new Set<string>();
     const translators = Array<[string, Translator<any>]>();
     let childTranslator: ChildTranslator | undefined;
 
-    nextField: for (let [ k, v ] of Object.entries(schema)) {
-        while (typeof v == "object") {
+    nextField: for (const kv of Object.entries(schema)) {
+        const [k] = kv;
+        let [, v] = kv;
+        while (typeof v === "object") {
             switch (v.option) {
                 case "optional":
                     optional.add(k);
                     v = v.wrapped;
                     break;
-                    
+
                 case "alias":
                     for (const source of v.sources) {
-                        aliases.push([ source, k ]);
+                        aliases.push([source, k]);
                     }
                     v = v.wrapped;
                     break;
@@ -241,10 +129,10 @@ export function translateTable<T extends TableSchema>(
         // Translate each field
         for (const [name, translator] of translators) {
             const el = source[name];
-            const value = el == undefined ? undefined : translator(el);
+            const value = el === undefined ? undefined : translator(el);
 
             // Ignore the row if required values are missing
-            const empty = value == undefined || value === "" || Number.isNaN(value);
+            const empty = value === undefined || value === null || value === "" || Number.isNaN(value);
             if (empty && !optional.has(name)) {
                 missing.add(name);
                 continue nextRow;
@@ -263,7 +151,7 @@ export function translateTable<T extends TableSchema>(
         logger.error(`keys present are: ${Object.keys(definition.table.rows[0]).join(', ')}`);
     }
 
-    if (definition.details != undefined) {
+    if (definition.details) {
         installPreciseDetails(tag, definition.details, result, childTranslator);
     }
 
@@ -286,7 +174,7 @@ export function translateRecordsToMatter<R, E extends { id?: number, name: strin
         }
 
         logger.debug(`${desc} ${mapped.name} = ${mapped.id ?? "(anon)"}`);
-        result.push(mapped as E);
+        result.push(mapped);
     }
     if (!result.length) {
         return undefined;
@@ -303,7 +191,7 @@ function installPreciseDetails(
 ) {
     const lookup = Object.fromEntries(
         definitions.map((detail) =>
-            [ detail.name.toLowerCase(), detail ]
+            [detail.name.toLowerCase(), detail]
         )
     );
 
@@ -316,9 +204,10 @@ function installPreciseDetails(
             || lookup[`${r.name.toLowerCase()}`];
         if (detail) {
             r.xref = detail.xref;
-            detail.firstParagraph && (r.details = Str(detail.firstParagraph));
+            
+            addDetails(r, detail);
 
-            if (r.details && r.details.indexOf("SHALL indicate the of the") != -1) {
+            if (r.details && r.details.indexOf("SHALL indicate the of the") !== -1) {
                 // Goofballs copy & pasted this typo a couple times
                 r.details = r.details.replace("the of the", "the status of the");
             }
@@ -335,7 +224,7 @@ enum InferredFieldType {
     Unknown,
     UniqueNumbers,
     UniqueStrings
-};
+}
 
 /** Examine a field in every row to infer the type of a field */
 function inferFieldType(definition: HtmlReference, name: string): InferredFieldType {
@@ -354,7 +243,7 @@ function inferFieldType(definition: HtmlReference, name: string): InferredFieldT
             return InferredFieldType.Unknown;
         }
         const str = Str(value);
-        if (str == "") {
+        if (str === "") {
             return InferredFieldType.Unknown;
         }
 
@@ -367,18 +256,18 @@ function inferFieldType(definition: HtmlReference, name: string): InferredFieldT
         // Update state based on the shape of the field
         if (str.match(/^\d+/)) {
             // Could be the ID.  Note we allow garbage after the ID
-            if (inferredType == InferredFieldType.UniqueStrings) {
+            if (inferredType === InferredFieldType.UniqueStrings) {
                 return InferredFieldType.Unknown;
             }
             inferredType = InferredFieldType.UniqueNumbers;
         } else {
             // Could be the name
-            if (inferredType == InferredFieldType.UniqueNumbers) {
+            if (inferredType === InferredFieldType.UniqueNumbers) {
                 return InferredFieldType.Unknown;
             }
             inferredType = InferredFieldType.UniqueStrings;
         }
-    };
+    }
 
     return inferredType;
 }
@@ -395,7 +284,7 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
         // Use the first preferred ID that is present
         for (const id of preferredIds) {
             idIndex = fields.indexOf(id);
-            if (idIndex != -1) {
+            if (idIndex !== -1) {
                 break;
             }
         }
@@ -403,15 +292,15 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
         // Use the first preferred name that is present
         for (const name of preferredNames) {
             nameIndex = fields.indexOf(name);
-            if (nameIndex != -1) {
+            if (nameIndex !== -1) {
                 break;
             }
         }
 
         // If we didn't find a preferred ID, use the first IDish column
-        if (idIndex == -1) {
+        if (idIndex === -1) {
             for (let i = 0; i < fields.length; i++) {
-                if (inferFieldType(definition, fields[i]) == InferredFieldType.UniqueNumbers) {
+                if (inferFieldType(definition, fields[i]) === InferredFieldType.UniqueNumbers) {
                     idIndex = i;
                     break;
                 }
@@ -419,15 +308,15 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
         }
 
         // If we found the ID, set the alias
-        if (idIndex != -1) {
-            ids = [ fields[idIndex] ];
+        if (idIndex !== -1) {
+            ids = [fields[idIndex]];
         }
 
         // If we didn't find a preferred name, use the first namish column
         // following the ID
-        if (nameIndex == -1) {
-            for (let i = idIndex == -1 ? 0 : idIndex; i < fields.length; i++) {
-                if (inferFieldType(definition, fields[i]) == InferredFieldType.UniqueStrings) {
+        if (nameIndex === -1) {
+            for (let i = idIndex === -1 ? 0 : idIndex; i < fields.length; i++) {
+                if (inferFieldType(definition, fields[i]) === InferredFieldType.UniqueStrings) {
                     nameIndex = i;
                     break;
                 }
@@ -435,8 +324,8 @@ export function chooseIdentityAliases(definition: HtmlReference, preferredIds: s
         }
 
         // If we found the name, set the alias
-        if (nameIndex != -1) {
-            names = [ fields[nameIndex] ];
+        if (nameIndex !== -1) {
+            names = [fields[nameIndex]];
         }
     }
 

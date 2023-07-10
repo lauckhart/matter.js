@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/index.js";
+import { MatterError } from "../../common/MatterError.js";
 import { DefinitionError, ElementTag, Specification } from "../definitions/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
@@ -57,7 +57,7 @@ export abstract class Model {
      * The full path ("." delimited) in the Matter tree.
      */
     get path(): string {
-        if (this.parent && this.parent.tag != ElementTag.Matter) {
+        if (this.parent && this.parent.tag !== ElementTag.Matter) {
             return `${this.parent.path}.${this.name}`;
         } else {
             return this.name;
@@ -70,21 +70,21 @@ export abstract class Model {
      */
     get parent(): Model | undefined {
         return this[PARENT];
-    };
+    }
 
     set parent(parent: Model | undefined) {
-        if (this.parent == parent) {
+        if (this.parent === parent) {
             return;
         }
-        
+
         if (this.parent) {
             const index = this.parent.children.indexOf(this);
-            if (index != -1) {
+            if (index !== -1) {
                 this.parent.children.splice(index, 1);
             }
         }
-        
-        if (parent == undefined) {
+
+        if (!parent) {
             delete this[PARENT];
         } else {
             this[PARENT] = parent;
@@ -130,7 +130,7 @@ export abstract class Model {
         this[CHILDREN] = new Proxy(Array<Model>(), {
             get: (target, p, receiver) => {
                 let result = Reflect.get(target, p, receiver);
-                if (!(result instanceof Model) && typeof p == "string" && p.match(/^[0-9]+$/)) {
+                if (!(result instanceof Model) && typeof p === "string" && p.match(/^[0-9]+$/)) {
                     result = Model.create(result);
                     result[PARENT] = this;
                     Reflect.set(target, p, result, receiver);
@@ -139,14 +139,14 @@ export abstract class Model {
             },
 
             set: (target, p, newValue, receiver) => {
-                if (typeof p == "string" && p.match(/^[0-9]+$/)) {
-                    if (typeof newValue != "object" || newValue === null || !newValue.tag) {
+                if (typeof p === "string" && p.match(/^[0-9]+$/)) {
+                    if (typeof newValue !== "object" || newValue === null || !newValue.tag) {
                         throw new MatterError("Child must be Model or AnyElement");
                     }
                 }
                 const result = Reflect.set(target, p, newValue, receiver);
                 if (newValue instanceof Model) {
-                    if (newValue[PARENT] != this) {
+                    if (newValue[PARENT] !== this) {
                         if (newValue[PARENT]) {
                             newValue.parent = undefined;
                         }
@@ -158,11 +158,11 @@ export abstract class Model {
 
             deleteProperty: (target, p) => {
                 let child;
-                if (typeof p == "string" && p.match(/^[0-9]+$/)) {
+                if (typeof p === "string" && p.match(/^[0-9]+$/)) {
                     child = target[Number.parseInt(p)];
                 }
                 if (Reflect.deleteProperty(target, p) && child) {
-                    if (child[PARENT] == this && this.children.indexOf(child) == -1) {
+                    if (child[PARENT] === this && this.children.indexOf(child) === -1) {
                         child[PARENT] = undefined;
                     }
                     return true;
@@ -173,15 +173,15 @@ export abstract class Model {
 
         // Clone child array because if it references a former parent they'll
         // disappear as we add
-        children = [ ...children ];
-        
+        children = [...children];
+
         this[CHILDREN].push(...children);
     }
 
     /**
      * Factory support.  Populated by derivatives upon definition.
      */
-    static constructors = {} as { [ type: string ]: new(definition: any) => Model };
+    static constructors = {} as { [type: string]: new (definition: any) => Model };
 
     /**
      * In some circumstances the base type can be inferred.  This inference
@@ -201,6 +201,14 @@ export abstract class Model {
     }
 
     /**
+     * Get the first global base type.  This may have semantic meaning more
+     * specific than the base primitive type.
+     */
+    get globalBase() {
+        return new ModelTraversal().findGlobalBase(this);
+    }
+
+    /**
      * A local or parent xref.
      */
     get effectiveXref() {
@@ -211,7 +219,7 @@ export abstract class Model {
      * The set of tags from which this model may derive.
      */
     get allowedBaseTags() {
-        return [ this.tag ];
+        return [this.tag];
     }
 
     /**
@@ -225,7 +233,7 @@ export abstract class Model {
      * Create a model for an element.
      */
     static create(definition: AnyElement) {
-        if (typeof definition != "object") {
+        if (typeof definition !== "object") {
             throw new MatterError(`Model definition must be object, not ${typeof definition}`);
         }
         const t = definition["tag"];
@@ -251,7 +259,7 @@ export abstract class Model {
     get<T extends Model>(constructor: Model.Constructor<T>, key: number | string) {
         return this.children.find(
             c => c instanceof constructor
-            && typeof key == "number" ? c.effectiveId == key : c.name == key
+                && typeof key === "number" ? c.effectiveId === key : c.name === key
         ) as T;
     }
 
@@ -266,12 +274,12 @@ export abstract class Model {
      * Check identity of element by name or ID.
      */
     is(key: ModelTraversal.ElementSelector | undefined) {
-        if (typeof key == "number") {
-            return this.id == key;
-        } else if (typeof key == "function") {
+        if (typeof key === "number") {
+            return this.id === key;
+        } else if (typeof key === "function") {
             return key(this);
         }
-        return this.name == key;
+        return this.name === key;
     }
 
     /**
@@ -281,7 +289,7 @@ export abstract class Model {
         if (!this.errors) {
             this.errors = [];
         }
-        
+
         this.errors.push({
             code,
             source: this.path,
@@ -316,7 +324,7 @@ export abstract class Model {
                     result[key] = this[key];
             }
         }
-        
+
         return result as AnyElement;
     }
 
@@ -337,8 +345,15 @@ export abstract class Model {
     /**
      * Search the inheritance chain for a child property.
      */
-    member(key: ModelTraversal.ElementSelector): Model | undefined {
-        return new ModelTraversal().findMember(this, key, [ ElementTag.Datatype, ElementTag.Attribute ]);
+    member(key: ModelTraversal.ElementSelector, allowedTags = [ElementTag.Datatype, ElementTag.Attribute]): Model | undefined {
+        return new ModelTraversal().findMember(this, key, allowedTags);
+    }
+
+    /**
+     * Does this model derive from another?
+     */
+    instanceOf(other: Model | AnyElement) {
+        return new ModelTraversal().instanceOf(this, other);
     }
 
     constructor(definition: BaseElement) {
@@ -358,13 +373,13 @@ export abstract class Model {
 }
 
 export namespace Model {
-    export type Constructor<T extends Model> = abstract new(...args: any) => T;
+    export type Constructor<T extends Model> = abstract new (...args: any) => T;
 
     export type LookupPredicate<T extends Model> = Constructor<T> | { type: Constructor<T>, test: (model: Model) => boolean };
 
     export type PropertyValidation = {
         name: string,
-        type: string | (new(...args: any[]) => any) | { [key: string | number]: any } | undefined,
+        type: string | (new (...args: any[]) => any) | { [key: string | number]: any } | undefined,
         required?: boolean,
         nullable?: boolean,
         values?: { [name: string]: any }

@@ -6,39 +6,76 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, OptionalAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+
+/**
+ * Target Navigator
+ *
+ * This cluster provides an interface for UX navigation within a set of targets on a device or endpoint.
+ *
+ * Use this factory function to create a TargetNavigator cluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
+ */
+export function TargetNavigatorCluster() {
+    const cluster = Cluster({ ...TargetNavigatorCluster.Metadata, ...TargetNavigatorCluster.BaseComponent });
+    return cluster as unknown as TargetNavigatorCluster.Type;
+}
 
 /**
  * This indicates an object describing the navigable target.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.5.1
  */
-export const TargetInfoStruct = TlvObject({
+export const TlvTargetInfoStruct = TlvObject({
     /**
      * An unique id within the TargetList.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.5.1.1
      */
-    Identifier: TlvField(0, TlvUInt8),
+    identifier: TlvField(0, TlvUInt8),
 
     /**
      * A name string for the TargetInfoStruct.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.5.1.2
      */
-    Name: TlvField(1, TlvString)
+    name: TlvField(1, TlvString)
+});
+
+/**
+ * Input to the TargetNavigator navigateTarget command
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
+ */
+export const TlvNavigateTargetRequest = TlvObject({
+    /**
+     * This shall indicate the Identifier for the target for UX navigation. The Target shall be an Identifier value
+     * contained within one of the TargetInfoStruct objects in the TargetList attribute list.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1.1
+     */
+    target: TlvField(0, TlvUInt8),
+
+    /**
+     * This shall indicate Optional app-specific data.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1.2
+     */
+    data: TlvOptionalField(1, TlvString)
 });
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.5.2
  */
-export const enum StatusEnum {
+export const enum Status {
     /**
      * Command succeeded
      */
@@ -53,104 +90,92 @@ export const enum StatusEnum {
      * Target request is not allowed in current state.
      */
     NotAllowed = 2
-};
+}
 
 /**
- * This command SHALL be generated in response to NavigateTarget command.
+ * Input to the TargetNavigator navigateTargetResponse command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
  */
-export const NavigateTargetResponseRequest = TlvObject({
+export const TlvNavigateTargetResponse = TlvObject({
     /**
-     * This SHALL indicate the status of the command.
+     * This shall indicate the of the command.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2.1
      */
-    Status: TlvField(0, TlvEnum<StatusEnum>()),
+    status: TlvField(0, TlvEnum<Status>()),
 
     /**
-     * This SHALL indicate Optional app-specific data.
+     * This shall indicate Optional app-specific data.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2.2
      */
-    Data: TlvOptionalField(1, TlvString)
-});
-
-/**
- * Upon receipt, this SHALL navigation the UX to the target identified.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
- */
-export const NavigateTargetRequest = TlvObject({
-    /**
-     * This SHALL indicate the Identifier for the target for UX navigation. The
-     * Target SHALL be an Identifier value contained within one of the
-     * TargetInfoStruct objects in the TargetList attribute list.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1.1
-     */
-    Target: TlvField(0, TlvUInt8),
-
-    /**
-     * This SHALL indicate Optional app-specific data.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1.2
-     */
-    Data: TlvOptionalField(1, TlvString)
+    data: TlvOptionalField(1, TlvString)
 });
 
 export namespace TargetNavigatorCluster {
-    export const id = 1285;
-    export const name = "TargetNavigator";
-    export const revision = 1;
+    export type Type =
+        typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
+        & typeof BaseComponent;
 
-    const Base = {
+    /**
+     * TargetNavigator cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
+     */
+    export const Metadata = ClusterMetadata({ id: 0x505, name: "TargetNavigator", revision: 1, features: {} });
+
+    /**
+     * A TargetNavigatorCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * The TargetList attribute SHALL represent a list of targets that
-             * can be navigated to within the experience presented to the user
-             * by the Endpoint (Video Player or Content App). The list SHALL
-             * not contain any entries with the same Identifier in the
-             * TargetInfoStruct object.
+             * The TargetList attribute shall represent a list of targets that can be navigated to within the
+             * experience presented to the user by the Endpoint (Video Player or Content App). The list shall not
+             * contain any entries with the same Identifier in the TargetInfoStruct object.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.1
              */
-            targetList: Attribute(0, TlvArray(TargetInfoStruct), { readAcl: AccessLevel.View }),
+            targetList: Attribute(0, TlvArray(TlvTargetInfoStruct), { default: [] }),
 
             /**
-             * The CurrentTarget attribute SHALL represent the Identifier for
-             * the target which is currently in foreground on the corresponding
-             * Endpoint (Video Player or Content App), or null to indicate that
-             * no target is in the foreground.
+             * The CurrentTarget attribute shall represent the Identifier for the target which is currently in
+             * foreground on the corresponding Endpoint (Video Player or Content App), or null to indicate that no
+             * target is in the foreground.
+             *
+             * When not null, the CurrentTarget shall be an Identifier value contained within one of the
+             * TargetInfoStruct objects in the TargetList attribute list.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.2
              */
-            currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View })
+            currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { default: 0 })
         },
 
         commands: {
             /**
-             * Upon receipt, this SHALL navigation the UX to the target
-             * identified.
+             * Upon receipt, this shall navigation the UX to the target identified.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
              */
-            navigateTarget: Command(0, NavigateTargetRequest, 1, NavigateTargetResponseRequest),
+            navigateTarget: Command(0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponse),
 
             /**
-             * This command SHALL be generated in response to NavigateTarget
-             * command.
+             * This command shall be generated in response to NavigateTarget command.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
              */
-            navigateTargetResponse: Command(1, NavigateTargetResponseRequest, 1, TlvNoResponse)
+            navigateTargetResponse: Command(1, TlvNavigateTargetResponse, 1, TlvNoResponse)
         }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
     });
-};
+
+    /**
+     * This cluster supports all TargetNavigator features.
+     */
+    export const Complete = Cluster({
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands }
+    });
+}

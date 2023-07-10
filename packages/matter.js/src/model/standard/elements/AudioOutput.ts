@@ -18,13 +18,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.5.2" },
-
-            children: [
-                {
-                    tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
-                    details: "Supports updates to output names"
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
+                details: "Supports updates to output names"
+            } ]
         },
 
         {
@@ -37,6 +34,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentOutput", id: 0x1, type: "uint8", access: "R V", conformance: "M",
+            default: 0,
             details: "This field contains the value of the index field of the currently selected OutputInfoStruct.",
             xref: { document: "cluster", section: "6.5.3.2" }
         },
@@ -51,7 +49,10 @@ Matter.children.push({
         {
             tag: "command", name: "RenameOutput", id: 0x1, access: "M", conformance: "NU", direction: "request",
             response: "status",
-            details: "Upon receipt, this SHALL rename the output at a specific index in the Output List.",
+            details: "Upon receipt, this shall rename the output at a specific index in the Output List." +
+                     "\n" +
+                     "Updates to the output name shall appear in the device’s settings menus. Name updates MAY " +
+                     "automatically be sent to the actual device to which the output connects.",
             xref: { document: "cluster", section: "6.5.4.2" },
             children: [
                 { tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M" },
@@ -67,14 +68,14 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M",
-                    details: "This SHALL indicate the unique index into the list of outputs.",
+                    details: "This shall indicate the unique index into the list of outputs.",
                     xref: { document: "cluster", section: "6.5.5.1.1" }
                 },
 
                 {
                     tag: "datatype", name: "OutputType", id: 0x1, type: "OutputTypeEnum", conformance: "M",
                     constraint: "desc",
-                    details: "This SHALL indicate the type of output",
+                    details: "This shall indicate the type of output",
                     xref: { document: "cluster", section: "6.5.5.1.2" }
                 },
 

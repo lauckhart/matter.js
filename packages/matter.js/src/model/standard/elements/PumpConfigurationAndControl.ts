@@ -55,7 +55,10 @@ Matter.children.push({
             tag: "attribute", name: "MaxPressure", id: 0x0, type: "int16", access: "R V", conformance: "M",
             default: null, quality: "X F",
             details: "This attribute specifies the maximum pressure the pump can achieve. It is a physical limit, and " +
-                     "does not apply to any specific control mode or operation mode.",
+                     "does not apply to any specific control mode or operation mode." +
+                     "\n" +
+                     "Valid range is -3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the " +
+                     "value is invalid.",
             xref: { document: "cluster", section: "4.2.7.1" }
         },
 
@@ -63,7 +66,10 @@ Matter.children.push({
             tag: "attribute", name: "MaxSpeed", id: 0x1, type: "uint16", access: "R V", conformance: "M",
             default: null, quality: "X F",
             details: "This attribute specifies the maximum speed the pump can achieve. It is a physical limit, and does " +
-                     "not apply to any specific control mode or operation mode.",
+                     "not apply to any specific control mode or operation mode." +
+                     "\n" +
+                     "Valid range is 0 to 65,534 RPM (steps of 1 RPM). This attribute shall be null if the value is " +
+                     "invalid.",
             xref: { document: "cluster", section: "4.2.7.2" }
         },
 
@@ -71,7 +77,10 @@ Matter.children.push({
             tag: "attribute", name: "MaxFlow", id: 0x2, type: "uint16", access: "R V", conformance: "M",
             default: null, quality: "X F",
             details: "This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does " +
-                     "not apply to any specific control mode or operation mode.",
+                     "not apply to any specific control mode or operation mode." +
+                     "\n" +
+                     "Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). This attribute shall be null if the value " +
+                     "is invalid.",
             xref: { document: "cluster", section: "4.2.7.3" }
         },
 
@@ -79,7 +88,10 @@ Matter.children.push({
             tag: "attribute", name: "MinConstPressure", id: 0x3, type: "int16", access: "R V",
             conformance: "PRSCONST, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the minimum pressure the pump can achieve when it is working with the " +
-                     "ControlMode attribute set to ConstantPressure.",
+                     "ControlMode attribute set to ConstantPressure." +
+                     "\n" +
+                     "Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the " +
+                     "value is invalid.",
             xref: { document: "cluster", section: "4.2.7.4" }
         },
 
@@ -87,7 +99,10 @@ Matter.children.push({
             tag: "attribute", name: "MaxConstPressure", id: 0x4, type: "int16", access: "R V",
             conformance: "PRSCONST, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum pressure the pump can achieve when it is working with the " +
-                     "ControlMode attribute set to ConstantPressure.",
+                     "ControlMode attribute set to ConstantPressure." +
+                     "\n" +
+                     "Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the " +
+                     "value is invalid.",
             xref: { document: "cluster", section: "4.2.7.5" }
         },
 
@@ -95,7 +110,10 @@ Matter.children.push({
             tag: "attribute", name: "MinCompPressure", id: 0x5, type: "int16", access: "R V",
             conformance: "PRSCOMP, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the minimum compensated pressure the pump can achieve when it is working " +
-                     "with the ControlMode attribute set to ProportionalPressure.",
+                     "with the ControlMode attribute set to ProportionalPressure." +
+                     "\n" +
+                     "Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the " +
+                     "value is invalid.",
             xref: { document: "cluster", section: "4.2.7.6" }
         },
 
@@ -103,7 +121,10 @@ Matter.children.push({
             tag: "attribute", name: "MaxCompPressure", id: 0x6, type: "int16", access: "R V",
             conformance: "PRSCOMP, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum compensated pressure the pump can achieve when it is working " +
-                     "with the ControlMode attribute set to ProportionalPressure.",
+                     "with the ControlMode attribute set to ProportionalPressure." +
+                     "\n" +
+                     "Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the " +
+                     "value is invalid.",
             xref: { document: "cluster", section: "4.2.7.7" }
         },
 
@@ -111,7 +132,10 @@ Matter.children.push({
             tag: "attribute", name: "MinConstSpeed", id: 0x7, type: "uint16", access: "R V",
             conformance: "SPD, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the minimum speed the pump can achieve when it is working with the " +
-                     "ControlMode attribute set to ConstantSpeed.",
+                     "ControlMode attribute set to ConstantSpeed." +
+                     "\n" +
+                     "Valid range is 0 to 65,534 RPM (steps of 1 RPM). This attribute shall be null if the value is " +
+                     "invalid.",
             xref: { document: "cluster", section: "4.2.7.8" }
         },
 
@@ -119,14 +143,24 @@ Matter.children.push({
             tag: "attribute", name: "MaxConstSpeed", id: 0x8, type: "uint16", access: "R V",
             conformance: "SPD, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum speed the pump can achieve when it is working with the " +
-                     "ControlMode attribute set to ConstantSpeed.",
+                     "ControlMode attribute set to ConstantSpeed." +
+                     "\n" +
+                     "Valid range is 0 to 65,534 RPM (steps of 1 RPM). This attribute shall be null if the value is " +
+                     "invalid.",
             xref: { document: "cluster", section: "4.2.7.9" }
         },
 
         {
             tag: "attribute", name: "MinConstFlow", id: 0x9, type: "uint16", access: "R V",
             conformance: "FLW, [AUTO]", default: null, quality: "X F",
-            details: "This attribute specifies the minimum flow the pump can achieve when it is working with the Con",
+
+            details: "This attribute specifies the minimum flow the pump can achieve when it is working with the Con" +
+                     "\n" +
+                     "trolMode attribute set to ConstantFlow." +
+                     "\n" +
+                     "Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). This attribute shall be null if the value " +
+                     "is invalid.",
+
             xref: { document: "cluster", section: "4.2.7.10" }
         },
 
@@ -134,112 +168,233 @@ Matter.children.push({
             tag: "attribute", name: "MaxConstFlow", id: 0xa, type: "uint16", access: "R V",
             conformance: "FLW, [AUTO]", default: null, quality: "X F",
             details: "This attribute specifies the maximum flow the pump can achieve when it is working with the " +
-                     "ControlMode attribute set to ConstantFlow.",
+                     "ControlMode attribute set to ConstantFlow." +
+                     "\n" +
+                     "Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). This attribute shall be null if the value " +
+                     "is invalid.",
             xref: { document: "cluster", section: "4.2.7.11" }
         },
 
         {
             tag: "attribute", name: "MinConstTemp", id: 0xb, type: "int16", access: "R V",
-            conformance: "TEMP, [AUTO]", default: null, quality: "X F",
+            conformance: "TEMP, [AUTO]", constraint: "min -27315", default: null, quality: "X F",
             details: "This attribute specifies the minimum temperature the pump can maintain in the system when it is " +
-                     "working with the ControlMode attribute set to ConstantTemperature.",
+                     "working with the ControlMode attribute set to ConstantTemperature." +
+                     "\n" +
+                     "Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). This attribute shall be null if the " +
+                     "value is invalid.",
             xref: { document: "cluster", section: "4.2.7.12" }
         },
 
         {
             tag: "attribute", name: "MaxConstTemp", id: 0xc, type: "int16", access: "R V",
-            conformance: "TEMP, [AUTO]", default: null, quality: "X F",
+            conformance: "TEMP, [AUTO]", constraint: "min -27315", default: null, quality: "X F",
+
             details: "This attribute specifies the maximum temperature the pump can maintain in the system when it is " +
-                     "working with the ControlMode attribute set to ConstantTemperature.",
+                     "working with the ControlMode attribute set to ConstantTemperature." +
+                     "\n" +
+                     "MaxConstTemp shall be greater than or equal to MinConstTemp" +
+                     "\n" +
+                     "Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). This attribute shall be null if the " +
+                     "value is invalid.",
+
             xref: { document: "cluster", section: "4.2.7.13" }
         },
 
         {
             tag: "attribute", name: "PumpStatus", id: 0x10, type: "PumpStatusBitmap", access: "R V",
-            conformance: "O", constraint: "desc", quality: "P",
+            conformance: "O", constraint: "desc", default: 0, quality: "P",
             details: "This attribute specifies the activity status of the pump functions as listed in PumpStatusBitmap. " +
-                     "Where a pump controller function is active, the corresponding bit SHALL be set to 1. Where a pump " +
-                     "controller function is not active, the corresponding bit SHALL be set to 0.",
+                     "Where a pump controller function is active, the corresponding bit shall be set to 1. Where a pump " +
+                     "controller function is not active, the corresponding bit shall be set to 0.",
             xref: { document: "cluster", section: "4.2.7.14" }
         },
 
         {
             tag: "attribute", name: "EffectiveOperationMode", id: 0x11, type: "OperationModeEnum",
             access: "R V", conformance: "M", constraint: "desc", quality: "N",
+
             details: "This attribute specifies current effective operation mode of the pump as defined in " +
-                     "OperationModeEnum.",
+                     "OperationModeEnum." +
+                     "\n" +
+                     "The value of the EffectiveOperationMode attribute is the same as the OperationMode attribute, " +
+                     "unless one of the following points are true:" +
+                     "\n" +
+                     "  • The pump is physically set to run with the local settings" +
+                     "\n" +
+                     "  • The LocalOverride bit in the PumpStatus attribute is set," +
+                     "\n" +
+                     "See OperationMode and ControlMode attributes for a detailed description of the operation and " +
+                     "control of the pump.",
+
             xref: { document: "cluster", section: "4.2.7.15" }
         },
 
         {
             tag: "attribute", name: "EffectiveControlMode", id: 0x12, type: "ControlModeEnum", access: "R V",
             conformance: "M", constraint: "desc", quality: "N",
+
             details: "This attribute specifies the current effective control mode of the pump as defined in " +
-                     "ControlModeEnum.",
+                     "ControlModeEnum." +
+                     "\n" +
+                     "This attribute contains the control mode that currently applies to the pump. It will have the value " +
+                     "of the ControlMode attribute, unless one of the following points are true:" +
+                     "\n" +
+                     "  • The ControlMode attribute is set to Automatic. In this case, the value of the " +
+                     "    EffectiveControlMode shall match the behavior of the pump." +
+                     "\n" +
+                     "  • A remote sensor is used as the sensor for regulation of the pump. In this case, " +
+                     "    EffectiveControlMode will display ConstantPressure, ConstantFlow or ConstantTemperature if the " +
+                     "    remote sensor is a pressure sensor, a flow sensor or a temperature sensor respectively, " +
+                     "    regardless of the value of the ControlMode attribute." +
+                     "\n" +
+                     "In case the ControlMode attribute is not included on the device and no remote sensors are " +
+                     "connected, the value of the EffectiveControlMode shall match the vendor-specific behavior of the " +
+                     "pump." +
+                     "\n" +
+                     "See OperationMode and ControlMode attributes for detailed a description of the operation and " +
+                     "control of the pump.",
+
             xref: { document: "cluster", section: "4.2.7.16" }
         },
 
         {
             tag: "attribute", name: "Capacity", id: 0x13, type: "int16", access: "R V", conformance: "M",
             default: null, quality: "X P",
+
             details: "This attribute specifies the actual capacity of the pump as a percentage of the effective maximum " +
-                     "setpoint value. It is updated dynamically as the speed of the pump changes.",
+                     "setpoint value. It is updated dynamically as the speed of the pump changes." +
+                     "\n" +
+                     "If the value is not available (the measurement or estimation of the speed is done in the pump), " +
+                     "this attribute will indicate the null value." +
+                     "\n" +
+                     "Valid range is 0 % to 163.835% (0.005 % granularity). Although this attribute is a signed value, " +
+                     "values of capacity less than zero have no physical meaning.",
+
             xref: { document: "cluster", section: "4.2.7.17" }
         },
 
         {
             tag: "attribute", name: "Speed", id: 0x14, type: "uint16", access: "R V", conformance: "O",
             default: null, quality: "X",
+
             details: "This attribute specifies the actual speed of the pump measured in RPM. It is updated dynamically as " +
-                     "the speed of the pump changes.",
+                     "the speed of the pump changes." +
+                     "\n" +
+                     "If the value is not available (the measurement or estimation of the speed is done in the pump), " +
+                     "this attribute will indicate the null value." +
+                     "\n" +
+                     "Valid range is 0 to 65.534 RPM.",
+
             xref: { document: "cluster", section: "4.2.7.18" }
         },
 
         {
             tag: "attribute", name: "LifetimeRunningHours", id: 0x15, type: "uint24", access: "RW VM",
-            conformance: "O", quality: "X N",
+            conformance: "O", default: 0, quality: "X N",
+
             details: "This attribute specifies the accumulated number of hours that the pump has been powered and the " +
                      "motor has been running. It is updated dynamically as it increases. It is preserved over power " +
                      "cycles of the pump. If LifeTimeRunningHours rises above maximum value it “rolls over” and starts at " +
-                     "0 (zero).",
+                     "0 (zero)." +
+                     "\n" +
+                     "This attribute is writeable, in order to allow setting to an appropriate value after maintenance. If" +
+                     "\n" +
+                     "the value is not available, this attribute will indicate the null value. Valid range is 0 to " +
+                     "16,777,214 hrs.",
+
             xref: { document: "cluster", section: "4.2.7.19" }
         },
 
         {
             tag: "attribute", name: "Power", id: 0x16, type: "uint24", access: "R V", conformance: "O",
             default: null, quality: "X",
+
             details: "This attribute specifies the actual power consumption of the pump in Watts. The value of this " +
-                     "attribute is updated dynamically as the power consumption of the pump changes.",
+                     "attribute is updated dynamically as the power consumption of the pump changes." +
+                     "\n" +
+                     "This attribute is read only. If the value is not available (the measurement of power consumption is " +
+                     "not done in the pump), this attribute will indicate the null value." +
+                     "\n" +
+                     "Valid range is 0 to 16,777,214 Watts.",
+
             xref: { document: "cluster", section: "4.2.7.20" }
         },
 
         {
             tag: "attribute", name: "LifetimeEnergyConsumed", id: 0x17, type: "uint32", access: "RW VM",
-            conformance: "O", quality: "X N",
+            conformance: "O", default: 0, quality: "X N",
+
             details: "This attribute specifies the accumulated energy consumption of the pump through the entire lifetime " +
                      "of the pump in kWh. The value of the LifetimeEnergyConsumed attribute is updated dynamically as the " +
                      "energy consumption of the pump increases. If LifetimeEnergyConsumed rises above maximum value it " +
-                     "“rolls over” and starts at 0 (zero).",
+                     "“rolls over” and starts at 0 (zero)." +
+                     "\n" +
+                     "This attribute is writeable, in order to allow setting to an appropriate value after maintenance." +
+                     "\n" +
+                     "Valid range is 0 kWh to 4,294,967,294 kWh." +
+                     "\n" +
+                     "This attribute shall be null if the value is unknown.",
+
             xref: { document: "cluster", section: "4.2.7.21" }
         },
 
         {
             tag: "attribute", name: "OperationMode", id: 0x20, type: "OperationModeEnum", access: "RW VM",
-            conformance: "M", constraint: "desc", quality: "N",
-            details: "This attribute specifies the operation mode of the pump as defined in OperationModeEnum.",
+            conformance: "M", constraint: "desc", default: 0, quality: "N",
+
+            details: "This attribute specifies the operation mode of the pump as defined in OperationModeEnum." +
+                     "\n" +
+                     "The actual operating mode of the pump is a result of the setting of the attributes OperationMode, " +
+                     "ControlMode and the optional connection of a remote sensor. The operation and control is " +
+                     "prioritized as shown in the scheme below:" +
+                     "\n" +
+                     "Priority Scheme of Pump Operation and Control" +
+                     "\n" +
+                     "If this attribute is Maximum, Minimum or Local, the OperationMode attribute decides how the pump is " +
+                     "operated." +
+                     "\n" +
+                     "If this attribute is Normal and a remote sensor is connected to the pump, the type of the remote " +
+                     "sensor decides the control mode of the pump. A connected remote pressure sensor will make the pump " +
+                     "run in control mode Constant pressure and vice versa for flow and temperature type sensors. This is " +
+                     "regardless of the setting of the ControlMode attribute." +
+                     "\n" +
+                     "If this attribute is Normal and no remote sensor is connected, the control mode of the pump is " +
+                     "decided by the ControlMode attribute." +
+                     "\n" +
+                     "OperationMode MAY be changed at any time, even when the pump is running. The behavior of the pump " +
+                     "at the point of changing the value of this attribute is vendor-specific." +
+                     "\n" +
+                     "In the case a device does not support a specific operation mode, the write interaction to this " +
+                     "attribute with an unsupported operation mode value shall be ignored and a response containing the " +
+                     "status of CONSTRAINT_ERROR shall be returned.",
+
             xref: { document: "cluster", section: "4.2.7.22" }
         },
 
         {
             tag: "attribute", name: "ControlMode", id: 0x21, type: "ControlModeEnum", access: "RW VM",
-            conformance: "O", constraint: "desc", quality: "N",
-            details: "This attribute specifies the control mode of the pump as defined in ControlModeEnum.",
+            conformance: "O", constraint: "desc", default: 0, quality: "N",
+
+            details: "This attribute specifies the control mode of the pump as defined in ControlModeEnum." +
+                     "\n" +
+                     "See the OperationMode attribute for a detailed description of the operation and control of the" +
+                     "\n" +
+                     "pump." +
+                     "\n" +
+                     "ControlMode MAY be changed at any time, even when the pump is running. The behavior of the pump at " +
+                     "the point of changing is vendor-specific." +
+                     "\n" +
+                     "In the case a device does not support a specific control mode, the write interaction to this " +
+                     "attribute with an unsupported control mode value shall be ignored and a response containing the " +
+                     "status of CONSTRAINT_ERROR shall be returned.",
+
             xref: { document: "cluster", section: "4.2.7.23" }
         },
 
         {
             tag: "attribute", name: "AlarmMask", id: 0x22, type: "map16", access: "R V", conformance: "D",
-            constraint: "desc", quality: "N",
+            constraint: "desc", default: 0, quality: "N",
             xref: { document: "cluster", section: "4.2.7" }
         },
         {
@@ -345,16 +500,13 @@ Matter.children.push({
                     tag: "datatype", name: "LocalOverride", id: 0x10, conformance: "M",
                     description: "Device control is overridden by hardware, such as an external STOP button or via a local HMI.",
                     details: "While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing " +
-                             "OperationMode SHALL generate a FAILURE error status until LocalOverride is cleared on the physical " +
-                             "device. When LocalOverride is cleared, the device SHALL return to the operation mode set in " +
+                             "OperationMode shall generate a FAILURE error status until LocalOverride is cleared on the physical " +
+                             "device. When LocalOverride is cleared, the device shall return to the operation mode set in " +
                              "OperationMode.",
                     xref: { document: "cluster", section: "4.2.6.1.3" }
                 },
 
-                {
-                    tag: "datatype", name: "Running", id: 0x20, conformance: "M",
-                    description: "Pump is currently running"
-                },
+                { tag: "datatype", name: "Running", id: 0x20, conformance: "M", description: "Pump is currently running" },
 
                 {
                     tag: "datatype", name: "RemotePressure", id: 0x40, conformance: "M",

@@ -5,7 +5,7 @@
  */
 
 import { ElementTag } from "../../definitions/index.js";
-import { Model } from "../../models/index.js";
+import { CommandModel, Model } from "../../models/index.js";
 
 /**
  * Base class for all model validators.
@@ -24,14 +24,14 @@ export class ModelValidator<T extends Model> {
 
         if (this.model.type) {
             const base = this.model.base;
-            if (base == undefined) {
+            if (!base) {
                 this.error("TYPE_UNKNOWN", `Type ${this.model.type} does not resolve`);
             }
         }
 
         if (this.model.xref) {
             const parentXref = this.model.parent?.effectiveXref;
-            if (parentXref && this.model.xref == parentXref) {
+            if (parentXref && this.model.xref === parentXref) {
                 delete this.model.xref;
             }
         }
@@ -43,7 +43,7 @@ export class ModelValidator<T extends Model> {
         this.model.error(code, message);
     }
 
-    protected validateStructure(requireId: boolean, ...childTypes: (new(...args: any) => Model)[]) {
+    protected validateStructure(requireId: boolean, ...childTypes: (new (...args: any) => Model)[]) {
         this.validateProperty({ name: "id", type: "number", required: requireId });
         if (this.model.children && childTypes.length) {
             let index = 0;
@@ -82,22 +82,22 @@ export class ModelValidator<T extends Model> {
         if (Number.isNaN(value)) {
             this.error("NAN_PROPERTY", `Property ${name} is NaN`);
         }
-        if (type == undefined) {
+        if (type === undefined) {
             return;
         }
-        if (typeof type == "string") {
-            if (typeof value != type) {
+        if (typeof type === "string") {
+            if (typeof value !== type) {
                 this.error("NON_STRING_PROPERTY", `Property ${name} type is ${typeof value} (expected ${type})`);
             }
             return;
         }
-        if (typeof type == "function") {
+        if (typeof type === "function") {
             if (!(value instanceof type)) {
                 this.error("PROPERTY_NOT_INSTANCE", `Property ${name} is not an instance of ${type.name}`);
             }
             return;
         }
-        if (Object.values(type).indexOf(value) == -1) {
+        if (Object.values(type).indexOf(value) === -1) {
             this.error("INVALID_ENUM_KEY", `Property ${name} value ${value} is not in enum`);
         }
     }
@@ -106,17 +106,28 @@ export class ModelValidator<T extends Model> {
         const identities = {} as { [identity: string]: number };
 
         for (const child of this.model.children) {
-            const identity = `${child.tag}:${child.name}:${(child as any).conformance}`;
-            if (identities[identity]) {
-                identities[identity]++;
-            } else {
-                identities[identity] = 1;
+            function addIdentity(id: string | number) {
+                if (child instanceof CommandModel) {
+                    id = `${id}:${child.direction}`
+                }
+                const identity = `${child.tag};${id};${(child as any).conformance}`;
+                if (identities[identity]) {
+                    identities[identity]++;
+                } else {
+                    identities[identity] = 1;
+                }
+            }
+
+            addIdentity(child.name);
+
+            if (child.effectiveId) {
+                addIdentity(child.effectiveId);
             }
         }
 
         for (const identity in identities) {
             if (identities[identity] > 1) {
-                const parts = identity.split(":");
+                const parts = identity.split(";");
                 this.error("DUPLICATE_CHILD", `Duplicate ${parts[0]} ${parts[1]}`);
             }
         }
@@ -125,6 +136,6 @@ export class ModelValidator<T extends Model> {
 
 export namespace ModelValidator {
     export const validators = {} as {
-        [key in ElementTag]: new(model: any) => ModelValidator<any>
+        [key in ElementTag]: new (model: any) => ModelValidator<any>
     };
 }

@@ -25,6 +25,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SwitchActions", id: 0x10, type: "enum8", access: "RW", conformance: "M",
+            default: 0,
             children: [
                 { tag: "datatype", name: "On", id: 0x0, conformance: "M" },
                 { tag: "datatype", name: "Off", id: 0x1, conformance: "M" },

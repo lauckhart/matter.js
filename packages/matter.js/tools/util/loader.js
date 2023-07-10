@@ -42,7 +42,7 @@ async function map(url, from, to) {
 }
 
 export async function resolve(specifier, context, nextResolve) {
-    if (context.parentURL && context.parentURL.indexOf(FLAGGED_PATH_SEGMENT) != -1) {
+    if (context.parentURL && context.parentURL.indexOf(FLAGGED_PATH_SEGMENT) !== -1) {
         const parentURL = new URL(context.parentURL);
         const url = new URL(specifier, parentURL);
         if (!await exists(url)) {

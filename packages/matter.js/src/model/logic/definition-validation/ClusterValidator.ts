@@ -9,18 +9,18 @@ import { AttributeModel, ClusterModel, CommandModel, DatatypeModel, EventModel }
 import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[ClusterElement.Tag] =
-class DeviceTypeValidator extends ModelValidator<ClusterModel> {
-    override validate() {
+    class DeviceTypeValidator extends ModelValidator<ClusterModel> {
+        override validate() {
 
-        this.validateStructure(false, DatatypeModel, AttributeModel, CommandModel, EventModel);
+            this.validateStructure(false, DatatypeModel, AttributeModel, CommandModel, EventModel);
 
-        this.validateProperty({ name: "singleton", type: "boolean" });
-        this.validateProperty({ name: "classification", type: ClusterElement.Classification });
-        
-        if (!this.model.children.length) {
-            this.error("EMPTY_CLUSTER", "Cluster has no elements");
+            this.validateProperty({ name: "singleton", type: "boolean" });
+            this.validateProperty({ name: "classification", type: ClusterElement.Classification });
+
+            if (!this.model.children.length) {
+                this.error("EMPTY_CLUSTER", "Cluster has no elements");
+            }
+
+            super.validate();
         }
-        
-        super.validate();
     }
-}

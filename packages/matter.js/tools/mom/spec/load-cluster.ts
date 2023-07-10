@@ -18,20 +18,20 @@ type SubsectionCollector = {
 }
 
 function isCluster(ref: HtmlReference, document: Specification, name: string) {
-    return ref.xref.document == document && ref.name == name;
+    return ref.xref.document === document && ref.name === name;
 }
 
 function isSection(ref: HtmlReference, ...sections: string[]) {
-    return !!sections.find(section => ref.xref.section == section);
+    return !!sections.find(section => ref.xref.section === section);
 }
 
 // Modify incoming stream to workaround specific spec issues
 function applyPatches(subref: HtmlReference, clusterRef: HtmlReference) {
     if (isCluster(clusterRef, Specification.Core, "General Commissioning")) {
-        if (isSection(subref, "11.9.6") && subref.name == "Commands" && !subref.table) {
+        if (isSection(subref, "11.9.6") && subref.name === "Commands" && !subref.table) {
             // In 1.1 spec, command table is not here...
             subref.name = "Ignored";
-        } else if (isSection(subref, "11.9.6.1") && subref.name == "Common fields in General Commissioning cluster responses" && subref.table) {
+        } else if (isSection(subref, "11.9.6.1") && subref.name === "Common fields in General Commissioning cluster responses" && subref.table) {
             // ...but here
             subref.name = "Commands";
             subref.detailSection = "11.9.6";
@@ -72,7 +72,7 @@ export function loadCluster(clusterRef: HtmlReference) {
         if (!ref.table) {
             // Sometimes there's a section with no table to indicate no
             // elements
-            if (ref.firstParagraph?.textContent?.match(/(?:this cluster has no|no cluster specific)/i)) {
+            if (ref.prose?.[0]?.textContent?.match(/(?:this cluster has no|no cluster specific)/i)) {
                 return;
             }
             logger.warn("no defining table in definition of", name, "for", ref.name, `(${ref.path})`);
@@ -104,8 +104,8 @@ export function loadCluster(clusterRef: HtmlReference) {
             collectors.pop();
         }
 
-        if (subref.xref.section == clusterRef.xref.section) {
-            definition.firstParagraph = clusterRef.firstParagraph;
+        if (subref.xref.section === clusterRef.xref.section) {
+            definition.prose = clusterRef.prose;
         }
 
         const name = camelize(subref.name).toLowerCase();
@@ -126,7 +126,7 @@ export function loadCluster(clusterRef: HtmlReference) {
             case "classification":
                 defineElement("classifications", subref);
                 break;
-    
+
             case "attributes":
                 defineElement("attributes", subref);
                 break;

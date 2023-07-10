@@ -6,18 +6,42 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-
+/**
+ * Low Power
+ *
+ * This cluster provides an interface for managing low power mode on a device.
+ *
+ * Use this factory function to create a LowPower cluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
+ */
+export function LowPowerCluster() {
+    const cluster = Cluster({ ...LowPowerCluster.Metadata, ...LowPowerCluster.BaseComponent });
+    return cluster as unknown as LowPowerCluster.Type;
+}
 
 export namespace LowPowerCluster {
-    export const id = 1288;
-    export const name = "LowPower";
-    export const revision = 1;
+    export type Type =
+        typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
+        & typeof BaseComponent;
 
-    const Base = {
+    /**
+     * LowPower cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
+     */
+    export const Metadata = ClusterMetadata({ id: 0x508, name: "LowPower", revision: 1, features: {} });
+
+    /**
+     * A LowPowerCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         commands: {
             /**
              * This command shall put the device into low power mode.
@@ -26,12 +50,10 @@ export namespace LowPowerCluster {
              */
             sleep: Command(0, TlvNoArguments, 0, TlvNoResponse)
         }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
     });
-};
+
+    /**
+     * This cluster supports all LowPower features.
+     */
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
+}

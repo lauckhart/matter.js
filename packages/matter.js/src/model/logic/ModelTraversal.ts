@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../common/index.js";
-import { Datatype, ElementTag } from "../definitions/index.js";
+import { InternalError } from "../../common/InternalError.js";
+import { ElementTag, FieldValue } from "../definitions/index.js";
+import { AnyElement, Globals } from "../elements/index.js";
 import { type Model, type ValueModel, type DatatypeModel, CommandModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
@@ -74,7 +75,7 @@ export class ModelTraversal {
             }
 
             // Commands and events always represent structs
-            if (model.tag == ElementTag.Command || model.tag == ElementTag.Event) {
+            if (model.tag === ElementTag.Command || model.tag === ElementTag.Event) {
                 return "struct";
             }
 
@@ -84,29 +85,29 @@ export class ModelTraversal {
                 // If parented by enum or bitmap, infer type as uint of same size
                 if ((ancestor as any).metatype) {
                     switch (ancestor.name) {
-                        case Datatype.enum8:
-                        case Datatype.map8:
-                            result = Datatype.uint8;
+                        case Globals.enum8.name:
+                        case Globals.map8.name:
+                            result = Globals.uint8.name;
                             return false;
-            
-                        case Datatype.enum16:
-                        case Datatype.map16:
-                            result = Datatype.uint16;
+
+                        case Globals.enum16.name:
+                        case Globals.map16.name:
+                            result = Globals.uint16.name;
                             return false;
-            
-                        case Datatype.map32:
-                            result = Datatype.uint32;
+
+                        case Globals.map32.name:
+                            result = Globals.uint32.name;
                             return false;
-            
-                        case Datatype.map64:
-                            result = Datatype.uint64;
+
+                        case Globals.map64.name:
+                            result = Globals.uint64.name;
                             return false;
                     }
                 }
 
                 // If I override a field my type is the same as the overridden
                 // field
-                const overridden = this.findLocal(ancestor, name, [ model.tag ]);
+                const overridden = this.findLocal(ancestor, name, [model.tag]);
                 if (overridden?.type) {
                     result = overridden.type;
                     return false;
@@ -138,11 +139,52 @@ export class ModelTraversal {
             if (!model) {
                 return;
             }
-            let type = this.getTypeName(model);
-            if (type != undefined) {
+            const type = this.getTypeName(model);
+            if (type !== undefined) {
                 return this.findType(model.parent, type, model.allowedBaseTags);
             }
         });
+    }
+
+    /**
+     * Find the first global model this model derives from, if any.
+     */
+    findGlobalBase(model: Model | undefined): Model | undefined {
+        if (!model) {
+            return;
+        }
+        let result: Model | undefined;
+
+        this.visitInheritance(model, (model) => {
+            if (model.global) {
+                result = model;
+                return false;
+            }
+        });
+
+        return result;
+    }
+
+    /**
+     * Determine whether this model derives from another.
+     */
+    instanceOf(model: Model | undefined, other: Model | AnyElement | undefined): boolean {
+        if (!model || !other) {
+            return false;
+        }
+        if (model === other) {
+            return true;
+        }
+        let result = false;
+
+        this.visitInheritance(model, (model) => {
+            if (model.name === other.name && model.global === other.global) {
+                result = true;
+                return false;
+            }
+        });
+
+        return result;
     }
 
     /**
@@ -180,7 +222,7 @@ export class ModelTraversal {
     findListEntry(model: ValueModel | undefined): DatatypeModel | undefined {
         return this.operation(() => {
             while (model) {
-                const entry = this.findMember(model, "entry", [ ElementTag.Datatype ]);
+                const entry = this.findMember(model, "entry", [ElementTag.Datatype]);
                 if (entry) {
                     return entry as DatatypeModel;
                 }
@@ -212,7 +254,7 @@ export class ModelTraversal {
                 return;
             }
             const queue = Array<Model>(scope);
-            while (scope = queue.shift()) {
+            for (scope = queue.shift(); scope; scope = queue.shift()) {
                 if (scope.isTypeScope) {
                     const result = this.findLocal(scope, name, allowedTags);
                     if (result) {
@@ -221,7 +263,7 @@ export class ModelTraversal {
                 }
 
                 // Search inherited scope next
-                let inheritedScope = this.findBase(scope);
+                const inheritedScope = this.findBase(scope);
                 if (inheritedScope) {
                     queue.unshift(inheritedScope);
                 }
@@ -238,8 +280,8 @@ export class ModelTraversal {
      * Find the response model for a command.
      */
     findResponse(command: CommandModel) {
-        if (command.response && command.response != "status") {
-            return new ModelTraversal().findType(command, command.response, [ ElementTag.Command ]);
+        if (command.response && command.response !== "status") {
+            return new ModelTraversal().findType(command, command.response, [ElementTag.Command]);
         }
     }
 
@@ -254,13 +296,13 @@ export class ModelTraversal {
         const references = Array<Model>();
         this.visit(scope, model => {
             // This is the most common method for referencing
-            if (this.findBase(model) == type) {
+            if (this.findBase(model) === type) {
                 references.push(model);
                 return;
             }
 
             // A command can reference its response
-            if (model instanceof CommandModel && this.findResponse(model) == type) {
+            if (model instanceof CommandModel && this.findResponse(model) === type) {
                 references.push(model);
                 return;
             }
@@ -269,8 +311,8 @@ export class ModelTraversal {
             // field
             if (model.isType) {
                 const defaultValue = (model as ValueModel).default;
-                if (typeof defaultValue == "object" && defaultValue.reference) {
-                    if (defaultValue.reference == type.name) {
+                if (FieldValue.is(defaultValue, FieldValue.reference)) {
+                    if ((defaultValue as FieldValue.Reference).name === type.name) {
                         references.push(model);
                     }
                 }
@@ -346,7 +388,7 @@ export class ModelTraversal {
      */
     private findLocal(scope: Model, key: ModelTraversal.ElementSelector, allowedTags: ElementTag[]) {
         for (const c of scope.children) {
-            if (c.is(key) && allowedTags.indexOf(c.tag) != -1 && !this.dismissed?.has(c)) {
+            if (c.is(key) && allowedTags.indexOf(c.tag) !== -1 && !this.dismissed?.has(c)) {
                 return c;
             }
         }

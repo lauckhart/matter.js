@@ -15,20 +15,10 @@ Matter.children.push({
              "only labels.",
     xref: { document: "core", section: "9.8" },
 
-    children: [
-        {
-            tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "R V", conformance: "M",
-            quality: "N",
-            xref: { document: "core", section: "9.8.4" },
-            children: [ { tag: "datatype", name: "entry", type: "LabelStruct" } ]
-        },
-
-        {
-            tag: "datatype", name: "LabelStruct", type: "struct", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Label", type: "string", conformance: "M" },
-                { tag: "datatype", name: "Value", type: "string", conformance: "M" }
-            ]
-        }
-    ]
+    children: [ {
+        tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "R V", conformance: "M",
+        default: [], quality: "N",
+        xref: { document: "core", section: "9.8.4" },
+        children: [ { tag: "datatype", name: "entry", type: "LabelStruct" } ]
+    } ]
 });

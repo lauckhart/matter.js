@@ -14,12 +14,10 @@ Matter.children.push({
     details: "This cluster provides an interface for managing low power mode on a device.",
     xref: { document: "cluster", section: "1.9" },
 
-    children: [
-        {
-            tag: "command", name: "Sleep", id: 0x0, access: "O", conformance: "M", direction: "request",
-            response: "status",
-            details: "This command shall put the device into low power mode.",
-            xref: { document: "cluster", section: "1.9.3.1" }
-        }
-    ]
+    children: [ {
+        tag: "command", name: "Sleep", id: 0x0, access: "O", conformance: "M", direction: "request",
+        response: "status",
+        details: "This command shall put the device into low power mode.",
+        xref: { document: "cluster", section: "1.9.3.1" }
+    } ]
 });

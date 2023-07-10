@@ -6,40 +6,72 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvUInt32, TlvInt16, TlvUInt16, TlvInt32, TlvInt8, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
-export const GetProfileInfoResponseCommandRequest = TlvObject({
-    ProfileCount: TlvField(0, TlvUInt8),
-    ProfileIntervalPeriod: TlvField(1, TlvUInt8),
-    MaxNumberOfIntervals: TlvField(2, TlvUInt8),
-    ListOfAttributes: TlvField(3, TlvUInt16)
+/**
+ * Electrical Measurement
+ *
+ * Attributes related to the electrical properties of a device. This cluster is used by power outlets and other devices
+ * that need to provide instantaneous data as opposed to metrology data which should be retrieved from the metering
+ * cluster..
+ *
+ * Use this factory function to create an ElectricalMeasurement cluster.
+ */
+export function ElectricalMeasurementCluster() {
+    const cluster = Cluster({ ...ElectricalMeasurementCluster.Metadata, ...ElectricalMeasurementCluster.BaseComponent });
+    return cluster as unknown as ElectricalMeasurementCluster.Type;
+}
+
+/**
+ * Input to the ElectricalMeasurement getProfileInfoResponseCommand command
+ */
+export const TlvGetProfileInfoResponseCommandRequest = TlvObject({
+    profileCount: TlvField(0, TlvUInt8),
+    profileIntervalPeriod: TlvField(1, TlvUInt8),
+    maxNumberOfIntervals: TlvField(2, TlvUInt8),
+    listOfAttributes: TlvField(3, TlvUInt16)
 });
 
-export const GetMeasurementProfileResponseCommandRequest = TlvObject({
-    StartTime: TlvField(0, TlvUInt32),
-    Status: TlvField(1, TlvUInt8),
-    ProfileIntervalPeriod: TlvField(2, TlvUInt8),
-    NumberOfIntervalsDelivered: TlvField(3, TlvUInt8),
-    AttributeId: TlvField(4, TlvUInt16),
-    Intervals: TlvField(5, TlvUInt8)
+/**
+ * Input to the ElectricalMeasurement getMeasurementProfileResponseCommand command
+ */
+export const TlvGetMeasurementProfileResponseCommandRequest = TlvObject({
+    startTime: TlvField(0, TlvUInt32),
+    status: TlvField(1, TlvUInt8),
+    profileIntervalPeriod: TlvField(2, TlvUInt8),
+    numberOfIntervalsDelivered: TlvField(3, TlvUInt8),
+    attributeId: TlvField(4, TlvUInt16),
+    intervals: TlvField(5, TlvUInt8)
 });
 
-export const GetMeasurementProfileCommandRequest = TlvObject({
-    AttributeId: TlvField(0, TlvUInt16),
-    StartTime: TlvField(1, TlvUInt32),
-    NumberOfIntervals: TlvField(2, TlvUInt8)
+/**
+ * Input to the ElectricalMeasurement getMeasurementProfileCommand command
+ */
+export const TlvGetMeasurementProfileCommandRequest = TlvObject({
+    attributeId: TlvField(0, TlvUInt16),
+    startTime: TlvField(1, TlvUInt32),
+    numberOfIntervals: TlvField(2, TlvUInt8)
 });
 
 export namespace ElectricalMeasurementCluster {
-    export const id = 2820;
-    export const name = "ElectricalMeasurement";
-    export const revision = 1;
+    export type Type =
+        typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
+        & typeof BaseComponent;
 
-    const Base = {
+    /**
+     * ElectricalMeasurement cluster metadata.
+     */
+    export const Metadata = ClusterMetadata({ id: 0xb04, name: "ElectricalMeasurement", revision: 1, features: {} });
+
+    /**
+     * A ElectricalMeasurementCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         attributes: {
             measurementType: OptionalAttribute(0, TlvUInt32),
             dcVoltage: OptionalAttribute(256, TlvInt16, { default: 32768 }),
@@ -60,9 +92,9 @@ export namespace ElectricalMeasurementCluster {
             acFrequency: OptionalAttribute(768, TlvUInt16, { default: 65535 }),
             acFrequencyMin: OptionalAttribute(769, TlvUInt16, { default: 65535 }),
             acFrequencyMax: OptionalAttribute(770, TlvUInt16, { default: 65535 }),
-            neutralCurrent: OptionalAttribute(771, TlvUInt16),
-            totalActivePower: OptionalAttribute(772, TlvInt32),
-            totalReactivePower: OptionalAttribute(773, TlvInt32),
+            neutralCurrent: OptionalAttribute(771, TlvUInt16, { default: 0 }),
+            totalActivePower: OptionalAttribute(772, TlvInt32, { default: 0 }),
+            totalReactivePower: OptionalAttribute(773, TlvInt32, { default: 0 }),
             totalApparentPower: OptionalAttribute(774, TlvUInt32, { default: 1 }),
             measured1StHarmonicCurrent: OptionalAttribute(775, TlvInt16, { default: 32768 }),
             measured3RdHarmonicCurrent: OptionalAttribute(776, TlvInt16, { default: 32768 }),
@@ -80,8 +112,8 @@ export namespace ElectricalMeasurementCluster {
             acFrequencyDivisor: OptionalAttribute(1025, TlvUInt16, { default: 1 }),
             powerMultiplier: OptionalAttribute(1026, TlvUInt32, { default: 1 }),
             powerDivisor: OptionalAttribute(1027, TlvUInt32, { default: 1 }),
-            harmonicCurrentMultiplier: OptionalAttribute(1028, TlvInt8),
-            phaseHarmonicCurrentMultiplier: OptionalAttribute(1029, TlvInt8),
+            harmonicCurrentMultiplier: OptionalAttribute(1028, TlvInt8, { default: 0 }),
+            phaseHarmonicCurrentMultiplier: OptionalAttribute(1029, TlvInt8, { default: 0 }),
             instantaneousVoltage: OptionalAttribute(1280, TlvInt16, { default: 65535 }),
             instantaneousLineCurrent: OptionalAttribute(1281, TlvUInt16, { default: 65535 }),
             instantaneousActiveCurrent: OptionalAttribute(1282, TlvInt16, { default: 65535 }),
@@ -98,13 +130,13 @@ export namespace ElectricalMeasurementCluster {
             activePowerMax: OptionalAttribute(1293, TlvInt16, { default: 65535 }),
             reactivePower: OptionalAttribute(1294, TlvInt16, { default: 65535 }),
             apparentPower: OptionalAttribute(1295, TlvUInt16, { default: 65535 }),
-            acPowerFactor: OptionalAttribute(1296, TlvInt8),
-            averageRmsVoltageMeasurementPeriod: OptionalWritableAttribute(1297, TlvUInt16),
-            averageRmsUnderVoltageCounter: OptionalWritableAttribute(1299, TlvUInt16),
-            rmsExtremeOverVoltagePeriod: OptionalWritableAttribute(1300, TlvUInt16),
-            rmsExtremeUnderVoltagePeriod: OptionalWritableAttribute(1301, TlvUInt16),
-            rmsVoltageSagPeriod: OptionalWritableAttribute(1302, TlvUInt16),
-            rmsVoltageSwellPeriod: OptionalWritableAttribute(1303, TlvUInt16),
+            acPowerFactor: OptionalAttribute(1296, TlvInt8, { default: 0 }),
+            averageRmsVoltageMeasurementPeriod: OptionalWritableAttribute(1297, TlvUInt16, { default: 0 }),
+            averageRmsUnderVoltageCounter: OptionalWritableAttribute(1299, TlvUInt16, { default: 0 }),
+            rmsExtremeOverVoltagePeriod: OptionalWritableAttribute(1300, TlvUInt16, { default: 0 }),
+            rmsExtremeUnderVoltagePeriod: OptionalWritableAttribute(1301, TlvUInt16, { default: 0 }),
+            rmsVoltageSagPeriod: OptionalWritableAttribute(1302, TlvUInt16, { default: 0 }),
+            rmsVoltageSwellPeriod: OptionalWritableAttribute(1303, TlvUInt16, { default: 0 }),
             acVoltageMultiplier: OptionalAttribute(1536, TlvUInt16, { default: 1 }),
             acVoltageDivisor: OptionalAttribute(1537, TlvUInt16, { default: 1 }),
             acCurrentMultiplier: OptionalAttribute(1538, TlvUInt16, { default: 1 }),
@@ -139,14 +171,14 @@ export namespace ElectricalMeasurementCluster {
             activePowerMaxPhaseB: OptionalAttribute(2317, TlvInt16, { default: 65535 }),
             reactivePowerPhaseB: OptionalAttribute(2318, TlvInt16, { default: 65535 }),
             apparentPowerPhaseB: OptionalAttribute(2319, TlvUInt16, { default: 65535 }),
-            powerFactorPhaseB: OptionalAttribute(2320, TlvInt8),
-            averageRmsVoltageMeasurementPeriodPhaseB: OptionalAttribute(2321, TlvUInt16),
-            averageRmsOverVoltageCounterPhaseB: OptionalAttribute(2322, TlvUInt16),
-            averageRmsUnderVoltageCounterPhaseB: OptionalAttribute(2323, TlvUInt16),
-            rmsExtremeOverVoltagePeriodPhaseB: OptionalAttribute(2324, TlvUInt16),
-            rmsExtremeUnderVoltagePeriodPhaseB: OptionalAttribute(2325, TlvUInt16),
-            rmsVoltageSagPeriodPhaseB: OptionalAttribute(2326, TlvUInt16),
-            rmsVoltageSwellPeriodPhaseB: OptionalAttribute(2327, TlvUInt16),
+            powerFactorPhaseB: OptionalAttribute(2320, TlvInt8, { default: 0 }),
+            averageRmsVoltageMeasurementPeriodPhaseB: OptionalAttribute(2321, TlvUInt16, { default: 0 }),
+            averageRmsOverVoltageCounterPhaseB: OptionalAttribute(2322, TlvUInt16, { default: 0 }),
+            averageRmsUnderVoltageCounterPhaseB: OptionalAttribute(2323, TlvUInt16, { default: 0 }),
+            rmsExtremeOverVoltagePeriodPhaseB: OptionalAttribute(2324, TlvUInt16, { default: 0 }),
+            rmsExtremeUnderVoltagePeriodPhaseB: OptionalAttribute(2325, TlvUInt16, { default: 0 }),
+            rmsVoltageSagPeriodPhaseB: OptionalAttribute(2326, TlvUInt16, { default: 0 }),
+            rmsVoltageSwellPeriodPhaseB: OptionalAttribute(2327, TlvUInt16, { default: 0 }),
             lineCurrentPhaseC: OptionalAttribute(2561, TlvUInt16, { default: 65535 }),
             activeCurrentPhaseC: OptionalAttribute(2562, TlvInt16, { default: 65535 }),
             reactiveCurrentPhaseC: OptionalAttribute(2563, TlvInt16, { default: 65535 }),
@@ -161,28 +193,37 @@ export namespace ElectricalMeasurementCluster {
             activePowerMaxPhaseC: OptionalAttribute(2573, TlvInt16, { default: 65535 }),
             reactivePowerPhaseC: OptionalAttribute(2574, TlvInt16, { default: 65535 }),
             apparentPowerPhaseC: OptionalAttribute(2575, TlvUInt16, { default: 65535 }),
-            powerFactorPhaseC: OptionalAttribute(2576, TlvInt8),
-            averageRmsVoltageMeasurementPeriodPhaseC: OptionalAttribute(2577, TlvUInt16),
-            averageRmsOverVoltageCounterPhaseC: OptionalAttribute(2578, TlvUInt16),
-            averageRmsUnderVoltageCounterPhaseC: OptionalAttribute(2579, TlvUInt16),
-            rmsExtremeOverVoltagePeriodPhaseC: OptionalAttribute(2580, TlvUInt16),
-            rmsExtremeUnderVoltagePeriodPhaseC: OptionalAttribute(2581, TlvUInt16),
-            rmsVoltageSagPeriodPhaseC: OptionalAttribute(2582, TlvUInt16),
-            rmsVoltageSwellPeriodPhaseC: OptionalAttribute(2583, TlvUInt16)
+            powerFactorPhaseC: OptionalAttribute(2576, TlvInt8, { default: 0 }),
+            averageRmsVoltageMeasurementPeriodPhaseC: OptionalAttribute(2577, TlvUInt16, { default: 0 }),
+            averageRmsOverVoltageCounterPhaseC: OptionalAttribute(2578, TlvUInt16, { default: 0 }),
+            averageRmsUnderVoltageCounterPhaseC: OptionalAttribute(2579, TlvUInt16, { default: 0 }),
+            rmsExtremeOverVoltagePeriodPhaseC: OptionalAttribute(2580, TlvUInt16, { default: 0 }),
+            rmsExtremeUnderVoltagePeriodPhaseC: OptionalAttribute(2581, TlvUInt16, { default: 0 }),
+            rmsVoltageSagPeriodPhaseC: OptionalAttribute(2582, TlvUInt16, { default: 0 }),
+            rmsVoltageSwellPeriodPhaseC: OptionalAttribute(2583, TlvUInt16, { default: 0 })
         },
 
         commands: {
-            getProfileInfoResponseCommand: OptionalCommand(0, GetProfileInfoResponseCommandRequest, 0, TlvNoResponse),
+            getProfileInfoResponseCommand: OptionalCommand(0, TlvGetProfileInfoResponseCommandRequest, 0, TlvNoResponse),
             getProfileInfoCommand: OptionalCommand(0, TlvNoArguments, 0, TlvNoResponse),
-            getMeasurementProfileResponseCommand: OptionalCommand(1, GetMeasurementProfileResponseCommandRequest, 1, TlvNoResponse),
-            getMeasurementProfileCommand: OptionalCommand(1, GetMeasurementProfileCommandRequest, 1, TlvNoResponse)
-        }
-    };
 
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
+            getMeasurementProfileResponseCommand: OptionalCommand(
+                1,
+                TlvGetMeasurementProfileResponseCommandRequest,
+                1,
+                TlvNoResponse
+            ),
+
+            getMeasurementProfileCommand: OptionalCommand(1, TlvGetMeasurementProfileCommandRequest, 1, TlvNoResponse)
+        }
     });
-};
+
+    /**
+     * This cluster supports all ElectricalMeasurement features.
+     */
+    export const Complete = Cluster({
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands }
+    });
+}

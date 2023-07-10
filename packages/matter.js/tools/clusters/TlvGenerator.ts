@@ -4,19 +4,47 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../src/common/index.js";
-import { ClusterModel, CommandModel, Conformance, Datatype, DatatypeModel, EventModel, Metatype, Model, ValueModel } from "../../src/model/index.js";
-import { camelize, serialize } from "../../src/util/index.js";
+import { InternalError } from "../../src/common/InternalError.js";
+import {
+    ClusterModel,
+    CommandModel,
+    Conformance,
+    DatatypeModel,
+    ElementTag,
+    EventModel,
+    FieldValue,
+    Globals,
+    Metatype,
+    Model,
+    ValueModel
+} from "../../src/model/index.js";
+import { camelize, serialize } from "../../src/util/String.js";
+import { Entry } from "../util/TsFile.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
 
-/** Adds TLV structures for ValueModels to a ClusterFile */
+const IntegerGlobalMap: { [name: string]: [string, string] } = {
+    [Globals.actionId.name]: ["datatype", "TlvAttributeId"],
+    [Globals.clusterId.name]: ["datatype", "TlvClusterId"],
+    [Globals.commandId.name]: ["datatype", "TlvCommandId"],
+    [Globals.deviceTypeId.name]: ["datatype", "TlvDeviceTypeId"],
+    [Globals.endpointNo.name]: ["datatype", "TlvEndpointNumber"],
+    [Globals.eventId.name]: ["datatype", "TlvEventId"],
+    [Globals.fabricId.name]: ["datatype", "TlvFabricId"],
+    [Globals.groupId.name]: ["datatype", "TlvGroupId"],
+    [Globals.nodeId.name]: ["datatype", "TlvNodeId"],
+    [Globals.SubjectId.name]: ["datatype", "TlvSubjectId"],
+    [Globals.vendorId.name]: ["datatype", "TlvVendorId"]
+};
+
+/**
+ * Adds TLV structures for ValueModels to a ClusterFile
+ **/
 export class TlvGenerator {
     private definedDatatypes = new Set<Model>();
-    private definedNames = new Set<string>();
     private scopedNames = new Set<string>();
 
-    constructor(private file: ClusterFile, cluster: ClusterModel) {
+    constructor(private file: ClusterFile, private cluster: ClusterModel) {
         // Find datatype names that conflict at top-level module scope.
         // Datatypes at cluster level get to use their own name but for nested
         // structures we prepend the parent name
@@ -39,11 +67,24 @@ export class TlvGenerator {
     }
 
     /**
+     * Import TLV type with automatic file naming.  Returns the name.
+     */
+    importTlv(fileOrDirectory: string, name: string) {
+        if (fileOrDirectory === "datatype") {
+            fileOrDirectory = `${fileOrDirectory}/${name.replace(/^Tlv/, "")}`;
+        } else if (fileOrDirectory === "tlv") {
+            fileOrDirectory = `${fileOrDirectory}/${name}`;
+        }
+        this.file.addImport(fileOrDirectory, name);
+        return name;
+    }
+
+    /**
      * Reference a TLV type.  Adds definitions to the file as necessary.
      * 
      * @return the referencing TS expression as a string
      */
-    reference(model: ValueModel): string {
+    reference(model: ValueModel, scope: ClusterModel): string {
         const metabase = model.metabase;
         if (!metabase) {
             throw new InternalError(`${model.path}: No root type for ${model.type}`);
@@ -52,91 +93,81 @@ export class TlvGenerator {
         let tlv: string;
         switch (metabase.metatype) {
             case Metatype.boolean:
-                tlv = "TlvBoolean";
-                this.file.addImport("tlv/TlvBoolean", tlv);
+                tlv = this.importTlv("tlv", "TlvBoolean");
                 break;
 
             case Metatype.float:
-                if (metabase.name == "single") {
+                if (metabase.name === "single") {
                     tlv = "TlvFloat";
                 } else {
                     tlv = "TlvDouble";
                 }
-                this.file.addImport("tlv/TlvNumber", tlv);
+                this.importTlv("tlv/TlvNumber", tlv);
                 break;
 
             case Metatype.integer:
-                tlv = this.integerTlv(metabase);
+                tlv = this.integerTlv(metabase, model);
                 break;
 
             case Metatype.any:
-                tlv = "TlvAny";
-                this.file.addImport("tlv/TlvAny", tlv);
+                tlv = this.importTlv("tlv", "TlvAny");
                 break;
-    
+
             case Metatype.bytes:
             case Metatype.string:
-                tlv = metabase.name == Datatype.octstr ? "TlvByteString" : "TlvString";
-                this.file.addImport("tlv/TlvString", tlv);
-                if (model.constraint.min != undefined || model.constraint.max != undefined) {
-                    const bounds = {} as any;
-                    if (model.constraint.min) {
-                        bounds.minLength = model.constraint.min;
-                    }
-                    if (model.constraint.max) {
-                        bounds.maxLength = model.constraint.max;
-                    }
+                tlv = this.importTlv("tlv/TlvString", metabase.name === Globals.octstr.name ? "TlvByteString" : "TlvString");
+                const bounds = this.createBounds(model, "minLength", "maxLength");
+                if (bounds) {
                     tlv = `${tlv}.bound(${serialize(bounds)})`;
                 }
                 break;
-    
+
             case Metatype.array:
-                this.file.addImport("tlv/TlvArray", "TlvArray");
+                this.importTlv("tlv", "TlvArray");
                 const entry = model.listEntry;
                 if (!entry) {
                     throw new InternalError(`${model.path}: No list entry type`);
                 }
-                tlv = `TlvArray(${this.reference(entry)})`;
+                tlv = `TlvArray(${this.reference(entry, scope)})`;
                 break;
-    
+
             case Metatype.bitmap:
                 {
-                    const dt = this.defineDatatype(model);
+                    const dt = this.defineDatatype(model, scope);
                     if (dt) {
                         tlv = dt;
                     } else {
                         // No fields; revert to the primitive type the bitmap
                         // derives from
-                        tlv = this.primitiveTlv(metabase);
+                        tlv = this.primitiveTlv(metabase, model);
                     }
                 }
                 break;
-    
+
             case Metatype.enum:
                 {
-                    const dt = this.defineDatatype(model);
+                    const dt = this.defineDatatype(model, scope);
                     if (dt) {
-                        this.file.addImport("tlv/TlvNumber", "TlvEnum");
+                        this.importTlv("tlv/TlvNumber", "TlvEnum");
                         tlv = `TlvEnum<${dt}>()`;
                     } else {
                         // No fields; revert to the primitive type the enum
                         // derives from
-                        tlv = this.primitiveTlv(metabase);
+                        tlv = this.primitiveTlv(metabase, model);
                     }
                 }
                 break;
 
             case Metatype.object:
                 {
-                    const dt = this.defineDatatype(model);
+                    const dt = this.defineDatatype(model, scope);
                     if (dt) {
                         tlv = dt;
                     } else {
                         // This is only legal for commands but we'll fall back
                         // to it in the (illegal) case where an object has no
                         // fields
-                        this.file.addImport("tlv/TlvNoArguments", "TlvNoArguments");
-                        return "TlvNoArguments";
+                        return this.importTlv("tlv", "TlvNoArguments");
                     }
                 }
                 break;
@@ -145,54 +176,70 @@ export class TlvGenerator {
                 throw new InternalError(`${model.path}: No tlv mapping for base type ${metabase.name}`);
         }
         if (model.quality.nullable) {
-            this.file.addImport("tlv/TlvNullable", "TlvNullable");
+            this.importTlv("tlv", "TlvNullable");
             tlv = `TlvNullable(${tlv})`;
         }
         return tlv;
     }
 
-    private integerTlv(metabase: ValueModel) {
-        const tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
-        this.file.addImport("tlv/TlvNumber", tlv);
+    private integerTlv(metabase: ValueModel, model: ValueModel) {
+        const globalMapping = IntegerGlobalMap[model.globalBase?.type as any];
+        if (globalMapping) {
+            return this.importTlv(...globalMapping);
+        }
+
+        let tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
+        this.importTlv("tlv/TlvNumber", tlv);
+
+        const bounds = this.createBounds(model, "min", "max");
+        if (bounds) {
+            tlv = `${tlv}.bound(${serialize(bounds)})`;
+        }
+
         return tlv;
     }
 
-    private primitiveTlv(metabase: ValueModel) {
+    private primitiveTlv(metabase: ValueModel, model: ValueModel) {
         const primitive = metabase.primitiveBase;
         if (!primitive) {
             throw new InternalError(`No primitive base for type ${metabase.name}`);
         }
-        return this.integerTlv(primitive);
+        return this.integerTlv(primitive, model);
     }
 
     private defineEnum(name: string, model: ValueModel) {
-        const block = this.file.types.expressions(`export const enum ${name} {`, "}")
-            .document(model);
+        const block = this.file.types.expressions(`export const enum ${name} {`, "}");
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(child => {
-                block.atom(`${asObjectKey(child.name)} = ${child.id}`)
+                let name = child.name;
+                if (name.match(/^\d+$/)) {
+                    // Typescript doesn't allow numeric enum keys
+                    name = `E${name}`;
+                }
+                block.atom(`${asObjectKey(name)} = ${child.id}`)
                     .document(child);
             });
         });
+        return block;
     }
 
-    private defineStruct(name: string, model: ValueModel) {
-        this.file.addImport("tlv/TlvObject", "TlvObject");
-        const block = this.file.types.expressions(`export const ${name} = TlvObject({`, "})")
-            .document(model);
+    private defineStruct(name: string, model: ValueModel, scope: ClusterModel) {
+        this.importTlv("tlv", "TlvObject");
+        const block = this.file.types.expressions(`export const ${name} = TlvObject({`, "})");
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(field => {
                 let tlv: string;
-                if (field.conformance.type == Conformance.Flag.Mandatory) {
+                if (field.conformance.type === Conformance.Flag.Mandatory) {
                     tlv = "TlvField";
                 } else {
                     tlv = "TlvOptionalField"
                 }
-                this.file.addImport("tlv/TlvObject", tlv);
-                block.atom(field.name, `${tlv}(${field.effectiveId}, ${this.reference(field)})`)
+                this.importTlv("tlv/TlvObject", tlv);
+                block.atom(camelize(field.name, false), `${tlv}(${field.effectiveId}, ${this.reference(field, scope)})`)
                     .document(field);
             });
         });
+        return block;
     }
 
     private defineBitmap(name: string, model: ValueModel) {
@@ -218,25 +265,29 @@ export class TlvGenerator {
                 throw new InternalError(`${model.path}: Could not determine numeric type for ${model.type}`);
         }
 
-        this.file.addImport("tlv/TlvNumber", tlvNum);
-        this.file.addImport("tlv/TlvNumber", "TlvBitmap");
-        this.file.addImport("schema/BitmapSchema", "BitFlag");
+        this.importTlv("tlv/TlvNumber", tlvNum);
+        this.importTlv("tlv/TlvNumber", "TlvBitmap");
+        this.importTlv("schema/BitmapSchema", "BitFlag");
 
-        const block = this.file.types.expressions(`export const ${name}Bits = {`, "}")
-            .document(model);
+        const enumName = `${name.replace(/^Tlv/, "")}Bits`;
+        this.file.nameDefined(enumName);
+
+        const block = this.file.types.expressions(`export const ${enumName} = {`, "}")
+            .document({ details: `Bit definitions for ${name}`, xref: model.xref });
 
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(child => {
-                block.atom(child.name, `BitFlag(${child.id})`)
+                block.atom(camelize(child.name, false), `BitFlag(${child.id})`)
                     .document(child);
             });
         });
 
-        this.file.types.atom(`export const ${name} = TlvBitmap(${tlvNum}, ${name}Bits)`);
+        return this.file.types.atom(`export const ${name} = TlvBitmap(${tlvNum}, ${enumName})`);
     }
 
-    private defineDatatype(model: ValueModel) {
-        let defining = model.definingModel;
+    private defineDatatype(model: ValueModel, scope: ClusterModel) {
+        // Obtain the defining model.  This is the actual datatype definition
+        const defining = model.definingModel;
         if (defining) {
             model = defining;
         } else {
@@ -246,46 +297,118 @@ export class TlvGenerator {
             return;
         }
 
+        // If there is a name collision, prefix the name with the parent's name
         let name = model.name;
         if (this.scopedNames.has(name) && model.parent && !(model instanceof ClusterModel)) {
             name = `${model.parent.name}${name}`;
         }
 
-        if (model instanceof CommandModel && model.isRequest) {
+        // Specialize the name based on the model type
+        if (model instanceof CommandModel && model.isRequest && !(name.endsWith("Response"))) {
             name += "Request";
         }
         if (model instanceof EventModel) {
             name += "Event";
         }
 
+        // For enums we create a typescript enum, for other types we create a TLV definition
+        if (model.effectiveMetatype === Metatype.enum) {
+            if (name.endsWith("Enum")) {
+                // This seems a bit redundant
+                name = name.substring(0, name.length - 4);
+            }
+        } else {
+            name = "Tlv" + name;
+        }
+
+        // We reserve the name "Type".  Plus it's kind of ambiguous
+        if (name == "Type") {
+            name = `${this.cluster.name}Type`;
+        }
+
+        // If the type is already defined we reference the existing definition
         if (this.definedDatatypes.has(model)) {
             return name;
         }
 
+        // Record name usage
         this.definedDatatypes.add(model);
-        if (this.definedNames.has(name)) {
-            debugger;
-            throw new InternalError(`Duplicate definitions of module-scope "${name}"`);
-        }
-        this.definedNames.add(name);
+        this.file.nameDefined(name);
 
+        // If the type is defined in a different cluster, load the cluster type
+        // rather than defining.  This will fail if the other cluster does not
+        // actually use the type.  Currently not an issue.
+        const definingScope = defining.owner(ClusterModel);
+        if (definingScope && scope !== definingScope) {
+            this.file.addImport(`cluster/definitions/${definingScope.name}Cluster`, name);
+            return name;
+        }
+
+        // Define the type
+        let definition: Entry;
         switch (model.effectiveMetatype) {
             case Metatype.enum:
-                this.defineEnum(name, model);
+                definition = this.defineEnum(name, model);
                 break;
 
             case Metatype.object:
-                this.defineStruct(name, model);
+                definition = this.defineStruct(name, model, scope);
                 break;
 
             case Metatype.bitmap:
-                this.defineBitmap(name, model);
+                definition = this.defineBitmap(name, model);
                 break;
 
             default:
                 throw new InternalError(`${model.path}: Top-level ${model.effectiveMetatype} is unsupported`);
         }
 
+        // Document the type.  For standalone definitions documentation is
+        // present on the model.  For other definitions the documentation is
+        // associated with the defining location, so just leave a comment
+        // referencing that
+        switch (model.tag) {
+            case ElementTag.Attribute:
+                definition.document({ details: `The value of the ${scope.name} ${camelize(model.name, false)} attribute`, xref: model.xref });
+                break;
+
+            case ElementTag.Command:
+                definition.document({ details: `Input to the ${scope.name} ${camelize(model.name, false)} command`, xref: model.xref });
+                break;
+
+            case ElementTag.Event:
+                definition.document({ details: `Body of the ${scope.name} ${camelize(model.name, false)} event`, xref: model.xref });
+                break;
+
+            default:
+                if (model.parent instanceof ClusterModel) {
+                    // Standalone
+                    definition.document(model);
+                } else {
+                    definition.document({ details: `The value of ${model.parent?.name}.${camelize(model.name, false)}`, xref: model.xref });
+                }
+                break;
+        }
+
         return name;
+    }
+
+    private createBounds<MIN extends string, MAX extends string>(model: ValueModel, minKey: MIN, maxKey: MAX): { [key in MIN | MAX]: number } | undefined {
+        const bounds = {} as any;
+
+        const min = FieldValue.numericValue(model.constraint.min, model.type);
+        const max = FieldValue.numericValue(model.constraint.max, model.type);
+        if (!(min || max)) {
+            return;
+        }
+
+        if (min) {
+            bounds[minKey] = min;
+        }
+        if (max) {
+            bounds[maxKey] = max;
+        }
+
+        return bounds;
     }
 }

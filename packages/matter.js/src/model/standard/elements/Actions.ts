@@ -17,17 +17,17 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "ActionList", id: 0x0, type: "list", access: "R V", conformance: "M",
-            constraint: "max 256",
-            details: "The ActionList attribute holds the list of actions. Each entry SHALL have an unique ActionID, and " +
-                     "its EndpointListID SHALL exist in the EndpointLists attribute.",
+            constraint: "max 256", default: [],
+            details: "The ActionList attribute holds the list of actions. Each entry shall have an unique ActionID, and " +
+                     "its EndpointListID shall exist in the EndpointLists attribute.",
             xref: { document: "core", section: "9.14.5.1" },
             children: [ { tag: "datatype", name: "entry", type: "ActionStruct" } ]
         },
 
         {
             tag: "attribute", name: "EndpointLists", id: 0x1, type: "list", access: "R V", conformance: "M",
-            constraint: "max 256",
-            details: "The EndpointLists attribute holds the list of endpoint lists. Each entry SHALL have an unique " +
+            constraint: "max 256", default: [],
+            details: "The EndpointLists attribute holds the list of endpoint lists. Each entry shall have an unique " +
                      "EndpointListID.",
             xref: { document: "core", section: "9.14.5.2" },
             children: [ { tag: "datatype", name: "entry", type: "EndpointListStruct" } ]
@@ -36,16 +36,49 @@ Matter.children.push({
         {
             tag: "attribute", name: "SetupUrl", id: 0x2, type: "string", access: "R V", conformance: "O",
             constraint: "max 512", default: "empty",
-            details: "The SetupURL attribute (when provided) SHALL indicate a URL; its syntax SHALL follow the syntax as " +
-                     "specified in RFC 3986, max. 512 ASCII characters. The location referenced by this URL SHALL provide " +
-                     "additional information for the actions provided:",
+
+            details: "The SetupURL attribute (when provided) shall indicate a URL; its syntax shall follow the syntax as " +
+                     "specified in RFC 3986, max. 512 ASCII characters. The location referenced by this URL shall provide " +
+                     "additional information for the actions provided:" +
+                     "\n" +
+                     "  • When used without suffix, it shall provide information about the various actions which the " +
+                     "    cluster provides." +
+                     "\n" +
+                     "    ◦ Example: SetupURL could take the value of example://Actions or https://domain.example/ " +
+                     "      Matter/bridgev1/Actions for this generic case (access generic info how to use actions " +
+                     "      provided by this cluster)." +
+                     "\n" +
+                     "  • When used with a suffix of \"/?a=\" and the decimal value of ActionID for one of the actions, it " +
+                     "    MAY provide information about that particular action. This could be a deeplink to " +
+                     "    manufacturer-app/website (associated somehow to the server node) with the " +
+                     "    information/edit-screen for this action so that the user can view and update details of the " +
+                     "    action, e.g. edit the scene, or change the wake-up experience time period." +
+                     "\n" +
+                     "    ◦ Example of SetupURL with suffix added: example://Actions/?a=12345 or " +
+                     "      https://domain.example/Matter/bridgev1/Actions/?a=12345 for linking to specific info/editing " +
+                     "      of the action with ActionID 0x3039.",
+
             xref: { document: "core", section: "9.14.5.3" }
         },
 
         {
             tag: "event", name: "StateChanged", id: 0x0, access: "V", conformance: "M", priority: "info",
-            details: "This event SHALL be generated when there is a change in the State of an ActionID during the " +
-                     "execution of an action and the most recent command using that ActionID used an InvokeID data field.",
+
+            details: "This event shall be generated when there is a change in the State of an ActionID during the " +
+                     "execution of an action and the most recent command using that ActionID used an InvokeID data field." +
+                     "\n" +
+                     "It provides feedback to the client about the progress of the action." +
+                     "\n" +
+                     "Example: When InstantActionWithTransition is invoked (with an InvokeID data field), two " +
+                     "StateChanged events will be generated:" +
+                     "\n" +
+                     "  • one when the transition starts (NewState=Active)" +
+                     "\n" +
+                     "  • one when the transition completed (NewState=Inactive) This event shall have the following data " +
+                     "    fields:" +
+                     "\n" +
+                     "This field shall be set to the ActionID of the action which has changed state.",
+
             xref: { document: "core", section: "9.14.7.1" },
 
             children: [
@@ -53,14 +86,14 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
-                    details: "This field SHALL be set to the InvokeID which was provided to the most recent command referencing " +
+                    details: "This field shall be set to the InvokeID which was provided to the most recent command referencing " +
                              "this ActionID.",
                     xref: { document: "core", section: "9.14.7.1.1" }
                 },
 
                 {
                     tag: "datatype", name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M",
-                    details: "This field SHALL be set to state that the action has changed to.",
+                    details: "This field shall be set to state that the action has changed to.",
                     xref: { document: "core", section: "9.14.7.1.2" }
                 }
             ]
@@ -68,8 +101,42 @@ Matter.children.push({
 
         {
             tag: "event", name: "ActionFailed", id: 0x1, access: "V", conformance: "M", priority: "info",
-            details: "This event SHALL be generated when there is some error which prevents the action from its normal " +
-                     "planned execution and the most recent command using that ActionID used an InvokeID data field.",
+
+            details: "This event shall be generated when there is some error which prevents the action from its normal " +
+                     "planned execution and the most recent command using that ActionID used an InvokeID data field." +
+                     "\n" +
+                     "It provides feedback to the client about the non-successful progress of the action." +
+                     "\n" +
+                     "Example: When InstantActionWithTransition is invoked (with an InvokeID data field), and another " +
+                     "controller changes the state of one or more of the involved endpoints during the transition, thus " +
+                     "interrupting the transition triggered by the action, two events would be generated:" +
+                     "\n" +
+                     "  • StateChanged when the transition starts (NewState=Active)" +
+                     "\n" +
+                     "  • ActionFailed when the interrupting command occurs (NewState=Inactive, Error=interrupted)" +
+                     "\n" +
+                     "Example: When InstantActionWithTransition is invoked (with an InvokeID data field = 1), and the " +
+                     "same client invokes an InstantAction with (the same or another ActionId and) InvokeID = 2, and this " +
+                     "second command interrupts the transition triggered by the first command, these events would be " +
+                     "generated:" +
+                     "\n" +
+                     "  • StateChanged (InvokeID=1, NewState=Active) when the transition starts" +
+                     "\n" +
+                     "  • ActionFailed (InvokeID=2, NewState=Inactive, Error=interrupted) when the second command " +
+                     "    interrupts the transition" +
+                     "\n" +
+                     "  • StateChanged (InvokeID=2, NewState=Inactive) upon the execution of the action for the second " +
+                     "    command" +
+                     "\n" +
+                     "This event shall have the following data fields:" +
+                     "\n" +
+                     "This field shall be set to the ActionID of the action which encountered an error." +
+                     "\n" +
+                     "This field shall be set to the InvokeID which was provided to the most recent command referencing " +
+                     "this ActionID." +
+                     "\n" +
+                     "This field shall be set to state that the action is in at the time of generating the event.",
+
             xref: { document: "core", section: "9.14.7.2" },
 
             children: [
@@ -78,7 +145,7 @@ Matter.children.push({
                 { tag: "datatype", name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M" },
                 {
                     tag: "datatype", name: "Error", id: 0x3, type: "ActionErrorEnum", conformance: "M",
-                    details: "This field SHALL be set to indicate the reason for non-successful progress of the action.",
+                    details: "This field shall be set to indicate the reason for non-successful progress of the action.",
                     xref: { document: "core", section: "9.14.7.2.1" }
                 }
             ]
@@ -87,7 +154,10 @@ Matter.children.push({
         {
             tag: "command", name: "InstantAction", id: 0x0, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+            details: "This command triggers an action (state change) on the involved endpoints, in a \"fire and forget\" " +
+                     "manner. Afterwards, the action’s state shall be Inactive." +
+                     "\n" +
+                     "Example: recall a scene on a number of lights.",
             xref: { document: "core", section: "9.14.6.1" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -98,7 +168,17 @@ Matter.children.push({
         {
             tag: "command", name: "InstantActionWithTransition", id: 0x1, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+
+            details: "It is recommended that, where possible (e.g., it is not possible for attributes with Boolean data " +
+                     "type), a gradual transition SHOULD take place from the old to the new state over this time period. " +
+                     "However, the exact transition is manufacturer dependent." +
+                     "\n" +
+                     "This command triggers an action (state change) on the involved endpoints, with a specified time to " +
+                     "transition from the current state to the new state. During the transition, the action’s state shall " +
+                     "be Active. Afterwards, the action’s state shall be Inactive." +
+                     "\n" +
+                     "Example: recall a scene on a number of lights, with a specified transition time.",
+
             xref: { document: "core", section: "9.14.6.2" },
 
             children: [
@@ -106,7 +186,7 @@ Matter.children.push({
                 { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" },
                 {
                     tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
-                    details: "This field SHALL indicate the transition time in 1/10th of seconds.",
+                    details: "This field shall indicate the transition time in 1/10th of seconds.",
                     xref: { document: "core", section: "9.14.6.2.1" }
                 }
             ]
@@ -115,7 +195,16 @@ Matter.children.push({
         {
             tag: "command", name: "StartAction", id: 0x2, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+
+            details: "This command triggers the commencement of an action on the involved endpoints. Afterwards, the " +
+                     "action’s state shall be Active." +
+                     "\n" +
+                     "Example: start a dynamic lighting pattern (such as gradually rotating the colors around the " +
+                     "setpoints of the scene) on a set of lights." +
+                     "\n" +
+                     "Example: start a sequence of events such as a wake-up experience involving lights moving through " +
+                     "several brightness/color combinations and the window covering gradually opening.",
+
             xref: { document: "core", section: "9.14.6.3" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -126,7 +215,14 @@ Matter.children.push({
         {
             tag: "command", name: "StartActionWithDuration", id: 0x3, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+
+            details: "This command triggers the commencement of an action on the involved endpoints, and shall change the " +
+                     "action’s state to Active. After the specified Duration, the action will stop, and the action’s " +
+                     "state shall change to Inactive." +
+                     "\n" +
+                     "Example: start a dynamic lighting pattern (such as gradually rotating the colors around the " +
+                     "setpoints of the scene) on a set of lights for 1 hour (Duration=3600).",
+
             xref: { document: "core", section: "9.14.6.4" },
 
             children: [
@@ -134,7 +230,7 @@ Matter.children.push({
                 { tag: "datatype", name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" },
                 {
                     tag: "datatype", name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                    details: "This field SHALL indicate the requested duration in seconds.",
+                    details: "This field shall indicate the requested duration in seconds.",
                     xref: { document: "core", section: "9.14.6.4.1" }
                 }
             ]
@@ -143,7 +239,10 @@ Matter.children.push({
         {
             tag: "command", name: "StopAction", id: 0x4, access: "O", conformance: "desc", direction: "request",
             response: "status",
-            details: "This command SHALL have the following data fields:",
+            details: "This command stops the ongoing action on the involved endpoints. Afterwards, the action’s state " +
+                     "shall be Inactive." +
+                     "\n" +
+                     "Example: stop a dynamic lighting pattern which was previously started with StartAction.",
             xref: { document: "core", section: "9.14.6.5" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -154,7 +253,10 @@ Matter.children.push({
         {
             tag: "command", name: "PauseAction", id: 0x5, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+            details: "This command pauses an ongoing action, and shall change the action’s state to Paused." +
+                     "\n" +
+                     "Example: pause a dynamic lighting effect (the lights stay at their current color) which was " +
+                     "previously started with StartAction.",
             xref: { document: "core", section: "9.14.6.6" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -165,7 +267,22 @@ Matter.children.push({
         {
             tag: "command", name: "PauseActionWithDuration", id: 0x6, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+
+            details: "This command pauses an ongoing action, and shall change the action’s state to Paused. After the " +
+                     "specified Duration, the ongoing action will be automatically resumed. which shall change the " +
+                     "action’s state to Active." +
+                     "\n" +
+                     "Example: pause a dynamic lighting effect (the lights stay at their current color) for 10 minutes " +
+                     "(Duration=600)." +
+                     "\n" +
+                     "The difference between Pause/Resume and Disable/Enable is on the one hand semantic (the former is " +
+                     "more of a transitionary nature while the latter is more permanent) and on the other hand these can " +
+                     "be implemented slightly differently in the implementation of the action (e.g. a Pause would be " +
+                     "automatically resumed after some hours or during a nightly reset, while an Disable would remain in " +
+                     "effect until explicitly enabled again)." +
+                     "\n" +
+                     "This field shall indicate the requested duration in seconds.",
+
             xref: { document: "core", section: "9.14.6.7" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -177,7 +294,15 @@ Matter.children.push({
         {
             tag: "command", name: "ResumeAction", id: 0x7, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+
+            details: "This command resumes a previously paused action, and shall change the action’s state to Active." +
+                     "\n" +
+                     "The difference between ResumeAction and StartAction is that ResumeAction will continue the action " +
+                     "from the state where it was paused, while StartAction will start the action from the beginning." +
+                     "\n" +
+                     "Example: resume a dynamic lighting effect (the lights' colors will change gradually, continuing " +
+                     "from the point they were paused).",
+
             xref: { document: "core", section: "9.14.6.8" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -188,7 +313,9 @@ Matter.children.push({
         {
             tag: "command", name: "EnableAction", id: 0x8, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+            details: "This command enables a certain action or automation. Afterwards, the action’s state shall be Active." +
+                     "\n" +
+                     "Example: enable a motion sensor to control the lights in an area.",
             xref: { document: "core", section: "9.14.6.9" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -199,7 +326,17 @@ Matter.children.push({
         {
             tag: "command", name: "EnableActionWithDuration", id: 0x9, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+
+            details: "This command enables a certain action or automation, and shall change the action’s state to be " +
+                     "Active. After the specified Duration, the action or automation will stop, and the action’s state " +
+                     "shall change to Disabled." +
+                     "\n" +
+                     "Example: enable a \"presence mimicking\" behavior for the lights in your home during a vacation; the " +
+                     "Duration field is used to indicated the length of your absence from home. After that period, the " +
+                     "presence mimicking behavior will no longer control these lights." +
+                     "\n" +
+                     "This field shall indicate the requested duration in seconds.",
+
             xref: { document: "core", section: "9.14.6.10" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -211,7 +348,10 @@ Matter.children.push({
         {
             tag: "command", name: "DisableAction", id: 0xa, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+            details: "This command disables a certain action or automation, and shall change the action’s state to " +
+                     "Inactive." +
+                     "\n" +
+                     "Example: disable a motion sensor to no longer control the lights in an area.",
             xref: { document: "core", section: "9.14.6.11" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -222,7 +362,17 @@ Matter.children.push({
         {
             tag: "command", name: "DisableActionWithDuration", id: 0xb, access: "O", conformance: "desc",
             direction: "request", response: "status",
-            details: "This command SHALL have the following data fields:",
+
+            details: "This command disables a certain action or automation, and shall change the action’s state to " +
+                     "Disabled. After the specified Duration, the action or automation will re-start, and the action’s " +
+                     "state shall change to either Inactive or Active, depending on the actions (see examples 4 and 6)." +
+                     "\n" +
+                     "Example: disable a \"wakeup\" experience for a period of 1 week when going on holiday (to prevent " +
+                     "them from turning on in the morning while you’re not at home). After this period, the wakeup " +
+                     "experience will control the lights as before." +
+                     "\n" +
+                     "This field shall indicate the requested duration in seconds.",
+
             xref: { document: "core", section: "9.14.6.12" },
             children: [
                 { tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M" },
@@ -233,6 +383,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "CommandBits", type: "map16", conformance: "M",
+            details: "Note - The bit allocation of this bitmap shall follow the ID’s of the Commands of this cluster.",
             xref: { document: "core", section: "9.14.4.1" },
 
             children: [
@@ -292,44 +443,61 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Scene", id: 0x1, conformance: "M",
+
                     details: "Can be used to set a static state of the associated endpoints (typically using InstantAction or " +
                              "InstantActionWithTransition), or to bring these endpoints into a more dynamic state (typically " +
                              "using StartAction), where the endpoints would e.g. gradually cycle through certain colors for a " +
                              "pleasing effect. A voice controller could use \"set\" (to map to InstantAction) or \"play\" (to map to " +
-                             "StartAction) to trig",
+                             "StartAction) to trig" +
+                             "\n" +
+                             "ger such actions." +
+                             "\n" +
+                             "Example: see examples 1 and 2.",
+
                     xref: { document: "core", section: "9.14.4.2.1" }
                 },
 
                 {
                     tag: "datatype", name: "Sequence", id: 0x2, conformance: "M",
                     details: "Indicates an action which involves a sequence of events/states of the associated endpoints, such as " +
-                             "a wake-up experience.",
+                             "a wake-up experience." +
+                             "\n" +
+                             "Example: see example 4.",
                     xref: { document: "core", section: "9.14.4.2.2" }
                 },
 
                 {
                     tag: "datatype", name: "Automation", id: 0x3, conformance: "M",
-                    details: "Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can be",
+                    details: "Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can " +
+                             "bee.g. started, stopped, paused, resumed. Example: see example 3.",
                     xref: { document: "core", section: "9.14.4.2.3" }
                 },
 
                 {
                     tag: "datatype", name: "Exception", id: 0x4, conformance: "M",
                     details: "Indicates some action which the server will execute when a certain condition (which normally does " +
-                             "not happen) is not met.",
+                             "not happen) is not met." +
+                             "\n" +
+                             "Example: lock the doors when the server’s system has detected no one is at home while the doors are " +
+                             "in the 'unlocked' state.",
                     xref: { document: "core", section: "9.14.4.2.4" }
                 },
 
                 {
                     tag: "datatype", name: "Notification", id: 0x5, conformance: "M",
-                    details: "Indicates an action that can be triggered (e.g. by InstantAction) to notify the user.",
+                    details: "Indicates an action that can be triggered (e.g. by InstantAction) to notify the user." +
+                             "\n" +
+                             "Example: play a pattern on the lights in the living room if there is someone in the garden in the " +
+                             "evening.",
                     xref: { document: "core", section: "9.14.4.2.5" }
                 },
 
                 {
                     tag: "datatype", name: "Alarm", id: 0x6, conformance: "M",
                     details: "Similar to Notification but with a higher priority (and might override other endpoint states which " +
-                             "Type=Notification would not override).",
+                             "Type=Notification would not override)." +
+                             "\n" +
+                             "Example: flash all lights in the house when CO sensor triggers.",
                     xref: { document: "core", section: "9.14.4.2.6" }
                 }
             ]
@@ -337,6 +505,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "ActionStateEnum", type: "enum8", conformance: "M",
+            details: "Note that some of these states are applicable only for certain actions, as determined by their " +
+                     "SupportedCommands.",
             xref: { document: "core", section: "9.14.4.3" },
 
             children: [
@@ -358,6 +528,8 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "EndpointListTypeEnum", type: "enum8", conformance: "M",
+            details: "The Room and Zone values are provided for the cases where a user (or the system on behalf of the " +
+                     "user) has created logical grouping of the endpoints (e.g. bridged devices) based on location.",
             xref: { document: "core", section: "9.14.4.5" },
 
             children: [
@@ -382,8 +554,16 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Zone", id: 0x2, conformance: "M",
+
                     details: "Is a more general concept where an endpoint can be part of multiple zones, e.g. a light in the " +
-                             "living",
+                             "living" +
+                             "\n" +
+                             "room can be part of the \"reading corner\" zone (subset of the lights in the living room) but also " +
+                             "part of the \"downstairs\" zone which contains all the lights on a floor, e.g. combining living room, " +
+                             "kitchen and hallway. This indicates that a user has defined this list of endpoints as something " +
+                             "they logically would like to control as a group, so Matter controllers could provide the user with " +
+                             "a way to do as such.",
+
                     xref: { document: "core", section: "9.14.4.5.3" }
                 }
             ]
@@ -397,13 +577,13 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    details: "This field SHALL provide an unique identifier used to identify an action.",
+                    details: "This field shall provide an unique identifier used to identify an action.",
                     xref: { document: "core", section: "9.14.4.6.1" }
                 },
 
                 {
                     tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]",
-                    details: "This field SHALL indicate the name (as assigned by the user or automatically by the server) " +
+                    details: "This field shall indicate the name (as assigned by the user or automatically by the server) " +
                              "associated with this action. This can be used for identifying the action to the user by the client. " +
                              "Example: \"my colorful scene\".",
                     xref: { document: "core", section: "9.14.4.6.2" }
@@ -411,7 +591,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Type", id: 0x2, type: "ActionTypeEnum", conformance: "M",
-                    details: "This field SHALL indicate the type of action. The value of Type of an action, along with its " +
+                    details: "This field shall indicate the type of action. The value of Type of an action, along with its " +
                              "SupportedCommands can be used by the client in its UX or logic to determine how to present or use " +
                              "such action. See ActionTypeEnum for details and examples.",
                     xref: { document: "core", section: "9.14.4.6.3" }
@@ -419,7 +599,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "EndpointListId", id: 0x3, type: "uint16", conformance: "M",
-                    details: "This field SHALL provide a reference to the associated endpoint list, which specifies the endpoints " +
+                    details: "This field shall provide a reference to the associated endpoint list, which specifies the endpoints " +
                              "on this Node which will be impacted by this ActionID.",
                     xref: { document: "core", section: "9.14.4.6.4" }
                 },
@@ -427,13 +607,16 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "SupportedCommands", id: 0x4, type: "CommandBits", conformance: "M",
                     constraint: "0",
-                    details: "This field is a bitmap which SHALL be used to indicate which of the cluster’s commands are sup",
+                    details: "This field is a bitmap which shall be used to indicate which of the cluster’s commands are sup" +
+                             "\n" +
+                             "ported for this particular action, with a bit set to 1 for each supported command according to the " +
+                             "table below. Other bits shall be set to 0.",
                     xref: { document: "core", section: "9.14.4.6.5" }
                 },
 
                 {
                     tag: "datatype", name: "State", id: 0x5, type: "ActionStateEnum", conformance: "M",
-                    details: "This field SHALL indicate the current state of this action.",
+                    details: "This field shall indicate the current state of this action.",
                     xref: { document: "core", section: "9.14.4.6.6" }
                 }
             ]
@@ -441,8 +624,18 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "EndpointListStruct", type: "struct", conformance: "M",
+
             details: "This data type holds the details of a single endpoint list, which relates to a set of endpoints " +
-                     "that have some logical relation, and contains the data fields below.",
+                     "that have some logical relation, and contains the data fields below." +
+                     "\n" +
+                     "This field shall provide an unique identifier used to identify the endpoint list." +
+                     "\n" +
+                     "This field shall indicate the name (as assigned by the user or automatically by the server) " +
+                     "associated with the set of endpoints in this list. This can be used for identifying the action to " +
+                     "the user by the client. Example: \"living room\"." +
+                     "\n" +
+                     "This field shall indicate the type of endpoint list, see EndpointListTypeEnum.",
+
             xref: { document: "core", section: "9.14.4.7" },
 
             children: [
@@ -452,7 +645,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Endpoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256",
-                    details: "This field SHALL provide a list of endpoint numbers.",
+                    details: "This field shall provide a list of endpoint numbers.",
                     xref: { document: "core", section: "9.14.4.7.1" },
                     children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
                 }

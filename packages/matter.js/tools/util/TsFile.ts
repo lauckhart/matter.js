@@ -5,6 +5,7 @@
  */
 
 import { Specification } from "../../src/model/index.js";
+import { serialize } from "../../src/util/String.js";
 import { writeMatterFile } from "./file.js";
 import { asObjectKey, wordWrap } from "./string.js";
 
@@ -17,7 +18,7 @@ const HEADER = `/**
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/`;
 
 const INDENT = "    ";
-const WRAP_WIDTH = 80;
+const WRAP_WIDTH = 120;
 
 type Documentation = {
     description?: string,
@@ -25,11 +26,24 @@ type Documentation = {
     xref?: Specification.CrossReference
 }
 
-abstract class Entry {
+function mapSpec(xref?: Specification.CrossReference) {
+    switch (xref?.document) {
+        case "core":
+            return "MatterCoreSpecificationV1_1";
+
+        case "cluster":
+            return "MatterApplicationClusterSpecificationV1_1";
+
+        case "device":
+            return "MatterDeviceLibrarySpecificationV1_1";
+    }
+}
+
+export abstract class Entry {
     private documentation?: Documentation;
     private docText?: string;
 
-    constructor(protected parentBlock: Block | undefined) {}
+    constructor(protected parentBlock: Block | undefined) { }
 
     get isDocumented() {
         return !!(this.documentation?.description || this.documentation?.details || this.documentation?.xref || this.docText);
@@ -37,12 +51,16 @@ abstract class Entry {
 
     /** Add a TsDoc style comment */
     document(content: string | Documentation, extra?: string) {
-        if (typeof content == "string") {
+        if (typeof content === "string") {
             this.documentation = { details: content };
         } else {
             this.documentation = content;
         }
         this.docText = extra;
+        const spec = mapSpec(this.documentation.xref);
+        if (spec) {
+            this.parentBlock?.file.addImport("spec/Specifications", spec);
+        }
         return this;
     }
 
@@ -53,8 +71,8 @@ abstract class Entry {
     protected abstract serialize(linePrefix: string): string;
 
     private createComment(linePrefix: string) {
-        let paragraphs = Array<string>();
-        
+        const paragraphs = Array<string>();
+
         if (this.documentation?.description) {
             paragraphs.push(this.documentation.description);
         }
@@ -70,32 +88,22 @@ abstract class Entry {
         const lines = wordWrap(paragraphs.join("\n"), WRAP_WIDTH - 3 - linePrefix.length);
 
         // Add xref after wrapping so we can ensure it never wraps
-        const xref = this.documentation?.xref;
-        if (xref) {
-            let spec;
-            switch (xref.document) {
-                case "core":
-                    spec = "MatterCoreSpecificationV1_1";
-                    break;
-
-                case "cluster":
-                    spec = "MatterApplicationClusterSpecificationV1_1";
-                    break;
-
-                case "device":
-                    spec = "MatterDeviceLibrarySpecificationV1_1";
-                    break;
+        const spec = mapSpec(this.documentation?.xref);
+        if (spec) {
+            if (lines.length) {
+                lines.push("");
             }
-            if (spec) {
-                if (lines.length) {
-                    lines.push("");
-                }
-                this.parentBlock!.file.addImport("spec/Specifications", spec);
-                lines.push(`@see {@link ${spec}} § ${xref.section}`);
-            }
+            lines.push(`@see {@link ${spec}} § ${this.documentation?.xref?.section}`);
         }
 
         if (lines.length) {
+            // Remove blank lines between jsdoc directies except for @see
+            for (let i = 0; i < lines.length - 1; i++) {
+                if (lines[i][0] == "@" && lines[i + 1] == "" && lines[i + 2][0] == "@" && !lines[i + 2].startsWith("@see")) {
+                    lines.splice(i + 1, 1);
+                }
+            }
+
             return `${linePrefix}/**\n${lines.map(l => `${linePrefix} * ${l}`.trimEnd()).join("\n")}\n${linePrefix} */\n`
         }
 
@@ -112,7 +120,7 @@ class Raw extends Entry {
     }
 
     serialize(linePrefix: string) {
-        if (this.text == undefined) {
+        if (this.text === undefined) {
             return "";
         }
         return this.text.split("\n").map(l => `${linePrefix}${l}`).join("\n");
@@ -121,7 +129,7 @@ class Raw extends Entry {
 
 class Atom extends Raw {
     constructor(parentBlock: Block, labelOrText: {}, text?: any) {
-        if (text == undefined) {
+        if (text === undefined) {
             text = labelOrText.toString();
         } else {
             text = `${asObjectKey(labelOrText)}: ${text}`;
@@ -153,12 +161,13 @@ export class Block extends Entry {
 
     get(index: number) {
         return this.entries[index];
-    }    
+    }
 
     serialize(linePrefix: string) {
         const pieces = new Array<string>();
         for (let i = 0; i < this.length; i++) {
-            pieces.push(`${this.get(i).toString(linePrefix)}${this.delimiterAfter(i)}`);
+            const serialized = this.get(i).toString(linePrefix);
+            pieces.push(`${serialized}${this.delimiterAfter(i, serialized)}`);
             if (i < this.length - 1) {
                 if (this.get(i) instanceof Block) {
                     // Always have blank line after blocks with following content
@@ -191,7 +200,7 @@ export class Block extends Entry {
     remove() {
         if (this.parentBlock) {
             const index = this.parentBlock.indexOf(this);
-            if (index != -1) this.parentBlock.splice(index, 1);
+            if (index !== -1) this.parentBlock.splice(index, 1);
         }
     }
 
@@ -199,7 +208,7 @@ export class Block extends Entry {
     add(...entries: Entry[]) {
         if (this.addBefore) {
             const index = this.entries.indexOf(this.addBefore);
-            if (index != -1) {
+            if (index !== -1) {
                 this.entries.splice(index, 0, ...entries);
                 return this;
             }
@@ -226,7 +235,7 @@ export class Block extends Entry {
     }
 
     /** Add a block with separate statements terminated by ";" */
-    statements(prefix: string = "", suffix = "") {
+    statements(prefix = "", suffix = "") {
         const block = new StatementBlock(this, prefix, suffix);
         this.add(block);
         return block;
@@ -246,6 +255,33 @@ export class Block extends Entry {
         return atom;
     }
 
+    /** Add an atom or block that recreates the input value */
+    value(value: any, prefix = "", suffix = "") {
+        if (value === undefined) {
+            return;
+        }
+
+        if (Array.isArray(value)) {
+            const block = this.expressions(`${prefix}[`, `]${suffix}`);
+            value.forEach(v => v === undefined ? block.atom("null") : block.value(v));
+            return block;
+        }
+
+        if (serialize.isPrimitive(value)) {
+            const serialized = serialize(value);
+            if (serialized === undefined) {
+                return;
+            }
+            return this.atom(`${prefix}${serialized}${suffix}`);
+        }
+
+        const block = this.expressions(`${prefix}{`, `}${suffix}`);
+        for (const k in value) {
+            block.value(value[k], `${asObjectKey(k)}: `);
+        }
+        return block;
+    }
+
     /** Execute logic with block configured for specific insertion point */
     insertingBefore<T>(before: Entry, fn: () => T) {
         const oldAddBefore = this.addBefore;
@@ -257,10 +293,16 @@ export class Block extends Entry {
         }
     }
 
-    protected delimiterAfter(index: number): string {
+    protected delimiterAfter(index: number, serialized: string): string {
+        // Do not delimit functions structures that eslint will complain about
+        if (serialized.match(/^(?:\s*(?:\/\*.*\*\/|export|const))*\s*(?:export)?\s*(?:enum|function|namespace)/m)) {
+            return "";
+        }
+
         if (this.isDelimited(index)) {
             return ";";
         }
+
         return "";
     }
 
@@ -284,15 +326,15 @@ abstract class NestedBlock extends Block {
     }
 
     layOutEntries(linePrefix: string, serializedEntries: string[]) {
-        let parts = Array<string>();
+        const parts = Array<string>();
         if (this.prefix) {
             parts.push(`${linePrefix}${this.prefix}`);
         }
-        
+
         let needSpace = false;
         for (let i = 0; i < serializedEntries.length; i++) {
             // Add delimiter to entry if necessary
-            const entry = `${serializedEntries[i]}${this.delimiterAfter(i)}`;
+            const entry = `${serializedEntries[i]}${this.delimiterAfter(i, serializedEntries[i])}`;
 
             // Separate documented and large elements from their siblings
             if (this.entries[i].isDocumented || entry.split("\n").length > 5) {
@@ -321,7 +363,7 @@ abstract class NestedBlock extends Block {
 }
 
 class StatementBlock extends NestedBlock {
-    constructor(parent: Block | undefined, prefix: string = "{", suffix: string = "}") {
+    constructor(parent: Block | undefined, prefix = "{", suffix = "}") {
         super(parent, prefix, suffix);
     }
 }
@@ -331,37 +373,59 @@ class StatementBlock extends NestedBlock {
 enum ExpressionLayout {
     None,
     SingleLine,
+    SingleNested,
     MultipleLines,
     Verbose
-};
+}
 
-function chooseExpressionLayout(currentLayout: ExpressionLayout, serializedEntry: string) {
-    const multiline = serializedEntry.indexOf("\n") != -1;
-    const simpleBlock = serializedEntry.match(/^(?:\[.*\]|\{.*\})$/);
+function chooseExpressionLayout(lineLength: number, serializedEntries: string[]) {
+    let currentLayout = ExpressionLayout.None;
+    for (const entry of serializedEntries) {
+        const multiline = entry.indexOf("\n") !== -1;
 
-    // If the entry is multiline but not a block, must use verbose layout
-    if (multiline && !simpleBlock) {
-        return ExpressionLayout.Verbose;
+        // Any comment or assignment automatically forces verbose layout mode
+        if (entry.match(/(?:\/\*|\/\/| = )/)) {
+            return ExpressionLayout.Verbose;
+        }
+
+        switch (currentLayout) {
+            case ExpressionLayout.None:
+                if (multiline) {
+                    currentLayout = ExpressionLayout.SingleNested;
+                } else {
+                    lineLength += entry.trim().length;
+                    if (lineLength >= WRAP_WIDTH + INDENT.length) {
+                        currentLayout = ExpressionLayout.MultipleLines;
+                    } else {
+                        currentLayout = ExpressionLayout.SingleLine;
+                    }
+                }
+                break;
+
+            case ExpressionLayout.SingleNested:
+                return ExpressionLayout.Verbose;
+
+            case ExpressionLayout.SingleLine:
+                if (multiline) {
+                    return ExpressionLayout.Verbose;
+                }
+
+                lineLength += entry.trim().length + 2;
+
+                if (lineLength >= WRAP_WIDTH + INDENT.length) {
+                    currentLayout = ExpressionLayout.MultipleLines;
+                }
+
+                break;
+
+            case ExpressionLayout.MultipleLines:
+                if (multiline) {
+                    return ExpressionLayout.Verbose;
+                }
+                break;
+        }
     }
-
-    switch (currentLayout) {
-        case ExpressionLayout.None:
-            return simpleBlock ? ExpressionLayout.Verbose : ExpressionLayout.SingleLine;
-
-        case ExpressionLayout.SingleLine:
-            if (!multiline) {
-                return ExpressionLayout.MultipleLines;
-            }
-            break;
-
-        case ExpressionLayout.MultipleLines:
-            if (!multiline) {
-                return currentLayout;
-            }
-            break;
-    }
-
-    return ExpressionLayout.Verbose;
+    return currentLayout;
 }
 
 class ExpressionBlock extends NestedBlock {
@@ -370,23 +434,38 @@ class ExpressionBlock extends NestedBlock {
     }
 
     override layOutEntries(linePrefix: string, serializedEntries: string[]) {
-        // Scan the entries to determine how we format the code
-        let layout = ExpressionLayout.None;
-        for (const entry of serializedEntries) {
-            layout = chooseExpressionLayout(layout, entry);
-            if (layout == ExpressionLayout.Verbose) {
-                // Must use least optimal "verbose" format
-                break;
-            }
+        let adornmentLength = linePrefix.length + this.prefix.length;
+        const isArrayOrObject = this.prefix.match(/[[{]/);
+        if (isArrayOrObject) {
+            adornmentLength += 2;
         }
+
+        // Scan the entries to determine how we format the code
+        const layout = chooseExpressionLayout(adornmentLength, serializedEntries);
 
         // Render optimized layouts
         switch (layout) {
             case ExpressionLayout.None:
                 return `${linePrefix}${this.prefix}${this.suffix}`;
 
+            case ExpressionLayout.SingleNested:
+                {
+                    // Need to reserialize with reduced padding
+                    let line = this.entries[0].toString(linePrefix).trim();
+                    if (isArrayOrObject) {
+                        line = ` ${line} `;
+                    }
+                    return `${linePrefix}${this.prefix}${line}${this.suffix}`;
+                }
+
             case ExpressionLayout.SingleLine:
-                return `${linePrefix}${this.prefix} ${serializedEntries[0].trim()} ${this.suffix}`;
+                {
+                    let line = serializedEntries.map(e => e.trim()).join(", ");
+                    if (isArrayOrObject) {
+                        line = ` ${line} `;
+                    }
+                    return `${linePrefix}${this.prefix}${line}${this.suffix}`;
+                }
 
             case ExpressionLayout.MultipleLines:
                 return `${linePrefix}${this.prefix}\n${serializedEntries.join(",\n")}\n${linePrefix}${this.suffix}`;
@@ -429,7 +508,7 @@ export class TsFile extends Block {
             this.imports.set(file, list);
         }
         if (name) {
-            if (list.indexOf(name) == -1) list.push(name);
+            if (list.indexOf(name) === -1) list.push(name);
         }
         return this;
     }
@@ -447,7 +526,12 @@ export class TsFile extends Block {
             });
         }
 
-        writeMatterFile(`${this.name}.ts`, this);
+        let body = this.toString();
+        if (body[body.length - 1] !== "\n") {
+            body += "\n";
+        }
+
+        writeMatterFile(`${this.name}.ts`, body);
         return this;
     }
 }

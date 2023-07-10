@@ -38,7 +38,7 @@ function scanCluster(clusterRef: HtmlReference) {
         logger.info("ingest");
         let definition: ClusterReference;
         Logger.nest(() => definition = loadCluster(clusterRef));
-        
+
         logger.info("translate");
         Logger.nest(() => clusters.push(...translateCluster(definition)));
     });

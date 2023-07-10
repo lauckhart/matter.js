@@ -30,7 +30,7 @@ export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
     constructor(definition: Quality.Definition) {
         super(definition);
 
-        if (typeof definition == "string") {
+        if (typeof definition === "string") {
             this.parse(this, definition);
         } else if (Array.isArray(definition)) {
             definition.map((f) => this.parse(this, f));
@@ -41,17 +41,17 @@ export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
 
     private parse(quality: Quality, definition: string) {
         const text = definition.toUpperCase();
-        if (text == "DERIVED") {
+        if (text === "DERIVED") {
             return;
         }
 
         let disallow = false;
         for (const char of text) {
-            if (char == " " || char == "\t") {
+            if (char === " " || char === "\t") {
                 continue;
             }
 
-            if (char == "!") {
+            if (char === "!") {
                 disallow = true;
                 continue;
             }
@@ -134,7 +134,7 @@ export namespace Quality {
     /**
      * Runtime version of QualityFlag.
      */
-    export const FlagNames: FlagName[] = [ "X", "N", "F", "S", "P", "C", "I" ];
+    export const FlagNames: FlagName[] = ["X", "N", "F", "S", "P", "C", "I"];
 
     /**
      * Quality values that apply to data fields.

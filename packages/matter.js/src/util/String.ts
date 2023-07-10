@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export function capitalize(text: string) {
-    return text[0].toUpperCase() + text.slice(1);
+export function capitalize<T extends string>(text: T) {
+    return text[0].toUpperCase() + text.slice(1) as Capitalize<T>;
 }
 
 /**
@@ -47,7 +47,7 @@ export function camelize(name: string, upperFirst = true) {
 
         addPiece(i);
 
-        if ((name[i] >= "0" && name[i] <= "9") || name[i] == "$") {
+        if ((name[i] >= "0" && name[i] <= "9") || name[i] === "$") {
             pieces.push(name[i])
         }
 
@@ -76,36 +76,44 @@ export function serialize(value: any) {
     const visited = new Set();
 
     function asValidKey(key: string) {
-        if (key.match(/[a-z_\$][a-z_\$0-9]*/i)) {
+        if (key.match(/[a-z_$][a-z_$0-9]*/i)) {
             return key;
         }
         return JSON.stringify(key);
     }
-    
+
     function serializeOne(value: any): string | undefined {
         if (value === undefined) {
             return;
         }
-        if (value == null) {
+        if (value === null) {
             return "null";
         }
         if (value[serialize.SERIALIZE]) {
             return value[serialize.SERIALIZE]();
         }
-        if (typeof value == "function") {
+        if (typeof value === "function") {
             return;
         }
-        if (typeof value == "bigint" || value instanceof BigInt) {
+        if (typeof value === "bigint" || value instanceof BigInt) {
             return value.toString();
         }
-        if (typeof value == "number" || value instanceof Number) {
+        if (typeof value === "number" || value instanceof Number) {
             return value.toString();
         }
-        if (typeof value == "string") {
+        if (typeof value === "string") {
             return JSON.stringify(value);
         }
-        if (typeof value == "boolean") {
+        if (typeof value === "boolean") {
             return value ? "true" : "false";
+        }
+        if (ArrayBuffer.isView(value)) {
+            const dv = new DataView(value.buffer);
+            const bytes = Array<string>();
+            for (let i = 0; i < dv.byteLength; i++) {
+                bytes.push(dv.getUint8(i).toString(16).padStart(2, "0"));
+            }
+            return bytes.join("");
         }
 
         // Composite objects after this
@@ -127,9 +135,9 @@ export function serialize(value: any) {
             }
 
             const entries = Object.entries(value)
-                .map(([k, v]) => [ k, serializeOne(v) ])
+                .map(([k, v]) => [k, serializeOne(v)])
                 .filter(([_k, v]) => v !== undefined)
-                .map(([k, v]) => `${asValidKey(k!)}: ${v}`);
+                .map(([k, v]) => `${asValidKey(k ?? "")}: ${v}`);
 
             if (!entries.length) {
                 return "{}";
@@ -155,12 +163,56 @@ export namespace serialize {
      * representation.
      */
     export function asIs(value: any) {
-        if (typeof value == "string") {
+        if (typeof value === "string") {
             value = new String(value);
         }
-        if (value != undefined) {
+        if (value !== undefined && value !== null) {
             value[SERIALIZE] = function() { return this.toString(); };
         }
         return value;
     }
+
+    /**
+     * Test whether a value serializes as a structure or a primitive.
+     */
+    export function isPrimitive(value: any) {
+        if (
+            value === undefined
+            || value === null
+            || value instanceof Date
+            || ArrayBuffer.isView(value)
+            || value[SERIALIZE]
+        ) {
+            return true;
+        }
+
+        if (Array.isArray(value)) {
+            return false;
+        }
+
+        return typeof value !== "object";
+    }
+}
+
+/**
+ * Create a human readable version of a list of items.
+ */
+export function describeList(setType: "and" | "or", ...entries: string[]) {
+    const text = Array<string>();
+
+    if (entries.length === 1) {
+        return entries[0];
+    }
+
+    for (let i = 0; i < entries.length; i++) {
+        if (i === entries.length - 1) {
+            text.push(setType, entries[i]);
+        } else if (i === entries.length - 2) {
+            text.push(entries[i]);
+        } else {
+            text.push(`${entries[i]},`);
+        }
+    }
+
+    return text.join(" ");
 }

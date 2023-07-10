@@ -4,20 +4,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Logger } from "../../../log/Logger.js";
 import { Conformance, Constraint, Quality } from "../../aspects/index.js";
 import { ValueModel } from "../../models/index.js";
-import { Validator } from "./Validator.js";
+import { RecordValidator } from "./RecordValidatorInterface.js";
 import { addConformance } from "./conformance.js";
 import { addConstraint } from "./constraint.js";
 import { addQuality } from "./quality.js";
 import { addType } from "./type.js";
+import { type ValidatorImplementation } from "./ValidatorImplementation.js";
+import { camelize } from "../../../util/String.js";
+import { FeatureSet } from "../../definitions/index.js";
+
+const logger = new Logger("ValidatorBuilder");
 
 export class ValidatorBuilder extends Array<string> {
     hasChoices = false;
 
-    constructor(fields: ValueModel[]) {
+    constructor(fields: ValueModel[], public definedFeatures: FeatureSet, public enabledFeatures: FeatureSet) {
         super(
-            "this.result = {}",
+            "this.result = { valid: true }",
             "let v"
         );
 
@@ -30,9 +36,9 @@ export class ValidatorBuilder extends Array<string> {
             if (!aspects.length) {
                 continue;
             }
-    
-            this.push(`v = record[JSON.stringify(${child.name})]`);
-            this.push("if (v != undefined) {");
+
+            this.push(`v = record[${JSON.stringify(camelize(child.name, false))}]`);
+
             for (const aspect of aspects) {
                 if (aspect instanceof Constraint) {
                     addConstraint(this, child, aspect);
@@ -43,10 +49,8 @@ export class ValidatorBuilder extends Array<string> {
                 }
                 addType(this, child);
             }
-
-            this.push("}");
         }
-        
+
         if (this.hasChoices) {
             this.unshift("delete this.choices");
             this.push("this.checkChoices()");
@@ -55,13 +59,45 @@ export class ValidatorBuilder extends Array<string> {
     }
 
     addTest(test: string, code: string, source: ValueModel, message: string) {
-        this.push(`if (!${test}) { this.error(${JSON.stringify(code)}, ${JSON.stringify(source.path)}, ${JSON.stringify(message)}) }`);
+        if (test == "true") {
+            return;
+        }
+        this.push(`if (!(${test})) { this.error(${JSON.stringify(code)}, ${JSON.stringify(source.path)}, ${JSON.stringify(message)}) }`);
+    }
+
+    logInternalEvaluationError(message: string, e: any) {
+        logger.error(`${message}: ${e}`);
+        this.logFailure();
+    }
+
+    logFailure() {
+        logger.debug("Failing record validator implementation:");
+        Logger.nest(() => {
+            const lineNoWidth = (this.length - 1).toString().length;
+            for (let i = 0; i < this.length; i++) {
+                logger.debug(`${i.toString().padStart(lineNoWidth, " ")} ${this[i]}`)
+            }
+        });
     }
 
     compile() {
-        return new Function(
-            "record",
-            this.join("\n")
-        ) as Validator["validate"];
+        const logInternalEvaluationError = this.logInternalEvaluationError.bind(this);
+        try {
+            const fn = new Function(
+                "record",
+                this.join("\n")
+            ) as RecordValidator["validate"];
+            return function(this: ValidatorImplementation, record: { [name: string]: any }) {
+                try {
+                    return fn.call(this, record);
+                } catch (e) {
+                    logInternalEvaluationError(`Record validator evaluation failed`, e);
+                    throw e;
+                }
+            }
+        } catch (e) {
+            logInternalEvaluationError("Record validator compilation failed", e);
+            throw e;
+        }
     }
 }

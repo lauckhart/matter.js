@@ -20,7 +20,7 @@ function convertTable(el: HTMLTableElement) {
     for (const tr of el.querySelectorAll("tr")) {
         const cells = tr.querySelectorAll("td, th");
 
-        if (cells.length == 1) {
+        if (cells.length === 1) {
             table.notes.push(cells[0] as HTMLElement);
             continue;
         }
@@ -38,7 +38,7 @@ function convertTable(el: HTMLTableElement) {
         for (let i = 0; i < table.fields.length; i++) {
             row[table.fields[i]] = cells.item(i) as HTMLElement;
         }
-        
+
         table.rows.push(row);
     }
 
@@ -49,15 +49,15 @@ function convertTable(el: HTMLTableElement) {
     // Detect this case and correct by concatenating the contents of rows onto
     // the first row
     const col1 = table.fields[0];
-    if (col1 != undefined) {
+    if (col1 !== undefined) {
         // Scan the table.  We treat as broken if there are multiple rows but
         // the first column is empty except on the first row
         const looksBorked = table.rows.length > 1 && table.rows.every((row, i) => {
             let text = row[col1]?.textContent?.trim();
-            if (text == "") {
+            if (text === "") {
                 text = undefined;
             }
-            return (!i && text != undefined) || (i && text == undefined);
+            return (!i && text !== undefined) || (i && text === undefined);
         });
 
         // If above test succeeds, concatenate all cells in column into first
@@ -187,7 +187,7 @@ export function* scanSection(ref: HtmlReference) {
                         // Already faking; treat these like a sub-headings to our fake heading
                         yield* emit();
                         fakeSection.subsection++;
-                        currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}.${fakeSection.subsection}`}};
+                        currentRef = { ...ref, name: text, xref: { ...ref.xref, section: `${fakeSection.actual}.${fakeSection.section}.${fakeSection.subsection}` } };
                         namesIdentified.add(text);
                         break;
                     } else if (text?.match(/^[a-z0-9]+(?:Enum|Struct| Attribute| Command| Event| Field| Value)$/i)) {
@@ -214,8 +214,11 @@ export function* scanSection(ref: HtmlReference) {
                     }
 
                     // Save the first paragraph of the section
-                    if (text && currentRef && !currentRef.firstParagraph) {
-                        currentRef.firstParagraph = element as HTMLParagraphElement;
+                    if (text && element.className !== "nav" && currentRef) {
+                        if (!currentRef.prose) {
+                            currentRef.prose = [];
+                        }
+                        currentRef.prose.push(element);
                     }
                     break;
 
@@ -235,7 +238,7 @@ export function* scanSection(ref: HtmlReference) {
                     const other = currentRef.table;
                     if (other) {
                         if (table.rows.length) {
-                            if (!other.rows.length || Object.keys(other.rows[0]).join("/") == Object.keys(table.rows[0]).join("/")) {
+                            if (!other.rows.length || Object.keys(other.rows[0]).join("/") === Object.keys(table.rows[0]).join("/")) {
                                 // Merge tables
                                 other.notes.push(...table.notes)
                                 other.rows.push(...table.rows);

@@ -13,7 +13,7 @@ import { EndpointElement } from "./EndpointElement.js";
  */
 export type NodeElement = BaseElement & {
     id: number,
-    tag: `${NodeElement.Tag}`,    
+    tag: `${NodeElement.Tag}`,
     children?: EndpointElement[]
 }
 

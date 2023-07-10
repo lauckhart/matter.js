@@ -6,127 +6,210 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * This message is sent in response to the GetSetupPIN command, and contains
- * the Setup PIN code, or null when the account identified in the request does
- * not match the active account of the running Content App.
+ * Account Login
  *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2
+ * This cluster provides commands that facilitate user account login on a Content App or a node. For example, a Content
+ * App running on a Video Player device, which is represented as an endpoint (see [TV Architecture]), can use this
+ * cluster to help make the user account on the Content App match the user account on the Client.
+ *
+ * Use this factory function to create an AccountLogin cluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2
  */
-export const GetSetupPinResponseRequest = TlvObject({
-    /**
-     * This field SHALL provide the setup PIN code as a text string at least 11
-     * characters in length or null to indicate that the accounts do not match.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2.1
-     */
-    SetupPin: TlvField(0, TlvNullable(TlvString.bound({ minLength: 11 })))
-});
+export function AccountLoginCluster() {
+    const cluster = Cluster({ ...AccountLoginCluster.Metadata, ...AccountLoginCluster.BaseComponent });
+    return cluster as unknown as AccountLoginCluster.Type;
+}
 
 /**
- * The purpose of this command is to determine if the active user account of
- * the given Content App matches the active user account of a given
- * Commissionee, and when it does, return a Setup PIN code which can be used
- * for password-authenticated session establishment (PASE) with the
- * Commissionee.
+ * Input to the AccountLogin getSetupPin command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.1
  */
-export const GetSetupPinRequest = TlvObject({
+export const TlvGetSetupPinRequest = TlvObject({
     /**
-     * This attribute SHALL specify the client’s Temporary Account Identifier.
-     * The length of this field SHALL be at least 16 characters to protect the
-     * account holder against password guessing attacks.
+     * This attribute shall specify the client’s Temporary Account Identifier. The length of this field shall be at
+     * least 16 characters to protect the account holder against password guessing attacks.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.1.1
      */
-    TempAccountIdentifier: TlvField(0, TlvString)
+    tempAccountIdentifier: TlvField(0, TlvString)
 });
 
 /**
- * The purpose of this command is to allow the Content App to assume the user
- * account of a given Commissionee by leveraging the Setup PIN code input by
- * the user during the commissioning process.
+ * Input to the AccountLogin getSetupPinResponse command
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2
+ */
+export const TlvGetSetupPinResponse = TlvObject({
+    /**
+     * This field shall provide the setup PIN code as a text string at least 11 characters in length or null to
+     * indicate that the accounts do not match.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2.1
+     */
+    setupPin: TlvField(0, TlvNullable(TlvString.bound({ minLength: 11 })))
+});
+
+/**
+ * Input to the AccountLogin login command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.3
  */
-export const LoginRequest = TlvObject({
+export const TlvLoginRequest = TlvObject({
     /**
-     * This field SHALL specify the client’s temporary account identifier.
+     * This field shall specify the client’s temporary account identifier.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.3.1
      */
-    TempAccountIdentifier: TlvField(0, TlvString),
+    tempAccountIdentifier: TlvField(0, TlvString),
 
     /**
-     * This field SHALL provide the setup PIN code as a text string at least 11
-     * characters in length.
+     * This field shall provide the setup PIN code as a text string at least 11 characters in length.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.3.2
      */
-    SetupPin: TlvField(1, TlvString.bound({ minLength: 11 }))
+    setupPin: TlvField(1, TlvString.bound({ minLength: 11 }))
 });
 
 export namespace AccountLoginCluster {
-    export const id = 1294;
-    export const name = "AccountLogin";
-    export const revision = 1;
+    export type Type =
+        typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
+        & typeof BaseComponent;
 
-    const Base = {
+    /**
+     * AccountLogin cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2
+     */
+    export const Metadata = ClusterMetadata({ id: 0x50e, name: "AccountLogin", revision: 1, features: {} });
+
+    /**
+     * A AccountLoginCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         commands: {
             /**
-             * The purpose of this command is to determine if the active user
-             * account of the given Content App matches the active user account
-             * of a given Commissionee, and when it does, return a Setup PIN
-             * code which can be used for password-authenticated session
-             * establishment (PASE) with the Commissionee.
+             * The purpose of this command is to determine if the active user account of the given Content App matches
+             * the active user account of a given Commissionee, and when it does, return a Setup PIN code which can be
+             * used for password-authenticated session establishment (PASE) with the Commissionee.
+             *
+             * For example, a Video Player with a Content App Platform may invoke this command on one of its Content
+             * App endpoints to facilitate commissioning of a Phone App made by the same vendor as the Content App. If
+             * the accounts match, then the Content App may return a setup code that can be used by the Video Player to
+             * commission the Phone App without requiring the user to physically input a setup code.
+             *
+             * The account match is determined by the Content App using a method which is outside the scope of this
+             * specification and will typically involve a central service which is in communication with both the
+             * Content App and the Commissionee. The GetSetupPIN command is needed in order to provide the
+             * Commissioner/Admin with a Setup PIN when this Commissioner/Admin is operated by a different vendor from
+             * the Content App.
+             *
+             * This method is used to facilitate Setup PIN exchange (for PASE) between Commissioner and Commissionee
+             * when the same user account is active on both nodes. With this method, the Content App satisfies proof of
+             * possession related to commissioning by requiring the same user account to be active on both Commissionee
+             * and Content App, while the Commissioner/Admin ensures user consent by prompting the user prior to
+             * invocation of the command.
+             *
+             * Upon receipt of this command, the Content App checks if the account associated with the Temporary
+             * Account Identifier sent by the client is the same account that is active on itself. If the accounts are
+             * the same, then the Content App returns the GetSetupPIN Response which includes a Setup PIN that may be
+             * used for PASE with the Commissionee.
+             *
+             * The Temporary Account Identifier for a Commissionee may be populated with the Rotating ID field of the
+             * client’s commissionable node advertisement (see Rotating Device Identifier section in [MatterCore] )
+             * encoded as an octet string where the octets of the Rotating Device Identifier are encoded as 2-character
+             * sequences by representing each octet’s value as a 2-digit hexadecimal number, using uppercase letters.
+             *
+             * The Setup PIN is an 11 character string so that it can accommodate different future formats, including
+             * alpha-numeric encodings. For a Commissionee it shall be populated with the Manual Pairing
+             *
+             * Code (see Manual Pairing Code section in [MatterCore] ) encoded as a string.
+             *
+             * The Server shall implement rate limiting to prevent brute force attacks. No more than 10 unique requests
+             * in a 10 minute period shall be allowed; a command response status of FAILURE should sent for additional
+             * commands received within the 10 minute period. Because access to this command is limited to nodes with
+             * Admin-level access, and the user is prompted for consent prior to Commissioning, there are in place
+             * multiple obstacles to successfully mounting a brute force attack. A Content App that supports this
+             * command shall ensure that the Temporary Account Identifier used by its clients is not valid for more
+             * than 10 minutes.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.1
              */
-            getSetupPin: Command(0, GetSetupPinRequest, 1, GetSetupPinResponseRequest),
+            getSetupPin: Command(0, TlvGetSetupPinRequest, 1, TlvGetSetupPinResponse),
 
             /**
-             * This message is sent in response to the GetSetupPIN command, and
-             * contains the Setup PIN code, or null when the account identified
-             * in the request does not match the active account of the running
-             * Content App.
+             * This message is sent in response to the GetSetupPIN command, and contains the Setup PIN code, or null
+             * when the account identified in the request does not match the active account of the running Content App.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.2
              */
-            getSetupPinResponse: Command(1, GetSetupPinResponseRequest, 1, TlvNoResponse),
+            getSetupPinResponse: Command(1, TlvGetSetupPinResponse, 1, TlvNoResponse),
 
             /**
-             * The purpose of this command is to allow the Content App to
-             * assume the user account of a given Commissionee by leveraging
-             * the Setup PIN code input by the user during the commissioning
-             * process.
+             * The purpose of this command is to allow the Content App to assume the user account of a given
+             * Commissionee by leveraging the Setup PIN code input by the user during the commissioning process.
+             *
+             * For example, a Video Player with a Content App Platform may invoke this command on one of its Content
+             * App endpoints after the commissioning has completed of a Phone App made by the same vendor as the
+             * Content App. The Content App may determine whether the Temporary Account Identifier maps to an account
+             * with a corresponding Setup PIN and, if so, it may automatically login to the account for the
+             * corresponding user. The end result is that a user performs commissioning of a Phone App to a Video
+             * Player by inputting the Setup PIN for the Phone App into the Video Player UX. Once commissioning has
+             * completed, the Video Player invokes this command to allow the corresponding Content App to assume the
+             * same user account as the Phone App.
+             *
+             * The verification of Setup PIN for the given Temporary Account Identifier is determined by the Content
+             * App using a method which is outside the scope of this specification and will typically involve a central
+             * service which is in communication with both the Content App and the Commissionee. Implementations of
+             * such a service should impose aggressive time outs for any mapping of Temporary Account Identifier to
+             * Setup PIN in order to prevent accidental login due to delayed invocation.
+             *
+             * Upon receipt, the Content App checks if the account associated with the client’s Temp Account Identifier
+             * has a current active Setup PIN with the given value. If the Setup PIN is valid for the user account
+             * associated with the Temp Account Identifier, then the Content App MAY make that user account active.
+             *
+             * The Temporary Account Identifier for a Commissionee may be populated with the Rotating ID field of the
+             * client’s commissionable node advertisement encoded as an octet string where the octets of the Rotating
+             * Device Identifier are encoded as 2-character sequences by representing each octet’s value as a 2-digit
+             * hexadecimal number, using uppercase letters.
+             *
+             * The Setup PIN for a Commissionee may be populated with the Manual Pairing Code encoded as a string of
+             * decimal numbers.
+             *
+             * The Server shall implement rate limiting to prevent brute force attacks. No more than 10 unique requests
+             * in a 10 minute period shall be allowed; a command response status of FAILURE should sent for additional
+             * commands received within the 10 minute period. Because access to this command is limited to nodes with
+             * Admin-level access, and the user is involved when obtaining the SetupPIN, there are in place multiple
+             * obstacles to successfully mounting a brute force attack. A Content App that supports this command shall
+             * ensure that the Temporary Account Identifier used by its clients is not valid for more than 10 minutes.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.3
              */
-            login: Command(2, LoginRequest, 2, TlvNoResponse),
+            login: Command(2, TlvLoginRequest, 2, TlvNoResponse),
 
             /**
-             * The purpose of this command is to instruct the Content App to
-             * clear the current user account. This command SHOULD be used by
-             * clients of a Content App to indicate the end of a user session.
+             * The purpose of this command is to instruct the Content App to clear the current user account. This
+             * command SHOULD be used by clients of a Content App to indicate the end of a user session.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.4
              */
             logout: Command(3, TlvNoArguments, 3, TlvNoResponse)
         }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
     });
-};
+
+    /**
+     * This cluster supports all AccountLogin features.
+     */
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
+}

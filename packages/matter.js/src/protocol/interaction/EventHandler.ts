@@ -6,7 +6,7 @@
 
 import { StorageContext } from "../../storage/StorageContext.js";
 import { StorageManager } from "../../storage/StorageManager.js";
-import { EventPriority } from "../../cluster/index.js";
+import { EventPriority } from "../../cluster/Cluster.js";
 
 const MAX_EVENTS = 10_000;
 

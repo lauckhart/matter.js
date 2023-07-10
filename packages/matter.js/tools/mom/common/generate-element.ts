@@ -9,11 +9,11 @@ import { serialize } from "../../../src/util/String.js";
 import { Block } from "../../util/TsFile.js";
 import { wordWrap } from "../../util/string.js";
 
-export function generateElement(target: Block, element: AnyElement, prefix: string = "", suffix = "") {
+export function generateElement(target: Block, element: AnyElement, prefix = "", suffix = "") {
     const block = target.expressions(`${prefix}{`, `}${suffix}`);
 
-    const fields = element.valueOf() as { [ name: string ]: any };
-    
+    const fields = element.valueOf() as { [name: string]: any };
+
     delete fields.tag;
     delete fields.xref;
     delete fields.children;
@@ -24,7 +24,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
         `tag: ${serialize(element.tag)}`,
         `name: ${serialize(element.name)}`
     );
-    if (element.id != undefined) {
+    if (element.id !== undefined) {
         const idStr = element.id < 0
             ? `${element.id}`
             : `0x${element.id.toString(16)}`;
@@ -36,7 +36,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
         properties.push(`type: ${serialize((element as any).type)}`);
         delete fields.type;
     }
-    
+
     // Next: Other fields
     properties.push(
         ...Object.entries(fields)
@@ -51,7 +51,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
         length += property.length + (length ? 2 : 0);
         if (row.length && length >= 100) {
             block.atom(row.join(", "));
-            row = [ property ];
+            row = [property];
             length = property.length;
         } else {
             row.push(property);
@@ -69,7 +69,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
                 ? "         "
                 : "details: ";
             const suffix = i < lines.length - 1 ? " +" : "";
-            lines[i] = `${prefix}${serialize(lines[i] == "" ? "\n" : lines[i])}${suffix}`;
+            lines[i] = `${prefix}${serialize(lines[i] === "" ? "\n" : lines[i])}${suffix}`;
         }
         const text = lines.join("\n");
         if (text) {
@@ -87,7 +87,7 @@ export function generateElement(target: Block, element: AnyElement, prefix: stri
     if (children?.length) {
         const childBlock = block.expressions(`children: [`, "]");
         for (const child of children) {
-            generateElement(childBlock, child as AnyElement);
+            generateElement(childBlock, child);
         }
     }
 }

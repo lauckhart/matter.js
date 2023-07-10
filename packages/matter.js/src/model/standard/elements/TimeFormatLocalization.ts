@@ -21,28 +21,27 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.4.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "CALFMT", id: 0x0, description: "CalendarFormat",
-                    details: "The Node can be configured to use different calendar formats when conveying values to a user."
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "CALFMT", id: 0x0, description: "CalendarFormat",
+                details: "The Node can be configured to use different calendar formats when conveying values to a user."
+            } ]
         },
 
         {
-            tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW",
+            tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW VM",
             conformance: "M", default: null, quality: "X N",
-            details: "The HourFormat attribute SHALL represent the format that the Node is currently configured to use " +
-                     "when conveying the hour unit of time. If provided, this value SHALL take priority over any unit",
+            details: "The HourFormat attribute shall represent the format that the Node is currently configured to use " +
+                     "when conveying the hour unit of time. If provided, this value shall take priority over any unit" +
+                     "\n" +
+                     "implied through the ActiveLocale Attribute.",
             xref: { document: "core", section: "11.4.6.1" }
         },
 
         {
-            tag: "attribute", name: "ActiveCalendarType", id: 0x1, type: "CalendarTypeEnum", access: "RW",
+            tag: "attribute", name: "ActiveCalendarType", id: 0x1, type: "CalendarTypeEnum", access: "RW VM",
             conformance: "CALFMT", default: null, quality: "X N",
-            details: "The ActiveCalendarType attribute SHALL represent the calendar format that the Node is currently " +
-                     "configured to use when conveying dates. If provided, this value SHALL take priority over any unit " +
+            details: "The ActiveCalendarType attribute shall represent the calendar format that the Node is currently " +
+                     "configured to use when conveying dates. If provided, this value shall take priority over any unit " +
                      "implied through the ActiveLocale Attribute.",
             xref: { document: "core", section: "11.4.6.2" }
         },
@@ -50,10 +49,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "SupportedCalendarTypes", id: 0x2, type: "list", access: "R V",
             conformance: "CALFMT", constraint: "desc", quality: "F",
-            details: "The SupportedCalendarTypes attribute SHALL represent a list of CalendarTypeEnum values that are " +
-                     "supported by the Node. The list SHALL NOT contain any duplicate entries. The ordering of items " +
+            details: "The SupportedCalendarTypes attribute shall represent a list of CalendarTypeEnum values that are " +
+                     "supported by the Node. The list shall NOT contain any duplicate entries. The ordering of items " +
                      "within the list SHOULD NOT express any meaning. The maximum length of the SupportedCalendarTypes " +
-                     "list SHALL be equivalent to the number of enumerations within CalendarTypeEnum.",
+                     "list shall be equivalent to the number of enumerations within CalendarTypeEnum.",
             xref: { document: "core", section: "11.4.6.3" },
             children: [ { tag: "datatype", name: "entry", type: "CalendarTypeEnum" } ]
         },

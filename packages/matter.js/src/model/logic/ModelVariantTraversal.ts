@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../common/index.js";
-import { Logger } from "../../log/index.js";
+import { InternalError } from "../../common/InternalError.js";
+import { Logger } from "../../log/Logger.js";
 import { ElementTag } from "../definitions/index.js";
 import { AnyElement } from "../elements/index.js";
 import { CommandModel, Model } from "../models/index.js";
@@ -64,7 +64,7 @@ export abstract class ModelVariantTraversal<S = void> {
      * of this list implies the priority used for choosing a name when multiple
      * model variants have different names.
      */
-    constructor(private sourceNames: string[]) {}
+    constructor(private sourceNames: string[]) { }
 
     /**
      * Initiate traversal.  The class is stateful so this call should not be
@@ -82,11 +82,11 @@ export abstract class ModelVariantTraversal<S = void> {
         this.visiting = true;
         try {
             return this.visitVariants(this.createVariantDetail(
-                Object.fromEntries(Object.entries(variants).map(([ sourceName, element ]) => {
+                Object.fromEntries(Object.entries(variants).map(([sourceName, element]) => {
                     if (!(element instanceof Model)) {
                         element = Model.create(element);
                     }
-                    return [ sourceName, element ];
+                    return [sourceName, element];
                 }))
             ));
         } finally {
@@ -111,7 +111,7 @@ export abstract class ModelVariantTraversal<S = void> {
     protected getCanonicalName(model: Model) {
         if (this.clusterState) {
             const name = this.clusterState.canonicalNames.get(model);
-            if (name != undefined) {
+            if (name !== undefined) {
                 return name;
             }
         }
@@ -122,7 +122,7 @@ export abstract class ModelVariantTraversal<S = void> {
      * Determine if we are entering a cluster and install cluster state if so.
      */
     protected enterCluster(variants: VariantDetail) {
-        if (variants.tag == ElementTag.Cluster) {
+        if (variants.tag === ElementTag.Cluster) {
             this.clusterState = {
                 canonicalNames: computeCanonicalNames(this.sourceNames, variants)
             };
@@ -143,12 +143,26 @@ export abstract class ModelVariantTraversal<S = void> {
 
                 // Group children across variants
                 const mappings = this.mapChildren(variants);
-        
+
                 // Visit children
                 const result = Array<S>();
                 for (const mapping of Object.values(mappings)) {
-                    for (const variants of mapping.slots) {
-                        const detail = this.createVariantDetail(variants);
+                    mappings: for (const childVariants of mapping.slots) {
+                        const detail = this.createVariantDetail(childVariants);
+
+                        // If a cluster child is defined directly in one variant but inherited in another, ignore the
+                        // direct variant so we will continue to properly reflect the inheritance structure
+                        if (variants.tag === ElementTag.Cluster) {
+                            for (const k in variants.map) {
+                                if (childVariants[k] === undefined) {
+                                    const inherited = variants.map[k].base?.member(detail.name, [detail.tag]);
+                                    if (inherited) {
+                                        continue mappings;
+                                    }
+                                }
+                            }
+                        }
+
                         result.push(this.visitVariants(detail));
                     }
                 }
@@ -179,7 +193,7 @@ export abstract class ModelVariantTraversal<S = void> {
         const mappings = {} as { [tag: string]: ChildMapping };
 
         // Iterate over each model variant
-        for (const [ sourceName, variant ] of Object.entries(variants.map)) {
+        for (const [sourceName, variant] of Object.entries(variants.map)) {
             // For each child of this variant, associated it with a slot
             for (let i = 0; i < variant.children.length; i++) {
                 const child = variant.children[i];
@@ -192,17 +206,17 @@ export abstract class ModelVariantTraversal<S = void> {
                     (mappings[child.tag] = { slots: [], idToSlot: {}, nameToSlot: {} });
 
                 const childId = child.effectiveId;
-                let childName = this.getCanonicalName(child);
+                const childName = this.getCanonicalName(child);
 
                 let slot;
                 let idStr: string | undefined;
-                if (childId != undefined) {
+                if (childId !== undefined) {
                     idStr = childId.toString();
 
                     // Commands may re-use the ID for request and response
                     // So append the direction to the ID
                     if (child instanceof CommandModel) {
-                        idStr = `${idStr}:${(child as CommandModel).direction}`
+                        idStr = `${idStr}:${child.direction}`
                     }
 
                     // Find existing slot by ID
@@ -210,18 +224,18 @@ export abstract class ModelVariantTraversal<S = void> {
                 }
 
                 // Find existing slot by name
-                if (slot == undefined) {
+                if (slot === undefined) {
                     slot = mapping.nameToSlot[childName];
                 }
 
                 // Create a new slot if necessary
-                if (slot == undefined) {
+                if (slot === undefined) {
                     slot = mapping.slots.length;
                     mapping.slots.push({});
                 }
 
                 // Map the child's ID to the slot
-                if (idStr != undefined) {
+                if (idStr !== undefined) {
                     if (mapping.idToSlot[idStr] === undefined) {
                         mapping.idToSlot[idStr] = slot;
                     }
@@ -244,8 +258,7 @@ export abstract class ModelVariantTraversal<S = void> {
      * Create a VariantDetail from a VariantMap.
      */
     private createVariantDetail(map: VariantMap):
-        VariantDetail
-    {
+        VariantDetail {
         let tag: ElementTag | undefined;
         let id: number | undefined;
         let name: string | undefined;
@@ -255,7 +268,7 @@ export abstract class ModelVariantTraversal<S = void> {
             if (variant) {
                 if (!tag) {
                     tag = variant.tag;
-                } else if (tag != variant.tag) {
+                } else if (tag !== variant.tag) {
                     // Sanity check
                     throw new InternalError(`Variant tag mismatch; previous variant identified as ${tag} but ${sourceName} identifies as ${tag}`);
                 }
@@ -306,7 +319,7 @@ type ClusterState = {
 function computeCanonicalNames(sourceNames: string[], variants: VariantDetail) {
     // First, infer name equivalence of datatypes based on usage.  There is no
     // ID on datatypes.  This is a reliable alternative
-    let datatypeNameMap = inferEquivalentDatatypes(sourceNames, variants);
+    const datatypeNameMap = inferEquivalentDatatypes(sourceNames, variants);
 
     // Now that we generally what what equals what, go through the names and
     // choose the name for the final model
@@ -337,7 +350,7 @@ function inferEquivalentDatatypes(
     const traversal = new class extends ModelVariantTraversal {
         override visit(variants: VariantDetail, recurse: () => void[]) {
             let mapEntry: ModelNameMapping | undefined;
-            
+
             for (let priority = 0; priority < sourceNames.length; priority++) {
                 const sourceName = sourceNames[priority];
                 const variant = variants.map[sourceName];
@@ -346,7 +359,7 @@ function inferEquivalentDatatypes(
                 // interest.  Global types we map manually so they should be
                 // correct
                 const base = variant?.base;
-                if (!base || base.parent?.tag != ElementTag.Cluster) {
+                if (!base || base.parent?.tag !== ElementTag.Cluster) {
                     continue;
                 }
 
@@ -369,7 +382,7 @@ function inferEquivalentDatatypes(
                 if (existingEntry) {
                     if (existingEntry.priority > mapEntry.priority) {
                         nameVariants.set(base, mapEntry);
-                    } else if (existingEntry.priority == mapEntry.priority && existingEntry.mapTo != mapEntry.mapTo) {
+                    } else if (existingEntry.priority === mapEntry.priority && existingEntry.mapTo !== mapEntry.mapTo) {
                         logger.warn(`Mapping ${sourceName} ${base.tag} ${base.name} to ${existingEntry.mapTo} but it also maps to ${mapEntry.mapTo}`);
                     }
                 } else {
@@ -390,7 +403,7 @@ function inferEquivalentDatatypes(
     // Convert the internal structure to NameMappings
     const result = new Map<Model, string>();
     for (const [model, mapEntry] of nameVariants) {
-        if (mapEntry.mapTo && mapEntry.mapTo != model.name) {
+        if (mapEntry.mapTo && mapEntry.mapTo !== model.name) {
             result.set(model, mapEntry.mapTo);
         }
     }
@@ -416,7 +429,7 @@ function chooseCanonicalNames(
 
                 // We give absolute priority to the highest priority element.
                 // This is presumably an editorial decision made by a human
-                if (!i && name != undefined) {
+                if (!i && name !== undefined) {
                     break;
                 }
 
@@ -439,8 +452,8 @@ function chooseCanonicalNames(
                 // with more capital letters.  This corrects for case issues
                 // that can arise from automatic camelization in our spec
                 // scraper
-                if (canonicalName?.toLowerCase() == name?.toLowerCase()) {
-                    if (canonicalName == name) {
+                if (canonicalName?.toLowerCase() === name?.toLowerCase()) {
+                    if (canonicalName === name) {
                         continue;
                     }
 
@@ -461,7 +474,7 @@ function chooseCanonicalNames(
             // name
             for (const sourceName in variants.map) {
                 const variant = variants.map[sourceName];
-                if (variant.name != canonicalName) {
+                if (variant.name !== canonicalName) {
                     canonicalNames.set(variant, canonicalName);
                 }
             }
@@ -472,7 +485,7 @@ function chooseCanonicalNames(
         override enterCluster(variants: VariantDetail) {
             // Disable default logic, just ensure our datatype names are always
             // installed so datatypes match up correctly
-            if (variants.tag == ElementTag.Cluster) {
+            if (variants.tag === ElementTag.Cluster) {
                 this.clusterState = { canonicalNames: datatypeMapping };
                 return true;
             }

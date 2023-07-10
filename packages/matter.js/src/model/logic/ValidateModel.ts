@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../log/index.js";
+import { Logger } from "../../log/Logger.js";
 import { DefinitionError } from "../definitions/index.js";
 import { Model } from "../models/index.js";
 import { ModelValidator } from "./definition-validation/ModelValidator.js";
@@ -44,25 +44,28 @@ export function ValidateModel(model: Model) {
         result.elementCount++;
         if (!model.valid) {
             result.invalidElementCount++;
-            for (const error of model.errors!) {
-                if (result.errorCounts[error.code]) {
-                    result.errorCounts[error.code]++;
-                } else {
-                    result.errorCounts[error.code] = 1;
+            if (model.errors) {
+                for (const error of model.errors) {
+                    if (result.errorCounts[error.code]) {
+                        result.errorCounts[error.code]++;
+                    } else {
+                        result.errorCounts[error.code] = 1;
+                    }
+                    result.errors.push(error);
                 }
-                result.errors.push(error);
             }
         }
 
-        logger.debug(
-            `${model.valid ? "✔": "✘"} ${model.name}`,
-            Logger.dict({
-                tag: model.tag,
-                children: model.children.length || undefined,
-                id: model.id ? `0x${model.id?.toString(16)}` : undefined,
-                xref: model.xref
-            })
-        );
+        // Need another logging level before enabling this
+        // logger.debug(
+        //     `${model.valid ? "✔": "✘"} ${model.name}`,
+        //     Logger.dict({
+        //         tag: model.tag,
+        //         children: model.children.length || undefined,
+        //         id: model.id ? `0x${model.id?.toString(16)}` : undefined,
+        //         xref: model.xref
+        //     })
+        // );
 
         Logger.nest(() => {
             model.children.forEach(validate);
@@ -86,7 +89,7 @@ export namespace ValidateModel {
             return (this.invalidElementCount / this.elementCount * 100).toPrecision(2);
         }
 
-        constructor(public model: Model) {}
+        constructor(public model: Model) { }
 
         report() {
             if (this.errors.length) {
@@ -104,13 +107,13 @@ export namespace ValidateModel {
                         logger.error(`${code}: ${this.errorCounts[code]}`);
                     }
                 });
-        
-                logger.error(`*** Total ${this.errors.length} validation error${this.errors.length == 1 ? "" : "s"} ***`);
-                logger.error(`*** Total ${this.invalidElementCount} invalid element${this.invalidElementCount == 1 ? "" : "s"} (${this.invalidElementPercent}%) ***`);
+
+                logger.error(`*** Total ${this.errors.length} validation error${this.errors.length === 1 ? "" : "s"} ***`);
+                logger.error(`*** Total ${this.invalidElementCount} invalid element${this.invalidElementCount === 1 ? "" : "s"} (${this.invalidElementPercent}%) ***`);
             } else {
                 logger.info(`*** Validation successful ***`)
             }
-            logger.debug(`*** Total ${this.elementCount} element${this.elementCount == 1 ? "" : "s"} ***`)
+            logger.debug(`*** Total ${this.elementCount} element${this.elementCount === 1 ? "" : "s"} ***`)
         }
     }
 }

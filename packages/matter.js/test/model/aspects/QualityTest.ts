@@ -19,18 +19,22 @@ describe("Quality", () => {
                 expect((new Quality(`${flag}`))[field]).toBe(true);
             });
 
-            it ("disallows from text definition", () => {
+            it("disallows from text definition", () => {
                 const quality = new Quality(`!${flag}`);
                 expect(quality[field]).toBe(undefined);
                 expect(quality.disallowed?.[field]).toBe(true);
             });
-        });
+        })
     })
 
     describe("illegal flag", () => {
         it("throws", () => {
-            expect(new Quality("Z").errors).toEqual([ 'Quality "Z": Unknown flag "Z"' ]);
-        });
+            expect(new Quality("Z").errors).toEqual([{
+                code: "UNKNOWN_QUALITY_FLAG",
+                message: 'Unknown flag "Z"',
+                source: 'Quality "Z"'
+            }]);
+        })
     })
 
     describe("all flags", () => {

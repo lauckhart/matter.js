@@ -6,35 +6,53 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Attribute, AccessLevel } from "../../cluster/Cluster.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Attribute, Cluster } from "../../cluster/Cluster.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
-import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { TlvString } from "../../tlv/TlvString.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
 
-export const LabelStruct = TlvObject({
-    Label: TlvField(0, TlvString),
-    Value: TlvField(1, TlvString)
-});
+/**
+ * Fixed Label
+ *
+ * The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read only labels.
+ *
+ * Use this factory function to create a FixedLabel cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 9.8
+ */
+export function FixedLabelCluster() {
+    const cluster = Cluster({ ...FixedLabelCluster.Metadata, ...FixedLabelCluster.BaseComponent });
+    return cluster as unknown as FixedLabelCluster.Type;
+}
 
 export namespace FixedLabelCluster {
-    export const id = 64;
-    export const name = "FixedLabel";
-    export const revision = 1;
+    export type Type =
+        typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
+        & typeof BaseComponent;
 
-    const Base = {
+    /**
+     * FixedLabel cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.8
+     */
+    export const Metadata = ClusterMetadata({ id: 0x40, name: "FixedLabel", revision: 1, features: {} });
+
+    /**
+     * A FixedLabelCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         attributes: {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
              */
-            labelList: Attribute(0, TlvArray(LabelStruct), { persistent: true, readAcl: AccessLevel.View })
+            labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, default: [] })
         }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
     });
-};
+
+    /**
+     * This cluster supports all FixedLabel features.
+     */
+    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
+}

@@ -25,7 +25,7 @@ export function writeMatterFile(path: string, body: any) {
     writeFileSync(path, body);
 }
 
-export function clean(target: string, suffix: string = "") {
+export function clean(target: string, suffix = "") {
     const path = resolveFromPackage(target);
     try {
         readdirSync(path).forEach((f) => {
@@ -34,7 +34,7 @@ export function clean(target: string, suffix: string = "") {
             }
         });
     } catch (e) {
-        if ((e as any).code == "ENOENT") {
+        if ((e as { code?: string }).code === "ENOENT") {
             return;
         }
         throw e;

@@ -38,8 +38,8 @@ Matter.children.push({
         {
             tag: "attribute", name: "PhyRate", id: 0x0, type: "PHYRateEnum", access: "R V", conformance: "O",
             default: null, quality: "X",
-            details: "The PHYRate attribute SHALL indicate the current nominal, usable speed at the top of the physical " +
-                     "layer of the Node. A value of null SHALL indicate that the interface is not currently configured or " +
+            details: "The PHYRate attribute shall indicate the current nominal, usable speed at the top of the physical " +
+                     "layer of the Node. A value of null shall indicate that the interface is not currently configured or " +
                      "operational.",
             xref: { document: "core", section: "11.15.6.1" }
         },
@@ -47,76 +47,90 @@ Matter.children.push({
         {
             tag: "attribute", name: "FullDuplex", id: 0x1, type: "bool", access: "R V", conformance: "O",
             default: null, quality: "X",
-            details: "The FullDuplex attribute SHALL indicate if the Node is currently utilizing the full-duplex " +
-                     "operating mode. A value of null SHALL indicate that the interface is not currently configured or " +
+            details: "The FullDuplex attribute shall indicate if the Node is currently utilizing the full-duplex " +
+                     "operating mode. A value of null shall indicate that the interface is not currently configured or " +
                      "operational.",
             xref: { document: "core", section: "11.15.6.2" }
         },
 
         {
             tag: "attribute", name: "PacketRxCount", id: 0x2, type: "uint64", access: "R V",
-            conformance: "PKTCNT",
-            details: "The PacketRxCount attribute SHALL indicate the number of packets that have been received on the " +
-                     "ethernet network interface. The PacketRxCount attribute SHALL be reset to 0 upon a reboot of the " +
+            conformance: "PKTCNT", default: 0,
+            details: "The PacketRxCount attribute shall indicate the number of packets that have been received on the " +
+                     "ethernet network interface. The PacketRxCount attribute shall be reset to 0 upon a reboot of the " +
                      "Node.",
             xref: { document: "core", section: "11.15.6.3" }
         },
 
         {
             tag: "attribute", name: "PacketTxCount", id: 0x3, type: "uint64", access: "R V",
-            conformance: "PKTCNT", quality: "C",
-            details: "The PacketTxCount attribute SHALL indicate the number of packets that have been successfully " +
-                     "transferred on the ethernet network interface. The PacketTxCount attribute SHALL be reset to 0 upon " +
+            conformance: "PKTCNT", default: 0, quality: "C",
+            details: "The PacketTxCount attribute shall indicate the number of packets that have been successfully " +
+                     "transferred on the ethernet network interface. The PacketTxCount attribute shall be reset to 0 upon " +
                      "a reboot of the Node.",
             xref: { document: "core", section: "11.15.6.4" }
         },
 
         {
             tag: "attribute", name: "TxErrCount", id: 0x4, type: "uint64", access: "R V", conformance: "ERRCNT",
-            quality: "C",
-            details: "The TxErrCount attribute SHALL indicate the number of failed packet transmissions that have " +
-                     "occurred on the ethernet network interface. The TxErrCount attribute SHALL be reset to 0 upon a " +
+            default: 0, quality: "C",
+            details: "The TxErrCount attribute shall indicate the number of failed packet transmissions that have " +
+                     "occurred on the ethernet network interface. The TxErrCount attribute shall be reset to 0 upon a " +
                      "reboot of the Node.",
             xref: { document: "core", section: "11.15.6.5" }
         },
 
         {
             tag: "attribute", name: "CollisionCount", id: 0x5, type: "uint64", access: "R V",
-            conformance: "ERRCNT", quality: "C",
-            details: "The CollisionCount attribute SHALL indicate the number of collisions that have occurred while " +
+            conformance: "ERRCNT", default: 0, quality: "C",
+            details: "The CollisionCount attribute shall indicate the number of collisions that have occurred while " +
                      "attempting to transmit a packet on the ethernet network interface. The CollisionCount attribute " +
-                     "SHALL be reset to 0 upon a reboot of the Node.",
+                     "shall be reset to 0 upon a reboot of the Node.",
             xref: { document: "core", section: "11.15.6.6" }
         },
 
         {
             tag: "attribute", name: "OverrunCount", id: 0x6, type: "uint64", access: "R V",
-            conformance: "ERRCNT", quality: "C",
-            details: "The OverrunCount attribute SHALL indicate the number of packets dropped either at ingress or " +
+            conformance: "ERRCNT", default: 0, quality: "C",
+            details: "The OverrunCount attribute shall indicate the number of packets dropped either at ingress or " +
                      "egress, due to lack of buffer memory to retain all packets on the ethernet network interface. The " +
-                     "OverrunCount attribute SHALL be reset to 0 upon a reboot of the Node.",
+                     "OverrunCount attribute shall be reset to 0 upon a reboot of the Node.",
             xref: { document: "core", section: "11.15.6.7" }
         },
 
         {
             tag: "attribute", name: "CarrierDetect", id: 0x7, type: "bool", access: "R V", conformance: "O",
             default: null, quality: "X C",
-            details: "The CarrierDetect attribute SHALL indicate the value of the Carrier Detect control signal present " +
-                     "on the ethernet network interface. A value of null SHALL indicate that the interface is not " +
+            details: "The CarrierDetect attribute shall indicate the value of the Carrier Detect control signal present " +
+                     "on the ethernet network interface. A value of null shall indicate that the interface is not " +
                      "currently configured or operational.",
             xref: { document: "core", section: "11.15.6.8" }
         },
 
         {
             tag: "attribute", name: "TimeSinceReset", id: 0x8, type: "uint64", access: "R V", conformance: "O",
-            quality: "C",
+            default: 0, quality: "C",
             xref: { document: "core", section: "11.15.6" }
         },
 
         {
             tag: "command", name: "ResetCounts", id: 0x0, access: "M", conformance: "PKTCNT | ERRCNT",
             direction: "request", response: "status",
-            details: "Reception of this command SHALL reset the following attributes to 0:",
+
+            details: "Reception of this command shall reset the following attributes to 0:" +
+                     "\n" +
+                     "  • PacketRxCount" +
+                     "\n" +
+                     "  • PacketTxCount" +
+                     "\n" +
+                     "  • TxErrCount" +
+                     "\n" +
+                     "  • CollisionCount" +
+                     "\n" +
+                     "  • OverrunCount" +
+                     "\n" +
+                     "This command has no associated data.",
+
             xref: { document: "core", section: "11.15.7.1" }
         },
 

@@ -17,15 +17,25 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "ConfigurationList", id: 0x0, type: "list", access: "RW", conformance: "M",
-            quality: "N",
-            details: "List of proxy configurations. There SHALL NOT be multiple entries in this list for the same fabric.",
+            default: [], quality: "N",
+            details: "List of proxy configurations. There shall NOT be multiple entries in this list for the same fabric.",
             xref: { document: "core", section: "9.15.14.5.1" },
             children: [ { tag: "datatype", name: "entry", type: "ConfigurationStruct" } ]
         },
 
         {
             tag: "datatype", name: "ConfigurationStruct", type: "struct",
-            details: "< Previous | Contents | Next >",
+
+            details: "ProxyAllNodes" +
+                     "\n" +
+                     "This field shall be set to to 'true' to indicate to the proxy that it shall proxy all nodes. When " +
+                     "'true', the SourceList attribute is ignored." +
+                     "\n" +
+                     "SourceList" +
+                     "\n" +
+                     "When ProxyAllNodes is 'false', this list contains the set of NodeIds of sources that this proxy " +
+                     "shall specifically proxy.",
+
             xref: { document: "core", section: "9.15.14.4.1" },
 
             children: [
@@ -35,7 +45,7 @@ Matter.children.push({
                 },
                 {
                     tag: "datatype", name: "SourceList", id: 0x2, type: "list", access: "RW", conformance: "M",
-                    constraint: "desc",
+                    constraint: "desc", default: [],
                     children: [ { tag: "datatype", name: "entry", type: "node-id" } ]
                 }
             ]

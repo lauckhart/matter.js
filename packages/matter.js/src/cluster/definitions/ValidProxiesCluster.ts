@@ -6,34 +6,59 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WritableFixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, WritableFixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+
+/**
+ * Proxy Valid
+ *
+ * Cluster to control Proxy Valid
+ *
+ * Use this factory function to create a ValidProxies cluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 9.15.15
+ */
+export function ValidProxiesCluster() {
+    const cluster = Cluster({ ...ValidProxiesCluster.Metadata, ...ValidProxiesCluster.BaseComponent });
+    return cluster as unknown as ValidProxiesCluster.Type;
+}
 
 /**
  * Encapsulates the Node ID of a Valid Proxy.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.4.1
  */
-export const ValidProxyStruct = TlvObject({ NodeId: TlvField(1, TlvUInt64) });
+export const TlvValidProxyStruct = TlvObject({ nodeId: TlvField(1, TlvUInt64) });
 
 export namespace ValidProxiesCluster {
-    export const id = 68;
-    export const name = "ValidProxies";
-    export const revision = 1;
+    export type Type =
+        typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
+        & typeof BaseComponent;
 
-    const Base = {
+    /**
+     * ValidProxies cluster metadata.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.15.15
+     */
+    export const Metadata = ClusterMetadata({ id: 0x44, name: "ValidProxies", revision: 1, features: {} });
+
+    /**
+     * A ValidProxiesCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * List of valid proxies that can proxy this Node. Each entry in
-             * this list is fabric-scoped.
+             * List of valid proxies that can proxy this Node. Each entry in this list is fabric-scoped.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.5.1
              */
-            validProxyList: WritableFixedAttribute(0, TlvArray(ValidProxyStruct), { persistent: true })
+            validProxyList: WritableFixedAttribute(0, TlvArray(TlvValidProxyStruct), { persistent: true, default: [] })
         },
 
         commands: {
@@ -47,12 +72,14 @@ export namespace ValidProxiesCluster {
              */
             getValidProxiesResponse: Command(1, TlvNoArguments, 1, TlvNoResponse)
         }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        elements: [ Base ]
     });
-};
+
+    /**
+     * This cluster supports all ValidProxies features.
+     */
+    export const Complete = Cluster({
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes },
+        commands: { ...BaseComponent.commands }
+    });
+}

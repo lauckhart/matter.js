@@ -152,14 +152,19 @@ To run:
 
 ```sh
 cd matter.js/packages/matter.js
-npm run generate-model
+npm run generate
+```
+
+Note that this will rebuild the model (above) and the clusters.  If you know
+the model is unchanged you can also just generate the clusters:
+
+```sh
+cd matter.js/packages/matter.js
 npm run generate-clusters
 ```
 
-Note that if you make changes to the input models you need to re-run
-[generate-model.ts](../../tools/generate-model.ts) to update the standard
-model because [generate-cluster.ts](../../tools/generate-clusters.ts) uses it
-as input.
+This is generally only useful if you are modifying the cluster generation
+code or if you have already generated the model.
 
 ## Ensuring correctness
 

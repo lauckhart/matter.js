@@ -21,20 +21,17 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.5.4" },
-
-            children: [
-                {
-                    tag: "datatype", name: "TEMP", id: 0x0, description: "TemperatureUnit",
-                    details: "The Node can be configured to use different units of temperature when conveying values to a user."
-                }
-            ]
+            children: [ {
+                tag: "datatype", name: "TEMP", id: 0x0, description: "TemperatureUnit",
+                details: "The Node can be configured to use different units of temperature when conveying values to a user."
+            } ]
         },
 
         {
-            tag: "attribute", name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", access: "RW",
+            tag: "attribute", name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", access: "RW VM",
             conformance: "TEMP", default: null, quality: "X N",
-            details: "The TemperatureUnit attribute SHALL indicate the unit for the Node to use only when conveying " +
-                     "temperature in communication to the user. If provided, this value SHALL take priority over any unit " +
+            details: "The TemperatureUnit attribute shall indicate the unit for the Node to use only when conveying " +
+                     "temperature in communication to the user. If provided, this value shall take priority over any unit " +
                      "implied through the ActiveLocale Attribute.",
             xref: { document: "core", section: "11.5.6.1" }
         },

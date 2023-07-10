@@ -5,14 +5,16 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
+import { AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
+import { addDetails } from "./extract-details.js";
+import { Code, Identifier, Integer, LowerIdentifier, NoSpace, Str, UpperIdentifier } from "./html-translators.js";
 import { ClusterReference, HtmlReference } from "./spec-types.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children, chooseIdentityAliases, Code } from "./translate-table.js";
+import { translateTable, Optional, Alias, translateRecordsToMatter, Children, chooseIdentityAliases } from "./translate-table.js";
 
 const logger = Logger.get("translate-cluster");
 
-const TYPE_ERRORS: { [badType: string]: string} = {
+const TYPE_ERRORS: { [badType: string]: string } = {
     "attribute-id": "attrib-id",
     "bitmap8": "map8",
     "node-idx": "node-id",
@@ -23,7 +25,7 @@ const TYPE_ERRORS: { [badType: string]: string} = {
 }
 
 function fixTypeError(type: string | undefined) {
-    if (type != undefined && TYPE_ERRORS[type]) {
+    if (type !== undefined && TYPE_ERRORS[type]) {
         return TYPE_ERRORS[type];
     }
     return type;
@@ -42,7 +44,7 @@ export function* translateCluster(definition: ClusterReference) {
     translateDatatypes(definition, children);
 
     for (const [id, name] of metadata.ids.entries()) {
-        const idStr = id == undefined ? "(no ID)" : `0x${id.toString(16)}`;
+        const idStr = id === undefined ? "(no ID)" : `0x${id.toString(16)}`;
         logger.debug(`0x${idStr} ${name}`, Logger.dict({ rev: metadata.revision, cls: metadata.classification }));
         const cluster = ClusterElement({
             id: id,
@@ -88,14 +90,14 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             id: Alias(Str, "identifier"),
             name: Identifier
         });
-    
+
         // Some tables list the primary ID twice; only accept the secondary
         // instance in core spec; only accept the primary in cluster spec
         const uniqueIds = new Map<number | undefined, string>();
         for (const record of ids) {
-            let idStr = record.id.trim().toLowerCase();
+            const idStr = record.id.trim().toLowerCase();
             let id;
-            if (idStr == "n/a") {
+            if (idStr === "n/a") {
                 // Base cluster
                 id = undefined;
             } else {
@@ -106,31 +108,31 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
                 }
             }
 
-            if (id == 0x8) {
+            if (id === 0x8) {
                 // Level control table is just kind of fubar
                 uniqueIds.set(id, "LevelControl");
             } else {
                 uniqueIds.set(id, camelize(record.name || definition.name));
             }
         }
-    
+
         if (!uniqueIds.size) {
             return false;
         }
-    
+
         return uniqueIds;
     }
-    
+
     function translateClassification() {
         const classifications = translateTable("classfication", definition.classifications, {
             hierarchy: Optional(Str),
             role: Optional(LowerIdentifier),
             scope: Optional(Alias(LowerIdentifier, "context"))
         });
-    
+
         let classification: ClusterElement.Classification;
-        if (classifications[0]?.role == "utility") {
-            if (classifications[0]?.scope == "node") {
+        if (classifications[0]?.role === "utility") {
+            if (classifications[0]?.scope === "node") {
                 classification = ClusterElement.Classification.NodeUtility;
             } else {
                 classification = ClusterElement.Classification.EndpointUtility;
@@ -143,30 +145,30 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         if (derivesFrom) {
             derivesFrom = derivesFrom.replace(/^derive[sd] from /i, "");
             derivesFrom = camelize(derivesFrom);
-            if (derivesFrom == "Base") {
+            if (derivesFrom === "Base") {
                 derivesFrom = undefined;
             }
         }
-    
+
         return { classification, derivesFrom };
     }
-    
+
     function translateRevision() {
         const revisions = translateTable("revision", definition.revisions, {
             revision: Alias(Integer, "rev")
         });
-    
+
         let revision = revisions[revisions.length - 1]?.revision;
-        if (revision == undefined) {
+        if (revision === undefined) {
             logger.warn(`no revisions for ${definition.name}, assuming "1"`);
             revision = 1;
         }
-    
+
         children.push({ ...Globals.ClusterRevision, default: revision });
-    
+
         return revision;
     }
-    
+
     function translateFeatures() {
         const records = translateTable("feature", definition.features, {
             id: Alias(Integer, "bit"),
@@ -175,14 +177,14 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
 
             // Must define after details which uses description column
             description: Optional(Alias(Identifier, "feature", "name")),
-    
+
             // Must define after description which uses name column
             name: Alias(UpperIdentifier, "code", "feature"),
-    
+
             // Actual type is numeric but we let Model handle that translation
             default: Optional(Alias(NoSpace, "def"))
         });
-    
+
         const values = translateRecordsToMatter("feature", records, DatatypeElement);
         values && children.push({
             tag: Globals.FeatureMap.tag,
@@ -205,7 +207,7 @@ function applyAccessNotes(fields?: HtmlReference, records?: { access?: string }[
     // Determine what the access flag should be
     let flag: string | undefined;
     for (const n of fields.table.notes) {
-        const match = n.textContent?.match(/access quality: fabric[\s\-](\w+)/i);
+        const match = n.textContent?.match(/access quality: fabric[\s-](\w+)/i);
         if (match) {
             const quality = match[1].toLowerCase();
 
@@ -260,7 +262,22 @@ function translateFields(desc: string, fields?: HtmlReference) {
 
     records.forEach(r => {
         r.type = fixTypeError(r.type);
-        if (typeof r.default == "string") {
+
+        if (r.conformance === "Matter!Zigbee") {
+            delete r.conformance;
+        }
+
+        if (r.constraint) {
+            // Remove units and otherwise normalize constraint
+            r.constraint = r.constraint.replace(/ octets| entries| bytes| per node/i, "").replace(/ to(\d|max)/i, " to $1");
+
+            // Ignore window covering's bitmap constraints
+            if (r.constraint.match(/^[0x]{4} [0x]{4}$/)) {
+                delete r.constraint;
+            }
+        }
+
+        if (typeof r.default === "string") {
             switch (r.default.toLowerCase()) {
                 case "desc": // See description
                 case "n/a": // Not available
@@ -301,7 +318,7 @@ function translateFields(desc: string, fields?: HtmlReference) {
 
 function hasColumn(definition: HtmlReference, ...names: string[]) {
     for (const name of names) {
-        if (definition.table?.rows[0]?.[name] != undefined) {
+        if (definition.table?.rows[0]?.[name] !== undefined) {
             return true;
         }
     }
@@ -312,7 +329,7 @@ function hasColumn(definition: HtmlReference, ...names: string[]) {
 // events.  If "parent" is none of these, returns undefined
 function translateValueChildren(tag: string, parent: undefined | { type?: string }, definition: HtmlReference): DatatypeElement[] | undefined {
     let type = parent?.type;
-    if (type == undefined) {
+    if (type === undefined) {
         switch (tag) {
             case "command":
             case "event":
@@ -338,8 +355,8 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
             // in the future
             const { ids, names } = chooseIdentityAliases(
                 definition,
-                [ "id", "value", "enum" ],
-                [ "name", "type", "statuscode", "description" ]
+                ["id", "value", "enum"],
+                ["name", "type", "statuscode", "description"]
             );
 
             let records = translateTable("value", definition, {
@@ -350,7 +367,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
                 meaning: Optional(Str)
             });
 
-            records = records.filter(r => r.name != "Reserved");
+            records = records.filter(r => r.name !== "Reserved");
 
             return translateRecordsToMatter("value", records, DatatypeElement);
         }
@@ -369,7 +386,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
                 //
                 // Previously had identified aliases as "mappedprotocol", "statebit", "function", "relatedattribute"
                 // but this was only a partial list.  Auto-detection makes more sense
-                const { ids, names } = chooseIdentityAliases(definition, [ "bit", "id" ], [ "name", "eventdescription" ]);
+                const { ids, names } = chooseIdentityAliases(definition, ["bit", "id"], ["name", "eventdescription"]);
                 records = translateTable("bit", definition, {
                     id: Alias(Integer, ...ids),
                     name: Alias(Identifier, ...names),
@@ -388,14 +405,14 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
 }
 
 // Load attributes, events and commands
-function translateInvokable(definition: ClusterReference, children: Array<ClusterElement.Child>) {    
+function translateInvokable(definition: ClusterReference, children: Array<ClusterElement.Child>) {
     translateAttributes();
     translateEvents();
     translateCommands();
     translateStatusCodes();
 
     function translateAttributes() {
-        const attributeSets = [ definition.attributes ];
+        const attributeSets = [definition.attributes];
         if (definition.attributeSets) {
             attributeSets.push(...definition.attributeSets);
         }
@@ -407,7 +424,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             }
         }
     }
-    
+
     function translateCommands() {
         const records = translateTable("command", definition.commands, {
             id: Integer,
@@ -420,7 +437,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
         });
 
         applyAccessNotes(definition.commands, records);
-    
+
         const commands = translateRecordsToMatter("command", records, (r) => {
             let direction: CommandElement.Direction | undefined;
             if (r.direction.match(/client.*server/i)) {
@@ -428,28 +445,28 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             } else if (r.direction.match(/server.*client/i)) {
                 direction = CommandElement.Direction.Response;
             }
-    
+
             let response: string | undefined;
             switch (r.response) {
                 case "Y":
                     response = "status";
                     break;
-    
+
                 case "N":
                 case "":
                 case undefined:
                     break;
-    
+
                 default:
                     response = r.response;
                     break;
             }
-    
+
             return CommandElement({ ...r, response: response, direction: direction });
         });
         commands && children.push(...commands);
     }
-    
+
     function translateEvents() {
         const records = translateTable("event", definition.events, {
             id: Integer,
@@ -461,8 +478,8 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
         });
 
         applyAccessNotes(definition.events, records);
-        
-        let events = translateRecordsToMatter("event", records, (r) => {
+
+        const events = translateRecordsToMatter("event", records, (r) => {
             let priority: EventElement.Priority;
             switch (r.priority?.toLowerCase()) {
                 case "debug":
@@ -485,7 +502,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
                 default:
                     logger.warn(`unrecognized priority "${r.priority}", assuming CRITICAL`)
                     priority = EventElement.Priority.Critical;
-                }
+            }
             return EventElement({ ...r, priority });
         });
         events && children.push(...events);
@@ -517,20 +534,20 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             }
         });
     }
-    
+
     function translateDatatype(definition: HtmlReference) {
         let name = definition.name;
-        const text = definition.firstParagraph?.textContent;
+        const text = definition.prose?.[0]?.textContent;
         if (!text) {
             logger.warn(`no text to search for base type`);
         }
         let match = text?.match(/derived from ([a-z0-9\-_]+)/i);
         let type = match?.[1];
-    
+
         let description: string | undefined;
 
         type = fixTypeError(type);
-    
+
         if (name.match(/enum$/i) || type?.match(/^enum/i)) {
             if (!type) {
                 logger.warn(`no base detected, guessing enum8`)
@@ -544,7 +561,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
                 type = type.slice(3);
             }
         } else if (name.match(/struct$/i)
-            || type == "struct"
+            || type === "struct"
             || (definition.table?.rows[0].type)
         ) {
             if (!type) {
@@ -554,9 +571,12 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             if (!type) {
                 type = "status";
             }
-        } else if (match = name.match(/(.+) \((\S+) type\)/i)) {
-            description = match[1];
-            name = match[2];
+        } else {
+            match = name.match(/(.+) \((\S+) type\)/i);
+            if (match) {
+                description = match[1];
+                name = match[2];
+            }
         }
 
         if (!type && name.match(/\s/)) {
@@ -567,40 +587,5 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         const datatype = DatatypeElement({ type: type, name, description, xref: definition.xref });
         datatype.children = translateValueChildren("datatype", datatype, definition);
         return datatype;
-    }
-}
-
-// A light attempt at making documentation seem slightly less repurposed
-function extractUsefulDocumentation(p: HTMLParagraphElement) {
-    return Str(p)
-        .replace(/This data type is derived from \S+(?: and has its values listed below)?\./, "")
-        .replace(/The data type \S+ is derived from \S+\./, "")
-        .replace(/The data type of the(?: \w+)+ is derived from \S+\./, "")
-        .replace(/The values of the(?: \w+)+ are listed below\./, "")
-        .replace(/(?:The )?\S+ Data Type is derived from \S+\./, "")
-        .replace(/, derived from \w+,/, "")
-        .replace(/SHALL/g, "shall")
-        .replace(/\s\s+/, "  ")
-        .trim();
-}
-
-function addDetails(element: AnyElement, definition: HtmlReference) {
-    let p = definition.firstParagraph;
-    if (!p) {
-        return;
-    }
-    let details = extractUsefulDocumentation(p);
-    while (!details && p) {
-        // These are useless as documentation.  Use the next paragraph or
-        // simply leave undocumented
-        if ((p.nextSibling as any)?.tagName == "P") {
-            p = p?.nextSibling as HTMLParagraphElement;
-            details = extractUsefulDocumentation(p);
-        } else {
-            return;
-        }
-    }
-    if (details) {
-        element.details = details;
     }
 }

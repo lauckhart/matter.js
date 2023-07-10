@@ -18,8 +18,8 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "TargetList", id: 0x0, type: "list", access: "R V", conformance: "M",
-            details: "The TargetList attribute SHALL represent a list of targets that can be navigated to within the " +
-                     "experience presented to the user by the Endpoint (Video Player or Content App). The list SHALL not " +
+            details: "The TargetList attribute shall represent a list of targets that can be navigated to within the " +
+                     "experience presented to the user by the Endpoint (Video Player or Content App). The list shall not " +
                      "contain any entries with the same Identifier in the TargetInfoStruct object.",
             xref: { document: "cluster", section: "6.11.3.1" },
             children: [ { tag: "datatype", name: "entry", type: "TargetInfoStruct" } ]
@@ -27,23 +27,28 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentTarget", id: 0x1, type: "uint8", access: "R V", conformance: "O",
-            constraint: "desc", quality: "X",
-            details: "The CurrentTarget attribute SHALL represent the Identifier for the target which is currently in " +
+            constraint: "desc", default: 0, quality: "X",
+
+            details: "The CurrentTarget attribute shall represent the Identifier for the target which is currently in " +
                      "foreground on the corresponding Endpoint (Video Player or Content App), or null to indicate that no " +
-                     "target is in the foreground.",
+                     "target is in the foreground." +
+                     "\n" +
+                     "When not null, the CurrentTarget shall be an Identifier value contained within one of the " +
+                     "TargetInfoStruct objects in the TargetList attribute list.",
+
             xref: { document: "cluster", section: "6.11.3.2" }
         },
 
         {
             tag: "command", name: "NavigateTarget", id: 0x0, access: "O", conformance: "M",
             direction: "request", response: "NavigateTargetResponse",
-            details: "Upon receipt, this SHALL navigation the UX to the target identified.",
+            details: "Upon receipt, this shall navigation the UX to the target identified.",
             xref: { document: "cluster", section: "6.11.4.1" },
 
             children: [
                 {
                     tag: "datatype", name: "Target", id: 0x0, type: "uint8", conformance: "M",
-                    details: "This SHALL indicate the Identifier for the target for UX navigation. The Target SHALL be an " +
+                    details: "This shall indicate the Identifier for the target for UX navigation. The Target shall be an " +
                              "Identifier value contained within one of the TargetInfoStruct objects in the TargetList attribute " +
                              "list.",
                     xref: { document: "cluster", section: "6.11.4.1.1" }
@@ -51,7 +56,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Data", id: 0x1, type: "string", conformance: "O",
-                    details: "This SHALL indicate Optional app-specific data.",
+                    details: "This shall indicate Optional app-specific data.",
                     xref: { document: "cluster", section: "6.11.4.1.2" }
                 }
             ]
@@ -59,18 +64,18 @@ Matter.children.push({
 
         {
             tag: "command", name: "NavigateTargetResponse", id: 0x1, conformance: "M", direction: "response",
-            details: "This command SHALL be generated in response to NavigateTarget command.",
+            details: "This command shall be generated in response to NavigateTarget command.",
             xref: { document: "cluster", section: "6.11.4.2" },
 
             children: [
                 {
                     tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
-                    details: "This SHALL indicate the status of the command.",
+                    details: "This shall indicate the of the command.",
                     xref: { document: "cluster", section: "6.11.4.2.1" }
                 },
                 {
                     tag: "datatype", name: "Data", id: 0x1, type: "string", conformance: "O",
-                    details: "This SHALL indicate Optional app-specific data.",
+                    details: "This shall indicate Optional app-specific data.",
                     xref: { document: "cluster", section: "6.11.4.2.2" }
                 }
             ]

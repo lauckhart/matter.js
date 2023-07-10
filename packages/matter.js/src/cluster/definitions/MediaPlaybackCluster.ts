@@ -6,19 +6,46 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { Attribute, AccessLevel, Command, OptionalCommand, TlvNoResponse } from "../../cluster/Cluster.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
+import { GlobalAttributes, Attribute, Command, OptionalCommand, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt64, TlvFloat } from "../../tlv/TlvNumber.js";
+import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
-import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
+
+/**
+ * Media Playback
+ *
+ * This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media device such as a TV
+ * or Speaker.
+ *
+ * Use this factory function to create a MediaPlayback cluster supporting a specific set of features. Include each
+ * {@link MediaPlaybackCluster.Feature} you wish to support.
+ *
+ * @param features a list of {@link MediaPlaybackCluster.Feature} to support
+ * @returns a MediaPlayback cluster with specified features enabled
+ * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10
+ */
+export function MediaPlaybackCluster<T extends MediaPlaybackCluster.Feature[]>(...features: [...T]) {
+    const cluster = Cluster({
+        ...MediaPlaybackCluster.Metadata,
+        supportedFeatures: BitFlags(MediaPlaybackCluster.Metadata.features, ...features),
+        ...MediaPlaybackCluster.BaseComponent
+    });
+    extendCluster(cluster, MediaPlaybackCluster.AdvancedSeekComponent, { advancedSeek: true });
+    extendCluster(cluster, MediaPlaybackCluster.VariableSpeedComponent, { variableSpeed: true });
+    return cluster as unknown as MediaPlaybackCluster.Type<BitFlags<typeof MediaPlaybackCluster.Metadata.features, T>>;
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.1
  */
-export const enum PlaybackStateEnum {
+export const enum PlaybackState {
     /**
      * Media is currently playing (includes FF and REW)
      */
@@ -35,31 +62,28 @@ export const enum PlaybackStateEnum {
     NotPlaying = 2,
 
     /**
-     * Media is not currently buffering and playback will start when buffer has
-     * been filled
+     * Media is not currently buffering and playback will start when buffer has been filled
      */
     Buffering = 3
-};
+}
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.2
  */
-export const enum StatusEnum {
+export const enum Status {
     /**
      * Command succeeded
      */
     Success = 0,
 
     /**
-     * Command failed: Requested playback command is invalid in the current
-     * playback state.
+     * Command failed: Requested playback command is invalid in the current playback state.
      */
     InvalidStateForCommand = 1,
 
     /**
-     * Command failed: Requested playback command is not allowed in the current
-     * playback state. For example, attempting to fast-forward during a
-     * commercial might return NotAllowed.
+     * Command failed: Requested playback command is not allowed in the current playback state. For example, attempting
+     * to fast-forward during a commercial might return NotAllowed.
      */
     NotAllowed = 2,
 
@@ -69,371 +93,432 @@ export const enum StatusEnum {
     NotActive = 3,
 
     /**
-     * Command failed: The FastForward or Rewind Command was issued but the
-     * media is already playing back at the fastest speed supported by the
-     * server in the respective direction.
+     * Command failed: The FastForward or Rewind Command was issued but the media is already playing back at the
+     * fastest speed supported by the server in the respective direction.
      */
     SpeedOutOfRange = 4,
 
     /**
-     * Command failed: The Seek Command was issued with a value of position
-     * outside of the allowed seek range of the media.
+     * Command failed: The Seek Command was issued with a value of position outside of the allowed seek range of the
+     * media.
      */
     SeekOutOfRange = 5
-};
+}
 
 /**
- * This command SHALL be generated in response to various Playback Commands.
- * The data for this command SHALL be as follows:
+ * Input to the MediaPlayback playbackResponse command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12
  */
-export const PlaybackResponseRequest = TlvObject({
+export const TlvPlaybackResponse = TlvObject({
     /**
-     * This SHALL indicate the status of the command which resulted in this
-     * response.
+     * This shall indicate the status of the command which resulted in this response.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12.1
      */
-    Status: TlvField(0, TlvEnum<StatusEnum>()),
+    status: TlvField(0, TlvEnum<Status>()),
 
     /**
-     * This SHALL indicate Optional app-specific data.
+     * This shall indicate Optional app-specific data.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12.2
      */
-    Data: TlvOptionalField(1, TlvByteString)
+    data: TlvOptionalField(1, TlvByteString)
 });
 
 /**
- * Upon receipt, this SHALL Skip forward in the media by the given number of
- * milliseconds, using the data as follows:
+ * Input to the MediaPlayback skipForward command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.9
  */
-export const SkipForwardRequest = TlvObject({
+export const TlvSkipForwardRequest = TlvObject({
     /**
-     * This SHALL indicate the duration of the time span to skip forward in the
-     * media, in milliseconds. In case the resulting position falls in the
-     * middle of a frame, the server SHALL set the position to the beginning of
-     * that frame and set the SampledPosition attribute on the cluster
-     * accordingly. If the resultant position falls beyond the furthest valid
-     * position in the media the client MAY seek forward to, the position
-     * should be set to that furthest valid position. If the SampledPosition
-     * attribute is supported it SHALL be updated on the cluster accordingly.
+     * This shall indicate the duration of the time span to skip forward in the media, in milliseconds. In case the
+     * resulting position falls in the middle of a frame, the server shall set the position to the beginning of that
+     * frame and set the SampledPosition attribute on the cluster accordingly. If the resultant position falls beyond
+     * the furthest valid position in the media the client MAY seek forward to, the position should be set to that
+     * furthest valid position. If the SampledPosition attribute is supported it shall be updated on the cluster
+     * accordingly.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.9.1
      */
-    DeltaPositionMilliseconds: TlvField(0, TlvUInt64)
+    deltaPositionMilliseconds: TlvField(0, TlvUInt64)
 });
 
 /**
- * Upon receipt, this SHALL Skip backward in the media by the given number of
- * milliseconds, using the data as follows:
+ * Input to the MediaPlayback skipBackward command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.10
  */
-export const SkipBackwardRequest = TlvObject({
+export const TlvSkipBackwardRequest = TlvObject({
     /**
-     * This SHALL indicate the duration of the time span to skip backward in
-     * the media, in milliseconds. In case the resulting position falls in the
-     * middle of a frame, the server SHALL set the position to the beginning of
-     * that frame and set the SampledPosition attribute on the cluster
-     * accordingly. If the resultant position falls before the earliest valid
-     * position to which a client MAY seek back to, the position should be set
-     * to that earliest valid position. If the SampledPosition attribute is
-     * supported it SHALL be updated on the cluster accordingly.
+     * This shall indicate the duration of the time span to skip backward in the media, in milliseconds. In case the
+     * resulting position falls in the middle of a frame, the server shall set the position to the beginning of that
+     * frame and set the SampledPosition attribute on the cluster accordingly. If the resultant position falls before
+     * the earliest valid position to which a client MAY seek back to, the position should be set to that earliest
+     * valid position. If the SampledPosition attribute is supported it shall be updated on the cluster accordingly.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.10.1
      */
-    DeltaPositionMilliseconds: TlvField(0, TlvUInt64)
+    deltaPositionMilliseconds: TlvField(0, TlvUInt64)
 });
 
 /**
- * This structure defines a playback position within a media stream being
- * played.
+ * This structure defines a playback position within a media stream being played.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.3
  */
-export const PlaybackPositionStruct = TlvObject({
+export const TlvPlaybackPositionStruct = TlvObject({
     /**
-     * This SHALL indicate the time when the position was last updated.
+     * This shall indicate the time when the position was last updated.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.3.1
      */
-    UpdatedAt: TlvField(0, TlvUInt64),
+    updatedAt: TlvField(0, TlvUInt64),
 
     /**
-     * This SHALL indicate the associated discrete position within the media
-     * stream, in milliseconds from the beginning of the stream, being
-     * associated with the time indicated by the UpdatedAt field. The Position
-     * SHALL not be greater than the duration of the media if duration is
-     * specified. The Position SHALL not be greater than the time difference
-     * between current time and start time of the media when start time is
-     * specified.
+     * This shall indicate the associated discrete position within the media stream, in milliseconds from the beginning
+     * of the stream, being associated with the time indicated by the UpdatedAt field. The Position shall not be
+     * greater than the duration of the media if duration is specified. The Position shall not be greater than the time
+     * difference between current time and start time of the media when start time is specified.
+     *
+     * A value of null shall indicate that playback position is not applicable for the current state of the media
+     * playback (For example : Live media with no known duration and where seek is not supported).
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.3.2
      */
-    Position: TlvField(1, TlvNullable(TlvUInt64))
+    position: TlvField(1, TlvNullable(TlvUInt64))
 });
 
 /**
- * Upon receipt, this SHALL change the playback position in the media to the
- * given position using data as follows:
+ * Input to the MediaPlayback seek command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.11
  */
-export const SeekRequest = TlvObject({
+export const TlvSeekRequest = TlvObject({
     /**
-     * This SHALL indicate the position (in milliseconds) in the media to seek
-     * to. In case the position falls in the middle of a frame, the server
-     * SHALL set the position to the beginning of that frame and set the
-     * SampledPosition attribute on the cluster accordingly. If the position
-     * falls before the earliest valid position or beyond the furthest valid
-     * position to which a client MAY seek back or forward to respectively, the
-     * status of SEEK_OUT_OF_RANGE SHALL be returned and no change SHALL be
-     * made to the position of the playback.
+     * This shall indicate the position (in milliseconds) in the media to seek to. In case the position falls in the
+     * middle of a frame, the server shall set the position to the beginning of that frame and set the SampledPosition
+     * attribute on the cluster accordingly. If the position falls before the earliest valid position or beyond the
+     * furthest valid position to which a client MAY seek back or forward to respectively, the status of
+     * SEEK_OUT_OF_RANGE shall be returned and no change shall be made to the position of the playback.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.11.1
      */
-    Position: TlvField(0, TlvUInt64)
+    position: TlvField(0, TlvUInt64)
 });
 
 export namespace MediaPlaybackCluster {
-    export const id = 1286;
-    export const name = "MediaPlayback";
-    export const revision = 1;
-
-    export const featureMap = {
+    /**
+     * These are optional features supported by MediaPlaybackCluster.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.2
+     */
+    export enum Feature {
         /**
          * AdvancedSeek
          *
-         * Enables clients to implement more advanced media seeking behavior in
-         * their user interface, such as for example a "seek bar". Adds support
-         * for Attributes and Commands related to advanced seek support
+         * Enables clients to implement more advanced media seeking behavior in their user interface, such as for
+         * example a "seek bar". Adds support for Attributes and Commands related to advanced seek support
          */
-        advancedSeek: BitFlag(0),
+        AdvancedSeek = "AdvancedSeek",
 
         /**
          * VariableSpeed
          *
-         * Support for commands to support variable speed playback on media
-         * that supports it.
+         * Support for commands to support variable speed playback on media that supports it.
          */
-        variableSpeed: BitFlag(1)
-    };
+        VariableSpeed = "VariableSpeed"
+    }
 
-    const Base = {
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
+        typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
+        & { supportedFeatures: T }
+        & typeof BaseComponent
+        & (T extends { advancedSeek: true } ? typeof AdvancedSeekComponent : {})
+        & (T extends { variableSpeed: true } ? typeof VariableSpeedComponent : {});
+
+    /**
+     * MediaPlayback cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x506,
+        name: "MediaPlayback",
+        revision: 1,
+
+        features: {
+            /**
+             * AdvancedSeek
+             *
+             * Enables clients to implement more advanced media seeking behavior in their user interface, such as for
+             * example a "seek bar". Adds support for Attributes and Commands related to advanced seek support
+             */
+            advancedSeek: BitFlag(0),
+
+            /**
+             * VariableSpeed
+             *
+             * Support for commands to support variable speed playback on media that supports it.
+             */
+            variableSpeed: BitFlag(1)
+        }
+    });
+
+    /**
+     * A MediaPlaybackCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * This SHALL indicate the current playback state of media.
+             * This shall indicate the current playback state of media.
+             *
+             * During fast-forward, rewind, and other seek operations; this attribute shall be set to PLAYING.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.1
              */
-            currentState: Attribute(0, TlvEnum<PlaybackStateEnum>(), { readAcl: AccessLevel.View })
+            currentState: Attribute(0, TlvEnum<PlaybackState>(), { default: PlaybackState.Playing })
         },
 
         commands: {
             /**
-             * Upon receipt, this SHALL play media. If content is currently in
-             * a FastForward or Rewind state. Play SHALL return media to normal
-             * playback speed.
+             * Upon receipt, this shall play media. If content is currently in a FastForward or Rewind state. Play
+             * shall return media to normal playback speed.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.1
              */
-            play: Command(0, TlvNoArguments, 10, PlaybackResponseRequest),
+            play: Command(0, TlvNoArguments, 10, TlvPlaybackResponse),
 
             /**
-             * Upon receipt, this SHALL pause playback of the media.
+             * Upon receipt, this shall pause playback of the media.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.2
              */
-            pause: Command(1, TlvNoArguments, 10, PlaybackResponseRequest),
+            pause: Command(1, TlvNoArguments, 10, TlvPlaybackResponse),
 
             /**
-             * Upon receipt, this SHALL stop playback of the media.
-             * User-visible outcome is context-specific. This MAY navigate the
-             * user back to the location from where the media was originally
-             * launched.
+             * Upon receipt, this shall stop playback of the media. User-visible outcome is context-specific. This MAY
+             * navigate the user back to the location from where the media was originally launched.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.3
              */
-            stop: Command(2, TlvNoArguments, 10, PlaybackResponseRequest),
+            stop: Command(2, TlvNoArguments, 10, TlvPlaybackResponse),
 
             /**
-             * Upon receipt, this SHALL Start Over with the current media
-             * playback item.
+             * Upon receipt, this shall Start Over with the current media playback item.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.4
              */
-            startOver: OptionalCommand(3, TlvNoArguments, 10, PlaybackResponseRequest),
+            startOver: OptionalCommand(3, TlvNoArguments, 10, TlvPlaybackResponse),
 
             /**
-             * Upon receipt, this SHALL cause the handler to be invoked for
-             * "Previous". User experience is context-specific. This will often
-             * Go back to the previous media playback item.
+             * Upon receipt, this shall cause the handler to be invoked for "Previous". User experience is
+             * context-specific. This will often Go back to the previous media playback item.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.5
              */
-            previous: OptionalCommand(4, TlvNoArguments, 10, PlaybackResponseRequest),
+            previous: OptionalCommand(4, TlvNoArguments, 10, TlvPlaybackResponse),
 
             /**
-             * Upon receipt, this SHALL cause the handler to be invoked for
-             * "Next". User experience is context- specific. This will often Go
-             * forward to the next media playback item.
+             * Upon receipt, this shall cause the handler to be invoked for "Next". User experience is context-
+             * specific. This will often Go forward to the next media playback item.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.6
              */
-            next: OptionalCommand(5, TlvNoArguments, 10, PlaybackResponseRequest),
+            next: OptionalCommand(5, TlvNoArguments, 10, TlvPlaybackResponse),
 
             /**
-             * Upon receipt, this SHALL Skip forward in the media by the given
-             * number of milliseconds, using the data as follows:
+             * Upon receipt, this shall Skip forward in the media by the given number of milliseconds.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.9
              */
-            skipForward: OptionalCommand(8, SkipForwardRequest, 10, PlaybackResponseRequest),
+            skipForward: OptionalCommand(8, TlvSkipForwardRequest, 10, TlvPlaybackResponse),
 
             /**
-             * Upon receipt, this SHALL Skip backward in the media by the given
-             * number of milliseconds, using the data as follows:
+             * Upon receipt, this shall Skip backward in the media by the given number of milliseconds.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.10
              */
-            skipBackward: OptionalCommand(9, SkipBackwardRequest, 10, PlaybackResponseRequest),
+            skipBackward: OptionalCommand(9, TlvSkipBackwardRequest, 10, TlvPlaybackResponse),
 
             /**
-             * This command SHALL be generated in response to various Playback
-             * Commands. The data for this command SHALL be as follows:
+             * This command shall be generated in response to various Playback Commands.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12
              */
-            playbackResponse: Command(10, PlaybackResponseRequest, 10, TlvNoResponse)
+            playbackResponse: Command(10, TlvPlaybackResponse, 10, TlvNoResponse)
         }
-    };
+    });
 
-    const AdvancedSeek = {
+    /**
+     * A MediaPlaybackCluster supports these elements if it supports feature AdvancedSeek.
+     */
+    export const AdvancedSeekComponent = ClusterComponent({
         attributes: {
             /**
-             * This SHALL indicate the start time of the media, in case the
-             * media has a fixed start time (for example, live stream or
-             * television broadcast), or null when start time does not apply to
-             * the current
+             * This shall indicate the start time of the media, in case the media has a fixed start time (for example,
+             * live stream or television broadcast), or null when start time does not apply to the current
+             *
+             * media (for example, video-on-demand). This time is a UTC time. The client needs to handle conversion to
+             * local time, as required, taking in account time zone and possible local DST offset.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.2
              */
-            startTime: Attribute(1, TlvNullable(TlvUInt64), { readAcl: AccessLevel.View }),
+            startTime: Attribute(1, TlvNullable(TlvUInt64), { default: 0 }),
 
             /**
-             * This SHALL indicate the duration, in milliseconds, of the
-             * current media being played back or null when duration is not
-             * applicable (for example, in live streaming content with no known
-             * duration). This attribute SHALL never be 0.
+             * This shall indicate the duration, in milliseconds, of the current media being played back or null when
+             * duration is not applicable (for example, in live streaming content with no known duration). This
+             * attribute shall never be 0.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.3
              */
-            duration: Attribute(2, TlvNullable(TlvUInt64), { readAcl: AccessLevel.View }),
+            duration: Attribute(2, TlvNullable(TlvUInt64), { default: 0 }),
 
             /**
-             * This SHALL indicate the position of playback (Position field) at
-             * the time (UpdateAt field) specified in the attribute. The client
-             * MAY use the SampledPosition attribute to compute the current
-             * position within the media stream based on the PlaybackSpeed,
-             * PlaybackPositionStruct.UpdatedAt and
-             * PlaybackPositionStruct.Position fields. To enable this, the
-             * SampledPosition attribute SHALL be updated whenever a change in
-             * either the playback speed or the playback position is triggered
-             * outside the normal playback of the media. The events which MAY
-             * cause this to happen include:
+             * This shall indicate the position of playback (Position field) at the time (UpdateAt field) specified in
+             * the attribute. The client MAY use the SampledPosition attribute to compute the current position within
+             * the media stream based on the PlaybackSpeed, PlaybackPositionStruct.UpdatedAt and
+             * PlaybackPositionStruct.Position fields. To enable this, the SampledPosition attribute shall be updated
+             * whenever a change in either the playback speed or the playback position is triggered outside the normal
+             * playback of the media. The events which MAY cause this to happen include:
+             *
+             *   • Starting or resumption of playback
+             *
+             *   • Seeking
+             *
+             *   • Skipping forward or backward
+             *
+             *   • Fast-forwarding or rewinding
+             *
+             *   • Updating of playback speed as a result of explicit request, or as a result of buffering events
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.4
              */
-            sampledPosition: Attribute(3, TlvNullable(PlaybackPositionStruct), { default: null, readAcl: AccessLevel.View }),
+            sampledPosition: Attribute(3, TlvNullable(TlvPlaybackPositionStruct), { default: null }),
 
             /**
-             * This SHALL indicate the speed at which the current media is
-             * being played. The new PlaybackSpeed
+             * This shall indicate the speed at which the current media is being played. The new PlaybackSpeed
+             *
+             * shall be reflected in this attribute whenever any of the following occurs:
+             *
+             *   • Starting of playback
+             *
+             *   • Resuming of playback
+             *
+             *   • Fast-forwarding
+             *
+             *   • Rewinding
+             *
+             * The PlaybackSpeed shall reflect the ratio of time elapsed in the media to the actual time taken for the
+             * playback assuming no changes to media playback (for example buffering events or requests to
+             * pause/rewind/forward).
+             *
+             *   • A value for PlaybackSpeed of 1 shall indicate normal playback where, for example, playback for 1
+             *     second causes the media to advance by 1 second within the duration of the media.
+             *
+             *   • A value for PlaybackSpeed which is greater than 0 shall indicate that as playback is happening the
+             *     media is currently advancing in time within the duration of the media.
+             *
+             *   • A value for PlaybackSpeed which is less than 0 shall indicate that as playback is happening the
+             *     media is currently going back in time within the duration of the media.
+             *
+             *   • A value for PlaybackSpeed of 0 shall indicate that the media is currently not playing back. When the
+             *     CurrentState attribute has the value of PAUSED, NOT_PLAYING or BUFFERING, the Playback
+             *
+             * Speed shall be set to 0 to reflect that the media is not playing.
+             *
+             * Following examples illustrate the PlaybackSpeed attribute values in various conditions.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.5
              */
-            playbackSpeed: Attribute(4, TlvFloat, { readAcl: AccessLevel.View }),
+            playbackSpeed: Attribute(4, TlvFloat, { default: 0 }),
 
             /**
-             * This SHALL indicate the furthest forward valid position to which
-             * a client MAY seek forward, in milliseconds from the start of the
-             * media. When the media has an associated StartTime, a value of
-             * null SHALL indicate that a seek forward is valid only until the
-             * current time within the media, using a position computed from
-             * the difference between the current time offset and StartTime, in
-             * milliseconds from start of the media, truncating fractional
-             * milliseconds towards 0. A value of Nas when StartTime is not
-             * specified SHALL indicate that seeking forward is not allowed.
+             * This shall indicate the furthest forward valid position to which a client MAY seek forward, in
+             * milliseconds from the start of the media. When the media has an associated StartTime, a value of null
+             * shall indicate that a seek forward is valid only until the current time within the media, using a
+             * position computed from the difference between the current time offset and StartTime, in milliseconds
+             * from start of the media, truncating fractional milliseconds towards 0. A value of Nas when StartTime is
+             * not specified shall indicate that seeking forward is not allowed.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.7
              */
-            seekRangeEnd: Attribute(5, TlvNullable(TlvUInt64), { default: null, readAcl: AccessLevel.View }),
+            seekRangeEnd: Attribute(5, TlvNullable(TlvUInt64), { default: null }),
 
             /**
-             * This SHALL indicate the earliest valid position to which a
-             * client MAY seek back, in milliseconds from start of the media. A
-             * value of Nas SHALL indicate that seeking backwards is not
-             * allowed.
+             * This shall indicate the earliest valid position to which a client MAY seek back, in milliseconds from
+             * start of the media. A value of Nas shall indicate that seeking backwards is not allowed.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.6
              */
-            seekRangeStart: Attribute(6, TlvNullable(TlvUInt64), { default: null, readAcl: AccessLevel.View })
+            seekRangeStart: Attribute(6, TlvNullable(TlvUInt64), { default: null })
         },
 
         commands: {
             /**
-             * Upon receipt, this SHALL change the playback position in the
-             * media to the given position using data as follows:
+             * Upon receipt, this shall change the playback position in the media to the given position.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.11
              */
-            seek: Command(11, SeekRequest, 10, PlaybackResponseRequest)
+            seek: Command(11, TlvSeekRequest, 10, TlvPlaybackResponse)
         }
-    };
+    });
 
-    const VariableSpeed = {
+    /**
+     * A MediaPlaybackCluster supports these elements if it supports feature VariableSpeed.
+     */
+    export const VariableSpeedComponent = ClusterComponent({
         commands: {
             /**
-             * Upon receipt, this SHALL start playback of the media backward in
-             * case the media is currently playing in the forward direction or
-             * is not playing. If the playback is already happening in the
-             * backwards direction receipt of this command SHALL increase the
-             * speed of the media playback back
+             * Upon receipt, this shall start playback of the media backward in case the media is currently playing in
+             * the forward direction or is not playing. If the playback is already happening in the backwards direction
+             * receipt of this command shall increase the speed of the media playback back
+             *
+             * wards.
+             *
+             * Different "rewind" speeds MAY be be reflected on the media playback device based upon the number of
+             * sequential calls to this function and the capability of the device. This is to avoid needing to define
+             * every speed (multiple fast, slow motion, etc). If the PlaybackSpeed attribute is supported it shall be
+             * updated to reflect the new speed of playback. If the playback speed cannot be changed for the media
+             * being played(for example, in live streaming content not supporting seek), the status of NOT_ALLOWED
+             * shall be returned. If the playback speed has reached the maximum supported speed for media playing
+             * backwards, the status of SPEED_OUT_OF_RANGE shall be returned.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.7
              */
-            rewind: Command(6, TlvNoArguments, 10, PlaybackResponseRequest),
+            rewind: Command(6, TlvNoArguments, 10, TlvPlaybackResponse),
 
             /**
-             * Upon receipt, this SHALL start playback of the media in the
-             * forward direction in case the media is currently playing in the
-             * backward direction or is not playing. If the playback is already
-             * happening in the forward direction receipt of this command SHALL
-             * increase the speed of the media playback.
+             * Upon receipt, this shall start playback of the media in the forward direction in case the media is
+             * currently playing in the backward direction or is not playing. If the playback is already happening in
+             * the forward direction receipt of this command shall increase the speed of the media playback.
+             *
+             * Different "fast-forward" speeds MAY be be reflected on the media playback device based upon the number
+             * of sequential calls to this function and the capability of the device. This is to avoid needing to
+             * define every speed (multiple fast, slow motion, etc). If the PlaybackSpeed attribute is supported it
+             * shall be updated to reflect the new speed of playback. If the playback speed cannot be changed for the
+             * media being played(for example, in live streaming content not supporting seek), the status of
+             * NOT_ALLOWED shall be returned. If the playback speed has reached the maximum supported speed for media
+             * playing forward, the status of SPEED_OUT_OF_RANGE shall be returned.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.8
              */
-            fastForward: Command(7, TlvNoArguments, 10, PlaybackResponseRequest)
+            fastForward: Command(7, TlvNoArguments, 10, TlvPlaybackResponse)
         }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        features: featureMap,
-        supportedFeatures: {
-            advancedSeek: true,
-            variableSpeed: true
-        },
-        elements: [
-            Base,
-            AdvancedSeek,
-            VariableSpeed
-        ]
     });
-};
+
+    /**
+     * This cluster supports all MediaPlayback features. It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export const Complete = Cluster({
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes, ...AdvancedSeekComponent.attributes },
+        commands: { ...BaseComponent.commands, ...AdvancedSeekComponent.commands, ...VariableSpeedComponent.commands }
+    });
+}

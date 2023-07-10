@@ -14,7 +14,7 @@ export class FeatureSet extends Set<FeatureSet.Flag> {
      * from an object of the form { [featureName: string]: true }
      */
     constructor(definition?: FeatureSet.Definition) {
-        if (definition && typeof (definition as any)[Symbol.iterator] != "function") {
+        if (definition && typeof (definition as any)[Symbol.iterator] !== "function") {
             definition = Object.entries(definition)
                 .filter(([_k, v]) => v)
                 .map(([k]) => k);
@@ -33,7 +33,7 @@ export class FeatureSet extends Set<FeatureSet.Flag> {
      * Access features as an object mapping feature name -> true.
      */
     get record() {
-        return Object.fromEntries(this.map(f => [ f, true ]))
+        return Object.fromEntries(this.map(f => [f, true]))
     }
 
     map<T>(fn: (name: FeatureSet.Flag) => T): T[] {
@@ -43,7 +43,8 @@ export class FeatureSet extends Set<FeatureSet.Flag> {
 
 export namespace FeatureSet {
     export type Flag = string;
+    export type Flags = Iterable<FeatureSet.Flag>;
     export type Definition =
-        Iterable<FeatureSet.Flag>
+        Flags
         | { [name: string]: boolean }
 }

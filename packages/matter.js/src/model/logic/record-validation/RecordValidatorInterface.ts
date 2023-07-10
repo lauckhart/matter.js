@@ -9,7 +9,7 @@ import { DefinitionError } from "../../definitions/index.js";
 /**
  * The result of validation.
  */
-export interface ValidationResult {
+export interface RecordValidationResult {
     valid: boolean;
     errors?: DefinitionError[];
 }
@@ -17,6 +17,7 @@ export interface ValidationResult {
 /**
  * Record validation API.
  */
-export interface Validator {
-    validate(record: { [name: string]: any }): ValidationResult;
+export interface RecordValidator {
+    validate(record: { [name: string]: any }): RecordValidationResult;
+    logFailure(): void;
 }

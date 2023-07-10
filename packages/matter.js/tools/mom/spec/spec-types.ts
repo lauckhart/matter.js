@@ -12,7 +12,7 @@ export type Table = {
     fields: string[],
 
     /** Column name -> defining HTML element */
-    rows: { [name: string ]: HTMLElement | undefined }[],
+    rows: { [name: string]: HTMLElement | undefined }[],
 
     /** Single-cell rows, tend to be informational */
     notes: HTMLElement[]
@@ -27,7 +27,7 @@ export type HtmlReference = {
     name: string,
     path: string,
     table?: Table,
-    firstParagraph?: HTMLParagraphElement,
+    prose?: HTMLElement[],
     detailSection?: string,
     ignore?: boolean;
     details?: HtmlReference[]

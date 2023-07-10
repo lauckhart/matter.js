@@ -9,14 +9,14 @@ import { ClusterModel, DeviceTypeModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[DeviceTypeElement.Tag] =
-class DeviceTypeValidator extends ModelValidator<DeviceTypeModel> {
-    override validate() {
-        this.validateStructure(true, DeviceTypeModel, ClusterModel);
-        this.validateProperty({
-            name: "classification",
-            type: DeviceTypeElement.Classification
-        });
+    class DeviceTypeValidator extends ModelValidator<DeviceTypeModel> {
+        override validate() {
+            this.validateStructure(true, DeviceTypeModel, ClusterModel);
+            this.validateProperty({
+                name: "classification",
+                type: DeviceTypeElement.Classification
+            });
 
-        super.validate();
+            super.validate();
+        }
     }
-}

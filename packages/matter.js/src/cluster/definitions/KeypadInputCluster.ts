@@ -6,47 +6,27 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { GlobalAttributes, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.4.1
- */
-export const enum StatusEnum {
-    /**
-     * Command succeeded
-     */
-    Success = 0,
-
-    /**
-     * Command failed: Key code is not supported.
-     */
-    UnsupportedKey = 1,
-
-    /**
-     * Command failed: Requested key code is invalid in the context of the
-     * responder’s current state.
-     */
-    InvalidKeyInCurrentState = 2
-};
-
-/**
- * This command SHALL be generated in response to a SendKey command. The data
- * for this command SHALL be as follows:
+ * Keypad Input
  *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
+ * This cluster provides an interface for controlling a device like a TV using action commands such as UP, DOWN, and
+ * SELECT.
+ *
+ * Use this factory function to create a KeypadInput cluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
  */
-export const SendKeyResponseRequest = TlvObject({
-    /**
-     * This SHALL indicate the status of the command.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2.1
-     */
-    Status: TlvField(0, TlvEnum<StatusEnum>())
-});
+export function KeypadInputCluster() {
+    const cluster = Cluster({ ...KeypadInputCluster.Metadata, ...KeypadInputCluster.BaseComponent });
+    return cluster as unknown as KeypadInputCluster.Type;
+}
 
 export const enum CecKeyCode {
     Select = 0,
@@ -135,80 +115,151 @@ export const enum CecKeyCode {
     F4Yellow = 116,
     F5 = 117,
     Data = 118
-};
+}
 
 /**
- * Upon receipt, this SHALL process a keycode as input to the media device.
+ * Input to the KeypadInput sendKey command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
  */
-export const SendKeyRequest = TlvObject({
+export const TlvSendKeyRequest = TlvObject({
     /**
-     * This SHALL indicate the key code to process.
+     * This shall indicate the key code to process.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1.1
      */
-    KeyCode: TlvField(0, TlvEnum<CecKeyCode>())
+    keyCode: TlvField(0, TlvEnum<CecKeyCode>())
+});
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.4.1
+ */
+export const enum Status {
+    /**
+     * Command succeeded
+     */
+    Success = 0,
+
+    /**
+     * Command failed: Key code is not supported.
+     */
+    UnsupportedKey = 1,
+
+    /**
+     * Command failed: Requested key code is invalid in the context of the responder’s current state.
+     */
+    InvalidKeyInCurrentState = 2
+}
+
+/**
+ * Input to the KeypadInput sendKeyResponse command
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
+ */
+export const TlvSendKeyResponse = TlvObject({
+    /**
+     * This shall indicate the of the command.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2.1
+     */
+    status: TlvField(0, TlvEnum<Status>())
 });
 
 export namespace KeypadInputCluster {
-    export const id = 1289;
-    export const name = "KeypadInput";
-    export const revision = 1;
-
-    export const featureMap = {
+    /**
+     * These are optional features supported by KeypadInputCluster.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.2
+     */
+    export enum Feature {
         /**
          * NavigationKeyCodes
          *
          * Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU
          */
-        navigationKeyCodes: BitFlag(0),
+        NavigationKeyCodes = "NavigationKeyCodes",
 
         /**
          * LocationKeys
          *
          * Supports CEC keys 0x0A (Settings) and 0x09 (Home)
          */
-        locationKeys: BitFlag(1),
+        LocationKeys = "LocationKeys",
 
         /**
          * NumberKeys
          *
          * Supports numeric input 0..9
          */
-        numberKeys: BitFlag(2)
-    };
+        NumberKeys = "NumberKeys"
+    }
 
-    const Base = {
+    export type Type =
+        typeof Metadata
+        & { attributes: GlobalAttributes<{}> }
+        & typeof BaseComponent;
+
+    /**
+     * KeypadInput cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x509,
+        name: "KeypadInput",
+        revision: 1,
+
+        features: {
+            /**
+             * NavigationKeyCodes
+             *
+             * Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU
+             */
+            navigationKeyCodes: BitFlag(0),
+
+            /**
+             * LocationKeys
+             *
+             * Supports CEC keys 0x0A (Settings) and 0x09 (Home)
+             */
+            locationKeys: BitFlag(1),
+
+            /**
+             * NumberKeys
+             *
+             * Supports numeric input 0..9
+             */
+            numberKeys: BitFlag(2)
+        }
+    });
+
+    /**
+     * A KeypadInputCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         commands: {
             /**
-             * Upon receipt, this SHALL process a keycode as input to the media
-             * device.
+             * Upon receipt, this shall process a keycode as input to the media device.
+             *
+             * If a second SendKey request with the same KeyCode value is received within 200ms, then the endpoint will
+             * consider the first key press to be a press and hold. When such a repeat KeyCode value is not received
+             * within 200ms, then the endpoint will consider the last key press to be a release.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
              */
-            sendKey: Command(0, SendKeyRequest, 1, SendKeyResponseRequest),
+            sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponse),
 
             /**
-             * This command SHALL be generated in response to a SendKey
-             * command. The data for this command SHALL be as follows:
+             * This command shall be generated in response to a SendKey command.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
              */
-            sendKeyResponse: Command(1, SendKeyResponseRequest, 1, TlvNoResponse)
+            sendKeyResponse: Command(1, TlvSendKeyResponse, 1, TlvNoResponse)
         }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        features: featureMap,
-        supportedFeatures: {
-            navigationKeyCodes: true,
-            locationKeys: true,
-            numberKeys: true
-        },
-        elements: [ Base ]
     });
-};
+
+    /**
+     * This cluster supports all KeypadInput features.
+     */
+    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
+}

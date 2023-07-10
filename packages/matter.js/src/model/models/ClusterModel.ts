@@ -38,14 +38,18 @@ export class ClusterModel extends Model implements ClusterElement {
     get revision() {
         let revision = 1;
         const revisionAttr = this.get(AttributeModel, Globals.ClusterRevision.id);
-        if (revisionAttr?.default != undefined) {
+        if (typeof revisionAttr?.default === "number") {
             revision = revisionAttr.default;
         }
         return revision;
     }
 
     get features() {
-        return this.get(AttributeModel, Globals.FeatureMap.id)?.children || [];
+        return this.featureMap?.children ?? [];
+    }
+
+    get featureMap() {
+        return this.get(AttributeModel, Globals.FeatureMap.id);
     }
 
     override get children(): ClusterModel.Child[] {

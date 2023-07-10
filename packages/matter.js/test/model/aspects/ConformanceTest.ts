@@ -45,7 +45,7 @@ function testOne(definition: string, expected = definition) {
 
 describe("Conformance", () => {
     TEST_DEFINITIONS.forEach(d => testOne(d));
-    Object.entries(TEST_DEFINITIONS2).forEach(([ d, e ]) => testOne(d, e));
+    Object.entries(TEST_DEFINITIONS2).forEach(([d, e]) => testOne(d, e));
 
     describe("invalid conformance", () => {
         it("fails gracefully", () => {

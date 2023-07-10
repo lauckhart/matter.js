@@ -16,7 +16,7 @@ Matter.children.push({
     children: [
         {
             tag: "attribute", name: "ValidProxyList", id: 0x0, type: "list", access: "RW", conformance: "M",
-            quality: "N F",
+            default: [], quality: "N F",
             details: "List of valid proxies that can proxy this Node. Each entry in this list is fabric-scoped.",
             xref: { document: "core", section: "9.15.15.5.1" },
             children: [ { tag: "datatype", name: "entry", type: "ValidProxyStruct" } ]

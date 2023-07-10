@@ -5,6 +5,7 @@
  */
 
 import { ByteArray } from "../../util/ByteArray.js";
+import { FieldValue } from "./FieldValue.js";
 
 /**
  * General groupings of Matter types.
@@ -24,8 +25,6 @@ export enum Metatype {
 }
 
 export namespace Metatype {
-    export const Invalid = Symbol("invalid");
-
     /**
      * Does the specific type have children?
      */
@@ -79,22 +78,26 @@ export namespace Metatype {
      * 
      * @param type casts to a native equivalent of this type
      * @param value value to cast
-     * @returns the cast value or Metatype.Invalid if cast is not possible
+     * @returns the cast value or FieldValue.Invalid if cast is not possible
      */
-    export function cast(type: Metatype, value: any) {
-        if (value == undefined || type == Metatype.any) {
+    export function cast(type: Metatype, value: FieldValue): FieldValue | FieldValue.Invalid | undefined {
+        if (value === undefined || value === null || type === Metatype.any) {
             return value;
         }
 
-        if (value == "null") {
+        if (value === "null") {
             return null;
         }
 
-        if (value == "") {
-            if (type == Metatype.string) {
+        if (value === "") {
+            if (type === Metatype.string) {
                 return "";
             }
             return undefined;
+        }
+
+        if (FieldValue.is(value, FieldValue.reference)) {
+            return value;
         }
 
         switch (type) {
@@ -102,13 +105,17 @@ export namespace Metatype {
                 return value.toString();
 
             case Metatype.boolean:
-                if (typeof value == "string") {
+                if (typeof value === "string") {
                     value = value.trim().toLowerCase();
                 }
-                return value == "false" || value == "no" || !!value;
+                return value === "false" || value === "no" || !!value;
 
             case Metatype.bitmap:
             case Metatype.enum:
+                if (FieldValue.is(value, FieldValue.flags)) {
+                    return value;
+                }
+
                 const id = Number(value);
                 if (Number.isNaN(id)) {
                     // Key name
@@ -116,13 +123,22 @@ export namespace Metatype {
                 }
                 // Value
                 return id;
-            
+
             case Metatype.integer:
-                if (typeof value == "string") {
-                    // Temperature type used by thermostat
+                if (typeof value === "string") {
+                    // Specialized support for percentages and temperatures
+                    let type: FieldValue.celsius | FieldValue.percent | undefined;
                     if (value.endsWith("°C")) {
-                        value = Math.floor(Number.parseFloat(value) * 100);
-                        return Number.isNaN(value) ? Invalid : value;
+                        type = FieldValue.celsius;
+                    } else if (value.endsWith("%")) {
+                        type = FieldValue.percent;
+                    }
+                    if (type) {
+                        value = Number.parseInt(value);
+                        if (Number.isNaN(value)) {
+                            return FieldValue.Invalid;
+                        }
+                        return { type, value };
                     }
 
                     // Strip off extra garbage like Number.parseInt would but
@@ -134,15 +150,28 @@ export namespace Metatype {
                 }
 
                 try {
+                    switch (typeof value) {
+                        case "string":
+                        case "number":
+                        case "bigint":
+                        case "boolean":
+                            break;
+
+                        default:
+                            if (FieldValue.is(value, FieldValue.celsius) || FieldValue.is(value, FieldValue.percent)) {
+                                return value;
+                            }
+                            return FieldValue.Invalid;
+                    }
                     const i = BigInt(value);
                     const n = Number(i);
-                    if (BigInt(n) == i) {
+                    if (BigInt(n) === i) {
                         return n;
                     }
                     return i;
                 } catch (e) {
                     if (e instanceof SyntaxError) {
-                        return Invalid;
+                        return FieldValue.Invalid;
                     }
                     throw e;
                 }
@@ -150,50 +179,60 @@ export namespace Metatype {
             case Metatype.float:
                 const float = Number(value);
                 if (Number.isNaN(float)) {
-                    return Invalid;
+                    return FieldValue.Invalid;
                 }
                 return float.valueOf();
 
             case Metatype.date:
+                if (value instanceof Date) {
+                    return value;
+                }
+                if (typeof value !== "string") {
+                    return FieldValue.Invalid;
+                }
                 value = new Date(value);
                 if (Number.isNaN(value.valueOf())) {
-                    return Invalid;
+                    return FieldValue.Invalid;
                 }
                 return value;
 
             case Metatype.object:
-                if (value == "null") {
+                if (value === "null") {
                     return null;
                 }
-                if (typeof value != "object") {
-                    return Invalid;
+                if (typeof value !== "object") {
+                    return FieldValue.Invalid;
                 }
-                return value;
+
+                // No literal object types supported
+                return FieldValue.Invalid;
 
             case Metatype.bytes:
-                if (value == "empty") {
+                if (value === "empty") {
                     return undefined;
                 }
                 if (!(value instanceof Uint8Array)) {
-                    return Invalid;
+                    return FieldValue.Invalid;
                 }
                 return value;
 
             case Metatype.array:
                 // Eject garbage we've seen in the spec
-                if (value == "0" || value == "{0,0}") {
+                if (value === "0" || value === "{0,0}") {
+                    return;
+                }
+                if (value === "empty" || value === "[]" || value === "{}") {
                     return [];
                 }
-                if (value == "empty" || value == "[]" || value == "{}") {
-                    return [];
+                if (Array.isArray(value) && !value.length) {
+                    return value;
                 }
-                if (!Array.isArray(value)) {
-                    return Invalid;
-                }
-                return value;
+
+                // The only supported literal is an empty array
+                return FieldValue.Invalid;
         }
 
-        return Invalid;
+        return FieldValue.Invalid;
     }
 
     /**

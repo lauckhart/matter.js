@@ -16,7 +16,7 @@ export function addConstraint(builder: ValidatorBuilder, model: ValueModel, cons
         if (ast.parts) {
             return `(${ast.parts.map(part => generateConstraintExpr(model, part)).join(" || ")})`;
         }
-        
+
         const metatype = model.metatype;
         switch (metatype) {
             case Metatype.array:
@@ -30,14 +30,14 @@ export function addConstraint(builder: ValidatorBuilder, model: ValueModel, cons
                 return generateRangeTest("v.length", ast, "v instanceof Uint8Array");
 
             case Metatype.string:
-                return generateRangeTest("v.length", ast, "typeof v == 'string'");
+                return generateRangeTest("v.length", ast, "typeof v === 'string'");
         }
 
         return generateRangeTest("v", ast);
     }
 
     function generateRangeTest(value: string, ast: Constraint.Ast, typeTest?: string, entryTest?: string) {
-        const parts = [];
+        const parts = Array<string>();
         if (typeTest) {
             parts.push(...typeTest);
         }

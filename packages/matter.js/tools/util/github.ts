@@ -14,14 +14,14 @@ type Cache = (name: string, generator: (name: string) => Promise<string>) => Pro
 
 export class Directory {
     private contents = {} as {
-        [ key: string ]: Entry
+        [key: string]: Entry
     };
 
     constructor(
         public readonly url: string,
         private readonly cache: Cache,
         private readonly auth?: string,
-    ) {}
+    ) { }
 
     async ls(): Promise<string[]> {
         await this.load();
@@ -36,7 +36,7 @@ export class Directory {
             if (entry.type !== "tree") throw new Error(`Path "${p}" not a directory`);
             result = new Directory(entry.url, this.cache, this.auth);
         }
-        return result!;
+        return result;
     }
 
     async get(name: string) {
@@ -70,7 +70,7 @@ export class Directory {
             if (this.auth) options.headers.Authorization = `Bearer ${this.auth.trim()}`
 
             const result = await fetch(url, options);
-            if (result.status != 200) {
+            if (result.status !== 200) {
                 throw new Error(`HTTP error ${result.statusText} (${result.status}) from ${url}`);
             }
 

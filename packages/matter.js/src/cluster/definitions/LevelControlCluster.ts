@@ -6,260 +6,328 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BitFlag } from "../../schema/BitmapSchema.js";
-import { Attribute, AccessLevel, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
+import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
+import { GlobalAttributes, Attribute, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { BuildCluster } from "../../cluster/ClusterBuilder.js";
 
 /**
- * The Options attribute is meant to be changed only during commissioning. The
- * Options attribute is a bitmap that determines the default behavior of some
- * cluster commands. Each command that is dependent on the Options attribute
- * SHALL first construct a temporary Options bitmap that is in effect during
- * the command processing. The temporary Options bitmap has the same format and
- * meaning as the Options attribute, but includes any bits that may be
- * overridden by command fields.
+ * Level Control
+ *
+ * Attributes and commands for controlling devices that can be set to a level between fully 'On' and fully 'Off.'
+ *
+ * Use this factory function to create a LevelControl cluster supporting a specific set of features. Include each
+ * {@link LevelControlCluster.Feature} you wish to support.
+ *
+ * @param features a list of {@link LevelControlCluster.Feature} to support
+ * @returns a LevelControl cluster with specified features enabled
+ * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
+ */
+export function LevelControlCluster<T extends LevelControlCluster.Feature[]>(...features: [...T]) {
+    const cluster = Cluster({
+        ...LevelControlCluster.Metadata,
+        supportedFeatures: BitFlags(LevelControlCluster.Metadata.features, ...features),
+        ...LevelControlCluster.BaseComponent
+    });
+    extendCluster(cluster, LevelControlCluster.LightingComponent, { lighting: true });
+    extendCluster(cluster, LevelControlCluster.FrequencyComponent, { frequency: true });
+    return cluster as unknown as LevelControlCluster.Type<BitFlags<typeof LevelControlCluster.Metadata.features, T>>;
+}
+
+/**
+ * Bit definitions for TlvOptions
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
  */
-export const OptionsBits = {
-    ExecuteIfOff: BitFlag(0),
-    CoupleColorTempToLevel: BitFlag(1)
-};
-
-export const Options = TlvBitmap(TlvUInt8, OptionsBits);
+export const OptionsBits = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFlag(1) };
 
 /**
- * The MoveToLevel command SHALL have the following data fields:
+ * The value of the LevelControl options attribute
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
+ */
+export const TlvOptions = TlvBitmap(TlvUInt8, OptionsBits);
+
+/**
+ * Input to the LevelControl moveToLevel command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.1
  */
-export const MoveToLevelRequest = TlvObject({
-    Level: TlvField(0, TlvUInt8),
-    TransitionTime: TlvField(1, TlvNullable(TlvUInt16)),
-    OptionsMask: TlvField(2, TlvUInt8),
-    OptionsOverride: TlvField(3, TlvUInt8)
+export const TlvMoveToLevelRequest = TlvObject({
+    level: TlvField(0, TlvUInt8.bound({ max: 254 })),
+    transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
+    optionsMask: TlvField(2, TlvUInt8),
+    optionsOverride: TlvField(3, TlvUInt8)
 });
 
 export const enum MoveMode {
     Up = 0,
     Down = 1
-};
+}
 
 /**
- * The Move command SHALL have the following data fields:
+ * Input to the LevelControl move command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2
  */
-export const MoveRequest = TlvObject({
+export const TlvMoveRequest = TlvObject({
     /**
-     * The MoveMode field SHALL be one of the non-reserved values in Values of
-     * the MoveMode Field.
+     * The MoveMode field shall be one of the non-reserved values in Values of the MoveMode Field.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2.1
      */
-    MoveMode: TlvField(0, TlvEnum<MoveMode>()),
+    moveMode: TlvField(0, TlvEnum<MoveMode>()),
 
     /**
-     * The Rate field specifies the rate of movement in units per second. The
-     * actual rate of movement SHOULD be as close to this rate as the device is
-     * able. If the Rate field is equal to null, then the value in
-     * DefaultMoveRate attribute SHALL be used. However, if the Rate field is
-     * equal to null and the DefaultMoveRate attribute is not supported, or if
-     * the Rate field is equal to null and the value of the DefaultMoveRate
-     * attribute is equal to null, then the device SHOULD move as fast as it is
-     * able. If the device is not able to move at a variable rate, this field
-     * MAY be disregarded.
+     * The Rate field specifies the rate of movement in units per second. The actual rate of movement SHOULD be as
+     * close to this rate as the device is able. If the Rate field is equal to null, then the value in DefaultMoveRate
+     * attribute shall be used. However, if the Rate field is equal to null and the DefaultMoveRate attribute is not
+     * supported, or if the Rate field is equal to null and the value of the DefaultMoveRate attribute is equal to
+     * null, then the device SHOULD move as fast as it is able. If the device is not able to move at a variable rate,
+     * this field MAY be disregarded.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2.2
      */
-    Rate: TlvField(1, TlvNullable(TlvUInt8)),
+    rate: TlvField(1, TlvNullable(TlvUInt8)),
 
-    OptionsMask: TlvField(2, TlvUInt8),
-    OptionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvUInt8),
+    optionsOverride: TlvField(3, TlvUInt8)
 });
 
 export const enum StepMode {
     Up = 0,
     Down = 1
-};
+}
 
 /**
- * The Step command SHALL have the following data fields:
+ * Input to the LevelControl step command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.3
  */
-export const StepRequest = TlvObject({
-    StepMode: TlvField(0, TlvEnum<StepMode>()),
-    StepSize: TlvField(1, TlvUInt8),
-    TransitionTime: TlvField(2, TlvNullable(TlvUInt16)),
-    OptionsMask: TlvField(3, TlvUInt8),
-    OptionsOverride: TlvField(4, TlvUInt8)
+export const TlvStepRequest = TlvObject({
+    stepMode: TlvField(0, TlvEnum<StepMode>()),
+    stepSize: TlvField(1, TlvUInt8),
+    transitionTime: TlvField(2, TlvNullable(TlvUInt16)),
+    optionsMask: TlvField(3, TlvUInt8),
+    optionsOverride: TlvField(4, TlvUInt8)
 });
 
 /**
- * The Stop command SHALL have the following data fields:
+ * Input to the LevelControl stop command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.4
  */
-export const StopRequest = TlvObject({
-    OptionsMask: TlvField(0, TlvUInt8),
-    OptionsOverride: TlvField(1, TlvUInt8)
-});
-
-export const LevelControlOptionsBits = {
-    ExecuteIfOff: BitFlag(1),
-    CoupleColorTempToLevel: BitFlag(2)
-};
-
-export const LevelControlOptions = TlvBitmap(TlvUInt8, LevelControlOptionsBits);
+export const TlvStopRequest = TlvObject({ optionsMask: TlvField(0, TlvUInt8), optionsOverride: TlvField(1, TlvUInt8) });
 
 /**
+ * Bit definitions for TlvLevelControlOptions
+ */
+export const LevelControlOptionsBits = { executeIfOff: BitFlag(1), coupleColorTempToLevel: BitFlag(2) };
+
+export const TlvLevelControlOptions = TlvBitmap(TlvUInt8, LevelControlOptionsBits);
+
+/**
+ * Input to the LevelControl moveToLevelWithOnOff command
+ *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
  */
-export const MoveToLevelWithOnOffRequest = TlvObject({
-    Level: TlvField(0, TlvUInt8),
-    TransitionTime: TlvField(1, TlvNullable(TlvUInt16)),
-    OptionsMask: TlvField(2, LevelControlOptions),
-    OptionsOverride: TlvField(3, LevelControlOptions)
+export const TlvMoveToLevelWithOnOffRequest = TlvObject({
+    level: TlvField(0, TlvUInt8),
+    transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
+    optionsMask: TlvField(2, TlvLevelControlOptions),
+    optionsOverride: TlvField(3, TlvLevelControlOptions)
 });
 
 /**
+ * Input to the LevelControl moveWithOnOff command
+ *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
  */
-export const MoveWithOnOffRequest = TlvObject({
-    MoveMode: TlvField(0, TlvEnum<MoveMode>()),
-    Rate: TlvField(1, TlvNullable(TlvUInt8)),
-    OptionsMask: TlvField(2, LevelControlOptions),
-    OptionsOverride: TlvField(3, LevelControlOptions)
+export const TlvMoveWithOnOffRequest = TlvObject({
+    moveMode: TlvField(0, TlvEnum<MoveMode>()),
+    rate: TlvField(1, TlvNullable(TlvUInt8)),
+    optionsMask: TlvField(2, TlvLevelControlOptions),
+    optionsOverride: TlvField(3, TlvLevelControlOptions)
 });
 
 /**
+ * Input to the LevelControl stepWithOnOff command
+ *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
  */
-export const StepWithOnOffRequest = TlvObject({
-    StepMode: TlvField(0, TlvEnum<StepMode>()),
-    StepSize: TlvField(1, TlvUInt8),
-    TransitionTime: TlvField(2, TlvNullable(TlvUInt16)),
-    OptionsMask: TlvField(3, LevelControlOptions),
-    OptionsOverride: TlvField(4, LevelControlOptions)
+export const TlvStepWithOnOffRequest = TlvObject({
+    stepMode: TlvField(0, TlvEnum<StepMode>()),
+    stepSize: TlvField(1, TlvUInt8),
+    transitionTime: TlvField(2, TlvNullable(TlvUInt16)),
+    optionsMask: TlvField(3, TlvLevelControlOptions),
+    optionsOverride: TlvField(4, TlvLevelControlOptions)
 });
 
 /**
+ * Input to the LevelControl stopWithOnOff command
+ *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
  */
-export const StopWithOnOffRequest = TlvObject({
-    OptionsMask: TlvField(0, LevelControlOptions),
-    OptionsOverride: TlvField(1, LevelControlOptions)
+export const TlvStopWithOnOffRequest = TlvObject({
+    optionsMask: TlvField(0, TlvLevelControlOptions),
+    optionsOverride: TlvField(1, TlvLevelControlOptions)
 });
 
 /**
- * The MoveToClosestFrequency command SHALL have the following data fields:
+ * Input to the LevelControl moveToClosestFrequency command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.5
  */
-export const MoveToClosestFrequencyRequest = TlvObject({ Frequency: TlvField(0, TlvUInt16) });
+export const TlvMoveToClosestFrequencyRequest = TlvObject({ frequency: TlvField(0, TlvUInt16) });
 
 export namespace LevelControlCluster {
-    export const id = 8;
-    export const name = "LevelControl";
-    export const revision = 1;
-
-    export const featureMap = {
+    /**
+     * These are optional features supported by LevelControlCluster.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.4
+     */
+    export enum Feature {
         /**
          * OnOff
          *
          * Dependency with the On/Off cluster
          */
-        onOff: BitFlag(0),
+        OnOff = "OnOff",
 
         /**
          * Lighting
          *
          * Behavior that supports lighting applications
          */
-        lighting: BitFlag(1),
+        Lighting = "Lighting",
 
         /**
          * Frequency
          *
-         * Supports frequency attributes and behavior. The Pulse Width
-         * Modulation cluster was created for frequency control.
+         * Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for frequency
+         * control.
          */
-        frequency: BitFlag(2)
-    };
+        Frequency = "Frequency"
+    }
 
-    const Base = {
+    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
+        typeof Metadata
+        & { attributes: GlobalAttributes<typeof Metadata.features> }
+        & { supportedFeatures: T }
+        & typeof BaseComponent
+        & (T extends { lighting: true } ? typeof LightingComponent : {})
+        & (T extends { frequency: true } ? typeof FrequencyComponent : {});
+
+    /**
+     * LevelControl cluster metadata.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
+     */
+    export const Metadata = ClusterMetadata({
+        id: 0x8,
+        name: "LevelControl",
+        revision: 1,
+
+        features: {
+            /**
+             * OnOff
+             *
+             * Dependency with the On/Off cluster
+             */
+            onOff: BitFlag(0),
+
+            /**
+             * Lighting
+             *
+             * Behavior that supports lighting applications
+             */
+            lighting: BitFlag(1),
+
+            /**
+             * Frequency
+             *
+             * Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for frequency
+             * control.
+             */
+            frequency: BitFlag(2)
+        }
+    });
+
+    /**
+     * A LevelControlCluster supports these elements for all feature combinations.
+     */
+    export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * The CurrentLevel attribute represents the current level of this
-             * device. The meaning of 'level' is device dependent.
+             * The CurrentLevel attribute represents the current level of this device. The meaning of 'level' is device
+             * dependent.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.1
              */
-            currentLevel: Attribute(0, TlvNullable(TlvUInt8), { scene: true, persistent: true, readAcl: AccessLevel.View }),
+            currentLevel: Attribute(0, TlvNullable(TlvUInt8), { scene: true, persistent: true, default: 0 }),
 
             /**
-             * The MinLevel attribute indicates the minimum value of
-             * CurrentLevel that is capable of being assigned.
+             * The MinLevel attribute indicates the minimum value of CurrentLevel that is capable of being assigned.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.3
              */
-            minLevel: OptionalAttribute(2, TlvUInt8, { readAcl: AccessLevel.View }),
+            minLevel: OptionalAttribute(2, TlvUInt8, { default: 0 }),
 
             /**
-             * The MaxLevel attribute indicates the maximum value of
-             * CurrentLevel that is capable of being assigned.
+             * The MaxLevel attribute indicates the maximum value of CurrentLevel that is capable of being assigned.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.4
              */
-            maxLevel: OptionalAttribute(3, TlvUInt8, { readAcl: AccessLevel.View }),
+            maxLevel: OptionalAttribute(3, TlvUInt8.bound({ max: 254 }), { default: 0 }),
 
             /**
-             * The Options attribute is meant to be changed only during
-             * commissioning. The Options attribute is a bitmap that determines
-             * the default behavior of some cluster commands. Each command that
-             * is dependent on the Options attribute SHALL first construct a
-             * temporary Options bitmap that is in effect during the command
-             * processing. The temporary Options bitmap has the same format and
-             * meaning as the Options attribute, but includes any bits that may
-             * be overridden by command fields.
+             * The Options attribute is meant to be changed only during commissioning. The Options attribute is a
+             * bitmap that determines the default behavior of some cluster commands. Each command that is dependent on
+             * the Options attribute shall first construct a temporary Options bitmap that is in effect during the
+             * command processing. The temporary Options bitmap has the same format and meaning as the Options
+             * attribute, but includes any bits that may be overridden by command fields.
+             *
+             * Below is the format and description of the Options attribute and temporary Options bitmap and the effect
+             * on dependent commands.
+             *
+             * Table 19. Options Attribute
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
              */
-            options: WritableAttribute(15, Options),
+            options: WritableAttribute(15, TlvOptions),
 
             /**
-             * The OnOffTransitionTime attribute represents the time taken to
-             * move to or from the target level when On or Off commands are
-             * received by an On/Off cluster on the same endpoint. It is
-             * specified in 1/10ths of a second.
+             * The OnOffTransitionTime attribute represents the time taken to move to or from the target level when On
+             * or Off commands are received by an On/Off cluster on the same endpoint. It is specified in 1/10ths of a
+             * second.
+             *
+             * The actual time taken SHOULD be as close to OnOffTransitionTime as the device is able. Please note that
+             * if the device is not able to move at a variable rate, the OnOffTransitionTime attribute SHOULD NOT be
+             * implemented.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.9
              */
-            onOffTransitionTime: OptionalWritableAttribute(16, TlvUInt16),
+            onOffTransitionTime: OptionalWritableAttribute(16, TlvUInt16, { default: 0 }),
 
             /**
-             * The OnLevel attribute determines the value that the CurrentLevel
-             * attribute is set to when the OnOff attribute of an On/Off
-             * cluster on the same endpoint is set to TRUE, as a result of
-             * processing an On/Off cluster command. If the OnLevel attribute
-             * is not implemented, or is set to the null value, it has no
-             * effect. For more details see Effect of On/Off Commands on the
-             * CurrentLevel Attribute.
+             * The OnLevel attribute determines the value that the CurrentLevel attribute is set to when the OnOff
+             * attribute of an On/Off cluster on the same endpoint is set to TRUE, as a result of processing an On/Off
+             * cluster command. If the OnLevel attribute is not implemented, or is set to the null value, it has no
+             * effect. For more details see Effect of On/Off Commands on the CurrentLevel Attribute.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.10
              */
             onLevel: WritableAttribute(17, TlvNullable(TlvUInt8), { default: null }),
 
             /**
-             * The OnTransitionTime attribute represents the time taken to move
-             * the current level from the minimum level to the maximum level
-             * when an On command is received by an On/Off cluster on the same
-             * endpoint. It is specified in 10ths of a second. If this
-             * attribute is not implemented, or contains a null value, the
+             * The OnTransitionTime attribute represents the time taken to move the current level from the minimum
+             * level to the maximum level when an On command is received by an On/Off cluster on the same endpoint. It
+             * is specified in 10ths of a second. If this attribute is not implemented, or contains a null value, the
              * OnOffTransitionTime will be used instead.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.11
@@ -267,11 +335,9 @@ export namespace LevelControlCluster {
             onTransitionTime: OptionalWritableAttribute(18, TlvNullable(TlvUInt16), { default: null }),
 
             /**
-             * The OffTransitionTime attribute represents the time taken to
-             * move the current level from the maximum level to the minimum
-             * level when an Off command is received by an On/Off cluster on
-             * the same endpoint. It is specified in 10ths of a second. If this
-             * attribute is not implemented, or contains a null value, the
+             * The OffTransitionTime attribute represents the time taken to move the current level from the maximum
+             * level to the minimum level when an Off command is received by an On/Off cluster on the same endpoint. It
+             * is specified in 10ths of a second. If this attribute is not implemented, or contains a null value, the
              * OnOffTransitionTime will be used instead.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.12
@@ -279,9 +345,8 @@ export namespace LevelControlCluster {
             offTransitionTime: OptionalWritableAttribute(19, TlvNullable(TlvUInt16), { default: null }),
 
             /**
-             * The DefaultMoveRate attribute determines the movement rate, in
-             * units per second, when a Move command is received with a null
-             * value Rate parameter.
+             * The DefaultMoveRate attribute determines the movement rate, in units per second, when a Move command is
+             * received with a null value Rate parameter.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.13
              */
@@ -290,135 +355,136 @@ export namespace LevelControlCluster {
 
         commands: {
             /**
-             * The MoveToLevel command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.1
              */
-            moveToLevel: Command(0, MoveToLevelRequest, 0, TlvNoResponse),
+            moveToLevel: Command(0, TlvMoveToLevelRequest, 0, TlvNoResponse),
 
             /**
-             * The Move command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2
              */
-            move: Command(1, MoveRequest, 1, TlvNoResponse),
+            move: Command(1, TlvMoveRequest, 1, TlvNoResponse),
 
             /**
-             * The Step command SHALL have the following data fields:
+             * The StepMode field shall be one of the non-reserved values in Values of the StepMode Field.
+             *
+             * The TransitionTime field specifies the time that shall be taken to perform the step, in tenths of a
+             * second. A step is a change in the CurrentLevel of StepSize units. The actual time taken SHOULD be as
+             * close to this as the device is able. If the TransitionTime field is equal to null, the device SHOULD
+             * move as fast as it is able.
+             *
+             * If the device is not able to move at a variable rate, the TransitionTime field MAY be disregarded.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.3
              */
-            step: Command(2, StepRequest, 2, TlvNoResponse),
+            step: Command(2, TlvStepRequest, 2, TlvNoResponse),
 
             /**
-             * The Stop command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.4
              */
-            stop: Command(3, StopRequest, 3, TlvNoResponse),
+            stop: Command(3, TlvStopRequest, 3, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
              */
-            moveToLevelWithOnOff: Command(4, MoveToLevelWithOnOffRequest, 4, TlvNoResponse),
+            moveToLevelWithOnOff: Command(4, TlvMoveToLevelWithOnOffRequest, 4, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
              */
-            moveWithOnOff: Command(5, MoveWithOnOffRequest, 5, TlvNoResponse),
+            moveWithOnOff: Command(5, TlvMoveWithOnOffRequest, 5, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
              */
-            stepWithOnOff: Command(6, StepWithOnOffRequest, 6, TlvNoResponse),
+            stepWithOnOff: Command(6, TlvStepWithOnOffRequest, 6, TlvNoResponse),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
              */
-            stopWithOnOff: Command(7, StopWithOnOffRequest, 7, TlvNoResponse)
+            stopWithOnOff: Command(7, TlvStopWithOnOffRequest, 7, TlvNoResponse)
         }
-    };
+    });
 
-    const Lighting = {
+    /**
+     * A LevelControlCluster supports these elements if it supports feature Lighting.
+     */
+    export const LightingComponent = ClusterComponent({
         attributes: {
             /**
-             * The RemainingTime attribute represents the time remaining until
-             * the current command is complete - it is specified in 1/10ths of
-             * a second.
+             * The RemainingTime attribute represents the time remaining until the current command is complete - it is
+             * specified in 1/10ths of a second.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.2
              */
-            remainingTime: Attribute(1, TlvUInt16, { readAcl: AccessLevel.View }),
+            remainingTime: Attribute(1, TlvUInt16, { default: 0 }),
 
             /**
-             * The StartUpCurrentLevel attribute SHALL define the desired
-             * startup level for a device when it is supplied with power and
-             * this level SHALL be reflected in the CurrentLevel attribute. The
-             * values of the StartUpCurrentLevel attribute are listed below:
+             * The StartUpCurrentLevel attribute shall define the desired startup level for a device when it is
+             * supplied with power and this level shall be reflected in the CurrentLevel attribute. The values of the
+             * StartUpCurrentLevel attribute are listed below:
+             *
+             * Table 20. Values of the StartUpCurrentLevel attribute
+             *
+             * This behavior does not apply to reboots associated with OTA. After an OTA restart, the CurrentLevel
+             * attribute shall return to its value prior to the restart.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.14
              */
-            startUpCurrentLevel: WritableAttribute(16384, TlvNullable(TlvUInt8), { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage })
+            startUpCurrentLevel: WritableAttribute(
+                16384,
+                TlvNullable(TlvUInt8),
+                { persistent: true, writeAcl: AccessLevel.Manage }
+            )
         }
-    };
+    });
 
-    const Frequency = {
+    /**
+     * A LevelControlCluster supports these elements if it supports feature Frequency.
+     */
+    export const FrequencyComponent = ClusterComponent({
         attributes: {
             /**
-             * The CurrentFrequency attribute represents the frequency at which
-             * the device is at CurrentLevel. A CurrentFrequency of 0 is
-             * unknown.
+             * The CurrentFrequency attribute represents the frequency at which the device is at CurrentLevel. A
+             * CurrentFrequency of 0 is unknown.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.5
              */
-            currentFrequency: Attribute(4, TlvUInt16, { scene: true, readAcl: AccessLevel.View }),
+            currentFrequency: Attribute(4, TlvUInt16, { scene: true, default: 0 }),
 
             /**
-             * The MinFrequency attribute indicates the minimum value of
-             * CurrentFrequency that is capable of being assigned. MinFrequency
-             * SHALL be less than or equal to MaxFrequency. A value of 0
-             * indicates undefined.
+             * The MinFrequency attribute indicates the minimum value of CurrentFrequency that is capable of being
+             * assigned. MinFrequency shall be less than or equal to MaxFrequency. A value of 0 indicates undefined.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.6
              */
-            minFrequency: Attribute(5, TlvUInt16, { readAcl: AccessLevel.View }),
+            minFrequency: Attribute(5, TlvUInt16, { default: 0 }),
 
             /**
-             * The MaxFrequency attribute indicates the maximum value of
-             * CurrentFrequency that is capable of being assigned. MaxFrequency
-             * SHALL be greater than or equal to MinFrequency. A value of 0
-             * indicates undefined.
+             * The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being
+             * assigned. MaxFrequency shall be greater than or equal to MinFrequency. A value of 0 indicates undefined.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.7
              */
-            maxFrequency: Attribute(6, TlvUInt16, { readAcl: AccessLevel.View })
+            maxFrequency: Attribute(6, TlvUInt16, { default: 0 })
         },
 
         commands: {
             /**
-             * The MoveToClosestFrequency command SHALL have the following data
-             * fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.5
              */
-            moveToClosestFrequency: Command(8, MoveToClosestFrequencyRequest, 8, TlvNoResponse)
+            moveToClosestFrequency: Command(8, TlvMoveToClosestFrequencyRequest, 8, TlvNoResponse)
         }
-    };
-
-    export const Complete = BuildCluster({
-        id,
-        name,
-        revision,
-        features: featureMap,
-        supportedFeatures: {
-            onOff: true,
-            lighting: true,
-            frequency: true
-        },
-        elements: [
-            Base,
-            Lighting,
-            Frequency
-        ]
     });
-};
+
+    /**
+     * This cluster supports all LevelControl features. It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export const Complete = Cluster({
+        ...Metadata,
+        attributes: { ...BaseComponent.attributes, ...LightingComponent.attributes, ...FrequencyComponent.attributes },
+        commands: { ...BaseComponent.commands, ...FrequencyComponent.commands }
+    });
+}

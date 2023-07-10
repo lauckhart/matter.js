@@ -5,7 +5,7 @@
  */
 
 import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
-import { ElementTag, Metatype } from "../definitions/index.js";
+import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, ValueElement, DatatypeElement, Globals } from "../elements/index.js";
 import { Model } from "./Model.js";
 
@@ -26,9 +26,9 @@ const QUALITY: unique symbol = Symbol("quality");
  */
 export abstract class ValueModel extends Model implements ValueElement {
     byteSize?: ValueElement.Size;
-    default?: any;
+    default?: FieldValue;
     metatype?: Metatype;
-    override isType? = true;
+    override isType?= true;
 
     override get children(): DatatypeModel[] {
         return super.children as any;
@@ -86,16 +86,16 @@ export abstract class ValueModel extends Model implements ValueElement {
         }
 
         // Enum is a derived type so we can just return its base
-        if (metabase.metatype == Metatype.enum) {
+        if (metabase.metatype === Metatype.enum) {
             return metabase.base;
         }
 
         // Bitmaps are not derived types so we have to map manually
-        if (metabase.metatype == Metatype.bitmap) {
+        if (metabase.metatype === Metatype.bitmap) {
             const primitiveName = metabase.name.replace("map", "uint");
-            return metabase.parent?.children.find(c => c.name == primitiveName) as ValueModel | undefined;
+            return metabase.parent?.children.find(c => c.name === primitiveName) as ValueModel | undefined;
         }
-        
+
         return metabase;
     }
 
@@ -118,6 +118,16 @@ export abstract class ValueModel extends Model implements ValueElement {
         if (metaBase) {
             return metaBase.metatype;
         }
+    }
+
+    /**
+     * The value to use as a default.
+     */
+    get effectiveDefault(): FieldValue | undefined {
+        if (this.default === undefined && !this.nullable && this.effectiveMetatype === Metatype.array) {
+            return [];
+        }
+        return this.default;
     }
 
     /**
@@ -155,23 +165,23 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Datatype models.
      */
     override get allowedBaseTags() {
-        if (this.tag == ElementTag.Datatype) {
-            return [ ElementTag.Datatype ];
+        if (this.tag === ElementTag.Datatype) {
+            return [ElementTag.Datatype];
         }
-        return [ this.tag, ElementTag.Datatype ];
+        return [this.tag, ElementTag.Datatype];
     }
 
     /**
      * Collect constraints and conformance for this type and all base types.
      */
     get validationAspects() {
-        let aspects = Array<Aspect<any>>();
-        
+        const aspects = Array<Aspect<any>>();
+
         new ModelTraversal().visitInheritance(this, (model) => {
             if (model instanceof ValueModel) {
                 if (
                     !model.conformance.empty
-                    && model.conformance.type != Conformance.Special.Desc
+                    && model.conformance.type !== Conformance.Special.Desc
                 ) {
                     aspects.push(model.conformance);
                 }
@@ -191,12 +201,19 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Is this model deprecated?
      */
     get deprecated() {
-        return this.conformance.type == Conformance.Flag.Deprecated;
+        return this.conformance.type === Conformance.Flag.Deprecated;
+    }
+
+    /**
+     * Can this model be omitted?
+     */
+    get nullable() {
+        return !!this.quality.nullable;
     }
 
     override valueOf() {
         const result = super.valueOf() as any;
-        for (const k of [ "conformance", "access", "quality", "constraint" ]) {
+        for (const k of ["conformance", "access", "quality", "constraint"]) {
             const v = (this as any)[k] as Aspect<any>;
             if (v && !v.empty) {
                 result[k] = v.valueOf();
@@ -218,11 +235,11 @@ export abstract class ValueModel extends Model implements ValueElement {
         }
     }
 
-    private getAspect(symbol: symbol, constructor: new(definition: any) => any) {
+    private getAspect(symbol: symbol, constructor: new (definition: any) => any) {
         return (this as any)[symbol] || ((this as any)[symbol] = new constructor(undefined));
     }
 
-    private setAspect(symbol: symbol, constructor: new(definition: any) => any, value: any) {
+    private setAspect(symbol: symbol, constructor: new (definition: any) => any, value: any) {
         if (value instanceof constructor) {
             (this as any)[symbol] = value;
         } else {
