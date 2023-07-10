@@ -27,17 +27,31 @@ Matter.children.push({
         {
             tag: "attribute", name: "WindowStatus", id: 0x0, type: "CommissioningWindowStatusEnum",
             access: "R V", conformance: "M",
-            details: "This attribute SHALL indicate whether a new Commissioning window has been opened by an " +
-                     "Administrator, using either the OCW command or the OBCW command.",
+
+            details: "This attribute shall indicate whether a new Commissioning window has been opened by an " +
+                     "Administrator, using either the OCW command or the OBCW command." +
+                     "\n" +
+                     "This attribute shall revert to WindowNotOpen upon expiry of a commissioning window." +
+                     "\n" +
+                     "Note that an initial commissioning window is not opened using either the OCW command or the OBCW " +
+                     "command, and therefore this attribute shall be set to WindowNotOpen on initial commissioning.",
+
             xref: { document: "core", section: "11.18.7.1" }
         },
 
         {
             tag: "attribute", name: "AdminFabricIndex", id: 0x1, type: "fabric-idx", access: "R V",
             conformance: "M", quality: "X",
-            details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute SHALL indicate the " +
+
+            details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                      "FabricIndex associated with the Fabric scoping of the Administrator that opened the window. This " +
-                     "MAY be used to cross-reference in the Fabrics attribute of the Node Operational Credentials cluster.",
+                     "MAY be used to cross-reference in the Fabrics attribute of the Node Operational Credentials cluster." +
+                     "\n" +
+                     "If, during an open commissioning window, the fabric for the Administrator that opened the window is " +
+                     "removed, then this attribute shall be set to null." +
+                     "\n" +
+                     "When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null.",
+
             xref: { document: "core", section: "11.18.7.2" }
         },
 
@@ -45,12 +59,14 @@ Matter.children.push({
             tag: "attribute", name: "AdminVendorId", id: 0x2, type: "vendor-id", access: "R V",
             conformance: "M", quality: "X",
 
-            details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute SHALL indicate the " +
+            details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                      "Vendor ID associated with the Fabric scoping of the Administrator that opened the window. This " +
-                     "field SHALL match the VendorID field of the Fabrics attribute list entry associated with the " +
+                     "field shall match the VendorID field of the Fabrics attribute list entry associated with the " +
                      "Administrator having opened the window, at the time of window opening. If the fabric for the " +
                      "Administrator that opened the window is removed from the node while the commissioning window is " +
-                     "still open, this attribute SHALL NOT be updated.",
+                     "still open, this attribute shall NOT be updated." +
+                     "\n" +
+                     "When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null.",
 
             xref: { document: "core", section: "11.18.7.3" }
         },
@@ -79,11 +95,16 @@ Matter.children.push({
         {
             tag: "command", name: "RevokeCommissioning", id: 0x2, access: "A T", conformance: "M",
             direction: "request", response: "status",
+
             details: "This command is used by a current Administrator to instruct a Node to revoke any active Open " +
                      "Commissioning Window or Open Basic Commissioning Window command. This is an idempotent command and " +
-                     "the Node SHALL (for ECM) delete the temporary PAKEPasscodeVerifier and associated data, and stop " +
+                     "the Node shall (for ECM) delete the temporary PAKEPasscodeVerifier and associated data, and stop " +
                      "publishing the DNS-SD record associated with the Open Commissioning Window or Open Basic " +
-                     "Commissioning Window command, see Section 4.3.1, “Commissionable Node Discovery”.",
+                     "Commissioning Window command, see Section 4.3.1, “Commissionable Node Discovery”." +
+                     "\n" +
+                     "If no commissioning window was open at time of receipt, this command shall fail with a cluster " +
+                     "specific status code of WindowNotOpen.",
+
             xref: { document: "core", section: "11.18.8.3" }
         },
 

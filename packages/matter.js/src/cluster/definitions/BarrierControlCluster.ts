@@ -17,13 +17,16 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * This cluster provides control of a barrier (garage door).
  *
- * This function creates a BarrierControl cluster.
+ * Use this factory function to create a BarrierControl cluster.
  */
 export function BarrierControlCluster() {
     const cluster = Cluster({ ...BarrierControlCluster.Metadata, ...BarrierControlCluster.BaseComponent });
     return cluster as unknown as BarrierControlCluster.Type;
 }
 
+/**
+ * Input to the BarrierControl barrierControlGoToPercent command
+ */
 export const TlvBarrierControlGoToPercentRequest = TlvObject({ percentOpen: TlvField(0, TlvUInt8) });
 
 export namespace BarrierControlCluster {

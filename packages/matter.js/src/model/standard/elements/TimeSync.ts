@@ -36,8 +36,11 @@ Matter.children.push({
         {
             tag: "attribute", name: "UtcTime", id: 0x0, type: "epoch-us", access: "R V", conformance: "M",
             default: null, quality: "X C",
-            details: "If the server has achieved time synchronization, this SHALL indicate the current time as a UTC " +
-                     "epoch-us (Epoch Time in Microseconds).",
+            details: "If the server has achieved time synchronization, this shall indicate the current time as a UTC " +
+                     "epoch-us (Epoch Time in Microseconds)." +
+                     "\n" +
+                     "If the server has not achieved time synchronization, this shall be null. This attribute MAY be set " +
+                     "when a Section 11.16.9.1, “SetUtcTime Command” is received.",
             xref: { document: "core", section: "11.16.8.1" }
         },
 
@@ -52,10 +55,15 @@ Matter.children.push({
         {
             tag: "attribute", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", access: "R V",
             conformance: "O", constraint: "desc", default: 0,
+
             details: "The server’s time source. This attribute indicates what method the server is using to sync, whether " +
                      "the source uses NTS or not and whether the source is internal or external to the Fabric. This " +
                      "attribute MAY be used by a client to determine its level of trust in the UTCTime. It is of type " +
-                     "TimeSourceEnum.",
+                     "TimeSourceEnum." +
+                     "\n" +
+                     "If a server is unsure if the selected NTP server is within the Fabric, it SHOULD indicate the " +
+                     "server is NonFabric.",
+
             xref: { document: "core", section: "11.16.8.3" }
         },
 
@@ -84,10 +92,35 @@ Matter.children.push({
         {
             tag: "attribute", name: "TimeZone", id: 0x5, type: "list", access: "RW VM", conformance: "TZ",
             constraint: "1 to 2",
-            details: "A list of time zone offsets from UTC and when they SHALL take effect. This attribute uses a list of " +
+
+            details: "A list of time zone offsets from UTC and when they shall take effect. This attribute uses a list of " +
                      "time offset configurations to allow Nodes to handle scheduled regulatory time zone changes. This " +
-                     "attribute SHALL NOT be used to indicate daylight savings time changes (see Section 11.16.8.7, " +
-                     "“DSTOffset Attribute” for daylight savings time).",
+                     "attribute shall NOT be used to indicate daylight savings time changes (see Section 11.16.8.7, " +
+                     "“DSTOffset Attribute” for daylight savings time)." +
+                     "\n" +
+                     "The first entry shall have a ValidAt entry of 0. If there is a second entry, it shall have a " +
+                     "non-zero ValidAt time." +
+                     "\n" +
+                     "If a server supports a TimeZoneDatabase, the server MAY update its own DSTOffset list (Section " +
+                     "11.16.8.7, “DSTOffset Attribute”) to add new DST change times as required, based on the Name fields " +
+                     "of the TimeZoneStruct. Administrators MAY add additional entries to the DSTOffset of other Nodes " +
+                     "with the same time zone, if required." +
+                     "\n" +
+                     "If a server does not support a TimeZoneDatabase, the Name field of the TimeZoneStruct is only " +
+                     "applicable for client-side localization. In particular:" +
+                     "\n" +
+                     "  • If the server does not support a TimeZoneDatabase, the Name field shall NOT be used to " +
+                     "    calculate the local time." +
+                     "\n" +
+                     "  • If the server does not support a TimeZoneDatabase, the Name field shall NOT be used to " +
+                     "    calculate DST start or end dates." +
+                     "\n" +
+                     "Upon writing this attribute, the server shall recompute its LocalTime, taking into account the " +
+                     "Offset of the currently used TimeZoneStruct." +
+                     "\n" +
+                     "When time passes, the server SHOULD remove any entries which are no longer active and change the " +
+                     "ValidAt time for the currently used TimeZoneStruct list item to zero.",
+
             xref: { document: "core", section: "11.16.8.6" },
             children: [ { tag: "datatype", name: "entry", type: "TimeZoneStruct" } ]
         },
@@ -95,8 +128,24 @@ Matter.children.push({
         {
             tag: "attribute", name: "DstOffset", id: 0x6, type: "list", access: "RW VM", conformance: "TZ",
             constraint: "max 20", default: [],
-            details: "A list of offsets to apply for daylight savings time, and their validity period. List entries SHALL " +
-                     "be sorted by ValidStarting time.",
+
+            details: "A list of offsets to apply for daylight savings time, and their validity period. List entries shall " +
+                     "be sorted by ValidStarting time." +
+                     "\n" +
+                     "A list entry shall NOT have a ValidStarting time that is smaller than the ValidUntil time of the " +
+                     "previous entry." +
+                     "\n" +
+                     "Upon writing this attribute, the server shall recompute its LocalTime." +
+                     "\n" +
+                     "This list MAY hold up to 20 entries. If a server does not have sufficient storage for 20 entries, " +
+                     "it MAY truncate the list by removing entries with the largest ValidStarting times. The server shall " +
+                     "reserve sufficient storage for at least one entry." +
+                     "\n" +
+                     "Over time, the server SHOULD remove any entries which are no longer active from the list." +
+                     "\n" +
+                     "Over time, if the server supports a TimeZoneDatabase, it MAY update its own list to add additional " +
+                     "entries.",
+
             xref: { document: "core", section: "11.16.8.7" },
             children: [ { tag: "datatype", name: "entry", type: "DSTOffsetStruct" } ]
         },
@@ -106,7 +155,9 @@ Matter.children.push({
             default: 0, quality: "X C",
             details: "The computed current local time of the server as a epoch-us (Epoch Time in Microseconds). The local " +
                      "time offset of the value is the sum of the currently used TimeZoneEntry’s offset and the currently " +
-                     "used DST offset, if any.",
+                     "used DST offset, if any." +
+                     "\n" +
+                     "If the server has not achieved time synchronization, this shall be null.",
             xref: { document: "core", section: "11.16.8.8" }
         },
 
@@ -122,29 +173,47 @@ Matter.children.push({
         {
             tag: "attribute", name: "NtpServerPort", id: 0x9, type: "uint16", access: "R V",
             conformance: "NTPS", default: null, quality: "X",
-            details: "If the server is running an NTP server, this value SHALL be the port number for the service. If the " +
-                     "server is not currently running an NTP server, this value SHALL be null.",
+            details: "If the server is running an NTP server, this value shall be the port number for the service. If the " +
+                     "server is not currently running an NTP server, this value shall be null." +
+                     "\n" +
+                     "This attribute shall be present if this server is capable of providing an NTP server instance. See " +
+                     "Section 11.16.15, “Acting as an NTP Server” for more information.",
             xref: { document: "core", section: "11.16.8.10" }
         },
 
         {
             tag: "event", name: "DstTableEmpty", id: 0x0, access: "V", conformance: "TZ", priority: "info",
-            details: "This event SHALL be generated when the server stops applying the current DSTOffset and there are no " +
+            details: "This event shall be generated when the server stops applying the current DSTOffset and there are no " +
                      "entries in the list with a larger ValidStarting time, indicating the need to possibly get new DST " +
-                     "data.",
+                     "data." +
+                     "\n" +
+                     "There is no data for this event.",
             xref: { document: "core", section: "11.16.10.1" }
         },
 
         {
             tag: "event", name: "DstStatus", id: 0x1, access: "V", conformance: "TZ", priority: "info",
-            details: "This event SHALL be generated when the server starts or stops applying a DST offset.",
+            details: "This event shall be generated when the server starts or stops applying a DST offset." +
+                     "\n" +
+                     "This event contains a boolean predicate that indicates whether the server is applying the DST " +
+                     "offset. When the value is \"true\", the current DST offset is being applied (i.e, daylight savings " +
+                     "time is applied, as opposed to standard time).",
             xref: { document: "core", section: "11.16.10.2" }
         },
 
         {
             tag: "event", name: "TimeZoneStatus", id: 0x2, access: "V", conformance: "TZ", priority: "info",
-            details: "This event SHALL be generated when the server changes its time zone offset or name. It SHALL NOT be " +
-                     "sent for DST changes that are not accompanied by a time zone change.",
+
+            details: "This event shall be generated when the server changes its time zone offset or name. It shall NOT be " +
+                     "sent for DST changes that are not accompanied by a time zone change." +
+                     "\n" +
+                     "This event returns a structure as follows:" +
+                     "\n" +
+                     "Current time zone offset from UTC in seconds." +
+                     "\n" +
+                     "Current time zone name. This name SHOULD use the country/city format specified by the IANA time " +
+                     "zone database [https://www.iana.org/time-zones].",
+
             xref: { document: "core", section: "11.16.10.3" },
             children: [
                 { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "-43200 to 50400" },
@@ -155,27 +224,43 @@ Matter.children.push({
         {
             tag: "command", name: "SetUtcTime", id: 0x0, access: "A", conformance: "M", direction: "request",
             response: "status",
-            details: "The data for this command are as follows:",
+
+            details: "This command MAY be issued by Administrator to set the time. If the Commissioner does not have a " +
+                     "valid time source, it MAY send a Granularity of NoTimeGranularity." +
+                     "\n" +
+                     "Upon receipt of this command, the server MAY update its UTCTime attribute to match the time " +
+                     "specified in the command, if the stated Granularity and TimeSource are acceptable. The server shall " +
+                     "update its UTCTime attribute if its current Granularity is NoTimeGranularity." +
+                     "\n" +
+                     "If the time is updated, the server shall also update its Granularity attribute as appropriate" +
+                     "\n" +
+                     "server does not plan to maintain time). It shall also update its TimeSource attribute to Admin. It " +
+                     "shall also update its last known good UTC time." +
+                     "\n" +
+                     "If the server updates its UTCTime attribute, it shall accept the command with a status code of " +
+                     "SUCCESS. If it opts to not update its time, it shall fail the command with a cluster specific " +
+                     "Status Code of TimeNotAccepted.",
+
             xref: { document: "core", section: "11.16.9.1" },
 
             children: [
                 {
                     tag: "datatype", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", default: 0,
-                    details: "This SHALL give the Client’s UTC Time.",
+                    details: "This shall give the Client’s UTC Time.",
                     xref: { document: "core", section: "11.16.9.1.1" }
                 },
 
                 {
                     tag: "datatype", name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M",
                     default: 0,
-                    details: "This SHALL give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity " +
+                    details: "This shall give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity " +
                              "Attribute”.",
                     xref: { document: "core", section: "11.16.9.1.2" }
                 },
 
                 {
                     tag: "datatype", name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: 0,
-                    details: "This SHALL give the Client’s TimeSource, as described in Section 11.16.8.3, “TimeSource Attribute”.",
+                    details: "This shall give the Client’s TimeSource, as described in Section 11.16.8.3, “TimeSource Attribute”.",
                     xref: { document: "core", section: "11.16.9.1.3" }
                 }
             ]
@@ -293,7 +378,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "ValidAt", id: 0x1, type: "epoch-us", conformance: "M",
-                    details: "The UTC time when the offset SHALL be applied.",
+                    details: "The UTC time when the offset shall be applied.",
                     xref: { document: "core", section: "11.16.6.3.2" }
                 },
 
@@ -317,13 +402,13 @@ Matter.children.push({
                 { tag: "datatype", name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc" },
                 {
                     tag: "datatype", name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M",
-                    details: "The UTC time when the offset SHALL be applied.",
+                    details: "The UTC time when the offset shall be applied.",
                     xref: { document: "core", section: "11.16.6.4.1" }
                 },
 
                 {
                     tag: "datatype", name: "ValidUntil", id: 0x2, type: "epoch-us", conformance: "M",
-                    details: "The UTC time when the offset SHALL stop being applied. This value SHALL be larger than the " +
+                    details: "The UTC time when the offset shall stop being applied. This value shall be larger than the " +
                              "ValidStarting time.",
                     xref: { document: "core", section: "11.16.6.4.2" }
                 }

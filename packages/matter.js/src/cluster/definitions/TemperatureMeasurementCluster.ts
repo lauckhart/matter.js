@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvInt16, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -17,7 +17,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * Attributes and commands for configuring the measurement of temperature, and reporting temperature measurements.
  *
- * This function creates a TemperatureMeasurement cluster.
+ * Use this factory function to create a TemperatureMeasurement cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3
  */
@@ -47,40 +47,41 @@ export namespace TemperatureMeasurementCluster {
             /**
              * Represents the temperature in degrees Celsius as follows:
              *
+             * MeasuredValue = 100 x temperature [°C]
+             *
+             * Where -273.15°C ≤ temperature ≤ 327.67°C, with a resolution of 0.01°C. The null value indicates that the
+             * temperature is unknown.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.1
              */
-            measuredValue: Attribute(0, TlvNullable(TlvInt16), { readAcl: AccessLevel.View }),
+            measuredValue: Attribute(0, TlvNullable(TlvInt16)),
 
             /**
              * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of being
              * measured. See Measured Value for more details.
              *
+             * The null value indicates that the value is not available.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.2
              */
-            minMeasuredValue: Attribute(
-                1,
-                TlvNullable(TlvInt16.bound({ min: -27315 })),
-                { default: 32768, readAcl: AccessLevel.View }
-            ),
+            minMeasuredValue: Attribute(1, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: 32768 }),
 
             /**
              * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that is capable of being
              * measured. See Measured Value for more details.
              *
+             * The null value indicates that the value is not available.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.3
              */
-            maxMeasuredValue: Attribute(
-                2,
-                TlvNullable(TlvInt16.bound({ max: 32767 })),
-                { default: 32768, readAcl: AccessLevel.View }
-            ),
+            maxMeasuredValue: Attribute(2, TlvNullable(TlvInt16.bound({ max: 32767 })), { default: 32768 }),
 
             /**
              * See Measured Value.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { default: 0, readAcl: AccessLevel.View })
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { default: 0 })
         }
     });
 

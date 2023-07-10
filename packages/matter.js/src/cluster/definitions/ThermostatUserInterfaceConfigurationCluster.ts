@@ -16,7 +16,7 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
  *
  * An interface for configuring the user interface of a thermostat (which may be remote from the thermostat).
  *
- * This function creates a ThermostatUserInterfaceConfiguration cluster.
+ * Use this factory function to create a ThermostatUserInterfaceConfiguration cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5
  */
@@ -29,7 +29,7 @@ export function ThermostatUserInterfaceConfigurationCluster() {
 }
 
 /**
- * The TemperatureDisplayMode attribute specifies the units of the temperature displayed on the thermostat screen.
+ * The value of the ThermostatUserInterfaceConfiguration temperatureDisplayMode attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.1
  */
@@ -46,7 +46,7 @@ export const enum TemperatureDisplayMode {
 }
 
 /**
- * The KeypadLockout attribute specifies the level of functionality that is available to the user via the keypad.
+ * The value of the ThermostatUserInterfaceConfiguration keypadLockout attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.2
  */
@@ -83,9 +83,7 @@ export const enum KeypadLockout {
 }
 
 /**
- * The ScheduleProgrammingVisibility attribute is used to hide the weekly schedule programming functionality or menu on
- * a thermostat from a user to prevent local user programming of the weekly schedule. The schedule programming MAY
- * still be performed via a remote interface, and the thermostat MAY operate in schedule programming mode.
+ * The value of the ThermostatUserInterfaceConfiguration scheduleProgrammingVisibility attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.3
  */
@@ -128,24 +126,30 @@ export namespace ThermostatUserInterfaceConfigurationCluster {
              * The TemperatureDisplayMode attribute specifies the units of the temperature displayed on the thermostat
              * screen.
              *
+             * Table 92. DisplayMode Attribute Values
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.1
              */
             temperatureDisplayMode: WritableAttribute(
                 0,
                 TlvEnum<TemperatureDisplayMode>(),
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
+                { default: TemperatureDisplayMode.Celsius }
             ),
 
             /**
              * The KeypadLockout attribute specifies the level of functionality that is available to the user via the
              * keypad.
              *
+             * Table 93. KeypadLockout Attribute Values
+             *
+             * The interpretation of the various levels is device-dependent.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.2
              */
             keypadLockout: WritableAttribute(
                 1,
                 TlvEnum<KeypadLockout>(),
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: KeypadLockout.NoLockout, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -154,12 +158,18 @@ export namespace ThermostatUserInterfaceConfigurationCluster {
              * schedule. The schedule programming MAY still be performed via a remote interface, and the thermostat MAY
              * operate in schedule programming mode.
              *
+             * This attribute is designed to prevent local tampering with or disabling of schedules that MAY have been
+             * programmed by users or service providers via a more capable remote interface. The programming schedule
+             * shall continue to run even though it is not visible to the user locally at the thermostat.
+             *
+             * Table 94. ScheduleProgrammingVisibility Attribute Values
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.3
              */
             scheduleProgrammingVisibility: OptionalWritableAttribute(
                 2,
                 TlvEnum<ScheduleProgrammingVisibility>(),
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: ScheduleProgrammingVisibility.ScheduleProgrammingPermitted, writeAcl: AccessLevel.Manage }
             )
         }
     });

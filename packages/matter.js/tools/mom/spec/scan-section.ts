@@ -214,8 +214,11 @@ export function* scanSection(ref: HtmlReference) {
                     }
 
                     // Save the first paragraph of the section
-                    if (text && currentRef && !currentRef.firstParagraph) {
-                        currentRef.firstParagraph = element as HTMLParagraphElement;
+                    if (text && element.className !== "nav" && currentRef) {
+                        if (!currentRef.prose) {
+                            currentRef.prose = [];
+                        }
+                        currentRef.prose.push(element);
                     }
                     break;
 

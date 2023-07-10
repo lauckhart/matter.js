@@ -19,7 +19,7 @@ import { TlvUInt64 } from "../../tlv/TlvNumber.js";
  *
  * Cluster to control Proxy Configuration
  *
- * This function creates a ProxyConfiguration cluster.
+ * Use this factory function to create a ProxyConfiguration cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.14
  */
@@ -29,7 +29,15 @@ export function ProxyConfigurationCluster() {
 }
 
 /**
- * < Previous | Contents | Next >
+ * ProxyAllNodes
+ *
+ * This field shall be set to to 'true' to indicate to the proxy that it shall proxy all nodes. When 'true', the
+ * SourceList attribute is ignored.
+ *
+ * SourceList
+ *
+ * When ProxyAllNodes is 'false', this list contains the set of NodeIds of sources that this proxy shall specifically
+ * proxy.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.14.4.1
  */
@@ -57,7 +65,7 @@ export namespace ProxyConfigurationCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * List of proxy configurations. There SHALL NOT be multiple entries in this list for the same fabric.
+             * List of proxy configurations. There shall NOT be multiple entries in this list for the same fabric.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.15.14.5.1
              */

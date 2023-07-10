@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvUInt32, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -21,7 +21,7 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  *
  * This cluster provides an interface for launching content on a media player device such as a TV or Speaker.
  *
- * Use this factory function to create a ContentLauncher cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a ContentLauncher cluster supporting a specific set of features. Include each
  * {@link ContentLauncherCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ContentLauncherCluster.Feature} to support
@@ -52,7 +52,7 @@ export function ContentLauncherCluster<T extends ContentLauncherCluster.Feature[
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9
  */
-export const enum MetricTypeEnum {
+export const enum MetricType {
     /**
      * This value is used for dimensions defined in a number of Pixels.
      *
@@ -64,7 +64,7 @@ export const enum MetricTypeEnum {
      * This value is for dimensions defined as a percentage of the overall display dimensions. For example, if using a
      * Percentage Metric type for a Width measurement of 50.0, against a display width of 1920 pixels, then the
      * resulting value used would be 960 pixels (50.0% of 1920) for that dimension. Whenever a measurement uses this
-     * Metric type, the resulting values SHALL be rounded ("floored") towards 0 if the measurement requires an integer
+     * Metric type, the resulting values shall be rounded ("floored") towards 0 if the measurement requires an integer
      * final value.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9.2
@@ -74,6 +74,9 @@ export const enum MetricTypeEnum {
 
 /**
  * This object defines dimension which can be used for defining Size of background images.
+ *
+ * TODO : Evaluate if Dimension should be part of common data types. As of Apr 2021 adding it in ContentLauncher
+ * because we don’t have any other usecases which require this datatype.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.8
  */
@@ -93,11 +96,11 @@ export const TlvDimensionStruct = TlvObject({
     height: TlvField(1, TlvDouble),
 
     /**
-     * This SHALL indicate metric used for defining Height/Width.
+     * This shall indicate metric used for defining Height/Width.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.8.3
      */
-    metric: TlvField(2, TlvEnum<MetricTypeEnum>())
+    metric: TlvField(2, TlvEnum<MetricType>())
 });
 
 /**
@@ -108,23 +111,27 @@ export const TlvDimensionStruct = TlvObject({
  */
 export const TlvStyleInformationStruct = TlvObject({
     /**
-     * This SHALL indicate the URL of image used for Styling different Video Player sections like Logo, Watermark etc.
+     * This shall indicate the URL of image used for Styling different Video Player sections like Logo, Watermark etc.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.7.1
      */
     imageUrl: TlvOptionalField(0, TlvString.bound({ maxLength: 8192 })),
 
     /**
-     * This SHALL indicate the color, in RGB or RGBA, used for styling different Video Player sections like Logo,
-     * Watermark, etc. The value SHALL conform to the 6-digit or 8-digit format defined for CSS sRGB hexadecimal color
+     * This shall indicate the color, in RGB or RGBA, used for styling different Video Player sections like Logo,
+     * Watermark, etc. The value shall conform to the 6-digit or 8-digit format defined for CSS sRGB hexadecimal color
      * notation [https://www.w3.org/TR/css-color-4/#hex-notation]. Examples:
+     *
+     *   • #76DE19 for R=0x76, G=0xDE, B=0x19, A absent
+     *
+     *   • #76DE1980 for R=0x76, G=0xDE, B=0x19, A=0x80
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.7.2
      */
     color: TlvOptionalField(1, TlvString),
 
     /**
-     * This SHALL indicate the size of the image used for Styling different Video Player sections like Logo, Watermark
+     * This shall indicate the size of the image used for Styling different Video Player sections like Logo, Watermark
      * etc.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.7.3
@@ -140,14 +147,14 @@ export const TlvStyleInformationStruct = TlvObject({
  */
 export const TlvBrandingInformationStruct = TlvObject({
     /**
-     * This SHALL indicate name of of the provider for the given content.
+     * This shall indicate name of of the provider for the given content.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.6.1
      */
     providerName: TlvField(0, TlvString.bound({ maxLength: 256 })),
 
     /**
-     * This SHALL indicate background of the Video Player while content launch request is being processed by it. This
+     * This shall indicate background of the Video Player while content launch request is being processed by it. This
      * background information MAY also be used by the Video Player when it is in idle state.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.6.2
@@ -155,7 +162,7 @@ export const TlvBrandingInformationStruct = TlvObject({
     background: TlvOptionalField(1, TlvStyleInformationStruct),
 
     /**
-     * This SHALL indicate the logo shown when the Video Player is launching. This is also used when the Video Player
+     * This shall indicate the logo shown when the Video Player is launching. This is also used when the Video Player
      * is in the idle state and Splash field is not available.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.6.3
@@ -163,22 +170,22 @@ export const TlvBrandingInformationStruct = TlvObject({
     logo: TlvOptionalField(2, TlvStyleInformationStruct),
 
     /**
-     * This SHALL indicate the style of progress bar for media playback.
+     * This shall indicate the style of progress bar for media playback.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.6.4
      */
     progressBar: TlvOptionalField(3, TlvStyleInformationStruct),
 
     /**
-     * This SHALL indicate the screen shown when the Video Player is in an idle state. If this property is not
-     * populated, the Video Player SHALL default to logo or the provider name.
+     * This shall indicate the screen shown when the Video Player is in an idle state. If this property is not
+     * populated, the Video Player shall default to logo or the provider name.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.6.5
      */
     splash: TlvOptionalField(4, TlvStyleInformationStruct),
 
     /**
-     * This SHALL indicate watermark shown when the media is playing.
+     * This shall indicate watermark shown when the media is playing.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.6.6
      */
@@ -186,20 +193,20 @@ export const TlvBrandingInformationStruct = TlvObject({
 });
 
 /**
- * Upon receipt, this SHALL launch content from the specified URL.
+ * Input to the ContentLauncher launchUrl command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2
  */
 export const TlvLaunchUrlRequest = TlvObject({
     /**
-     * This SHALL indicate the URL of content to launch.
+     * This shall indicate the URL of content to launch.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2.1
      */
     contentUrl: TlvField(0, TlvString),
 
     /**
-     * This field, if present, SHALL provide a string that MAY be used to describe the content being accessed at the
+     * This field, if present, shall provide a string that MAY be used to describe the content being accessed at the
      * given URL.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2.2
@@ -207,7 +214,7 @@ export const TlvLaunchUrlRequest = TlvObject({
     displayString: TlvOptionalField(1, TlvString),
 
     /**
-     * This field, if present, SHALL indicate the branding information that MAY be displayed when playing back the
+     * This field, if present, shall indicate the branding information that MAY be displayed when playing back the
      * given content.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2.3
@@ -218,7 +225,7 @@ export const TlvLaunchUrlRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.1
  */
-export const enum StatusEnum {
+export const enum Status {
     /**
      * Command succeeded
      */
@@ -236,20 +243,20 @@ export const enum StatusEnum {
 }
 
 /**
- * This command SHALL be generated in response to LaunchContent and LaunchURL commands.
+ * Input to the ContentLauncher launcherResponse command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3
  */
-export const TlvLauncherResponseRequest = TlvObject({
+export const TlvLauncherResponse = TlvObject({
     /**
-     * This SHALL indicate the status of the command which resulted in this response.
+     * This shall indicate the status of the command which resulted in this response.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3.1
      */
-    status: TlvField(0, TlvEnum<StatusEnum>()),
+    status: TlvField(0, TlvEnum<Status>()),
 
     /**
-     * This SHALL indicate Optional app-specific data.
+     * This shall indicate Optional app-specific data.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3.2
      */
@@ -259,7 +266,7 @@ export const TlvLauncherResponseRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.4
  */
-export const enum ParameterEnum {
+export const enum Parameter {
     /**
      * Actor represents an actor credited in video media content; for example, “Gaby sHoffman”
      */
@@ -346,14 +353,14 @@ export const enum ParameterEnum {
  */
 export const TlvAdditionalInfoStruct = TlvObject({
     /**
-     * This SHALL indicate the name of external id, ex. "musicbrainz".
+     * This shall indicate the name of external id, ex. "musicbrainz".
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.5.1
      */
     name: TlvField(0, TlvString.bound({ maxLength: 256 })),
 
     /**
-     * This SHALL indicate the value for external id, ex. "ST0000000666661".
+     * This shall indicate the value for external id, ex. "ST0000000666661".
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.5.2
      */
@@ -367,21 +374,21 @@ export const TlvAdditionalInfoStruct = TlvObject({
  */
 export const TlvParameterStruct = TlvObject({
     /**
-     * This SHALL indicate the entity type.
+     * This shall indicate the entity type.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.3.1
      */
-    type: TlvField(0, TlvEnum<ParameterEnum>()),
+    type: TlvField(0, TlvEnum<Parameter>()),
 
     /**
-     * This SHALL indicate the entity value, which is a search string, ex. “Manchester by the Sea”.
+     * This shall indicate the entity value, which is a search string, ex. “Manchester by the Sea”.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.3.2
      */
     value: TlvField(1, TlvString.bound({ maxLength: 1024 })),
 
     /**
-     * This SHALL indicate the list of additional external content identifiers.
+     * This shall indicate the list of additional external content identifiers.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.3.3
      */
@@ -395,8 +402,8 @@ export const TlvParameterStruct = TlvObject({
  */
 export const TlvContentSearchStruct = TlvObject({
     /**
-     * This SHALL indicate the list of parameters comprising the search. If multiple parameters are provided, the
-     * search parameters SHALL be joined with 'AND' logic. e.g. action movies with Tom Cruise will be represented as
+     * This shall indicate the list of parameters comprising the search. If multiple parameters are provided, the
+     * search parameters shall be joined with 'AND' logic. e.g. action movies with Tom Cruise will be represented as
      * [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.2.1
@@ -405,21 +412,20 @@ export const TlvContentSearchStruct = TlvObject({
 });
 
 /**
- * Upon receipt, this SHALL launch the specified content with optional search criteria. This command returns a Launch
- * Response.
+ * Input to the ContentLauncher launchContent command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1
  */
 export const TlvLaunchContentRequest = TlvObject({
     /**
-     * This SHALL indicate the content to launch.
+     * This shall indicate the content to launch.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1.1
      */
     search: TlvField(0, TlvContentSearchStruct),
 
     /**
-     * This SHALL indicate whether to automatically start playing content, where: * TRUE means best match should start
+     * This shall indicate whether to automatically start playing content, where: * TRUE means best match should start
      * playing automatically. * FALSE means matches should be displayed on screen for user selection.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1.2
@@ -427,7 +433,7 @@ export const TlvLaunchContentRequest = TlvObject({
     autoPlay: TlvField(1, TlvBoolean),
 
     /**
-     * This SHALL indicate Optional app-specific data.
+     * This shall indicate Optional app-specific data.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1.3
      */
@@ -508,23 +514,28 @@ export namespace ContentLauncherCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.1
              */
-            acceptHeader: Attribute(0, TlvArray(TlvString), { persistent: true, default: [], readAcl: AccessLevel.View }),
+            acceptHeader: Attribute(0, TlvArray(TlvString), { persistent: true, default: [] }),
 
             /**
              * This attribute provides information about supported streaming protocols.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2
              */
-            supportedStreamingProtocols: Attribute(1, TlvUInt32, { persistent: true, readAcl: AccessLevel.View })
+            supportedStreamingProtocols: Attribute(1, TlvUInt32, { persistent: true })
         },
 
         commands: {
             /**
-             * Upon receipt, this SHALL launch content from the specified URL.
+             * Upon receipt, this shall launch content from the specified URL.
+             *
+             * The content types supported include those identified in the AcceptHeader and SupportedStreamingProtocols
+             * attributes.
+             *
+             * A check shall be made to ensure the URL is secure (uses HTTPS). This command returns a Launch Response.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2
              */
-            launchUrl: Command(1, TlvLaunchUrlRequest, 2, TlvLauncherResponseRequest)
+            launchUrl: Command(1, TlvLaunchUrlRequest, 2, TlvLauncherResponse)
         }
     });
 
@@ -534,12 +545,12 @@ export namespace ContentLauncherCluster {
     export const ContentSearchComponent = ClusterComponent({
         commands: {
             /**
-             * Upon receipt, this SHALL launch the specified content with optional search criteria. This command
+             * Upon receipt, this shall launch the specified content with optional search criteria. This command
              * returns a Launch Response.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1
              */
-            launchContent: Command(0, TlvLaunchContentRequest, 2, TlvLauncherResponseRequest)
+            launchContent: Command(0, TlvLaunchContentRequest, 2, TlvLauncherResponse)
         }
     });
 
@@ -549,16 +560,18 @@ export namespace ContentLauncherCluster {
     export const ContentSearchOrUrlPlaybackComponent = ClusterComponent({
         commands: {
             /**
-             * This command SHALL be generated in response to LaunchContent and LaunchURL commands.
+             * This command shall be generated in response to LaunchContent and LaunchURL commands.
+             *
+             * WARNING TODO: Data in table above needs a max size
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.3
              */
-            launcherResponse: Command(2, TlvLauncherResponseRequest, 2, TlvNoResponse)
+            launcherResponse: Command(2, TlvLauncherResponse, 2, TlvNoResponse)
         }
     });
 
     /**
-     * This cluster supports all ContentLauncher features.  It may support illegal feature combinations.
+     * This cluster supports all ContentLauncher features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.

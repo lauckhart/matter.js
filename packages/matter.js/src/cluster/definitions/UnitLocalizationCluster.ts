@@ -21,7 +21,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * audibly convey measurable values to the user need a mechanism by which they can be configured to use a user’s
  * preferred unit.
  *
- * Use this factory function to create an UnitLocalization cluster supporting a specific set of features.  Include each
+ * Use this factory function to create an UnitLocalization cluster supporting a specific set of features. Include each
  * {@link UnitLocalizationCluster.Feature} you wish to support.
  *
  * @param features a list of {@link UnitLocalizationCluster.Feature} to support
@@ -43,7 +43,7 @@ export function UnitLocalizationCluster<T extends UnitLocalizationCluster.Featur
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.5.5.1
  */
-export const enum TempUnitEnum {
+export const enum TempUnit {
     Fahrenheit = 0,
     Celsius = 1,
     Kelvin = 2
@@ -102,22 +102,22 @@ export namespace UnitLocalizationCluster {
     export const TemperatureUnitComponent = ClusterComponent({
         attributes: {
             /**
-             * The TemperatureUnit attribute SHALL indicate the unit for the Node to use only when conveying
-             * temperature in communication to the user. If provided, this value SHALL take priority over any unit
+             * The TemperatureUnit attribute shall indicate the unit for the Node to use only when conveying
+             * temperature in communication to the user. If provided, this value shall take priority over any unit
              * implied through the ActiveLocale Attribute.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.5.6.1
              */
             temperatureUnit: WritableAttribute(
                 0,
-                TlvNullable(TlvEnum<TempUnitEnum>()),
-                { persistent: true, default: null, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvNullable(TlvEnum<TempUnit>()),
+                { persistent: true, default: null, writeAcl: AccessLevel.Manage }
             )
         }
     });
 
     /**
-     * This cluster supports all UnitLocalization features.  It may support illegal feature combinations.
+     * This cluster supports all UnitLocalization features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.

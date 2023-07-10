@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
@@ -17,7 +17,7 @@ import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
  *
  * The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read only labels.
  *
- * This function creates a FixedLabel cluster.
+ * Use this factory function to create a FixedLabel cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.8
  */
@@ -47,7 +47,7 @@ export namespace FixedLabelCluster {
             /**
              * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
              */
-            labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, default: [], readAcl: AccessLevel.View })
+            labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, default: [] })
         }
     });
 

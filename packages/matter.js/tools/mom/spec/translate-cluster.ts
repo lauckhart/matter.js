@@ -5,10 +5,12 @@
  */
 
 import { Logger } from "../../../src/log/Logger.js";
-import { AnyElement, AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
+import { AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
+import { addDetails } from "./extract-details.js";
+import { Code, Identifier, Integer, LowerIdentifier, NoSpace, Str, UpperIdentifier } from "./html-translators.js";
 import { ClusterReference, HtmlReference } from "./spec-types.js";
-import { Integer, Identifier, LowerIdentifier, translateTable, Str, Optional, UpperIdentifier, Alias, NoSpace, translateRecordsToMatter, Children, chooseIdentityAliases, Code } from "./translate-table.js";
+import { translateTable, Optional, Alias, translateRecordsToMatter, Children, chooseIdentityAliases } from "./translate-table.js";
 
 const logger = Logger.get("translate-cluster");
 
@@ -535,7 +537,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
 
     function translateDatatype(definition: HtmlReference) {
         let name = definition.name;
-        const text = definition.firstParagraph?.textContent;
+        const text = definition.prose?.[0]?.textContent;
         if (!text) {
             logger.warn(`no text to search for base type`);
         }
@@ -585,40 +587,5 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         const datatype = DatatypeElement({ type: type, name, description, xref: definition.xref });
         datatype.children = translateValueChildren("datatype", datatype, definition);
         return datatype;
-    }
-}
-
-// A light attempt at making documentation seem slightly less repurposed
-function extractUsefulDocumentation(p: HTMLParagraphElement) {
-    return Str(p)
-        .replace(/This data type is derived from \S+(?: and has its values listed below)?\./, "")
-        .replace(/The data type \S+ is derived from \S+\./, "")
-        .replace(/The data type of the(?: \w+)+ is derived from \S+\./, "")
-        .replace(/The values of the(?: \w+)+ are listed below\./, "")
-        .replace(/(?:The )?\S+ Data Type is derived from \S+\./, "")
-        .replace(/, derived from \w+,/, "")
-        .replace(/SHALL/g, "shall")
-        .replace(/\s\s+/, "  ")
-        .trim();
-}
-
-function addDetails(element: AnyElement, definition: HtmlReference) {
-    let p = definition.firstParagraph;
-    if (!p) {
-        return;
-    }
-    let details = extractUsefulDocumentation(p);
-    while (!details && p) {
-        // These are useless as documentation.  Use the next paragraph or
-        // simply leave undocumented
-        if ((p.nextSibling as any)?.tagName === "P") {
-            p = p?.nextSibling as HTMLParagraphElement;
-            details = extractUsefulDocumentation(p);
-        } else {
-            return;
-        }
-    }
-    if (details) {
-        element.details = details;
     }
 }

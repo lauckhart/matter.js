@@ -19,7 +19,7 @@ import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
  * The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be used to aid in
  * diagnostics.
  *
- * This function creates a DiagnosticLogs cluster.
+ * Use this factory function to create a DiagnosticLogs cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.10
  */
@@ -31,9 +31,9 @@ export function DiagnosticLogsCluster() {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1
  */
-export const enum IntentEnum {
+export const enum Intent {
     /**
-     * SHALL indicate that the purpose of the log request is to retrieve logs for the intention of providing support to
+     * shall indicate that the purpose of the log request is to retrieve logs for the intention of providing support to
      * an end-user.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1.1
@@ -41,7 +41,7 @@ export const enum IntentEnum {
     EndUserSupport = 0,
 
     /**
-     * SHALL indicate that the purpose of the log request is to diagnose the network(s) for which the Node is currently
+     * shall indicate that the purpose of the log request is to diagnose the network(s) for which the Node is currently
      * commissioned (and/or connected) or has previously been commissioned (and/or connected).
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1.2
@@ -49,7 +49,7 @@ export const enum IntentEnum {
     NetworkDiag = 1,
 
     /**
-     * SHALL indicate that the purpose of the log request is to retrieve any crash logs that may be present on a Node.
+     * shall indicate that the purpose of the log request is to retrieve any crash logs that may be present on a Node.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1.3
      */
@@ -59,16 +59,16 @@ export const enum IntentEnum {
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3
  */
-export const enum TransferProtocolEnum {
+export const enum TransferProtocol {
     /**
-     * SHALL be used by a Client to request that logs are transferred using the LogContent attribute of the response
+     * shall be used by a Client to request that logs are transferred using the LogContent attribute of the response
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3.1
      */
     ResponsePayload = 0,
 
     /**
-     * SHALL be used by a Client to request that logs are transferred using BDX as defined in BDX Protocol
+     * shall be used by a Client to request that logs are transferred using BDX as defined in BDX Protocol
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3.2
      */
@@ -76,34 +76,62 @@ export const enum TransferProtocolEnum {
 }
 
 /**
- * Reception of this command starts the process of retrieving diagnostic logs from a Node. The data for this command is
- * as follows:
+ * Input to the DiagnosticLogs retrieveLogsRequest command
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
  */
 export const TlvRetrieveLogsRequestRequest = TlvObject({
     /**
-     * This field SHALL indicate why the diagnostic logs are being retrieved from the Node. A Node MAY utilize this
+     * This field shall indicate why the diagnostic logs are being retrieved from the Node. A Node MAY utilize this
      * field to selectively determine the logs to transfer.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1.1
      */
-    intent: TlvField(0, TlvEnum<IntentEnum>()),
+    intent: TlvField(0, TlvEnum<Intent>()),
 
     /**
-     * This field SHALL be used to indicate how the log transfer is to be realized. If the field is set to BDX, then if
-     * the receiving Node supports BDX it SHALL attempt to use BDX to transfer any potential diagnostic logs; if the
-     * receiving Node does not support BDX then the Node SHALL follow the requirements defined for a
-     * TransferProtocolEnum of ResponsePayload. If this field is set to ResponsePayload the receiving Node SHALL only
+     * This field shall be used to indicate how the log transfer is to be realized. If the field is set to BDX, then if
+     * the receiving Node supports BDX it shall attempt to use BDX to transfer any potential diagnostic logs; if the
+     * receiving Node does not support BDX then the Node shall follow the requirements defined for a
+     * TransferProtocolEnum of ResponsePayload. If this field is set to ResponsePayload the receiving Node shall only
      * utilize the LogContent field of the RetreiveLogsResponse command to transfer diagnostic log information.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1.2
      */
-    requestedProtocol: TlvField(1, TlvEnum<TransferProtocolEnum>()),
+    requestedProtocol: TlvField(1, TlvEnum<TransferProtocol>()),
 
     /**
-     * This field SHALL be present if the RequestedProtocol is BDX. The TransferFileDesignator SHALL be set as the File
+     * This field shall be present if the RequestedProtocol is BDX. The TransferFileDesignator shall be set as the File
      * Designator of the BDX transfer if initiated.
+     *
+     * Effect on Receipt
+     *
+     * On receipt of this command, the Node shall respond with a RetrieveLogsResponse command.
+     *
+     * If the RequestedProtocol is set to BDX the Node SHOULD immediately realize the RetrieveLogsResponse command by
+     * initiating a BDX Transfer, sending a BDX SendInit message with the File Designator field of the message set to
+     * the value of the TransferFileDesignator field of the RetrieveLogsRequest. On reception of a BDX SendAccept
+     * message the Node shall send a RetrieveLogsResponse command with a Status field set to Success and proceed with
+     * the log transfer over BDX. If a failure StatusReport is received in response to the SendInit message, the Node
+     * shall send a RetrieveLogsResponse command with a Status of Denied. In the case where the Node is able to fit the
+     * entirety of the requested logs within the LogContent field, the Status field of the RetrieveLogsResponse shall
+     * be set to Exhausted and a BDX session shall NOT be initiated.
+     *
+     * If the RequestedProtocol is set to BDX and either the Node does not support BDX or it is not possible for the
+     * Node to establish a BDX session, then the Node shall utilize the LogContent field of the RetrieveLogsResponse
+     * command to transfer as much of the current logs as it can fit within the response, and the Status field of the
+     * RetrieveLogsResponse shall be set to Exhausted.
+     *
+     * If the RequestedProtocol is set to ResponsePayload the Node shall utilize the LogContent field of the
+     * RetrieveLogsResponse command to transfer as much of the current logs as it can fit within the
+     *
+     * response, and a BDX session shall NOT be initiated.
+     *
+     * If the RequestedProtocol is set to BDX and there is no TransferFileDesignator the command shall fail with a
+     * Status Code of INVALID_COMMAND.
+     *
+     * If the Intent and/or the RequestedProtocol arguments contain invalid (out of range) values the command shall
+     * fail with a Status Code of INVALID_COMMAND.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1.3
      */
@@ -113,30 +141,32 @@ export const TlvRetrieveLogsRequestRequest = TlvObject({
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2
  */
-export const enum StatusEnum {
+export const enum Status {
     /**
-     * SHALL be used if diagnostic logs will be or are being transferred.
+     * shall be used if diagnostic logs will be or are being transferred.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.1
      */
     Success = 0,
 
     /**
-     * SHALL be used when a BDX session is requested, however, all available logs were provided in a
+     * shall be used when a BDX session is requested, however, all available logs were provided in a
+     *
+     * LogContent field.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.2
      */
     Exhausted = 1,
 
     /**
-     * SHALL be used if the Node does not currently have any diagnostic logs of the requested type (Intent) to transfer.
+     * shall be used if the Node does not currently have any diagnostic logs of the requested type (Intent) to transfer.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.3
      */
     NoLogs = 2,
 
     /**
-     * SHALL be used if the Node is unable to handle the request (e.g. in the process of another transfer) and the
+     * shall be used if the Node is unable to handle the request (e.g. in the process of another transfer) and the
      * Client SHOULD re-attempt the request later.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.4
@@ -144,7 +174,7 @@ export const enum StatusEnum {
     Busy = 3,
 
     /**
-     * SHALL be used if the Node is denying the current transfer of diagnostic logs for any reason.
+     * shall be used if the Node is denying the current transfer of diagnostic logs for any reason.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.5
      */
@@ -152,22 +182,21 @@ export const enum StatusEnum {
 }
 
 /**
- * This SHALL be generated as a response to the RetrieveLogsRequest. The data for this command is shown in the
- * following.
+ * Input to the DiagnosticLogs retrieveLogsResponse command
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2
  */
-export const TlvRetrieveLogsResponseRequest = TlvObject({
+export const TlvRetrieveLogsResponse = TlvObject({
     /**
-     * This field SHALL indicate the result of an attempt to retrieve diagnostic logs.
+     * This field shall indicate the result of an attempt to retrieve diagnostic logs.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.1
      */
-    status: TlvField(0, TlvEnum<StatusEnum>()),
+    status: TlvField(0, TlvEnum<Status>()),
 
     /**
-     * This field SHALL be included in the command if the Status field has a value of Success or Exhausted. A Node
-     * SHOULD utilize this field to transfer the newest diagnostic log entries. This field SHALL be empty if BDX is
+     * This field shall be included in the command if the Status field has a value of Success or Exhausted. A Node
+     * SHOULD utilize this field to transfer the newest diagnostic log entries. This field shall be empty if BDX is
      * requested and the Status field has a value of Success.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.2
@@ -176,7 +205,7 @@ export const TlvRetrieveLogsResponseRequest = TlvObject({
 
     /**
      * This field SHOULD be included in the command if the Status field has a value of Success and the Node maintains a
-     * wall clock. When included, the UTCTimeStamp field SHALL contain the value of the oldest log entry in the
+     * wall clock. When included, the UTCTimeStamp field shall contain the value of the oldest log entry in the
      * diagnostic logs that are being transferred.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.3
@@ -185,7 +214,7 @@ export const TlvRetrieveLogsResponseRequest = TlvObject({
 
     /**
      * This field SHOULD be included in the command if the Status field has a value of Success. When included, the
-     * TimeSinceBoot field SHALL contain the time of the oldest log entry in the diagnostic logs that are being
+     * TimeSinceBoot field shall contain the time of the oldest log entry in the diagnostic logs that are being
      * transferred represented by the number of microseconds since the last time the Node went through a reboot.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.4
@@ -212,20 +241,19 @@ export namespace DiagnosticLogsCluster {
     export const BaseComponent = ClusterComponent({
         commands: {
             /**
-             * Reception of this command starts the process of retrieving diagnostic logs from a Node. The data for
-             * this command is as follows:
+             * Reception of this command starts the process of retrieving diagnostic logs from a Node.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
              */
-            retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponseRequest),
+            retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponse),
 
             /**
-             * This SHALL be generated as a response to the RetrieveLogsRequest. The data for this command is shown in
+             * This shall be generated as a response to the RetrieveLogsRequest. The data for this command is shown in
              * the following.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2
              */
-            retrieveLogsResponse: Command(1, TlvRetrieveLogsResponseRequest, 1, TlvNoResponse)
+            retrieveLogsResponse: Command(1, TlvRetrieveLogsResponse, 1, TlvNoResponse)
         }
     });
 

@@ -10,8 +10,8 @@ import { ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { Attribute } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvString } from "../../tlv/TlvString.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 
 /**
  * This is a string tuple with strings that are user defined.

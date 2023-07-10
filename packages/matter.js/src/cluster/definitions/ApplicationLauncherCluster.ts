@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, OptionalAttribute, AccessLevel, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -21,7 +21,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  *
  * This cluster provides an interface for launching content on a media player device such as a TV or Speaker.
  *
- * Use this factory function to create an ApplicationLauncher cluster supporting a specific set of features.  Include
+ * Use this factory function to create an ApplicationLauncher cluster supporting a specific set of features. Include
  * each {@link ApplicationLauncherCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ApplicationLauncherCluster.Feature} to support
@@ -47,15 +47,20 @@ export function ApplicationLauncherCluster<T extends ApplicationLauncherCluster.
  */
 export const TlvApplicationStruct = TlvObject({
     /**
-     * This SHALL indicate the CSA-issued vendor ID for the catalog. The DIAL registry SHALL use value 0x0000.
+     * This shall indicate the CSA-issued vendor ID for the catalog. The DIAL registry shall use value 0x0000.
+     *
+     * Content App Platform providers will have their own catalog vendor ID (set to their own Vendor ID) and will
+     * assign an ApplicationID to each Content App.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.5.2.1
      */
     catalogVendorId: TlvField(0, TlvUInt16),
 
     /**
-     * This SHALL indicate the application identifier, expressed as a string, such as "PruneVideo" or "Company X". This
-     * field SHALL be unique within a catalog.
+     * This shall indicate the application identifier, expressed as a string, such as "PruneVideo" or "Company X". This
+     * field shall be unique within a catalog.
+     *
+     * For the DIAL registry catalog, this value shall be the DIAL prefix (see [DIAL Registry]).
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.5.2.2
      */
@@ -73,21 +78,25 @@ export const TlvApplicationEPStruct = TlvObject({
 });
 
 /**
- * Upon receipt of this command, the server SHALL launch the application with optional data. The application SHALL be
- * either
+ * Input to the ApplicationLauncher launchApp command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1
  */
 export const TlvLaunchAppRequest = TlvObject({
     /**
-     * This field SHALL specify the Application to launch.
+     * This field shall specify the Application to launch.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1.1
      */
     application: TlvOptionalField(0, TlvApplicationStruct),
 
     /**
-     * This field SHALL specify optional app-specific data to be sent to the app.
+     * This field shall specify optional app-specific data to be sent to the app.
+     *
+     * Note: This format and meaning of this value is proprietary and outside the specification. It provides a
+     * transition path for device makers that use other protocols (like DIAL) which allow for proprietary data. Apps
+     * that are not yet Matter aware can be launched via Matter, while retaining the existing ability to launch with
+     * proprietary data.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1.2
      */
@@ -97,7 +106,7 @@ export const TlvLaunchAppRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.5.1
  */
-export const enum StatusEnum {
+export const enum Status {
     /**
      * Command succeeded
      */
@@ -115,20 +124,20 @@ export const enum StatusEnum {
 }
 
 /**
- * This command SHALL be generated in response to LaunchApp/StopApp/HideApp commands.
+ * Input to the ApplicationLauncher launcherResponse command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4
  */
-export const TlvLauncherResponseRequest = TlvObject({
+export const TlvLauncherResponse = TlvObject({
     /**
-     * This SHALL indicate the status of the command which resulted in this response.
+     * This shall indicate the status of the command which resulted in this response.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4.1
      */
-    status: TlvField(0, TlvEnum<StatusEnum>()),
+    status: TlvField(0, TlvEnum<Status>()),
 
     /**
-     * This SHALL specify Optional app-specific data.
+     * This shall specify Optional app-specific data.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4.2
      */
@@ -136,13 +145,13 @@ export const TlvLauncherResponseRequest = TlvObject({
 });
 
 /**
- * Upon receipt of this command, the server SHALL stop the application if it is running. The application SHALL be either
+ * Input to the ApplicationLauncher stopApp command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.2
  */
 export const TlvStopAppRequest = TlvObject({
     /**
-     * This field SHALL specify the Application to stop.
+     * This field shall specify the Application to stop.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.2.1
      */
@@ -150,13 +159,13 @@ export const TlvStopAppRequest = TlvObject({
 });
 
 /**
- * Upon receipt of this command, the server SHALL hide the application. The application SHALL be either
+ * Input to the ApplicationLauncher hideApp command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3
  */
 export const TlvHideAppRequest = TlvObject({
     /**
-     * This field SHALL specify the Application to hide.
+     * This field shall specify the Application to hide.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3.1
      */
@@ -213,49 +222,80 @@ export namespace ApplicationLauncherCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * This attribute SHALL specify the current in-focus application, identified using an Application ID,
+             * This attribute shall specify the current in-focus application, identified using an Application ID,
              * catalog vendor ID and the corresponding endpoint number when the application is represented by a Content
-             * App endpoint. A null SHALL be used to indicate there is no current in-focus application.
+             * App endpoint. A null shall be used to indicate there is no current in-focus application.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.2
              */
-            currentApp: OptionalAttribute(
-                1,
-                TlvNullable(TlvApplicationEPStruct),
-                { default: null, readAcl: AccessLevel.View }
-            )
+            currentApp: OptionalAttribute(1, TlvNullable(TlvApplicationEPStruct), { default: null })
         },
 
         commands: {
             /**
-             * Upon receipt of this command, the server SHALL launch the application with optional data. The
-             * application SHALL be either
+             * Upon receipt of this command, the server shall launch the application with optional data. The
+             * application shall be either
+             *
+             *   • the specified application, if the Application Platform feature is supported;
+             *
+             *   • otherwise the application corresponding to the endpoint.
+             *
+             * The endpoint shall launch and bring to foreground the requisite application if the application is not
+             * already launched and in foreground. The Status attribute shall be updated to ACTIVE_VISIBLE_FOCUS on the
+             * Application Basic cluster of the Endpoint corresponding to the launched application. The Status
+             * attribute shall be updated on any other application whose Status MAY have changed as a result of this
+             * command. The CurrentApp attribute, if supported, shall be updated to reflect the new application in the
+             * foreground.
+             *
+             * This command returns a Launcher Response.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1
              */
-            launchApp: Command(0, TlvLaunchAppRequest, 3, TlvLauncherResponseRequest),
+            launchApp: Command(0, TlvLaunchAppRequest, 3, TlvLauncherResponse),
 
             /**
-             * Upon receipt of this command, the server SHALL stop the application if it is running. The application
-             * SHALL be either
+             * Upon receipt of this command, the server shall stop the application if it is running. The application
+             * shall be either
+             *
+             *   • the specified application, if the Application Platform feature is supported;
+             *
+             *   • otherwise the application corresponding to the endpoint.
+             *
+             * The Status attribute shall be updated to STOPPED on the Application Basic cluster of the Endpoint
+             * corresponding to the stopped application. The Status attribute shall be updated on any other application
+             * whose Status MAY have changed as a result of this command.
+             *
+             * This command returns a Launcher Response.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.2
              */
-            stopApp: Command(1, TlvStopAppRequest, 3, TlvLauncherResponseRequest),
+            stopApp: Command(1, TlvStopAppRequest, 3, TlvLauncherResponse),
 
             /**
-             * Upon receipt of this command, the server SHALL hide the application. The application SHALL be either
+             * Upon receipt of this command, the server shall hide the application. The application shall be either
+             *
+             *   • the specified application, if the Application Platform feature is supported;
+             *
+             *   • otherwise the application corresponding to the endpoint.
+             *
+             * The endpoint MAY decide to stop the application based on manufacturer specific behavior or resource
+             * constraints if any. The Status attribute shall be updated to ACTIVE_HIDDEN or STOPPED, depending on the
+             * action taken, on the Application Basic cluster of the Endpoint corresponding to the application on which
+             * the action was taken. The Status attribute shall be updated on any other application whose Status MAY
+             * have changed as a result of this command.
+             *
+             * This command returns a Launcher Response.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3
              */
-            hideApp: Command(2, TlvHideAppRequest, 3, TlvLauncherResponseRequest),
+            hideApp: Command(2, TlvHideAppRequest, 3, TlvLauncherResponse),
 
             /**
-             * This command SHALL be generated in response to LaunchApp/StopApp/HideApp commands.
+             * This command shall be generated in response to LaunchApp/StopApp/HideApp commands.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.4
              */
-            launcherResponse: Command(3, TlvLauncherResponseRequest, 3, TlvNoResponse)
+            launcherResponse: Command(3, TlvLauncherResponse, 3, TlvNoResponse)
         }
     });
 
@@ -265,17 +305,20 @@ export namespace ApplicationLauncherCluster {
     export const ApplicationPlatformComponent = ClusterComponent({
         attributes: {
             /**
-             * This attribute SHALL specify the list of supported application catalogs, where each entry in the list is
-             * the CSA-issued vendor ID for the catalog. The DIAL registry (see [DIAL Registry]) SHALL use value 0x0000.
+             * This attribute shall specify the list of supported application catalogs, where each entry in the list is
+             * the CSA-issued vendor ID for the catalog. The DIAL registry (see [DIAL Registry]) shall use value 0x0000.
+             *
+             * It is expected that Content App Platform providers will have their own catalog vendor ID (set to their
+             * own Vendor ID) and will assign an ApplicationID to each Content App.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
              */
-            catalogList: Attribute(0, TlvArray(TlvUInt16), { persistent: true, default: [], readAcl: AccessLevel.View })
+            catalogList: Attribute(0, TlvArray(TlvUInt16), { persistent: true, default: [] })
         }
     });
 
     /**
-     * This cluster supports all ApplicationLauncher features.  It may support illegal feature combinations.
+     * This cluster supports all ApplicationLauncher features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.

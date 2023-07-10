@@ -72,7 +72,7 @@ export function loadCluster(clusterRef: HtmlReference) {
         if (!ref.table) {
             // Sometimes there's a section with no table to indicate no
             // elements
-            if (ref.firstParagraph?.textContent?.match(/(?:this cluster has no|no cluster specific)/i)) {
+            if (ref.prose?.[0]?.textContent?.match(/(?:this cluster has no|no cluster specific)/i)) {
                 return;
             }
             logger.warn("no defining table in definition of", name, "for", ref.name, `(${ref.path})`);
@@ -105,7 +105,7 @@ export function loadCluster(clusterRef: HtmlReference) {
         }
 
         if (subref.xref.section === clusterRef.xref.section) {
-            definition.firstParagraph = clusterRef.firstParagraph;
+            definition.prose = clusterRef.prose;
         }
 
         const name = camelize(subref.name).toLowerCase();

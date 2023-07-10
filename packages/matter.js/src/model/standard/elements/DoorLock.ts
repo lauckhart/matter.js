@@ -74,7 +74,29 @@ Matter.children.push({
         {
             tag: "attribute", name: "LockState", id: 0x0, type: "enum8", access: "R V", conformance: "M",
             constraint: "desc", quality: "X S P",
-            details: "This attribute has the following possible values:",
+
+            details: "The LockState Attribute may be NULL if the lock hardware does not currently know the status of the " +
+                     "locking mechanism. For example, a lock may not know the LockState status after a power cycle until " +
+                     "the first lock actuation is completed." +
+                     "\n" +
+                     "The Not Fully Locked value is used by a lock to indicate that the state of the lock is somewhere " +
+                     "between Locked and Unlocked so it is only partially secured. For example, a deadbolt could be " +
+                     "partially extended and not in a dead latched state." +
+                     "\n" +
+                     "If the Scenes server cluster is implemented on the same endpoint, the following extension field " +
+                     "shall be added to the Scene Table:" +
+                     "\n" +
+                     "  • LockState" +
+                     "\n" +
+                     "When the LockState attribute is part of a Scene table, the attribute is treated as a writable " +
+                     "command; that is, setting the LockState to lock will command the lock to lock, and setting the " +
+                     "LockState to unlock will command the lock to unlock. Setting the LockState attribute to “not fully " +
+                     "locked” is not supported. The Transition Time field in the Scene table will be treated as a delay " +
+                     "before setting the LockState attribute; that is, it is possible to activate a scene with the lock " +
+                     "actuation some seconds later." +
+                     "\n" +
+                     "Locks that do not have an actuation mechanism SHOULD not support the Scene table extension.",
+
             xref: { document: "cluster", section: "5.2.3.1" },
 
             children: [
@@ -93,7 +115,6 @@ Matter.children.push({
         {
             tag: "attribute", name: "LockType", id: 0x1, type: "enum8", access: "R V", conformance: "M",
             constraint: "desc",
-            details: "The LockType attribute is indicated by an enumeration:",
             xref: { document: "cluster", section: "5.2.3.2" },
 
             children: [
@@ -148,7 +169,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "DoorState", id: 0x3, type: "enum8", access: "R V", conformance: "DPS",
             constraint: "desc", quality: "X P",
-            details: "The current door state as defined in DoorStateEnum.",
+            details: "The current door state as defined in DoorStateEnum." +
+                     "\n" +
+                     "This attribute shall be null only if an internal error prevents the retrieval of the current door " +
+                     "state.",
             xref: { document: "cluster", section: "5.2.3.4" }
         },
 
@@ -270,7 +294,17 @@ Matter.children.push({
         {
             tag: "attribute", name: "NumberOfCredentialsSupportedPerUser", id: 0x1c, type: "uint8",
             access: "R V", conformance: "USR", default: 0, quality: "F",
-            details: "The number of credentials that could be assigned for each user.",
+
+            details: "The number of credentials that could be assigned for each user." +
+                     "\n" +
+                     "Depending on the value of NumberOfRFIDUsersSupported and NumberOfPINUsersSupported it may not be " +
+                     "possible to assign that number of credentials for a user." +
+                     "\n" +
+                     "For example, if the device supports only PIN and RFID credential types, " +
+                     "NumberOfCredentialsSupportedPerUser is set to 10, NumberOfPINUsersSupported is set to 5 and " +
+                     "NumberOfRFIDUsersSupported is set to 3, it will not be possible to actually assign 10 credentials " +
+                     "for a user because maximum number of credentials in the database is 8.",
+
             xref: { document: "cluster", section: "5.2.3.20" }
         },
 
@@ -296,7 +330,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "LedSettings", id: 0x22, type: "uint8", access: "R[W] VM", conformance: "O",
             constraint: "desc", default: 0, quality: "P",
-            details: "The settings for the LED support three different modes, shown below:",
+            details: "The settings for the LED support three different modes",
             xref: { document: "cluster", section: "5.2.3.25" }
         },
 
@@ -312,8 +346,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "SoundVolume", id: 0x24, type: "uint8", access: "R[W] VM", conformance: "O",
             constraint: "desc", default: 0, quality: "P",
-            details: "The sound volume on a door lock has four possible settings: silent, low, high and medium volumes, " +
-                     "shown below:",
+            details: "The sound volume on a door lock has four possible settings: silent, low, high and medium volumes",
             xref: { document: "cluster", section: "5.2.3.27" }
         },
 
@@ -329,8 +362,8 @@ Matter.children.push({
             conformance: "M", default: { type: "flags", flags: [ "Vacation", "Privacy", "Passage" ] },
             quality: "F",
             details: "This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All " +
-                     "operating modes NOT supported by a lock SHALL be set to one. The value of the OperatingMode " +
-                     "enumeration defines the related bit to be set, as shown below:",
+                     "operating modes NOT supported by a lock shall be set to one. The value of the OperatingMode " +
+                     "enumeration defines the related bit to be set, as",
             xref: { document: "cluster", section: "5.2.3.24" },
 
             children: [
@@ -344,10 +377,24 @@ Matter.children.push({
         {
             tag: "attribute", name: "DefaultConfigurationRegister", id: 0x27, type: "map16", access: "R V",
             conformance: "O", default: 0, quality: "P",
+
             details: "This attribute represents the default configurations as they are physically set on the device " +
                      "(example: hardware dip switch setting, etc…) and represents the default setting for some of the " +
                      "attributes within this cluster (for example: LED, Auto Lock, Sound Volume, and Operating Mode " +
-                     "attributes).",
+                     "attributes)." +
+                     "\n" +
+                     "This is a read-only attribute and is intended to allow clients to determine what changes MAY need " +
+                     "to be made without having to query all the included attributes. It MAY be beneficial for the " +
+                     "clients to know what the device’s original settings were in the event that the device needs to be " +
+                     "restored to factory default settings." +
+                     "\n" +
+                     "If the Client device would like to query and modify the door lock server’s operating settings, it " +
+                     "SHOULD send read and write attribute requests to the specific attributes." +
+                     "\n" +
+                     "For example, the Sound Volume attribute default value is Silent Mode. However, it is possible that " +
+                     "the current Sound Volume is High Volume. Therefore, if the client wants to query/modify the current " +
+                     "Sound Volume setting on the server, the client SHOULD read/write to the Sound Volume attribute.",
+
             xref: { document: "cluster", section: "5.2.3.28" },
 
             children: [
@@ -366,7 +413,7 @@ Matter.children.push({
             details: "Enable/disable local programming on the door lock of certain features (see LocalProgrammingFeatures " +
                      "attribute). If this value is set to TRUE then local programming is enabled on the door lock for all " +
                      "features. If it is set to FALSE then local programming is disabled on the door lock for those " +
-                     "features whose bit is set to 0 in the LocalProgrammingFeatures attribute. Local programming SHALL " +
+                     "features whose bit is set to 0 in the LocalProgrammingFeatures attribute. Local programming shall " +
                      "be enabled by default.",
             xref: { document: "cluster", section: "5.2.3.29" }
         },
@@ -396,11 +443,15 @@ Matter.children.push({
         {
             tag: "attribute", name: "LocalProgrammingFeatures", id: 0x2c, type: "map8", access: "R[W] VA",
             conformance: "O", default: 0, quality: "P",
+
             details: "The local programming features that will be disabled when EnableLocalProgramming attribute is set " +
-                     "to False. If a door lock doesn’t support disabling one aspect of local programming it SHALL return " +
+                     "to False. If a door lock doesn’t support disabling one aspect of local programming it shall return " +
                      "CONSTRAINT_ERROR during a write operation of this attribute. If the EnableLocalProgramming " +
-                     "attribute is set to True then all local programming features SHALL be enabled regardless of the " +
-                     "bits set to 0 in this attribute.",
+                     "attribute is set to True then all local programming features shall be enabled regardless of the " +
+                     "bits set to 0 in this attribute." +
+                     "\n" +
+                     "The features that can be disabled from local programming are defined in the following bitmap.",
+
             xref: { document: "cluster", section: "5.2.3.33" },
 
             children: [
@@ -420,7 +471,11 @@ Matter.children.push({
                      "of credential presentation, including Pin codes used in an Unlock Command when " +
                      "RequirePINforRemoteOperation is set to true. Valid range is 1-255 incorrect attempts. The lockout " +
                      "state will be for the duration of UserCodeTemporaryDisableTime. If the attribute accepts writes and " +
-                     "an attempt to write the value 0 is made, the device SHALL respond with CONSTRAINT_ERROR.",
+                     "an attempt to write the value 0 is made, the device shall respond with CONSTRAINT_ERROR." +
+                     "\n" +
+                     "The lock MAY reset the counter used to track incorrect credential presentations as required by " +
+                     "internal logic, environmental events, or other reasons. The lock shall reset the counter if a valid " +
+                     "credential is presented.",
 
             xref: { document: "cluster", section: "5.2.3.34" }
         },
@@ -431,16 +486,25 @@ Matter.children.push({
             details: "The number of seconds that the lock shuts down following wrong code entry. Valid range is 1-255 " +
                      "seconds. Device can shut down to lock user out for specified amount of time. (Makes it difficult to " +
                      "try and guess a PIN for the device.) If the attribute accepts writes and an attempt to write the " +
-                     "attribute to 0 is made, the device SHALL respond with CONSTRAINT_ERROR.",
+                     "attribute to 0 is made, the device shall respond with CONSTRAINT_ERROR.",
             xref: { document: "cluster", section: "5.2.3.35" }
         },
 
         {
             tag: "attribute", name: "SendPinOverTheAir", id: 0x32, type: "bool", access: "R[W] VA",
             conformance: "[PIN]", default: true, quality: "P",
+
             details: "Boolean set to True if it is ok for the door lock server to send PINs over the air. This attribute " +
                      "determines the behavior of the server’s TX operation. If it is false, then it is not ok for the " +
-                     "device to send PIN in any messages over the air.",
+                     "device to send PIN in any messages over the air." +
+                     "\n" +
+                     "The PIN field within any door lock cluster message shall keep the first octet unchanged and masks " +
+                     "the actual code by replacing with 0xFF. For example (PIN \"1234\" ): If the attribute value is True, " +
+                     "0x04 0x31 0x32 0x33 0x34 shall be used in the PIN field in any door lock cluster message payload. " +
+                     "If the attribute value is False, 0x04 0xFF 0xFF 0xFF 0xFF shall be used." +
+                     "\n" +
+                     "If the USR feature is supported by the device then this attribute shall NOT be supported.",
+
             xref: { document: "cluster", section: "5.2.3.36" }
         },
 
@@ -462,8 +526,8 @@ Matter.children.push({
             tag: "attribute", name: "ExpiringUserTimeout", id: 0x35, type: "uint16", access: "R[W] VA",
             conformance: "[USR]", constraint: "1 to 2880", quality: "P",
             details: "Number of minutes a PIN, RFID, Fingerprint, or other credential associated with a user of type " +
-                     "ExpiringUser SHALL remain valid after its first use before expiring. When the credential expires " +
-                     "the UserStatus for the corresponding user record SHALL be set to OccupiedDisabled.",
+                     "ExpiringUser shall remain valid after its first use before expiring. When the credential expires " +
+                     "the UserStatus for the corresponding user record shall be set to OccupiedDisabled.",
             xref: { document: "cluster", section: "5.2.3.38" }
         },
 
@@ -471,10 +535,14 @@ Matter.children.push({
             tag: "attribute", name: "AlarmMask", id: 0x40, type: "map16", access: "RW VA", conformance: "O",
             default: { type: "flags", flags: [ "LockResetToFactoryDefaults", "Reserved", "TamperAlarmWrongCodeEntryLimit" ] },
             quality: "P",
+
             details: "This attribute is only supported if the Alarms cluster is on the same endpoint. The alarm mask is " +
                      "used to turn on/off alarms for particular functions. Alarms for an alarm group are enabled if the " +
                      "associated alarm mask bit is set. Each bit represents a group of alarms. Entire alarm groups can be " +
-                     "turned on or off by setting or clearing the associated bit in the alarm mask.",
+                     "turned on or off by setting or clearing the associated bit in the alarm mask." +
+                     "\n" +
+                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
+
             xref: { document: "cluster", section: "5.2.3.39" },
 
             children: [
@@ -495,7 +563,9 @@ Matter.children.push({
             quality: "P",
             details: "Event mask used to turn on and off the transmission of keypad operation events. This mask DOES NOT " +
                      "apply to the storing of events in the event log. This mask only applies to the Operation Event " +
-                     "Notification Command.",
+                     "Notification Command." +
+                     "\n" +
+                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
             xref: { document: "cluster", section: "5.2.3.40" },
 
             children: [
@@ -515,8 +585,14 @@ Matter.children.push({
             conformance: "[NOT]",
             default: { type: "flags", flags: [ "LockSourceRemote", "UnlockSourceRemote", "LockSourceRemoteErrorInvalidSchedule" ] },
             quality: "P",
+
             details: "Event mask used to turn on and off the transmission of remote operation events. This mask DOES NOT " +
-                     "apply to the storing of events in the event log. This mask only applies to the Operation Event",
+                     "apply to the storing of events in the event log. This mask only applies to the Operation Event" +
+                     "\n" +
+                     "Notification Command." +
+                     "\n" +
+                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
+
             xref: { document: "cluster", section: "5.2.3.41" },
 
             children: [
@@ -535,7 +611,9 @@ Matter.children.push({
             conformance: "[NOT]",
             default: { type: "flags", flags: [ "ThumbturnLock", "ThumbturnUnlock", "KeyLock" ] }, quality: "P",
             details: "Event mask used to turn on and off manual operation events. This mask DOES NOT apply to the storing " +
-                     "of events in the event log. This mask only applies to the Operation Event Notification Command.",
+                     "of events in the event log. This mask only applies to the Operation Event Notification Command." +
+                     "\n" +
+                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
             xref: { document: "cluster", section: "5.2.3.42" },
 
             children: [
@@ -559,7 +637,9 @@ Matter.children.push({
             default: { type: "flags", flags: [ "LockSourceRfid", "UnlockSourceRfid", "LockSourceRfidErrorInvalidSchedule" ] },
             quality: "P",
             details: "Event mask used to turn on and off RFID operation events. This mask DOES NOT apply to the storing " +
-                     "of events in the event log. This mask only applies to the Operation Event Notification Command.",
+                     "of events in the event log. This mask only applies to the Operation Event Notification Command." +
+                     "\n" +
+                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
             xref: { document: "cluster", section: "5.2.3.43" },
 
             children: [
@@ -580,7 +660,9 @@ Matter.children.push({
             quality: "P",
             details: "Event mask used to turn on and off keypad programming events. This mask DOES NOT apply to the " +
                      "storing of events in the event log. This mask only applies to the Programming Event Notification " +
-                     "Command.",
+                     "Command." +
+                     "\n" +
+                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
             xref: { document: "cluster", section: "5.2.3.44" },
 
             children: [
@@ -599,7 +681,9 @@ Matter.children.push({
             quality: "P",
             details: "Event mask used to turn on and off remote programming events. This mask DOES NOT apply to the " +
                      "storing of events in the event log. This mask only applies to the Programming Event Notification " +
-                     "Command.",
+                     "Command." +
+                     "\n" +
+                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
             xref: { document: "cluster", section: "5.2.3.45" },
 
             children: [
@@ -634,8 +718,7 @@ Matter.children.push({
         {
             tag: "event", name: "DoorStateChange", id: 0x1, access: "V", conformance: "DPS",
             priority: "critical",
-            details: "The door lock server sends out a DoorStateChange event when the door lock door state changes. The " +
-                     "data of this event SHALL contain the following information:",
+            details: "The door lock server sends out a DoorStateChange event when the door lock door state changes.",
             xref: { document: "cluster", section: "5.2.5.2" },
             children: [ {
                 tag: "datatype", name: "DoorState", id: 0x0, type: "DoorStateEnum", conformance: "M",
@@ -666,25 +749,25 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "UserIndex", id: 0x2, type: "uint16", conformance: "M", quality: "X",
-                    details: "The lock UserIndex who performed the lock operation. This SHALL be null if there is no user index " +
-                             "that can be determined for the given operation source. This SHALL NOT be null if a user index can " +
-                             "be determined. In particular, this SHALL NOT be null if the operation was associated with a valid " +
+                    details: "The lock UserIndex who performed the lock operation. This shall be null if there is no user index " +
+                             "that can be determined for the given operation source. This shall NOT be null if a user index can " +
+                             "be determined. In particular, this shall NOT be null if the operation was associated with a valid " +
                              "credential.",
                     xref: { document: "cluster", section: "5.2.5.3.3" }
                 },
 
                 {
                     tag: "datatype", name: "FabricIndex", id: 0x3, type: "fabric-idx", conformance: "M", quality: "X",
-                    details: "The fabric index of the fabric that performed the lock operation. This SHALL be null if there is no " +
-                             "fabric that can be determined for the given operation source. This SHALL NOT be null if the " +
+                    details: "The fabric index of the fabric that performed the lock operation. This shall be null if there is no " +
+                             "fabric that can be determined for the given operation source. This shall NOT be null if the " +
                              "operation source is \"Remote\".",
                     xref: { document: "cluster", section: "5.2.5.3.4" }
                 },
 
                 {
                     tag: "datatype", name: "SourceNode", id: 0x4, type: "node-id", conformance: "M", quality: "X",
-                    details: "The Node ID of the node that performed the lock operation. This SHALL be null if there is no Node " +
-                             "associated with the given operation source. This SHALL NOT be null if the operation source is " +
+                    details: "The Node ID of the node that performed the lock operation. This shall be null if there is no Node " +
+                             "associated with the given operation source. This shall NOT be null if the operation source is " +
                              "\"Remote\".",
                     xref: { document: "cluster", section: "5.2.5.3.5" }
                 },
@@ -692,7 +775,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Credentials", id: 0x5, type: "list", conformance: "[USR]",
                     constraint: "1 to NumberOfCredentialsSupportedPerUser", quality: "X",
-                    details: "The list of credentials used in performing the lock operation. This SHALL be null if no credentials " +
+                    details: "The list of credentials used in performing the lock operation. This shall be null if no credentials " +
                              "were involved.",
                     xref: { document: "cluster", section: "5.2.5.3.6" },
                     children: [ { tag: "datatype", name: "entry", type: "CredentialStruct" } ]
@@ -728,30 +811,32 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "UserIndex", id: 0x3, type: "uint16", conformance: "M", quality: "X",
-                    details: "The lock UserIndex who performed the lock operation. This SHALL be null if there is no user id that " +
+                    details: "The lock UserIndex who performed the lock operation. This shall be null if there is no user id that " +
                              "can be determined for the given operation source.",
                     xref: { document: "cluster", section: "5.2.5.4.4" }
                 },
 
                 {
                     tag: "datatype", name: "FabricIndex", id: 0x4, type: "fabric-idx", conformance: "M", quality: "X",
-                    details: "The fabric index of the fabric that performed the lock operation. This SHALL be null if there is no " +
-                             "fabric that can be determined for the given operation source. This SHALL NOT be null if the " +
+                    details: "The fabric index of the fabric that performed the lock operation. This shall be null if there is no " +
+                             "fabric that can be determined for the given operation source. This shall NOT be null if the " +
                              "operation source is \"Remote\".",
                     xref: { document: "cluster", section: "5.2.5.4.5" }
                 },
 
                 {
                     tag: "datatype", name: "SourceNode", id: 0x5, type: "node-id", conformance: "M", quality: "X",
-                    details: "The Node ID of the node that performed the lock operation. This SHALL be null if there is no Node " +
-                             "associated with the given operation source. This SHALL NOT be null if the operation source is",
+                    details: "The Node ID of the node that performed the lock operation. This shall be null if there is no Node " +
+                             "associated with the given operation source. This shall NOT be null if the operation source is" +
+                             "\n" +
+                             "\"Remote\".",
                     xref: { document: "cluster", section: "5.2.5.4.6" }
                 },
 
                 {
                     tag: "datatype", name: "Credentials", id: 0x6, type: "list", conformance: "[USR]",
                     constraint: "1 to NumberOfCredentialsSupportedPerUser", quality: "X",
-                    details: "The list of credentials used in performing the lock operation. This SHALL be null if no credentials " +
+                    details: "The list of credentials used in performing the lock operation. This shall be null if no credentials " +
                              "were involved.",
                     xref: { document: "cluster", section: "5.2.5.4.7" },
                     children: [ { tag: "datatype", name: "entry", type: "CredentialStruct" } ]
@@ -788,16 +873,16 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "UserIndex", id: 0x3, type: "uint16", conformance: "M", quality: "X",
-                    details: "The lock UserIndex associated with the change (if any). This SHALL be null if there is no specific " +
-                             "user associated with the data operation. This SHALL be 0xFFFE if all users are affected (e.g. Clear " +
+                    details: "The lock UserIndex associated with the change (if any). This shall be null if there is no specific " +
+                             "user associated with the data operation. This shall be 0xFFFE if all users are affected (e.g. Clear " +
                              "Users).",
                     xref: { document: "cluster", section: "5.2.5.5.4" }
                 },
 
                 {
                     tag: "datatype", name: "FabricIndex", id: 0x4, type: "fabric-idx", conformance: "M", quality: "X",
-                    details: "The fabric index of the fabric that performed the change (if any). This SHALL be null if there is " +
-                             "no fabric that can be determined to have caused the change. This SHALL NOT be null if the operation " +
+                    details: "The fabric index of the fabric that performed the change (if any). This shall be null if there is " +
+                             "no fabric that can be determined to have caused the change. This shall NOT be null if the operation " +
                              "source is \"Remote\".",
                     xref: { document: "cluster", section: "5.2.5.5.5" }
                 },
@@ -805,7 +890,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "SourceNode", id: 0x5, type: "node-id", conformance: "M", quality: "X",
                     details: "The Node ID that that performed the change (if any). The Node ID of the node that performed the " +
-                             "change. This SHALL be null if there was no Node involved in the change. This SHALL NOT be null if " +
+                             "change. This shall be null if there was no Node involved in the change. This shall NOT be null if " +
                              "the operation source is \"Remote\".",
                     xref: { document: "cluster", section: "5.2.5.5.6" }
                 },
@@ -813,8 +898,8 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "DataIndex", id: 0x6, type: "uint16", conformance: "M", quality: "X",
                     details: "This is the index of the specific item that was changed (e.g. schedule, PIN, RFID, etc.) in the " +
-                             "list of items identified by LockDataType. This SHALL be null if the LockDataType does not " +
-                             "correspond to a list that can be indexed into (e.g. ProgrammingUser). This SHALL be 0xFFFE if all " +
+                             "list of items identified by LockDataType. This shall be null if the LockDataType does not " +
+                             "correspond to a list that can be indexed into (e.g. ProgrammingUser). This shall be 0xFFFE if all " +
                              "indices are affected (e.g. Clear PIN Code, Clear RFID Code, Clear Week Day Schedule, Clear Year Day " +
                              "Schedule, etc.).",
                     xref: { document: "cluster", section: "5.2.5.5.7" }
@@ -1254,7 +1339,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "CredentialIndex", id: 0x1, type: "uint16", conformance: "M", default: 0,
                     details: "This is the index of the specific credential used to authorize the lock operation in the list of " +
-                             "credentials identified by CredentialType (e.g. schedule, PIN, RFID, etc.). This SHALL be set to 0 " +
+                             "credentials identified by CredentialType (e.g. schedule, PIN, RFID, etc.). This shall be set to 0 " +
                              "if CredentialType is ProgrammingPIN or does not correspond to a list that can be indexed into.",
                     xref: { document: "cluster", section: "5.2.6.3.2" }
                 }
@@ -1312,7 +1397,9 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "DoorStateEnum", type: "enum8", conformance: "M",
-            details: "The DoorState enumeration shall indicate the current door state. The data type of the DoorState",
+            details: "The DoorState enumeration shall indicate the current door state. The data type of the DoorState" +
+                     "\n" +
+                     "enum field is derived from enum8.",
             xref: { document: "cluster", section: "5.2.6.7" },
 
             children: [
@@ -1420,7 +1507,17 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OperatingModeEnum", type: "enum8", conformance: "M",
-            details: "The OperatingMode enumeration shall indicate the lock operating mode.",
+
+            details: "The OperatingMode enumeration shall indicate the lock operating mode." +
+                     "\n" +
+                     "The table below shows the operating mode and which interfaces are enabled, if supported, for each " +
+                     "mode." +
+                     "\n" +
+                     "Note: For modes that disable the remote interface, the door lock shall respond to Lock, Unlock, " +
+                     "Toggle, and Unlock with Timeout commands with a response status Failure and not take the action " +
+                     "requested by those commands. The door lock shall NOT disable the radio or otherwise unbind or leave " +
+                     "the network. It shall still respond to all other commands and requests.",
+
             xref: { document: "cluster", section: "5.2.6.12" },
 
             children: [
@@ -1431,7 +1528,7 @@ Matter.children.push({
                 },
                 {
                     tag: "datatype", name: "Vacation", id: 0x1, conformance: "O",
-                    details: "Only remote interaction is enabled. The keypad SHALL only be operable by the master user.",
+                    details: "Only remote interaction is enabled. The keypad shall only be operable by the master user.",
                     xref: { document: "cluster", section: "5.2.6.12.2" }
                 },
 
@@ -1462,7 +1559,16 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OperationSourceEnum", type: "enum8", conformance: "M",
-            details: "The OperationSource enumeration shall indicate the source of the Lock/Unlock operation performed.",
+
+            details: "The OperationSource enumeration shall indicate the source of the Lock/Unlock operation performed." +
+                     "\n" +
+                     "5.2.6.14. PIN/RFID Code Format" +
+                     "\n" +
+                     "The PIN/RFID codes defined in this specification are all octet strings." +
+                     "\n" +
+                     "All value in the PIN/RFID code shall be ASCII encoded regardless if the PIN/RFID codes are number " +
+                     "or characters. For example, code of “1, 2, 3, 4” shall be represented as 0x31, 0x32, 0x33, 0x34.",
+
             xref: { document: "cluster", section: "5.2.6.13" },
 
             children: [
@@ -1540,7 +1646,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "DisposableUser", id: 0x6, conformance: "[USR]",
-                    details: "User has ability to open lock once after which the lock SHALL change the corresponding user record " +
+                    details: "User has ability to open lock once after which the lock shall change the corresponding user record " +
                              "UserStatus value to OccupiedDisabled automatically.",
                     xref: { document: "cluster", section: "5.2.6.16.7" }
                 },
@@ -1549,8 +1655,8 @@ Matter.children.push({
                     tag: "datatype", name: "ExpiringUser", id: 0x7, conformance: "[USR]",
                     details: "User has ability to open lock for ExpiringUserTimeout attribute minutes after the first use of the " +
                              "PIN code, RFID code, Fingerprint, or other credential. After ExpiringUserTimeout minutes the " +
-                             "corresponding user record UserStatus value SHALL be set to OccupiedDisabled automatically by the " +
-                             "lock. The lock SHALL persist the timeout across reboots such that the ExpiringUserTimeout is " +
+                             "corresponding user record UserStatus value shall be set to OccupiedDisabled automatically by the " +
+                             "lock. The lock shall persist the timeout across reboots such that the ExpiringUserTimeout is " +
                              "honored.",
                     xref: { document: "cluster", section: "5.2.6.16.8" }
                 },

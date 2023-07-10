@@ -48,9 +48,15 @@ Matter.children.push({
         {
             tag: "attribute", name: "SceneValid", id: 0x3, type: "bool", access: "R V", conformance: "M",
             default: true,
+
             details: "The SceneValid attribute indicates whether the state of the server corresponds to that associated " +
                      "with the CurrentScene and CurrentGroup attributes. TRUE indicates that these attributes are valid, " +
-                     "FALSE indicates that they are not valid.",
+                     "FALSE indicates that they are not valid." +
+                     "\n" +
+                     "Before a scene has been stored or recalled, this attribute is set to FALSE. After a successful " +
+                     "StoreScene or RecallScene command it is set to TRUE. If, after a scene is stored or recalled, the " +
+                     "state of the server is modified, this attribute is set to FALSE.",
+
             xref: { document: "cluster", section: "1.4.7.4" }
         },
 
@@ -58,8 +64,8 @@ Matter.children.push({
             tag: "attribute", name: "NameSupport", id: 0x4, type: "map8", access: "R V", conformance: "M",
             constraint: "desc", default: 0,
             details: "This attribute provides legacy, read-only access to whether the Scene Names feature is supported. " +
-                     "The most significant bit, bit 7, SHALL be equal to bit 0 of the FeatureMap attribute. All other " +
-                     "bits SHALL be 0.",
+                     "The most significant bit, bit 7, shall be equal to bit 0 of the FeatureMap attribute. All other " +
+                     "bits shall be 0.",
             xref: { document: "cluster", section: "1.4.7.5" },
             children: [
                 { tag: "datatype", name: "SceneNames", id: 0x7, description: "The ability to store a name for a scene." }
@@ -70,14 +76,19 @@ Matter.children.push({
             tag: "attribute", name: "LastConfiguredBy", id: 0x5, type: "node-id", access: "R V",
             conformance: "O", default: null, quality: "X",
             details: "The LastConfiguredBy attribute holds the Node ID (the IEEE address in case of Zigbee) of the node " +
-                     "that last configured the Scene Table.",
+                     "that last configured the Scene Table." +
+                     "\n" +
+                     "The null value indicates that the server has not been configured, or that the identifier of the " +
+                     "node that last configured the Scenes cluster is not known.",
             xref: { document: "cluster", section: "1.4.7.6" }
         },
 
         {
             tag: "command", name: "AddScene", id: 0x0, access: "M", conformance: "M", direction: "request",
             response: "AddSceneResponse",
-            details: "The AddScene command SHALL have the following data fields:",
+            details: "It is not mandatory for an extension field set to be included in the command for every cluster on " +
+                     "that endpoint that has a defined extension field set. Extension field sets MAY be omitted, " +
+                     "including the case of no extension field sets at all.",
             xref: { document: "cluster", section: "1.4.9.2" },
 
             children: [
@@ -95,7 +106,6 @@ Matter.children.push({
         {
             tag: "command", name: "ViewScene", id: 0x1, access: "O", conformance: "M", direction: "request",
             response: "ViewSceneResponse",
-            details: "The ViewScene command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.3" },
             children: [
                 { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
@@ -106,7 +116,6 @@ Matter.children.push({
         {
             tag: "command", name: "RemoveScene", id: 0x2, access: "M", conformance: "M", direction: "request",
             response: "RemoveSceneResponse",
-            details: "The RemoveScene command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.4" },
             children: [
                 { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
@@ -117,7 +126,6 @@ Matter.children.push({
         {
             tag: "command", name: "RemoveAllScenes", id: 0x3, access: "M", conformance: "M",
             direction: "request", response: "RemoveAllScenesResponse",
-            details: "The RemoveAllScenes command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.5" },
             children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" } ]
         },
@@ -125,7 +133,6 @@ Matter.children.push({
         {
             tag: "command", name: "StoreScene", id: 0x4, access: "M", conformance: "M", direction: "request",
             response: "StoreSceneResponse",
-            details: "The StoreScene command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.6" },
             children: [
                 { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
@@ -136,7 +143,6 @@ Matter.children.push({
         {
             tag: "command", name: "RecallScene", id: 0x5, access: "O", conformance: "M", direction: "request",
             response: "status",
-            details: "The RecallScene command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.7" },
             children: [
                 { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" },
@@ -158,8 +164,14 @@ Matter.children.push({
         {
             tag: "command", name: "EnhancedAddScene", id: 0x40, access: "M", conformance: "O",
             direction: "request", response: "EnhancedAddSceneResponse",
+
             details: "The EnhancedAddScene command allows a scene to be added using a finer scene transition time than " +
-                     "the AddScene command.",
+                     "the AddScene command." +
+                     "\n" +
+                     "This command shall have the same data fields as the AddScene command, with the following difference:" +
+                     "\n" +
+                     "The TransitionTime data field shall be measured in tenths of a second rather than in seconds.",
+
             xref: { document: "cluster", section: "1.4.9.9" },
 
             children: [
@@ -175,7 +187,9 @@ Matter.children.push({
             tag: "command", name: "EnhancedViewScene", id: 0x41, access: "O", conformance: "O",
             direction: "request", response: "EnhancedViewSceneResponse",
             details: "The EnhancedViewScene command allows a scene to be retrieved using a finer scene transition time " +
-                     "than the ViewScene command.",
+                     "than the ViewScene command." +
+                     "\n" +
+                     "This command shall have the same data fields as the ViewScene command.",
             xref: { document: "cluster", section: "1.4.9.10" },
             children: [
                 { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
@@ -193,8 +207,14 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Mode", id: 0x0, type: "map8", conformance: "M", constraint: "desc",
-                    details: "The Mode field contains information of how the scene copy is to proceed. This field SHALL be " +
-                             "formatted as illustrated in Format of the Mode Field of the CopyScene Command.",
+
+                    details: "The Mode field contains information of how the scene copy is to proceed. This field shall be " +
+                             "formatted as illustrated in Format of the Mode Field of the CopyScene Command." +
+                             "\n" +
+                             "The CopyAllScenes subfield is 1-bit in length and indicates whether all scenes are to be copied. If " +
+                             "this value is set to 1, all scenes are to be copied and the SceneIdentifierFrom and " +
+                             "SceneIdentifierTo fields shall be ignored. Otherwise this field is set to 0.",
+
                     xref: { document: "cluster", section: "1.4.9.11.1" },
                     children: [
                         { tag: "datatype", name: "CopyAllScenes", id: 0x0 },
@@ -238,7 +258,6 @@ Matter.children.push({
 
         {
             tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
-            details: "The AddSceneResponse command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.12" },
             children: [
                 { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
@@ -249,7 +268,6 @@ Matter.children.push({
 
         {
             tag: "command", name: "ViewSceneResponse", id: 0x1, conformance: "M", direction: "response",
-            details: "The ViewSceneResponse command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.13" },
 
             children: [
@@ -267,7 +285,6 @@ Matter.children.push({
 
         {
             tag: "command", name: "RemoveSceneResponse", id: 0x2, conformance: "M", direction: "response",
-            details: "The RemoveSceneResponse command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.14" },
             children: [
                 { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
@@ -278,7 +295,6 @@ Matter.children.push({
 
         {
             tag: "command", name: "RemoveAllScenesResponse", id: 0x3, conformance: "M", direction: "response",
-            details: "The RemoveAllScenesResponse command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.15" },
             children: [
                 { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
@@ -288,7 +304,6 @@ Matter.children.push({
 
         {
             tag: "command", name: "StoreSceneResponse", id: 0x4, conformance: "M", direction: "response",
-            details: "The StoreSceneResponse command SHALL have the following data fields:",
             xref: { document: "cluster", section: "1.4.9.16" },
             children: [
                 { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
@@ -300,7 +315,33 @@ Matter.children.push({
         {
             tag: "command", name: "GetSceneMembershipResponse", id: 0x6, conformance: "M",
             direction: "response",
-            details: "The GetSceneMembershipResponse command SHALL have the following data fields:",
+
+            details: "The fields of the get scene membership response command have the following semantics:" +
+                     "\n" +
+                     "The Capacity field shall contain the remaining capacity of the Scene Table of the server (for all " +
+                     "groups). The following values apply:" +
+                     "\n" +
+                     "  • 0 - No further scenes MAY be added." +
+                     "\n" +
+                     "  • 0 < Capacity < 0xfe - Capacity holds the number of scenes that MAY be added." +
+                     "\n" +
+                     "  • 0xfe - At least 1 further scene MAY be added (exact number is unknown)." +
+                     "\n" +
+                     "  • null - It is unknown if any further scenes MAY be added." +
+                     "\n" +
+                     "The Status field shall contain SUCCESS or ILLEGAL_COMMAND (the endpoint is not a member of the " +
+                     "group) as appropriate." +
+                     "\n" +
+                     "The GroupID field shall be set to the corresponding field of the received GetSceneMembership " +
+                     "command." +
+                     "\n" +
+                     "If the status is not SUCCESS then the SceneList field shall be omitted, else the SceneList field " +
+                     "shall contain the identifiers of all the scenes in the Scene Table with the corresponding Group ID." +
+                     "\n" +
+                     "Zigbee: If the total number of scenes associated with this Group ID will cause the maximum payload " +
+                     "length of a frame to be exceeded, then the SceneList field shall contain only as many scenes as " +
+                     "will fit.",
+
             xref: { document: "cluster", section: "1.4.9.17" },
 
             children: [
@@ -317,7 +358,9 @@ Matter.children.push({
         {
             tag: "command", name: "EnhancedAddSceneResponse", id: 0x40, conformance: "O", direction: "response",
             details: "The EnhancedAddSceneResponse command allows a server to respond to an EnhancedAddScene command, see " +
-                     "EnhancedAddScene Command.",
+                     "EnhancedAddScene Command." +
+                     "\n" +
+                     "This command shall have the same data fields as the AddSceneResponse command.",
             xref: { document: "cluster", section: "1.4.9.18" },
             children: [
                 { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
@@ -329,8 +372,15 @@ Matter.children.push({
         {
             tag: "command", name: "EnhancedViewSceneResponse", id: 0x41, conformance: "O",
             direction: "response",
+
             details: "The EnhancedViewSceneResponse command allows a server to respond to an EnhancedViewScene command " +
-                     "using a finer scene transition time.",
+                     "using a finer scene transition time." +
+                     "\n" +
+                     "This command shall have the same data fields as the ViewSceneResponse command, with the following " +
+                     "difference:" +
+                     "\n" +
+                     "The TransitionTime field shall be measured in tenths of a second rather than in seconds.",
+
             xref: { document: "cluster", section: "1.4.9.19" },
 
             children: [
@@ -345,14 +395,13 @@ Matter.children.push({
 
         {
             tag: "command", name: "CopySceneResponse", id: 0x42, conformance: "O", direction: "response",
-            details: "The CopySceneResponse command allows a server to respond to a CopyScene command. The " +
-                     "CopySceneResponse command SHALL have the following data fields:",
+            details: "The CopySceneResponse command allows a server to respond to a CopyScene command.",
             xref: { document: "cluster", section: "1.4.9.20" },
 
             children: [
                 {
                     tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                    details: "The Status field contains the status of the copy scene attempt. This field SHALL be set to one of " +
+                    details: "The Status field contains the status of the copy scene attempt. This field shall be set to one of " +
                              "the non-reserved values listed in Values of the Status Field of the CopySceneResponse Command.",
                     xref: { document: "cluster", section: "1.4.9.20.1" }
                 },
@@ -383,9 +432,9 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "AttributeId", id: 0x0, type: "attrib-id", access: "RW", conformance: "O",
-                    details: "This field SHALL be present or not present, for all instances in the Scenes cluster. If this field " +
-                             "is not present, then the data type of AttributeValue SHALL be determined by the order and data type " +
-                             "defined in the cluster specification. Otherwise the data type of AttributeValue SHALL be the data " +
+                    details: "This field shall be present or not present, for all instances in the Scenes cluster. If this field " +
+                             "is not present, then the data type of AttributeValue shall be determined by the order and data type " +
+                             "defined in the cluster specification. Otherwise the data type of AttributeValue shall be the data " +
                              "type of the attribute indicated by AttributeID.",
                     xref: { document: "cluster", section: "1.4.6.1.1" }
                 },

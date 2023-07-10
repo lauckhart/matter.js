@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, FixedAttribute, AccessLevel, Attribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, FixedAttribute, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -19,7 +19,7 @@ import { TlvUInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
  * The Descriptor Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for describing a node,
  * its endpoints and clusters.
  *
- * This function creates a Descriptor cluster.
+ * Use this factory function to create a Descriptor cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.5
  */
@@ -36,7 +36,7 @@ export function DescriptorCluster() {
  */
 export const TlvDeviceTypeStruct = TlvObject({
     /**
-     * This SHALL indicate the device type definition. The endpoint SHALL conform to the device type definition and
+     * This shall indicate the device type definition. The endpoint shall conform to the device type definition and
      * cluster specifications required by the device type.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.5.4.1.1
@@ -44,7 +44,7 @@ export const TlvDeviceTypeStruct = TlvObject({
     deviceType: TlvField(0, TlvUInt32),
 
     /**
-     * This is the implemented revision of the device type definition. The endpoint SHALL conform to this revision of
+     * This is the implemented revision of the device type definition. The endpoint shall conform to this revision of
      * the device type.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.5.4.1.2
@@ -72,34 +72,38 @@ export namespace DescriptorCluster {
         attributes: {
             /**
              * This is a list of device types and corresponding revisions declaring endpoint conformance (see
-             * DeviceTypeStruct). At least one device type entry SHALL be present.
+             * DeviceTypeStruct). At least one device type entry shall be present.
+             *
+             * An endpoint shall conform to all device types listed in the DeviceTypeList. A cluster instance that is
+             * in common for more than one device type in the DeviceTypeList shall be supported as a shared cluster
+             * instance on the endpoint.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.1
              */
-            deviceTypeList: FixedAttribute(0, TlvArray(TlvDeviceTypeStruct), { default: [], readAcl: AccessLevel.View }),
+            deviceTypeList: FixedAttribute(0, TlvArray(TlvDeviceTypeStruct), { default: [] }),
 
             /**
-             * This attribute SHALL list each cluster ID for the server clusters present on the endpoint instance.
+             * This attribute shall list each cluster ID for the server clusters present on the endpoint instance.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.2
              */
-            serverList: FixedAttribute(1, TlvArray(TlvUInt32), { default: [], readAcl: AccessLevel.View }),
+            serverList: FixedAttribute(1, TlvArray(TlvUInt32), { default: [] }),
 
             /**
-             * This attribute SHALL list each cluster ID for the client clusters present on the endpoint instance.
+             * This attribute shall list each cluster ID for the client clusters present on the endpoint instance.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.3
              */
-            clientList: FixedAttribute(2, TlvArray(TlvUInt32), { default: [], readAcl: AccessLevel.View }),
+            clientList: FixedAttribute(2, TlvArray(TlvUInt32), { default: [] }),
 
             /**
-             * This attribute indicates composition of the device type instance. Device type instance composition SHALL
+             * This attribute indicates composition of the device type instance. Device type instance composition shall
              * include the endpoints in this list. See Endpoint Composition for more information which endpoints to
              * include in this list.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.4
              */
-            partsList: Attribute(3, TlvArray(TlvUInt16), { default: [], readAcl: AccessLevel.View })
+            partsList: Attribute(3, TlvArray(TlvUInt16), { default: [] })
         }
     });
 

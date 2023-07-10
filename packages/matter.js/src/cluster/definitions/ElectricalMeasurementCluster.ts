@@ -19,13 +19,16 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * that need to provide instantaneous data as opposed to metrology data which should be retrieved from the metering
  * cluster..
  *
- * This function creates an ElectricalMeasurement cluster.
+ * Use this factory function to create an ElectricalMeasurement cluster.
  */
 export function ElectricalMeasurementCluster() {
     const cluster = Cluster({ ...ElectricalMeasurementCluster.Metadata, ...ElectricalMeasurementCluster.BaseComponent });
     return cluster as unknown as ElectricalMeasurementCluster.Type;
 }
 
+/**
+ * Input to the ElectricalMeasurement getProfileInfoResponseCommand command
+ */
 export const TlvGetProfileInfoResponseCommandRequest = TlvObject({
     profileCount: TlvField(0, TlvUInt8),
     profileIntervalPeriod: TlvField(1, TlvUInt8),
@@ -33,6 +36,9 @@ export const TlvGetProfileInfoResponseCommandRequest = TlvObject({
     listOfAttributes: TlvField(3, TlvUInt16)
 });
 
+/**
+ * Input to the ElectricalMeasurement getMeasurementProfileResponseCommand command
+ */
 export const TlvGetMeasurementProfileResponseCommandRequest = TlvObject({
     startTime: TlvField(0, TlvUInt32),
     status: TlvField(1, TlvUInt8),
@@ -42,6 +48,9 @@ export const TlvGetMeasurementProfileResponseCommandRequest = TlvObject({
     intervals: TlvField(5, TlvUInt8)
 });
 
+/**
+ * Input to the ElectricalMeasurement getMeasurementProfileCommand command
+ */
 export const TlvGetMeasurementProfileCommandRequest = TlvObject({
     attributeId: TlvField(0, TlvUInt16),
     startTime: TlvField(1, TlvUInt32),

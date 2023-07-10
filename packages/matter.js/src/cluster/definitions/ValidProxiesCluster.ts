@@ -19,7 +19,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * Cluster to control Proxy Valid
  *
- * This function creates a ValidProxies cluster.
+ * Use this factory function to create a ValidProxies cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.15
  */

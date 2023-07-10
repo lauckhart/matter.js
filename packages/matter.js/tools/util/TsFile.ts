@@ -39,7 +39,7 @@ function mapSpec(xref?: Specification.CrossReference) {
     }
 }
 
-abstract class Entry {
+export abstract class Entry {
     private documentation?: Documentation;
     private docText?: string;
 

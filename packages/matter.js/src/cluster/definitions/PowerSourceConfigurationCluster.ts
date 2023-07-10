@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvUInt16 } from "../../tlv/TlvNumber.js";
@@ -17,7 +17,7 @@ import { TlvUInt16 } from "../../tlv/TlvNumber.js";
  *
  * This cluster is used to describe the configuration and capabilities of a Device's power system.
  *
- * This function creates a PowerSourceConfiguration cluster.
+ * Use this factory function to create a PowerSourceConfiguration cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.6
  */
@@ -48,14 +48,19 @@ export namespace PowerSourceConfigurationCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * This list SHALL contain the set of all power sources capable of participating in the power system of
-             * this Node. Each entry in the list SHALL be the endpoint number of an endpoint having a Power Source
-             * cluster, which corresponds to a physical power source. The endpoint number SHALL be unique within the
+             * This list shall contain the set of all power sources capable of participating in the power system of
+             * this Node. Each entry in the list shall be the endpoint number of an endpoint having a Power Source
+             * cluster, which corresponds to a physical power source. The endpoint number shall be unique within the
              * list.
+             *
+             * The order of power sources on a Node is defined by the Order attribute of its associated Power Source
+             * cluster provided on the endpoint. List entries shall be sorted in increasing order, that is, an entry
+             * with a lower order shall have a lower index than any entry with a higher order. Multiple entries MAY
+             * have the same order, there are no restrictions on their relative sorting.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.6.4.1
              */
-            sources: Attribute(0, TlvArray(TlvUInt16), { persistent: true, default: [], readAcl: AccessLevel.View })
+            sources: Attribute(0, TlvArray(TlvUInt16), { persistent: true, default: [] })
         }
     });
 

@@ -5,8 +5,21 @@
  */
 
 import { InternalError } from "../../src/common/InternalError.js";
-import { ClusterModel, CommandModel, Conformance, DatatypeModel, EventModel, FieldValue, Globals, Metatype, Model, ValueModel } from "../../src/model/index.js";
+import {
+    ClusterModel,
+    CommandModel,
+    Conformance,
+    DatatypeModel,
+    ElementTag,
+    EventModel,
+    FieldValue,
+    Globals,
+    Metatype,
+    Model,
+    ValueModel
+} from "../../src/model/index.js";
 import { camelize, serialize } from "../../src/util/String.js";
+import { Entry } from "../util/TsFile.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
 
@@ -24,7 +37,9 @@ const IntegerGlobalMap: { [name: string]: [string, string] } = {
     [Globals.vendorId.name]: ["datatype", "TlvVendorId"]
 };
 
-/** Adds TLV structures for ValueModels to a ClusterFile */
+/**
+ * Adds TLV structures for ValueModels to a ClusterFile
+ **/
 export class TlvGenerator {
     private definedDatatypes = new Set<Model>();
     private scopedNames = new Set<string>();
@@ -193,8 +208,7 @@ export class TlvGenerator {
     }
 
     private defineEnum(name: string, model: ValueModel) {
-        const block = this.file.types.expressions(`export const enum ${name} {`, "}")
-            .document(model);
+        const block = this.file.types.expressions(`export const enum ${name} {`, "}");
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(child => {
                 let name = child.name;
@@ -206,12 +220,12 @@ export class TlvGenerator {
                     .document(child);
             });
         });
+        return block;
     }
 
     private defineStruct(name: string, model: ValueModel, scope: ClusterModel) {
         this.importTlv("tlv", "TlvObject");
-        const block = this.file.types.expressions(`export const ${name} = TlvObject({`, "})")
-            .document(model);
+        const block = this.file.types.expressions(`export const ${name} = TlvObject({`, "})");
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(field => {
                 let tlv: string;
@@ -225,6 +239,7 @@ export class TlvGenerator {
                     .document(field);
             });
         });
+        return block;
     }
 
     private defineBitmap(name: string, model: ValueModel) {
@@ -254,8 +269,11 @@ export class TlvGenerator {
         this.importTlv("tlv/TlvNumber", "TlvBitmap");
         this.importTlv("schema/BitmapSchema", "BitFlag");
 
-        const block = this.file.types.expressions(`export const ${name}Bits = {`, "}")
-            .document(model);
+        const enumName = `${name.replace(/^Tlv/, "")}Bits`;
+        this.file.nameDefined(enumName);
+
+        const block = this.file.types.expressions(`export const ${enumName} = {`, "}")
+            .document({ details: `Bit definitions for ${name}`, xref: model.xref });
 
         this.file.types.insertingBefore(block, () => {
             model.children.forEach(child => {
@@ -264,10 +282,11 @@ export class TlvGenerator {
             });
         });
 
-        this.file.types.atom(`export const ${name} = TlvBitmap(${tlvNum}, ${name}Bits)`);
+        return this.file.types.atom(`export const ${name} = TlvBitmap(${tlvNum}, ${enumName})`);
     }
 
     private defineDatatype(model: ValueModel, scope: ClusterModel) {
+        // Obtain the defining model.  This is the actual datatype definition
         const defining = model.definingModel;
         if (defining) {
             model = defining;
@@ -278,54 +297,97 @@ export class TlvGenerator {
             return;
         }
 
+        // If there is a name collision, prefix the name with the parent's name
         let name = model.name;
         if (this.scopedNames.has(name) && model.parent && !(model instanceof ClusterModel)) {
             name = `${model.parent.name}${name}`;
         }
 
-        if (model instanceof CommandModel && model.isRequest) {
+        // Specialize the name based on the model type
+        if (model instanceof CommandModel && model.isRequest && !(name.endsWith("Response"))) {
             name += "Request";
         }
         if (model instanceof EventModel) {
             name += "Event";
         }
 
-        if (model.effectiveMetatype !== Metatype.enum) {
+        // For enums we create a typescript enum, for other types we create a TLV definition
+        if (model.effectiveMetatype === Metatype.enum) {
+            if (name.endsWith("Enum")) {
+                // This seems a bit redundant
+                name = name.substring(0, name.length - 4);
+            }
+        } else {
             name = "Tlv" + name;
         }
 
+        // We reserve the name "Type".  Plus it's kind of ambiguous
         if (name == "Type") {
             name = `${this.cluster.name}Type`;
         }
 
+        // If the type is already defined we reference the existing definition
         if (this.definedDatatypes.has(model)) {
             return name;
         }
 
+        // Record name usage
         this.definedDatatypes.add(model);
         this.file.nameDefined(name);
 
+        // If the type is defined in a different cluster, load the cluster type
+        // rather than defining.  This will fail if the other cluster does not
+        // actually use the type.  Currently not an issue.
         const definingScope = defining.owner(ClusterModel);
         if (definingScope && scope !== definingScope) {
             this.file.addImport(`cluster/definitions/${definingScope.name}Cluster`, name);
             return name;
         }
 
+        // Define the type
+        let definition: Entry;
         switch (model.effectiveMetatype) {
             case Metatype.enum:
-                this.defineEnum(name, model);
+                definition = this.defineEnum(name, model);
                 break;
 
             case Metatype.object:
-                this.defineStruct(name, model, scope);
+                definition = this.defineStruct(name, model, scope);
                 break;
 
             case Metatype.bitmap:
-                this.defineBitmap(name, model);
+                definition = this.defineBitmap(name, model);
                 break;
 
             default:
                 throw new InternalError(`${model.path}: Top-level ${model.effectiveMetatype} is unsupported`);
+        }
+
+        // Document the type.  For standalone definitions documentation is
+        // present on the model.  For other definitions the documentation is
+        // associated with the defining location, so just leave a comment
+        // referencing that
+        switch (model.tag) {
+            case ElementTag.Attribute:
+                definition.document({ details: `The value of the ${scope.name} ${camelize(model.name, false)} attribute`, xref: model.xref });
+                break;
+
+            case ElementTag.Command:
+                definition.document({ details: `Input to the ${scope.name} ${camelize(model.name, false)} command`, xref: model.xref });
+                break;
+
+            case ElementTag.Event:
+                definition.document({ details: `Body of the ${scope.name} ${camelize(model.name, false)} event`, xref: model.xref });
+                break;
+
+            default:
+                if (model.parent instanceof ClusterModel) {
+                    // Standalone
+                    definition.document(model);
+                } else {
+                    definition.document({ details: `The value of ${model.parent?.name}.${camelize(model.name, false)}`, xref: model.xref });
+                }
+                break;
         }
 
         return name;

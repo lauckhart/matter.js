@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, OptionalFixedAttribute, AccessLevel, FixedAttribute, Attribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalFixedAttribute, FixedAttribute, Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -20,7 +20,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * This cluster provides information about an application running on a TV or media player device which is represented
  * as an endpoint.
  *
- * This function creates an ApplicationBasic cluster.
+ * Use this factory function to create an ApplicationBasic cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3
  */
@@ -36,16 +36,22 @@ export function ApplicationBasicCluster() {
  */
 export const TlvApplicationStruct = TlvObject({
     /**
-     * This SHALL indicate the Connectivity Standards Alliance issued vendor ID for the catalog. The DIAL registry
-     * SHALL use value 0x0000.
+     * This shall indicate the Connectivity Standards Alliance issued vendor ID for the catalog. The DIAL registry
+     * shall use value 0x0000.
+     *
+     * It is assumed that Content App Platform providers (see Video Player Architecture section in [MatterDevLib] )
+     * will have their own catalog vendor ID (set to their own Vendor ID) and will assign an ApplicationID to each
+     * Content App.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.4.1.1
      */
     catalogVendorId: TlvField(0, TlvUInt16),
 
     /**
-     * This SHALL indicate the application identifier, expressed as a string, such as "123456-5433", "PruneVideo" or
-     * "Company X". This field SHALL be unique within a catalog.
+     * This shall indicate the application identifier, expressed as a string, such as "123456-5433", "PruneVideo" or
+     * "Company X". This field shall be unique within a catalog.
+     *
+     * For the DIAL registry catalog, this value shall be the DIAL prefix.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.4.1.2
      */
@@ -55,7 +61,7 @@ export const TlvApplicationStruct = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.4.2
  */
-export const enum ApplicationStatusEnum {
+export const enum ApplicationStatus {
     /**
      * Application is not running.
      */
@@ -96,63 +102,59 @@ export namespace ApplicationBasicCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * This attribute SHALL specify a human readable (displayable) name of the vendor for the Content App.
+             * This attribute shall specify a human readable (displayable) name of the vendor for the Content App.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.1
              */
-            vendorName: OptionalFixedAttribute(
-                0,
-                TlvString.bound({ maxLength: 32 }),
-                { default: "", readAcl: AccessLevel.View }
-            ),
+            vendorName: OptionalFixedAttribute(0, TlvString.bound({ maxLength: 32 }), { default: "" }),
 
             /**
-             * This attribute, if present, SHALL specify the Connectivity Standards Alliance assigned Vendor ID for the
+             * This attribute, if present, shall specify the Connectivity Standards Alliance assigned Vendor ID for the
              * Content App.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.2
              */
-            vendorId: OptionalFixedAttribute(1, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
+            vendorId: OptionalFixedAttribute(1, TlvUInt16, { default: 0 }),
 
             /**
-             * This attribute SHALL specify a human readable (displayable) name of the Content App assigned by the
+             * This attribute shall specify a human readable (displayable) name of the Content App assigned by the
              * vendor. For example, "NPR On Demand". The maximum length of the ApplicationName attribute is 256 bytes
              * of UTF-8 characters.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.3
              */
-            applicationName: FixedAttribute(2, TlvString, { readAcl: AccessLevel.View }),
+            applicationName: FixedAttribute(2, TlvString),
 
             /**
-             * This attribute, if present, SHALL specify a numeric ID assigned by the vendor to identify a specific
+             * This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific
              * Content App made by them. If the Content App is certified by the Connectivity Standards Alliance, then
              * this would be the Product ID as specified by the vendor for the certification.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.4
              */
-            productId: OptionalFixedAttribute(3, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
+            productId: OptionalFixedAttribute(3, TlvUInt16, { default: 0 }),
 
             /**
-             * This attribute SHALL specify a Content App which consists of an Application ID using a specified catalog.
+             * This attribute shall specify a Content App which consists of an Application ID using a specified catalog.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.5
              */
-            application: FixedAttribute(4, TlvApplicationStruct, { readAcl: AccessLevel.View }),
+            application: FixedAttribute(4, TlvApplicationStruct),
 
             /**
-             * This attribute SHALL specify the current running status of the application.
+             * This attribute shall specify the current running status of the application.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.6
              */
-            status: Attribute(5, TlvEnum<ApplicationStatusEnum>(), { default: 1, readAcl: AccessLevel.View }),
+            status: Attribute(5, TlvEnum<ApplicationStatus>(), { default: ApplicationStatus.ActiveVisibleFocus }),
 
             /**
-             * This attribute SHALL specify a human readable (displayable) version of the Content App assigned by the
-             * vendor. The maximum length of the ApplicationVersion attribute is 32 bytes of UTF-8 charac
+             * This attribute shall specify a human readable (displayable) version of the Content App assigned by the
+             * vendor. The maximum length of the ApplicationVersion attribute is 32 bytes of UTF-8 characters.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.7
              */
-            applicationVersion: FixedAttribute(6, TlvString.bound({ maxLength: 32 }), { readAcl: AccessLevel.View }),
+            applicationVersion: FixedAttribute(6, TlvString.bound({ maxLength: 32 })),
 
             /**
              * This is a list of vendor IDs. Each entry is a vendor-id.

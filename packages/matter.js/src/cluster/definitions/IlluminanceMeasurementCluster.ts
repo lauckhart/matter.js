@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, OptionalAttribute, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -17,7 +17,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * Attributes and commands for configuring the measurement of illuminance, and reporting illuminance measurements.
  *
- * This function creates an IlluminanceMeasurement cluster.
+ * Use this factory function to create an IlluminanceMeasurement cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2
  */
@@ -27,8 +27,7 @@ export function IlluminanceMeasurementCluster() {
 }
 
 /**
- * The LightSensorType attribute specifies the electronic type of the light sensor. This attribute shall be set to one
- * of the non-reserved values listed in Values of the LightSensorType Attribute.
+ * The value of the IlluminanceMeasurement lightSensorType attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.5
  */
@@ -58,9 +57,22 @@ export namespace IlluminanceMeasurementCluster {
             /**
              * The MeasuredValue attribute represents the illuminance in Lux (symbol lx) as follows:
              *
+             *   • MeasuredValue = 10,000 x log10(illuminance) + 1,
+             *
+             * where 1 lx ≤ illuminance ≤ 3.576 Mlx, corresponding to a MeasuredValue in the range 1 to 0xfffe. The
+             * MeasuredValue attribute can take the following values:
+             *
+             *   • 0 indicates a value of illuminance that is too low to be measured,
+             *
+             *   • MinMeasuredValue ≤ MeasuredValue ≤ MaxMeasuredValue under normal circumstances,
+             *
+             *   • null indicates that the illuminance measurement is invalid.
+             *
+             * The MeasuredValue attribute is updated continuously as new measurements are made.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.1
              */
-            measuredValue: Attribute(0, TlvNullable(TlvUInt16), { default: 0, readAcl: AccessLevel.View }),
+            measuredValue: Attribute(0, TlvNullable(TlvUInt16), { default: 0 }),
 
             /**
              * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. A
@@ -68,7 +80,7 @@ export namespace IlluminanceMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.2
              */
-            minMeasuredValue: Attribute(1, TlvNullable(TlvUInt16.bound({ min: 1 })), { readAcl: AccessLevel.View }),
+            minMeasuredValue: Attribute(1, TlvNullable(TlvUInt16.bound({ min: 1 }))),
 
             /**
              * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. A
@@ -76,14 +88,14 @@ export namespace IlluminanceMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.3
              */
-            maxMeasuredValue: Attribute(2, TlvNullable(TlvUInt16.bound({ max: 65534 })), { readAcl: AccessLevel.View }),
+            maxMeasuredValue: Attribute(2, TlvNullable(TlvUInt16.bound({ max: 65534 }))),
 
             /**
              * See Measured Value.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.4
              */
-            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { readAcl: AccessLevel.View }),
+            tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 })),
 
             /**
              * The LightSensorType attribute specifies the electronic type of the light sensor. This attribute shall be
@@ -91,11 +103,7 @@ export namespace IlluminanceMeasurementCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.5
              */
-            lightSensorType: OptionalAttribute(
-                4,
-                TlvNullable(TlvEnum<LightSensorType>()),
-                { default: 255, readAcl: AccessLevel.View }
-            )
+            lightSensorType: OptionalAttribute(4, TlvNullable(TlvEnum<LightSensorType>()), { default: 255 })
         }
     });
 

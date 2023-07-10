@@ -17,10 +17,17 @@ Matter.children.push({
     children: [ {
         tag: "attribute", name: "Sources", id: 0x0, type: "list", access: "R V", conformance: "M",
         constraint: "max 6", quality: "N",
-        details: "This list SHALL contain the set of all power sources capable of participating in the power system " +
-                 "of this Node. Each entry in the list SHALL be the endpoint number of an endpoint having a Power " +
-                 "Source cluster, which corresponds to a physical power source. The endpoint number SHALL be unique " +
-                 "within the list.",
+
+        details: "This list shall contain the set of all power sources capable of participating in the power system " +
+                 "of this Node. Each entry in the list shall be the endpoint number of an endpoint having a Power " +
+                 "Source cluster, which corresponds to a physical power source. The endpoint number shall be unique " +
+                 "within the list." +
+                 "\n" +
+                 "The order of power sources on a Node is defined by the Order attribute of its associated Power " +
+                 "Source cluster provided on the endpoint. List entries shall be sorted in increasing order, that is, " +
+                 "an entry with a lower order shall have a lower index than any entry with a higher order. Multiple " +
+                 "entries MAY have the same order, there are no restrictions on their relative sorting.",
+
         xref: { document: "core", section: "11.6.4.1" },
         children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
     } ]

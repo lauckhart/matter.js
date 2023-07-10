@@ -88,10 +88,14 @@ export class ClusterComponentGenerator {
             if (def !== undefined) {
                 options.value(def, "default: ");
             }
-            if (model.access.readPriv) {
+            
+            // View is the default
+            if (model.access.readPriv && model.access.readPriv != Access.Privilege.View) {
                 options.atom("readAcl", this.mapPrivilege(model.access.readPriv));
             }
-            if (model.access.writePriv) {
+
+            // Operate is the default
+            if (model.access.writePriv && model.access.writePriv != Access.Privilege.Operate) {
                 options.atom("writeAcl", this.mapPrivilege(model.access.writePriv));
             }
 
@@ -197,6 +201,24 @@ export class ClusterComponentGenerator {
         const metatype = model.effectiveMetatype;
 
         switch (metatype) {
+            case Metatype.enum:
+                if (typeof def == "number" || typeof def == "string") {
+                    const value = model.member(def);
+                    if (value) {
+                        let enumName = value.parent?.name;
+                        if (enumName) {
+                            if (enumName.endsWith("Enum")) {
+                                enumName = enumName.substring(0, enumName.length - 4);
+                            }
+                            if (enumName == "Type") {
+                                enumName = `${this.cluster.name}Type`;
+                            }
+                            def = serialize.asIs(`${enumName}.${value.name}`);
+                        }
+                    }
+                }
+                break;
+
             case Metatype.integer:
             case Metatype.float:
                 return FieldValue.numericValue(def, model.type);
@@ -211,7 +233,7 @@ export class ClusterComponentGenerator {
 
                 this.file.addImport("schema/BitmapSchema", "BitFlags");
                 const flags = (def as FieldValue.Flags).flags.map(f => serialize(camelize(f, true)));
-                def = serialize.asIs(`BitFlags(${tlvType}Bits, ${flags.join(", ")})`);
+                def = serialize.asIs(`BitFlags(${tlvType.replace(/^Tlv/, "")}Bits, ${flags.join(", ")})`);
 
                 break;
         }

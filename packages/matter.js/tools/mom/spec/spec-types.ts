@@ -27,7 +27,7 @@ export type HtmlReference = {
     name: string,
     path: string,
     table?: Table,
-    firstParagraph?: HTMLParagraphElement,
+    prose?: HTMLElement[],
     detailSection?: string,
     ignore?: boolean;
     details?: HtmlReference[]

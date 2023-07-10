@@ -19,7 +19,7 @@ import { TlvUInt64, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
  * The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for supporting the binding
  * table.
  *
- * This function creates a Binding cluster.
+ * Use this factory function to create a Binding cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.6
  */
@@ -33,7 +33,7 @@ export function BindingCluster() {
  */
 export const TlvTargetStruct = TlvObject({
     /**
-     * This field is the remote target node ID. If the Endpoint field is present, this field SHALL be present.
+     * This field is the remote target node ID. If the Endpoint field is present, this field shall be present.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.1
      */
@@ -41,7 +41,7 @@ export const TlvTargetStruct = TlvObject({
 
     /**
      * This field is the target group ID that represents remote endpoints. If the Endpoint field is present, this field
-     * SHALL NOT be present.
+     * shall NOT be present.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.2
      */
@@ -49,7 +49,7 @@ export const TlvTargetStruct = TlvObject({
 
     /**
      * This field is the remote endpoint that the local endpoint is bound to. If the Group field is present, this field
-     * SHALL NOT be present.
+     * shall NOT be present.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.3
      */
@@ -57,8 +57,8 @@ export const TlvTargetStruct = TlvObject({
 
     /**
      * This field is the cluster ID (client & server) on the local and target endpoint(s). If this field is present,
-     * the client cluster SHALL also exist on this endpoint (with this Binding cluster). If this field is present, the
-     * target SHALL be this cluster on the target endpoint(s).
+     * the client cluster shall also exist on this endpoint (with this Binding cluster). If this field is present, the
+     * target shall be this cluster on the target endpoint(s).
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1.4
      */
@@ -84,14 +84,14 @@ export namespace BindingCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * Each entry SHALL represent a binding. Here are some examples:
+             * Each entry shall represent a binding.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.6.6.1
              */
             binding: WritableFabricScopedAttribute(
                 0,
                 TlvArray(TlvTargetStruct),
-                { persistent: true, default: [], readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: [], writeAcl: AccessLevel.Manage }
             )
         }
     });

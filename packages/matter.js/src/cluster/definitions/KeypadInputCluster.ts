@@ -19,7 +19,7 @@ import { TlvEnum } from "../../tlv/TlvNumber.js";
  * This cluster provides an interface for controlling a device like a TV using action commands such as UP, DOWN, and
  * SELECT.
  *
- * This function creates a KeypadInput cluster.
+ * Use this factory function to create a KeypadInput cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
  */
@@ -118,13 +118,13 @@ export const enum CecKeyCode {
 }
 
 /**
- * Upon receipt, this SHALL process a keycode as input to the media device.
+ * Input to the KeypadInput sendKey command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
  */
 export const TlvSendKeyRequest = TlvObject({
     /**
-     * This SHALL indicate the key code to process.
+     * This shall indicate the key code to process.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1.1
      */
@@ -134,7 +134,7 @@ export const TlvSendKeyRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.4.1
  */
-export const enum StatusEnum {
+export const enum Status {
     /**
      * Command succeeded
      */
@@ -152,17 +152,17 @@ export const enum StatusEnum {
 }
 
 /**
- * This command SHALL be generated in response to a SendKey command. The data for this command SHALL be as follows:
+ * Input to the KeypadInput sendKeyResponse command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
  */
-export const TlvSendKeyResponseRequest = TlvObject({
+export const TlvSendKeyResponse = TlvObject({
     /**
-     * This SHALL indicate the status of the command.
+     * This shall indicate the of the command.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2.1
      */
-    status: TlvField(0, TlvEnum<StatusEnum>())
+    status: TlvField(0, TlvEnum<Status>())
 });
 
 export namespace KeypadInputCluster {
@@ -239,19 +239,22 @@ export namespace KeypadInputCluster {
     export const BaseComponent = ClusterComponent({
         commands: {
             /**
-             * Upon receipt, this SHALL process a keycode as input to the media device.
+             * Upon receipt, this shall process a keycode as input to the media device.
+             *
+             * If a second SendKey request with the same KeyCode value is received within 200ms, then the endpoint will
+             * consider the first key press to be a press and hold. When such a repeat KeyCode value is not received
+             * within 200ms, then the endpoint will consider the last key press to be a release.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
              */
-            sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponseRequest),
+            sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponse),
 
             /**
-             * This command SHALL be generated in response to a SendKey command. The data for this command SHALL be as
-             * follows:
+             * This command shall be generated in response to a SendKey command.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.2
              */
-            sendKeyResponse: Command(1, TlvSendKeyResponseRequest, 1, TlvNoResponse)
+            sendKeyResponse: Command(1, TlvSendKeyResponse, 1, TlvNoResponse)
         }
     });
 

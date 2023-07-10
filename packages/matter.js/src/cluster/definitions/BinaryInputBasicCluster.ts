@@ -17,7 +17,7 @@ import { TlvUInt8, TlvUInt32 } from "../../tlv/TlvNumber.js";
  *
  * An interface for reading the value of a binary measurement and accessing various characteristics of that measurement.
  *
- * This function creates a BinaryInputBasic cluster.
+ * Use this factory function to create a BinaryInputBasic cluster.
  */
 export function BinaryInputBasicCluster() {
     const cluster = Cluster({ ...BinaryInputBasicCluster.Metadata, ...BinaryInputBasicCluster.BaseComponent });

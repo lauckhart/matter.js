@@ -19,7 +19,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * common languages, units of measurements, and numerical formatting standards. As such, Nodes that visually or audibly
  * convey information need a mechanism by which they can be configured to use a user’s preferred language, units, etc
  *
- * This function creates a LocalizationConfiguration cluster.
+ * Use this factory function to create a LocalizationConfiguration cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.3
  */
@@ -50,27 +50,30 @@ export namespace LocalizationConfigurationCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * The ActiveLocale attribute SHALL represent the locale that the Node is currently configured to use when
-             * conveying information. The ActiveLocale attribute SHALL be a Language Tag as defined by BCP47
-             * [https://tools.ietf.org/rfc/bcp/bcp47.txt]. The ActiveLocale attribute SHALL have a default value
-             * assigned by the Vendor and SHALL be a value contained within the SupportedLocales attribute list.
+             * The ActiveLocale attribute shall represent the locale that the Node is currently configured to use when
+             * conveying information. The ActiveLocale attribute shall be a Language Tag as defined by BCP47
+             * [https://tools.ietf.org/rfc/bcp/bcp47.txt]. The ActiveLocale attribute shall have a default value
+             * assigned by the Vendor and shall be a value contained within the SupportedLocales attribute list.
+             *
+             * An attempt to write a value to ActiveLocale that is not present in SupportedLocales shall result in a
+             * CONSTRAINT_ERROR error.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.3.4.1
              */
             activeLocale: WritableAttribute(
                 0,
                 TlvString.bound({ maxLength: 35 }),
-                { persistent: true, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, writeAcl: AccessLevel.Manage }
             ),
 
             /**
-             * The SupportedLocales attribute SHALL represent a list of locale strings that are valid values for the
-             * ActiveLocale attribute. The list SHALL NOT contain any duplicate entries. The ordering of items within
+             * The SupportedLocales attribute shall represent a list of locale strings that are valid values for the
+             * ActiveLocale attribute. The list shall NOT contain any duplicate entries. The ordering of items within
              * the list SHOULD NOT express any meaning.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.3.4.2
              */
-            supportedLocales: FixedAttribute(1, TlvArray(TlvString), { default: [], readAcl: AccessLevel.View })
+            supportedLocales: FixedAttribute(1, TlvArray(TlvString), { default: [] })
         }
     });
 

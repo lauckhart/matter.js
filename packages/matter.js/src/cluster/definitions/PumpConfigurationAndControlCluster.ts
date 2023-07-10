@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, FixedAttribute, AccessLevel, OptionalAttribute, Attribute, OptionalWritableAttribute, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, FixedAttribute, OptionalAttribute, Attribute, OptionalWritableAttribute, AccessLevel, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvBitmap, TlvEnum, TlvUInt24, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -57,9 +57,11 @@ export function PumpConfigurationAndControlCluster<T extends PumpConfigurationAn
 }
 
 /**
+ * Bit definitions for TlvPumpStatusBitmap
+ *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1
  */
-export const TlvPumpStatusBitmapBits = {
+export const PumpStatusBitmapBits = {
     /**
      * A fault related to the system or pump device is detected.
      *
@@ -91,9 +93,9 @@ export const TlvPumpStatusBitmapBits = {
     /**
      * Device control is overridden by hardware, such as an external STOP button or via a local HMI.
      *
-     * While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing OperationMode SHALL
+     * While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing OperationMode shall
      * generate a FAILURE error status until LocalOverride is cleared on the physical device. When LocalOverride is
-     * cleared, the device SHALL return to the operation mode set in OperationMode.
+     * cleared, the device shall return to the operation mode set in OperationMode.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.3
      */
@@ -135,12 +137,15 @@ export const TlvPumpStatusBitmapBits = {
     remoteTemperature: BitFlag(256)
 };
 
-export const TlvPumpStatusBitmap = TlvBitmap(TlvUInt16, TlvPumpStatusBitmapBits);
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1
+ */
+export const TlvPumpStatusBitmap = TlvBitmap(TlvUInt16, PumpStatusBitmapBits);
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.2
  */
-export const enum OperationModeEnum {
+export const enum OperationMode {
     /**
      * If the pump is running in this operation mode the setpoint is an internal variable which MAY be controlled
      * between 0% and 100%, e.g., by means of the Level Control cluster
@@ -157,7 +162,7 @@ export const enum OperationModeEnum {
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.3
  */
-export const enum ControlModeEnum {
+export const enum ControlMode {
     /**
      * The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – MaxConstSpeed]
      * attributes.
@@ -356,89 +361,141 @@ export namespace PumpConfigurationAndControlCluster {
              * This attribute specifies the maximum pressure the pump can achieve. It is a physical limit, and does not
              * apply to any specific control mode or operation mode.
              *
+             * Valid range is -3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.1
              */
-            maxPressure: FixedAttribute(0, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            maxPressure: FixedAttribute(0, TlvNullable(TlvInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum speed the pump can achieve. It is a physical limit, and does not
              * apply to any specific control mode or operation mode.
              *
+             * Valid range is 0 to 65,534 RPM (steps of 1 RPM). This attribute shall be null if the value is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.2
              */
-            maxSpeed: FixedAttribute(1, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            maxSpeed: FixedAttribute(1, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does not
              * apply to any specific control mode or operation mode.
              *
+             * Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.3
              */
-            maxFlow: FixedAttribute(2, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            maxFlow: FixedAttribute(2, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the activity status of the pump functions as listed in PumpStatusBitmap. Where
-             * a pump controller function is active, the corresponding bit SHALL be set to 1. Where a pump controller
-             * function is not active, the corresponding bit SHALL be set to 0.
+             * a pump controller function is active, the corresponding bit shall be set to 1. Where a pump controller
+             * function is not active, the corresponding bit shall be set to 0.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.14
              */
-            pumpStatus: OptionalAttribute(16, TlvPumpStatusBitmap, { readAcl: AccessLevel.View }),
+            pumpStatus: OptionalAttribute(16, TlvPumpStatusBitmap),
 
             /**
              * This attribute specifies current effective operation mode of the pump as defined in OperationModeEnum.
              *
+             * The value of the EffectiveOperationMode attribute is the same as the OperationMode attribute, unless one
+             * of the following points are true:
+             *
+             *   • The pump is physically set to run with the local settings
+             *
+             *   • The LocalOverride bit in the PumpStatus attribute is set,
+             *
+             * See OperationMode and ControlMode attributes for a detailed description of the operation and control of
+             * the pump.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.15
              */
-            effectiveOperationMode: Attribute(
-                17,
-                TlvEnum<OperationModeEnum>(),
-                { persistent: true, readAcl: AccessLevel.View }
-            ),
+            effectiveOperationMode: Attribute(17, TlvEnum<OperationMode>(), { persistent: true }),
 
             /**
              * This attribute specifies the current effective control mode of the pump as defined in ControlModeEnum.
              *
+             * This attribute contains the control mode that currently applies to the pump. It will have the value of
+             * the ControlMode attribute, unless one of the following points are true:
+             *
+             *   • The ControlMode attribute is set to Automatic. In this case, the value of the EffectiveControlMode
+             *     shall match the behavior of the pump.
+             *
+             *   • A remote sensor is used as the sensor for regulation of the pump. In this case, EffectiveControlMode
+             *     will display ConstantPressure, ConstantFlow or ConstantTemperature if the remote sensor is a
+             *     pressure sensor, a flow sensor or a temperature sensor respectively, regardless of the value of the
+             *     ControlMode attribute.
+             *
+             * In case the ControlMode attribute is not included on the device and no remote sensors are connected, the
+             * value of the EffectiveControlMode shall match the vendor-specific behavior of the pump.
+             *
+             * See OperationMode and ControlMode attributes for detailed a description of the operation and control of
+             * the pump.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.16
              */
-            effectiveControlMode: Attribute(18, TlvEnum<ControlModeEnum>(), { persistent: true, readAcl: AccessLevel.View }),
+            effectiveControlMode: Attribute(18, TlvEnum<ControlMode>(), { persistent: true }),
 
             /**
              * This attribute specifies the actual capacity of the pump as a percentage of the effective maximum
              * setpoint value. It is updated dynamically as the speed of the pump changes.
              *
+             * If the value is not available (the measurement or estimation of the speed is done in the pump), this
+             * attribute will indicate the null value.
+             *
+             * Valid range is 0 % to 163.835% (0.005 % granularity). Although this attribute is a signed value, values
+             * of capacity less than zero have no physical meaning.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.17
              */
-            capacity: Attribute(19, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            capacity: Attribute(19, TlvNullable(TlvInt16), { default: null }),
 
             /**
              * This attribute specifies the actual speed of the pump measured in RPM. It is updated dynamically as the
              * speed of the pump changes.
              *
+             * If the value is not available (the measurement or estimation of the speed is done in the pump), this
+             * attribute will indicate the null value.
+             *
+             * Valid range is 0 to 65.534 RPM.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.18
              */
-            speed: OptionalAttribute(20, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            speed: OptionalAttribute(20, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the accumulated number of hours that the pump has been powered and the motor
              * has been running. It is updated dynamically as it increases. It is preserved over power cycles of the
              * pump. If LifeTimeRunningHours rises above maximum value it “rolls over” and starts at 0 (zero).
              *
+             * This attribute is writeable, in order to allow setting to an appropriate value after maintenance. If
+             *
+             * the value is not available, this attribute will indicate the null value. Valid range is 0 to 16,777,214
+             * hrs.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.19
              */
             lifetimeRunningHours: OptionalWritableAttribute(
                 21,
                 TlvNullable(TlvUInt24),
-                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
             ),
 
             /**
              * This attribute specifies the actual power consumption of the pump in Watts. The value of this attribute
              * is updated dynamically as the power consumption of the pump changes.
              *
+             * This attribute is read only. If the value is not available (the measurement of power consumption is not
+             * done in the pump), this attribute will indicate the null value.
+             *
+             * Valid range is 0 to 16,777,214 Watts.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.20
              */
-            power: OptionalAttribute(22, TlvNullable(TlvUInt24), { default: null, readAcl: AccessLevel.View }),
+            power: OptionalAttribute(22, TlvNullable(TlvUInt24), { default: null }),
 
             /**
              * This attribute specifies the accumulated energy consumption of the pump through the entire lifetime of
@@ -446,34 +503,75 @@ export namespace PumpConfigurationAndControlCluster {
              * consumption of the pump increases. If LifetimeEnergyConsumed rises above maximum value it “rolls over”
              * and starts at 0 (zero).
              *
+             * This attribute is writeable, in order to allow setting to an appropriate value after maintenance.
+             *
+             * Valid range is 0 kWh to 4,294,967,294 kWh.
+             *
+             * This attribute shall be null if the value is unknown.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.21
              */
             lifetimeEnergyConsumed: OptionalWritableAttribute(
                 23,
                 TlvNullable(TlvUInt32),
-                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
             ),
 
             /**
              * This attribute specifies the operation mode of the pump as defined in OperationModeEnum.
              *
+             * The actual operating mode of the pump is a result of the setting of the attributes OperationMode,
+             * ControlMode and the optional connection of a remote sensor. The operation and control is prioritized as
+             * shown in the scheme below:
+             *
+             * Priority Scheme of Pump Operation and Control
+             *
+             * If this attribute is Maximum, Minimum or Local, the OperationMode attribute decides how the pump is
+             * operated.
+             *
+             * If this attribute is Normal and a remote sensor is connected to the pump, the type of the remote sensor
+             * decides the control mode of the pump. A connected remote pressure sensor will make the pump run in
+             * control mode Constant pressure and vice versa for flow and temperature type sensors. This is regardless
+             * of the setting of the ControlMode attribute.
+             *
+             * If this attribute is Normal and no remote sensor is connected, the control mode of the pump is decided
+             * by the ControlMode attribute.
+             *
+             * OperationMode MAY be changed at any time, even when the pump is running. The behavior of the pump at the
+             * point of changing the value of this attribute is vendor-specific.
+             *
+             * In the case a device does not support a specific operation mode, the write interaction to this attribute
+             * with an unsupported operation mode value shall be ignored and a response containing the status of
+             * CONSTRAINT_ERROR shall be returned.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.22
              */
             operationMode: WritableAttribute(
                 32,
-                TlvEnum<OperationModeEnum>(),
-                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<OperationMode>(),
+                { persistent: true, default: OperationMode.Normal, writeAcl: AccessLevel.Manage }
             ),
 
             /**
              * This attribute specifies the control mode of the pump as defined in ControlModeEnum.
              *
+             * See the OperationMode attribute for a detailed description of the operation and control of the
+             *
+             * pump.
+             *
+             * ControlMode MAY be changed at any time, even when the pump is running. The behavior of the pump at the
+             * point of changing is vendor-specific.
+             *
+             * In the case a device does not support a specific control mode, the write interaction to this attribute
+             * with an unsupported control mode value shall be ignored and a response containing the status of
+             * CONSTRAINT_ERROR shall be returned.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.23
              */
             controlMode: OptionalWritableAttribute(
                 33,
-                TlvEnum<ControlModeEnum>(),
-                { persistent: true, default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                TlvEnum<ControlMode>(),
+                { persistent: true, default: ControlMode.ConstantSpeed, writeAcl: AccessLevel.Manage }
             )
         },
 
@@ -574,17 +672,23 @@ export namespace PumpConfigurationAndControlCluster {
              * This attribute specifies the minimum pressure the pump can achieve when it is working with the
              * ControlMode attribute set to ConstantPressure.
              *
+             * Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.4
              */
-            minConstPressure: FixedAttribute(3, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            minConstPressure: FixedAttribute(3, TlvNullable(TlvInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum pressure the pump can achieve when it is working with the
              * ControlMode attribute set to ConstantPressure.
              *
+             * Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.5
              */
-            maxConstPressure: FixedAttribute(4, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
+            maxConstPressure: FixedAttribute(4, TlvNullable(TlvInt16), { default: null })
         }
     });
 
@@ -597,88 +701,112 @@ export namespace PumpConfigurationAndControlCluster {
              * This attribute specifies the minimum pressure the pump can achieve when it is working with the
              * ControlMode attribute set to ConstantPressure.
              *
+             * Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.4
              */
-            minConstPressure: OptionalFixedAttribute(3, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            minConstPressure: OptionalFixedAttribute(3, TlvNullable(TlvInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum pressure the pump can achieve when it is working with the
              * ControlMode attribute set to ConstantPressure.
              *
+             * Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.5
              */
-            maxConstPressure: OptionalFixedAttribute(4, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            maxConstPressure: OptionalFixedAttribute(4, TlvNullable(TlvInt16), { default: null }),
 
             /**
              * This attribute specifies the minimum compensated pressure the pump can achieve when it is working with
              * the ControlMode attribute set to ProportionalPressure.
              *
+             * Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.6
              */
-            minCompPressure: OptionalFixedAttribute(5, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            minCompPressure: OptionalFixedAttribute(5, TlvNullable(TlvInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum compensated pressure the pump can achieve when it is working with
              * the ControlMode attribute set to ProportionalPressure.
              *
+             * Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.7
              */
-            maxCompPressure: OptionalFixedAttribute(6, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            maxCompPressure: OptionalFixedAttribute(6, TlvNullable(TlvInt16), { default: null }),
 
             /**
              * This attribute specifies the minimum speed the pump can achieve when it is working with the ControlMode
              * attribute set to ConstantSpeed.
              *
+             * Valid range is 0 to 65,534 RPM (steps of 1 RPM). This attribute shall be null if the value is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
              */
-            minConstSpeed: OptionalFixedAttribute(7, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            minConstSpeed: OptionalFixedAttribute(7, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum speed the pump can achieve when it is working with the ControlMode
              * attribute set to ConstantSpeed.
              *
+             * Valid range is 0 to 65,534 RPM (steps of 1 RPM). This attribute shall be null if the value is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
              */
-            maxConstSpeed: OptionalFixedAttribute(8, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            maxConstSpeed: OptionalFixedAttribute(8, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the minimum flow the pump can achieve when it is working with the Con
              *
+             * trolMode attribute set to ConstantFlow.
+             *
+             * Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
              */
-            minConstFlow: OptionalFixedAttribute(9, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            minConstFlow: OptionalFixedAttribute(9, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum flow the pump can achieve when it is working with the ControlMode
              * attribute set to ConstantFlow.
              *
+             * Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
              */
-            maxConstFlow: OptionalFixedAttribute(10, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            maxConstFlow: OptionalFixedAttribute(10, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the minimum temperature the pump can maintain in the system when it is working
              * with the ControlMode attribute set to ConstantTemperature.
              *
+             * Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
              */
-            minConstTemp: OptionalFixedAttribute(
-                11,
-                TlvNullable(TlvInt16.bound({ min: -27315 })),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            minConstTemp: OptionalFixedAttribute(11, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null }),
 
             /**
              * This attribute specifies the maximum temperature the pump can maintain in the system when it is working
              * with the ControlMode attribute set to ConstantTemperature.
              *
+             * MaxConstTemp shall be greater than or equal to MinConstTemp
+             *
+             * Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
              */
-            maxConstTemp: OptionalFixedAttribute(
-                12,
-                TlvNullable(TlvInt16.bound({ min: -27315 })),
-                { default: null, readAcl: AccessLevel.View }
-            )
+            maxConstTemp: OptionalFixedAttribute(12, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null })
         }
     });
 
@@ -691,17 +819,23 @@ export namespace PumpConfigurationAndControlCluster {
              * This attribute specifies the minimum compensated pressure the pump can achieve when it is working with
              * the ControlMode attribute set to ProportionalPressure.
              *
+             * Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.6
              */
-            minCompPressure: FixedAttribute(5, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View }),
+            minCompPressure: FixedAttribute(5, TlvNullable(TlvInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum compensated pressure the pump can achieve when it is working with
              * the ControlMode attribute set to ProportionalPressure.
              *
+             * Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). This attribute shall be null if the value
+             * is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.7
              */
-            maxCompPressure: FixedAttribute(6, TlvNullable(TlvInt16), { default: null, readAcl: AccessLevel.View })
+            maxCompPressure: FixedAttribute(6, TlvNullable(TlvInt16), { default: null })
         }
     });
 
@@ -714,17 +848,21 @@ export namespace PumpConfigurationAndControlCluster {
              * This attribute specifies the minimum speed the pump can achieve when it is working with the ControlMode
              * attribute set to ConstantSpeed.
              *
+             * Valid range is 0 to 65,534 RPM (steps of 1 RPM). This attribute shall be null if the value is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
              */
-            minConstSpeed: FixedAttribute(7, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            minConstSpeed: FixedAttribute(7, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum speed the pump can achieve when it is working with the ControlMode
              * attribute set to ConstantSpeed.
              *
+             * Valid range is 0 to 65,534 RPM (steps of 1 RPM). This attribute shall be null if the value is invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
              */
-            maxConstSpeed: FixedAttribute(8, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View })
+            maxConstSpeed: FixedAttribute(8, TlvNullable(TlvUInt16), { default: null })
         }
     });
 
@@ -736,17 +874,25 @@ export namespace PumpConfigurationAndControlCluster {
             /**
              * This attribute specifies the minimum flow the pump can achieve when it is working with the Con
              *
+             * trolMode attribute set to ConstantFlow.
+             *
+             * Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
              */
-            minConstFlow: FixedAttribute(9, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View }),
+            minConstFlow: FixedAttribute(9, TlvNullable(TlvUInt16), { default: null }),
 
             /**
              * This attribute specifies the maximum flow the pump can achieve when it is working with the ControlMode
              * attribute set to ConstantFlow.
              *
+             * Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
              */
-            maxConstFlow: FixedAttribute(10, TlvNullable(TlvUInt16), { default: null, readAcl: AccessLevel.View })
+            maxConstFlow: FixedAttribute(10, TlvNullable(TlvUInt16), { default: null })
         }
     });
 
@@ -759,30 +905,30 @@ export namespace PumpConfigurationAndControlCluster {
              * This attribute specifies the minimum temperature the pump can maintain in the system when it is working
              * with the ControlMode attribute set to ConstantTemperature.
              *
+             * Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
              */
-            minConstTemp: FixedAttribute(
-                11,
-                TlvNullable(TlvInt16.bound({ min: -27315 })),
-                { default: null, readAcl: AccessLevel.View }
-            ),
+            minConstTemp: FixedAttribute(11, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null }),
 
             /**
              * This attribute specifies the maximum temperature the pump can maintain in the system when it is working
              * with the ControlMode attribute set to ConstantTemperature.
              *
+             * MaxConstTemp shall be greater than or equal to MinConstTemp
+             *
+             * Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). This attribute shall be null if the value is
+             * invalid.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
              */
-            maxConstTemp: FixedAttribute(
-                12,
-                TlvNullable(TlvInt16.bound({ min: -27315 })),
-                { default: null, readAcl: AccessLevel.View }
-            )
+            maxConstTemp: FixedAttribute(12, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null })
         }
     });
 
     /**
-     * This cluster supports all PumpConfigurationAndControl features.  It may support illegal feature combinations.
+     * This cluster supports all PumpConfigurationAndControl features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.
