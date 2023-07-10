@@ -51,8 +51,9 @@ export function SwitchCluster<T extends SwitchCluster.Feature[]>(...features: [.
         { momentarySwitchLongPress: true, momentarySwitchRelease: false },
         { momentarySwitchMultiPress: true, momentarySwitch: false },
         { momentarySwitchMultiPress: true, momentarySwitchRelease: false },
-        { latchingSwitch: true, momentarySwitch: false },
-        { latchingSwitch: false, momentarySwitch: true }
+        { latchingSwitch: true, momentarySwitch: true },
+        { momentarySwitch: true, latchingSwitch: true },
+        { latchingSwitch: false, momentarySwitch: false }
     );
 
     return cluster as unknown as SwitchCluster.Type<BitFlags<typeof SwitchCluster.Metadata.features, T>>;
@@ -161,8 +162,9 @@ export namespace SwitchCluster {
         & (T extends { momentarySwitchLongPress: true, momentarySwitchRelease: false } ? never : {})
         & (T extends { momentarySwitchMultiPress: true, momentarySwitch: false } ? never : {})
         & (T extends { momentarySwitchMultiPress: true, momentarySwitchRelease: false } ? never : {})
-        & (T extends { latchingSwitch: true, momentarySwitch: false } ? never : {})
-        & (T extends { latchingSwitch: false, momentarySwitch: true } ? never : {});
+        & (T extends { latchingSwitch: true, momentarySwitch: true } ? never : {})
+        & (T extends { momentarySwitch: true, latchingSwitch: true } ? never : {})
+        & (T extends { latchingSwitch: false, momentarySwitch: false } ? never : {});
 
     /**
      * Switch cluster metadata.

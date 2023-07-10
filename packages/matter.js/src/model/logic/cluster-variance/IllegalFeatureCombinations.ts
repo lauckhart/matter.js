@@ -26,7 +26,8 @@ type Choices = {
  * conformance dialect that is inclusive of all feature conformances used by
  * the 1.1 specifications.
  * 
- * Throws an error if conformance does not adhere to supported rules.
+ * Throws an error if conformance does not adhere to supported rules.  This
+ * indicates the ruleset needs to be augmented.
  */
 export function IllegalFeatureCombinations(cluster: ClusterModel) {
     const illegal = [] as IllegalFeatureCombinations;
@@ -37,17 +38,24 @@ export function IllegalFeatureCombinations(cluster: ClusterModel) {
     }
 
     for (const choice of Object.values(choices)) {
+        // If choices are mutually exclusive, reject any two flags in
+        // combination
+        if (choice.exclusive) {
+            for (const f1 of choice.features) {
+                for (const f2 of choice.features) {
+                    if (f1 !== f2) {
+                        illegal.push({ [f1]: true, [f2]: true });
+                    }
+                }
+            }
+        }
+
+        // At least one feature choice must be enabled
         const flags = FeatureBitmap();
         for (const f of choice.features) {
             flags[f] = false;
         }
-        if (choice.exclusive) {
-            for (const f of choice.features) {
-                illegal.push({ ...flags, [f]: true })
-            }
-        } else {
-            illegal.push(flags);
-        }
+        illegal.push(flags);
     }
 
     return illegal;

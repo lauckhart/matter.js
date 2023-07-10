@@ -50,9 +50,13 @@ export function NetworkCommissioningCluster<T extends NetworkCommissioningCluste
 
     preventCluster(
         cluster,
-        { wiFiNetworkInterface: true, threadNetworkInterface: false, ethernetNetworkInterface: false },
-        { wiFiNetworkInterface: false, threadNetworkInterface: true, ethernetNetworkInterface: false },
-        { wiFiNetworkInterface: false, threadNetworkInterface: false, ethernetNetworkInterface: true }
+        { wiFiNetworkInterface: true, threadNetworkInterface: true },
+        { wiFiNetworkInterface: true, ethernetNetworkInterface: true },
+        { threadNetworkInterface: true, wiFiNetworkInterface: true },
+        { threadNetworkInterface: true, ethernetNetworkInterface: true },
+        { ethernetNetworkInterface: true, wiFiNetworkInterface: true },
+        { ethernetNetworkInterface: true, threadNetworkInterface: true },
+        { wiFiNetworkInterface: false, threadNetworkInterface: false, ethernetNetworkInterface: false }
     );
 
     return cluster as unknown as NetworkCommissioningCluster.Type<BitFlags<typeof NetworkCommissioningCluster.Metadata.features, T>>;
@@ -503,9 +507,13 @@ export namespace NetworkCommissioningCluster {
         & (T extends { wiFiNetworkInterface: true } | { threadNetworkInterface: true } ? typeof WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent : {})
         & (T extends { wiFiNetworkInterface: true } ? typeof WiFiNetworkInterfaceComponent : {})
         & (T extends { threadNetworkInterface: true } ? typeof ThreadNetworkInterfaceComponent : {})
-        & (T extends { wiFiNetworkInterface: true, threadNetworkInterface: false, ethernetNetworkInterface: false } ? never : {})
-        & (T extends { wiFiNetworkInterface: false, threadNetworkInterface: true, ethernetNetworkInterface: false } ? never : {})
-        & (T extends { wiFiNetworkInterface: false, threadNetworkInterface: false, ethernetNetworkInterface: true } ? never : {});
+        & (T extends { wiFiNetworkInterface: true, threadNetworkInterface: true } ? never : {})
+        & (T extends { wiFiNetworkInterface: true, ethernetNetworkInterface: true } ? never : {})
+        & (T extends { threadNetworkInterface: true, wiFiNetworkInterface: true } ? never : {})
+        & (T extends { threadNetworkInterface: true, ethernetNetworkInterface: true } ? never : {})
+        & (T extends { ethernetNetworkInterface: true, wiFiNetworkInterface: true } ? never : {})
+        & (T extends { ethernetNetworkInterface: true, threadNetworkInterface: true } ? never : {})
+        & (T extends { wiFiNetworkInterface: false, threadNetworkInterface: false, ethernetNetworkInterface: false } ? never : {});
 
     /**
      * NetworkCommissioning cluster metadata.
