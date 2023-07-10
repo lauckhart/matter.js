@@ -16,7 +16,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * This cluster provides an interface for managing low power mode on a device.
  *
- * This function creates a LowPower cluster.
+ * Use this factory function to create a LowPower cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9
  */

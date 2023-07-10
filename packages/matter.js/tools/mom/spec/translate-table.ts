@@ -4,130 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { camelize } from "../../../src/util/String.js";
 import { HtmlReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, DatatypeElement, Specification } from "../../../src/model/index.js";
-import { WORDS } from "../../util/words.js";
+import { Str } from "./html-translators.js";
+import { addDetails } from "./extract-details.js";
 
 const logger = Logger.get("translate-table");
 
-/** Generic type of table cell "translators" such as those that follow */
+/** Generic type of table cell "translators" such as those in html-translators */
 type Translator<T> = (el: HTMLElement) => T;
-
-/** String, trimmed with whitespace collapsed */
-export const Str = (el: HTMLElement) => {
-    // Remove footnote references
-    for (const child of el.querySelectorAll("span")) {
-        if (child.textContent?.match(/^[*0-9]$/)) {
-            child.remove();
-        }
-    }
-
-    const text = el.textContent
-
-    if (!text) {
-        return "";
-    }
-
-    return text
-        // Remove leading and trailing whitespace
-        .trim()
-
-        // Remove soft hyphen and any surrounding whitespace
-        .replace(/\s*\u00ad\s*/g, "")
-
-        // Collapse whitespace    
-        .replace(/\s+/g, " ");
-}
-
-/** String with no space at all */
-export const NoSpace = (el: HTMLElement) => Str(el).replace(/\s/g, "");
-
-/** Number parsed as integer */
-export const Integer = (el: HTMLElement) => {
-    const text = Str(el);
-
-    // Ignore range descriptions
-    if (text.match(/ (?:-|to) /)) {
-        return NaN;
-    }
-
-    return Number.parseInt(NoSpace(el));
-}
-
-/** Number encoded as BIT(n) */
-export const Bit = (el: HTMLElement) => {
-    const text = Str(el).replace(/bit\((\d+)\)/i, "$1");
-    return Number.parseInt(text);
-}
-
-/**
- * DSL or identifier.  Note we replace "Fo o" with "Foo" because space errors
- * are very common in the PDFs, especially in narrow columns and we don't want
- * to end up with FoO
- */
-export const Code = (el: HTMLElement) => {
-    let str = Str(el);
-
-    // Use the english dictionary to heuristically repair whitespace errors
-    const parts = str.split(/\s+/);
-    for (let i = 0; i < parts.length - 1; i++) {
-        // If the current word is all uppercase, assume it's a standalone
-        // identifier
-        if (parts[i].match(/^[A-Z_]+$/)) {
-            continue;
-        }
-
-        // If a word starts with lowercase, see if it's a word when
-        // concatenated with the previous word
-        if (parts[i + 1].match(/^[a-z]/)) {
-            // Get beginning of word from current part
-            const beginning = parts[i].replace(/^.*([A-Z])/, "$1");
-
-            // Get ending of word from next part
-            const ending = parts[i + 1].replace(/^([a-z]+).*/, "$1");
-
-            // If the concatenation is a word, assume it should be joined
-            if (WORDS.has(`${beginning}${ending}`.toLowerCase())) {
-                parts[i] = `${parts[i]}${parts[i + 1]}`;
-                parts.splice(i + 1, 1);
-
-                // Redo check from current point
-                i--;
-            }
-        }
-    }
-    str = parts.join(" ");
-
-    return str;
-}
-
-/** Camelized identifier */
-export const Identifier = (el: HTMLElement) => {
-    let str = Code(el);
-
-    // If there are multiple paragraphs, only use the first if there is space
-    // in the string
-    if (str.indexOf(" ") !== -1 && el.childNodes.length > 1) {
-        const limited = Str(el.firstChild as HTMLElement);
-        if (limited.length) {
-            str = limited;
-        }
-    }
-
-    // Strip everything following a subset of characters known to be inside
-    // what is properly a "key"
-    str = str.replace(/^([a-z0-9 _:,/-$]+).*/i, "$1");
-
-    return camelize(str, true);
-}
-
-/** Identifier, all lowercase.  Used for matching so "_" removed */
-export const LowerIdentifier = (el: HTMLElement) => Identifier(el).toLowerCase();
-
-/** Identifier, all uppercase.  Used for naming so "_" left in */
-export const UpperIdentifier = (el: HTMLElement) => Code(el).toUpperCase();
 
 /** Modifier that allows a value to be undefined */
 type Optional<T> = { option: "optional", wrapped: Alias<T> | Translator<T> };
@@ -318,7 +204,8 @@ function installPreciseDetails(
             || lookup[`${r.name.toLowerCase()}`];
         if (detail) {
             r.xref = detail.xref;
-            detail.firstParagraph && (r.details = Str(detail.firstParagraph));
+            
+            addDetails(r, detail);
 
             if (r.details && r.details.indexOf("SHALL indicate the of the") !== -1) {
                 // Goofballs copy & pasted this typo a couple times

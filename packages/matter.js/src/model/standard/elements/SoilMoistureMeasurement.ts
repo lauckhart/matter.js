@@ -16,7 +16,21 @@ Matter.children.push({
         {
             tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
             constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
-            details: "MeasuredValue represents the water content in % as follows:",
+
+            details: "MeasuredValue represents the water content in % as follows:" +
+                     "\n" +
+                     "MeasuredValue = 100 x water content" +
+                     "\n" +
+                     "Where 0% < = water content < = 100%, corresponding to a MeasuredValue in the range 0 to 10000. The " +
+                     "maximum resolution this format allows is 0.01%." +
+                     "\n" +
+                     "MinMeasuredValue and MaxMeasuredValue define the range of the sensor." +
+                     "\n" +
+                     "The null value indicates that the measurement is unknown, otherwise the range shall be as described " +
+                     "in Measured Value." +
+                     "\n" +
+                     "MeasuredValue is updated continuously as new measurements are made.",
+
             xref: { document: "cluster", section: "2.6.4.1" }
         },
 

@@ -23,7 +23,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * attributes/events and thus be informed of the interactions, and can perform actions based on this, for example by
  * sending commands to perform an action such as controlling a light or a window shade.
  *
- * Use this factory function to create a Switch cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a Switch cluster supporting a specific set of features. Include each
  * {@link SwitchCluster.Feature} you wish to support.
  *
  * @param features a list of {@link SwitchCluster.Feature} to support
@@ -59,8 +59,7 @@ export function SwitchCluster<T extends SwitchCluster.Feature[]>(...features: [.
 }
 
 /**
- * This event SHALL be generated to indicate how many times the momentary switch has been pressed in a multi-press
- * sequence, during that sequence. See Section 1.11.9, “Sequence of events for MultiPress” below.
+ * Body of the Switch multiPressOngoing event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
  */
@@ -70,9 +69,7 @@ export const TlvMultiPressOngoingEvent = TlvObject({
 });
 
 /**
- * This event SHALL be generated to indicate how many times the momentary switch has been pressed in a multi-press
- * sequence, after it has been detected that the sequence has ended. See Section 1.11.9, “Sequence of events for
- * MultiPress” below.
+ * Body of the Switch multiPressComplete event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
  */
@@ -82,39 +79,35 @@ export const TlvMultiPressCompleteEvent = TlvObject({
 });
 
 /**
- * This event SHALL be generated, when the latching switch is moved to a new position. It MAY have been delayed by
- * debouncing within the switch.
+ * Body of the Switch switchLatched event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
  */
 export const TlvSwitchLatchedEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
- * This event SHALL be generated, when the momentary switch starts to be pressed (after debouncing).
+ * Body of the Switch initialPress event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
  */
 export const TlvInitialPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
- * This event SHALL be generated, when the momentary switch has been pressed for a "long" time (this time interval is
- * manufacturer determined (e.g. since it depends on the switch physics)).
+ * Body of the Switch longPress event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
  */
 export const TlvLongPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
- * This event SHALL be generated, when the momentary switch has been released (after debouncing) and after having been
- * pressed for a long time, i.e. this event SHALL be generated when the switch is released if a LongPress event has
- * been generated since since the previous InitialPress event. Also see Section 1.11.8, “Sequence of generated events”.
+ * Body of the Switch longRelease event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
  */
 export const TlvLongReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8) });
 
 /**
- * This event SHALL be generated, when the momentary switch has been released (after debouncing).
+ * Body of the Switch shortRelease event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
  */
@@ -215,7 +208,7 @@ export namespace SwitchCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * This attribute SHALL indicate the maximum number of positions the switch has. Any kind of switch has a
+             * This attribute shall indicate the maximum number of positions the switch has. Any kind of switch has a
              * minimum of 2 positions. Also see Section 1.11.10, “NumberOfPositions > 2” for the case
              * NumberOfPositions>2.
              *
@@ -224,8 +217,8 @@ export namespace SwitchCluster {
             numberOfPositions: FixedAttribute(0, TlvUInt8.bound({ min: 2 }), { default: 2 }),
 
             /**
-             * This attribute SHALL indicate the position of the switch. The valid range is zero to
-             * NumberOfPositions-1. CurrentPosition value 0 SHALL be assigned to the default position of the switch:
+             * This attribute shall indicate the position of the switch. The valid range is zero to
+             * NumberOfPositions-1. CurrentPosition value 0 shall be assigned to the default position of the switch:
              * for example the "open" state of a rocker switch, or the "idle" state of a push button switch.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.2
@@ -240,7 +233,7 @@ export namespace SwitchCluster {
     export const MomentarySwitchMultiPressComponent = ClusterComponent({
         attributes: {
             /**
-             * This attribute SHALL indicate how many consecutive presses can be detected and reported by a momentary
+             * This attribute shall indicate how many consecutive presses can be detected and reported by a momentary
              * switch which supports multi-press (e.g. it will report the value 3 if it can detect single press, double
              * press and triple press, but not quad press and beyond).
              *
@@ -251,18 +244,46 @@ export namespace SwitchCluster {
 
         events: {
             /**
-             * This event SHALL be generated to indicate how many times the momentary switch has been pressed in a
+             * This event shall be generated to indicate how many times the momentary switch has been pressed in a
              * multi-press sequence, during that sequence. See Section 1.11.9, “Sequence of events for MultiPress”
              * below.
+             *
+             * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
+             *
+             * The CurrentNumberOfPressesCounted field shall contain:
+             *
+             *   • a value of 2 when the second press of a multi-press sequence has been detected,
+             *
+             *   • a value of 3 when the third press of a multi-press sequence has been detected,
+             *
+             *   • a value of N when the Nth press of a multi-press sequence has been detected.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
              */
             multiPressOngoing: Event(5, EventPriority.Info, TlvMultiPressOngoingEvent),
 
             /**
-             * This event SHALL be generated to indicate how many times the momentary switch has been pressed in a
+             * This event shall be generated to indicate how many times the momentary switch has been pressed in a
              * multi-press sequence, after it has been detected that the sequence has ended. See Section 1.11.9,
              * “Sequence of events for MultiPress” below.
+             *
+             * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
+             * prior to release.
+             *
+             * The TotalNumberOfPressesCounted field shall contain:
+             *
+             *   • a value of 1 when there was one press in a multi-press sequence (and the sequence has ended),
+             *
+             *     i.e. there was no double press (or more),
+             *
+             *   • a value of 2 when there were exactly two presses in a multi-press sequence (and the sequence has
+             *     ended),
+             *
+             *   • a value of 3 when there were exactly three presses in a multi-press sequence (and the sequence has
+             *     ended),
+             *
+             *   • a value of N when there were exactly N presses in a multi-press sequence (and the sequence has
+             *     ended).
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
              */
@@ -276,8 +297,10 @@ export namespace SwitchCluster {
     export const LatchingSwitchComponent = ClusterComponent({
         events: {
             /**
-             * This event SHALL be generated, when the latching switch is moved to a new position. It MAY have been
+             * This event shall be generated, when the latching switch is moved to a new position. It MAY have been
              * delayed by debouncing within the switch.
+             *
+             * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
              */
@@ -291,7 +314,9 @@ export namespace SwitchCluster {
     export const MomentarySwitchComponent = ClusterComponent({
         events: {
             /**
-             * This event SHALL be generated, when the momentary switch starts to be pressed (after debouncing).
+             * This event shall be generated, when the momentary switch starts to be pressed (after debouncing).
+             *
+             * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
              */
@@ -305,18 +330,23 @@ export namespace SwitchCluster {
     export const MomentarySwitchLongPressComponent = ClusterComponent({
         events: {
             /**
-             * This event SHALL be generated, when the momentary switch has been pressed for a "long" time (this time
+             * This event shall be generated, when the momentary switch has been pressed for a "long" time (this time
              * interval is manufacturer determined (e.g. since it depends on the switch physics)).
+             *
+             * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
              */
             longPress: Event(2, EventPriority.Info, TlvLongPressEvent),
 
             /**
-             * This event SHALL be generated, when the momentary switch has been released (after debouncing) and after
-             * having been pressed for a long time, i.e. this event SHALL be generated when the switch is released if a
+             * This event shall be generated, when the momentary switch has been released (after debouncing) and after
+             * having been pressed for a long time, i.e. this event shall be generated when the switch is released if a
              * LongPress event has been generated since since the previous InitialPress event. Also see Section 1.11.8,
              * “Sequence of generated events”.
+             *
+             * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
+             * prior to release.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
              */
@@ -330,7 +360,19 @@ export namespace SwitchCluster {
     export const MomentarySwitchReleaseComponent = ClusterComponent({
         events: {
             /**
-             * This event SHALL be generated, when the momentary switch has been released (after debouncing).
+             * This event shall be generated, when the momentary switch has been released (after debouncing).
+             *
+             *   • If the server supports the Momentary Switch LongPress (MSL) feature, this event shall be generated
+             *     when the switch is released if no LongPress event had been generated since the previous InitialPress
+             *     event.
+             *
+             *   • If the server does not support the Momentary Switch LongPress (MSL) feature, this event shall be
+             *     generated when the switch is released - even when the switch was pressed for a long time.
+             *
+             *   • Also see Section 1.11.8, “Sequence of generated events”.
+             *
+             * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
+             * prior to release.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
              */
@@ -339,7 +381,7 @@ export namespace SwitchCluster {
     });
 
     /**
-     * This cluster supports all Switch features.  It may support illegal feature combinations.
+     * This cluster supports all Switch features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.

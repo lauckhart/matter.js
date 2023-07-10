@@ -20,7 +20,7 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  *
  * Provides an interface for providing OTA software updates
  *
- * This function creates an OtaSoftwareUpdateProvider cluster.
+ * Use this factory function to create an OtaSoftwareUpdateProvider cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
  */
@@ -33,9 +33,13 @@ export function OtaSoftwareUpdateProviderCluster() {
 }
 
 /**
+ * Note that only HTTP over TLS (HTTPS) is supported (see RFC 7230). Using HTTP without TLS shall
+ *
+ * NOT be supported, as there is no way to authenticate the involved participants.
+ *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.3
  */
-export const enum DownloadProtocolEnum {
+export const enum DownloadProtocol {
     BdxSynchronous = 0,
     BdxAsynchronous = 1,
     Https = 2,
@@ -43,8 +47,7 @@ export const enum DownloadProtocolEnum {
 }
 
 /**
- * Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA Provider to match
- * the OTA Requestor’s constraints provided in the payload fields.
+ * Input to the OtaSoftwareUpdateProvider queryImage command
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
  */
@@ -52,7 +55,7 @@ export const TlvQueryImageRequest = TlvObject({
     vendorId: TlvField(0, TlvUInt16),
     productId: TlvField(1, TlvUInt16),
     softwareVersion: TlvField(2, TlvUInt32),
-    protocolsSupported: TlvField(3, TlvArray(TlvEnum<DownloadProtocolEnum>())),
+    protocolsSupported: TlvField(3, TlvArray(TlvEnum<DownloadProtocol>())),
     hardwareVersion: TlvOptionalField(4, TlvUInt16),
     location: TlvOptionalField(5, TlvString.bound({ minLength: 2, maxLength: 2 })),
     requestorCanConsent: TlvOptionalField(6, TlvBoolean),
@@ -64,7 +67,7 @@ export const TlvQueryImageRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.1
  */
-export const enum StatusEnum {
+export const enum Status {
     UpdateAvailable = 0,
     Busy = 1,
     NotAvailable = 2,
@@ -72,12 +75,12 @@ export const enum StatusEnum {
 }
 
 /**
- * < Previous | Contents | Next >
+ * Input to the OtaSoftwareUpdateProvider queryImageResponse command
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
  */
-export const TlvQueryImageResponseRequest = TlvObject({
-    status: TlvField(0, TlvEnum<StatusEnum>()),
+export const TlvQueryImageResponse = TlvObject({
+    status: TlvField(0, TlvEnum<Status>()),
     delayedActionTime: TlvOptionalField(1, TlvUInt32),
     imageUri: TlvOptionalField(2, TlvString.bound({ maxLength: 256 })),
     softwareVersion: TlvOptionalField(3, TlvUInt32),
@@ -88,7 +91,7 @@ export const TlvQueryImageResponseRequest = TlvObject({
 });
 
 /**
- * < Previous | Contents | Next >
+ * Input to the OtaSoftwareUpdateProvider applyUpdateRequest command
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
  */
@@ -103,24 +106,24 @@ export const TlvApplyUpdateRequestRequest = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.2
  */
-export const enum ApplyUpdateActionEnum {
+export const enum ApplyUpdateAction {
     Proceed = 0,
     AwaitNextAction = 1,
     Discontinue = 2
 }
 
 /**
- * < Previous | Contents | Next >
+ * Input to the OtaSoftwareUpdateProvider applyUpdateResponse command
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
  */
-export const TlvApplyUpdateResponseRequest = TlvObject({
-    action: TlvField(0, TlvEnum<ApplyUpdateActionEnum>()),
+export const TlvApplyUpdateResponse = TlvObject({
+    action: TlvField(0, TlvEnum<ApplyUpdateAction>()),
     delayedActionTime: TlvField(1, TlvUInt32)
 });
 
 /**
- * < Previous | Contents | Next >
+ * Input to the OtaSoftwareUpdateProvider notifyUpdateApplied command
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.22
  */
@@ -148,36 +151,64 @@ export namespace OtaSoftwareUpdateProviderCluster {
     export const BaseComponent = ClusterComponent({
         commands: {
             /**
-             * Upon receipt, this command SHALL trigger an attempt to find an updated Software Image by the OTA
+             * Upon receipt, this command shall trigger an attempt to find an updated Software Image by the OTA
              * Provider to match the OTA Requestor’s constraints provided in the payload fields.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
              */
-            queryImage: Command(0, TlvQueryImageRequest, 1, TlvQueryImageResponseRequest),
+            queryImage: Command(0, TlvQueryImageRequest, 1, TlvQueryImageResponse),
 
             /**
-             * < Previous | Contents | Next >
-             *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.10
              */
-            queryImageResponse: Command(1, TlvQueryImageResponseRequest, 1, TlvNoResponse),
+            queryImageResponse: Command(1, TlvQueryImageResponse, 1, TlvNoResponse),
 
             /**
-             * < Previous | Contents | Next >
+             * This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”. This
+             * field MAY be used by the OTA Provider to track minimal lifecycle state to allow finer-grained scheduling
+             * of the application of Software Images by OTA Requestors.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
              */
-            applyUpdateRequest: Command(2, TlvApplyUpdateRequestRequest, 3, TlvApplyUpdateResponseRequest),
+            applyUpdateRequest: Command(2, TlvApplyUpdateRequestRequest, 3, TlvApplyUpdateResponse),
 
             /**
-             * < Previous | Contents | Next >
-             *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.20
              */
-            applyUpdateResponse: Command(3, TlvApplyUpdateResponseRequest, 3, TlvNoResponse),
+            applyUpdateResponse: Command(3, TlvApplyUpdateResponse, 3, TlvNoResponse),
 
             /**
-             * < Previous | Contents | Next >
+             * This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”.
+             *
+             * The SoftwareVersion included in the request payload shall provide the same value as the SoftwareVersion
+             * attribute in the invoking OTA Requestor’s Basic Information Cluster, and SHOULD be consistent with the
+             * value representing a new version running on the Node invoking the command.
+             *
+             * When Generated
+             *
+             * The NotifyUpdateApplied command SHOULD be invoked in the following two circumstances:
+             *
+             *   1. An OTA Requestor has just successfully applied a Software Image it had obtained from a previous
+             *      QueryImage response.
+             *
+             *   2. An OTA Requestor has just successfully applied a Software Image it had obtained through means
+             *      different than those of this Cluster.
+             *
+             * An OTA Provider MAY use the state of invocation of this command to help track the progress of update for
+             * OTA Requestors it knows require a new OTA Software Image. However, due to the possibility that an OTA
+             * Requestor MAY never come back (e.g. device removed from Fabric altogether, or a critical malfunction),
+             * an OTA Provider shall NOT expect every OTA Requestor to invoke this command for correct operation of the
+             * OTA Provider.
+             *
+             * This command shall be considered optional and shall not result in reduced availability of the OTA
+             * Provider functionality if OTA Requestors never invoke this command.
+             *
+             * Effect on Receipt
+             *
+             * An OTA Provider receiving an invocation of this command MAY log it internally.
+             *
+             * On receiving this command, an OTA Provider MAY use the information to update its bookkeeping of cached
+             * Software Images, or use it for other similar administrative purposes.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.22
              */

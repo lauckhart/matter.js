@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, WritableAttribute, AccessLevel, Attribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, WritableAttribute, Attribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -19,7 +19,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * Attributes and commands for putting a device into Identification mode (e.g. flashing a light).
  *
- * Use this factory function to create an Identify cluster supporting a specific set of features.  Include each
+ * Use this factory function to create an Identify cluster supporting a specific set of features. Include each
  * {@link IdentifyCluster.Feature} you wish to support.
  *
  * @param features a list of {@link IdentifyCluster.Feature} to support
@@ -39,8 +39,7 @@ export function IdentifyCluster<T extends IdentifyCluster.Feature[]>(...features
 }
 
 /**
- * This attribute specifies how the identification state is presented to the user. This field SHALL contain one of the
- * values listed below:
+ * The value of the Identify identifyType attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
  */
@@ -75,17 +74,14 @@ export const enum IdentifyType {
 }
 
 /**
- * This command starts or stops the receiving device identifying itself. This command SHALL have the following data
- * fields:
+ * Input to the Identify identify command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
  */
 export const TlvIdentifyRequest = TlvObject({ identifyTime: TlvField(0, TlvUInt16) });
 
 /**
- * This field specifies the identify effect to use. All values of the EffectIdentifier SHALL be supported. Implementors
- * MAY deviate from the example light effects in the table below, but they SHOULD indicate during testing how they
- * handle each effect.
+ * The value of TriggerEffect.effectIdentifier
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.1
  */
@@ -124,9 +120,7 @@ export const enum EffectIdentifier {
 }
 
 /**
- * This field is used to indicate which variant of the effect, indicated in the EffectIdentifier field, SHOULD be
- * triggered. If a device does not support the given variant, it SHALL use the default variant. This field SHALL
- * contain one of the values listed below:
+ * The value of TriggerEffect.effectVariant
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.2
  */
@@ -135,19 +129,19 @@ export const enum EffectVariant {
 }
 
 /**
- * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow an
- * implementation to provide visual feedback to the user under certain circumstances such as a color light turning
- * green when it has successfully connected to a network. The use of this command and the effects themselves are
- * entirely up to the implementer to use whenever a visual feedback is useful but it is not the same as and does not
- * replace the identify mechanism used during commissioning.
+ * Input to the Identify triggerEffect command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
  */
 export const TlvTriggerEffectRequest = TlvObject({
     /**
-     * This field specifies the identify effect to use. All values of the EffectIdentifier SHALL be supported.
+     * This field specifies the identify effect to use. All values of the EffectIdentifier shall be supported.
      * Implementors MAY deviate from the example light effects in the table below, but they SHOULD indicate during
      * testing how they handle each effect.
+     *
+     * This field shall contain one of the non-reserved values listed below.
+     *
+     * Table 3. Values of the EffectIdentifier Field of the TriggerEffect Command
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.1
      */
@@ -155,8 +149,10 @@ export const TlvTriggerEffectRequest = TlvObject({
 
     /**
      * This field is used to indicate which variant of the effect, indicated in the EffectIdentifier field, SHOULD be
-     * triggered. If a device does not support the given variant, it SHALL use the default variant. This field SHALL
+     * triggered. If a device does not support the given variant, it shall use the default variant. This field shall
      * contain one of the values listed below:
+     *
+     * Table 4. Values of the EffectVariant Field of the TriggerEffect Command
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.2
      */
@@ -164,12 +160,11 @@ export const TlvTriggerEffectRequest = TlvObject({
 });
 
 /**
- * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command, in the case
- * that the device is currently identifying itself.
+ * Input to the Identify identifyQueryResponse command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
  */
-export const TlvIdentifyQueryResponseRequest = TlvObject({
+export const TlvIdentifyQueryResponse = TlvObject({
     /**
      * This field contains the current value of the IdentifyTime attribute, and specifies the length of time, in
      * seconds, that the device will continue to identify itself.
@@ -230,27 +225,32 @@ export namespace IdentifyCluster {
              * This attribute specifies the remaining length of time, in seconds, that the endpoint will continue to
              * identify itself.
              *
+             * If this attribute is set to a value other than 0 then the device shall enter its identification state,
+             * in order to indicate to an observer which of several nodes and/or endpoints it is. It is RECOMMENDED
+             * that this state consists of flashing a light with a period of 0.5 seconds. The IdentifyTime attribute
+             * shall be decremented every second while in this state.
+             *
+             * If this attribute reaches or is set to the value 0 then the device shall terminate its identification
+             * state.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
              */
-            identifyTime: WritableAttribute(
-                0,
-                TlvUInt16,
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }
-            ),
+            identifyTime: WritableAttribute(0, TlvUInt16, { default: 0 }),
 
             /**
-             * This attribute specifies how the identification state is presented to the user. This field SHALL contain
+             * This attribute specifies how the identification state is presented to the user. This field shall contain
              * one of the values listed below:
+             *
+             * Table 2. Values of the IdentifyType attribute
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
              */
-            identifyType: Attribute(1, TlvEnum<IdentifyType>(), { default: 0, readAcl: AccessLevel.View })
+            identifyType: Attribute(1, TlvEnum<IdentifyType>(), { default: IdentifyType.None })
         },
 
         commands: {
             /**
-             * This command starts or stops the receiving device identifying itself. This command SHALL have the
-             * following data fields:
+             * This command starts or stops the receiving device identifying itself.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
              */
@@ -280,20 +280,22 @@ export namespace IdentifyCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
              */
-            identifyQueryResponse: Command(0, TlvIdentifyQueryResponseRequest, 0, TlvNoResponse),
+            identifyQueryResponse: Command(0, TlvIdentifyQueryResponse, 0, TlvNoResponse),
 
             /**
              * This command allows the sending device to request the target or targets to respond if they are currently
              * identifying themselves.
              *
+             * This command has no data fields.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
              */
-            identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponseRequest)
+            identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponse)
         }
     });
 
     /**
-     * This cluster supports all Identify features.  It may support illegal feature combinations.
+     * This cluster supports all Identify features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.

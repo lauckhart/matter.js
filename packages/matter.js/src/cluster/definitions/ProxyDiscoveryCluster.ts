@@ -16,7 +16,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  *
  * Cluster to control Proxy Discovery
  *
- * This function creates a ProxyDiscovery cluster.
+ * Use this factory function to create a ProxyDiscovery cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.15.13
  */

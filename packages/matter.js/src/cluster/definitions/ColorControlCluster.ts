@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, OptionalAttribute, AccessLevel, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, OptionalAttribute, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap, TlvInt16 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -20,7 +20,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * Attributes and commands for controlling the color properties of a color-capable light.
  *
- * Use this factory function to create a ColorControl cluster supporting a specific set of features.  Include each
+ * Use this factory function to create a ColorControl cluster supporting a specific set of features. Include each
  * {@link ColorControlCluster.Feature} you wish to support.
  *
  * @param features a list of {@link ColorControlCluster.Feature} to support
@@ -45,8 +45,7 @@ export function ColorControlCluster<T extends ColorControlCluster.Feature[]>(...
 }
 
 /**
- * The DriftCompensation attribute indicates what mechanism, if any, is in use for compensation for color/intensity
- * drift over time. It SHALL be one of the non-reserved values in Values of the DriftCompensation Attribute.
+ * The value of the ColorControl driftCompensation attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.6
  */
@@ -59,7 +58,7 @@ export const enum DriftCompensation {
 }
 
 /**
- * The ColorMode attribute indicates which attributes are currently determining the color of the device.
+ * The value of the ColorControl colorMode attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.9
  */
@@ -70,21 +69,21 @@ export const enum ColorMode {
 }
 
 /**
- * The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap that
- * determines the default behavior of some cluster commands. Each command that is dependent on the Options attribute
- * SHALL first construct a temporary Options bitmap that is in effect during the command processing. The temporary
- * Options bitmap has the same format and meaning as the Options attribute, but includes any bits that may be
- * overridden by command fields.
+ * Bit definitions for TlvOptions
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
  */
-export const TlvOptionsBits = { executeIfOff: BitFlag(1) };
-
-export const TlvOptions = TlvBitmap(TlvUInt8, TlvOptionsBits);
+export const OptionsBits = { executeIfOff: BitFlag(1) };
 
 /**
- * The EnhancedColorMode attribute specifies which attributes are currently determining the color of the device, as
- * detailed in Values of the EnhancedColorMode Attribute.
+ * The value of the ColorControl options attribute
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
+ */
+export const TlvOptions = TlvBitmap(TlvUInt8, OptionsBits);
+
+/**
+ * The value of the ColorControl enhancedColorMode attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.12
  */
@@ -106,7 +105,7 @@ export const enum ColorControlDirection {
 }
 
 /**
- * The MoveToHue command SHALL have the following data fields:
+ * Input to the ColorControl moveToHue command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4
  */
@@ -119,14 +118,14 @@ export const TlvMoveToHueRequest = TlvObject({
     hue: TlvField(0, TlvUInt8.bound({ max: 254 })),
 
     /**
-     * The Direction field SHALL be one of the non-reserved values in Values of the Direction Field.
+     * The Direction field shall be one of the non-reserved values in Values of the Direction Field.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.2
      */
     direction: TlvField(1, TlvEnum<ColorControlDirection>()),
 
     /**
-     * The TransitionTime field specifies, in 1/10ths of a second, the time that SHALL be taken to move to the new hue.
+     * The TransitionTime field specifies, in 1/10ths of a second, the time that shall be taken to move to the new hue.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.3
      */
@@ -146,14 +145,14 @@ export const enum MoveMode {
 }
 
 /**
- * The MoveHue command SHALL have the following data fields:
+ * Input to the ColorControl moveHue command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.5
  */
 export const TlvMoveHueRequest = TlvObject({
     /**
-     * The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the MoveMode
-     * field is equal to 0 (Stop), the Rate field SHALL be ignored.
+     * The MoveMode field shall be one of the non-reserved values in Values of the MoveMode Field. If the MoveMode
+     * field is equal to 0 (Stop), the Rate field shall be ignored.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.5.1
      */
@@ -162,8 +161,8 @@ export const TlvMoveHueRequest = TlvObject({
     /**
      * The Rate field specifies the rate of movement in steps per second. A step is a change in the device’s hue of one
      * unit. If the MoveMode field is set to 1 (up) or 3 (down) and the Rate field has a value of zero, the command has
-     * no effect and a response command SHALL be sent in response, with the status code set to INVALID_COMMAND. If the
-     * MoveMode field is set to 0 (stop) the Rate field SHALL be ignored.
+     * no effect and a response command shall be sent in response, with the status code set to INVALID_COMMAND. If the
+     * MoveMode field is set to 0 (stop) the Rate field shall be ignored.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.5.2
      */
@@ -182,13 +181,15 @@ export const enum StepMode {
 }
 
 /**
- * The StepHue command SHALL have the following data fields:
+ * Input to the ColorControl stepHue command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.6
  */
 export const TlvStepHueRequest = TlvObject({
     /**
-     * The StepMode field SHALL be one of the non-reserved values in Values of the StepMode Field.
+     * The StepMode field shall be one of the non-reserved values in Values of the StepMode Field.
+     *
+     * Table 50. Values of the StepMode Field
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.6.1
      */
@@ -202,8 +203,11 @@ export const TlvStepHueRequest = TlvObject({
     stepSize: TlvField(1, TlvUInt8),
 
     /**
-     * The TransitionTime field specifies, in 1/10ths of a second, the time that SHALL be taken to perform the step. A
+     * The TransitionTime field specifies, in 1/10ths of a second, the time that shall be taken to perform the step. A
      * step is a change in the device’s hue of ‘Step size’ units.
+     *
+     * Note: Here the TransitionTime data field is of data type uint8, where uint16 is more common for TransitionTime
+     * data fields in other clusters / commands.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.6.3
      */
@@ -214,7 +218,7 @@ export const TlvStepHueRequest = TlvObject({
 });
 
 /**
- * The MoveToSaturation command SHALL have the following data fields:
+ * Input to the ColorControl moveToSaturation command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.7
  */
@@ -226,14 +230,14 @@ export const TlvMoveToSaturationRequest = TlvObject({
 });
 
 /**
- * The MoveSaturation command SHALL have the following data fields:
+ * Input to the ColorControl moveSaturation command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.8
  */
 export const TlvMoveSaturationRequest = TlvObject({
     /**
-     * The MoveMode field SHALL be one of the non-reserved values in Values of the MoveMode Field. If the MoveMode
-     * field is equal to 0 (Stop), the Rate field SHALL be ignored.
+     * The MoveMode field shall be one of the non-reserved values in Values of the MoveMode Field. If the MoveMode
+     * field is equal to 0 (Stop), the Rate field shall be ignored.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.8.1
      */
@@ -241,6 +245,10 @@ export const TlvMoveSaturationRequest = TlvObject({
 
     /**
      * The Rate field specifies the rate of movement in steps per second. A step is a change in the device’s
+     *
+     * saturation of one unit. If the MoveMode field is set to 1 (up) or 3 (down) and the Rate field has a value of
+     * zero, the command has no effect and a response command shall be sent in response, with the status code set to
+     * INVALID_COMMAND. If the MoveMode field is set to 0 (stop) the Rate field shall be ignored.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.8.2
      */
@@ -251,13 +259,13 @@ export const TlvMoveSaturationRequest = TlvObject({
 });
 
 /**
- * The StepSaturation command SHALL have the following data fields:
+ * Input to the ColorControl stepSaturation command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.9
  */
 export const TlvStepSaturationRequest = TlvObject({
     /**
-     * The StepMode field SHALL be one of the non-reserved values in Values of the StepMode Field.
+     * The StepMode field shall be one of the non-reserved values in Values of the StepMode Field.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.9.1
      */
@@ -271,8 +279,11 @@ export const TlvStepSaturationRequest = TlvObject({
     stepSize: TlvField(1, TlvUInt8),
 
     /**
-     * The TransitionTime field specifies, in 1/10ths of a second, the time that SHALL be taken to perform the step. A
+     * The TransitionTime field specifies, in 1/10ths of a second, the time that shall be taken to perform the step. A
      * step is a change in the device’s saturation of ‘Step size’ units.
+     *
+     * Note: Here the TransitionTime data field is of data type uint8, where uint16 is more common for TransitionTime
+     * data fields in other clusters / commands.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.9.3
      */
@@ -283,7 +294,7 @@ export const TlvStepSaturationRequest = TlvObject({
 });
 
 /**
- * The MoveToHueAndSaturation command SHALL have the following data fields:
+ * Input to the ColorControl moveToHueAndSaturation command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.10
  */
@@ -296,7 +307,7 @@ export const TlvMoveToHueAndSaturationRequest = TlvObject({
 });
 
 /**
- * The MoveToColor command SHALL have the following data fields:
+ * Input to the ColorControl moveToColor command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.11
  */
@@ -309,7 +320,7 @@ export const TlvMoveToColorRequest = TlvObject({
 });
 
 /**
- * The MoveColor command SHALL have the following data fields:
+ * Input to the ColorControl moveColor command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.12
  */
@@ -335,7 +346,7 @@ export const TlvMoveColorRequest = TlvObject({
 });
 
 /**
- * The StepColor command SHALL have the following data fields:
+ * Input to the ColorControl stepColor command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.13
  */
@@ -344,7 +355,7 @@ export const TlvStepColorRequest = TlvObject({
     stepY: TlvField(1, TlvInt16),
 
     /**
-     * The TransitionTime field specifies, in 1/10ths of a second, the time that SHALL be taken to perform the color
+     * The TransitionTime field specifies, in 1/10ths of a second, the time that shall be taken to perform the color
      * change.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.13.2
@@ -356,7 +367,7 @@ export const TlvStepColorRequest = TlvObject({
 });
 
 /**
- * The MoveToColorTemperature command SHALL have the following data fields:
+ * Input to the ColorControl moveToColorTemperature command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.14
  */
@@ -368,13 +379,15 @@ export const TlvMoveToColorTemperatureRequest = TlvObject({
 });
 
 /**
- * The MoveColorTemperature command allows the color temperature of a lamp to be moved at a specified rate.
+ * Input to the ColorControl moveColorTemperature command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.21
  */
 export const TlvMoveColorTemperatureRequest = TlvObject({
     /**
      * This field is identical to the MoveMode field of the MoveHue command of the Color Control cluster
+     *
+     * (see sub-clause MoveHue Command). If the MoveMode field is equal to 0 (Stop), the Rate field shall be ignored.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.21.1
      */
@@ -383,8 +396,8 @@ export const TlvMoveColorTemperatureRequest = TlvObject({
     /**
      * The Rate field specifies the rate of movement in steps per second. A step is a change in the color temperature
      * of a device by one unit. If the MoveMode field is set to 1 (up) or 3 (down) and the Rate field has a value of
-     * zero, the command has no effect and a response command SHALL be sent in response, with the status code set to
-     * INVALID_COMMAND. If the MoveMode field is set to 0 (stop) the Rate field SHALL be ignored.
+     * zero, the command has no effect and a response command shall be sent in response, with the status code set to
+     * INVALID_COMMAND. If the MoveMode field is set to 0 (stop) the Rate field shall be ignored.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.21.2
      */
@@ -392,7 +405,14 @@ export const TlvMoveColorTemperatureRequest = TlvObject({
 
     /**
      * The ColorTemperatureMinimumMireds field specifies a lower bound on the ColorTemperatureMireds attribute (≡ an
-     * upper bound on the color temperature in kelvins) for the current move operation such that:
+     * upper bound on the color temperature in kelvins) for the current move operation
+     *
+     * ColorTempPhysicalMinMireds ≤ ColorTemperatureMinimumMireds field ≤ ColorTemperatureMireds
+     *
+     * As such if the move operation takes the ColorTemperatureMireds attribute towards the value of the
+     * ColorTemperatureMinimumMireds field it shall be clipped so that the above invariant is satisfied. If the
+     * ColorTemperatureMinimumMireds field is set to 0, ColorTempPhysicalMinMireds shall be used as the lower bound for
+     * the ColorTemperatureMireds attribute.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.21.3
      */
@@ -400,7 +420,14 @@ export const TlvMoveColorTemperatureRequest = TlvObject({
 
     /**
      * The ColorTemperatureMaximumMireds field specifies an upper bound on the ColorTemperatureMireds attribute (≡ a
-     * lower bound on the color temperature in kelvins) for the current move operation such that:
+     * lower bound on the color temperature in kelvins) for the current move operation
+     *
+     * ColorTemperatureMireds ≤ ColorTemperatureMaximumMireds field ≤ ColorTempPhysicalMaxMireds
+     *
+     * As such if the move operation takes the ColorTemperatureMireds attribute towards the value of the
+     * ColorTemperatureMaximumMireds field it shall be clipped so that the above invariant is satisfied. If the
+     * ColorTemperatureMaximumMireds field is set to 0, ColorTempPhysicalMaxMireds shall be used as the upper bound for
+     * the ColorTemperatureMireds attribute.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.21.4
      */
@@ -411,7 +438,7 @@ export const TlvMoveColorTemperatureRequest = TlvObject({
 });
 
 /**
- * The StepColorTemperature command allows the color temperature of a lamp to be stepped with a specified step size.
+ * Input to the ColorControl stepColorTemperature command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.22
  */
@@ -433,7 +460,7 @@ export const TlvStepColorTemperatureRequest = TlvObject({
     stepSize: TlvField(1, TlvUInt16),
 
     /**
-     * The TransitionTime field specifies, in units of 1/10ths of a second, the time that SHALL be taken to perform the
+     * The TransitionTime field specifies, in units of 1/10ths of a second, the time that shall be taken to perform the
      * step. A step is a change to the device’s color temperature of a magnitude corresponding to the StepSize field.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.22.3
@@ -442,7 +469,14 @@ export const TlvStepColorTemperatureRequest = TlvObject({
 
     /**
      * The ColorTemperatureMinimumMireds field specifies a lower bound on the ColorTemperatureMireds attribute (≡ an
-     * upper bound on the color temperature in kelvins) for the current step operation such that:
+     * upper bound on the color temperature in kelvins) for the current step operation
+     *
+     * ColorTempPhysicalMinMireds ≤ ColorTemperatureMinimumMireds field ≤ ColorTemperatureMireds
+     *
+     * As such if the step operation takes the ColorTemperatureMireds attribute towards the value of the Color
+     * Temperature Minimum Mireds field it shall be clipped so that the above invariant is satisfied. If the
+     * ColorTemperatureMinimumMireds field is set to 0, ColorTempPhysicalMinMireds shall be used as the lower bound for
+     * the ColorTemperatureMireds attribute.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.22.4
      */
@@ -450,7 +484,14 @@ export const TlvStepColorTemperatureRequest = TlvObject({
 
     /**
      * The ColorTemperatureMaximumMireds field specifies an upper bound on the ColorTemperatureMireds attribute (≡ a
-     * lower bound on the color temperature in kelvins) for the current step operation such that:
+     * lower bound on the color temperature in kelvins) for the current step operation
+     *
+     * ColorTemperatureMireds ≤ ColorTemperatureMaximumMireds field ≤ ColorTempPhysicalMaxMireds
+     *
+     * As such if the step operation takes the ColorTemperatureMireds attribute towards the value of the
+     * ColorTemperatureMaximumMireds field it shall be clipped so that the above invariant is satisfied. If the
+     * ColorTemperatureMaximum Mireds field is set to 0, ColorTempPhysicalMaxMireds shall be used as the upper bound
+     * for the ColorTemperatureMireds attribute.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.22.5
      */
@@ -461,8 +502,7 @@ export const TlvStepColorTemperatureRequest = TlvObject({
 });
 
 /**
- * The EnhancedMoveToHue command allows lamps to be moved in a smooth continuous transition from their current hue to a
- * target hue.
+ * Input to the ColorControl enhancedMoveToHue command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.15
  */
@@ -495,15 +535,14 @@ export const TlvEnhancedMoveToHueRequest = TlvObject({
 });
 
 /**
- * The EnhancedMoveHue command allows lamps to be moved in a continuous stepped transition from their current hue to a
- * target hue.
+ * Input to the ColorControl enhancedMoveHue command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.16
  */
 export const TlvEnhancedMoveHueRequest = TlvObject({
     /**
      * This field is identical to the MoveMode field of the MoveHue command of the Color Control cluster (see
-     * sub-clause MoveHue Command). If the MoveMode field is equal to 0 (Stop), the Rate field SHALL be ignored.
+     * sub-clause MoveHue Command). If the MoveMode field is equal to 0 (Stop), the Rate field shall be ignored.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.16.1
      */
@@ -512,8 +551,8 @@ export const TlvEnhancedMoveHueRequest = TlvObject({
     /**
      * The Rate field specifies the rate of movement in steps per second. A step is a change in the extended hue of a
      * device by one unit. If the MoveMode field is set to 1 (up) or 3 (down) and the Rate field has a value of zero,
-     * the command has no effect and a response command SHALL be sent in response, with the status code set to
-     * INVALID_COMMAND. If the MoveMode field is set to 0 (stop) the Rate field SHALL be ignored.
+     * the command has no effect and a response command shall be sent in response, with the status code set to
+     * INVALID_COMMAND. If the MoveMode field is set to 0 (stop) the Rate field shall be ignored.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.16.2
      */
@@ -524,8 +563,7 @@ export const TlvEnhancedMoveHueRequest = TlvObject({
 });
 
 /**
- * The EnhancedStepHue command allows lamps to be moved in a stepped transition from their current hue to a target hue,
- * resulting in a linear transition through XY space.
+ * Input to the ColorControl enhancedStepHue command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.17
  */
@@ -547,8 +585,11 @@ export const TlvEnhancedStepHueRequest = TlvObject({
     stepSize: TlvField(1, TlvUInt16),
 
     /**
-     * The TransitionTime field specifies, in units of 1/10ths of a second, the time that SHALL be taken to perform the
+     * The TransitionTime field specifies, in units of 1/10ths of a second, the time that shall be taken to perform the
      * step. A step is a change to the device’s enhanced hue of a magnitude corresponding to the StepSize field.
+     *
+     * Note: Here TransitionTime data field is of data type uint16, while the TransitionTime data field of the StepHue
+     * command is of data type uint8.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.17.3
      */
@@ -559,8 +600,7 @@ export const TlvEnhancedStepHueRequest = TlvObject({
 });
 
 /**
- * The EnhancedMoveToHueAndSaturation command allows lamps to be moved in a smooth continuous transition from their
- * current hue to a target hue and from their current saturation to a target saturation.
+ * Input to the ColorControl enhancedMoveToHueAndSaturation command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.18
  */
@@ -593,12 +633,11 @@ export const TlvEnhancedMoveToHueAndSaturationRequest = TlvObject({
 });
 
 /**
- * The UpdateFlags field specifies which color loop attributes to update before the color loop is started. This field
- * SHALL be formatted as illustrated in Format of the UpdateFlags Field of the ColorLoopSet Command.
+ * Bit definitions for TlvUpdateFlags
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.1
  */
-export const TlvUpdateFlagsBits = {
+export const UpdateFlagsBits = {
     updateAction: BitFlag(0),
     updateDirection: BitFlag(1),
     updateTime: BitFlag(2),
@@ -606,12 +645,15 @@ export const TlvUpdateFlagsBits = {
     reserved: BitFlag(4)
 };
 
-export const TlvUpdateFlags = TlvBitmap(TlvUInt8, TlvUpdateFlagsBits);
+/**
+ * The value of ColorLoopSet.updateFlags
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.1
+ */
+export const TlvUpdateFlags = TlvBitmap(TlvUInt8, UpdateFlagsBits);
 
 /**
- * The Action field specifies the action to take for the color loop if the UpdateAction sub-field of the UpdateFlags
- * field is set to 1. This field SHALL be set to one of the non-reserved values listed in Values of the Action Field of
- * the ColorLoopSet Command.
+ * The value of ColorLoopSet.action
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.2
  */
@@ -622,9 +664,7 @@ export const enum Action {
 }
 
 /**
- * The Direction field specifies the direction for the color loop if the Update Direction field of the UpdateFlags
- * field is set to 1. This field SHALL be set to one of the non-reserved values listed in Values of the Direction Field
- * of the ColorLoopSet Command.
+ * The value of ColorLoopSet.direction
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.3
  */
@@ -634,15 +674,33 @@ export const enum ColorLoopSetDirection {
 }
 
 /**
- * The Color Loop Set command allows a color loop to be activated such that the color lamp cycles through its range of
- * hues.
+ * Input to the ColorControl colorLoopSet command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19
  */
 export const TlvColorLoopSetRequest = TlvObject({
     /**
      * The UpdateFlags field specifies which color loop attributes to update before the color loop is started. This
-     * field SHALL be formatted as illustrated in Format of the UpdateFlags Field of the ColorLoopSet Command.
+     * field shall be formatted as illustrated in Format of the UpdateFlags Field of the ColorLoopSet Command.
+     *
+     * The UpdateAction sub-field is 1 bit in length and specifies whether the device shall adhere to the action field
+     * in order to process the command. If this sub-field is set to 1, the device shall adhere to the action field. If
+     * this sub-field is set to 0, the device shall ignore the Action field.
+     *
+     * The UpdateDirection sub-field is 1 bit in length and specifies whether the device shall update the
+     * ColorLoopDirection attribute with the Direction field. If this sub-field is set to 1, the device shall update
+     * the value of the ColorLoopDirection attribute with the value of the Direction field. If this sub-field is set to
+     * 0, the device shall ignore the Direction field.
+     *
+     * The UpdateTime sub-field is 1 bit in length and specifies whether the device shall update the ColorLoopTime
+     * attribute with the Time field. If this sub-field is set to 1, the device shall update the value of the
+     * ColorLoopTime attribute with the value of the Time field. If this sub-field is set to 0, the device shall ignore
+     * the Time field.
+     *
+     * The UpdateStartHue sub-field is 1 bit in length and specifies whether the device shall update the
+     * ColorLoopStartEnhancedHue attribute with the StartHue field. If this sub-field is set to 1, the device shall
+     * update the value of the ColorLoopStartEnhancedHue attribute with the value of the StartHue field. If this
+     * sub-field is set to 0, the device shall ignore the StartHue field.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.1
      */
@@ -650,7 +708,7 @@ export const TlvColorLoopSetRequest = TlvObject({
 
     /**
      * The Action field specifies the action to take for the color loop if the UpdateAction sub-field of the
-     * UpdateFlags field is set to 1. This field SHALL be set to one of the non-reserved values listed in Values of the
+     * UpdateFlags field is set to 1. This field shall be set to one of the non-reserved values listed in Values of the
      * Action Field of the ColorLoopSet Command.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.2
@@ -659,7 +717,7 @@ export const TlvColorLoopSetRequest = TlvObject({
 
     /**
      * The Direction field specifies the direction for the color loop if the Update Direction field of the UpdateFlags
-     * field is set to 1. This field SHALL be set to one of the non-reserved values listed in Values of the Direction
+     * field is set to 1. This field shall be set to one of the non-reserved values listed in Values of the Direction
      * Field of the ColorLoopSet Command.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.3
@@ -680,8 +738,7 @@ export const TlvColorLoopSetRequest = TlvObject({
 });
 
 /**
- * The StopMoveStep command is provided to allow MoveTo and Step commands to be stopped. (Note this automatically
- * provides symmetry to the Level Control cluster.)
+ * Input to the ColorControl stopMoveStep command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.20
  */
@@ -804,197 +861,227 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.3
              */
-            remainingTime: OptionalAttribute(2, TlvUInt16.bound({ max: 65534 }), { default: 0, readAcl: AccessLevel.View }),
+            remainingTime: OptionalAttribute(2, TlvUInt16.bound({ max: 65534 }), { default: 0 }),
 
             /**
              * The DriftCompensation attribute indicates what mechanism, if any, is in use for compensation for
-             * color/intensity drift over time. It SHALL be one of the non-reserved values in Values of the
+             * color/intensity drift over time. It shall be one of the non-reserved values in Values of the
              * DriftCompensation Attribute.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.6
              */
-            driftCompensation: OptionalAttribute(5, TlvEnum<DriftCompensation>(), { readAcl: AccessLevel.View }),
+            driftCompensation: OptionalAttribute(5, TlvEnum<DriftCompensation>()),
 
             /**
              * The CompensationText attribute holds a textual indication of what mechanism, if any, is in use to
              *
+             * compensate for color/intensity drift over time.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.7
              */
-            compensationText: OptionalAttribute(6, TlvString.bound({ maxLength: 254 }), { readAcl: AccessLevel.View }),
+            compensationText: OptionalAttribute(6, TlvString.bound({ maxLength: 254 })),
 
             /**
              * The ColorMode attribute indicates which attributes are currently determining the color of the device.
              *
+             * The value of the ColorMode attribute cannot be written directly - it is set upon reception of any
+             * command in section Commands to the appropriate mode for that command.
+             *
+             * Table 39. Values of the ColorMode Attribute
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.9
              */
-            colorMode: Attribute(8, TlvEnum<ColorMode>(), { persistent: true, default: 1, readAcl: AccessLevel.View }),
+            colorMode: Attribute(8, TlvEnum<ColorMode>(), { persistent: true, default: ColorMode.CurrentXAndCurrentY }),
 
             /**
              * The Options attribute is meant to be changed only during commissioning. The Options attribute is a
              * bitmap that determines the default behavior of some cluster commands. Each command that is dependent on
-             * the Options attribute SHALL first construct a temporary Options bitmap that is in effect during the
+             * the Options attribute shall first construct a temporary Options bitmap that is in effect during the
              * command processing. The temporary Options bitmap has the same format and meaning as the Options
              * attribute, but includes any bits that may be overridden by command fields.
              *
+             * Below is the format and description of the Options attribute and temporary Options bitmap and the effect
+             * on dependent commands.
+             *
+             * Table 40. Options Attribute
+             *
+             * ExecuteIfOff Options bit: Command execution shall NOT continue beyond the Options processing if all of
+             * these criteria are true:
+             *
+             *   • The On/Off cluster exists on the same endpoint as this cluster.
+             *
+             *   • The OnOff attribute of the On/Off cluster, on this endpoint, is FALSE.
+             *
+             *   • The value of the ExecuteIfOff bit is 0.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
              */
-            options: WritableAttribute(15, TlvOptions, { readAcl: AccessLevel.View, writeAcl: AccessLevel.Operate }),
+            options: WritableAttribute(15, TlvOptions),
 
             /**
              * The NumberOfPrimaries attribute contains the number of color primaries implemented on this device. A
-             * value of null SHALL indicate that the number of primaries is unknown.
+             * value of null shall indicate that the number of primaries is unknown.
+             *
+             * Where this attribute is implemented, the attributes below for indicating the “x” and “y” color values of
+             * the primaries shall also be implemented for each of the primaries from 1 to NumberOfPrimaries, without
+             * leaving gaps. Implementation of the Primary1Intensity attribute and subsequent intensity attributes is
+             * optional.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8.1
              */
-            numberOfPrimaries: FixedAttribute(16, TlvNullable(TlvUInt8.bound({ max: 6 })), { readAcl: AccessLevel.View }),
+            numberOfPrimaries: FixedAttribute(16, TlvNullable(TlvUInt8.bound({ max: 6 }))),
 
             /**
              * The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined in the
              * CIE xyY Color Space.
              *
+             * The value of x shall be related to the Primary1X attribute by the relationship x = Primary1X / 65536
+             * (Primary1X in the range 0 to 65279 inclusive)
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8.2
              */
-            primary1X: OptionalFixedAttribute(17, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary1X: OptionalFixedAttribute(17, TlvUInt16),
 
             /**
              * The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined in the
              * CIE xyY Color Space.
              *
+             * The value of y shall be related to the Primary1Y attribute by the relationship y = Primary1Y / 65536
+             * (Primary1Y in the range 0 to 65279 inclusive)
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8.3
              */
-            primary1Y: OptionalFixedAttribute(18, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary1Y: OptionalFixedAttribute(18, TlvUInt16),
 
             /**
              * The Primary1intensity attribute contains a representation of the maximum intensity of this primary as
              * defined in the Dimming Light Curve in the Ballast Configuration cluster (see Ballast Configuration
              * Cluster), normalized such that the primary with the highest maximum intensity contains the value 0xfe.
              *
+             * A value of null shall indicate that this primary is not available.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8.4
              */
-            primary1Intensity: OptionalFixedAttribute(19, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View }),
+            primary1Intensity: OptionalFixedAttribute(19, TlvNullable(TlvUInt8)),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
              */
-            primary2X: OptionalFixedAttribute(21, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary2X: OptionalFixedAttribute(21, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
              */
-            primary2Y: OptionalFixedAttribute(22, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary2Y: OptionalFixedAttribute(22, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
              */
-            primary2Intensity: OptionalFixedAttribute(23, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View }),
+            primary2Intensity: OptionalFixedAttribute(23, TlvNullable(TlvUInt8)),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
              */
-            primary3X: OptionalFixedAttribute(25, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary3X: OptionalFixedAttribute(25, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
              */
-            primary3Y: OptionalFixedAttribute(26, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary3Y: OptionalFixedAttribute(26, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
              */
-            primary3Intensity: OptionalFixedAttribute(27, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View }),
+            primary3Intensity: OptionalFixedAttribute(27, TlvNullable(TlvUInt8)),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary4X: FixedAttribute(32, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary4X: FixedAttribute(32, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary4Y: FixedAttribute(33, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary4Y: FixedAttribute(33, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary4Intensity: FixedAttribute(34, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View }),
+            primary4Intensity: FixedAttribute(34, TlvNullable(TlvUInt8)),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary5X: FixedAttribute(36, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary5X: FixedAttribute(36, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary5Y: FixedAttribute(37, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary5Y: FixedAttribute(37, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary5Intensity: FixedAttribute(38, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View }),
+            primary5Intensity: FixedAttribute(38, TlvNullable(TlvUInt8)),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary6X: FixedAttribute(40, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary6X: FixedAttribute(40, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary6Y: FixedAttribute(41, TlvUInt16, { readAcl: AccessLevel.View }),
+            primary6Y: FixedAttribute(41, TlvUInt16),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
              */
-            primary6Intensity: FixedAttribute(42, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View }),
+            primary6Intensity: FixedAttribute(42, TlvNullable(TlvUInt8)),
 
             /**
              * The WhitePointX attribute contains the normalized chromaticity value x, as defined in the CIE xyY Color
              * Space, of the current white point of the device.
              *
+             * The value of x shall be related to the WhitePointX attribute by the relationship x = WhitePointX / 65536
+             * (WhitePointX in the range 0 to 65279 inclusive)
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.1
              */
-            whitePointX: OptionalWritableAttribute(
-                48,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            whitePointX: OptionalWritableAttribute(48, TlvUInt16, { writeAcl: AccessLevel.Manage }),
 
             /**
              * The WhitePointY attribute contains the normalized chromaticity value y, as defined in the CIE xyY Color
              * Space, of the current white point of the device.
              *
+             * The value of y shall be related to the WhitePointY attribute by the relationship y = WhitePointY / 65536
+             * (WhitePointY in the range 0 to 65279 inclusive)
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.2
              */
-            whitePointY: OptionalWritableAttribute(
-                49,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            whitePointY: OptionalWritableAttribute(49, TlvUInt16, { writeAcl: AccessLevel.Manage }),
 
             /**
              * The ColorPointRX attribute contains the normalized chromaticity value x, as defined in the CIE xyY Color
              * Space, of the red color point of the device.
              *
+             * The value of x shall be related to the ColorPointRX attribute by the relationship x = ColorPointRX /
+             * 65536 (ColorPointRX in the range 0 to 65279 inclusive)
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.3
              */
-            colorPointRx: OptionalWritableAttribute(
-                50,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointRx: OptionalWritableAttribute(50, TlvUInt16, { writeAcl: AccessLevel.Manage }),
 
             /**
              * The ColorPointRY attribute contains the normalized chromaticity value y, as defined in the CIE xyY Color
              * Space, of the red color point of the device.
              *
+             * The value of y shall be related to the ColorPointRY attribute by the relationship y = ColorPointRY /
+             * 65536 (ColorPointRY in the range 0 to 65279 inclusive)
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.4
              */
-            colorPointRy: OptionalWritableAttribute(
-                51,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointRy: OptionalWritableAttribute(51, TlvUInt16, { writeAcl: AccessLevel.Manage }),
 
             /**
              * The ColorPointRIntensity attribute contains a representation of the relative intensity of the red color
@@ -1002,87 +1089,66 @@ export namespace ColorControlCluster {
              * Configuration Cluster), normalized such that the color point with the highest relative intensity
              * contains the value 0xfe.
              *
+             * A value of null shall indicate an invalid value.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.5
              */
-            colorPointRIntensity: OptionalWritableAttribute(
-                52,
-                TlvNullable(TlvUInt8),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointRIntensity: OptionalWritableAttribute(52, TlvNullable(TlvUInt8), { writeAcl: AccessLevel.Manage }),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
              */
-            colorPointGx: OptionalWritableAttribute(
-                54,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointGx: OptionalWritableAttribute(54, TlvUInt16, { writeAcl: AccessLevel.Manage }),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
              */
-            colorPointGy: OptionalWritableAttribute(
-                55,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointGy: OptionalWritableAttribute(55, TlvUInt16, { writeAcl: AccessLevel.Manage }),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
              */
-            colorPointGIntensity: OptionalWritableAttribute(
-                56,
-                TlvNullable(TlvUInt8),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointGIntensity: OptionalWritableAttribute(56, TlvNullable(TlvUInt8), { writeAcl: AccessLevel.Manage }),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
              */
-            colorPointBx: OptionalWritableAttribute(
-                58,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointBx: OptionalWritableAttribute(58, TlvUInt16, { writeAcl: AccessLevel.Manage }),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
              */
-            colorPointBy: OptionalWritableAttribute(
-                59,
-                TlvUInt16,
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointBy: OptionalWritableAttribute(59, TlvUInt16, { writeAcl: AccessLevel.Manage }),
 
             /**
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
              */
-            colorPointBIntensity: OptionalWritableAttribute(
-                60,
-                TlvNullable(TlvUInt8),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
-            ),
+            colorPointBIntensity: OptionalWritableAttribute(60, TlvNullable(TlvUInt8), { writeAcl: AccessLevel.Manage }),
 
             /**
              * The EnhancedColorMode attribute specifies which attributes are currently determining the color of the
              * device, as detailed in Values of the EnhancedColorMode Attribute.
+             *
+             * To provide compatibility with standard ZCL, the original ColorMode attribute shall indicate ‘CurrentHue
+             * and CurrentSaturation’ when the light uses the EnhancedCurrentHue attribute. If the ColorMode attribute
+             * is changed, e.g., due to one of the standard Color Control cluster commands defined in the ZCL, its new
+             * value shall be copied to the EnhancedColorMode attribute.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.12
              */
             enhancedColorMode: Attribute(
                 16385,
                 TlvEnum<EnhancedColorMode>(),
-                { persistent: true, default: 1, readAcl: AccessLevel.View }
+                { persistent: true, default: EnhancedColorMode.CurrentXAndCurrentY }
             ),
 
             /**
-             * Bits 0-4 of the ColorCapabilities attribute SHALL have the same values as the corresponding bits of the
-             * FeatureMap attribute. All other bits in ColorCapabilities SHALL be 0.
+             * Bits 0-4 of the ColorCapabilities attribute shall have the same values as the corresponding bits of the
+             * FeatureMap attribute. All other bits in ColorCapabilities shall be 0.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.18
              */
-            colorCapabilities: Attribute(16394, TlvUInt16, { readAcl: AccessLevel.View })
+            colorCapabilities: Attribute(16394, TlvUInt16)
         }
     });
 
@@ -1095,73 +1161,62 @@ export namespace ColorControlCluster {
              * The CurrentHue attribute contains the current hue value of the light. It is updated as fast as practical
              * during commands that change the hue.
              *
+             * The hue in degrees shall be related to the CurrentHue attribute by the relationship: Hue = CurrentHue x
+             * 360 / 254 (CurrentHue in the range 0 to 254 inclusive)
+             *
+             * If this attribute is implemented then the CurrentSaturation and ColorMode attributes shall also be
+             * implemented.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.1
              */
-            currentHue: Attribute(
-                0,
-                TlvUInt8.bound({ max: 254 }),
-                { persistent: true, default: 0, readAcl: AccessLevel.View }
-            ),
+            currentHue: Attribute(0, TlvUInt8.bound({ max: 254 }), { persistent: true, default: 0 }),
 
             /**
              * The CurrentSaturation attribute holds the current saturation value of the light. It is updated as fast
              * as practical during commands that change the saturation.
              *
+             * The saturation shall be related to the CurrentSaturation attribute by the relationship: Saturation =
+             * CurrentSaturation/254 (CurrentSaturation in the range 0 to 254 inclusive)
+             *
+             * If this attribute is implemented then the CurrentHue and ColorMode attributes shall also be implemented.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.2
              */
-            currentSaturation: Attribute(
-                1,
-                TlvUInt8.bound({ max: 254 }),
-                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
-            )
+            currentSaturation: Attribute(1, TlvUInt8.bound({ max: 254 }), { scene: true, persistent: true, default: 0 })
         },
 
         commands: {
             /**
-             * The MoveToHue command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4
              */
             moveToHue: Command(0, TlvMoveToHueRequest, 0, TlvNoResponse),
 
             /**
-             * The MoveHue command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.5
              */
             moveHue: Command(1, TlvMoveHueRequest, 1, TlvNoResponse),
 
             /**
-             * The StepHue command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.6
              */
             stepHue: Command(2, TlvStepHueRequest, 2, TlvNoResponse),
 
             /**
-             * The MoveToSaturation command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.7
              */
             moveToSaturation: Command(3, TlvMoveToSaturationRequest, 3, TlvNoResponse),
 
             /**
-             * The MoveSaturation command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.8
              */
             moveSaturation: Command(4, TlvMoveSaturationRequest, 4, TlvNoResponse),
 
             /**
-             * The StepSaturation command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.9
              */
             stepSaturation: Command(5, TlvStepSaturationRequest, 5, TlvNoResponse),
 
             /**
-             * The MoveToHueAndSaturation command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.10
              */
             moveToHueAndSaturation: Command(6, TlvMoveToHueAndSaturationRequest, 6, TlvNoResponse)
@@ -1177,37 +1232,37 @@ export namespace ColorControlCluster {
              * The CurrentX attribute contains the current value of the normalized chromaticity value x, as defined in
              * the CIE xyY Color Space. It is updated as fast as practical during commands that change the color.
              *
+             * The value of x shall be related to the CurrentX attribute by the relationship x = CurrentX / 65536
+             * (CurrentX in the range 0 to 65279 inclusive)
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.4
              */
-            currentX: Attribute(3, TlvUInt16, { scene: true, persistent: true, default: 1558, readAcl: AccessLevel.View }),
+            currentX: Attribute(3, TlvUInt16, { scene: true, persistent: true, default: 1558 }),
 
             /**
              * The CurrentY attribute contains the current value of the normalized chromaticity value y, as defined in
              * the CIE xyY Color Space. It is updated as fast as practical during commands that change the color.
              *
+             * The value of y shall be related to the CurrentY attribute by the relationship y = CurrentY / 65536
+             * (CurrentY in the range 0 to 65279 inclusive)
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.5
              */
-            currentY: Attribute(4, TlvUInt16, { scene: true, persistent: true, default: 1543, readAcl: AccessLevel.View })
+            currentY: Attribute(4, TlvUInt16, { scene: true, persistent: true, default: 1543 })
         },
 
         commands: {
             /**
-             * The MoveToColor command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.11
              */
             moveToColor: Command(7, TlvMoveToColorRequest, 7, TlvNoResponse),
 
             /**
-             * The MoveColor command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.12
              */
             moveColor: Command(8, TlvMoveColorRequest, 8, TlvNoResponse),
 
             /**
-             * The StepColor command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.13
              */
             stepColor: Command(9, TlvStepColorRequest, 9, TlvNoResponse)
@@ -1224,13 +1279,18 @@ export namespace ColorControlCluster {
              * temperature. The unit of ColorTemperatureMireds is the mired (micro reciprocal degree), AKA mirek (micro
              * reciprocal kelvin). It is updated as fast as practical during commands that change the color.
              *
+             * The color temperature value in kelvins shall be related to the ColorTemperatureMireds attribute in
+             * mireds by the relationship
+             *
+             * Color temperature in kelvins = 1,000,000 / ColorTemperatureMireds, where ColorTemperatureMireds is in
+             * the range 1 to 65279 mireds inclusive, giving a color temperature range from 1,000,000 kelvins to 15.32
+             * kelvins.
+             *
+             * If this attribute is implemented then the ColorMode attribute shall also be implemented.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.8
              */
-            colorTemperatureMireds: Attribute(
-                7,
-                TlvUInt16,
-                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
-            ),
+            colorTemperatureMireds: Attribute(7, TlvUInt16, { scene: true, persistent: true, default: 0 }),
 
             /**
              * The ColorTempPhysicalMinMireds attribute indicates the minimum mired value supported by the hardware.
@@ -1239,7 +1299,7 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.19
              */
-            colorTempPhysicalMinMireds: Attribute(16395, TlvUInt16, { default: 0, readAcl: AccessLevel.View }),
+            colorTempPhysicalMinMireds: Attribute(16395, TlvUInt16, { default: 0 }),
 
             /**
              * The ColorTempPhysicalMaxMireds attribute indicates the maximum mired value supported by the hardware.
@@ -1248,39 +1308,47 @@ export namespace ColorControlCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.20
              */
-            colorTempPhysicalMaxMireds: Attribute(16396, TlvUInt16, { default: 65279, readAcl: AccessLevel.View }),
+            colorTempPhysicalMaxMireds: Attribute(16396, TlvUInt16, { default: 65279 }),
 
             /**
              * The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the
              * ColorTemperatureMireds attribute for the purposes of coupling the ColorTemperatureMireds attribute to
              * the CurrentLevel attribute when the CoupleColorTempToLevel bit of the Options attribute of the Level
              * Control cluster is equal to 1. When coupling the ColorTemperatureMireds attribute to the CurrentLevel
-             * attribute, this value SHALL correspond to a CurrentLevel value of 0xfe (100%).
+             * attribute, this value shall correspond to a CurrentLevel value of 0xfe (100%).
+             *
+             * This attribute shall be set such that the following relationship exists: ColorTempPhysicalMinMireds ≤
+             * CoupleColorTempToLevelMinMireds ≤ ColorTemperatureMireds
+             *
+             * Note that since this attribute is stored as a micro reciprocal degree (mired) value (i.e. color
+             * temperature in kelvins = 1,000,000 / CoupleColorTempToLevelMinMireds), the
+             * CoupleColorTempToLevelMinMireds attribute corresponds to an upper bound on the value of the color
+             * temperature in kelvins supported by the device.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.21
              */
-            coupleColorTempToLevelMinMireds: OptionalAttribute(16397, TlvUInt16, { readAcl: AccessLevel.View }),
+            coupleColorTempToLevelMinMireds: OptionalAttribute(16397, TlvUInt16),
 
             /**
-             * The StartUpColorTemperatureMireds attribute SHALL define the desired startup color temperature value a
-             * lamp SHALL use when it is supplied with power and this value SHALL be reflected in the
-             * ColorTemperatureMireds attribute. In addition, the ColorMode and EnhancedColorMode attributes SHALL be
+             * The StartUpColorTemperatureMireds attribute shall define the desired startup color temperature value a
+             * lamp shall use when it is supplied with power and this value shall be reflected in the
+             * ColorTemperatureMireds attribute. In addition, the ColorMode and EnhancedColorMode attributes shall be
              * set to 0x02 (color temperature). The values of the StartUpColorTemperatureMireds attribute are listed in
              * the table below,
+             *
+             * Table 42. Values of the StartUpColorTemperatureMireds attribute
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.22
              */
             startUpColorTemperatureMireds: OptionalWritableAttribute(
                 16400,
                 TlvNullable(TlvUInt16),
-                { readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { writeAcl: AccessLevel.Manage }
             )
         },
 
         commands: {
             /**
-             * The MoveToColorTemperature command SHALL have the following data fields:
-             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.14
              */
             moveToColorTemperature: Command(10, TlvMoveToColorTemperatureRequest, 10, TlvNoResponse),
@@ -1311,13 +1379,16 @@ export namespace ColorControlCluster {
              * The EnhancedCurrentHue attribute represents non-equidistant steps along the CIE 1931 color triangle, and
              * it provides 16-bits precision.
              *
+             * The upper 8 bits of this attribute shall be used as an index in the implementation specific XY lookup
+             * table to provide the non-equidistance steps. The lower 8 bits shall be used to interpolate between these
+             * steps in a linear way in order to provide color zoom for the user.
+             *
+             * To provide compatibility with standard ZCL, the CurrentHue attribute shall contain a hue value in the
+             * range 0 to 254, calculated from the EnhancedCurrentHue attribute.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.11
              */
-            enhancedCurrentHue: Attribute(
-                16384,
-                TlvUInt16,
-                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
-            )
+            enhancedCurrentHue: Attribute(16384, TlvUInt16, { scene: true, persistent: true, default: 0 })
         },
 
         commands: {
@@ -1363,55 +1434,46 @@ export namespace ColorControlCluster {
             /**
              * The ColorLoopActive attribute specifies the current active status of the color loop. If this attribute
              *
+             * has the value 0, the color loop shall not be active. If this attribute has the value 1, the color loop
+             * shall be active. All other values (2 to 254) are reserved.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.13
              */
-            colorLoopActive: Attribute(
-                16386,
-                TlvUInt8,
-                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
-            ),
+            colorLoopActive: Attribute(16386, TlvUInt8, { scene: true, persistent: true, default: 0 }),
 
             /**
              * The ColorLoopDirection attribute specifies the current direction of the color loop. If this attribute
-             * has the value 0, the EnhancedCurrentHue attribute SHALL be decremented. If this attribute has the value
-             * 1, the EnhancedCurrentHue attribute SHALL be incremented. All other values (2 to 254) are reserved.
+             * has the value 0, the EnhancedCurrentHue attribute shall be decremented. If this attribute has the value
+             * 1, the EnhancedCurrentHue attribute shall be incremented. All other values (2 to 254) are reserved.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.14
              */
-            colorLoopDirection: Attribute(
-                16387,
-                TlvUInt8,
-                { scene: true, persistent: true, default: 0, readAcl: AccessLevel.View }
-            ),
+            colorLoopDirection: Attribute(16387, TlvUInt8, { scene: true, persistent: true, default: 0 }),
 
             /**
-             * The ColorLoopTime attribute specifies the number of seconds it SHALL take to perform a full color loop,
+             * The ColorLoopTime attribute specifies the number of seconds it shall take to perform a full color loop,
              * i.e., to cycle all values of the EnhancedCurrentHue attribute (between 0 and 0xfffe).
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.15
              */
-            colorLoopTime: Attribute(
-                16388,
-                TlvUInt16,
-                { scene: true, persistent: true, default: 25, readAcl: AccessLevel.View }
-            ),
+            colorLoopTime: Attribute(16388, TlvUInt16, { scene: true, persistent: true, default: 25 }),
 
             /**
              * The ColorLoopStartEnhancedHue attribute specifies the value of the EnhancedCurrentHue attribute from
-             * which the color loop SHALL be started.
+             * which the color loop shall be started.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.16
              */
-            colorLoopStartEnhancedHue: Attribute(16389, TlvUInt16, { default: 8960, readAcl: AccessLevel.View }),
+            colorLoopStartEnhancedHue: Attribute(16389, TlvUInt16, { default: 8960 }),
 
             /**
              * The ColorLoopStoredEnhancedHue attribute specifies the value of the EnhancedCurrentHue attribute before
-             * the color loop was started. Once the color loop is complete, the EnhancedCurrentHue attribute SHALL be
+             * the color loop was started. Once the color loop is complete, the EnhancedCurrentHue attribute shall be
              * restored to this value.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.17
              */
-            colorLoopStoredEnhancedHue: Attribute(16390, TlvUInt16, { default: 0, readAcl: AccessLevel.View })
+            colorLoopStoredEnhancedHue: Attribute(16390, TlvUInt16, { default: 0 })
         },
 
         commands: {
@@ -1434,6 +1496,8 @@ export namespace ColorControlCluster {
              * The StopMoveStep command is provided to allow MoveTo and Step commands to be stopped. (Note this
              * automatically provides symmetry to the Level Control cluster.)
              *
+             * Note: the StopMoveStep command has no effect on an active color loop.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.20
              */
             stopMoveStep: Command(71, TlvStopMoveStepRequest, 71, TlvNoResponse)
@@ -1441,7 +1505,7 @@ export namespace ColorControlCluster {
     });
 
     /**
-     * This cluster supports all ColorControl features.  It may support illegal feature combinations.
+     * This cluster supports all ColorControl features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.

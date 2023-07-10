@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, AccessLevel, OptionalEvent, EventPriority, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, OptionalEvent, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -17,7 +17,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  *
  * This cluster provides an interface to a boolean state called StateValue.
  *
- * This function creates a BooleanState cluster.
+ * Use this factory function to create a BooleanState cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7
  */
@@ -27,7 +27,7 @@ export function BooleanStateCluster() {
 }
 
 /**
- * This event SHALL be generated when the StateValue attribute changes.
+ * Body of the BooleanState stateChange event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.5.1
  */
@@ -56,12 +56,14 @@ export namespace BooleanStateCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.4.1
              */
-            stateValue: Attribute(0, TlvBoolean, { readAcl: AccessLevel.View })
+            stateValue: Attribute(0, TlvBoolean)
         },
 
         events: {
             /**
-             * This event SHALL be generated when the StateValue attribute changes.
+             * This event shall be generated when the StateValue attribute changes.
+             *
+             * The StateValue field shall indicate the new value of the StateValue attribute.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.5.1
              */

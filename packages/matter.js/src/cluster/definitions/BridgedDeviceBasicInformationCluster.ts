@@ -24,7 +24,7 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * collection of attributes that the Node MAY collect to aid in conveying information regarding the Bridged Device to a
  * user, such as the vendor name, the model name, or user-assigned name.
  *
- * This function creates a BridgedDeviceBasicInformation cluster.
+ * Use this factory function to create a BridgedDeviceBasicInformation cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.13
  */
@@ -36,7 +36,7 @@ export function BridgedDeviceBasicInformationCluster() {
     return cluster as unknown as BridgedDeviceBasicInformationCluster.Type;
 }
 
-export const enum ProductFinishEnum {
+export const enum ProductFinish {
     Other = 0,
     Matte = 1,
     Satin = 2,
@@ -45,7 +45,7 @@ export const enum ProductFinishEnum {
     Fabric = 5
 }
 
-export const enum ColorEnum {
+export const enum Color {
     Black = 0,
     Navy = 1,
     Green = 2,
@@ -70,19 +70,19 @@ export const enum ColorEnum {
 }
 
 export const TlvProductAppearanceStruct = TlvObject({
-    finish: TlvField(0, TlvEnum<ProductFinishEnum>()),
-    primaryColor: TlvField(1, TlvNullable(TlvEnum<ColorEnum>()))
+    finish: TlvField(0, TlvEnum<ProductFinish>()),
+    primaryColor: TlvField(1, TlvNullable(TlvEnum<Color>()))
 });
 
 /**
+ * Body of the BridgedDeviceBasicInformation startUp event
+ *
  * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
  */
 export const TlvStartUpEvent = TlvObject({ softwareVersion: TlvField(0, TlvUInt32) });
 
 /**
- * This event SHALL be generated when there is a change in the Reachable attribute. Its purpose is to provide an
- * indication towards interested parties that the reachability of a bridged device (over the non-Matter network) has
- * changed, so they MAY take appropriate action.
+ * Body of the BridgedDeviceBasicInformation reachableChanged event
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
  */
@@ -201,9 +201,11 @@ export namespace BridgedDeviceBasicInformationCluster {
             leave: OptionalEvent(2, EventPriority.Info, TlvNoArguments),
 
             /**
-             * This event SHALL be generated when there is a change in the Reachable attribute. Its purpose is to
+             * This event shall be generated when there is a change in the Reachable attribute. Its purpose is to
              * provide an indication towards interested parties that the reachability of a bridged device (over the
              * non-Matter network) has changed, so they MAY take appropriate action.
+             *
+             * After (re)start of a bridge this event MAY be generated.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
              */

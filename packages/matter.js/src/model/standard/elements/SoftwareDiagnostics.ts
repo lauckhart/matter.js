@@ -28,8 +28,8 @@ Matter.children.push({
         {
             tag: "attribute", name: "ThreadMetrics", id: 0x0, type: "list", access: "R V", conformance: "O",
             constraint: "max 64",
-            details: "The ThreadMetrics attribute SHALL be a list of ThreadMetricsStruct structs. Each active thread on " +
-                     "the Node SHALL be represented by a single entry within the ThreadMetrics attribute.",
+            details: "The ThreadMetrics attribute shall be a list of ThreadMetricsStruct structs. Each active thread on " +
+                     "the Node shall be represented by a single entry within the ThreadMetrics attribute.",
             xref: { document: "core", section: "11.12.6.1" },
             children: [ { tag: "datatype", name: "entry", type: "ThreadMetricsStruct" } ]
         },
@@ -37,7 +37,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "CurrentHeapFree", id: 0x1, type: "uint64", access: "R V", conformance: "O",
             default: 0,
-            details: "The CurrentHeapFree attribute SHALL indicate the current amount of heap memory, in bytes, that are " +
+            details: "The CurrentHeapFree attribute shall indicate the current amount of heap memory, in bytes, that are " +
                      "free for allocation. The effective amount MAY be smaller due to heap fragmentation or other reasons.",
             xref: { document: "core", section: "11.12.6.2" }
         },
@@ -45,7 +45,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "CurrentHeapUsed", id: 0x2, type: "uint64", access: "R V", conformance: "O",
             default: 0,
-            details: "The CurrentHeapUsed attribute SHALL indicate the current amount of heap memory, in bytes, that is " +
+            details: "The CurrentHeapUsed attribute shall indicate the current amount of heap memory, in bytes, that is " +
                      "being used.",
             xref: { document: "core", section: "11.12.6.3" }
         },
@@ -53,16 +53,23 @@ Matter.children.push({
         {
             tag: "attribute", name: "CurrentHeapHighWatermark", id: 0x3, type: "uint64", access: "R V",
             conformance: "WTRMRK", default: 0,
-            details: "The CurrentHeapHighWatermark attribute SHALL indicate the maximum amount of heap memory, in bytes, " +
-                     "that has been used by the Node. This value SHALL only be reset upon a Node reboot or upon receiving " +
+            details: "The CurrentHeapHighWatermark attribute shall indicate the maximum amount of heap memory, in bytes, " +
+                     "that has been used by the Node. This value shall only be reset upon a Node reboot or upon receiving " +
                      "of the ResetWatermarks command.",
             xref: { document: "core", section: "11.12.6.4" }
         },
 
         {
             tag: "event", name: "SoftwareFault", id: 0x0, access: "V", conformance: "O", priority: "info",
-            details: "The SoftwareFault Event SHALL be generated when a software fault takes place on the Node. The " +
-                     "event’s data are as follows:",
+
+            details: "The SoftwareFault Event shall be generated when a software fault takes place on the Node." +
+                     "\n" +
+                     "The ID field shall be set to the ID of the software thread in which the last software fault " +
+                     "occurred." +
+                     "\n" +
+                     "The Name field shall be set to a manufacturer-specified name or prefix of the software thread in " +
+                     "which the last software fault occurred.",
+
             xref: { document: "core", section: "11.12.8.1" },
 
             children: [
@@ -75,7 +82,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O",
                     constraint: "max 1024",
-                    details: "The FaultRecording field SHALL be a manufacturer-specified payload intended to convey information " +
+                    details: "The FaultRecording field shall be a manufacturer-specified payload intended to convey information " +
                              "to assist in further diagnosing or debugging a software fault. The FaultRecording field MAY be used " +
                              "to convey information such as, but not limited to, thread backtraces or register contents.",
                     xref: { document: "core", section: "11.12.8.1.1" }
@@ -86,7 +93,24 @@ Matter.children.push({
         {
             tag: "command", name: "ResetWatermarks", id: 0x0, access: "M", conformance: "WTRMRK",
             direction: "request", response: "status",
-            details: "Receipt of this command SHALL reset the following values which track high and lower watermarks:",
+
+            details: "Receipt of this command shall reset the following values which track high and lower watermarks:" +
+                     "\n" +
+                     "  • The StackFreeMinimum field of the ThreadMetrics attribute" +
+                     "\n" +
+                     "  • The CurrentHeapHighWatermark attribute This command has no payload." +
+                     "\n" +
+                     "Effect on Receipt" +
+                     "\n" +
+                     "On receipt of this command, the Node shall make the following modifications to attributes it " +
+                     "supports:" +
+                     "\n" +
+                     "If implemented, the server shall set the value of the CurrentHeapHighWatermark attribute to the " +
+                     "value of the CurrentHeapUsed attribute." +
+                     "\n" +
+                     "If implemented, the server shall set the value of the StackFreeMinimum field for every thread to " +
+                     "the value of the corresponding thread’s StackFreeCurrent field.",
+
             xref: { document: "core", section: "11.12.7.1" }
         },
 
@@ -97,7 +121,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M",
-                    details: "The Id field SHALL be a server-assigned per-thread unique ID that is constant for the duration of " +
+                    details: "The Id field shall be a server-assigned per-thread unique ID that is constant for the duration of " +
                              "the thread. Efforts SHOULD be made to avoid reusing ID values when possible.",
                     xref: { document: "core", section: "11.12.5.1.1" }
                 },
@@ -105,30 +129,32 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
                     default: "empty",
-                    details: "The Name field SHALL be set to a vendor defined name or prefix of the software thread that is " +
+                    details: "The Name field shall be set to a vendor defined name or prefix of the software thread that is " +
                              "static for the duration of the thread.",
                     xref: { document: "core", section: "11.12.5.1.2" }
                 },
 
                 {
                     tag: "datatype", name: "StackFreeCurrent", id: 0x2, type: "uint32", conformance: "O",
-                    details: "The StackFreeCurrent field SHALL indicate the current amount of stack memory, in bytes, that are " +
+                    details: "The StackFreeCurrent field shall indicate the current amount of stack memory, in bytes, that are " +
                              "not being utilized on the respective thread.",
                     xref: { document: "core", section: "11.12.5.1.3" }
                 },
 
                 {
                     tag: "datatype", name: "StackFreeMinimum", id: 0x3, type: "uint32", conformance: "O",
-                    details: "The StackFreeMinimum field SHALL indicate the minimum amount of stack memory, in bytes, that has " +
+                    details: "The StackFreeMinimum field shall indicate the minimum amount of stack memory, in bytes, that has " +
                              "been available at any point between the current time and this attribute being reset or initialized " +
-                             "on the respective thread. This value SHALL only be reset upon a Node reboot or upon receiving of " +
+                             "on the respective thread. This value shall only be reset upon a Node reboot or upon receiving of " +
                              "the ResetWatermarks command.",
                     xref: { document: "core", section: "11.12.5.1.4" }
                 },
 
                 {
                     tag: "datatype", name: "StackSize", id: 0x4, type: "uint32", conformance: "O",
-                    details: "The StackSize field SHALL indicate the amount of stack memory, in bytes, that has been allocated",
+                    details: "The StackSize field shall indicate the amount of stack memory, in bytes, that has been allocated" +
+                             "\n" +
+                             "for use by the respective thread.",
                     xref: { document: "core", section: "11.12.5.1.5" }
                 }
             ]

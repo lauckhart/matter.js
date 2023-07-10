@@ -32,8 +32,15 @@ Matter.children.push({
         {
             tag: "attribute", name: "OccupancySensorTypeBitmap", id: 0x2, type: "OccupancySensorTypeBitmap",
             access: "R V", conformance: "M", constraint: "0",
+
             details: "The OccupancySensorTypeBitmap attribute specifies the types of the occupancy sensor. A ‘1’ in each " +
-                     "bit position indicates the capability is implemented.",
+                     "bit position indicates the capability is implemented." +
+                     "\n" +
+                     "The value of the OccupancySensorTypeBitmap attribute and the OccupancySensorType attribute shall be " +
+                     "aligned as defined below." +
+                     "\n" +
+                     "Table 32. Mapping between OccupancySensorTypeBitmap and OccupancySensorType Attributes",
+
             xref: { document: "cluster", section: "2.7.6.3" }
         },
 
@@ -107,7 +114,9 @@ Matter.children.push({
             tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedDelay", id: 0x31, type: "uint16",
             access: "RW VM", conformance: "O", default: 0, quality: "X",
             details: "The PhysicalContactUnoccupiedToOccupiedDelay attribute specifies the time delay, in seconds, before " +
-                     "the physical contact sensor changes to its occupied state after the detection of the occupied event.",
+                     "the physical contact sensor changes to its occupied state after the detection of the occupied event." +
+                     "\n" +
+                     "The null value indicates that the sensor does not report unoccupied to occupied transition.",
             xref: { document: "cluster", section: "2.7.9.2" }
         },
 
@@ -123,6 +132,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "OccupancyBitmap", type: "map8", conformance: "M",
+            details: "All other bits are reserved.",
             xref: { document: "cluster", section: "2.7.5.1" },
 
             children: [

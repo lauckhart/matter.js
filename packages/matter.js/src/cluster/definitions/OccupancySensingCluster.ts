@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, AccessLevel, OptionalWritableAttribute, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, OptionalWritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
@@ -18,7 +18,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * Attributes and commands for configuring occupancy sensing, and reporting occupancy status.
  *
- * This function creates an OccupancySensing cluster.
+ * Use this factory function to create an OccupancySensing cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7
  */
@@ -28,21 +28,28 @@ export function OccupancySensingCluster() {
 }
 
 /**
+ * Bit definitions for TlvOccupancyBitmap
+ *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.1
  */
-export const TlvOccupancyBitmapBits = {
+export const OccupancyBitmapBits = {
     /**
      * Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.
      */
     occupied: BitFlag(1)
 };
 
-export const TlvOccupancyBitmap = TlvBitmap(TlvUInt8, TlvOccupancyBitmapBits);
+/**
+ * All other bits are reserved.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.1
+ */
+export const TlvOccupancyBitmap = TlvBitmap(TlvUInt8, OccupancyBitmapBits);
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.2
  */
-export const enum OccupancySensorTypeEnum {
+export const enum OccupancySensorType {
     Pir = 0,
     Ultrasonic = 1,
     PirAndUltrasonic = 2,
@@ -50,9 +57,11 @@ export const enum OccupancySensorTypeEnum {
 }
 
 /**
+ * Bit definitions for TlvOccupancySensorTypeBitmap
+ *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.3
  */
-export const TlvOccupancySensorTypeBitmapBits = {
+export const OccupancySensorTypeBitmapBits = {
     /**
      * Indicates a ultrasonic sensor.
      */
@@ -64,7 +73,10 @@ export const TlvOccupancySensorTypeBitmapBits = {
     physicalContact: BitFlag(4)
 };
 
-export const TlvOccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, TlvOccupancySensorTypeBitmapBits);
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.3
+ */
+export const TlvOccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, OccupancySensorTypeBitmapBits);
 
 export namespace OccupancySensingCluster {
     export type Type =
@@ -89,22 +101,27 @@ export namespace OccupancySensingCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.6.1
              */
-            occupancy: Attribute(0, TlvOccupancyBitmap, { readAcl: AccessLevel.View }),
+            occupancy: Attribute(0, TlvOccupancyBitmap),
 
             /**
              * The OccupancySensorType attribute specifies the type of the occupancy sensor.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.6.2
              */
-            occupancySensorType: Attribute(1, TlvEnum<OccupancySensorTypeEnum>(), { readAcl: AccessLevel.View }),
+            occupancySensorType: Attribute(1, TlvEnum<OccupancySensorType>()),
 
             /**
              * The OccupancySensorTypeBitmap attribute specifies the types of the occupancy sensor. A ‘1’ in each bit
              * position indicates the capability is implemented.
              *
+             * The value of the OccupancySensorTypeBitmap attribute and the OccupancySensorType attribute shall be
+             * aligned as defined below.
+             *
+             * Table 32. Mapping between OccupancySensorTypeBitmap and OccupancySensorType Attributes
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.6.3
              */
-            occupancySensorTypeBitmap: Attribute(2, TlvOccupancySensorTypeBitmap, { readAcl: AccessLevel.View }),
+            occupancySensorTypeBitmap: Attribute(2, TlvOccupancySensorTypeBitmap),
 
             /**
              * The PIROccupiedToUnoccupiedDelay attribute specifies the time delay, in seconds, before the PIR sensor
@@ -115,7 +132,7 @@ export namespace OccupancySensingCluster {
             pirOccupiedToUnoccupiedDelay: OptionalWritableAttribute(
                 16,
                 TlvUInt16,
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -128,7 +145,7 @@ export namespace OccupancySensingCluster {
             pirUnoccupiedToOccupiedDelay: OptionalWritableAttribute(
                 17,
                 TlvUInt16,
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -141,7 +158,7 @@ export namespace OccupancySensingCluster {
             pirUnoccupiedToOccupiedThreshold: OptionalWritableAttribute(
                 18,
                 TlvUInt8.bound({ min: 1, max: 254 }),
-                { default: 1, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 1, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -154,7 +171,7 @@ export namespace OccupancySensingCluster {
             ultrasonicOccupiedToUnoccupiedDelay: OptionalWritableAttribute(
                 32,
                 TlvUInt16,
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -167,7 +184,7 @@ export namespace OccupancySensingCluster {
             ultrasonicUnoccupiedToOccupiedDelay: OptionalWritableAttribute(
                 33,
                 TlvUInt16,
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -181,7 +198,7 @@ export namespace OccupancySensingCluster {
             ultrasonicUnoccupiedToOccupiedThreshold: OptionalWritableAttribute(
                 34,
                 TlvUInt8.bound({ min: 1, max: 254 }),
-                { default: 1, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 1, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -194,19 +211,21 @@ export namespace OccupancySensingCluster {
             physicalContactOccupiedToUnoccupiedDelay: OptionalWritableAttribute(
                 48,
                 TlvNullable(TlvUInt16),
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, writeAcl: AccessLevel.Manage }
             ),
 
             /**
              * The PhysicalContactUnoccupiedToOccupiedDelay attribute specifies the time delay, in seconds, before the
              * physical contact sensor changes to its occupied state after the detection of the occupied event.
              *
+             * The null value indicates that the sensor does not report unoccupied to occupied transition.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.9.2
              */
             physicalContactUnoccupiedToOccupiedDelay: OptionalWritableAttribute(
                 49,
                 TlvNullable(TlvUInt16),
-                { default: 0, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 0, writeAcl: AccessLevel.Manage }
             ),
 
             /**
@@ -220,7 +239,7 @@ export namespace OccupancySensingCluster {
             physicalContactUnoccupiedToOccupiedThreshold: OptionalWritableAttribute(
                 50,
                 TlvUInt8.bound({ min: 1, max: 254 }),
-                { default: 1, readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { default: 1, writeAcl: AccessLevel.Manage }
             )
         }
     });

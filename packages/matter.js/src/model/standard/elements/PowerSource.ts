@@ -36,7 +36,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "Status", id: 0x0, type: "PowerSourceStatusEnum", access: "R V",
             conformance: "M", constraint: "desc",
-            details: "This attribute SHALL indicate the participation of this power source in providing power to the Node " +
+            details: "This attribute shall indicate the participation of this power source in providing power to the Node " +
                      "as specified in PowerSourceStatusEnum.",
             xref: { document: "core", section: "11.7.6.1" }
         },
@@ -44,17 +44,22 @@ Matter.children.push({
         {
             tag: "attribute", name: "Order", id: 0x1, type: "uint8", access: "R V", conformance: "M",
             quality: "N",
-            details: "This attribute SHALL indicate the relative preference with which the Node will select this source " +
-                     "to provide power. A source with a lower order SHALL be selected by the Node to provide power before " +
-                     "any other source with a higher order, if the lower order source is available (see Status).",
+
+            details: "This attribute shall indicate the relative preference with which the Node will select this source " +
+                     "to provide power. A source with a lower order shall be selected by the Node to provide power before " +
+                     "any other source with a higher order, if the lower order source is available (see Status)." +
+                     "\n" +
+                     "Note, Order is read-only and therefore NOT intended to allow clients control over power source " +
+                     "selection.",
+
             xref: { document: "core", section: "11.7.6.2" }
         },
 
         {
             tag: "attribute", name: "Description", id: 0x2, type: "string", access: "R V", conformance: "M",
             constraint: "max 60", quality: "F",
-            details: "This attribute SHALL provide a user-facing description of this source, used to distinguish it from " +
-                     "other power sources, e.g. \"DC Power\", \"Primary Battery\" or \"Battery back-up\". This attribute SHALL " +
+            details: "This attribute shall provide a user-facing description of this source, used to distinguish it from " +
+                     "other power sources, e.g. \"DC Power\", \"Primary Battery\" or \"Battery back-up\". This attribute shall " +
                      "NOT be used to convey information such as battery form factor, or chemistry.",
             xref: { document: "core", section: "11.7.6.3" }
         },
@@ -62,8 +67,8 @@ Matter.children.push({
         {
             tag: "attribute", name: "WiredAssessedInputVoltage", id: 0x3, type: "uint32", access: "R V",
             conformance: "[WIRED]", quality: "X C",
-            details: "This attribute SHALL indicate the assessed RMS or DC voltage currently provided by the hard-wired " +
-                     "source, in mV (millivolts). A value of NULL SHALL indicate the Node is currently unable to assess " +
+            details: "This attribute shall indicate the assessed RMS or DC voltage currently provided by the hard-wired " +
+                     "source, in mV (millivolts). A value of NULL shall indicate the Node is currently unable to assess " +
                      "the value. If the wired source is not connected, but the Node is still able to assess a value, then " +
                      "the assessed value MAY be reported.",
             xref: { document: "core", section: "11.7.6.4" }
@@ -72,8 +77,8 @@ Matter.children.push({
         {
             tag: "attribute", name: "WiredAssessedInputFrequency", id: 0x4, type: "uint16", access: "R V",
             conformance: "[WIRED]", quality: "X C",
-            details: "This attribute SHALL indicate the assessed frequency of the voltage, currently provided by the " +
-                     "hard-wired source, in Hz. A value of NULL SHALL indicate the Node is currently unable to assess the " +
+            details: "This attribute shall indicate the assessed frequency of the voltage, currently provided by the " +
+                     "hard-wired source, in Hz. A value of NULL shall indicate the Node is currently unable to assess the " +
                      "value. If the wired source is not connected, but the Node is still able to assess a value, then the " +
                      "assessed value MAY be reported.",
             xref: { document: "core", section: "11.7.6.5" }
@@ -82,7 +87,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "WiredCurrentType", id: 0x5, type: "WiredCurrentTypeEnum", access: "R V",
             conformance: "WIRED", constraint: "desc", quality: "F",
-            details: "This attribute SHALL indicate the type of current the Node expects to be provided by the hard- " +
+            details: "This attribute shall indicate the type of current the Node expects to be provided by the hard- " +
                      "wired source as specified in WiredCurrentTypeEnum.",
             xref: { document: "core", section: "11.7.6.6" }
         },
@@ -90,8 +95,8 @@ Matter.children.push({
         {
             tag: "attribute", name: "WiredAssessedCurrent", id: 0x6, type: "uint32", access: "R V",
             conformance: "[WIRED]", quality: "X C",
-            details: "This attribute SHALL indicate the assessed instantaneous current draw of the Node on the hard- " +
-                     "wired source, in mA (milliamps). A value of NULL SHALL indicate the Node is currently unable to " +
+            details: "This attribute shall indicate the assessed instantaneous current draw of the Node on the hard- " +
+                     "wired source, in mA (milliamps). A value of NULL shall indicate the Node is currently unable to " +
                      "assess the value. If the wired source is not connected, but the Node is still able to assess a " +
                      "value, then the assessed value MAY be reported.",
             xref: { document: "core", section: "11.7.6.7" }
@@ -100,7 +105,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "WiredNominalVoltage", id: 0x7, type: "uint32", access: "R V",
             conformance: "[WIRED]", quality: "F",
-            details: "This attribute SHALL indicate the nominal voltage, printed as part of the Node’s regulatory " +
+            details: "This attribute shall indicate the nominal voltage, printed as part of the Node’s regulatory " +
                      "compliance label in mV (millivolts), expected to be provided by the hard-wired source.",
             xref: { document: "core", section: "11.7.6.8" }
         },
@@ -108,7 +113,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "WiredMaximumCurrent", id: 0x8, type: "uint32", access: "R V",
             conformance: "[WIRED]", quality: "F",
-            details: "This attribute SHALL indicate the maximum current, printed as part of the Node’s regulatory " +
+            details: "This attribute shall indicate the maximum current, printed as part of the Node’s regulatory " +
                      "compliance label in mA (milliamps), expected to be provided by the hard-wired source.",
             xref: { document: "core", section: "11.7.6.9" }
         },
@@ -116,7 +121,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "WiredPresent", id: 0x9, type: "bool", access: "R V",
             conformance: "[WIRED]",
-            details: "This attribute SHALL indicate if the Node detects that the hard-wired power source is properly " +
+            details: "This attribute shall indicate if the Node detects that the hard-wired power source is properly " +
                      "connected.",
             xref: { document: "core", section: "11.7.6.10" }
         },
@@ -125,12 +130,12 @@ Matter.children.push({
             tag: "attribute", name: "ActiveWiredFaults", id: 0xa, type: "list", access: "R V",
             conformance: "[WIRED]", constraint: "8",
 
-            details: "This attribute SHALL indicate the set of wired faults currently detected by the Node on this power " +
+            details: "This attribute shall indicate the set of wired faults currently detected by the Node on this power " +
                      "source. This set is represented as a list of WiredFaultEnum. When the Node detects a fault has been " +
-                     "raised, the appropriate WiredFaultEnum value SHALL be added to this list, provided it is not " +
-                     "already present. This list SHALL NOT contain more than one instance of a specific WiredFaultEnum " +
+                     "raised, the appropriate WiredFaultEnum value shall be added to this list, provided it is not " +
+                     "already present. This list shall NOT contain more than one instance of a specific WiredFaultEnum " +
                      "value. When the Node detects all conditions contributing to a fault have been cleared, the " +
-                     "corresponding WiredFaultEnum value SHALL be removed from this list. An empty list SHALL indicate " +
+                     "corresponding WiredFaultEnum value shall be removed from this list. An empty list shall indicate " +
                      "there are currently no active faults. The order of this list SHOULD have no significance. Clients " +
                      "interested in monitoring changes in active faults MAY subscribe to this attribute, or they MAY " +
                      "subscribe to WiredFaultChange.",
@@ -142,17 +147,17 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatVoltage", id: 0xb, type: "uint32", access: "R V", conformance: "[BAT]",
             quality: "X C",
-            details: "This attribute SHALL indicate the currently measured output voltage of the battery in mV " +
-                     "(millivolts). A value of NULL SHALL indicate the Node is currently unable to assess the value.",
+            details: "This attribute shall indicate the currently measured output voltage of the battery in mV " +
+                     "(millivolts). A value of NULL shall indicate the Node is currently unable to assess the value.",
             xref: { document: "core", section: "11.7.6.12" }
         },
 
         {
             tag: "attribute", name: "BatPercentRemaining", id: 0xc, type: "uint8", access: "R V",
             conformance: "[BAT]", constraint: "0 to 200", quality: "X C",
-            details: "This attribute SHALL indicate the estimated percentage of battery charge remaining until the " +
+            details: "This attribute shall indicate the estimated percentage of battery charge remaining until the " +
                      "battery will no longer be able to provide power to the Node. Values are expressed in half percent " +
-                     "units, ranging from 0 to 200. E.g. a value of 48 is equivalent to 24%. A value of NULL SHALL " +
+                     "units, ranging from 0 to 200. E.g. a value of 48 is equivalent to 24%. A value of NULL shall " +
                      "indicate the Node is currently unable to assess the value.",
             xref: { document: "core", section: "11.7.6.13" }
         },
@@ -160,8 +165,8 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatTimeRemaining", id: 0xd, type: "uint32", access: "R V",
             conformance: "[BAT]", quality: "X C",
-            details: "This attribute SHALL indicate the estimated time in seconds before the battery will no longer be " +
-                     "able to provide power to the Node. A value of NULL SHALL indicate the Node is currently unable to " +
+            details: "This attribute shall indicate the estimated time in seconds before the battery will no longer be " +
+                     "able to provide power to the Node. A value of NULL shall indicate the Node is currently unable to " +
                      "assess the value.",
             xref: { document: "core", section: "11.7.6.14" }
         },
@@ -169,7 +174,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatChargeLevel", id: 0xe, type: "BatChargeLevelEnum", access: "R V",
             conformance: "BAT", constraint: "desc",
-            details: "This attribute SHALL indicate a coarse ranking of the charge level of the battery, used to indicate " +
+            details: "This attribute shall indicate a coarse ranking of the charge level of the battery, used to indicate " +
                      "when intervention is required as specified in BatChargeLevelEnum.",
             xref: { document: "core", section: "11.7.6.15" }
         },
@@ -177,7 +182,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatReplacementNeeded", id: 0xf, type: "bool", access: "R V",
             conformance: "BAT",
-            details: "This attribute SHALL indicate if the battery needs to be replaced. Replacement MAY be simple " +
+            details: "This attribute shall indicate if the battery needs to be replaced. Replacement MAY be simple " +
                      "routine maintenance, such as with a single use, non-rechargeable cell. Replacement, however, MAY " +
                      "also indicate end of life, or serious fault with a rechargeable or even non-replaceable cell.",
             xref: { document: "core", section: "11.7.6.16" }
@@ -186,14 +191,14 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatReplaceability", id: 0x10, type: "BatReplaceabilityEnum", access: "R V",
             conformance: "BAT", quality: "F",
-            details: "This attribute SHALL indicate the replaceability of the battery as specified in " +
+            details: "This attribute shall indicate the replaceability of the battery as specified in " +
                      "BatReplaceabilityEnum.",
             xref: { document: "core", section: "11.7.6.17" }
         },
 
         {
             tag: "attribute", name: "BatPresent", id: 0x11, type: "bool", access: "R V", conformance: "[BAT]",
-            details: "This attribute SHALL indicate whether the Node detects that the batteries are properly installed.",
+            details: "This attribute shall indicate whether the Node detects that the batteries are properly installed.",
             xref: { document: "core", section: "11.7.6.18" }
         },
 
@@ -201,12 +206,12 @@ Matter.children.push({
             tag: "attribute", name: "ActiveBatFaults", id: 0x12, type: "list", access: "R V",
             conformance: "[BAT]", constraint: "8",
 
-            details: "This attribute SHALL indicate the set of battery faults currently detected by the Node on this " +
+            details: "This attribute shall indicate the set of battery faults currently detected by the Node on this " +
                      "power source. This set is represented as a list of BatFaultEnum. When the Node detects a fault has " +
-                     "been raised, the appropriate BatFaultEnum value SHALL be added to this list, provided it is not " +
-                     "already present. This list SHALL NOT contain more than one instance of a specific BatFaultEnum " +
+                     "been raised, the appropriate BatFaultEnum value shall be added to this list, provided it is not " +
+                     "already present. This list shall NOT contain more than one instance of a specific BatFaultEnum " +
                      "value. When the Node detects all conditions contributing to a fault have been cleared, the " +
-                     "corresponding BatFaultEnum value SHALL be removed from this list. An empty list SHALL indicate " +
+                     "corresponding BatFaultEnum value shall be removed from this list. An empty list shall indicate " +
                      "there are currently no active faults. The order of this list SHOULD have no significance. Clients " +
                      "interested in monitoring changes in active faults MAY subscribe to this attribute, or they MAY " +
                      "subscribe to Section 11.7.7.2, “BatFaultChange Event”.",
@@ -218,7 +223,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatReplacementDescription", id: 0x13, type: "string", access: "R V",
             conformance: "REPLC", constraint: "max 60", quality: "F",
-            details: "This attribute SHALL provide a user-facing description of this battery, which SHOULD contain " +
+            details: "This attribute shall provide a user-facing description of this battery, which SHOULD contain " +
                      "information required to identify a replacement, such as form factor, chemistry or preferred " +
                      "manufacturer.",
             xref: { document: "core", section: "11.7.6.20" }
@@ -227,7 +232,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatCommonDesignation", id: 0x14, type: "BatCommonDesignationEnum",
             access: "R V", conformance: "[REPLC]", constraint: "desc", quality: "F",
-            details: "This attribute SHALL indicate the ID of the common or colloquial designation of the battery, as " +
+            details: "This attribute shall indicate the ID of the common or colloquial designation of the battery, as " +
                      "specified in BatCommonDesignationEnum.",
             xref: { document: "core", section: "11.7.6.21" }
         },
@@ -235,7 +240,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatAnsiDesignation", id: 0x15, type: "string", access: "R V",
             conformance: "[REPLC]", constraint: "max 20", quality: "F",
-            details: "This attribute SHALL indicate the string representing the ANSI designation for the battery as " +
+            details: "This attribute shall indicate the string representing the ANSI designation for the battery as " +
                      "specified in ANSI C18.",
             xref: { document: "core", section: "11.7.6.22" }
         },
@@ -243,7 +248,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatIecDesignation", id: 0x16, type: "string", access: "R V",
             conformance: "[REPLC]", constraint: "max 20", quality: "F",
-            details: "This attribute SHALL indicate the string representing the IEC designation for the battery as " +
+            details: "This attribute shall indicate the string representing the IEC designation for the battery as " +
                      "specified in IEC 60086.",
             xref: { document: "core", section: "11.7.6.23" }
         },
@@ -251,7 +256,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatApprovedChemistry", id: 0x17, type: "BatApprovedChemistryEnum",
             access: "R V", conformance: "[REPLC]", constraint: "desc", quality: "F",
-            details: "This attribute SHALL indicate the ID of the preferred chemistry of the battery source as specified " +
+            details: "This attribute shall indicate the ID of the preferred chemistry of the battery source as specified " +
                      "in BatApprovedChemistryEnum.",
             xref: { document: "core", section: "11.7.6.24" }
         },
@@ -259,7 +264,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatCapacity", id: 0x18, type: "uint32", access: "R V",
             conformance: "[REPLC]", quality: "F",
-            details: "This attribute SHALL indicate the preferred minimum charge capacity rating in mAh of individual, " +
+            details: "This attribute shall indicate the preferred minimum charge capacity rating in mAh of individual, " +
                      "user- or factory-serviceable battery cells or packs in the battery source.",
             xref: { document: "core", section: "11.7.6.25" }
         },
@@ -267,7 +272,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatQuantity", id: 0x19, type: "uint8", access: "R V", conformance: "REPLC",
             quality: "F",
-            details: "This attribute SHALL indicate the quantity of individual, user- or factory-serviceable battery " +
+            details: "This attribute shall indicate the quantity of individual, user- or factory-serviceable battery " +
                      "cells or packs in the battery source.",
             xref: { document: "core", section: "11.7.6.26" }
         },
@@ -275,7 +280,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatChargeState", id: 0x1a, type: "BatChargeStateEnum", access: "R V",
             conformance: "RECHG", constraint: "desc",
-            details: "This attribute SHALL indicate the current state of the battery source with respect to charging as " +
+            details: "This attribute shall indicate the current state of the battery source with respect to charging as " +
                      "specified in BatChargeStateEnum.",
             xref: { document: "core", section: "11.7.6.27" }
         },
@@ -283,15 +288,15 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatTimeToFullCharge", id: 0x1b, type: "uint32", access: "R V",
             conformance: "[RECHG]", quality: "X C",
-            details: "This attribute SHALL indicate the estimated time in seconds before the battery source will be at " +
-                     "full charge. A value of NULL SHALL indicate the Node is currently unable to assess the value.",
+            details: "This attribute shall indicate the estimated time in seconds before the battery source will be at " +
+                     "full charge. A value of NULL shall indicate the Node is currently unable to assess the value.",
             xref: { document: "core", section: "11.7.6.28" }
         },
 
         {
             tag: "attribute", name: "BatFunctionalWhileCharging", id: 0x1c, type: "bool", access: "R V",
             conformance: "RECHG",
-            details: "This attribute SHALL indicate whether the Node can remain operational while the battery source is " +
+            details: "This attribute shall indicate whether the Node can remain operational while the battery source is " +
                      "charging.",
             xref: { document: "core", section: "11.7.6.29" }
         },
@@ -299,8 +304,8 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatChargingCurrent", id: 0x1d, type: "uint32", access: "R V",
             conformance: "[RECHG]", quality: "X C",
-            details: "This attribute SHALL indicate assessed current in mA (milliamps) presently supplied to charge the " +
-                     "battery source. A value of NULL SHALL indicate the Node is currently unable to assess the value.",
+            details: "This attribute shall indicate assessed current in mA (milliamps) presently supplied to charge the " +
+                     "battery source. A value of NULL shall indicate the Node is currently unable to assess the value.",
             xref: { document: "core", section: "11.7.6.30" }
         },
 
@@ -308,13 +313,13 @@ Matter.children.push({
             tag: "attribute", name: "ActiveBatChargeFaults", id: 0x1e, type: "list", access: "R V",
             conformance: "[RECHG]", constraint: "16",
 
-            details: "This attribute SHALL indicate the set of charge faults currently detected by the Node on this power " +
+            details: "This attribute shall indicate the set of charge faults currently detected by the Node on this power " +
                      "source. This set is represented as a list of BatChargeFaultEnum. When the Node detects a fault has " +
-                     "been raised, the appropriate BatChargeFaultEnum value SHALL be added to this list, provided it is " +
-                     "not already present. This list SHALL NOT contain more than one instance of a specific " +
+                     "been raised, the appropriate BatChargeFaultEnum value shall be added to this list, provided it is " +
+                     "not already present. This list shall NOT contain more than one instance of a specific " +
                      "BatChargeFaultEnum value. When the Node detects all conditions contributing to a fault have been " +
-                     "cleared, the corresponding BatChargeFaultEnum value SHALL be removed from this list. An empty list " +
-                     "SHALL indicate there are currently no active faults. The order of this list SHOULD have no " +
+                     "cleared, the corresponding BatChargeFaultEnum value shall be removed from this list. An empty list " +
+                     "shall indicate there are currently no active faults. The order of this list SHOULD have no " +
                      "significance. Clients interested in monitoring changes in active faults MAY subscribe to this " +
                      "attribute, or they MAY subscribe to the BatFaultChange event.",
 
@@ -325,8 +330,8 @@ Matter.children.push({
         {
             tag: "event", name: "WiredFaultChange", id: 0x0, access: "V", conformance: "[WIRED]",
             priority: "info",
-            details: "The WiredFaultChange Event SHALL be generated when the set of wired faults currently detected by " +
-                     "the Node on this wired power source changes. This event SHALL correspond to a change in value of " +
+            details: "The WiredFaultChange Event shall be generated when the set of wired faults currently detected by " +
+                     "the Node on this wired power source changes. This event shall correspond to a change in value of " +
                      "ActiveWiredFaults.",
             xref: { document: "core", section: "11.7.7.1" },
 
@@ -334,7 +339,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8",
                     default: [],
-                    details: "This field SHALL represent the set of faults currently detected, as per Section 11.7.6.11, " +
+                    details: "This field shall represent the set of faults currently detected, as per Section 11.7.6.11, " +
                              "“ActiveWiredFaults Attribute”.",
                     xref: { document: "core", section: "11.7.7.1.1" },
                     children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
@@ -343,7 +348,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8",
                     default: [],
-                    details: "This field SHALL represent the set of faults detected prior to this change event, as per Section " +
+                    details: "This field shall represent the set of faults detected prior to this change event, as per Section " +
                              "11.7.6.11, “ActiveWiredFaults Attribute”.",
                     xref: { document: "core", section: "11.7.7.1.2" },
                     children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
@@ -353,9 +358,17 @@ Matter.children.push({
 
         {
             tag: "event", name: "BatFaultChange", id: 0x1, access: "V", conformance: "[BAT]", priority: "info",
-            details: "The BatFaultChange Event SHALL be generated when the set of battery faults currently detected by " +
-                     "the Node on this battery power source changes. This event SHALL correspond to a change in value of " +
-                     "ActiveBatFaults.",
+
+            details: "The BatFaultChange Event shall be generated when the set of battery faults currently detected by " +
+                     "the Node on this battery power source changes. This event shall correspond to a change in value of " +
+                     "ActiveBatFaults." +
+                     "\n" +
+                     "This field shall represent the set of faults currently detected, as per Section 11.7.6.19, " +
+                     "“ActiveBatFaults Attribute”." +
+                     "\n" +
+                     "This field shall represent the set of faults detected prior to this change event, as per Section " +
+                     "11.7.6.19, “ActiveBatFaults Attribute”.",
+
             xref: { document: "core", section: "11.7.7.2" },
 
             children: [
@@ -375,7 +388,18 @@ Matter.children.push({
         {
             tag: "event", name: "BatChargeFaultChange", id: 0x2, access: "V", conformance: "[RECHG]",
             priority: "info",
-            details: "The BatChargeFaultChange Event SHALL be generated when the set of charge faults currently",
+
+            details: "The BatChargeFaultChange Event shall be generated when the set of charge faults currently" +
+                     "\n" +
+                     "detected by the Node on this battery power source changes. This event shall correspond to a change " +
+                     "in value of ActiveBatChargeFaults." +
+                     "\n" +
+                     "This field shall represent the set of faults currently detected, as per Section 11.7.6.31, " +
+                     "“ActiveBatChargeFaults Attribute”." +
+                     "\n" +
+                     "This field shall represent the set of faults detected prior to this change event, as per Section " +
+                     "11.7.6.31, “ActiveBatChargeFaults Attribute”.",
+
             xref: { document: "core", section: "11.7.7.3" },
 
             children: [

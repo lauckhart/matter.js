@@ -7,7 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, OptionalAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -20,7 +20,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  *
  * This cluster provides an interface for UX navigation within a set of targets on a device or endpoint.
  *
- * This function creates a TargetNavigator cluster.
+ * Use this factory function to create a TargetNavigator cluster.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
  */
@@ -51,13 +51,13 @@ export const TlvTargetInfoStruct = TlvObject({
 });
 
 /**
- * Upon receipt, this SHALL navigation the UX to the target identified.
+ * Input to the TargetNavigator navigateTarget command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
  */
 export const TlvNavigateTargetRequest = TlvObject({
     /**
-     * This SHALL indicate the Identifier for the target for UX navigation. The Target SHALL be an Identifier value
+     * This shall indicate the Identifier for the target for UX navigation. The Target shall be an Identifier value
      * contained within one of the TargetInfoStruct objects in the TargetList attribute list.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1.1
@@ -65,7 +65,7 @@ export const TlvNavigateTargetRequest = TlvObject({
     target: TlvField(0, TlvUInt8),
 
     /**
-     * This SHALL indicate Optional app-specific data.
+     * This shall indicate Optional app-specific data.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1.2
      */
@@ -75,7 +75,7 @@ export const TlvNavigateTargetRequest = TlvObject({
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.5.2
  */
-export const enum StatusEnum {
+export const enum Status {
     /**
      * Command succeeded
      */
@@ -93,20 +93,20 @@ export const enum StatusEnum {
 }
 
 /**
- * This command SHALL be generated in response to NavigateTarget command.
+ * Input to the TargetNavigator navigateTargetResponse command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
  */
-export const TlvNavigateTargetResponseRequest = TlvObject({
+export const TlvNavigateTargetResponse = TlvObject({
     /**
-     * This SHALL indicate the status of the command.
+     * This shall indicate the of the command.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2.1
      */
-    status: TlvField(0, TlvEnum<StatusEnum>()),
+    status: TlvField(0, TlvEnum<Status>()),
 
     /**
-     * This SHALL indicate Optional app-specific data.
+     * This shall indicate Optional app-specific data.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2.2
      */
@@ -132,38 +132,41 @@ export namespace TargetNavigatorCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * The TargetList attribute SHALL represent a list of targets that can be navigated to within the
-             * experience presented to the user by the Endpoint (Video Player or Content App). The list SHALL not
+             * The TargetList attribute shall represent a list of targets that can be navigated to within the
+             * experience presented to the user by the Endpoint (Video Player or Content App). The list shall not
              * contain any entries with the same Identifier in the TargetInfoStruct object.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.1
              */
-            targetList: Attribute(0, TlvArray(TlvTargetInfoStruct), { default: [], readAcl: AccessLevel.View }),
+            targetList: Attribute(0, TlvArray(TlvTargetInfoStruct), { default: [] }),
 
             /**
-             * The CurrentTarget attribute SHALL represent the Identifier for the target which is currently in
+             * The CurrentTarget attribute shall represent the Identifier for the target which is currently in
              * foreground on the corresponding Endpoint (Video Player or Content App), or null to indicate that no
              * target is in the foreground.
              *
+             * When not null, the CurrentTarget shall be an Identifier value contained within one of the
+             * TargetInfoStruct objects in the TargetList attribute list.
+             *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.2
              */
-            currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { default: 0, readAcl: AccessLevel.View })
+            currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { default: 0 })
         },
 
         commands: {
             /**
-             * Upon receipt, this SHALL navigation the UX to the target identified.
+             * Upon receipt, this shall navigation the UX to the target identified.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
              */
-            navigateTarget: Command(0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponseRequest),
+            navigateTarget: Command(0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponse),
 
             /**
-             * This command SHALL be generated in response to NavigateTarget command.
+             * This command shall be generated in response to NavigateTarget command.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
              */
-            navigateTargetResponse: Command(1, TlvNavigateTargetResponseRequest, 1, TlvNoResponse)
+            navigateTargetResponse: Command(1, TlvNavigateTargetResponse, 1, TlvNoResponse)
         }
     });
 

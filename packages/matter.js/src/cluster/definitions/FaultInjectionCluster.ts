@@ -18,7 +18,7 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  * The Fault Injection Cluster provide a means for a test harness to configure faults(for example triggering a fault in
  * the system).
  *
- * This function creates a FaultInjection cluster.
+ * Use this factory function to create a FaultInjection cluster.
  */
 export function FaultInjectionCluster() {
     const cluster = Cluster({ ...FaultInjectionCluster.Metadata, ...FaultInjectionCluster.BaseComponent });
@@ -33,6 +33,9 @@ export const enum FaultType {
     CertFault = 4
 }
 
+/**
+ * Input to the FaultInjection failAtFault command
+ */
 export const TlvFailAtFaultRequest = TlvObject({
     type: TlvField(0, TlvEnum<FaultType>()),
     id: TlvField(1, TlvUInt32),
@@ -41,6 +44,9 @@ export const TlvFailAtFaultRequest = TlvObject({
     takeMutex: TlvField(4, TlvBoolean)
 });
 
+/**
+ * Input to the FaultInjection failRandomlyAtFault command
+ */
 export const TlvFailRandomlyAtFaultRequest = TlvObject({
     type: TlvField(0, TlvEnum<FaultType>()),
     id: TlvField(1, TlvUInt32),

@@ -9,7 +9,7 @@
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -43,13 +43,15 @@ export function AdministratorCommissioningCluster<T extends AdministratorCommiss
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.18.5.1
  */
-export const enum CommissioningWindowStatusEnum {
+export const enum CommissioningWindowStatus {
     WindowNotOpen = 0,
     EnhancedWindowOpen = 1,
     BasicWindowOpen = 2
 }
 
 /**
+ * Input to the AdministratorCommissioning openCommissioningWindow command
+ *
  * @see {@link MatterCoreSpecificationV1_1} § 11.18.8
  */
 export const TlvOpenCommissioningWindowRequest = TlvObject({
@@ -61,6 +63,8 @@ export const TlvOpenCommissioningWindowRequest = TlvObject({
 });
 
 /**
+ * Input to the AdministratorCommissioning openBasicCommissioningWindow command
+ *
  * @see {@link MatterCoreSpecificationV1_1} § 11.18.8
  */
 export const TlvOpenBasicCommissioningWindowRequest = TlvObject({ commissioningTimeout: TlvField(0, TlvUInt16) });
@@ -113,32 +117,44 @@ export namespace AdministratorCommissioningCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * This attribute SHALL indicate whether a new Commissioning window has been opened by an Administrator,
+             * This attribute shall indicate whether a new Commissioning window has been opened by an Administrator,
              * using either the OCW command or the OBCW command.
+             *
+             * This attribute shall revert to WindowNotOpen upon expiry of a commissioning window.
+             *
+             * Note that an initial commissioning window is not opened using either the OCW command or the OBCW
+             * command, and therefore this attribute shall be set to WindowNotOpen on initial commissioning.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.18.7.1
              */
-            windowStatus: Attribute(0, TlvEnum<CommissioningWindowStatusEnum>(), { readAcl: AccessLevel.View }),
+            windowStatus: Attribute(0, TlvEnum<CommissioningWindowStatus>()),
 
             /**
-             * When the WindowStatus attribute is not set to WindowNotOpen, this attribute SHALL indicate the
+             * When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the
              * FabricIndex associated with the Fabric scoping of the Administrator that opened the window. This MAY be
              * used to cross-reference in the Fabrics attribute of the Node Operational Credentials cluster.
              *
+             * If, during an open commissioning window, the fabric for the Administrator that opened the window is
+             * removed, then this attribute shall be set to null.
+             *
+             * When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null.
+             *
              * @see {@link MatterCoreSpecificationV1_1} § 11.18.7.2
              */
-            adminFabricIndex: Attribute(1, TlvNullable(TlvUInt8), { readAcl: AccessLevel.View }),
+            adminFabricIndex: Attribute(1, TlvNullable(TlvUInt8)),
 
             /**
-             * When the WindowStatus attribute is not set to WindowNotOpen, this attribute SHALL indicate the Vendor ID
-             * associated with the Fabric scoping of the Administrator that opened the window. This field SHALL match
+             * When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the Vendor ID
+             * associated with the Fabric scoping of the Administrator that opened the window. This field shall match
              * the VendorID field of the Fabrics attribute list entry associated with the Administrator having opened
              * the window, at the time of window opening. If the fabric for the Administrator that opened the window is
-             * removed from the node while the commissioning window is still open, this attribute SHALL NOT be updated.
+             * removed from the node while the commissioning window is still open, this attribute shall NOT be updated.
+             *
+             * When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.18.7.3
              */
-            adminVendorId: Attribute(2, TlvNullable(TlvUInt16), { readAcl: AccessLevel.View })
+            adminVendorId: Attribute(2, TlvNullable(TlvUInt16))
         },
 
         commands: {
@@ -150,9 +166,12 @@ export namespace AdministratorCommissioningCluster {
             /**
              * This command is used by a current Administrator to instruct a Node to revoke any active Open
              * Commissioning Window or Open Basic Commissioning Window command. This is an idempotent command and the
-             * Node SHALL (for ECM) delete the temporary PAKEPasscodeVerifier and associated data, and stop publishing
+             * Node shall (for ECM) delete the temporary PAKEPasscodeVerifier and associated data, and stop publishing
              * the DNS-SD record associated with the Open Commissioning Window or Open Basic Commissioning Window
              * command, see Section 4.3.1, “Commissionable Node Discovery”.
+             *
+             * If no commissioning window was open at time of receipt, this command shall fail with a cluster specific
+             * status code of WindowNotOpen.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.18.8.3
              */
@@ -173,7 +192,7 @@ export namespace AdministratorCommissioningCluster {
     });
 
     /**
-     * This cluster supports all AdministratorCommissioning features.  It may support illegal feature combinations.
+     * This cluster supports all AdministratorCommissioning features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.

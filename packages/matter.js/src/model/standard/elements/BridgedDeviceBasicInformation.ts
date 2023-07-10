@@ -111,9 +111,11 @@ Matter.children.push({
 
         {
             tag: "event", name: "ReachableChanged", id: 0x3, conformance: "M", priority: "info",
-            details: "This event SHALL be generated when there is a change in the Reachable attribute. Its purpose is to " +
+            details: "This event shall be generated when there is a change in the Reachable attribute. Its purpose is to " +
                      "provide an indication towards interested parties that the reachability of a bridged device (over " +
-                     "the non-Matter network) has changed, so they MAY take appropriate action.",
+                     "the non-Matter network) has changed, so they MAY take appropriate action." +
+                     "\n" +
+                     "After (re)start of a bridge this event MAY be generated.",
             xref: { document: "core", section: "9.13.5.1" },
             children: [ { tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M" } ]
         },

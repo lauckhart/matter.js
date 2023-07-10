@@ -98,7 +98,7 @@ function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: Clu
             );
     } else {
         factoryFunction = file.types.statements(`export function ${file.clusterName}() {`, "}")
-            .document(cluster, `This function creates ${withArticle(cluster.name)} cluster.`);
+            .document(cluster, `Use this factory function to create ${withArticle(cluster.name)} cluster.`);
     }
 
     const base = factoryFunction.expressions(`const cluster = Cluster({`, "})");

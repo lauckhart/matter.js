@@ -21,18 +21,23 @@ Matter.children.push({
         {
             tag: "attribute", name: "ActiveLocale", id: 0x0, type: "string", access: "RW VM", conformance: "M",
             constraint: "max 35", quality: "N",
-            details: "The ActiveLocale attribute SHALL represent the locale that the Node is currently configured to use " +
-                     "when conveying information. The ActiveLocale attribute SHALL be a Language Tag as defined by BCP47 " +
-                     "[https://tools.ietf.org/rfc/bcp/bcp47.txt]. The ActiveLocale attribute SHALL have a default value " +
-                     "assigned by the Vendor and SHALL be a value contained within the SupportedLocales attribute list.",
+
+            details: "The ActiveLocale attribute shall represent the locale that the Node is currently configured to use " +
+                     "when conveying information. The ActiveLocale attribute shall be a Language Tag as defined by BCP47 " +
+                     "[https://tools.ietf.org/rfc/bcp/bcp47.txt]. The ActiveLocale attribute shall have a default value " +
+                     "assigned by the Vendor and shall be a value contained within the SupportedLocales attribute list." +
+                     "\n" +
+                     "An attempt to write a value to ActiveLocale that is not present in SupportedLocales shall result in " +
+                     "a CONSTRAINT_ERROR error.",
+
             xref: { document: "core", section: "11.3.4.1" }
         },
 
         {
             tag: "attribute", name: "SupportedLocales", id: 0x1, type: "list", access: "R V", conformance: "M",
             constraint: "max 32[max 35]", quality: "F",
-            details: "The SupportedLocales attribute SHALL represent a list of locale strings that are valid values for " +
-                     "the ActiveLocale attribute. The list SHALL NOT contain any duplicate entries. The ordering of items " +
+            details: "The SupportedLocales attribute shall represent a list of locale strings that are valid values for " +
+                     "the ActiveLocale attribute. The list shall NOT contain any duplicate entries. The ordering of items " +
                      "within the list SHOULD NOT express any meaning.",
             xref: { document: "core", section: "11.3.4.2" },
             children: [ { tag: "datatype", name: "entry", type: "string" } ]

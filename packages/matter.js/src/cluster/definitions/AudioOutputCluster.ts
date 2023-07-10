@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
 import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, Attribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { GlobalAttributes, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -20,7 +20,7 @@ import { TlvString } from "../../tlv/TlvString.js";
  *
  * This cluster provides an interface for controlling the Output on a media device such as a TV.
  *
- * Use this factory function to create an AudioOutput cluster supporting a specific set of features.  Include each
+ * Use this factory function to create an AudioOutput cluster supporting a specific set of features. Include each
  * {@link AudioOutputCluster.Feature} you wish to support.
  *
  * @param features a list of {@link AudioOutputCluster.Feature} to support
@@ -44,7 +44,7 @@ export function AudioOutputCluster<T extends AudioOutputCluster.Feature[]>(...fe
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.2
  */
-export const enum OutputTypeEnum {
+export const enum OutputType {
     /**
      * HDMI
      */
@@ -64,18 +64,18 @@ export const enum OutputTypeEnum {
  */
 export const TlvOutputInfoStruct = TlvObject({
     /**
-     * This SHALL indicate the unique index into the list of outputs.
+     * This shall indicate the unique index into the list of outputs.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.1.1
      */
     index: TlvField(0, TlvUInt8),
 
     /**
-     * This SHALL indicate the type of output
+     * This shall indicate the type of output
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.1.2
      */
-    outputType: TlvField(1, TlvEnum<OutputTypeEnum>()),
+    outputType: TlvField(1, TlvEnum<OutputType>()),
 
     /**
      * The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be blank, but
@@ -87,12 +87,14 @@ export const TlvOutputInfoStruct = TlvObject({
 });
 
 /**
+ * Input to the AudioOutput selectOutput command
+ *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4
  */
 export const TlvSelectOutputRequest = TlvObject({ index: TlvField(0, TlvUInt8) });
 
 /**
- * Upon receipt, this SHALL rename the output at a specific index in the Output List.
+ * Input to the AudioOutput renameOutput command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4.2
  */
@@ -150,14 +152,14 @@ export namespace AudioOutputCluster {
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.3.1
              */
-            outputList: Attribute(0, TlvArray(TlvOutputInfoStruct), { default: [], readAcl: AccessLevel.View }),
+            outputList: Attribute(0, TlvArray(TlvOutputInfoStruct), { default: [] }),
 
             /**
              * This field contains the value of the index field of the currently selected OutputInfoStruct.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.3.2
              */
-            currentOutput: Attribute(1, TlvUInt8, { default: 0, readAcl: AccessLevel.View })
+            currentOutput: Attribute(1, TlvUInt8, { default: 0 })
         },
 
         commands: {
@@ -174,7 +176,10 @@ export namespace AudioOutputCluster {
     export const NameUpdatesComponent = ClusterComponent({
         commands: {
             /**
-             * Upon receipt, this SHALL rename the output at a specific index in the Output List.
+             * Upon receipt, this shall rename the output at a specific index in the Output List.
+             *
+             * Updates to the output name shall appear in the device’s settings menus. Name updates MAY automatically
+             * be sent to the actual device to which the output connects.
              *
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4.2
              */
@@ -183,7 +188,7 @@ export namespace AudioOutputCluster {
     });
 
     /**
-     * This cluster supports all AudioOutput features.  It may support illegal feature combinations.
+     * This cluster supports all AudioOutput features. It may support illegal feature combinations.
      *
      * If you use this cluster you must manually specify which features are active and ensure the set of active
      * features is legal per the Matter specification.

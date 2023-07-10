@@ -17,7 +17,7 @@ import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
  *
  * The User Label Cluster provides a feature to tag an endpoint with zero or more labels.
  *
- * This function creates an UserLabel cluster.
+ * Use this factory function to create an UserLabel cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.9
  */
@@ -45,7 +45,7 @@ export namespace UserLabelCluster {
     export const BaseComponent = ClusterComponent({
         attributes: {
             /**
-             * An implementation SHALL support at least 4 list entries per node for all User Label cluster instances on
+             * An implementation shall support at least 4 list entries per node for all User Label cluster instances on
              * the node.
              *
              * @see {@link MatterCoreSpecificationV1_1} § 9.9.4.1
@@ -53,7 +53,7 @@ export namespace UserLabelCluster {
             labelList: WritableAttribute(
                 0,
                 TlvArray(TlvLabelStruct),
-                { persistent: true, default: [], readAcl: AccessLevel.View, writeAcl: AccessLevel.Manage }
+                { persistent: true, default: [], writeAcl: AccessLevel.Manage }
             )
         }
     });
