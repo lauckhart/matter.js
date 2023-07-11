@@ -7,57 +7,11 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
-import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, FixedAttribute, Attribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
+import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { FixedAttribute, Attribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
-
-/**
- * Switch
- *
- * This cluster exposes interactions with a switch device, for the purpose of using those interactions by other
- * devices. Two types of switch devices are supported: latching switch (e.g. rocker switch) and momentary switch (e.g.
- * push button), distinguished with their feature flags. Interactions with the switch device are exposed as attributes
- * (for the latching switch) and as events (for both types of switches). An interested party MAY subscribe to these
- * attributes/events and thus be informed of the interactions, and can perform actions based on this, for example by
- * sending commands to perform an action such as controlling a light or a window shade.
- *
- * Use this factory function to create a Switch cluster supporting a specific set of features. Include each
- * {@link SwitchCluster.Feature} you wish to support.
- *
- * @param features a list of {@link SwitchCluster.Feature} to support
- * @returns a Switch cluster with specified features enabled
- * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11
- */
-export function SwitchCluster<T extends SwitchCluster.Feature[]>(...features: [...T]) {
-    const cluster = Cluster({
-        ...SwitchCluster.Metadata,
-        supportedFeatures: BitFlags(SwitchCluster.Metadata.features, ...features),
-        ...SwitchCluster.BaseComponent
-    });
-    extendCluster(cluster, SwitchCluster.MomentarySwitchMultiPressComponent, { momentarySwitchMultiPress: true });
-    extendCluster(cluster, SwitchCluster.LatchingSwitchComponent, { latchingSwitch: true });
-    extendCluster(cluster, SwitchCluster.MomentarySwitchComponent, { momentarySwitch: true });
-    extendCluster(cluster, SwitchCluster.MomentarySwitchLongPressComponent, { momentarySwitchLongPress: true });
-    extendCluster(cluster, SwitchCluster.MomentarySwitchReleaseComponent, { momentarySwitchRelease: true });
-
-    preventCluster(
-        cluster,
-        { momentarySwitchRelease: true, momentarySwitch: false },
-        { momentarySwitchLongPress: true, momentarySwitch: false },
-        { momentarySwitchLongPress: true, momentarySwitchRelease: false },
-        { momentarySwitchMultiPress: true, momentarySwitch: false },
-        { momentarySwitchMultiPress: true, momentarySwitchRelease: false },
-        { latchingSwitch: true, momentarySwitch: true },
-        { momentarySwitch: true, latchingSwitch: true },
-        { latchingSwitch: false, momentarySwitch: false }
-    );
-
-    return cluster as unknown as SwitchCluster.Type<BitFlags<typeof SwitchCluster.Metadata.features, T>>;
-}
 
 /**
  * Body of the Switch multiPressOngoing event
@@ -114,290 +68,328 @@ export const TlvLongReleaseEvent = TlvObject({ previousPosition: TlvField(0, Tlv
  */
 export const TlvShortReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8) });
 
-export namespace SwitchCluster {
+/**
+ * These are optional features supported by SwitchCluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.4
+ */
+export enum SwitchFeature {
     /**
-     * These are optional features supported by SwitchCluster.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.4
+     * LatchingSwitch
      */
-    export enum Feature {
+    LatchingSwitch = "LatchingSwitch",
+
+    /**
+     * MomentarySwitch
+     */
+    MomentarySwitch = "MomentarySwitch",
+
+    /**
+     * MomentarySwitchRelease
+     */
+    MomentarySwitchRelease = "MomentarySwitchRelease",
+
+    /**
+     * MomentarySwitchLongPress
+     */
+    MomentarySwitchLongPress = "MomentarySwitchLongPress",
+
+    /**
+     * MomentarySwitchMultiPress
+     */
+    MomentarySwitchMultiPress = "MomentarySwitchMultiPress"
+}
+
+/**
+ * These elements and properties are present in all Switch clusters.
+ */
+export const SwitchBase = BaseClusterComponent({
+    id: 0x3b,
+    name: "Switch",
+    revision: 1,
+
+    features: {
         /**
          * LatchingSwitch
          */
-        LatchingSwitch = "LatchingSwitch",
+        latchingSwitch: BitFlag(0),
 
         /**
          * MomentarySwitch
          */
-        MomentarySwitch = "MomentarySwitch",
+        momentarySwitch: BitFlag(1),
 
         /**
          * MomentarySwitchRelease
          */
-        MomentarySwitchRelease = "MomentarySwitchRelease",
+        momentarySwitchRelease: BitFlag(2),
 
         /**
          * MomentarySwitchLongPress
          */
-        MomentarySwitchLongPress = "MomentarySwitchLongPress",
+        momentarySwitchLongPress: BitFlag(3),
 
         /**
          * MomentarySwitchMultiPress
          */
-        MomentarySwitchMultiPress = "MomentarySwitchMultiPress"
+        momentarySwitchMultiPress: BitFlag(4)
+    },
+
+    attributes: {
+        /**
+         * This attribute shall indicate the maximum number of positions the switch has. Any kind of switch has a
+         * minimum of 2 positions. Also see Section 1.11.10, “NumberOfPositions > 2” for the case NumberOfPositions>2.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.1
+         */
+        numberOfPositions: FixedAttribute(0, TlvUInt8.bound({ min: 2 }), { default: 2 }),
+
+        /**
+         * This attribute shall indicate the position of the switch. The valid range is zero to NumberOfPositions-1.
+         * CurrentPosition value 0 shall be assigned to the default position of the switch: for example the "open"
+         * state of a rocker switch, or the "idle" state of a push button switch.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.2
+         */
+        currentPosition: Attribute(1, TlvUInt8, { persistent: true, default: 0 })
     }
+});
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
-        typeof Metadata
-        & { attributes: GlobalAttributes<typeof Metadata.features> }
-        & { supportedFeatures: T }
-        & typeof BaseComponent
-        & (T extends { momentarySwitchMultiPress: true } ? typeof MomentarySwitchMultiPressComponent : {})
-        & (T extends { latchingSwitch: true } ? typeof LatchingSwitchComponent : {})
-        & (T extends { momentarySwitch: true } ? typeof MomentarySwitchComponent : {})
-        & (T extends { momentarySwitchLongPress: true } ? typeof MomentarySwitchLongPressComponent : {})
-        & (T extends { momentarySwitchRelease: true } ? typeof MomentarySwitchReleaseComponent : {})
-        & (T extends { momentarySwitchRelease: true, momentarySwitch: false } ? never : {})
-        & (T extends { momentarySwitchLongPress: true, momentarySwitch: false } ? never : {})
-        & (T extends { momentarySwitchLongPress: true, momentarySwitchRelease: false } ? never : {})
-        & (T extends { momentarySwitchMultiPress: true, momentarySwitch: false } ? never : {})
-        & (T extends { momentarySwitchMultiPress: true, momentarySwitchRelease: false } ? never : {})
-        & (T extends { latchingSwitch: true, momentarySwitch: true } ? never : {})
-        & (T extends { momentarySwitch: true, latchingSwitch: true } ? never : {})
-        & (T extends { latchingSwitch: false, momentarySwitch: false } ? never : {});
+/**
+ * A SwitchCluster supports these elements if it supports feature MomentarySwitchMultiPress.
+ */
+export const MomentarySwitchMultiPressComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute shall indicate how many consecutive presses can be detected and reported by a momentary
+         * switch which supports multi-press (e.g. it will report the value 3 if it can detect single press, double
+         * press and triple press, but not quad press and beyond).
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.3
+         */
+        multiPressMax: FixedAttribute(2, TlvUInt8.bound({ min: 2 }), { default: 2 })
+    },
+
+    events: {
+        /**
+         * This event shall be generated to indicate how many times the momentary switch has been pressed in a
+         * multi-press sequence, during that sequence. See Section 1.11.9, “Sequence of events for MultiPress” below.
+         *
+         * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
+         *
+         * The CurrentNumberOfPressesCounted field shall contain:
+         *
+         *   • a value of 2 when the second press of a multi-press sequence has been detected,
+         *
+         *   • a value of 3 when the third press of a multi-press sequence has been detected,
+         *
+         *   • a value of N when the Nth press of a multi-press sequence has been detected.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
+         */
+        multiPressOngoing: Event(5, EventPriority.Info, TlvMultiPressOngoingEvent),
+
+        /**
+         * This event shall be generated to indicate how many times the momentary switch has been pressed in a
+         * multi-press sequence, after it has been detected that the sequence has ended. See Section 1.11.9, “Sequence
+         * of events for MultiPress” below.
+         *
+         * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
+         * prior to release.
+         *
+         * The TotalNumberOfPressesCounted field shall contain:
+         *
+         *   • a value of 1 when there was one press in a multi-press sequence (and the sequence has ended),
+         *
+         *     i.e. there was no double press (or more),
+         *
+         *   • a value of 2 when there were exactly two presses in a multi-press sequence (and the sequence has ended),
+         *
+         *   • a value of 3 when there were exactly three presses in a multi-press sequence (and the sequence has
+         *     ended),
+         *
+         *   • a value of N when there were exactly N presses in a multi-press sequence (and the sequence has ended).
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
+         */
+        multiPressComplete: Event(6, EventPriority.Info, TlvMultiPressCompleteEvent)
+    }
+});
+
+/**
+ * A SwitchCluster supports these elements if it supports feature LatchingSwitch.
+ */
+export const LatchingSwitchComponent = ClusterComponent({
+    events: {
+        /**
+         * This event shall be generated, when the latching switch is moved to a new position. It MAY have been delayed
+         * by debouncing within the switch.
+         *
+         * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
+         */
+        switchLatched: Event(0, EventPriority.Info, TlvSwitchLatchedEvent)
+    }
+});
+
+/**
+ * A SwitchCluster supports these elements if it supports feature MomentarySwitch.
+ */
+export const MomentarySwitchComponent = ClusterComponent({
+    events: {
+        /**
+         * This event shall be generated, when the momentary switch starts to be pressed (after debouncing).
+         *
+         * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
+         */
+        initialPress: Event(1, EventPriority.Info, TlvInitialPressEvent)
+    }
+});
+
+/**
+ * A SwitchCluster supports these elements if it supports feature MomentarySwitchLongPress.
+ */
+export const MomentarySwitchLongPressComponent = ClusterComponent({
+    events: {
+        /**
+         * This event shall be generated, when the momentary switch has been pressed for a "long" time (this time
+         * interval is manufacturer determined (e.g. since it depends on the switch physics)).
+         *
+         * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
+         */
+        longPress: Event(2, EventPriority.Info, TlvLongPressEvent),
+
+        /**
+         * This event shall be generated, when the momentary switch has been released (after debouncing) and after
+         * having been pressed for a long time, i.e. this event shall be generated when the switch is released if a
+         * LongPress event has been generated since since the previous InitialPress event. Also see Section 1.11.8,
+         * “Sequence of generated events”.
+         *
+         * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
+         * prior to release.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
+         */
+        longRelease: Event(4, EventPriority.Info, TlvLongReleaseEvent)
+    }
+});
+
+/**
+ * A SwitchCluster supports these elements if it supports feature MomentarySwitchRelease.
+ */
+export const MomentarySwitchReleaseComponent = ClusterComponent({
+    events: {
+        /**
+         * This event shall be generated, when the momentary switch has been released (after debouncing).
+         *
+         *   • If the server supports the Momentary Switch LongPress (MSL) feature, this event shall be generated when
+         *     the switch is released if no LongPress event had been generated since the previous InitialPress event.
+         *
+         *   • If the server does not support the Momentary Switch LongPress (MSL) feature, this event shall be
+         *     generated when the switch is released - even when the switch was pressed for a long time.
+         *
+         *   • Also see Section 1.11.8, “Sequence of generated events”.
+         *
+         * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
+         * prior to release.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
+         */
+        shortRelease: Event(3, EventPriority.Info, TlvShortReleaseEvent)
+    }
+});
+
+/**
+ * Switch
+ *
+ * This cluster exposes interactions with a switch device, for the purpose of using those interactions by other devices.
+ *
+ * Two types of switch devices are supported: latching switch (e.g. rocker switch) and momentary switch (e.g. push
+ * button), distinguished with their feature flags.
+ *
+ * Interactions with the switch device are exposed as attributes (for the latching switch) and as events (for both
+ * types of switches).
+ *
+ * An interested client MAY subscribe to these attributes/events and thus be informed of the interactions, and can
+ * perform actions based on this, for example by sending commands to perform an action such as controlling a light or a
+ * window shade.
+ *
+ * SwitchCluster supports optional features that you can enable with the SwitchCluster.with factory method.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11
+ */
+export const SwitchCluster = ExtensibleCluster({
+    ...SwitchBase,
 
     /**
-     * Switch cluster metadata.
+     * Use this factory method to create a Switch cluster with support for optional features. Include each
+     * {@link SwitchFeature} you wish to support.
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11
+     * @param features the optional features to support
+     * @returns a Switch cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
      */
-    export const Metadata = ClusterMetadata({
-        id: 0x3b,
-        name: "Switch",
-        revision: 1,
+    factory: <T extends `${SwitchFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, SwitchFeature);
+        const cluster = Cluster({ ...SwitchBase, supportedFeatures: BitFlags(SwitchBase.features, ...features) });
+        extendCluster(cluster, LatchingSwitchComponent, { latchingSwitch: true });
+        extendCluster(cluster, MomentarySwitchComponent, { momentarySwitch: true });
+        extendCluster(cluster, MomentarySwitchLongPressComponent, { momentarySwitchLongPress: true });
+        extendCluster(cluster, MomentarySwitchReleaseComponent, { momentarySwitchRelease: true });
 
-        features: {
-            /**
-             * LatchingSwitch
-             */
-            latchingSwitch: BitFlag(0),
+        preventCluster(
+            cluster,
+            { momentarySwitchRelease: true, momentarySwitch: false },
+            { momentarySwitchLongPress: true, momentarySwitch: false },
+            { momentarySwitchLongPress: true, momentarySwitchRelease: false },
+            { momentarySwitchMultiPress: true, momentarySwitch: false },
+            { momentarySwitchMultiPress: true, momentarySwitchRelease: false },
+            { latchingSwitch: true, momentarySwitch: true },
+            { momentarySwitch: true, latchingSwitch: true },
+            { latchingSwitch: false, momentarySwitch: false }
+        );
 
-            /**
-             * MomentarySwitch
-             */
-            momentarySwitch: BitFlag(1),
+        return cluster as unknown as SwitchExtension<BitFlags<typeof SwitchBase.features, T>>;
+    }
+});
 
-            /**
-             * MomentarySwitchRelease
-             */
-            momentarySwitchRelease: BitFlag(2),
+export type SwitchExtension<SF extends TypeFromPartialBitSchema<typeof SwitchBase.features>> =
+    ClusterForBaseCluster<typeof SwitchBase, SF>
+    & { supportedFeatures: SF }
+    & (SF extends { momentarySwitchMultiPress: true } ? typeof MomentarySwitchMultiPressComponent : {})
+    & (SF extends { latchingSwitch: true } ? typeof LatchingSwitchComponent : {})
+    & (SF extends { momentarySwitch: true } ? typeof MomentarySwitchComponent : {})
+    & (SF extends { momentarySwitchLongPress: true } ? typeof MomentarySwitchLongPressComponent : {})
+    & (SF extends { momentarySwitchRelease: true } ? typeof MomentarySwitchReleaseComponent : {})
+    & (SF extends { momentarySwitchRelease: true, momentarySwitch: false } ? never : {})
+    & (SF extends { momentarySwitchLongPress: true, momentarySwitch: false } ? never : {})
+    & (SF extends { momentarySwitchLongPress: true, momentarySwitchRelease: false } ? never : {})
+    & (SF extends { momentarySwitchMultiPress: true, momentarySwitch: false } ? never : {})
+    & (SF extends { momentarySwitchMultiPress: true, momentarySwitchRelease: false } ? never : {})
+    & (SF extends { latchingSwitch: true, momentarySwitch: true } ? never : {})
+    & (SF extends { momentarySwitch: true, latchingSwitch: true } ? never : {})
+    & (SF extends { latchingSwitch: false, momentarySwitch: false } ? never : {});
 
-            /**
-             * MomentarySwitchLongPress
-             */
-            momentarySwitchLongPress: BitFlag(3),
+/**
+ * This cluster supports all Switch features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const SwitchComplete = Cluster({
+    ...SwitchCluster,
+    attributes: { ...MomentarySwitchMultiPressComponent.attributes },
 
-            /**
-             * MomentarySwitchMultiPress
-             */
-            momentarySwitchMultiPress: BitFlag(4)
-        }
-    });
-
-    /**
-     * A SwitchCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This attribute shall indicate the maximum number of positions the switch has. Any kind of switch has a
-             * minimum of 2 positions. Also see Section 1.11.10, “NumberOfPositions > 2” for the case
-             * NumberOfPositions>2.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.1
-             */
-            numberOfPositions: FixedAttribute(0, TlvUInt8.bound({ min: 2 }), { default: 2 }),
-
-            /**
-             * This attribute shall indicate the position of the switch. The valid range is zero to
-             * NumberOfPositions-1. CurrentPosition value 0 shall be assigned to the default position of the switch:
-             * for example the "open" state of a rocker switch, or the "idle" state of a push button switch.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.2
-             */
-            currentPosition: Attribute(1, TlvUInt8, { persistent: true, default: 0 })
-        }
-    });
-
-    /**
-     * A SwitchCluster supports these elements if it supports feature MomentarySwitchMultiPress.
-     */
-    export const MomentarySwitchMultiPressComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This attribute shall indicate how many consecutive presses can be detected and reported by a momentary
-             * switch which supports multi-press (e.g. it will report the value 3 if it can detect single press, double
-             * press and triple press, but not quad press and beyond).
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.3
-             */
-            multiPressMax: FixedAttribute(2, TlvUInt8.bound({ min: 2 }), { default: 2 })
-        },
-
-        events: {
-            /**
-             * This event shall be generated to indicate how many times the momentary switch has been pressed in a
-             * multi-press sequence, during that sequence. See Section 1.11.9, “Sequence of events for MultiPress”
-             * below.
-             *
-             * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
-             *
-             * The CurrentNumberOfPressesCounted field shall contain:
-             *
-             *   • a value of 2 when the second press of a multi-press sequence has been detected,
-             *
-             *   • a value of 3 when the third press of a multi-press sequence has been detected,
-             *
-             *   • a value of N when the Nth press of a multi-press sequence has been detected.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
-             */
-            multiPressOngoing: Event(5, EventPriority.Info, TlvMultiPressOngoingEvent),
-
-            /**
-             * This event shall be generated to indicate how many times the momentary switch has been pressed in a
-             * multi-press sequence, after it has been detected that the sequence has ended. See Section 1.11.9,
-             * “Sequence of events for MultiPress” below.
-             *
-             * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
-             * prior to release.
-             *
-             * The TotalNumberOfPressesCounted field shall contain:
-             *
-             *   • a value of 1 when there was one press in a multi-press sequence (and the sequence has ended),
-             *
-             *     i.e. there was no double press (or more),
-             *
-             *   • a value of 2 when there were exactly two presses in a multi-press sequence (and the sequence has
-             *     ended),
-             *
-             *   • a value of 3 when there were exactly three presses in a multi-press sequence (and the sequence has
-             *     ended),
-             *
-             *   • a value of N when there were exactly N presses in a multi-press sequence (and the sequence has
-             *     ended).
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
-             */
-            multiPressComplete: Event(6, EventPriority.Info, TlvMultiPressCompleteEvent)
-        }
-    });
-
-    /**
-     * A SwitchCluster supports these elements if it supports feature LatchingSwitch.
-     */
-    export const LatchingSwitchComponent = ClusterComponent({
-        events: {
-            /**
-             * This event shall be generated, when the latching switch is moved to a new position. It MAY have been
-             * delayed by debouncing within the switch.
-             *
-             * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
-             */
-            switchLatched: Event(0, EventPriority.Info, TlvSwitchLatchedEvent)
-        }
-    });
-
-    /**
-     * A SwitchCluster supports these elements if it supports feature MomentarySwitch.
-     */
-    export const MomentarySwitchComponent = ClusterComponent({
-        events: {
-            /**
-             * This event shall be generated, when the momentary switch starts to be pressed (after debouncing).
-             *
-             * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
-             */
-            initialPress: Event(1, EventPriority.Info, TlvInitialPressEvent)
-        }
-    });
-
-    /**
-     * A SwitchCluster supports these elements if it supports feature MomentarySwitchLongPress.
-     */
-    export const MomentarySwitchLongPressComponent = ClusterComponent({
-        events: {
-            /**
-             * This event shall be generated, when the momentary switch has been pressed for a "long" time (this time
-             * interval is manufacturer determined (e.g. since it depends on the switch physics)).
-             *
-             * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
-             */
-            longPress: Event(2, EventPriority.Info, TlvLongPressEvent),
-
-            /**
-             * This event shall be generated, when the momentary switch has been released (after debouncing) and after
-             * having been pressed for a long time, i.e. this event shall be generated when the switch is released if a
-             * LongPress event has been generated since since the previous InitialPress event. Also see Section 1.11.8,
-             * “Sequence of generated events”.
-             *
-             * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
-             * prior to release.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
-             */
-            longRelease: Event(4, EventPriority.Info, TlvLongReleaseEvent)
-        }
-    });
-
-    /**
-     * A SwitchCluster supports these elements if it supports feature MomentarySwitchRelease.
-     */
-    export const MomentarySwitchReleaseComponent = ClusterComponent({
-        events: {
-            /**
-             * This event shall be generated, when the momentary switch has been released (after debouncing).
-             *
-             *   • If the server supports the Momentary Switch LongPress (MSL) feature, this event shall be generated
-             *     when the switch is released if no LongPress event had been generated since the previous InitialPress
-             *     event.
-             *
-             *   • If the server does not support the Momentary Switch LongPress (MSL) feature, this event shall be
-             *     generated when the switch is released - even when the switch was pressed for a long time.
-             *
-             *   • Also see Section 1.11.8, “Sequence of generated events”.
-             *
-             * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just
-             * prior to release.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
-             */
-            shortRelease: Event(3, EventPriority.Info, TlvShortReleaseEvent)
-        }
-    });
-
-    /**
-     * This cluster supports all Switch features. It may support illegal feature combinations.
-     *
-     * If you use this cluster you must manually specify which features are active and ensure the set of active
-     * features is legal per the Matter specification.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes, ...MomentarySwitchMultiPressComponent.attributes },
-
-        events: {
-            ...MomentarySwitchMultiPressComponent.events,
-            ...LatchingSwitchComponent.events,
-            ...MomentarySwitchComponent.events,
-            ...MomentarySwitchLongPressComponent.events,
-            ...MomentarySwitchReleaseComponent.events
-        }
-    });
-}
+    events: {
+        ...MomentarySwitchMultiPressComponent.events,
+        ...LatchingSwitchComponent.events,
+        ...MomentarySwitchComponent.events,
+        ...MomentarySwitchLongPressComponent.events,
+        ...MomentarySwitchReleaseComponent.events
+    }
+});

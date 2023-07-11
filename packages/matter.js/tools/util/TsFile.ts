@@ -97,7 +97,7 @@ export abstract class Entry {
         }
 
         if (lines.length) {
-            // Remove blank lines between jsdoc directies except for @see
+            // Remove blank lines between jsdoc directives except for @see
             for (let i = 0; i < lines.length - 1; i++) {
                 if (lines[i][0] == "@" && lines[i + 1] == "" && lines[i + 2][0] == "@" && !lines[i + 2].startsWith("@see")) {
                     lines.splice(i + 1, 1);
@@ -166,13 +166,20 @@ export class Block extends Entry {
     serialize(linePrefix: string) {
         const pieces = new Array<string>();
         for (let i = 0; i < this.length; i++) {
-            const serialized = this.get(i).toString(linePrefix);
-            pieces.push(`${serialized}${this.delimiterAfter(i, serialized)}`);
+            const entry = this.get(i);
+            const text = entry.toString(linePrefix);
+
+            if (entry instanceof Block && text === "") {
+                continue;
+            }
+
+            pieces.push(`${text}${this.delimiterAfter(i, text)}`);
+
             if (i < this.length - 1) {
-                if (this.get(i) instanceof Block) {
+                if (entry instanceof Block) {
                     // Always have blank line after blocks with following content
                     pieces.push("");
-                } else if (this.get(i) instanceof Atom && (this.get(i + 1).isDocumented)) {
+                } else if (entry instanceof Atom && (this.get(i + 1).isDocumented)) {
                     // Always have blank line after atoms followed by a comment
                     pieces.push("");
                 }
@@ -321,7 +328,13 @@ abstract class NestedBlock extends Block {
 
     override serialize(linePrefix = "") {
         const childLinePrefix = `${linePrefix}${INDENT}`;
-        const serializedEntries = this.entries.map(e => e.toString(childLinePrefix));
+        const serializedEntries = Array<string>();
+        for (const entry of this.entries) {
+            const text = entry.toString(childLinePrefix);
+            if (!(entry instanceof Block) || text !== "") {
+                serializedEntries.push(text);
+            }
+        }
         return this.layOutEntries(linePrefix, serializedEntries);
     }
 

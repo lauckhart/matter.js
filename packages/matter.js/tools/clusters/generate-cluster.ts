@@ -19,7 +19,8 @@ import { Block } from "../util/TsFile.js";
 
 const logger = Logger.get("generate-cluster");
 
-export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
+export function generateCluster(file: ClusterFile) {
+    const cluster = file.cluster;
     logger.info(`${cluster.name} → ${file.name}.ts`);
 
     // Load features
@@ -31,16 +32,9 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
     const variance = ClusterVariance(cluster);
     const illegal = variance.illegal.map(bitmap => translateBitmap(bitmap, featureNames));
 
-    // Generate the factory function
-    if (cluster.id !== undefined) {
-        generateFactory(file, cluster, variance, featureNames, illegal);
-    }
-
-    const ns = file.statements(`export namespace ${file.clusterName} {`, "}");
-
     // Generate feature enum
     if (features.length) {
-        const featureEnum = ns.expressions("export enum Feature {", "}")
+        const featureEnum = file.expressions(`export enum ${cluster.name}Feature {`, "}")
             .document({ description: `These are optional features supported by ${file.clusterName}.`, xref: cluster.featureMap.xref });
         for (const f of features) {
             const name = camelize(f.description || f.name);
@@ -49,24 +43,64 @@ export function generateCluster(file: ClusterFile, cluster: ClusterModel) {
         }
     }
 
-    if (cluster.id !== undefined) {
-        // Generate the conditional type that defines cluster structure
-        generateType(ns, variance, featureNames, illegal);
-
-        // Generate metadata
-        generateMetadata(ns, cluster);
+    // Generate the base component
+    let base
+    if (cluster.id === undefined) {
+        file.addImport("cluster/ClusterFactory", "ClusterComponent");
+        base = file.expressions(`export const ${cluster.name}Base = ClusterComponent({`, "})")
+            .document(`${cluster.name} is a derived cluster, not to be used directly.  These elements are present in all clusters derived from ${cluster.name}.`);
+    } else if (!variance.componentized) {
+        file.addImport("cluster/Cluster", "Cluster");
+        base = file.expressions(`export const ${file.clusterName} = Cluster({`, "})")
+            .document(cluster);
+        generateMetadata(base, cluster);
+    } else {
+        file.addImport("cluster/ClusterFactory", "BaseClusterComponent");
+        base = file.expressions(`export const ${cluster.name}Base = BaseClusterComponent({`, "})")
+            .document(`These elements and properties are present in all ${cluster.name} clusters.`);
+        generateMetadata(base, cluster);
     }
+    const gen = new ClusterComponentGenerator(file, cluster);
+    gen.populateComponent(variance.base, base);
 
-    // Generate components
-    const gen = new ClusterComponentGenerator(ns, cluster);
+    // Generate other components
     for (const component of variance.components) {
         gen.defineComponent(component);
     }
 
-    if (cluster.id !== undefined) {
-        // Generate the "complete" cluster
-        generateExhaustive(ns, cluster, variance);
+    // The rest of this code only applies to derived componentized clusters
+    if (cluster.id === undefined || !variance.componentized) {
+        return;
     }
+
+    // Create the default cluster instance
+    if (variance.requiresFeatures) {
+        // The cluster requires some features to be present
+        file.addImport("cluster/ClusterFactory", "ExtensionRequiredCluster");
+        const instance = file.expressions(`export const ${file.clusterName} = ExtensionRequiredCluster({`, "})")
+            .document(
+                cluster,
+                `Per the Matter specification you cannot use ${file.clusterName} without enabling certain feature combinations.  `
+                    + `You must use the ${file.clusterName}.with factory method to obtain a working cluster.`
+            );
+        generateFactory(instance, variance, featureNames, illegal);
+    } else {
+        // The cluster has optional features but functions without them
+        file.addImport("cluster/ClusterFactory", "ExtensibleCluster");
+        const instance = file.expressions(`export const ${file.clusterName} = ExtensibleCluster({`, "})")
+            .document(
+                cluster,
+                `${file.clusterName} supports optional features that you can enable with the ${file.clusterName}.with factory method.`
+            );
+        instance.atom(`...${cluster.name}Base`);
+        generateFactory(instance, variance, featureNames, illegal);
+    }
+
+    // Generate the conditional type that defines cluster structure
+    generateExtensionType(file, variance, featureNames, illegal);
+
+    // Generate the "complete" cluster
+    generateExhaustive(file, variance);
 }
 
 function withArticle(what: string) {
@@ -83,38 +117,33 @@ function withArticle(what: string) {
     }
 }
 
-function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
+function generateFactory(base: Block, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
+    const file = base.file as ClusterFile;
     let factoryFunction;
-    if (variance.componentized) {
-        factoryFunction = file.types.statements(`export function ${file.clusterName}<T extends ${file.clusterName}.Feature[]>(...features: [...T]) {`, "}")
-            .document(
-                cluster,
-                [
-                    `Use this factory function to create ${withArticle(cluster.name)} cluster supporting a specific set of features.  Include each {@link ${file.clusterName}.Feature} you wish to support.`,
-                    `@param features a list of {@link ${file.clusterName}.Feature} to support`,
-                    `@returns ${withArticle(cluster.name)} cluster with specified features enabled`,
-                    "@throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification"
-                ].join("\n")
-            );
-    } else {
-        factoryFunction = file.types.statements(`export function ${file.clusterName}() {`, "}")
-            .document(cluster, `Use this factory function to create ${withArticle(cluster.name)} cluster.`);
-    }
+    factoryFunction = base.statements(`factory: <T extends \`\${${file.cluster.name}Feature}\`[]>(...features: [...T]) => {`, "}")
+        .document(
+            [
+                `Use this factory method to create ${withArticle(file.cluster.name)} cluster with support for optional features.  Include each {@link ${file.cluster.name}Feature} you wish to support.`,
+                `@param features the optional features to support`,
+                `@returns ${withArticle(file.cluster.name)} cluster with specified features enabled`,
+                "@throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification"
+            ].join("\n")
+        );
 
-    const base = factoryFunction.expressions(`const cluster = Cluster({`, "})");
-    base.atom(`...${file.clusterName}.Metadata`);
-    if (variance.componentized) {
-        file.addImport("schema/BitmapSchema", "BitFlags");
-        base.atom(`supportedFeatures: BitFlags(${file.clusterName}.Metadata.features, ...features)`);
-    }
-    base.atom(`...${file.clusterName}.BaseComponent`);
+    file.addImport("cluster/ClusterFactory", "validateFeatureSelection");
+    factoryFunction.atom(`validateFeatureSelection(features, ${file.cluster.name}Feature)`);
+
+    const cluster = factoryFunction.expressions(`const cluster = Cluster({`, "})");
+    cluster.atom(`...${file.cluster.name}Base`);
+    file.addImport("schema/BitmapSchema", "BitFlags");
+    cluster.atom(`supportedFeatures: BitFlags(${file.cluster.name}Base.features, ...features)`);
 
     for (let i = 1; i < variance.components.length; i++) {
         const component = variance.components[i];
         file.addImport("cluster/ClusterFactory", "extendCluster");
         const extension = factoryFunction.expressions(`extendCluster(`, ")");
         extension.atom("cluster");
-        extension.atom(`${file.clusterName}.${component.name}Component`);
+        extension.atom(`${component.name}Component`);
         if (component.condition) {
             const bitmaps = conditionToBitmaps(component.condition, featureNames);
             for (const bitmap of bitmaps) {
@@ -131,64 +160,50 @@ function generateFactory(file: ClusterFile, cluster: ClusterModel, variance: Clu
         illegal.forEach(bitmap => prevent.value(bitmap));
     }
 
-    if (variance.componentized) {
-        factoryFunction.atom(`return cluster as unknown as ${file.clusterName}.Type<BitFlags<typeof ${file.clusterName}.Metadata.features, T>>`);
-    } else {
-        factoryFunction.atom(`return cluster as unknown as ${file.clusterName}.Type`);
-    }
+    factoryFunction.atom(`return cluster as unknown as ${file.cluster.name}Extension<BitFlags<typeof ${file.cluster.name}Base.features, T>>`);
 }
 
-function generateType(ns: Block, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
+function generateExtensionType(file: ClusterFile, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
     let factoryType;
 
-    ns.file.addImport("cluster/Cluster", "GlobalAttributes");
-    if (variance.componentized) {
-        ns.file.addImport("schema/BitmapSchema", "TypeFromPartialBitSchema");
-        factoryType = Array<string>(
-            "export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =",
-            "    typeof Metadata",
-            "    & { attributes: GlobalAttributes<typeof Metadata.features> }",
-            "    & { supportedFeatures: T }"
-        );
-    } else {
-        factoryType = Array<string>(
-            "export type Type =",
-            "    typeof Metadata",
-            "    & { attributes: GlobalAttributes<{}> }"
-        )
-    }
+    file.addImport("cluster/ClusterFactory", "ClusterForBaseCluster");
+    file.addImport("schema/BitmapSchema", "TypeFromPartialBitSchema");
+    factoryType = Array<string>(
+        `export type ${file.cluster.name}Extension<SF extends TypeFromPartialBitSchema<typeof ${file.cluster.name}Base.features>> =`,
+        `    ClusterForBaseCluster<typeof ${file.cluster.name}Base, SF>`,
+        `    & { supportedFeatures: SF }`
+    );
 
     for (const component of variance.components) {
         let componentPhrase = `typeof ${component.name}Component`;
         if (component.condition) {
             const test = conditionToBitmaps(component.condition, featureNames).map(serialize).join(" | ");
-            componentPhrase = `(T extends ${test} ? ${componentPhrase} : {})`
+            componentPhrase = `(SF extends ${test} ? ${componentPhrase} : {})`
         }
 
         factoryType.push(`    & ${componentPhrase}`);
     }
 
     for (const bitmap of illegal) {
-        factoryType.push(`    & (T extends ${serialize(bitmap)} ? never : {})`)
+        factoryType.push(`    & (SF extends ${serialize(bitmap)} ? never : {})`)
     }
 
-    ns.atom(factoryType.join("\n"));
+    file.atom(factoryType.join("\n"));
 }
 
-function generateMetadata(ns: Block, cluster: ClusterModel) {
-    ns.file.addImport("cluster/ClusterFactory", "ClusterMetadata");
-    const metadata = ns.expressions(`export const Metadata = ClusterMetadata({`, `})`)
-        .document({ details: `${cluster.name} cluster metadata.`, xref: cluster.xref });
-    if (cluster.id !== undefined) {
-        metadata.atom("id", `0x${cluster.id.toString(16)}`);
+function generateMetadata(base: Block, cluster: ClusterModel) {
+    if (cluster.id === undefined) {
+        return;
     }
-    metadata.atom("name", `${JSON.stringify(cluster.name)}`);
-    metadata.atom("revision", `${JSON.stringify(cluster.revision)}`);
 
-    const featureBlock = metadata.expressions("features: {", "}");
+    base.atom("id", `0x${cluster.id.toString(16)}`);
+    base.atom("name", `${JSON.stringify(cluster.name)}`);
+    base.atom("revision", `${JSON.stringify(cluster.revision)}`);
+
+    const featureBlock = base.expressions("features: {", "}");
     const features = cluster.features;
     if (features.length) {
-        ns.file.addImport("schema/BitmapSchema", "BitFlag");
+        base.file.addImport("schema/BitmapSchema", "BitFlag");
         features.forEach(feature => {
             const name = camelize(feature.description || feature.name, false);
             featureBlock.atom(name, `BitFlag(${feature.effectiveId})`)
@@ -197,18 +212,14 @@ function generateMetadata(ns: Block, cluster: ClusterModel) {
     }
 }
 
-function generateExhaustive(ns: Block, cluster: ClusterModel, variance: ClusterVariance) {
-    ns.file.addImport("cluster/Cluster", "Cluster");
-    const complete = ns.expressions("export const Complete = Cluster({", "})");
+function generateExhaustive(file: ClusterFile, variance: ClusterVariance) {
+    file.addImport("cluster/Cluster", "Cluster");
+    const complete = file.expressions(`export const ${file.cluster.name}Complete = Cluster({`, "})");
 
-    if (variance.componentized) {
-        complete.document(`This cluster supports all ${cluster.name} features.  It may support illegal feature combinations.\n` +
-            "If you use this cluster you must manually specify which features are active and ensure the set of active features is legal per the Matter specification.");
-    } else {
-        complete.document(`This cluster supports all ${cluster.name} features.`);
-    }
+    complete.document(`This cluster supports all ${file.cluster.name} features.  It may support illegal feature combinations.\n` +
+        "If you use this cluster you must manually specify which features are active and ensure the set of active features is legal per the Matter specification.");
 
-    complete.atom("...Metadata");
+    complete.atom(`...${file.clusterName}`);
 
     const elementSources = {} as { [name: string]: string[] };
 

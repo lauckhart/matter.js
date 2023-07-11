@@ -12,8 +12,9 @@ Matter.children.push({
     tag: "cluster", name: "GeneralDiagnostics", id: 0x33, classification: "node",
     description: "General Diagnostics",
     details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire " +
-             "standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node " +
-             "in diagnosing potential problems.",
+             "standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrator in " +
+             "diagnosing potential problems. The General Diagnostics Cluster attempts to centralize all metrics " +
+             "that are broadly relevant to the majority of Nodes.",
     xref: { document: "core", section: "11.11" },
 
     children: [

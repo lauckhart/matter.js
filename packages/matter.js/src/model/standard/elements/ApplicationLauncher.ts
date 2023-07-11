@@ -11,8 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "ApplicationLauncher", id: 0x50c, classification: "application",
     description: "Application Launcher",
-    details: "This cluster provides an interface for launching content on a media player device such as a TV or " +
-             "Speaker.",
+    details: "This cluster provides an interface for launching applications on a Video Player device such as a TV.",
     xref: { document: "cluster", section: "6.4" },
 
     children: [

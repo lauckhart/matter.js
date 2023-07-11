@@ -7,8 +7,7 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, FixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
+import { Cluster, FixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -17,20 +16,6 @@ import { TlvString } from "../../tlv/TlvString.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-
-/**
- * Groups
- *
- * Attributes and commands for group configuration and manipulation.
- *
- * Use this factory function to create a Groups cluster.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3
- */
-export function GroupsCluster() {
-    const cluster = Cluster({ ...GroupsCluster.Metadata, ...GroupsCluster.BaseComponent });
-    return cluster as unknown as GroupsCluster.Type;
-}
 
 /**
  * Bit definitions for TlvNameSupport
@@ -149,123 +134,116 @@ export const TlvAddGroupIfIdentifyingRequest = TlvObject({
     groupName: TlvField(1, TlvString.bound({ maxLength: 16 }))
 });
 
-export namespace GroupsCluster {
+/**
+ * These are optional features supported by GroupsCluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.4
+ */
+export enum GroupsFeature {
     /**
-     * These are optional features supported by GroupsCluster.
+     * GroupNames
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.4
+     * The ability to store a name for a group.
      */
-    export enum Feature {
+    GroupNames = "GroupNames"
+}
+
+/**
+ * Groups
+ *
+ * The Groups cluster manages, per endpoint, the content of the node-wide Group Table that is part of the underlying
+ * interaction layer.
+ *
+ * In a network supporting fabrics, group IDs referenced by attributes or other elements of this cluster are scoped to
+ * the accessing fabric.
+ *
+ * The Groups cluster is scoped to the endpoint. Groups cluster commands support discovering the endpoint membership in
+ * a group, adding the endpoint to a group, removing the endpoint from a group, removing endpoint membership from all
+ * groups. All commands defined in this cluster shall only affect groups scoped to the accessing fabric.
+ *
+ * When group names are supported, the server stores a name string, which is set by the client for each assigned group
+ * and indicated in response to a client request.
+ *
+ * Note that configuration of group addresses for outgoing commands is achieved using the Message Layer mechanisms
+ * where the Group Table is not involved. Hence this cluster does not play a part in that.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3
+ */
+export const GroupsCluster = Cluster({
+    id: 0x4,
+    name: "Groups",
+    revision: 1,
+
+    features: {
         /**
          * GroupNames
          *
          * The ability to store a name for a group.
          */
-        GroupNames = "GroupNames"
+        groupNames: BitFlag(0)
+    },
+
+    attributes: {
+        /**
+         * This attribute provides legacy, read-only access to whether the Group Names feature is supported. The most
+         * significant bit, bit 7, shall be equal to bit 0 of the FeatureMap attribute. All other bits shall be 0.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.6.1
+         */
+        nameSupport: FixedAttribute(0, TlvNameSupport)
+    },
+
+    commands: {
+        /**
+         * The AddGroup command allows a client to add group membership in a particular group for the server endpoint.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.1
+         */
+        addGroup: Command(0, TlvAddGroupRequest, 0, TlvAddGroupResponse),
+
+        /**
+         * The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse command
+         * containing the name string for a particular group.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.2
+         */
+        viewGroup: Command(1, TlvViewGroupRequest, 1, TlvViewGroupResponse),
+
+        /**
+         * The GetGroupMembership command allows a client to inquire about the group membership of the server endpoint,
+         * in a number of ways.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.3
+         */
+        getGroupMembership: Command(2, TlvGetGroupMembershipRequest, 2, TlvGetGroupMembershipResponse),
+
+        /**
+         * The RemoveGroup command allows a client to request that the server removes the membership for the server
+         * endpoint, if any, in a particular group.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.4
+         */
+        removeGroup: Command(3, TlvRemoveGroupRequest, 3, TlvRemoveGroupResponse),
+
+        /**
+         * The RemoveAllGroups command allows a client to direct the server to remove all group associations for the
+         * server endpoint.
+         *
+         * The RemoveAllGroups command has no data fields.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.5
+         */
+        removeAllGroups: Command(4, TlvNoArguments, 4, TlvNoResponse),
+
+        /**
+         * The AddGroupIfIdentifying command allows a client to add group membership in a particular group for the
+         * server endpoint, on condition that the endpoint is identifying itself. Identifying functionality is
+         * controlled using the Identify cluster, (see Identify).
+         *
+         * This command might be used to assist configuring group membership in the absence of a commissioning tool.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.6
+         */
+        addGroupIfIdentifying: Command(5, TlvAddGroupIfIdentifyingRequest, 5, TlvNoResponse)
     }
-
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
-
-    /**
-     * Groups cluster metadata.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3
-     */
-    export const Metadata = ClusterMetadata({
-        id: 0x4,
-        name: "Groups",
-        revision: 1,
-
-        features: {
-            /**
-             * GroupNames
-             *
-             * The ability to store a name for a group.
-             */
-            groupNames: BitFlag(0)
-        }
-    });
-
-    /**
-     * A GroupsCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This attribute provides legacy, read-only access to whether the Group Names feature is supported. The
-             * most significant bit, bit 7, shall be equal to bit 0 of the FeatureMap attribute. All other bits shall
-             * be 0.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.6.1
-             */
-            nameSupport: FixedAttribute(0, TlvNameSupport)
-        },
-
-        commands: {
-            /**
-             * The AddGroup command allows a client to add group membership in a particular group for the server
-             * endpoint.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.1
-             */
-            addGroup: Command(0, TlvAddGroupRequest, 0, TlvAddGroupResponse),
-
-            /**
-             * The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse
-             * command containing the name string for a particular group.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.2
-             */
-            viewGroup: Command(1, TlvViewGroupRequest, 1, TlvViewGroupResponse),
-
-            /**
-             * The GetGroupMembership command allows a client to inquire about the group membership of the server
-             * endpoint, in a number of ways.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.3
-             */
-            getGroupMembership: Command(2, TlvGetGroupMembershipRequest, 2, TlvGetGroupMembershipResponse),
-
-            /**
-             * The RemoveGroup command allows a client to request that the server removes the membership for the server
-             * endpoint, if any, in a particular group.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.4
-             */
-            removeGroup: Command(3, TlvRemoveGroupRequest, 3, TlvRemoveGroupResponse),
-
-            /**
-             * The RemoveAllGroups command allows a client to direct the server to remove all group associations for
-             * the server endpoint.
-             *
-             * The RemoveAllGroups command has no data fields.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.5
-             */
-            removeAllGroups: Command(4, TlvNoArguments, 4, TlvNoResponse),
-
-            /**
-             * The AddGroupIfIdentifying command allows a client to add group membership in a particular group for the
-             * server endpoint, on condition that the endpoint is identifying itself. Identifying functionality is
-             * controlled using the Identify cluster, (see Identify).
-             *
-             * This command might be used to assist configuring group membership in the absence of a commissioning tool.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.6
-             */
-            addGroupIfIdentifying: Command(5, TlvAddGroupIfIdentifyingRequest, 5, TlvNoResponse)
-        }
-    });
-
-    /**
-     * This cluster supports all Groups features.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes },
-        commands: { ...BaseComponent.commands }
-    });
-}
+});

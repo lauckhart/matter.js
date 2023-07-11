@@ -7,38 +7,11 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
-import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
+import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-
-/**
- * Unit Localization
- *
- * Nodes should be expected to be deployed to any and all regions of the world. These global regions may have differing
- * preferences for the units in which values are conveyed in communication to a user. As such, Nodes that visually or
- * audibly convey measurable values to the user need a mechanism by which they can be configured to use a user’s
- * preferred unit.
- *
- * Use this factory function to create an UnitLocalization cluster supporting a specific set of features. Include each
- * {@link UnitLocalizationCluster.Feature} you wish to support.
- *
- * @param features a list of {@link UnitLocalizationCluster.Feature} to support
- * @returns an UnitLocalization cluster with specified features enabled
- * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.5
- */
-export function UnitLocalizationCluster<T extends UnitLocalizationCluster.Feature[]>(...features: [...T]) {
-    const cluster = Cluster({
-        ...UnitLocalizationCluster.Metadata,
-        supportedFeatures: BitFlags(UnitLocalizationCluster.Metadata.features, ...features),
-        ...UnitLocalizationCluster.BaseComponent
-    });
-    extendCluster(cluster, UnitLocalizationCluster.TemperatureUnitComponent, { temperatureUnit: true });
-    return cluster as unknown as UnitLocalizationCluster.Type<BitFlags<typeof UnitLocalizationCluster.Metadata.features, T>>;
-}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.5.5.1
@@ -49,78 +22,107 @@ export const enum TempUnit {
     Kelvin = 2
 }
 
-export namespace UnitLocalizationCluster {
+/**
+ * These are optional features supported by UnitLocalizationCluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.5.4
+ */
+export enum UnitLocalizationFeature {
     /**
-     * These are optional features supported by UnitLocalizationCluster.
+     * TemperatureUnit
      *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.5.4
+     * The Node can be configured to use different units of temperature when conveying values to a user.
      */
-    export enum Feature {
+    TemperatureUnit = "TemperatureUnit"
+}
+
+/**
+ * These elements and properties are present in all UnitLocalization clusters.
+ */
+export const UnitLocalizationBase = BaseClusterComponent({
+    id: 0x2d,
+    name: "UnitLocalization",
+    revision: 1,
+
+    features: {
         /**
          * TemperatureUnit
          *
          * The Node can be configured to use different units of temperature when conveying values to a user.
          */
-        TemperatureUnit = "TemperatureUnit"
+        temperatureUnit: BitFlag(0)
     }
+});
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
-        typeof Metadata
-        & { attributes: GlobalAttributes<typeof Metadata.features> }
-        & { supportedFeatures: T }
-        & typeof BaseComponent
-        & (T extends { temperatureUnit: true } ? typeof TemperatureUnitComponent : {});
+/**
+ * A UnitLocalizationCluster supports these elements if it supports feature TemperatureUnit.
+ */
+export const TemperatureUnitComponent = ClusterComponent({
+    attributes: {
+        /**
+         * The TemperatureUnit attribute shall indicate the unit for the Node to use only when conveying temperature in
+         * communication to the user. If provided, this value shall take priority over any unit implied through the
+         * ActiveLocale Attribute.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.5.6.1
+         */
+        temperatureUnit: WritableAttribute(
+            0,
+            TlvNullable(TlvEnum<TempUnit>()),
+            { persistent: true, default: null, writeAcl: AccessLevel.Manage }
+        )
+    }
+});
+
+/**
+ * Unit Localization
+ *
+ * Nodes should be expected to be deployed to any and all regions of the world. These global regions may have differing
+ * preferences for the units in which values are conveyed in communication to a user. As such, Nodes that visually or
+ * audibly convey measurable values to the user need a mechanism by which they can be configured to use a user’s
+ * preferred unit.
+ *
+ * This cluster supports an interface to a Node. It provides attributes for determining and configuring the units that
+ * a Node shall utilize when conveying values in communication to a user.
+ *
+ * UnitLocalizationCluster supports optional features that you can enable with the UnitLocalizationCluster.with factory
+ * method.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.5
+ */
+export const UnitLocalizationCluster = ExtensibleCluster({
+    ...UnitLocalizationBase,
 
     /**
-     * UnitLocalization cluster metadata.
+     * Use this factory method to create an UnitLocalization cluster with support for optional features. Include each
+     * {@link UnitLocalizationFeature} you wish to support.
      *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.5
+     * @param features the optional features to support
+     * @returns an UnitLocalization cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
      */
-    export const Metadata = ClusterMetadata({
-        id: 0x2d,
-        name: "UnitLocalization",
-        revision: 1,
+    factory: <T extends `${UnitLocalizationFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, UnitLocalizationFeature);
+        const cluster = Cluster({
+            ...UnitLocalizationBase,
+            supportedFeatures: BitFlags(UnitLocalizationBase.features, ...features)
+        });
+        return cluster as unknown as UnitLocalizationExtension<BitFlags<typeof UnitLocalizationBase.features, T>>;
+    }
+});
 
-        features: {
-            /**
-             * TemperatureUnit
-             *
-             * The Node can be configured to use different units of temperature when conveying values to a user.
-             */
-            temperatureUnit: BitFlag(0)
-        }
-    });
+export type UnitLocalizationExtension<SF extends TypeFromPartialBitSchema<typeof UnitLocalizationBase.features>> =
+    ClusterForBaseCluster<typeof UnitLocalizationBase, SF>
+    & { supportedFeatures: SF }
+    & (SF extends { temperatureUnit: true } ? typeof TemperatureUnitComponent : {});
 
-    /**
-     * A UnitLocalizationCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({});
-
-    /**
-     * A UnitLocalizationCluster supports these elements if it supports feature TemperatureUnit.
-     */
-    export const TemperatureUnitComponent = ClusterComponent({
-        attributes: {
-            /**
-             * The TemperatureUnit attribute shall indicate the unit for the Node to use only when conveying
-             * temperature in communication to the user. If provided, this value shall take priority over any unit
-             * implied through the ActiveLocale Attribute.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.5.6.1
-             */
-            temperatureUnit: WritableAttribute(
-                0,
-                TlvNullable(TlvEnum<TempUnit>()),
-                { persistent: true, default: null, writeAcl: AccessLevel.Manage }
-            )
-        }
-    });
-
-    /**
-     * This cluster supports all UnitLocalization features. It may support illegal feature combinations.
-     *
-     * If you use this cluster you must manually specify which features are active and ensure the set of active
-     * features is legal per the Matter specification.
-     */
-    export const Complete = Cluster({ ...Metadata, attributes: { ...TemperatureUnitComponent.attributes } });
-}
+/**
+ * This cluster supports all UnitLocalization features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const UnitLocalizationComplete = Cluster({
+    ...UnitLocalizationCluster,
+    attributes: { ...TemperatureUnitComponent.attributes }
+});

@@ -24,24 +24,25 @@ export type NamedComponents = NamedComponent[];
 /**
  * Compute name and documentation a set of inferred components.
  */
-export function NamedComponents(cluster: ClusterModel, inferredComponents: InferredComponents): NamedComponents {
-    const namedComponents = [] as NamedComponents;
+export function NamedComponents(cluster: ClusterModel, inferredComponents: InferredComponents) {
+    let base = { mandatory: [], optional: [] } as InferredComponent;
+    const components = [] as NamedComponents;
     const namedComponentMap = {} as { [name: string]: NamedComponent };
     const featureNames = Object.fromEntries(cluster.features.map(f => [f.name, f.description || f.name]));
 
-    for (const elementVariance of inferredComponents) {
+    for (const component of inferredComponents) {
         let name;
 
         const contributorDocumentation = Array<string>();
 
-        const allOf = elementVariance.condition?.allOf;
+        const allOf = component.condition?.allOf;
         if (allOf) {
             const names = allOf.map(f => featureNames[f]);
             name = names.join("And");
             contributorDocumentation.push(`it supports feature${allOf.length === 1 ? "" : "s"}`, describeList("and", ...names));
         }
 
-        const anyOf = elementVariance.condition?.anyOf;
+        const anyOf = component.condition?.anyOf;
         if (anyOf) {
             const names = anyOf.map(f => featureNames[f]);
             const members = Array<string>();
@@ -56,7 +57,7 @@ export function NamedComponents(cluster: ClusterModel, inferredComponents: Infer
             contributorDocumentation.push(`it supports feature${anyOf.length === 1 ? "" : "s"}`, describeList("or", ...names))
         }
 
-        const not = elementVariance.condition?.not;
+        const not = component.condition?.not;
         if (not) {
             name = `${name || ""}Not${featureNames[not]}`;
             if (contributorDocumentation.length) {
@@ -66,29 +67,23 @@ export function NamedComponents(cluster: ClusterModel, inferredComponents: Infer
         }
 
         if (!name) {
-            name = "Base";
-            contributorDocumentation.push(`A ${cluster.name}Cluster supports these elements for all feature combinations`);
+            base = component;
         } else {
             contributorDocumentation.unshift(`A ${cluster.name}Cluster supports these elements if`);
-        }
 
-        let namedComponent = namedComponentMap[name];
-        if (!namedComponent) {
-            namedComponent = {
-                name,
-                documentation: `${contributorDocumentation.join(" ")}.`,
-                ...elementVariance
-            }
-            namedComponentMap[name] = namedComponent;
+            let namedComponent = namedComponentMap[name];
+            if (!namedComponent) {
+                namedComponent = {
+                    name,
+                    documentation: `${contributorDocumentation.join(" ")}.`,
+                    ...component
+                }
+                namedComponentMap[name] = namedComponent;
 
-            if (name === "Base") {
-                // Base components should always be first in the list
-                namedComponents.unshift(namedComponent);
-            } else {
-                namedComponents.push(namedComponent);
+                components.push(namedComponent);
             }
         }
     }
 
-    return namedComponents;
+    return { base, components };
 }

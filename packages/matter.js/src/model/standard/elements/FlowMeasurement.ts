@@ -11,7 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "FlowMeasurement", id: 0x404, classification: "application",
     description: "Flow Measurement",
-    details: "Attributes and commands for configuring the measurement of flow, and reporting flow measurements.",
+    details: "This cluster provides an interface to flow measurement functionality, including configuration and " +
+             "provision of notifications of flow measurements.",
     xref: { document: "cluster", section: "2.5" },
 
     children: [

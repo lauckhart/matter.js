@@ -10,7 +10,7 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "cluster", name: "OnOff", id: 0x6, classification: "application", description: "On/Off",
-    details: "Attributes and commands for switching devices between 'On' and 'Off' states.",
+    details: "Attributes and commands for turning devices on and off.",
     xref: { document: "cluster", section: "1.5" },
 
     children: [
@@ -41,47 +41,15 @@ Matter.children.push({
                      "that is stored with group identifier 0 and scene identifier 0." +
                      "\n" +
                      "The GlobalSceneControl attribute is defined in order to prevent a second Off command storing the " +
-                     "all-devices-off situation as a global scene, and to prevent a second On command destroying the cur" +
-                     "\n" +
-                     "rent settings by going back to the global scene." +
+                     "all-devices-off situation as a global scene, and to prevent a second On command destroying the " +
+                     "current settings by going back to the global scene." +
                      "\n" +
                      "The GlobalSceneControl attribute shall be set to TRUE after the reception of a command which causes " +
                      "the OnOff attribute to be set to TRUE, such as a standard On command, a MoveToLevel(WithOnOff) " +
                      "command, a RecallScene command or a OnWithRecallGlobalScene command (see OnWithRecallGlobalScene " +
                      "Command)." +
                      "\n" +
-                     "The GlobalSceneControl attribute is set to FALSE after reception of a OffWithEffect command." +
-                     "\n" +
-                     "These concepts are illustrated in Explanation of the Behavior of Store and Recall Global Scene " +
-                     "functionality using a State Diagram." +
-                     "\n" +
-                     "### OffWithEffect" +
-                     "\n" +
-                     "store global scene" +
-                     "\n" +
-                     "other commands" +
-                     "\n" +
-                     "other commands" +
-                     "\n" +
-                     "GlobalSceneControl" +
-                     "\n" +
-                     ":= TRUE" +
-                     "\n" +
-                     "On" +
-                     "\n" +
-                     "GlobalSceneControl" +
-                     "\n" +
-                     ":= FALSE" +
-                     "\n" +
-                     "recall global scene" +
-                     "\n" +
-                     "OnWithRecallGlobalScene" +
-                     "\n" +
-                     "Note 1: Any command which causes the OnOff attribute to be set to TRUE except " +
-                     "OnWithRecallGlobalScene, e.g. On or Toggle." +
-                     "\n" +
-                     "Figure 1. Explanation of the Behavior of Store and Recall Global Scene functionality using a State " +
-                     "Diagram",
+                     "The GlobalSceneControl attribute is set to FALSE after reception of a OffWithEffect command.",
 
             xref: { document: "cluster", section: "1.5.6.2" }
         },

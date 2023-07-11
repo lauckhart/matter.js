@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, FixedAttribute, WritableAttribute, AccessLevel, OptionalFixedAttribute, OptionalWritableAttribute, OptionalAttribute, Event, EventPriority, OptionalEvent } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, FixedAttribute, WritableAttribute, AccessLevel, OptionalFixedAttribute, OptionalWritableAttribute, OptionalAttribute, Event, EventPriority, OptionalEvent, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvUInt16, TlvUInt32, TlvEnum, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
@@ -16,22 +15,6 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-
-/**
- * Basic Information
- *
- * This cluster provides attributes and events for determining basic information about Nodes, which supports both
- * Commissioning and operational determination of Node characteristics, such as Vendor ID, Product ID and serial
- * number, which apply to the whole Node. Also allows setting user device information such as location.
- *
- * Use this factory function to create a BasicInformation cluster.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.1
- */
-export function BasicInformationCluster() {
-    const cluster = Cluster({ ...BasicInformationCluster.Metadata, ...BasicInformationCluster.BaseComponent });
-    return cluster as unknown as BasicInformationCluster.Type;
-}
 
 /**
  * This structure provides constant values related to overall global capabilities of this Node, that are not
@@ -141,303 +124,290 @@ export const TlvReachableChangedEvent = TlvObject({
     reachableNewValue: TlvField(0, TlvBoolean)
 });
 
-export namespace BasicInformationCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
+/**
+ * Basic Information
+ *
+ * This cluster provides attributes and events for determining basic information about Nodes, which supports both
+ * Commissioning and operational determination of Node characteristics, such as Vendor ID, Product ID and serial
+ * number, which apply to the whole Node.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.1
+ */
+export const BasicInformationCluster = Cluster({
+    id: 0x28,
+    name: "BasicInformation",
+    revision: 1,
+    features: {},
 
-    /**
-     * BasicInformation cluster metadata.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.1
-     */
-    export const Metadata = ClusterMetadata({ id: 0x28, name: "BasicInformation", revision: 1, features: {} });
+    attributes: {
+        /**
+         * This attribute shall be set to the revision number of the Data Model against which the Node is certified.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.1
+         */
+        dataModelRevision: FixedAttribute(0, TlvUInt16),
 
-    /**
-     * A BasicInformationCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This attribute shall be set to the revision number of the Data Model against which the Node is certified.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.1
-             */
-            dataModelRevision: FixedAttribute(0, TlvUInt16),
+        /**
+         * This attribute shall specify a human readable (displayable) name of the vendor for the Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.2
+         */
+        vendorName: FixedAttribute(1, TlvString.bound({ maxLength: 32 })),
 
-            /**
-             * This attribute shall specify a human readable (displayable) name of the vendor for the Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.2
-             */
-            vendorName: FixedAttribute(1, TlvString.bound({ maxLength: 32 })),
+        /**
+         * This attribute shall specify the Vendor ID.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.3
+         */
+        vendorId: FixedAttribute(2, TlvVendorId),
 
-            /**
-             * This attribute shall specify the Vendor ID.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.3
-             */
-            vendorId: FixedAttribute(2, TlvVendorId),
+        /**
+         * This attribute shall specify a human readable (displayable) name of the model for the Node such as the model
+         * number (or other identifier) assigned by the vendor.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.4
+         */
+        productName: FixedAttribute(3, TlvString.bound({ maxLength: 32 })),
 
-            /**
-             * This attribute shall specify a human readable (displayable) name of the model for the Node such as the
-             * model number (or other identifier) assigned by the vendor.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.4
-             */
-            productName: FixedAttribute(3, TlvString.bound({ maxLength: 32 })),
+        /**
+         * This attribute shall specify the Product ID assigned by the vendor that is unique to the specific product of
+         * the Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.5
+         */
+        productId: FixedAttribute(4, TlvUInt16),
 
-            /**
-             * This attribute shall specify the Product ID assigned by the vendor that is unique to the specific
-             * product of the Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.5
-             */
-            productId: FixedAttribute(4, TlvUInt16),
+        /**
+         * This attribute shall represent a user defined name for the Node. This attribute SHOULD be set during initial
+         * commissioning and MAY be updated by further reconfigurations.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.6
+         */
+        nodeLabel: WritableAttribute(
+            5,
+            TlvString.bound({ maxLength: 32 }),
+            { persistent: true, default: "", writeAcl: AccessLevel.Manage }
+        ),
 
-            /**
-             * This attribute shall represent a user defined name for the Node. This attribute SHOULD be set during
-             * initial commissioning and MAY be updated by further reconfigurations.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.6
-             */
-            nodeLabel: WritableAttribute(
-                5,
-                TlvString.bound({ maxLength: 32 }),
-                { persistent: true, default: "", writeAcl: AccessLevel.Manage }
-            ),
+        /**
+         * This attribute shall be an ISO 3166-1 alpha-2 code to represent the country, dependent territory, or special
+         * area of geographic interest in which the Node is located at the time of the attribute being set. This
+         * attribute shall be set during initial commissioning (unless already set) and MAY be updated by further
+         * reconfigurations. This attribute MAY affect some regulatory aspects of the Node’s operation, such as radio
+         * transmission power levels in given spectrum allocation bands if technologies where this is applicable are
+         * used. The Location’s region code shall be interpreted in a case-insensitive manner. If the Node cannot
+         * understand the location code with which it was configured, or the location code has not yet been configured,
+         * it shall configure itself in a region- agnostic manner as determined by the vendor, avoiding region-specific
+         * assumptions as much as is practical. The special value XX shall indicate that region-agnostic mode is used.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.7
+         */
+        location: WritableAttribute(
+            6,
+            TlvString.bound({ minLength: 2, maxLength: 2 }),
+            { persistent: true, default: "XX", writeAcl: AccessLevel.Administer }
+        ),
 
-            /**
-             * This attribute shall be an ISO 3166-1 alpha-2 code to represent the country, dependent territory, or
-             * special area of geographic interest in which the Node is located at the time of the attribute being set.
-             * This attribute shall be set during initial commissioning (unless already set) and MAY be updated by
-             * further reconfigurations. This attribute MAY affect some regulatory aspects of the Node’s operation,
-             * such as radio transmission power levels in given spectrum allocation bands if technologies where this is
-             * applicable are used. The Location’s region code shall be interpreted in a case-insensitive manner. If
-             * the Node cannot understand the location code with which it was configured, or the location code has not
-             * yet been configured, it shall configure itself in a region- agnostic manner as determined by the vendor,
-             * avoiding region-specific assumptions as much as is practical. The special value XX shall indicate that
-             * region-agnostic mode is used.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.7
-             */
-            location: WritableAttribute(
-                6,
-                TlvString.bound({ minLength: 2, maxLength: 2 }),
-                { persistent: true, default: "XX", writeAcl: AccessLevel.Administer }
-            ),
+        /**
+         * This attribute shall specify the version number of the hardware of the Node. The meaning of its value, and
+         * the versioning scheme, are vendor defined.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.8
+         */
+        hardwareVersion: FixedAttribute(7, TlvUInt16, { default: 0 }),
 
-            /**
-             * This attribute shall specify the version number of the hardware of the Node. The meaning of its value,
-             * and the versioning scheme, are vendor defined.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.8
-             */
-            hardwareVersion: FixedAttribute(7, TlvUInt16, { default: 0 }),
+        /**
+         * This attribute shall specify the version number of the hardware of the Node. The meaning of its value, and
+         * the versioning scheme, are vendor defined. The HardwareVersionString attribute shall be used to provide a
+         * more user-friendly value than that represented by the HardwareVersion attribute.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.9
+         */
+        hardwareVersionString: FixedAttribute(8, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
-            /**
-             * This attribute shall specify the version number of the hardware of the Node. The meaning of its value,
-             * and the versioning scheme, are vendor defined. The HardwareVersionString attribute shall be used to
-             * provide a more user-friendly value than that represented by the HardwareVersion attribute.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.9
-             */
-            hardwareVersionString: FixedAttribute(8, TlvString.bound({ minLength: 1, maxLength: 64 })),
+        /**
+         * This attribute shall contain the current version number for the software running on this Node. The version
+         * number can be compared using a total ordering to determine if a version is logically newer than another one.
+         * A larger value of SoftwareVersion is newer than a lower value, from the perspective of software updates (see
+         * Section 11.19.3.3, “Availability of Software Images”). Nodes MAY query this field to determine the currently
+         * running version of software on another given Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.10
+         */
+        softwareVersion: FixedAttribute(9, TlvUInt32, { default: 0 }),
 
-            /**
-             * This attribute shall contain the current version number for the software running on this Node. The
-             * version number can be compared using a total ordering to determine if a version is logically newer than
-             * another one. A larger value of SoftwareVersion is newer than a lower value, from the perspective of
-             * software updates (see Section 11.19.3.3, “Availability of Software Images”). Nodes MAY query this field
-             * to determine the currently running version of software on another given Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.10
-             */
-            softwareVersion: FixedAttribute(9, TlvUInt32, { default: 0 }),
+        /**
+         * This attribute shall contain a current human-readable representation for the software running on the Node.
+         * This version information MAY be conveyed to users. The maximum length of the SoftwareVersionString attribute
+         * is 64 bytes of UTF-8 characters. The contents SHOULD only use simple 7-bit ASCII alphanumeric and
+         * punctuation characters, so as to simplify the conveyance of the value to a variety of cultures.
+         *
+         * Examples of version strings include "1.0", "1.2.3456", "1.2-2", "1.0b123", "1.2_3".
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.11
+         */
+        softwareVersionString: FixedAttribute(10, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
-            /**
-             * This attribute shall contain a current human-readable representation for the software running on the
-             * Node. This version information MAY be conveyed to users. The maximum length of the SoftwareVersionString
-             * attribute is 64 bytes of UTF-8 characters. The contents SHOULD only use simple 7-bit ASCII alphanumeric
-             * and punctuation characters, so as to simplify the conveyance of the value to a variety of cultures.
-             *
-             * Examples of version strings include "1.0", "1.2.3456", "1.2-2", "1.0b123", "1.2_3".
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.11
-             */
-            softwareVersionString: FixedAttribute(10, TlvString.bound({ minLength: 1, maxLength: 64 })),
+        /**
+         * This attribute shall specify the date that the Node was manufactured. The first 8 characters shall specify
+         * the date of manufacture of the Node in international date notation according to ISO 8601, i.e., YYYYMMDD,
+         * e.g., 20060814. The final 8 characters MAY include country, factory, line, shift or other related
+         * information at the option of the vendor. The format of this information is vendor
+         *
+         * defined.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.12
+         */
+        manufacturingDate: OptionalFixedAttribute(11, TlvString.bound({ minLength: 8, maxLength: 16 })),
 
-            /**
-             * This attribute shall specify the date that the Node was manufactured. The first 8 characters shall
-             * specify the date of manufacture of the Node in international date notation according to ISO 8601, i.e.,
-             * YYYYMMDD, e.g., 20060814. The final 8 characters MAY include country, factory, line, shift or other
-             * related information at the option of the vendor. The format of this information is vendor
-             *
-             * defined.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.12
-             */
-            manufacturingDate: OptionalFixedAttribute(11, TlvString.bound({ minLength: 8, maxLength: 16 })),
+        /**
+         * This attribute shall specify a human-readable (displayable) vendor assigned part number for the Node whose
+         * meaning and numbering scheme is vendor defined.
+         *
+         * Multiple products (and hence PartNumbers) can share a ProductID. For instance, there may be different
+         * packaging (with different PartNumbers) for different regions; also different colors of a product might share
+         * the ProductID but may have a different PartNumber.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.13
+         */
+        partNumber: OptionalFixedAttribute(12, TlvString.bound({ maxLength: 32 })),
 
-            /**
-             * This attribute shall specify a human-readable (displayable) vendor assigned part number for the Node
-             * whose meaning and numbering scheme is vendor defined.
-             *
-             * Multiple products (and hence PartNumbers) can share a ProductID. For instance, there may be different
-             * packaging (with different PartNumbers) for different regions; also different colors of a product might
-             * share the ProductID but may have a different PartNumber.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.13
-             */
-            partNumber: OptionalFixedAttribute(12, TlvString.bound({ maxLength: 32 })),
+        /**
+         * This attribute shall specify a link to a product specific web page. The syntax of the ProductURL attribute
+         * shall follow the syntax as specified in RFC 3986 [https://tools.ietf.org/html/rfc3986]. The specified URL
+         * SHOULD resolve to a maintained web page available for the lifetime of the product. The maximum length of the
+         * ProductUrl attribute is 256 ASCII characters.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.14
+         */
+        productUrl: OptionalFixedAttribute(13, TlvString.bound({ maxLength: 256 })),
 
-            /**
-             * This attribute shall specify a link to a product specific web page. The syntax of the ProductURL
-             * attribute shall follow the syntax as specified in RFC 3986 [https://tools.ietf.org/html/rfc3986]. The
-             * specified URL SHOULD resolve to a maintained web page available for the lifetime of the product. The
-             * maximum length of the ProductUrl attribute is 256 ASCII characters.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.14
-             */
-            productUrl: OptionalFixedAttribute(13, TlvString.bound({ maxLength: 256 })),
+        /**
+         * This attribute shall specify a vendor specific human readable (displayable) product label. The ProductLabel
+         * attribute MAY be used to provide a more user-friendly value than that represented by the ProductName
+         * attribute. The ProductLabel attribute SHOULD NOT include the name of the vendor as defined within the
+         * VendorName attribute.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.15
+         */
+        productLabel: OptionalFixedAttribute(14, TlvString.bound({ maxLength: 64 })),
 
-            /**
-             * This attribute shall specify a vendor specific human readable (displayable) product label. The
-             * ProductLabel attribute MAY be used to provide a more user-friendly value than that represented by the
-             * ProductName attribute. The ProductLabel attribute SHOULD NOT include the name of the vendor as defined
-             * within the VendorName attribute.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.15
-             */
-            productLabel: OptionalFixedAttribute(14, TlvString.bound({ maxLength: 64 })),
+        /**
+         * This attributes shall specify a human readable (displayable) serial number.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.16
+         */
+        serialNumber: OptionalFixedAttribute(15, TlvString.bound({ maxLength: 32 })),
 
-            /**
-             * This attributes shall specify a human readable (displayable) serial number.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.16
-             */
-            serialNumber: OptionalFixedAttribute(15, TlvString.bound({ maxLength: 32 })),
+        /**
+         * This attribute shall allow a local Node configuration to be disabled. When this attribute is set to True the
+         * Node shall disable the ability to configure the Node through an on-Node user interface. The value of the
+         * LocalConfigDisabled attribute shall NOT in any way modify, disable, or otherwise affect the user’s ability
+         * to trigger a factory reset on the Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.17
+         */
+        localConfigDisabled: OptionalWritableAttribute(
+            16,
+            TlvBoolean,
+            { persistent: true, default: true, writeAcl: AccessLevel.Manage }
+        ),
 
-            /**
-             * This attribute shall allow a local Node configuration to be disabled. When this attribute is set to True
-             * the Node shall disable the ability to configure the Node through an on-Node user interface. The value of
-             * the LocalConfigDisabled attribute shall NOT in any way modify, disable, or otherwise affect the user’s
-             * ability to trigger a factory reset on the Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.17
-             */
-            localConfigDisabled: OptionalWritableAttribute(
-                16,
-                TlvBoolean,
-                { persistent: true, default: true, writeAcl: AccessLevel.Manage }
-            ),
+        /**
+         * This attribute (when used) shall indicate whether the Node can be reached. For a native Node this is
+         * implicitly True (and its use is optional).
+         *
+         * Its main use case is in the derived Bridged Device Basic Information cluster where it is used to indicate
+         * whether the bridged device is reachable by the bridge over the non-native network.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.18
+         */
+        reachable: OptionalAttribute(17, TlvBoolean, { default: true }),
 
-            /**
-             * This attribute (when used) shall indicate whether the Node can be reached. For a native Node this is
-             * implicitly True (and its use is optional).
-             *
-             * Its main use case is in the derived Bridged Device Basic Information cluster where it is used to
-             * indicate whether the bridged device is reachable by the bridge over the non-native network.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.18
-             */
-            reachable: OptionalAttribute(17, TlvBoolean, { default: true }),
+        /**
+         * This attribute (when used) shall indicate a unique identifier for the device, which is constructed in a
+         * manufacturer specific manner.
+         *
+         * It MAY be constructed using a permanent device identifier (such as device MAC address) as basis. In order to
+         * prevent tracking,
+         *
+         *   • it SHOULD NOT be identical to (or easily derived from) such permanent device identifier
+         *
+         *   • it SHOULD be updated when the device is factory reset
+         *
+         *   • it shall not be identical to the SerialNumber attribute
+         *
+         *   • it shall not be printed on the product or delivered with the product The value does not need to be human
+         *     readable.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.19
+         */
+        uniqueId: OptionalFixedAttribute(18, TlvString.bound({ maxLength: 32 })),
 
-            /**
-             * This attribute (when used) shall indicate a unique identifier for the device, which is constructed in a
-             * manufacturer specific manner.
-             *
-             * It MAY be constructed using a permanent device identifier (such as device MAC address) as basis. In
-             * order to prevent tracking,
-             *
-             *   • it SHOULD NOT be identical to (or easily derived from) such permanent device identifier
-             *
-             *   • it SHOULD be updated when the device is factory reset
-             *
-             *   • it shall not be identical to the SerialNumber attribute
-             *
-             *   • it shall not be printed on the product or delivered with the product The value does not need to be
-             *     human readable.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.19
-             */
-            uniqueId: OptionalFixedAttribute(18, TlvString.bound({ maxLength: 32 })),
+        /**
+         * This attribute shall provide the minimum guaranteed value for some system-wide resource capabilities that
+         * are not otherwise cluster-specific and do not appear elsewhere. This attribute MAY be used by clients to
+         * optimize communication with Nodes by allowing them to use more than the strict minimum values required by
+         * this specification, wherever available.
+         *
+         * The values supported by the server in reality MAY be larger than the values provided in this attribute, such
+         * as if a server is not resource-constrained at all. However, clients SHOULD only rely on the amounts provided
+         * in this attribute.
+         *
+         * Note that since the fixed values within this attribute MAY change over time, both increasing and decreasing,
+         * as software versions change for a given Node, clients SHOULD take care not to assume forever unchanging
+         * values and SHOULD NOT cache this value permanently at Commissioning time.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.20
+         */
+        capabilityMinima: FixedAttribute(19, TlvCapabilityMinimaStruct),
 
-            /**
-             * This attribute shall provide the minimum guaranteed value for some system-wide resource capabilities
-             * that are not otherwise cluster-specific and do not appear elsewhere. This attribute MAY be used by
-             * clients to optimize communication with Nodes by allowing them to use more than the strict minimum values
-             * required by this specification, wherever available.
-             *
-             * The values supported by the server in reality MAY be larger than the values provided in this attribute,
-             * such as if a server is not resource-constrained at all. However, clients SHOULD only rely on the amounts
-             * provided in this attribute.
-             *
-             * Note that since the fixed values within this attribute MAY change over time, both increasing and
-             * decreasing, as software versions change for a given Node, clients SHOULD take care not to assume forever
-             * unchanging values and SHOULD NOT cache this value permanently at Commissioning time.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.20
-             */
-            capabilityMinima: FixedAttribute(19, TlvCapabilityMinimaStruct),
+        productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
+    },
 
-            productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
-        },
+    events: {
+        /**
+         * The StartUp event shall be generated by a Node as soon as reasonable after completing a boot or reboot
+         * process. The StartUp event SHOULD be the first Data Model event recorded by the Node after it completes a
+         * boot or reboot process.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.1
+         */
+        startUp: Event(0, EventPriority.Critical, TlvStartUpEvent),
 
-        events: {
-            /**
-             * The StartUp event shall be generated by a Node as soon as reasonable after completing a boot or reboot
-             * process. The StartUp event SHOULD be the first Data Model event recorded by the Node after it completes
-             * a boot or reboot process.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.1
-             */
-            startUp: Event(0, EventPriority.Critical, TlvStartUpEvent),
+        /**
+         * The ShutDown event SHOULD be generated by a Node prior to any orderly shutdown sequence on a best-effort
+         * basis. When a ShutDown event is generated, it SHOULD be the last Data Model event recorded by the Node. This
+         * event SHOULD be delivered urgently to current subscribers on a best- effort basis. Any subsequent incoming
+         * interactions to the Node MAY be dropped until the completion of a future boot or reboot process.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.2
+         */
+        shutDown: OptionalEvent(1, EventPriority.Critical, TlvNoArguments),
 
-            /**
-             * The ShutDown event SHOULD be generated by a Node prior to any orderly shutdown sequence on a best-effort
-             * basis. When a ShutDown event is generated, it SHOULD be the last Data Model event recorded by the Node.
-             * This event SHOULD be delivered urgently to current subscribers on a best- effort basis. Any subsequent
-             * incoming interactions to the Node MAY be dropped until the completion of a future boot or reboot process.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.2
-             */
-            shutDown: OptionalEvent(1, EventPriority.Critical, TlvNoArguments),
+        /**
+         * The Leave event SHOULD be generated by a Node prior to permanently leaving a given Fabric, such as when the
+         * RemoveFabric command is invoked for a given fabric, or triggered by factory reset or some other manufacturer
+         * specific action to disable or reset the operational data in the Node. When a Leave event is generated, it
+         * SHOULD be assumed that the fabric recorded in the event is no longer usable, and subsequent interactions
+         * targeting that fabric will most likely fail.
+         *
+         * Upon receipt of Leave Event on a subscription, the receiving Node MAY update other nodes in the fabric by
+         * removing related bindings, access control list entries and other data referencing the leaving Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.3
+         */
+        leave: OptionalEvent(2, EventPriority.Info, TlvLeaveEvent),
 
-            /**
-             * The Leave event SHOULD be generated by a Node prior to permanently leaving a given Fabric, such as when
-             * the RemoveFabric command is invoked for a given fabric, or triggered by factory reset or some other
-             * manufacturer specific action to disable or reset the operational data in the Node. When a Leave event is
-             * generated, it SHOULD be assumed that the fabric recorded in the event is no longer usable, and
-             * subsequent interactions targeting that fabric will most likely fail.
-             *
-             * Upon receipt of Leave Event on a subscription, the receiving Node MAY update other nodes in the fabric
-             * by removing related bindings, access control list entries and other data referencing the leaving Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.3
-             */
-            leave: OptionalEvent(2, EventPriority.Info, TlvLeaveEvent),
-
-            /**
-             * This event shall be supported if and only if the Reachable attribute is supported.
-             *
-             * This event (when supported) shall be generated when there is a change in the Reachable attribute.
-             *
-             * Its main use case is in the derived Bridged Device Basic Information cluster.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.4
-             */
-            reachableChanged: OptionalEvent(3, EventPriority.Info, TlvReachableChangedEvent)
-        }
-    });
-
-    /**
-     * This cluster supports all BasicInformation features.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes },
-        events: { ...BaseComponent.events }
-    });
-}
+        /**
+         * This event shall be supported if and only if the Reachable attribute is supported.
+         *
+         * This event (when supported) shall be generated when there is a change in the Reachable attribute.
+         *
+         * Its main use case is in the derived Bridged Device Basic Information cluster.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.4
+         */
+        reachableChanged: OptionalEvent(3, EventPriority.Info, TlvReachableChangedEvent)
+    }
+});

@@ -12,7 +12,9 @@ Matter.children.push({
     tag: "cluster", name: "ThreadNetworkDiagnostics", id: 0x35, classification: "node",
     description: "Thread Network Diagnostics",
     details: "The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
-             "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
+             "that MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+             "Thread Network Diagnostics Cluster attempts to centralize all metrics that are relevant to a " +
+             "potential Thread radio running on a Node.",
     xref: { document: "core", section: "11.13" },
 
     children: [

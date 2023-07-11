@@ -6,60 +6,35 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, WritableAttribute, AccessLevel } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
 
 /**
  * User Label
  *
- * The User Label Cluster provides a feature to tag an endpoint with zero or more labels.
- *
- * Use this factory function to create an UserLabel cluster.
+ * This cluster provides a feature to tag an endpoint with zero or more labels.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.9
  */
-export function UserLabelCluster() {
-    const cluster = Cluster({ ...UserLabelCluster.Metadata, ...UserLabelCluster.BaseComponent });
-    return cluster as unknown as UserLabelCluster.Type;
-}
+export const UserLabelCluster = Cluster({
+    id: 0x41,
+    name: "UserLabel",
+    revision: 1,
+    features: {},
 
-export namespace UserLabelCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
-
-    /**
-     * UserLabel cluster metadata.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 9.9
-     */
-    export const Metadata = ClusterMetadata({ id: 0x41, name: "UserLabel", revision: 1, features: {} });
-
-    /**
-     * A UserLabelCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * An implementation shall support at least 4 list entries per node for all User Label cluster instances on
-             * the node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.9.4.1
-             */
-            labelList: WritableAttribute(
-                0,
-                TlvArray(TlvLabelStruct),
-                { persistent: true, default: [], writeAcl: AccessLevel.Manage }
-            )
-        }
-    });
-
-    /**
-     * This cluster supports all UserLabel features.
-     */
-    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-}
+    attributes: {
+        /**
+         * An implementation shall support at least 4 list entries per node for all User Label cluster instances on the
+         * node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.9.4.1
+         */
+        labelList: WritableAttribute(
+            0,
+            TlvArray(TlvLabelStruct),
+            { persistent: true, default: [], writeAcl: AccessLevel.Manage }
+        )
+    }
+});

@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "UserLabel", id: 0x41, type: "Label", classification: "endpoint",
     description: "User Label",
-    details: "The User Label Cluster provides a feature to tag an endpoint with zero or more labels.",
+    details: "This cluster provides a feature to tag an endpoint with zero or more labels.",
     xref: { document: "core", section: "9.9" },
 
     children: [ {

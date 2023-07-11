@@ -10,6 +10,8 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "cluster", name: "Label", classification: "endpoint",
+    details: "This cluster provides a feature to tag an endpoint with zero or more labels. This is a base cluster " +
+             "that requires a derived cluster to create an instance.",
     xref: { document: "core", section: "9.7" },
 
     children: [

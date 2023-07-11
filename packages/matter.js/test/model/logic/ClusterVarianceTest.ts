@@ -12,6 +12,7 @@ import {
     Globals,
     MatterModel
 } from "../../../src/model/index.js"
+import { InferredComponent } from "../../../src/model/logic/cluster-variance/InferredComponents.js"
 import { VarianceCondition } from "../../../src/model/logic/cluster-variance/VarianceCondition.js"
 
 describe("ClusterVariance", () => {
@@ -164,7 +165,14 @@ type ExpectedElementVariance = {
 }
 
 function actualToExpected(actual: ClusterVariance) {
-    return actual.components.map(a => {
+    const components = Array<InferredComponent>();
+    if (actual.base.mandatory.length || actual.base.optional.length) {
+        components.push(actual.base);
+    }
+
+    components.push(...actual.components);
+
+    return components.map(a => {
         const e = {} as ExpectedElementVariance;
         if (a.mandatory.length) {
             e.mandatory = a.mandatory.map(a => a.name);

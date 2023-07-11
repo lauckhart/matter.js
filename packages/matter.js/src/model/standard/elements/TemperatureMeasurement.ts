@@ -11,8 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "TemperatureMeasurement", id: 0x402, classification: "application",
     description: "Temperature Measurement",
-    details: "Attributes and commands for configuring the measurement of temperature, and reporting temperature " +
-             "measurements.",
+    details: "This cluster provides an interface to temperature measurement functionality, including " +
+             "configuration and provision of notifications of temperature measurements.",
     xref: { document: "cluster", section: "2.3" },
 
     children: [

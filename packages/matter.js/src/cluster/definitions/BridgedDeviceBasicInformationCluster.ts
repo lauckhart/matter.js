@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, OptionalAttribute, OptionalWritableAttribute, Attribute, OptionalEvent, EventPriority, Event } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, OptionalAttribute, OptionalWritableAttribute, Attribute, OptionalEvent, EventPriority, Event, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
@@ -16,26 +15,6 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-
-/**
- * Bridged Device Basic Information
- *
- * This Cluster serves two purposes towards a Node communicating with a Bridge: indicate that the functionality on the
- * Endpoint where it is placed (and its Parts) is bridged from a non-CHIP technology; and provide a centralized
- * collection of attributes that the Node MAY collect to aid in conveying information regarding the Bridged Device to a
- * user, such as the vendor name, the model name, or user-assigned name.
- *
- * Use this factory function to create a BridgedDeviceBasicInformation cluster.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 9.13
- */
-export function BridgedDeviceBasicInformationCluster() {
-    const cluster = Cluster({
-        ...BridgedDeviceBasicInformationCluster.Metadata,
-        ...BridgedDeviceBasicInformationCluster.BaseComponent
-    });
-    return cluster as unknown as BridgedDeviceBasicInformationCluster.Type;
-}
 
 export const enum ProductFinish {
     Other = 0,
@@ -89,137 +68,144 @@ export const TlvStartUpEvent = TlvObject({ softwareVersion: TlvField(0, TlvUInt3
  */
 export const TlvReachableChangedEvent = TlvObject({ reachableNewValue: TlvField(0, TlvBoolean) });
 
-export namespace BridgedDeviceBasicInformationCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
+/**
+ * Bridged Device Basic Information
+ *
+ * This Cluster serves two purposes towards a Node communicating with a Bridge:
+ *
+ *   • Indicate that the functionality on the Endpoint where it is placed (and its Parts) is bridged from a non-Matter
+ *     technology, and
+ *
+ *   • Provide a centralized collection of attributes that the Node MAY collect to aid in conveying information
+ *     regarding the Bridged Device to a user, such as the vendor name, the model name, or user-assigned name.
+ *
+ * This cluster shall be exposed by a Bridge on the Endpoint representing each Bridged Device. When the functionality
+ * of a Bridged Device is represented using a set of Endpoints, this cluster shall only be exposed on the Endpoint
+ * which is at the top of the hierarchy for the functionality of that Bridged Device.
+ *
+ * This cluster shall NOT be used on an endpoint that is not in the Descriptor cluster PartsList of an endpoint with an
+ * Aggregator device type.
+ *
+ * This cluster has been derived from the Basic Information Cluster, and provides generic information about the Bridged
+ * Device. Not all of the attributes in the Basic Information Cluster are relevant for a Bridged Device (e.g. ProductID
+ * since it is not a Matter device). For other attributes, the information which is listed as Mandatory for the Basic
+ * Information Cluster, may not be available when the Bridged Device does not provide it to the Bridge, and the Bridge
+ * has no other means to determine it. For such cases where the information for a particular attribute is not
+ * available, the Bridge SHOULD NOT include the attribute in the cluster for this Bridged Device. See below for
+ * Conformance details.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 9.13
+ */
+export const BridgedDeviceBasicInformationCluster = Cluster({
+    id: 0x39,
+    name: "BridgedDeviceBasicInformation",
+    revision: 1,
+    features: {},
 
-    /**
-     * BridgedDeviceBasicInformation cluster metadata.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 9.13
-     */
-    export const Metadata = ClusterMetadata({ id: 0x39, name: "BridgedDeviceBasicInformation", revision: 1, features: {} });
+    attributes: {
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        vendorName: OptionalAttribute(1, TlvString),
 
-    /**
-     * A BridgedDeviceBasicInformationCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            vendorName: OptionalAttribute(1, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        vendorId: OptionalAttribute(2, TlvVendorId),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            vendorId: OptionalAttribute(2, TlvVendorId),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        productName: OptionalAttribute(3, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            productName: OptionalAttribute(3, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        nodeLabel: OptionalWritableAttribute(5, TlvString, { default: "" }),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            nodeLabel: OptionalWritableAttribute(5, TlvString, { default: "" }),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        hardwareVersion: OptionalAttribute(7, TlvUInt16, { default: 0 }),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            hardwareVersion: OptionalAttribute(7, TlvUInt16, { default: 0 }),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        hardwareVersionString: OptionalAttribute(8, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            hardwareVersionString: OptionalAttribute(8, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        softwareVersion: OptionalAttribute(9, TlvUInt32, { default: 0 }),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            softwareVersion: OptionalAttribute(9, TlvUInt32, { default: 0 }),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        softwareVersionString: OptionalAttribute(10, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            softwareVersionString: OptionalAttribute(10, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        manufacturingDate: OptionalAttribute(11, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            manufacturingDate: OptionalAttribute(11, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        partNumber: OptionalAttribute(12, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            partNumber: OptionalAttribute(12, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        productUrl: OptionalAttribute(13, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            productUrl: OptionalAttribute(13, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        productLabel: OptionalAttribute(14, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            productLabel: OptionalAttribute(14, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        serialNumber: OptionalAttribute(15, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            serialNumber: OptionalAttribute(15, TlvString),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        reachable: Attribute(17, TlvBoolean, { default: true }),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            reachable: Attribute(17, TlvBoolean, { default: true }),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
+         */
+        uniqueId: OptionalAttribute(18, TlvString),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
-             */
-            uniqueId: OptionalAttribute(18, TlvString),
+        productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
+    },
 
-            productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
-        },
+    events: {
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
+         */
+        startUp: OptionalEvent(0, EventPriority.Critical, TlvStartUpEvent),
 
-        events: {
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
-             */
-            startUp: OptionalEvent(0, EventPriority.Critical, TlvStartUpEvent),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
+         */
+        shutDown: OptionalEvent(1, EventPriority.Critical, TlvNoArguments),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
-             */
-            shutDown: OptionalEvent(1, EventPriority.Critical, TlvNoArguments),
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
+         */
+        leave: OptionalEvent(2, EventPriority.Info, TlvNoArguments),
 
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
-             */
-            leave: OptionalEvent(2, EventPriority.Info, TlvNoArguments),
-
-            /**
-             * This event shall be generated when there is a change in the Reachable attribute. Its purpose is to
-             * provide an indication towards interested parties that the reachability of a bridged device (over the
-             * non-Matter network) has changed, so they MAY take appropriate action.
-             *
-             * After (re)start of a bridge this event MAY be generated.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
-             */
-            reachableChanged: Event(3, EventPriority.Info, TlvReachableChangedEvent)
-        }
-    });
-
-    /**
-     * This cluster supports all BridgedDeviceBasicInformation features.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes },
-        events: { ...BaseComponent.events }
-    });
-}
+        /**
+         * This event shall be generated when there is a change in the Reachable attribute. Its purpose is to provide
+         * an indication towards interested parties that the reachability of a bridged device (over the non-Matter
+         * network) has changed, so they MAY take appropriate action.
+         *
+         * After (re)start of a bridge this event MAY be generated.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
+         */
+        reachableChanged: Event(3, EventPriority.Info, TlvReachableChangedEvent)
+    }
+});

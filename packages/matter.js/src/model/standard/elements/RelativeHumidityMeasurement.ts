@@ -11,8 +11,9 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "RelativeHumidityMeasurement", id: 0x405, classification: "application",
     description: "Relative Humidity Measurement",
-    details: "Attributes and commands for configuring the measurement of relative humidity, and reporting " +
-             "relative humidity measurements.",
+    details: "This is a base cluster. The server cluster provides an interface to water content measurement " +
+             "functionality. The measurement is reportable and may be configured for reporting. Water content " +
+             "measurements include, but are not limited to, leaf wetness, relative humidity, and soil moisture.",
     xref: { document: "cluster", section: "2.6" },
 
     children: [

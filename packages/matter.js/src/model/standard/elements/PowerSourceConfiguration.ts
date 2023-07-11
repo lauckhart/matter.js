@@ -11,7 +11,9 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "PowerSourceConfiguration", id: 0x2e, classification: "endpoint",
     description: "Power Source Configuration",
-    details: "This cluster is used to describe the configuration and capabilities of a Device's power system.",
+    details: "This cluster is used to describe the configuration and capabilities of a Device’s power system. It " +
+             "provides an ordering overview as well as linking to the one or more endpoints each supporting a " +
+             "Power Source cluster.",
     xref: { document: "core", section: "11.6" },
 
     children: [ {

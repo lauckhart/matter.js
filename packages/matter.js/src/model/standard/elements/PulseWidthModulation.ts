@@ -11,7 +11,9 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "PulseWidthModulation", id: 0x1c, classification: "application",
     description: "Pulse Width Modulation",
-    details: "Cluster to control pulse width modulation",
+    details: "This cluster provides an interface for controlling a characteristic of a device that can be set to " +
+             "a level, for example the brightness of a light, the degree of closure of a door, or the power " +
+             "output of a heater.",
     xref: { document: "cluster", section: "1.6" },
 
     children: [

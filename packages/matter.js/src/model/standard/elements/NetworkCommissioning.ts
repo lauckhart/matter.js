@@ -11,7 +11,21 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "NetworkCommissioning", id: 0x31, classification: "node",
     description: "Network Commissioning",
-    details: "Functionality to configure, enable, disable network credentials and access on a Matter device.",
+
+    details: "Network commissioning is part of the overall Node commissioning. The main goal of Network " +
+             "Commissioning Cluster is to associate a Node with or manage a Node’s one or more network " +
+             "interfaces. These network interfaces can include the following types." +
+             "\n" +
+             "  • Wi-Fi (IEEE 802.11-2020)" +
+             "\n" +
+             "  • Ethernet (802.3)" +
+             "\n" +
+             "  • Thread (802.15.4)" +
+             "\n" +
+             "An instance of the Network Commissioning Cluster only applies to a single network interface " +
+             "instance present. An interface, in this context, is a unique entity that can have an IPv6 address " +
+             "assigned to it and ingress and egress IP packets.",
+
     xref: { document: "core", section: "11.8" },
 
     children: [

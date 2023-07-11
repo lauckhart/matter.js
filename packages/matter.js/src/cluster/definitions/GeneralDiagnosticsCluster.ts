@@ -6,31 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, Attribute, OptionalAttribute, Command, TlvNoResponse, OptionalEvent, EventPriority, Event } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, OptionalAttribute, Command, TlvNoResponse, OptionalEvent, EventPriority, Event, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvEnum, TlvUInt16, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
-
-/**
- * General Diagnostics
- *
- * The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire standardized
- * diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential
- * problems.
- *
- * Use this factory function to create a GeneralDiagnostics cluster.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.11
- */
-export function GeneralDiagnosticsCluster() {
-    const cluster = Cluster({ ...GeneralDiagnosticsCluster.Metadata, ...GeneralDiagnosticsCluster.BaseComponent });
-    return cluster as unknown as GeneralDiagnosticsCluster.Type;
-}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.4
@@ -275,190 +258,174 @@ export const TlvBootReasonEvent = TlvObject({
     bootReason: TlvField(0, TlvEnum<BootReason>())
 });
 
-export namespace GeneralDiagnosticsCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
+/**
+ * General Diagnostics
+ *
+ * The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire standardized
+ * diagnostics metrics that MAY be used by a Node to assist a user or Administrator in diagnosing potential problems.
+ * The General Diagnostics Cluster attempts to centralize all metrics that are broadly relevant to the majority of
+ * Nodes.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.11
+ */
+export const GeneralDiagnosticsCluster = Cluster({
+    id: 0x33,
+    name: "GeneralDiagnostics",
+    revision: 1,
+    features: {},
 
-    /**
-     * GeneralDiagnostics cluster metadata.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.11
-     */
-    export const Metadata = ClusterMetadata({ id: 0x33, name: "GeneralDiagnostics", revision: 1, features: {} });
+    attributes: {
+        /**
+         * The NetworkInterfaces attribute shall be a list of NetworkInterface structs. Each logical network interface
+         * on the Node shall be represented by a single entry within the NetworkInterfaces attribute.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.1
+         */
+        networkInterfaces: Attribute(0, TlvArray(TlvNetworkInterface), { default: [] }),
 
-    /**
-     * A GeneralDiagnosticsCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * The NetworkInterfaces attribute shall be a list of NetworkInterface structs. Each logical network
-             * interface on the Node shall be represented by a single entry within the NetworkInterfaces attribute.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.1
-             */
-            networkInterfaces: Attribute(0, TlvArray(TlvNetworkInterface), { default: [] }),
+        /**
+         * The RebootCount attribute shall indicate a best-effort count of the number of times the Node has rebooted.
+         * The RebootCount attribute SHOULD be incremented each time the Node reboots. The RebootCount attribute shall
+         * NOT be incremented when a Node wakes from a low-power or sleep state. The RebootCount attribute shall only
+         * be reset to 0 upon a factory reset of the Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.2
+         */
+        rebootCount: Attribute(1, TlvUInt16, { persistent: true, default: 0 }),
 
-            /**
-             * The RebootCount attribute shall indicate a best-effort count of the number of times the Node has
-             * rebooted. The RebootCount attribute SHOULD be incremented each time the Node reboots. The RebootCount
-             * attribute shall NOT be incremented when a Node wakes from a low-power or sleep state. The RebootCount
-             * attribute shall only be reset to 0 upon a factory reset of the Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.2
-             */
-            rebootCount: Attribute(1, TlvUInt16, { persistent: true, default: 0 }),
+        /**
+         * The UpTime attribute shall indicate a best-effort assessment of the length of time, in seconds, since the
+         * Node’s last reboot. The UpTime attribute SHOULD be incremented to account for the periods of time that a
+         * Node is in a low-power or sleep state. The UpTime attribute shall only be reset upon a device reboot.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.3
+         */
+        upTime: OptionalAttribute(2, TlvUInt64, { omitChanges: true, default: 0 }),
 
-            /**
-             * The UpTime attribute shall indicate a best-effort assessment of the length of time, in seconds, since
-             * the Node’s last reboot. The UpTime attribute SHOULD be incremented to account for the periods of time
-             * that a Node is in a low-power or sleep state. The UpTime attribute shall only be reset upon a device
-             * reboot.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.3
-             */
-            upTime: OptionalAttribute(2, TlvUInt64, { omitChanges: true, default: 0 }),
+        /**
+         * The TotalOperationalHours attribute shall indicate a best-effort attempt at tracking the length of time, in
+         * hours, that the Node has been operational. The TotalOperationalHours attribute SHOULD be incremented to
+         * account for the periods of time that a Node is in a low-power or sleep state. The
+         *
+         * TotalOperationalHours attribute shall only be reset upon a factory reset of the Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.4
+         */
+        totalOperationalHours: OptionalAttribute(3, TlvUInt32, { persistent: true, omitChanges: true, default: 0 }),
 
-            /**
-             * The TotalOperationalHours attribute shall indicate a best-effort attempt at tracking the length of time,
-             * in hours, that the Node has been operational. The TotalOperationalHours attribute SHOULD be incremented
-             * to account for the periods of time that a Node is in a low-power or sleep state. The
-             *
-             * TotalOperationalHours attribute shall only be reset upon a factory reset of the Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.4
-             */
-            totalOperationalHours: OptionalAttribute(3, TlvUInt32, { persistent: true, omitChanges: true, default: 0 }),
+        /**
+         * The BootReason attribute shall indicate the reason for the Node’s most recent boot.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.5
+         */
+        bootReason: OptionalAttribute(4, TlvEnum<BootReason>()),
 
-            /**
-             * The BootReason attribute shall indicate the reason for the Node’s most recent boot.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.5
-             */
-            bootReason: OptionalAttribute(4, TlvEnum<BootReason>()),
+        /**
+         * The ActiveHardwareFaults attribute shall indicate the set of faults currently detected by the Node. When the
+         * Node detects a fault has been raised, the appropriate HardwareFaultEnum value shall be added to this list.
+         * This list shall NOT contain more than one instance of a specific HardwareFaultEnum value. When the Node
+         * detects that all conditions contributing to a fault has been cleared, the corresponding HardwareFaultEnum
+         * value shall be removed from this list. An empty list shall indicate there are currently no active faults.
+         * The order of this list SHOULD have no significance. Clients interested in monitoring changes in active
+         * faults MAY subscribe to this attribute, or they MAY subscribe to HardwareFaultChange.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.6
+         */
+        activeHardwareFaults: OptionalAttribute(5, TlvArray(TlvEnum<HardwareFault>()), { default: [] }),
 
-            /**
-             * The ActiveHardwareFaults attribute shall indicate the set of faults currently detected by the Node. When
-             * the Node detects a fault has been raised, the appropriate HardwareFaultEnum value shall be added to this
-             * list. This list shall NOT contain more than one instance of a specific HardwareFaultEnum value. When the
-             * Node detects that all conditions contributing to a fault has been cleared, the corresponding
-             * HardwareFaultEnum value shall be removed from this list. An empty list shall indicate there are
-             * currently no active faults. The order of this list SHOULD have no significance. Clients interested in
-             * monitoring changes in active faults MAY subscribe to this attribute, or they MAY subscribe to
-             * HardwareFaultChange.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.6
-             */
-            activeHardwareFaults: OptionalAttribute(5, TlvArray(TlvEnum<HardwareFault>()), { default: [] }),
+        /**
+         * The ActiveRadioFaults attribute shall indicate the set of faults currently detected by the Node. When the
+         * Node detects a fault has been raised, the appropriate RadioFaultEnum value shall be added to this list. This
+         * list shall NOT contain more than one instance of a specific RadioFaultEnum value. When the Node detects that
+         * all conditions contributing to a fault has been cleared, the corresponding RadioFaultEnum value shall be
+         * removed from this list. An empty list shall indicate there are currently no active faults. The order of this
+         * list SHOULD have no significance. Clients interested in monitoring changes in active faults MAY subscribe to
+         * this attribute, or they MAY subscribe to RadioFaultChange.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.7
+         */
+        activeRadioFaults: OptionalAttribute(6, TlvArray(TlvEnum<RadioFault>()), { default: [] }),
 
-            /**
-             * The ActiveRadioFaults attribute shall indicate the set of faults currently detected by the Node. When
-             * the Node detects a fault has been raised, the appropriate RadioFaultEnum value shall be added to this
-             * list. This list shall NOT contain more than one instance of a specific RadioFaultEnum value. When the
-             * Node detects that all conditions contributing to a fault has been cleared, the corresponding
-             * RadioFaultEnum value shall be removed from this list. An empty list shall indicate there are currently
-             * no active faults. The order of this list SHOULD have no significance. Clients interested in monitoring
-             * changes in active faults MAY subscribe to this attribute, or they MAY subscribe to RadioFaultChange.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.7
-             */
-            activeRadioFaults: OptionalAttribute(6, TlvArray(TlvEnum<RadioFault>()), { default: [] }),
+        /**
+         * The ActiveNetworkFaults attribute shall indicate the set of faults currently detected by the Node. When the
+         * Node detects a fault has been raised, the appropriate NetworkFaultEnum value shall be added to this list.
+         * This list shall NOT contain more than one instance of a specific NetworkFaultEnum value. When the Node
+         * detects that all conditions contributing to a fault has been cleared, the corresponding NetworkFaultEnum
+         * value shall be removed from this list. An empty list shall indicate there are currently no active faults.
+         * The order of this list SHOULD have no significance. Clients interested in monitoring changes in active
+         * faults MAY subscribe to this attribute, or they MAY subscribe to NetworkFaultChange.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.8
+         */
+        activeNetworkFaults: OptionalAttribute(7, TlvArray(TlvEnum<NetworkFault>()), { default: [] }),
 
-            /**
-             * The ActiveNetworkFaults attribute shall indicate the set of faults currently detected by the Node. When
-             * the Node detects a fault has been raised, the appropriate NetworkFaultEnum value shall be added to this
-             * list. This list shall NOT contain more than one instance of a specific NetworkFaultEnum value. When the
-             * Node detects that all conditions contributing to a fault has been cleared, the corresponding
-             * NetworkFaultEnum value shall be removed from this list. An empty list shall indicate there are currently
-             * no active faults. The order of this list SHOULD have no significance. Clients interested in monitoring
-             * changes in active faults MAY subscribe to this attribute, or they MAY subscribe to NetworkFaultChange.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.8
-             */
-            activeNetworkFaults: OptionalAttribute(7, TlvArray(TlvEnum<NetworkFault>()), { default: [] }),
+        /**
+         * The TestEventTriggersEnabled attribute shall indicate whether the Node has any TestEventTrigger configured.
+         * When this attribute is true, the Node has been configured with one or more test event triggers by virtue of
+         * the internally programmed EnableKey value (see Section 11.11.7.1, “TestEventTrigger Command”) being set to a
+         * non-zero value. This attribute can be used by Administrators to detect if a device was inadvertently
+         * commissioned with test event trigger mode enabled, and take appropriate action (e.g. warn the user and/or
+         * offer to remove all fabrics on the Node).
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.9
+         */
+        testEventTriggersEnabled: Attribute(8, TlvBoolean)
+    },
 
-            /**
-             * The TestEventTriggersEnabled attribute shall indicate whether the Node has any TestEventTrigger
-             * configured. When this attribute is true, the Node has been configured with one or more test event
-             * triggers by virtue of the internally programmed EnableKey value (see Section 11.11.7.1,
-             * “TestEventTrigger Command”) being set to a non-zero value. This attribute can be used by Administrators
-             * to detect if a device was inadvertently commissioned with test event trigger mode enabled, and take
-             * appropriate action (e.g. warn the user and/or offer to remove all fabrics on the Node).
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.9
-             */
-            testEventTriggersEnabled: Attribute(8, TlvBoolean)
-        },
+    commands: {
+        /**
+         * This command shall be supported to provide a means for certification tests to trigger some test-
+         * plan-specific events, necessary to assist in automation of device interactions for some certification test
+         * cases. This command shall NOT cause any changes to the state of the device that persist after the last
+         * fabric is removed.
+         *
+         * The fields for the TestEventTrigger command are as follows:
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.7.1
+         */
+        testEventTrigger: Command(0, TlvTestEventTriggerRequest, 0, TlvNoResponse)
+    },
 
-        commands: {
-            /**
-             * This command shall be supported to provide a means for certification tests to trigger some test-
-             * plan-specific events, necessary to assist in automation of device interactions for some certification
-             * test cases. This command shall NOT cause any changes to the state of the device that persist after the
-             * last fabric is removed.
-             *
-             * The fields for the TestEventTrigger command are as follows:
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.7.1
-             */
-            testEventTrigger: Command(0, TlvTestEventTriggerRequest, 0, TlvNoResponse)
-        },
+    events: {
+        /**
+         * The HardwareFaultChange Event shall indicate a change in the set of hardware faults currently detected by
+         * the Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1
+         */
+        hardwareFaultChange: OptionalEvent(0, EventPriority.Critical, TlvHardwareFaultChangeEvent),
 
-        events: {
-            /**
-             * The HardwareFaultChange Event shall indicate a change in the set of hardware faults currently detected
-             * by the Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1
-             */
-            hardwareFaultChange: OptionalEvent(0, EventPriority.Critical, TlvHardwareFaultChangeEvent),
+        /**
+         * The RadioFaultChange Event shall indicate a change in the set of radio faults currently detected by the Node.
+         *
+         * This field shall represent the set of faults currently detected, as per Section 11.11.4.2, “RadioFaultEnum”.
+         *
+         * This field shall represent the set of faults detected prior to this change event, as per Section 11.11.4.2,
+         * “RadioFaultEnum”.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.2
+         */
+        radioFaultChange: OptionalEvent(1, EventPriority.Critical, TlvRadioFaultChangeEvent),
 
-            /**
-             * The RadioFaultChange Event shall indicate a change in the set of radio faults currently detected by the
-             * Node.
-             *
-             * This field shall represent the set of faults currently detected, as per Section 11.11.4.2,
-             * “RadioFaultEnum”.
-             *
-             * This field shall represent the set of faults detected prior to this change event, as per Section
-             * 11.11.4.2, “RadioFaultEnum”.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.2
-             */
-            radioFaultChange: OptionalEvent(1, EventPriority.Critical, TlvRadioFaultChangeEvent),
+        /**
+         * The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected by the
+         * Node.
+         *
+         * This field shall represent the set of faults currently detected, as per Section 11.11.4.3,
+         * “NetworkFaultEnum”.
+         *
+         * This field shall represent the set of faults detected prior to this change event, as per Section 11.11.4.3,
+         * “NetworkFaultEnum”.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.3
+         */
+        networkFaultChange: OptionalEvent(2, EventPriority.Critical, TlvNetworkFaultChangeEvent),
 
-            /**
-             * The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected by
-             * the Node.
-             *
-             * This field shall represent the set of faults currently detected, as per Section 11.11.4.3,
-             * “NetworkFaultEnum”.
-             *
-             * This field shall represent the set of faults detected prior to this change event, as per Section
-             * 11.11.4.3, “NetworkFaultEnum”.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.3
-             */
-            networkFaultChange: OptionalEvent(2, EventPriority.Critical, TlvNetworkFaultChangeEvent),
-
-            /**
-             * The BootReason Event shall indicate the reason that caused the device to start-up.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.4
-             */
-            bootReason: Event(3, EventPriority.Critical, TlvBootReasonEvent)
-        }
-    });
-
-    /**
-     * This cluster supports all GeneralDiagnostics features.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes },
-        commands: { ...BaseComponent.commands },
-        events: { ...BaseComponent.events }
-    });
-}
+        /**
+         * The BootReason Event shall indicate the reason that caused the device to start-up.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.4
+         */
+        bootReason: Event(3, EventPriority.Critical, TlvBootReasonEvent)
+    }
+});

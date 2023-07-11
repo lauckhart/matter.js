@@ -11,8 +11,17 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "TimeSync", id: 0x38, classification: "node",
     description: "Time Synchronization",
+
     details: "Accurate time is required for a number of reasons, including scheduling, display and validating " +
-             "security materials.",
+             "security materials." +
+             "\n" +
+             "This section describes a mechanism for Nodes to achieve and maintain time synchronization. The Time " +
+             "Cluster provides attributes for reading a Node’s current time. It also allows Administrators to" +
+             "\n" +
+             "set current time, time zone and daylight savings time (DST) settings." +
+             "\n" +
+             "NOTE Support for Time Synchronization is provisional.",
+
     xref: { document: "core", section: "11.16" },
 
     children: [

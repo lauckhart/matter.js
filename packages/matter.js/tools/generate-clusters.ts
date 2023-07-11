@@ -17,10 +17,12 @@ const index = new TsFile(ClusterFile.createFilename("index"));
 
 for (const cluster of mom.clusters) {
     const file = new ClusterFile(cluster);
-    generateCluster(file, cluster);
+    generateCluster(file);
     file.save();
 
-    index.atom(`export { ${file.clusterName} } from "./${file.clusterName}.js"`);
+    if (cluster.id !== undefined) {
+        index.atom(`export { ${file.clusterName} } from "./${file.clusterName}.js"`);
+    }
 }
 
 index.save();

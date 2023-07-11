@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "AudioOutput", id: 0x50b, classification: "application",
     description: "Audio Output",
-    details: "This cluster provides an interface for controlling the Output on a media device such as a TV.",
+    details: "This cluster provides an interface for controlling the Output on a Video Player device such as a TV.",
     xref: { document: "cluster", section: "6.5" },
 
     children: [

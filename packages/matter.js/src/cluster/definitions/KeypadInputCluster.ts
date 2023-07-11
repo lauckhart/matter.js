@@ -7,26 +7,10 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Command, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
+import { Cluster, Command } from "../../cluster/Cluster.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
-
-/**
- * Keypad Input
- *
- * This cluster provides an interface for controlling a device like a TV using action commands such as UP, DOWN, and
- * SELECT.
- *
- * Use this factory function to create a KeypadInput cluster.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
- */
-export function KeypadInputCluster() {
-    const cluster = Cluster({ ...KeypadInputCluster.Metadata, ...KeypadInputCluster.BaseComponent });
-    return cluster as unknown as KeypadInputCluster.Type;
-}
 
 export const enum CecKeyCode {
     Select = 0,
@@ -165,94 +149,80 @@ export const TlvSendKeyResponse = TlvObject({
     status: TlvField(0, TlvEnum<Status>())
 });
 
-export namespace KeypadInputCluster {
+/**
+ * These are optional features supported by KeypadInputCluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.2
+ */
+export enum KeypadInputFeature {
     /**
-     * These are optional features supported by KeypadInputCluster.
+     * NavigationKeyCodes
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.2
+     * Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU
      */
-    export enum Feature {
+    NavigationKeyCodes = "NavigationKeyCodes",
+
+    /**
+     * LocationKeys
+     *
+     * Supports CEC keys 0x0A (Settings) and 0x09 (Home)
+     */
+    LocationKeys = "LocationKeys",
+
+    /**
+     * NumberKeys
+     *
+     * Supports numeric input 0..9
+     */
+    NumberKeys = "NumberKeys"
+}
+
+/**
+ * Keypad Input
+ *
+ * This cluster provides an interface for key code based input and control on a device like a Video Player or an
+ * endpoint like a Content App. This may include text or action commands such as UP, DOWN, and SELECT.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
+ */
+export const KeypadInputCluster = Cluster({
+    id: 0x509,
+    name: "KeypadInput",
+    revision: 1,
+
+    features: {
         /**
          * NavigationKeyCodes
          *
          * Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU
          */
-        NavigationKeyCodes = "NavigationKeyCodes",
+        navigationKeyCodes: BitFlag(0),
 
         /**
          * LocationKeys
          *
          * Supports CEC keys 0x0A (Settings) and 0x09 (Home)
          */
-        LocationKeys = "LocationKeys",
+        locationKeys: BitFlag(1),
 
         /**
          * NumberKeys
          *
          * Supports numeric input 0..9
          */
-        NumberKeys = "NumberKeys"
+        numberKeys: BitFlag(2)
+    },
+
+    commands: {
+        /**
+         * Upon receipt, this shall process a keycode as input to the media device.
+         *
+         * If a second SendKey request with the same KeyCode value is received within 200ms, then the endpoint will
+         * consider the first key press to be a press and hold. When such a repeat KeyCode value is not received within
+         * 200ms, then the endpoint will consider the last key press to be a release.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
+         */
+        sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponse)
     }
-
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
-
-    /**
-     * KeypadInput cluster metadata.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
-     */
-    export const Metadata = ClusterMetadata({
-        id: 0x509,
-        name: "KeypadInput",
-        revision: 1,
-
-        features: {
-            /**
-             * NavigationKeyCodes
-             *
-             * Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU
-             */
-            navigationKeyCodes: BitFlag(0),
-
-            /**
-             * LocationKeys
-             *
-             * Supports CEC keys 0x0A (Settings) and 0x09 (Home)
-             */
-            locationKeys: BitFlag(1),
-
-            /**
-             * NumberKeys
-             *
-             * Supports numeric input 0..9
-             */
-            numberKeys: BitFlag(2)
-        }
-    });
-
-    /**
-     * A KeypadInputCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        commands: {
-            /**
-             * Upon receipt, this shall process a keycode as input to the media device.
-             *
-             * If a second SendKey request with the same KeyCode value is received within 200ms, then the endpoint will
-             * consider the first key press to be a press and hold. When such a repeat KeyCode value is not received
-             * within 200ms, then the endpoint will consider the last key press to be a release.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
-             */
-            sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponse)
-        }
-    });
-
-    /**
-     * This cluster supports all KeypadInput features.
-     */
-    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-}
+});

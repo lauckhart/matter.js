@@ -11,8 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "OperationalCredentials", id: 0x3e, classification: "node",
     description: "Operational Credentials",
-    details: "This cluster is used to add or remove Operational Credentials on a Commissionee or Node, as well as " +
-             "manage the associated Fabrics.",
+    details: "This cluster is used to add or remove Node Operational credentials on a Commissionee or Node, as " +
+             "well as manage the associated Fabrics.",
     xref: { document: "core", section: "11.17" },
 
     children: [
@@ -758,9 +758,8 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "FabricId", id: 0x3, type: "fabric-id", access: "F", conformance: "M",
                     details: "This field shall contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
-                             "shall match the value found in the matter-fabric-id field from the operational certificate provid" +
-                             "\n" +
-                             "ing the operational identity under this Fabric.",
+                             "shall match the value found in the matter-fabric-id field from the operational certificate " +
+                             "providing the operational identity under this Fabric.",
                     xref: { document: "core", section: "11.17.4.5.3" }
                 },
 

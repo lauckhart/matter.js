@@ -11,10 +11,16 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "TimeFormatLocalization", id: 0x2c, classification: "node",
     description: "Time Format Localization",
+
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
              "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually " +
              "or audibly convey time information need a mechanism by which they can be configured to use a user’s " +
-             "preferred format.",
+             "preferred format." +
+             "\n" +
+             "This cluster supports an interface to a Node. It provides attributes for determining and " +
+             "configuring time and date formatting information that a Node shall utilize when conveying values to " +
+             "a user.",
+
     xref: { document: "core", section: "11.4" },
 
     children: [

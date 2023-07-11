@@ -6,29 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, OptionalFixedAttribute, FixedAttribute, Attribute, AccessLevel } from "../../cluster/Cluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, OptionalFixedAttribute, FixedAttribute, Attribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
-
-/**
- * Application Basic
- *
- * This cluster provides information about an application running on a TV or media player device which is represented
- * as an endpoint.
- *
- * Use this factory function to create an ApplicationBasic cluster.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3
- */
-export function ApplicationBasicCluster() {
-    const cluster = Cluster({ ...ApplicationBasicCluster.Metadata, ...ApplicationBasicCluster.BaseComponent });
-    return cluster as unknown as ApplicationBasicCluster.Type;
-}
 
 /**
  * This indicates a global identifier for an Application given a catalog.
@@ -84,94 +68,85 @@ export const enum ApplicationStatus {
     ActiveVisibleNotFocus = 3
 }
 
-export namespace ApplicationBasicCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
+/**
+ * Application Basic
+ *
+ * This cluster provides information about a Content App running on a Video Player device which is represented as an
+ * endpoint (see Device Type Library document).
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3
+ */
+export const ApplicationBasicCluster = Cluster({
+    id: 0x50d,
+    name: "ApplicationBasic",
+    revision: 1,
+    features: {},
 
-    /**
-     * ApplicationBasic cluster metadata.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3
-     */
-    export const Metadata = ClusterMetadata({ id: 0x50d, name: "ApplicationBasic", revision: 1, features: {} });
+    attributes: {
+        /**
+         * This attribute shall specify a human readable (displayable) name of the vendor for the Content App.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.1
+         */
+        vendorName: OptionalFixedAttribute(0, TlvString.bound({ maxLength: 32 }), { default: "" }),
 
-    /**
-     * A ApplicationBasicCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This attribute shall specify a human readable (displayable) name of the vendor for the Content App.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.1
-             */
-            vendorName: OptionalFixedAttribute(0, TlvString.bound({ maxLength: 32 }), { default: "" }),
+        /**
+         * This attribute, if present, shall specify the Connectivity Standards Alliance assigned Vendor ID for the
+         * Content App.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.2
+         */
+        vendorId: OptionalFixedAttribute(1, TlvVendorId, { default: { id: 0 } }),
 
-            /**
-             * This attribute, if present, shall specify the Connectivity Standards Alliance assigned Vendor ID for the
-             * Content App.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.2
-             */
-            vendorId: OptionalFixedAttribute(1, TlvVendorId, { default: { id: 0 } }),
+        /**
+         * This attribute shall specify a human readable (displayable) name of the Content App assigned by the vendor.
+         * For example, "NPR On Demand". The maximum length of the ApplicationName attribute is 256 bytes of UTF-8
+         * characters.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.3
+         */
+        applicationName: FixedAttribute(2, TlvString),
 
-            /**
-             * This attribute shall specify a human readable (displayable) name of the Content App assigned by the
-             * vendor. For example, "NPR On Demand". The maximum length of the ApplicationName attribute is 256 bytes
-             * of UTF-8 characters.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.3
-             */
-            applicationName: FixedAttribute(2, TlvString),
+        /**
+         * This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific Content
+         * App made by them. If the Content App is certified by the Connectivity Standards Alliance, then this would be
+         * the Product ID as specified by the vendor for the certification.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.4
+         */
+        productId: OptionalFixedAttribute(3, TlvUInt16, { default: 0 }),
 
-            /**
-             * This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific
-             * Content App made by them. If the Content App is certified by the Connectivity Standards Alliance, then
-             * this would be the Product ID as specified by the vendor for the certification.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.4
-             */
-            productId: OptionalFixedAttribute(3, TlvUInt16, { default: 0 }),
+        /**
+         * This attribute shall specify a Content App which consists of an Application ID using a specified catalog.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.5
+         */
+        application: FixedAttribute(4, TlvApplicationStruct),
 
-            /**
-             * This attribute shall specify a Content App which consists of an Application ID using a specified catalog.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.5
-             */
-            application: FixedAttribute(4, TlvApplicationStruct),
+        /**
+         * This attribute shall specify the current running status of the application.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.6
+         */
+        status: Attribute(5, TlvEnum<ApplicationStatus>(), { default: ApplicationStatus.ActiveVisibleFocus }),
 
-            /**
-             * This attribute shall specify the current running status of the application.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.6
-             */
-            status: Attribute(5, TlvEnum<ApplicationStatus>(), { default: ApplicationStatus.ActiveVisibleFocus }),
+        /**
+         * This attribute shall specify a human readable (displayable) version of the Content App assigned by the
+         * vendor. The maximum length of the ApplicationVersion attribute is 32 bytes of UTF-8 characters.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.7
+         */
+        applicationVersion: FixedAttribute(6, TlvString.bound({ maxLength: 32 })),
 
-            /**
-             * This attribute shall specify a human readable (displayable) version of the Content App assigned by the
-             * vendor. The maximum length of the ApplicationVersion attribute is 32 bytes of UTF-8 characters.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.7
-             */
-            applicationVersion: FixedAttribute(6, TlvString.bound({ maxLength: 32 })),
-
-            /**
-             * This is a list of vendor IDs. Each entry is a vendor-id.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.8
-             */
-            allowedVendorList: FixedAttribute(
-                7,
-                TlvArray(TlvVendorId),
-                { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
-            )
-        }
-    });
-
-    /**
-     * This cluster supports all ApplicationBasic features.
-     */
-    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-}
+        /**
+         * This is a list of vendor IDs. Each entry is a vendor-id.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.8
+         */
+        allowedVendorList: FixedAttribute(
+            7,
+            TlvArray(TlvVendorId),
+            { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+        )
+    }
+});

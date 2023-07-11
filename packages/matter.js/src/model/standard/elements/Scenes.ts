@@ -10,7 +10,21 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "cluster", name: "Scenes", id: 0x5, classification: "application", description: "Scenes",
-    details: "Attributes and commands for scene configuration and manipulation.",
+
+    details: "The Scenes cluster provides attributes and commands for setting up and recalling scenes. Each scene " +
+             "corresponds to a set of stored values of specified attributes for one or more clusters on the same " +
+             "end point as the Scenes cluster." +
+             "\n" +
+             "In most cases scenes are associated with a particular group identifier. Scenes MAY also exist " +
+             "without a group, in which case the value 0 replaces the group identifier. Note that extra care is " +
+             "required in these cases to avoid a scene identifier collision, and that commands related to scenes " +
+             "without a group MAY only be unicast, i.e., they MAY not be multicast or broadcast." +
+             "\n" +
+             "In a network supporting fabrics, scenes are scoped to the accessing fabric. When storing scene " +
+             "information, implementations need to take care of this." +
+             "\n" +
+             "NOTE Support for Scenes cluster is provisional.",
+
     xref: { document: "cluster", section: "1.4" },
 
     children: [

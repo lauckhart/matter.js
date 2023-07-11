@@ -13,8 +13,7 @@ Matter.children.push({
     description: "Basic Information", singleton: true,
     details: "This cluster provides attributes and events for determining basic information about Nodes, which " +
              "supports both Commissioning and operational determination of Node characteristics, such as Vendor " +
-             "ID, Product ID and serial number, which apply to the whole Node. Also allows setting user device " +
-             "information such as location.",
+             "ID, Product ID and serial number, which apply to the whole Node.",
     xref: { document: "core", section: "11.1" },
 
     children: [

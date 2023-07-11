@@ -11,8 +11,9 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "KeypadInput", id: 0x509, classification: "application",
     description: "Keypad Input",
-    details: "This cluster provides an interface for controlling a device like a TV using action commands such as " +
-             "UP, DOWN, and SELECT.",
+    details: "This cluster provides an interface for key code based input and control on a device like a Video " +
+             "Player or an endpoint like a Content App. This may include text or action commands such as UP, " +
+             "DOWN, and SELECT.",
     xref: { document: "cluster", section: "6.8" },
 
     children: [

@@ -11,7 +11,9 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "PumpConfigurationAndControl", id: 0x200, classification: "application",
     description: "Pump Configuration and Control",
-    details: "An interface for configuring and controlling pumps.",
+    details: "The Pump Configuration and Control cluster provides an interface for the setup and control of pump " +
+             "devices, and the automatic reporting of pump status information. Note that control of pump speed is " +
+             "not included – speed is controlled by the On/Off and Level Control clusters.",
     xref: { document: "cluster", section: "4.2" },
 
     children: [

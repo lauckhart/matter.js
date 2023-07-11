@@ -14,6 +14,20 @@ export const SpecMatter: MatterElement = {
     children: [
         {
             tag: "cluster", name: "Identify", id: 0x3, classification: "endpoint",
+
+            details: "This cluster supports an endpoint identification state (e.g., flashing a light), that indicates to " +
+                     "an observer (e.g., an installer) which of several nodes and/or endpoints it is. It also supports a " +
+                     "multicast request that any endpoint that is identifying itself to respond to the initiator." +
+                     "\n" +
+                     "The state of this cluster MAY be shared on more than one endpoint on a node." +
+                     "\n" +
+                     "For Example: Two endpoints on a single node, one a temperature sensor, and one a humidity sensor, " +
+                     "may both share the same cluster instance and therefore identification state (e.g. single LED on the " +
+                     "node)." +
+                     "\n" +
+                     "Zigbee: Note that this cluster cannot be disabled, and remains functional regardless of the setting " +
+                     "of the DeviceEnable attribute in the Basic cluster.",
+
             xref: { document: "cluster", section: "1.2" },
 
             children: [
@@ -176,6 +190,25 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Groups", id: 0x4, classification: "endpoint",
+
+            details: "The Groups cluster manages, per endpoint, the content of the node-wide Group Table that is part of " +
+                     "the underlying interaction layer." +
+                     "\n" +
+                     "In a network supporting fabrics, group IDs referenced by attributes or other elements of this " +
+                     "cluster are scoped to the accessing fabric." +
+                     "\n" +
+                     "The Groups cluster is scoped to the endpoint. Groups cluster commands support discovering the " +
+                     "endpoint membership in a group, adding the endpoint to a group, removing the endpoint from a group, " +
+                     "removing endpoint membership from all groups. All commands defined in this cluster shall only " +
+                     "affect groups scoped to the accessing fabric." +
+                     "\n" +
+                     "When group names are supported, the server stores a name string, which is set by the client for " +
+                     "each assigned group and indicated in response to a client request." +
+                     "\n" +
+                     "Note that configuration of group addresses for outgoing commands is achieved using the Message " +
+                     "Layer mechanisms where the Group Table is not involved. Hence this cluster does not play a part in " +
+                     "that.",
+
             xref: { document: "cluster", section: "1.3" },
 
             children: [
@@ -372,6 +405,21 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Scenes", id: 0x5, classification: "application",
+
+            details: "The Scenes cluster provides attributes and commands for setting up and recalling scenes. Each scene " +
+                     "corresponds to a set of stored values of specified attributes for one or more clusters on the same " +
+                     "end point as the Scenes cluster." +
+                     "\n" +
+                     "In most cases scenes are associated with a particular group identifier. Scenes MAY also exist " +
+                     "without a group, in which case the value 0 replaces the group identifier. Note that extra care is " +
+                     "required in these cases to avoid a scene identifier collision, and that commands related to scenes " +
+                     "without a group MAY only be unicast, i.e., they MAY not be multicast or broadcast." +
+                     "\n" +
+                     "In a network supporting fabrics, scenes are scoped to the accessing fabric. When storing scene " +
+                     "information, implementations need to take care of this." +
+                     "\n" +
+                     "NOTE Support for Scenes cluster is provisional.",
+
             xref: { document: "cluster", section: "1.4" },
 
             children: [
@@ -809,6 +857,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "OnOff", id: 0x6, classification: "application",
+            details: "Attributes and commands for turning devices on and off.",
             xref: { document: "cluster", section: "1.5" },
 
             children: [
@@ -839,47 +888,15 @@ export const SpecMatter: MatterElement = {
                              "that is stored with group identifier 0 and scene identifier 0." +
                              "\n" +
                              "The GlobalSceneControl attribute is defined in order to prevent a second Off command storing the " +
-                             "all-devices-off situation as a global scene, and to prevent a second On command destroying the cur" +
-                             "\n" +
-                             "rent settings by going back to the global scene." +
+                             "all-devices-off situation as a global scene, and to prevent a second On command destroying the " +
+                             "current settings by going back to the global scene." +
                              "\n" +
                              "The GlobalSceneControl attribute shall be set to TRUE after the reception of a command which causes " +
                              "the OnOff attribute to be set to TRUE, such as a standard On command, a MoveToLevel(WithOnOff) " +
                              "command, a RecallScene command or a OnWithRecallGlobalScene command (see OnWithRecallGlobalScene " +
                              "Command)." +
                              "\n" +
-                             "The GlobalSceneControl attribute is set to FALSE after reception of a OffWithEffect command." +
-                             "\n" +
-                             "These concepts are illustrated in Explanation of the Behavior of Store and Recall Global Scene " +
-                             "functionality using a State Diagram." +
-                             "\n" +
-                             "### OffWithEffect" +
-                             "\n" +
-                             "store global scene" +
-                             "\n" +
-                             "other commands" +
-                             "\n" +
-                             "other commands" +
-                             "\n" +
-                             "GlobalSceneControl" +
-                             "\n" +
-                             ":= TRUE" +
-                             "\n" +
-                             "On" +
-                             "\n" +
-                             "GlobalSceneControl" +
-                             "\n" +
-                             ":= FALSE" +
-                             "\n" +
-                             "recall global scene" +
-                             "\n" +
-                             "OnWithRecallGlobalScene" +
-                             "\n" +
-                             "Note 1: Any command which causes the OnOff attribute to be set to TRUE except " +
-                             "OnWithRecallGlobalScene, e.g. On or Toggle." +
-                             "\n" +
-                             "Figure 1. Explanation of the Behavior of Store and Recall Global Scene functionality using a State " +
-                             "Diagram",
+                             "The GlobalSceneControl attribute is set to FALSE after reception of a OffWithEffect command.",
 
                     xref: { document: "cluster", section: "1.5.6.2" }
                 },
@@ -1053,6 +1070,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "LevelControl", id: 0x8, classification: "application",
+            details: "This cluster provides an interface for controlling a characteristic of a device that can be set to " +
+                     "a level, for example the brightness of a light, the degree of closure of a door, or the power " +
+                     "output of a heater.",
             xref: { document: "cluster", section: "1.6" },
 
             children: [
@@ -1365,6 +1385,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "PulseWidthModulation", id: 0x1c, classification: "application",
+            details: "This cluster provides an interface for controlling a characteristic of a device that can be set to " +
+                     "a level, for example the brightness of a light, the degree of closure of a door, or the power " +
+                     "output of a heater.",
             xref: { document: "cluster", section: "1.6" },
 
             children: [
@@ -1677,6 +1700,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "BooleanState", id: 0x45, classification: "application",
+            details: "This cluster provides an interface to a boolean state called StateValue.",
             xref: { document: "cluster", section: "1.7" },
 
             children: [
@@ -1700,6 +1724,27 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "ModeSelect", id: 0x50, classification: "application",
+
+            details: "This cluster provides an interface for controlling a characteristic of a device that can be set to " +
+                     "one of several predefined values. For example, the light pattern of a disco ball, the mode of a " +
+                     "massage chair, or the wash cycle of a laundry machine." +
+                     "\n" +
+                     "The server allows the client to set a mode on the server. A mode is one of a list of options that " +
+                     "may be presented by a client for a user choice, or understood by the client, via the semantic tags " +
+                     "on the mode." +
+                     "\n" +
+                     "A semantic tag is either a standard tag within a standard category namespace, or a manufacturer " +
+                     "specific tag, within the namespace of the vendor ID of the manufacturer. If there is no semantic " +
+                     "tag, the mode is anonymous, and the selection is made by the user solely based on the Label string." +
+                     "\n" +
+                     "Each cluster ID that indicates this specification shall define a distinct purpose for the cluster " +
+                     "instance. For example: A LightBlinking cluster ID supports blinking modes for a light (and is " +
+                     "described that way)." +
+                     "\n" +
+                     "An anonymous mode shall support the derived cluster purpose. A manufacturer specific semantic tag " +
+                     "shall support the derived cluster purpose. An anonymous mode shall NOT replace the meaning of a " +
+                     "standard semantic tag, when one exists, for the cluster purpose.",
+
             xref: { document: "cluster", section: "1.8" },
 
             children: [
@@ -1890,6 +1935,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "LowPower", id: 0x508, classification: "application",
+            details: "This cluster provides an interface for managing low power mode on a device.",
             xref: { document: "cluster", section: "1.9" },
 
             children: [ {
@@ -1902,6 +1948,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "WakeOnLan", id: 0x503, classification: "application",
+            details: "This cluster provides an interface for managing low power mode on a device that supports the Wake " +
+                     "On LAN or Wake On Wireless LAN (WLAN) protocol (see [Wake On LAN]).",
             xref: { document: "cluster", section: "1.10" },
 
             children: [
@@ -1933,6 +1981,20 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Switch", id: 0x3b, classification: "application",
+
+            details: "This cluster exposes interactions with a switch device, for the purpose of using those interactions " +
+                     "by other devices." +
+                     "\n" +
+                     "Two types of switch devices are supported: latching switch (e.g. rocker switch) and momentary " +
+                     "switch (e.g. push button), distinguished with their feature flags." +
+                     "\n" +
+                     "Interactions with the switch device are exposed as attributes (for the latching switch) and as " +
+                     "events (for both types of switches)." +
+                     "\n" +
+                     "An interested client MAY subscribe to these attributes/events and thus be informed of the " +
+                     "interactions, and can perform actions based on this, for example by sending commands to perform an " +
+                     "action such as controlling a light or a window shade.",
+
             xref: { document: "cluster", section: "1.11" },
 
             children: [
@@ -2209,6 +2271,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "TemperatureMeasurement", id: 0x402, classification: "application",
+            details: "This cluster provides an interface to temperature measurement functionality, including " +
+                     "configuration and provision of notifications of temperature measurements.",
             xref: { document: "cluster", section: "2.3" },
 
             children: [
@@ -2257,6 +2321,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "PressureMeasurement", id: 0x403, classification: "application",
+            details: "This cluster provides an interface to pressure measurement functionality, including configuration " +
+                     "and provision of notifications of pressure measurements.",
             xref: { document: "cluster", section: "2.4" },
 
             children: [
@@ -2360,6 +2426,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "FlowMeasurement", id: 0x404, classification: "application",
+            details: "This cluster provides an interface to flow measurement functionality, including configuration and " +
+                     "provision of notifications of flow measurements.",
             xref: { document: "cluster", section: "2.5" },
 
             children: [
@@ -2404,6 +2472,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "RelativeHumidityMeasurement", id: 0x405, classification: "application",
+            details: "This is a base cluster. The server cluster provides an interface to water content measurement " +
+                     "functionality. The measurement is reportable and may be configured for reporting. Water content " +
+                     "measurements include, but are not limited to, leaf wetness, relative humidity, and soil moisture.",
             xref: { document: "cluster", section: "2.6" },
 
             children: [
@@ -2455,6 +2526,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "LeafWetnessMeasurement", id: 0x407, classification: "application",
+            details: "This is a base cluster. The server cluster provides an interface to water content measurement " +
+                     "functionality. The measurement is reportable and may be configured for reporting. Water content " +
+                     "measurements include, but are not limited to, leaf wetness, relative humidity, and soil moisture.",
             xref: { document: "cluster", section: "2.6" },
 
             children: [
@@ -2506,6 +2580,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "SoilMoistureMeasurement", id: 0x408, classification: "application",
+            details: "This is a base cluster. The server cluster provides an interface to water content measurement " +
+                     "functionality. The measurement is reportable and may be configured for reporting. Water content " +
+                     "measurements include, but are not limited to, leaf wetness, relative humidity, and soil moisture.",
             xref: { document: "cluster", section: "2.6" },
 
             children: [
@@ -4273,6 +4350,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "PumpConfigurationAndControl", id: 0x200, classification: "application",
+            details: "The Pump Configuration and Control cluster provides an interface for the setup and control of pump " +
+                     "devices, and the automatic reporting of pump status information. Note that control of pump speed is " +
+                     "not included – speed is controlled by the On/Off and Level Control clusters.",
             xref: { document: "cluster", section: "4.2" },
 
             children: [
@@ -4874,6 +4954,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Thermostat", id: 0x201, classification: "application",
+            details: "This cluster provides an interface to the functionality of a thermostat.",
             xref: { document: "cluster", section: "4.3" },
 
             children: [
@@ -6191,6 +6272,8 @@ export const SpecMatter: MatterElement = {
         {
             tag: "cluster", name: "ThermostatUserInterfaceConfiguration", id: 0x204,
             classification: "application",
+            details: "This cluster provides an interface to allow configuration of the user interface for a thermostat, " +
+                     "or a thermostat controller device, that supports a keypad and LCD screen.",
             xref: { document: "cluster", section: "4.5" },
 
             children: [
@@ -7797,6 +7880,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "WindowCovering", id: 0x102, classification: "application",
+            details: "The window covering cluster provides an interface for controlling and adjusting automatic window " +
+                     "coverings such as drapery motors, automatic shades, curtains and blinds.",
             xref: { document: "cluster", section: "5.3" },
 
             children: [
@@ -8321,6 +8406,10 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "AccountLogin", id: 0x50e, classification: "application",
+            details: "This cluster provides commands that facilitate user account login on a Content App or a node. For " +
+                     "example, a Content App running on a Video Player device, which is represented as an endpoint (see " +
+                     "Device Type Library document), can use this cluster to help make the user account on the Content " +
+                     "App match the user account on the Client.",
             xref: { document: "cluster", section: "6.2" },
 
             children: [
@@ -8471,6 +8560,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "ApplicationBasic", id: 0x50d, classification: "application",
+            details: "This cluster provides information about a Content App running on a Video Player device which is " +
+                     "represented as an endpoint (see Device Type Library document).",
             xref: { document: "cluster", section: "6.3" },
 
             children: [
@@ -8596,6 +8687,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "ApplicationLauncher", id: 0x50c, classification: "application",
+            details: "This cluster provides an interface for launching applications on a Video Player device such as a TV.",
             xref: { document: "cluster", section: "6.4" },
 
             children: [
@@ -8810,6 +8902,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "AudioOutput", id: 0x50b, classification: "application",
+            details: "This cluster provides an interface for controlling the Output on a Video Player device such as a TV.",
             xref: { document: "cluster", section: "6.5" },
 
             children: [
@@ -8902,6 +8995,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Channel", id: 0x504, classification: "application",
+            details: "This cluster provides an interface for controlling the current Channel on a device or endpoint.",
             xref: { document: "cluster", section: "6.6" },
 
             children: [
@@ -9129,6 +9223,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "ContentLauncher", id: 0x50a, classification: "application",
+            details: "This cluster provides an interface for launching content on a Video Player device such as a " +
+                     "Streaming Media Player, Smart TV or Smart Screen.",
             xref: { document: "cluster", section: "6.7" },
 
             children: [
@@ -9536,6 +9632,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "KeypadInput", id: 0x509, classification: "application",
+            details: "This cluster provides an interface for key code based input and control on a device like a Video " +
+                     "Player or an endpoint like a Content App. This may include text or action commands such as UP, " +
+                     "DOWN, and SELECT.",
             xref: { document: "cluster", section: "6.8" },
 
             children: [
@@ -9607,6 +9706,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "MediaInput", id: 0x507, classification: "application",
+            details: "This cluster provides an interface for controlling the Input Selector on a media device such as a " +
+                     "Video Player.",
             xref: { document: "cluster", section: "6.9" },
 
             children: [
@@ -9736,6 +9837,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "MediaPlayback", id: 0x506, classification: "application",
+            details: "This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media " +
+                     "device such as a TV, Set-top Box, or Smart Speaker.",
             xref: { document: "cluster", section: "6.10" },
 
             children: [
@@ -10122,6 +10225,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "TargetNavigator", id: 0x505, classification: "application",
+            details: "This cluster provides an interface for UX navigation within a set of targets on a device or " +
+                     "endpoint.",
             xref: { document: "cluster", section: "6.11" },
 
             children: [
@@ -10230,6 +10335,19 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Descriptor", id: 0x1d, classification: "endpoint",
+
+            details: "NOTE The Descriptor cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
+                     "describing a node, its endpoints and clusters." +
+                     "\n" +
+                     "This cluster describes an endpoint instance on the node, independently from other endpoints, but " +
+                     "also allows composition of endpoints to conform to complex device type patterns." +
+                     "\n" +
+                     "This cluster supports a list of one or more device type identifiers that represent conformance to " +
+                     "device type specifications." +
+                     "\n" +
+                     "The cluster supports a PartsList attribute that is a list of zero or more endpoints to support a " +
+                     "composed device type.",
+
             xref: { document: "core", section: "9.5" },
 
             children: [
@@ -10301,6 +10419,39 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Binding", id: 0x1e, classification: "endpoint",
+
+            details: "NOTE" +
+                     "\n" +
+                     "This scope of this document is the Binding cluster as part of the Cluster Library. The Binding " +
+                     "cluster is meant to replace the support from the Zigbee Device Object (ZDO) for supporting the " +
+                     "binding table." +
+                     "\n" +
+                     "A binding represents a persistent relationship between an endpoint and one or more other local or " +
+                     "remote endpoints. A binding does not require that the relationship exists. It is up to the node " +
+                     "application to set up the relationship." +
+                     "\n" +
+                     "A binding is used to inform a client endpoint of one or more targets for a potential interaction. " +
+                     "For example: a light switch that controls one or more light bulbs, needs to be told the nodes and " +
+                     "endpoints of the bulbs, or told a group in which the bulbs are members. For example: A client that " +
+                     "needs to subscribe to an occupancy sensor, needs to know the node and endpoint of the sensor." +
+                     "\n" +
+                     "In such cases, a binding is used to direct a local endpoint to a target. The existence of the " +
+                     "Binding cluster on the client endpoint, allows the creation of one or more binding entries " +
+                     "(bindings) in the Binding cluster." +
+                     "\n" +
+                     "Each binding indicates another endpoint or cluster on another endpoint. Multiple bindings are " +
+                     "allowed, depending on the interaction." +
+                     "\n" +
+                     "A binding is either a unicast binding, where the target is a single endpoint on a single node, or a " +
+                     "groupcast binding, where the target is a group, which may indicate multiple endpoints on multiple " +
+                     "nodes. The binding may also target a single cluster on the target endpoint(s)." +
+                     "\n" +
+                     "When a client cluster requires a target for an interaction, the Binding cluster shall exist on the " +
+                     "same endpoint." +
+                     "\n" +
+                     "Once a binding entry is created on the Binding cluster, the client endpoint MAY initiate " +
+                     "interactions to the binding target.",
+
             xref: { document: "core", section: "9.6" },
 
             children: [
@@ -10352,6 +10503,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Label", classification: "endpoint",
+            details: "This cluster provides a feature to tag an endpoint with zero or more labels. This is a base cluster " +
+                     "that requires a derived cluster to create an instance.",
             xref: { document: "core", section: "9.7" },
 
             children: [
@@ -10392,6 +10545,19 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "FixedLabel", id: 0x40, type: "Label", classification: "endpoint",
+
+            details: "This cluster provides a feature for the device to tag an endpoint with zero or more read only " +
+                     "labels. Examples:" +
+                     "\n" +
+                     "  • A bridge can use this to indicate grouping of bridged devices. For example: All bridged devices " +
+                     "    whose endpoints have an entry in their LabelList \"room\":\"bedroom 2\" are in the same (bed)room." +
+                     "\n" +
+                     "  • A manufacturer can use this to identify a characteristic of an endpoint. For example to " +
+                     "    identify the endpoints of a luminaire, one pointing up, the other pointing down, one of the " +
+                     "    endpoints would have a LabelList entry \"orientation\":\"up\" while the other would have " +
+                     "    \"orientation\":\"down\". Using such indication, the user interface of a Node controlling this " +
+                     "    luminaire knows which of the endpoints is which of the lights.",
+
             xref: { document: "core", section: "9.8" },
 
             children: [ {
@@ -10404,6 +10570,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "UserLabel", id: 0x41, type: "Label", classification: "endpoint",
+            details: "This cluster provides a feature to tag an endpoint with zero or more labels.",
             xref: { document: "core", section: "9.9" },
 
             children: [ {
@@ -10418,6 +10585,16 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "AccessControl", id: 0x1f, classification: "node",
+
+            details: "The Access Control Cluster exposes a data model view of a Node’s Access Control List (ACL), which " +
+                     "codifies the rules used to manage and enforce Access Control for the Node’s endpoints and their " +
+                     "associated cluster instances. Access to this Access Control Cluster itself requires a special " +
+                     "Administer privilege level, such that only Nodes granted such privilege (hereafter termed " +
+                     "\"Administrators\") can manage the Access Control Cluster." +
+                     "\n" +
+                     "The Access Control Cluster shall be present on the root node endpoint of each Node, and shall NOT " +
+                     "be present on any other Endpoint of any Node.",
+
             xref: { document: "core", section: "9.10" },
 
             children: [
@@ -10807,6 +10984,33 @@ export const SpecMatter: MatterElement = {
         {
             tag: "cluster", name: "BridgedDeviceBasicInformation", id: 0x39, type: "BasicInformation",
             classification: "endpoint",
+
+            details: "This Cluster serves two purposes towards a Node communicating with a Bridge:" +
+                     "\n" +
+                     "  • Indicate that the functionality on the Endpoint where it is placed (and its Parts) is bridged " +
+                     "    from a non-Matter technology, and" +
+                     "\n" +
+                     "  • Provide a centralized collection of attributes that the Node MAY collect to aid in conveying " +
+                     "    information regarding the Bridged Device to a user, such as the vendor name, the model name, or " +
+                     "    user-assigned name." +
+                     "\n" +
+                     "This cluster shall be exposed by a Bridge on the Endpoint representing each Bridged Device. When " +
+                     "the functionality of a Bridged Device is represented using a set of Endpoints, this cluster shall " +
+                     "only be exposed on the Endpoint which is at the top of the hierarchy for the functionality of that " +
+                     "Bridged Device." +
+                     "\n" +
+                     "This cluster shall NOT be used on an endpoint that is not in the Descriptor cluster PartsList of an " +
+                     "endpoint with an Aggregator device type." +
+                     "\n" +
+                     "This cluster has been derived from the Basic Information Cluster, and provides generic information " +
+                     "about the Bridged Device. Not all of the attributes in the Basic Information Cluster are relevant " +
+                     "for a Bridged Device (e.g. ProductID since it is not a Matter device). For other attributes, the " +
+                     "information which is listed as Mandatory for the Basic Information Cluster, may not be available " +
+                     "when the Bridged Device does not provide it to the Bridge, and the Bridge has no other means to " +
+                     "determine it. For such cases where the information for a particular attribute is not available, the " +
+                     "Bridge SHOULD NOT include the attribute in the cluster for this Bridged Device. See below for " +
+                     "Conformance details.",
+
             xref: { document: "core", section: "9.13" },
 
             children: [
@@ -10917,6 +11121,42 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "Actions", id: 0x25, classification: "application",
+
+            details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to " +
+                     "expose" +
+                     "\n" +
+                     "  • Information about logical grouping of endpoints on the Node (example: lights in a room)" +
+                     "\n" +
+                     "  • Information about named actions that can be performed on such a group of endpoints (example: " +
+                     "    recall a scene for a group of lights by its name)" +
+                     "\n" +
+                     "  • Commands to trigger such actions" +
+                     "\n" +
+                     "  • Events to receive feedback on the state of such actions." +
+                     "\n" +
+                     "The information on grouping and available actions is typically provided by the user or Bridge " +
+                     "manufacturer via some means not defined in Matter, and therefore provided as read-only to Nodes. " +
+                     "For example: a manufacturer-provided app allows a user to set up logical grouping and create/assign " +
+                     "scene for such groups." +
+                     "\n" +
+                     "Using this cluster, a Node can learn about such logical grouping, provided actions, and trigger " +
+                     "such actions." +
+                     "\n" +
+                     "While the origin of this cluster stems from use cases with a Bridge, its server side may also be " +
+                     "implemented on any Node which can expose certain grouping, actions or automations to other users." +
+                     "\n" +
+                     "After defining the attributes, commands and events for this cluster, and the associated data types, " +
+                     "several examples are provided to illustrate the capabilities of this cluster." +
+                     "\n" +
+                     "Actions can be defined in a flexible manner to suit the needs of the various nodes implementing " +
+                     "this cluster. For each action, the commands available for that particular action are defined." +
+                     "\n" +
+                     "This cluster can be used to expose only the grouping of endpoints without any actions defined by " +
+                     "populating the EndpointList attribute accordingly and providing an empty list for ActionList." +
+                     "\n" +
+                     "The term 'action' in the description of this cluster should not be confused with the term 'action' " +
+                     "as used in the Interaction Model.",
+
             xref: { document: "core", section: "9.14" },
 
             children: [
@@ -11567,6 +11807,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "ProxyDiscovery", id: 0x43, classification: "node",
+            details: "This cluster contains commands needed to do proxy discovery as defined in the Section 9.15.7.3, " +
+                     "“Step 2: Proxy Discovery” and Section 9.15.7.4, “Step 3: Proxy Response” steps of the overall " +
+                     "Section 9.15.7, “Proxy Discovery & Assignment Flow”.",
             xref: { document: "core", section: "9.15.13" },
 
             children: [
@@ -11584,6 +11827,7 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "ProxyConfiguration", id: 0x42, classification: "node",
+            details: "This cluster provides a means for a proxy-capable device to be told the set of Nodes it shall proxy.",
             xref: { document: "core", section: "9.15.14" },
 
             children: [
@@ -11627,6 +11871,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "ValidProxies", id: 0x44, classification: "node",
+            details: "This cluster provides a means for a device to be told of the valid set of possible proxies that can " +
+                     "proxy subscriptions on its behalf as per Section 9.15.7, “Proxy Discovery & Assignment Flow”.",
             xref: { document: "core", section: "9.15.15" },
 
             children: [
@@ -11661,6 +11907,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "BasicInformation", id: 0x28, classification: "node",
+            details: "This cluster provides attributes and events for determining basic information about Nodes, which " +
+                     "supports both Commissioning and operational determination of Node characteristics, such as Vendor " +
+                     "ID, Product ID and serial number, which apply to the whole Node.",
             xref: { document: "core", section: "11.1" },
 
             children: [
@@ -12359,6 +12608,15 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "LocalizationConfiguration", id: 0x2b, classification: "node",
+
+            details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
+                     "may have differing common languages, units of measurements, and numerical formatting standards. As " +
+                     "such, Nodes that visually or audibly convey information need a mechanism by which they can be " +
+                     "configured to use a user’s preferred language, units, etc." +
+                     "\n" +
+                     "This cluster supports an interface to a Node. It provides attributes for determining and " +
+                     "configuring localization information that a Node shall utilize when conveying values to a user.",
+
             xref: { document: "core", section: "11.3" },
 
             children: [
@@ -12391,6 +12649,16 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "TimeFormatLocalization", id: 0x2c, classification: "node",
+
+            details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
+                     "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually " +
+                     "or audibly convey time information need a mechanism by which they can be configured to use a user’s " +
+                     "preferred format." +
+                     "\n" +
+                     "This cluster supports an interface to a Node. It provides attributes for determining and " +
+                     "configuring time and date formatting information that a Node shall utilize when conveying values to " +
+                     "a user.",
+
             xref: { document: "core", section: "11.4" },
 
             children: [
@@ -12466,6 +12734,15 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "UnitLocalization", id: 0x2d, classification: "node",
+
+            details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
+                     "may have differing preferences for the units in which values are conveyed in communication to a " +
+                     "user. As such, Nodes that visually or audibly convey measurable values to the user need a mechanism " +
+                     "by which they can be configured to use a user’s preferred unit." +
+                     "\n" +
+                     "This cluster supports an interface to a Node. It provides attributes for determining and " +
+                     "configuring the units that a Node shall utilize when conveying values in communication to a user.",
+
             xref: { document: "core", section: "11.5" },
 
             children: [
@@ -12501,6 +12778,9 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "PowerSourceConfiguration", id: 0x2e, classification: "endpoint",
+            details: "This cluster is used to describe the configuration and capabilities of a Device’s power system. It " +
+                     "provides an ordering overview as well as linking to the one or more endpoints each supporting a " +
+                     "Power Source cluster.",
             xref: { document: "core", section: "11.6" },
 
             children: [ {
@@ -12524,6 +12804,10 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "PowerSource", id: 0x2f, classification: "node",
+            details: "This cluster is used to describe the configuration and capabilities of a physical power source that " +
+                     "provides power to the Node. In case the Node has multiple power sources, each is described by its " +
+                     "own Power Source cluster. The Power Source Configuration cluster referenced by the Root Node device " +
+                     "type for the Node provides the overview of the power source(s) of the Node.",
             xref: { document: "core", section: "11.7" },
 
             children: [
@@ -13156,6 +13440,21 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "NetworkCommissioning", id: 0x31, classification: "node",
+
+            details: "Network commissioning is part of the overall Node commissioning. The main goal of Network " +
+                     "Commissioning Cluster is to associate a Node with or manage a Node’s one or more network " +
+                     "interfaces. These network interfaces can include the following types." +
+                     "\n" +
+                     "  • Wi-Fi (IEEE 802.11-2020)" +
+                     "\n" +
+                     "  • Ethernet (802.3)" +
+                     "\n" +
+                     "  • Thread (802.15.4)" +
+                     "\n" +
+                     "An instance of the Network Commissioning Cluster only applies to a single network interface " +
+                     "instance present. An interface, in this context, is a unique entity that can have an IPv6 address " +
+                     "assigned to it and ingress and egress IP packets.",
+
             xref: { document: "core", section: "11.8" },
 
             children: [
@@ -14065,6 +14364,15 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "GeneralCommissioning", id: 0x30, classification: "node",
+
+            details: "This cluster is used to manage basic commissioning lifecycle." +
+                     "\n" +
+                     "This cluster also represents responsibilities related to commissioning that don’t well fit other " +
+                     "commissioning clusters, like Section 11.8, “Network Commissioning Cluster”. It also hosts " +
+                     "functionalities" +
+                     "\n" +
+                     "those other clusters may depend on.",
+
             xref: { document: "core", section: "11.9" },
 
             children: [
@@ -14507,6 +14815,15 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "DiagnosticLogs", id: 0x32, classification: "node",
+
+            details: "This Cluster supports an interface to a Node. It provides commands for retrieving unstructured " +
+                     "diagnostic logs from a Node that may be used to aid in diagnostics. It will often be the case that " +
+                     "unstructured diagnostic logs will be Node-wide and not specific to any subset of Endpoints. When " +
+                     "present, this Cluster shall be implemented once for the Node. The Node SHOULD also implement the " +
+                     "BDX Initiator and BDX Sender roles as defined in the BDX Protocol." +
+                     "\n" +
+                     "NOTE Support for Diagnostic Logs cluster is provisional.",
+
             xref: { document: "core", section: "11.10" },
 
             children: [
@@ -14712,6 +15029,10 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "GeneralDiagnostics", id: 0x33, classification: "node",
+            details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire " +
+                     "standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrator in " +
+                     "diagnosing potential problems. The General Diagnostics Cluster attempts to centralize all metrics " +
+                     "that are broadly relevant to the majority of Nodes.",
             xref: { document: "core", section: "11.11" },
 
             children: [
@@ -15149,6 +15470,10 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "SoftwareDiagnostics", id: 0x34, classification: "node",
+            details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that " +
+                     "MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+                     "Software Diagnostics Cluster attempts to centralize all metrics that are relevant to the software " +
+                     "that may be running on a Node.",
             xref: { document: "core", section: "11.12" },
 
             children: [
@@ -15298,6 +15623,10 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "ThreadNetworkDiagnostics", id: 0x35, classification: "node",
+            details: "The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
+                     "that MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+                     "Thread Network Diagnostics Cluster attempts to centralize all metrics that are relevant to a " +
+                     "potential Thread radio running on a Node.",
             xref: { document: "core", section: "11.13" },
 
             children: [
@@ -16260,6 +16589,10 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "WiFiNetworkDiagnostics", id: 0x36, classification: "node",
+            details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
+                     "that MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+                     "Wi-Fi Network Diagnostics Cluster attempts to centralize all metrics that are relevant to a " +
+                     "potential Wi-Fi radio running on a Node.",
             xref: { document: "core", section: "11.14" },
 
             children: [
@@ -16523,6 +16856,10 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "EthernetNetworkDiagnostics", id: 0x37, classification: "node",
+            details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics " +
+                     "metrics that MAY be used by a Node to assist a user or Administrator in diagnosing potential " +
+                     "problems. The Ethernet Network Diagnostics Cluster attempts to centralize all metrics that are " +
+                     "relevant to a potential Ethernet connection to a Node.",
             xref: { document: "core", section: "11.15" },
 
             children: [
@@ -16665,6 +17002,17 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "TimeSync", id: 0x38, classification: "node",
+
+            details: "Accurate time is required for a number of reasons, including scheduling, display and validating " +
+                     "security materials." +
+                     "\n" +
+                     "This section describes a mechanism for Nodes to achieve and maintain time synchronization. The Time " +
+                     "Cluster provides attributes for reading a Node’s current time. It also allows Administrators to" +
+                     "\n" +
+                     "set current time, time zone and daylight savings time (DST) settings." +
+                     "\n" +
+                     "NOTE Support for Time Synchronization is provisional.",
+
             xref: { document: "core", section: "11.16" },
 
             children: [
@@ -17078,6 +17426,8 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "OperationalCredentials", id: 0x3e, classification: "node",
+            details: "This cluster is used to add or remove Node Operational credentials on a Commissionee or Node, as " +
+                     "well as manage the associated Fabrics.",
             xref: { document: "core", section: "11.17" },
 
             children: [
@@ -17838,9 +18188,8 @@ export const SpecMatter: MatterElement = {
                         {
                             tag: "datatype", name: "FabricId", id: 0x3, type: "fabric-id", access: "F", conformance: "M",
                             details: "This field shall contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
-                                     "shall match the value found in the matter-fabric-id field from the operational certificate provid" +
-                                     "\n" +
-                                     "ing the operational identity under this Fabric.",
+                                     "shall match the value found in the matter-fabric-id field from the operational certificate " +
+                                     "providing the operational identity under this Fabric.",
                             xref: { document: "core", section: "11.17.4.5.3" }
                         },
 
@@ -17866,6 +18215,11 @@ export const SpecMatter: MatterElement = {
 
         {
             tag: "cluster", name: "AdministratorCommissioning", id: 0x3c, classification: "node",
+            details: "This cluster is used to trigger a Node to allow a new Administrator to commission it. It defines " +
+                     "Attributes, Commands and Responses needed for this purpose." +
+                     "\n" +
+                     "For the management of Operational Credentials and Trusted Root Certificates, the Node Operational " +
+                     "Credentials cluster is used.",
             xref: { document: "core", section: "11.18" },
 
             children: [

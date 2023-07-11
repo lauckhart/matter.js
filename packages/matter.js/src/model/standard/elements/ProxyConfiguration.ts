@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "ProxyConfiguration", id: 0x42, classification: "node",
     description: "Proxy Configuration",
-    details: "Cluster to control Proxy Configuration",
+    details: "This cluster provides a means for a proxy-capable device to be told the set of Nodes it shall proxy.",
     xref: { document: "core", section: "9.15.14" },
 
     children: [

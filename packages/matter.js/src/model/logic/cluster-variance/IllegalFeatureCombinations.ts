@@ -58,7 +58,7 @@ export function IllegalFeatureCombinations(cluster: ClusterModel) {
         illegal.push(flags);
     }
 
-    return illegal;
+    return { illegal, requiresFeatures: !!choices.length };
 }
 
 function addFeatureNode(feature: DatatypeModel, node: Conformance.Ast, illegal: IllegalFeatureCombinations, choices: Choices) {
