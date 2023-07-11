@@ -7,10 +7,14 @@
 import { MatterError } from "../common/MatterError.js";
 import { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
 import { serialize } from "../util/String.js";
-import { Attributes, Cluster, Commands, Events } from "./Cluster.js";
+import { Merge } from "../util/Type.js";
+import { Attributes, Cluster, Commands, Events, GlobalAttributes } from "./Cluster.js";
 
 export class IllegalClusterError extends MatterError { }
 
+/**
+ * A "cluster component" is a set of elements that can be added to a cluster.
+ */
 export type ClusterComponent<A extends Attributes, C extends Commands, E extends Events> = {
     readonly attributes: A,
     readonly commands: C,
@@ -33,17 +37,60 @@ export function ClusterComponent<
     };
 }
 
-export type ClusterMetadata<F extends BitSchema> = {
+/**
+ * A "base cluster component" contains properties and elements that apply to a
+ * cluster regardless of which features are enabled.
+ */
+export type BaseClusterComponent<F extends BitSchema, A extends Attributes, C extends Commands, E extends Events> = {
     id: number,
     name: string,
     revision: number,
-    features: F
+    readonly features: F
+} & ClusterComponent<A, C, E>;
+
+export function BaseClusterComponent<
+    F extends BitSchema,
+    A extends Attributes,
+    C extends Commands,
+    E extends Events
+>({
+    id,
+    name,
+    revision,
+    features = {} as F,
+    attributes = {} as A,
+    commands = {} as C,
+    events = {} as E
+}: {
+    id: number,
+    name: string,
+    revision: number,
+    features?: F
+} & Partial<ClusterComponent<A, C, E>>): BaseClusterComponent<F, A, C, E> {
+    return {
+        id,
+        name,
+        revision,
+        features,
+        attributes,
+        commands,
+        events
+    };
 }
 
-export function ClusterMetadata<F extends BitSchema>(metadata: ClusterMetadata<F>): ClusterMetadata<F> {
-    return metadata;
-}
+/**
+ * Obtain a cluster type for a BaseClusterComponent.
+ */
+export type ClusterForBaseCluster<T, SF> =
+    T extends BaseClusterComponent<infer F, infer A, infer C, infer E>
+        ? SF extends TypeFromPartialBitSchema<F>
+            ? Cluster<F, SF, A, C, E>
+        : never
+    : never;
 
+/**
+ * Injects a set of functionality into a cluster.
+ */
 export function extendCluster<F extends BitSchema>(
     cluster: Cluster<F, any, any, any, any>,
     component: ClusterComponent<any, any, any>,
@@ -89,6 +136,22 @@ export function extendCluster<F extends BitSchema>(
     }
 }
 
+/**
+ * Validates a set of feature flags against the features supported by a
+ * cluster.
+ */
+export function validateFeatureSelection(features: string[], validFeatures: { [name: string]: string }) {
+    for (const f of features) {
+        if (!validFeatures[f]) {
+            throw new IllegalClusterError(`"${f} is not a valid feature identifier`);
+        }
+    }
+}
+
+/**
+ * Throws an error if a feature combination is illegal per the Matter
+ * specification.
+ */
 export function preventCluster<F extends BitSchema>(
     cluster: Cluster<F, any, any, any, any>,
     ...illegalFeatureCombinations: TypeFromPartialBitSchema<F>[]
@@ -101,4 +164,82 @@ export function preventCluster<F extends BitSchema>(
         }
         throw new IllegalClusterError(`Feature combination ${serialize(bitmap)} is disallowed by the Matter specification`);
     }
+}
+
+export type ClusterFactory = (...features: any) => Cluster<any, any, any, any, any>;
+
+/**
+ * This is a cluster that can be extended with optional features.
+ */
+export type ExtensibleCluster<
+    F extends BitSchema,
+    SF extends TypeFromPartialBitSchema<F>,
+    A extends Attributes,
+    C extends Commands,
+    E extends Events,
+    W extends ClusterFactory
+> = Cluster<F, SF, A, C, E> & {
+    with: W
+};
+
+export function ExtensibleCluster<
+    F extends BitSchema,
+    SF extends TypeFromPartialBitSchema<F>,
+    W extends ClusterFactory,
+    A extends Attributes = {},
+    C extends Commands = {},
+    E extends Events = {},
+>({
+    id,
+    name,
+    revision,
+    features = <F>{},
+    supportedFeatures = <SF>{},
+    attributes = <A>{},
+    commands = <C>{},
+    events = <E>{},
+    factory
+}: {
+    id: number,
+    name: string,
+    revision: number,
+    features?: F,
+    supportedFeatures?: SF,
+    attributes?: A,
+    commands?: C,
+    events?: E,
+    factory: W
+}): ExtensibleCluster<F, SF, Merge<A, GlobalAttributes<F>>, C, E, W> {
+    return {
+        ...Cluster({
+            id,
+            name,
+            revision,
+            features,
+            supportedFeatures,
+            commands,
+            attributes,
+            events
+        }),
+        with: factory
+    }
+}
+
+/**
+ * This is a factory for clusters that cannot be used without supporting one
+ * or more optional features.  These features are "optional" in the sense that
+ * they need not all be present but one or more is required.
+ */
+export type ExtensionRequiredCluster<W extends ClusterFactory> = {
+    with: W
+}
+
+export function ExtensionRequiredCluster<
+    W extends ClusterFactory
+>({
+    factory
+}: {
+    factory: W
+}): ExtensionRequiredCluster<W> {
+    return { with: factory };
 }

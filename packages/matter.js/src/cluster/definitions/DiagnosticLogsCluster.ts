@@ -6,27 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, Command } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Command, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
-
-/**
- * Diagnostic Logs
- *
- * The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be used to aid in
- * diagnostics.
- *
- * Use this factory function to create a DiagnosticLogs cluster.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.10
- */
-export function DiagnosticLogsCluster() {
-    const cluster = Cluster({ ...DiagnosticLogsCluster.Metadata, ...DiagnosticLogsCluster.BaseComponent });
-    return cluster as unknown as DiagnosticLogsCluster.Type;
-}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1
@@ -223,35 +207,30 @@ export const TlvRetrieveLogsResponse = TlvObject({
     timeSinceBoot: TlvOptionalField(3, TlvUInt64)
 });
 
-export namespace DiagnosticLogsCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
+/**
+ * Diagnostic Logs
+ *
+ * This Cluster supports an interface to a Node. It provides commands for retrieving unstructured diagnostic logs from
+ * a Node that may be used to aid in diagnostics. It will often be the case that unstructured diagnostic logs will be
+ * Node-wide and not specific to any subset of Endpoints. When present, this Cluster shall be implemented once for the
+ * Node. The Node SHOULD also implement the BDX Initiator and BDX Sender roles as defined in the BDX Protocol.
+ *
+ * NOTE Support for Diagnostic Logs cluster is provisional.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.10
+ */
+export const DiagnosticLogsCluster = Cluster({
+    id: 0x32,
+    name: "DiagnosticLogs",
+    revision: 1,
+    features: {},
 
-    /**
-     * DiagnosticLogs cluster metadata.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.10
-     */
-    export const Metadata = ClusterMetadata({ id: 0x32, name: "DiagnosticLogs", revision: 1, features: {} });
-
-    /**
-     * A DiagnosticLogsCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        commands: {
-            /**
-             * Reception of this command starts the process of retrieving diagnostic logs from a Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
-             */
-            retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponse)
-        }
-    });
-
-    /**
-     * This cluster supports all DiagnosticLogs features.
-     */
-    export const Complete = Cluster({ ...Metadata, commands: { ...BaseComponent.commands } });
-}
+    commands: {
+        /**
+         * Reception of this command starts the process of retrieving diagnostic logs from a Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
+         */
+        retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponse)
+    }
+});

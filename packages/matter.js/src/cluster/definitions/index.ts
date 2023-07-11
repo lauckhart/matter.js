@@ -45,7 +45,6 @@ export { MediaPlaybackCluster } from "./MediaPlaybackCluster.js";
 export { TargetNavigatorCluster } from "./TargetNavigatorCluster.js";
 export { DescriptorCluster } from "./DescriptorCluster.js";
 export { BindingCluster } from "./BindingCluster.js";
-export { LabelCluster } from "./LabelCluster.js";
 export { FixedLabelCluster } from "./FixedLabelCluster.js";
 export { UserLabelCluster } from "./UserLabelCluster.js";
 export { AccessControlCluster } from "./AccessControlCluster.js";

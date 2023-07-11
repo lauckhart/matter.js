@@ -11,8 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "ThermostatUserInterfaceConfiguration", id: 0x204,
     classification: "application", description: "Thermostat User Interface Configuration",
-    details: "An interface for configuring the user interface of a thermostat (which may be remote from the " +
-             "thermostat).",
+    details: "This cluster provides an interface to allow configuration of the user interface for a thermostat, " +
+             "or a thermostat controller device, that supports a keypad and LCD screen.",
     xref: { document: "cluster", section: "4.5" },
 
     children: [

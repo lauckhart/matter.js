@@ -35,18 +35,16 @@ export const TlvLabelStruct = TlvObject({
     value: TlvField(1, TlvString.bound({ maxLength: 16 }))
 });
 
-export namespace LabelCluster {
-    /**
-     * A LabelCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This is a list of string tuples. Each entry is a LabelStruct.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.7.5.1
-             */
-            labelList: Attribute(0, TlvArray(TlvLabelStruct), { default: [] })
-        }
-    });
-}
+/**
+ * Label is a derived cluster, not to be used directly. These elements are present in all clusters derived from Label.
+ */
+export const LabelBase = ClusterComponent({
+    attributes: {
+        /**
+         * This is a list of string tuples. Each entry is a LabelStruct.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.7.5.1
+         */
+        labelList: Attribute(0, TlvArray(TlvLabelStruct), { default: [] })
+    }
+});

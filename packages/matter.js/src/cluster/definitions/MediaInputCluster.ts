@@ -7,38 +7,14 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
-import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
+import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { Attribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
-
-/**
- * Media Input
- *
- * This cluster provides an interface for controlling the Input Selector on a media device such as a TV.
- *
- * Use this factory function to create a MediaInput cluster supporting a specific set of features. Include each
- * {@link MediaInputCluster.Feature} you wish to support.
- *
- * @param features a list of {@link MediaInputCluster.Feature} to support
- * @returns a MediaInput cluster with specified features enabled
- * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9
- */
-export function MediaInputCluster<T extends MediaInputCluster.Feature[]>(...features: [...T]) {
-    const cluster = Cluster({
-        ...MediaInputCluster.Metadata,
-        supportedFeatures: BitFlags(MediaInputCluster.Metadata.features, ...features),
-        ...MediaInputCluster.BaseComponent
-    });
-    extendCluster(cluster, MediaInputCluster.NameUpdatesComponent, { nameUpdates: true });
-    return cluster as unknown as MediaInputCluster.Type<BitFlags<typeof MediaInputCluster.Metadata.features, T>>;
-}
 
 /**
  * The type of input, expressed as an enum, with the following values:
@@ -121,117 +97,129 @@ export const TlvSelectInputRequest = TlvObject({
  */
 export const TlvRenameInputRequest = TlvObject({ index: TlvField(0, TlvUInt8), name: TlvField(1, TlvString) });
 
-export namespace MediaInputCluster {
+/**
+ * These are optional features supported by MediaInputCluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.2
+ */
+export enum MediaInputFeature {
     /**
-     * These are optional features supported by MediaInputCluster.
+     * NameUpdates
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.2
+     * Supports updates to the input names
      */
-    export enum Feature {
+    NameUpdates = "NameUpdates"
+}
+
+/**
+ * These elements and properties are present in all MediaInput clusters.
+ */
+export const MediaInputBase = BaseClusterComponent({
+    id: 0x507,
+    name: "MediaInput",
+    revision: 1,
+
+    features: {
         /**
          * NameUpdates
          *
          * Supports updates to the input names
          */
-        NameUpdates = "NameUpdates"
+        nameUpdates: BitFlag(0)
+    },
+
+    attributes: {
+        /**
+         * This list provides the media inputs supported by the device.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.1
+         */
+        inputList: Attribute(0, TlvArray(TlvInputInfoStruct), { default: [] }),
+
+        /**
+         * This field contains the value of the index field of the currently selected InputInfoStruct.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.2
+         */
+        currentInput: Attribute(1, TlvUInt8, { default: 0 })
+    },
+
+    commands: {
+        /**
+         * Upon receipt, this shall change the media input on the device to the input at a specific index in the Input
+         * List.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.1
+         */
+        selectInput: Command(0, TlvSelectInputRequest, 0, TlvNoResponse),
+
+        /**
+         * Upon receipt, this shall display the active status of the input list on screen.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.2
+         */
+        showInputStatus: Command(1, TlvNoArguments, 1, TlvNoResponse),
+
+        /**
+         * Upon receipt, this shall hide the input list from the screen.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.3
+         */
+        hideInputStatus: Command(2, TlvNoArguments, 2, TlvNoResponse)
     }
+});
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
-        typeof Metadata
-        & { attributes: GlobalAttributes<typeof Metadata.features> }
-        & { supportedFeatures: T }
-        & typeof BaseComponent
-        & (T extends { nameUpdates: true } ? typeof NameUpdatesComponent : {});
+/**
+ * A MediaInputCluster supports these elements if it supports feature NameUpdates.
+ */
+export const NameUpdatesComponent = ClusterComponent({
+    commands: {
+        /**
+         * Upon receipt, this shall rename the input at a specific index in the Input List. Updates to the input name
+         * shall appear in the device’s settings menus.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.4
+         */
+        renameInput: Command(3, TlvRenameInputRequest, 3, TlvNoResponse)
+    }
+});
+
+/**
+ * Media Input
+ *
+ * This cluster provides an interface for controlling the Input Selector on a media device such as a Video Player.
+ *
+ * MediaInputCluster supports optional features that you can enable with the MediaInputCluster.with factory method.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9
+ */
+export const MediaInputCluster = ExtensibleCluster({
+    ...MediaInputBase,
 
     /**
-     * MediaInput cluster metadata.
+     * Use this factory method to create a MediaInput cluster with support for optional features. Include each
+     * {@link MediaInputFeature} you wish to support.
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9
+     * @param features the optional features to support
+     * @returns a MediaInput cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
      */
-    export const Metadata = ClusterMetadata({
-        id: 0x507,
-        name: "MediaInput",
-        revision: 1,
+    factory: <T extends `${MediaInputFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, MediaInputFeature);
+        const cluster = Cluster({ ...MediaInputBase, supportedFeatures: BitFlags(MediaInputBase.features, ...features) });
+        return cluster as unknown as MediaInputExtension<BitFlags<typeof MediaInputBase.features, T>>;
+    }
+});
 
-        features: {
-            /**
-             * NameUpdates
-             *
-             * Supports updates to the input names
-             */
-            nameUpdates: BitFlag(0)
-        }
-    });
+export type MediaInputExtension<SF extends TypeFromPartialBitSchema<typeof MediaInputBase.features>> =
+    ClusterForBaseCluster<typeof MediaInputBase, SF>
+    & { supportedFeatures: SF }
+    & (SF extends { nameUpdates: true } ? typeof NameUpdatesComponent : {});
 
-    /**
-     * A MediaInputCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This list provides the media inputs supported by the device.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.1
-             */
-            inputList: Attribute(0, TlvArray(TlvInputInfoStruct), { default: [] }),
-
-            /**
-             * This field contains the value of the index field of the currently selected InputInfoStruct.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.2
-             */
-            currentInput: Attribute(1, TlvUInt8, { default: 0 })
-        },
-
-        commands: {
-            /**
-             * Upon receipt, this shall change the media input on the device to the input at a specific index in the
-             * Input List.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.1
-             */
-            selectInput: Command(0, TlvSelectInputRequest, 0, TlvNoResponse),
-
-            /**
-             * Upon receipt, this shall display the active status of the input list on screen.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.2
-             */
-            showInputStatus: Command(1, TlvNoArguments, 1, TlvNoResponse),
-
-            /**
-             * Upon receipt, this shall hide the input list from the screen.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.3
-             */
-            hideInputStatus: Command(2, TlvNoArguments, 2, TlvNoResponse)
-        }
-    });
-
-    /**
-     * A MediaInputCluster supports these elements if it supports feature NameUpdates.
-     */
-    export const NameUpdatesComponent = ClusterComponent({
-        commands: {
-            /**
-             * Upon receipt, this shall rename the input at a specific index in the Input List. Updates to the input
-             * name shall appear in the device’s settings menus.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.4
-             */
-            renameInput: Command(3, TlvRenameInputRequest, 3, TlvNoResponse)
-        }
-    });
-
-    /**
-     * This cluster supports all MediaInput features. It may support illegal feature combinations.
-     *
-     * If you use this cluster you must manually specify which features are active and ensure the set of active
-     * features is legal per the Matter specification.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes },
-        commands: { ...BaseComponent.commands, ...NameUpdatesComponent.commands }
-    });
-}
+/**
+ * This cluster supports all MediaInput features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const MediaInputComplete = Cluster({ ...MediaInputCluster, commands: { ...NameUpdatesComponent.commands } });

@@ -11,10 +11,15 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "UnitLocalization", id: 0x2d, classification: "node",
     description: "Unit Localization",
+
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
              "may have differing preferences for the units in which values are conveyed in communication to a " +
              "user. As such, Nodes that visually or audibly convey measurable values to the user need a mechanism " +
-             "by which they can be configured to use a user’s preferred unit.",
+             "by which they can be configured to use a user’s preferred unit." +
+             "\n" +
+             "This cluster supports an interface to a Node. It provides attributes for determining and " +
+             "configuring the units that a Node shall utilize when conveying values in communication to a user.",
+
     xref: { document: "core", section: "11.5" },
 
     children: [

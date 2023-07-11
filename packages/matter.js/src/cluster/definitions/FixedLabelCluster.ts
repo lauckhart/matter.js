@@ -6,53 +6,36 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, Attribute } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, Attribute, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
 
 /**
  * Fixed Label
  *
- * The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read only labels.
+ * This cluster provides a feature for the device to tag an endpoint with zero or more read only labels. Examples:
  *
- * Use this factory function to create a FixedLabel cluster.
+ *   • A bridge can use this to indicate grouping of bridged devices. For example: All bridged devices whose endpoints
+ *     have an entry in their LabelList "room":"bedroom 2" are in the same (bed)room.
+ *
+ *   • A manufacturer can use this to identify a characteristic of an endpoint. For example to identify the endpoints
+ *     of a luminaire, one pointing up, the other pointing down, one of the endpoints would have a LabelList entry
+ *     "orientation":"up" while the other would have "orientation":"down". Using such indication, the user interface of
+ *     a Node controlling this luminaire knows which of the endpoints is which of the lights.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.8
  */
-export function FixedLabelCluster() {
-    const cluster = Cluster({ ...FixedLabelCluster.Metadata, ...FixedLabelCluster.BaseComponent });
-    return cluster as unknown as FixedLabelCluster.Type;
-}
+export const FixedLabelCluster = Cluster({
+    id: 0x40,
+    name: "FixedLabel",
+    revision: 1,
+    features: {},
 
-export namespace FixedLabelCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
-
-    /**
-     * FixedLabel cluster metadata.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 9.8
-     */
-    export const Metadata = ClusterMetadata({ id: 0x40, name: "FixedLabel", revision: 1, features: {} });
-
-    /**
-     * A FixedLabelCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
-             */
-            labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, default: [] })
-        }
-    });
-
-    /**
-     * This cluster supports all FixedLabel features.
-     */
-    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-}
+    attributes: {
+        /**
+         * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
+         */
+        labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, default: [] })
+    }
+});

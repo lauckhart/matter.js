@@ -11,7 +11,11 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "AdministratorCommissioning", id: 0x3c, classification: "node",
     description: "Administrator Commissioning",
-    details: "Commands to trigger a Node to allow a new Administrator to commission it.",
+    details: "This cluster is used to trigger a Node to allow a new Administrator to commission it. It defines " +
+             "Attributes, Commands and Responses needed for this purpose." +
+             "\n" +
+             "For the management of Operational Credentials and Trusted Root Certificates, the Node Operational " +
+             "Credentials cluster is used.",
     xref: { document: "core", section: "11.18" },
 
     children: [

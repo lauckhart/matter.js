@@ -6,30 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, WritableFabricScopedAttribute, AccessLevel } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvClusterId } from "../../datatype/ClusterId.js";
-
-/**
- * Binding
- *
- * The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for supporting the binding
- * table.
- *
- * Use this factory function to create a Binding cluster.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 9.6
- */
-export function BindingCluster() {
-    const cluster = Cluster({ ...BindingCluster.Metadata, ...BindingCluster.BaseComponent });
-    return cluster as unknown as BindingCluster.Type;
-}
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 9.6.5.1
@@ -68,39 +52,55 @@ export const TlvTargetStruct = TlvObject({
     cluster: TlvOptionalField(4, TlvClusterId)
 });
 
-export namespace BindingCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
+/**
+ * Binding
+ *
+ * NOTE
+ *
+ * This scope of this document is the Binding cluster as part of the Cluster Library. The Binding cluster is meant to
+ * replace the support from the Zigbee Device Object (ZDO) for supporting the binding table.
+ *
+ * A binding represents a persistent relationship between an endpoint and one or more other local or remote endpoints.
+ * A binding does not require that the relationship exists. It is up to the node application to set up the relationship.
+ *
+ * A binding is used to inform a client endpoint of one or more targets for a potential interaction. For example: a
+ * light switch that controls one or more light bulbs, needs to be told the nodes and endpoints of the bulbs, or told a
+ * group in which the bulbs are members. For example: A client that needs to subscribe to an occupancy sensor, needs to
+ * know the node and endpoint of the sensor.
+ *
+ * In such cases, a binding is used to direct a local endpoint to a target. The existence of the Binding cluster on the
+ * client endpoint, allows the creation of one or more binding entries (bindings) in the Binding cluster.
+ *
+ * Each binding indicates another endpoint or cluster on another endpoint. Multiple bindings are allowed, depending on
+ * the interaction.
+ *
+ * A binding is either a unicast binding, where the target is a single endpoint on a single node, or a groupcast
+ * binding, where the target is a group, which may indicate multiple endpoints on multiple nodes. The binding may also
+ * target a single cluster on the target endpoint(s).
+ *
+ * When a client cluster requires a target for an interaction, the Binding cluster shall exist on the same endpoint.
+ *
+ * Once a binding entry is created on the Binding cluster, the client endpoint MAY initiate interactions to the binding
+ * target.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 9.6
+ */
+export const BindingCluster = Cluster({
+    id: 0x1e,
+    name: "Binding",
+    revision: 1,
+    features: {},
 
-    /**
-     * Binding cluster metadata.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 9.6
-     */
-    export const Metadata = ClusterMetadata({ id: 0x1e, name: "Binding", revision: 1, features: {} });
-
-    /**
-     * A BindingCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * Each entry shall represent a binding.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.6.6.1
-             */
-            binding: WritableFabricScopedAttribute(
-                0,
-                TlvArray(TlvTargetStruct),
-                { persistent: true, default: [], writeAcl: AccessLevel.Manage }
-            )
-        }
-    });
-
-    /**
-     * This cluster supports all Binding features.
-     */
-    export const Complete = Cluster({ ...Metadata, attributes: { ...BaseComponent.attributes } });
-}
+    attributes: {
+        /**
+         * Each entry shall represent a binding.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.6.6.1
+         */
+        binding: WritableFabricScopedAttribute(
+            0,
+            TlvArray(TlvTargetStruct),
+            { persistent: true, default: [], writeAcl: AccessLevel.Manage }
+        )
+    }
+});

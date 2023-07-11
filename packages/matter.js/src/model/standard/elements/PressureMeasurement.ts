@@ -11,8 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "PressureMeasurement", id: 0x403, classification: "application",
     description: "Pressure Measurement",
-    details: "Attributes and commands for configuring the measurement of pressure, and reporting pressure " +
-             "measurements.",
+    details: "This cluster provides an interface to pressure measurement functionality, including configuration " +
+             "and provision of notifications of pressure measurements.",
     xref: { document: "cluster", section: "2.4" },
 
     children: [

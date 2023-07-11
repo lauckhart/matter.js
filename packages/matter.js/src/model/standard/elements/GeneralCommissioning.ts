@@ -11,7 +11,15 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "GeneralCommissioning", id: 0x30, classification: "node",
     description: "General Commissioning",
-    details: "This cluster is used to manage global aspects of the Commissioning flow.",
+
+    details: "This cluster is used to manage basic commissioning lifecycle." +
+             "\n" +
+             "This cluster also represents responsibilities related to commissioning that don’t well fit other " +
+             "commissioning clusters, like Section 11.8, “Network Commissioning Cluster”. It also hosts " +
+             "functionalities" +
+             "\n" +
+             "those other clusters may depend on.",
+
     xref: { document: "core", section: "11.9" },
 
     children: [

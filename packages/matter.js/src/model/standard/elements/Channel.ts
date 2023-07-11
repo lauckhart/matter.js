@@ -10,7 +10,7 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "cluster", name: "Channel", id: 0x504, classification: "application", description: "Channel",
-    details: "This cluster provides an interface for controlling the current Channel on a device.",
+    details: "This cluster provides an interface for controlling the current Channel on a device or endpoint.",
     xref: { document: "cluster", section: "6.6" },
 
     children: [

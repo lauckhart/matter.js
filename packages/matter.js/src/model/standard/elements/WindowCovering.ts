@@ -11,7 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "WindowCovering", id: 0x102, classification: "application",
     description: "Window Covering",
-    details: "Provides an interface for controlling and adjusting automatic window coverings.",
+    details: "The window covering cluster provides an interface for controlling and adjusting automatic window " +
+             "coverings such as drapery motors, automatic shades, curtains and blinds.",
     xref: { document: "cluster", section: "5.3" },
 
     children: [

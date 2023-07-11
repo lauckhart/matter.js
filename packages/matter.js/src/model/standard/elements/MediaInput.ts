@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "MediaInput", id: 0x507, classification: "application",
     description: "Media Input",
     details: "This cluster provides an interface for controlling the Input Selector on a media device such as a " +
-             "TV.",
+             "Video Player.",
     xref: { document: "cluster", section: "6.9" },
 
     children: [

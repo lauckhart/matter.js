@@ -13,8 +13,8 @@ Matter.children.push({
     description: "Account Login",
     details: "This cluster provides commands that facilitate user account login on a Content App or a node. For " +
              "example, a Content App running on a Video Player device, which is represented as an endpoint (see " +
-             "[TV Architecture]), can use this cluster to help make the user account on the Content App match the " +
-             "user account on the Client.",
+             "Device Type Library document), can use this cluster to help make the user account on the Content " +
+             "App match the user account on the Client.",
     xref: { document: "cluster", section: "6.2" },
 
     children: [

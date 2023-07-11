@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "Thermostat", id: 0x201, classification: "application",
     description: "Thermostat",
-    details: "An interface for configuring and controlling the functionality of a thermostat.",
+    details: "This cluster provides an interface to the functionality of a thermostat.",
     xref: { document: "cluster", section: "4.3" },
 
     children: [

@@ -283,7 +283,10 @@ export namespace MergeModels {
             "name": ["local", "spec", "chip"],
 
             // Prefer spec for datatype names (must match element names)
-            "type": ["local", "spec", "chip"]
+            "type": ["local", "spec", "chip"],
+
+            // Prefer spec for detailed documentation
+            "details": [ "local", "spec", "chip" ]
         }
     }
 }

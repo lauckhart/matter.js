@@ -11,9 +11,16 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "AccessControl", id: 0x1f, classification: "node",
     description: "Access Control",
-    details: "The Access Control Cluster exposes a data model view of a Node's Access Control List (ACL), which " +
-             "codifies the rules used to manage and enforce Access Control for the Node's endpoints and their " +
-             "associated cluster instances.",
+
+    details: "The Access Control Cluster exposes a data model view of a Node’s Access Control List (ACL), which " +
+             "codifies the rules used to manage and enforce Access Control for the Node’s endpoints and their " +
+             "associated cluster instances. Access to this Access Control Cluster itself requires a special " +
+             "Administer privilege level, such that only Nodes granted such privilege (hereafter termed " +
+             "\"Administrators\") can manage the Access Control Cluster." +
+             "\n" +
+             "The Access Control Cluster shall be present on the root node endpoint of each Node, and shall NOT " +
+             "be present on any other Endpoint of any Node.",
+
     xref: { document: "core", section: "9.10" },
 
     children: [

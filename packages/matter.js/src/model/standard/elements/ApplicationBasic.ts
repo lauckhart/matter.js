@@ -11,8 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "ApplicationBasic", id: 0x50d, classification: "application",
     description: "Application Basic",
-    details: "This cluster provides information about an application running on a TV or media player device which " +
-             "is represented as an endpoint.",
+    details: "This cluster provides information about a Content App running on a Video Player device which is " +
+             "represented as an endpoint (see Device Type Library document).",
     xref: { document: "cluster", section: "6.3" },
 
     children: [

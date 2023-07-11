@@ -5,7 +5,7 @@
  */
 
 import { camelize } from "../../../src/util/String.js";
-import { WORDS } from "../../util/words.js";
+import { Words } from "../../util/words.js";
 
 /** String, trimmed with whitespace collapsed */
 export const Str = (el: HTMLElement) => {
@@ -81,7 +81,7 @@ export const Code = (el: HTMLElement) => {
             const ending = parts[i + 1].replace(/^([a-z]+).*/, "$1");
 
             // If the concatenation is a word, assume it should be joined
-            if (WORDS.has(`${beginning}${ending}`.toLowerCase())) {
+            if (Words.has(`${beginning}${ending}`.toLowerCase())) {
                 parts[i] = `${parts[i]}${parts[i + 1]}`;
                 parts.splice(i + 1, 1);
 

@@ -12,12 +12,17 @@ Matter.children.push({
     tag: "cluster", name: "Switch", id: 0x3b, classification: "application", description: "Switch",
 
     details: "This cluster exposes interactions with a switch device, for the purpose of using those interactions " +
-             "by other devices. Two types of switch devices are supported: latching switch (e.g. rocker switch) " +
-             "and momentary switch (e.g. push button), distinguished with their feature flags. Interactions with " +
-             "the switch device are exposed as attributes (for the latching switch) and as events (for both types " +
-             "of switches). An interested party MAY subscribe to these attributes/events and thus be informed of " +
-             "the interactions, and can perform actions based on this, for example by sending commands to perform " +
-             "an action such as controlling a light or a window shade.",
+             "by other devices." +
+             "\n" +
+             "Two types of switch devices are supported: latching switch (e.g. rocker switch) and momentary " +
+             "switch (e.g. push button), distinguished with their feature flags." +
+             "\n" +
+             "Interactions with the switch device are exposed as attributes (for the latching switch) and as " +
+             "events (for both types of switches)." +
+             "\n" +
+             "An interested client MAY subscribe to these attributes/events and thus be informed of the " +
+             "interactions, and can perform actions based on this, for example by sending commands to perform an " +
+             "action such as controlling a light or a window shade.",
 
     xref: { document: "cluster", section: "1.11" },
 

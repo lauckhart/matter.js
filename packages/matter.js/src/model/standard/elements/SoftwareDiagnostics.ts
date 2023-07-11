@@ -12,7 +12,9 @@ Matter.children.push({
     tag: "cluster", name: "SoftwareDiagnostics", id: 0x34, classification: "node",
     description: "Software Diagnostics",
     details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that " +
-             "MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
+             "MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+             "Software Diagnostics Cluster attempts to centralize all metrics that are relevant to the software " +
+             "that may be running on a Node.",
     xref: { document: "core", section: "11.12" },
 
     children: [

@@ -6,9 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { Cluster, WritableFabricScopedAttribute, AccessLevel, OptionalWritableFabricScopedAttribute, FixedAttribute, Event, EventPriority } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { GlobalAttributes, WritableFabricScopedAttribute, AccessLevel, OptionalWritableFabricScopedAttribute, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
-import { ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
@@ -19,21 +18,6 @@ import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvDeviceTypeId } from "../../datatype/DeviceTypeId.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
-
-/**
- * Access Control
- *
- * The Access Control Cluster exposes a data model view of a Node's Access Control List (ACL), which codifies the rules
- * used to manage and enforce Access Control for the Node's endpoints and their associated cluster instances.
- *
- * Use this factory function to create an AccessControl cluster.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 9.10
- */
-export function AccessControlCluster() {
-    const cluster = Cluster({ ...AccessControlCluster.Metadata, ...AccessControlCluster.BaseComponent });
-    return cluster as unknown as AccessControlCluster.Type;
-}
 
 /**
  * Proxy View Value
@@ -271,152 +255,143 @@ export const TlvAccessControlExtensionChangedEvent = TlvObject({
     latestValue: TlvField(4, TlvNullable(TlvAccessControlExtensionStruct))
 });
 
-export namespace AccessControlCluster {
-    export type Type =
-        typeof Metadata
-        & { attributes: GlobalAttributes<{}> }
-        & typeof BaseComponent;
+/**
+ * Access Control
+ *
+ * The Access Control Cluster exposes a data model view of a Node’s Access Control List (ACL), which codifies the rules
+ * used to manage and enforce Access Control for the Node’s endpoints and their associated cluster instances. Access to
+ * this Access Control Cluster itself requires a special Administer privilege level, such that only Nodes granted such
+ * privilege (hereafter termed "Administrators") can manage the Access Control Cluster.
+ *
+ * The Access Control Cluster shall be present on the root node endpoint of each Node, and shall NOT be present on any
+ * other Endpoint of any Node.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 9.10
+ */
+export const AccessControlCluster = Cluster({
+    id: 0x1f,
+    name: "AccessControl",
+    revision: 1,
+    features: {},
 
-    /**
-     * AccessControl cluster metadata.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 9.10
-     */
-    export const Metadata = ClusterMetadata({ id: 0x1f, name: "AccessControl", revision: 1, features: {} });
+    attributes: {
+        /**
+         * An attempt to add an Access Control Entry when no more entries are available shall result in a
+         * RESOURCE_EXHAUSTED error being reported and the ACL attribute shall NOT have the entry
+         *
+         * added to it. See access control limits.
+         *
+         * See the AccessControlEntriesPerFabric attribute for the actual value of the number of entries per fabric
+         * supported by the server.
+         *
+         * Each Access Control Entry codifies a single grant of privilege on this Node, and is used by the Access
+         * Control Privilege Granting algorithm to determine if a subject has privilege to interact with targets on the
+         * Node.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.3
+         */
+        acl: WritableFabricScopedAttribute(
+            0,
+            TlvArray(TlvAccessControlEntryStruct),
+            { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+        ),
 
-    /**
-     * A AccessControlCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * An attempt to add an Access Control Entry when no more entries are available shall result in a
-             * RESOURCE_EXHAUSTED error being reported and the ACL attribute shall NOT have the entry
-             *
-             * added to it. See access control limits.
-             *
-             * See the AccessControlEntriesPerFabric attribute for the actual value of the number of entries per fabric
-             * supported by the server.
-             *
-             * Each Access Control Entry codifies a single grant of privilege on this Node, and is used by the Access
-             * Control Privilege Granting algorithm to determine if a subject has privilege to interact with targets on
-             * the Node.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.3
-             */
-            acl: WritableFabricScopedAttribute(
-                0,
-                TlvArray(TlvAccessControlEntryStruct),
-                { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
-            ),
+        /**
+         * If present, the Access Control Extensions MAY be used by Administrators to store arbitrary data related to
+         * fabric’s Access Control Entries.
+         *
+         * The Access Control Extension list shall support a single extension entry per supported fabric.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.4
+         */
+        extension: OptionalWritableFabricScopedAttribute(
+            1,
+            TlvArray(TlvAccessControlExtensionStruct),
+            { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+        ),
 
-            /**
-             * If present, the Access Control Extensions MAY be used by Administrators to store arbitrary data related
-             * to fabric’s Access Control Entries.
-             *
-             * The Access Control Extension list shall support a single extension entry per supported fabric.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.4
-             */
-            extension: OptionalWritableFabricScopedAttribute(
-                1,
-                TlvArray(TlvAccessControlExtensionStruct),
-                { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
-            ),
+        /**
+         * This attribute shall provide the minimum number of Subjects per entry that are supported by this server.
+         *
+         * Since reducing this value over time may invalidate ACL entries already written, this value shall NOT
+         * decrease across time as software updates occur that could impact this value. If this is a concern for a
+         * given implementation, it is recommended to only use the minimum value required and avoid reporting a higher
+         * value than the required minimum.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.5
+         */
+        subjectsPerAccessControlEntry: FixedAttribute(2, TlvUInt16.bound({ min: 4 }), { default: 4 }),
 
-            /**
-             * This attribute shall provide the minimum number of Subjects per entry that are supported by this server.
-             *
-             * Since reducing this value over time may invalidate ACL entries already written, this value shall NOT
-             * decrease across time as software updates occur that could impact this value. If this is a concern for a
-             * given implementation, it is recommended to only use the minimum value required and avoid reporting a
-             * higher value than the required minimum.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.5
-             */
-            subjectsPerAccessControlEntry: FixedAttribute(2, TlvUInt16.bound({ min: 4 }), { default: 4 }),
+        /**
+         * This attribute shall provide the minimum number of Targets per entry that are supported by this server.
+         *
+         * Since reducing this value over time may invalidate ACL entries already written, this value shall NOT
+         * decrease across time as software updates occur that could impact this value. If this is a concern for a
+         * given implementation, it is recommended to only use the minimum value required and avoid reporting a higher
+         * value than the required minimum.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.6
+         */
+        targetsPerAccessControlEntry: FixedAttribute(3, TlvUInt16.bound({ min: 3 }), { default: 3 }),
 
-            /**
-             * This attribute shall provide the minimum number of Targets per entry that are supported by this server.
-             *
-             * Since reducing this value over time may invalidate ACL entries already written, this value shall NOT
-             * decrease across time as software updates occur that could impact this value. If this is a concern for a
-             * given implementation, it is recommended to only use the minimum value required and avoid reporting a
-             * higher value than the required minimum.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.6
-             */
-            targetsPerAccessControlEntry: FixedAttribute(3, TlvUInt16.bound({ min: 3 }), { default: 3 }),
+        /**
+         * This attribute shall provide the minimum number of ACL Entries per fabric that are supported by this server.
+         *
+         * Since reducing this value over time may invalidate ACL entries already written, this value shall NOT
+         * decrease across time as software updates occur that could impact this value. If this is a concern for a
+         * given implementation, it is recommended to only use the minimum value required and avoid reporting a higher
+         * value than the required minimum.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.7
+         */
+        accessControlEntriesPerFabric: FixedAttribute(4, TlvUInt16.bound({ min: 4 }), { default: 4 })
+    },
 
-            /**
-             * This attribute shall provide the minimum number of ACL Entries per fabric that are supported by this
-             * server.
-             *
-             * Since reducing this value over time may invalidate ACL entries already written, this value shall NOT
-             * decrease across time as software updates occur that could impact this value. If this is a concern for a
-             * given implementation, it is recommended to only use the minimum value required and avoid reporting a
-             * higher value than the required minimum.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.7
-             */
-            accessControlEntriesPerFabric: FixedAttribute(4, TlvUInt16.bound({ min: 4 }), { default: 4 })
-        },
+    events: {
+        /**
+         * The cluster shall send AccessControlEntryChanged events whenever its ACL attribute data is changed by an
+         * Administrator.
+         *
+         *   • Each added entry shall generate an event with ChangeType Added.
+         *
+         *   • Each changed entry shall generate an event with ChangeType Changed.
+         *
+         *   • Each removed entry shall generate an event with ChangeType Removed.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1
+         */
+        accessControlEntryChanged: Event(0, EventPriority.Info, TlvAccessControlEntryChangedEvent),
 
-        events: {
-            /**
-             * The cluster shall send AccessControlEntryChanged events whenever its ACL attribute data is changed by an
-             * Administrator.
-             *
-             *   • Each added entry shall generate an event with ChangeType Added.
-             *
-             *   • Each changed entry shall generate an event with ChangeType Changed.
-             *
-             *   • Each removed entry shall generate an event with ChangeType Removed.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1
-             */
-            accessControlEntryChanged: Event(0, EventPriority.Info, TlvAccessControlEntryChangedEvent),
-
-            /**
-             * The cluster shall send AccessControlExtensionChanged events whenever its extension attribute data is
-             * changed by an Administrator.
-             *
-             *   • Each added extension shall generate an event with ChangeType Added.
-             *
-             *   • Each changed extension shall generate an event with ChangeType Changed.
-             *
-             *   • Each removed extension shall generate an event with ChangeType Removed.
-             *
-             * The Node ID of the Administrator that made the change, if the change occurred via a CASE session.
-             *
-             * Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change occurred
-             * via a CASE or PASE session; the other shall be null.
-             *
-             * The Passcode ID of the Administrator that made the change, if the change occurred via a PASE session.
-             * Non-zero values are reserved for future use (see PasscodeId generation in PBKDFParamRequest).
-             *
-             * Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change occurred
-             * via a CASE or PASE session; the other shall be null.
-             *
-             * The type of change as appropriate.
-             *
-             * The latest value of the changed extension.
-             *
-             * This field SHOULD be set if resources are adequate for it; otherwise it shall be set to NULL if
-             * resources are scarce.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.2
-             */
-            accessControlExtensionChanged: Event(1, EventPriority.Info, TlvAccessControlExtensionChangedEvent)
-        }
-    });
-
-    /**
-     * This cluster supports all AccessControl features.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes },
-        events: { ...BaseComponent.events }
-    });
-}
+        /**
+         * The cluster shall send AccessControlExtensionChanged events whenever its extension attribute data is changed
+         * by an Administrator.
+         *
+         *   • Each added extension shall generate an event with ChangeType Added.
+         *
+         *   • Each changed extension shall generate an event with ChangeType Changed.
+         *
+         *   • Each removed extension shall generate an event with ChangeType Removed.
+         *
+         * The Node ID of the Administrator that made the change, if the change occurred via a CASE session.
+         *
+         * Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change occurred via a
+         * CASE or PASE session; the other shall be null.
+         *
+         * The Passcode ID of the Administrator that made the change, if the change occurred via a PASE session.
+         * Non-zero values are reserved for future use (see PasscodeId generation in PBKDFParamRequest).
+         *
+         * Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change occurred via a
+         * CASE or PASE session; the other shall be null.
+         *
+         * The type of change as appropriate.
+         *
+         * The latest value of the changed extension.
+         *
+         * This field SHOULD be set if resources are adequate for it; otherwise it shall be set to NULL if resources
+         * are scarce.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.2
+         */
+        accessControlExtensionChanged: Event(1, EventPriority.Info, TlvAccessControlExtensionChangedEvent)
+    }
+});

@@ -17,6 +17,7 @@ import {
     Model,
     ValueModel
 } from "../../src/model/index.js";
+import { InferredComponent } from "../../src/model/logic/cluster-variance/InferredComponents.js";
 import { NamedComponent } from "../../src/model/logic/cluster-variance/NamedComponents.js";
 import { serialize, camelize } from "../../src/util/String.js";
 import { Block } from "../util/TsFile.js";
@@ -33,10 +34,14 @@ export class ClusterComponentGenerator {
         this.tlv = new TlvGenerator(this.file, cluster);
     }
 
-    defineComponent(component: NamedComponent): Block {
+    defineComponent(component: NamedComponent) {
         this.target.file.addImport("cluster/ClusterFactory", "ClusterComponent");
         const block = this.target.expressions(`export const ${component.name}Component = ClusterComponent({`, `})`)
             .document(component.documentation);
+        return this.populateComponent(component, block);
+    }
+
+    populateComponent(component: InferredComponent, block: Block) {
         const mandatory = new Set(component.mandatory);
 
         const elements = [...component.optional, ...component.mandatory]

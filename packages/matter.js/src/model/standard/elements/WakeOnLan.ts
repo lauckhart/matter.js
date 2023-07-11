@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "WakeOnLan", id: 0x503, classification: "application",
     description: "Wake on LAN",
     details: "This cluster provides an interface for managing low power mode on a device that supports the Wake " +
-             "On LAN protocol.",
+             "On LAN or Wake On Wireless LAN (WLAN) protocol (see [Wake On LAN]).",
     xref: { document: "cluster", section: "1.10" },
 
     children: [

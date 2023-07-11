@@ -12,7 +12,9 @@ Matter.children.push({
     tag: "cluster", name: "WiFiNetworkDiagnostics", id: 0x36, classification: "node",
     description: "WiFi Network Diagnostics",
     details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
-             "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
+             "that MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+             "Wi-Fi Network Diagnostics Cluster attempts to centralize all metrics that are relevant to a " +
+             "potential Wi-Fi radio running on a Node.",
     xref: { document: "core", section: "11.14" },
 
     children: [

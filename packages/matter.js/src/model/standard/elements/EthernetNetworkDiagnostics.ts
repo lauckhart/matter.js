@@ -12,8 +12,9 @@ Matter.children.push({
     tag: "cluster", name: "EthernetNetworkDiagnostics", id: 0x37, classification: "node",
     description: "Ethernet Network Diagnostics",
     details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics " +
-             "metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential " +
-             "problems.",
+             "metrics that MAY be used by a Node to assist a user or Administrator in diagnosing potential " +
+             "problems. The Ethernet Network Diagnostics Cluster attempts to centralize all metrics that are " +
+             "relevant to a potential Ethernet connection to a Node.",
     xref: { document: "core", section: "11.15" },
 
     children: [

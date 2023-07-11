@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "MediaPlayback", id: 0x506, classification: "application",
     description: "Media Playback",
     details: "This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media " +
-             "device such as a TV or Speaker.",
+             "device such as a TV, Set-top Box, or Smart Speaker.",
     xref: { document: "cluster", section: "6.10" },
 
     children: [

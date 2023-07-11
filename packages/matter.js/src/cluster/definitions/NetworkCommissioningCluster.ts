@@ -7,60 +7,15 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
-import { extendCluster, preventCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, FixedAttribute, AccessLevel, Attribute, WritableAttribute, Command, Cluster } from "../../cluster/Cluster.js";
+import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { FixedAttribute, AccessLevel, Attribute, WritableAttribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvEnum, TlvInt32, TlvUInt64, TlvBitmap, TlvUInt16, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvByteString, TlvString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-
-/**
- * Network Commissioning
- *
- * Functionality to configure, enable, disable network credentials and access on a Matter device.
- *
- * Use this factory function to create a NetworkCommissioning cluster supporting a specific set of features. Include
- * each {@link NetworkCommissioningCluster.Feature} you wish to support.
- *
- * @param features a list of {@link NetworkCommissioningCluster.Feature} to support
- * @returns a NetworkCommissioning cluster with specified features enabled
- * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.8
- */
-export function NetworkCommissioningCluster<T extends NetworkCommissioningCluster.Feature[]>(...features: [...T]) {
-    const cluster = Cluster({
-        ...NetworkCommissioningCluster.Metadata,
-        supportedFeatures: BitFlags(NetworkCommissioningCluster.Metadata.features, ...features),
-        ...NetworkCommissioningCluster.BaseComponent
-    });
-
-    extendCluster(
-        cluster,
-        NetworkCommissioningCluster.WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent,
-        { wiFiNetworkInterface: true },
-        { threadNetworkInterface: true }
-    );
-
-    extendCluster(cluster, NetworkCommissioningCluster.WiFiNetworkInterfaceComponent, { wiFiNetworkInterface: true });
-    extendCluster(cluster, NetworkCommissioningCluster.ThreadNetworkInterfaceComponent, { threadNetworkInterface: true });
-
-    preventCluster(
-        cluster,
-        { wiFiNetworkInterface: true, threadNetworkInterface: true },
-        { wiFiNetworkInterface: true, ethernetNetworkInterface: true },
-        { threadNetworkInterface: true, wiFiNetworkInterface: true },
-        { threadNetworkInterface: true, ethernetNetworkInterface: true },
-        { ethernetNetworkInterface: true, wiFiNetworkInterface: true },
-        { ethernetNetworkInterface: true, threadNetworkInterface: true },
-        { wiFiNetworkInterface: false, threadNetworkInterface: false, ethernetNetworkInterface: false }
-    );
-
-    return cluster as unknown as NetworkCommissioningCluster.Type<BitFlags<typeof NetworkCommissioningCluster.Metadata.features, T>>;
-}
 
 /**
  * NetworkInfoStruct struct describes an existing network configuration, as provided in the Networks attribute.
@@ -529,504 +484,545 @@ export const TlvAddOrUpdateThreadNetworkRequest = TlvObject({
     breadcrumb: TlvOptionalField(1, TlvUInt64)
 });
 
-export namespace NetworkCommissioningCluster {
+/**
+ * These are optional features supported by NetworkCommissioningCluster.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.8.4
+ */
+export enum NetworkCommissioningFeature {
     /**
-     * These are optional features supported by NetworkCommissioningCluster.
+     * WiFiNetworkInterface
      *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.8.4
+     * Wi-Fi related features
      */
-    export enum Feature {
+    WiFiNetworkInterface = "WiFiNetworkInterface",
+
+    /**
+     * ThreadNetworkInterface
+     *
+     * Thread related features
+     */
+    ThreadNetworkInterface = "ThreadNetworkInterface",
+
+    /**
+     * EthernetNetworkInterface
+     *
+     * Ethernet related features
+     */
+    EthernetNetworkInterface = "EthernetNetworkInterface"
+}
+
+/**
+ * These elements and properties are present in all NetworkCommissioning clusters.
+ */
+export const NetworkCommissioningBase = BaseClusterComponent({
+    id: 0x31,
+    name: "NetworkCommissioning",
+    revision: 1,
+
+    features: {
         /**
          * WiFiNetworkInterface
          *
          * Wi-Fi related features
          */
-        WiFiNetworkInterface = "WiFiNetworkInterface",
+        wiFiNetworkInterface: BitFlag(0),
 
         /**
          * ThreadNetworkInterface
          *
          * Thread related features
          */
-        ThreadNetworkInterface = "ThreadNetworkInterface",
+        threadNetworkInterface: BitFlag(1),
 
         /**
          * EthernetNetworkInterface
          *
          * Ethernet related features
          */
-        EthernetNetworkInterface = "EthernetNetworkInterface"
+        ethernetNetworkInterface: BitFlag(2)
+    },
+
+    attributes: {
+        /**
+         * This shall indicate the maximum number of network configuration entries that can be added, based on
+         * available device resources. The length of the Networks attribute list shall be less than or equal to this
+         * value.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.1
+         */
+        maxNetworks: FixedAttribute(
+            0,
+            TlvUInt8.bound({ min: 1 }),
+            { readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+        ),
+
+        /**
+         * This attribute shall indicate the network configurations that are usable on the network interface
+         * represented by this cluster server instance.
+         *
+         * The order of configurations in the list reflects precedence. That is, any time the Node attempts to connect
+         * to the network it shall attempt to do so using the configurations in Networks Attribute in the order as they
+         * appear in the list.
+         *
+         * The order of list items shall only be modified by the AddOrUpdateThreadNetwork, AddOrUpdateWiFiNetwork and
+         * ReorderNetwork commands. In other words, the list shall be stable over
+         *
+         * time, unless mutated externally.
+         *
+         * Ethernet networks shall be automatically populated by the cluster server. Ethernet Network Commissioning
+         * Cluster instances shall always have exactly one Section 11.8.5.4, “NetworkInfoStruct” instance in their
+         * Networks attribute. There shall be no way to add, update or remove Ethernet network configurations to those
+         * Cluster instances.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.2
+         */
+        networks: Attribute(
+            1,
+            TlvArray(TlvNetworkInfoStruct),
+            { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+        ),
+
+        /**
+         * This attribute shall indicate whether the associated network interface is enabled or not. By default all
+         * network interfaces SHOULD be enabled during initial commissioning (InterfaceEnabled set to true).
+         *
+         * It is undefined what happens if InterfaceEnabled is written to false on the same interface as that which is
+         * used to write the value. In that case, it is possible that the Administrator would have to await expiry of
+         * the fail-safe, and associated recovery of network configuration to prior safe values, before being able to
+         * communicate with the node again (see Section 11.9.6.2, “ArmFailSafe Command”).
+         *
+         * It MAY be possible to disable Ethernet interfaces but it is implementation-defined. If not supported, a
+         * write to this attribute with a value of false shall fail with a status of INVALID_ACTION. When disabled, an
+         * Ethernet interface would longer employ media detection. That is, a simple unplug and replug of the cable
+         * shall NOT re-enable the interface.
+         *
+         * On Ethernet-only Nodes, there shall always be at least one of the Network Commissioning server cluster
+         * instances with InterfaceEnabled set to true.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.5
+         */
+        interfaceEnabled: WritableAttribute(
+            4,
+            TlvBoolean,
+            { persistent: true, default: true, writeAcl: AccessLevel.Administer }
+        ),
+
+        /**
+         * This attribute shall indicate the status of the last attempt either scan or connect to an operational
+         * network, using this interface, whether by invocation of the ConnectNetwork command or by autonomous
+         * connection after loss of connectivity or during initial establishment. If no such attempt was made, or no
+         * network configurations exist in the Networks attribute, then this attribute shall be set to null.
+         *
+         * This attribute is present to assist with error recovery during Network commissioning and to assist in
+         * non-concurrent networking commissioning flows.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.6
+         */
+        lastNetworkingStatus: Attribute(
+            5,
+            TlvNullable(TlvEnum<NetworkCommissioningStatus>()),
+            { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+        ),
+
+        /**
+         * This attribute shall indicate the NetworkID used in the last attempt to connect to an operational network,
+         * using this interface, whether by invocation of the ConnectNetwork command or by autonomous connection after
+         * loss of connectivity or during initial establishment. If no such attempt was made, or no network
+         * configurations exist in the Networks attribute, then this attribute shall be set to null.
+         *
+         * If a network configuration is removed from the Networks attribute using the RemoveNetwork command after a
+         * connection attempt, this field MAY indicate a NetworkID that is no longer configured on the Node.
+         *
+         * This attribute is present to assist with error recovery during Network commissioning and to assist in
+         * non-concurrent networking commissioning flows.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.7
+         */
+        lastNetworkId: Attribute(
+            6,
+            TlvNullable(TlvByteString.bound({ minLength: 1, maxLength: 32 })),
+            { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+        ),
+
+        /**
+         * This attribute shall indicate the ErrorValue used in the last failed attempt to connect to an operational
+         * network, using this interface, whether by invocation of the ConnectNetwork command or by autonomous
+         * connection after loss of connectivity or during initial establishment. If no such attempt was made, or no
+         * network configurations exist in the Networks attribute, then this attribute shall be set to null.
+         *
+         * If the last connection succeeded, as indicated by a value of Success in the LastNetworkingStatus attribute,
+         * then this field shall be set to null.
+         *
+         * This attribute is present to assist with error recovery during Network commissioning and to assist in
+         * non-concurrent networking commissioning flows.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.8
+         */
+        lastConnectErrorValue: Attribute(
+            7,
+            TlvNullable(TlvInt32),
+            { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+        )
     }
+});
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
-        typeof Metadata
-        & { attributes: GlobalAttributes<typeof Metadata.features> }
-        & { supportedFeatures: T }
-        & typeof BaseComponent
-        & (T extends { wiFiNetworkInterface: true } | { threadNetworkInterface: true } ? typeof WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent : {})
-        & (T extends { wiFiNetworkInterface: true } ? typeof WiFiNetworkInterfaceComponent : {})
-        & (T extends { threadNetworkInterface: true } ? typeof ThreadNetworkInterfaceComponent : {})
-        & (T extends { wiFiNetworkInterface: true, threadNetworkInterface: true } ? never : {})
-        & (T extends { wiFiNetworkInterface: true, ethernetNetworkInterface: true } ? never : {})
-        & (T extends { threadNetworkInterface: true, wiFiNetworkInterface: true } ? never : {})
-        & (T extends { threadNetworkInterface: true, ethernetNetworkInterface: true } ? never : {})
-        & (T extends { ethernetNetworkInterface: true, wiFiNetworkInterface: true } ? never : {})
-        & (T extends { ethernetNetworkInterface: true, threadNetworkInterface: true } ? never : {})
-        & (T extends { wiFiNetworkInterface: false, threadNetworkInterface: false, ethernetNetworkInterface: false } ? never : {});
+/**
+ * A NetworkCommissioningCluster supports these elements if it supports features WiFiNetworkInterface or
+ * ThreadNetworkInterface.
+ */
+export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This attribute shall indicate the maximum duration taken, in seconds, by the network interface on this
+         * cluster server instance to provide scan results.
+         *
+         * See Section 11.8.7.1, “ScanNetworks Command” for usage.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.3
+         */
+        scanMaxTimeSeconds: FixedAttribute(2, TlvUInt8),
+
+        /**
+         * This attribute shall indicate the maximum duration taken, in seconds, by the network interface on this
+         * cluster server instance to report a successful or failed network connection indication. This maximum time
+         * shall account for all operations needed until a successful network connection is deemed to have occurred,
+         * including, for example, obtaining IP addresses, or the execution of necessary internal retries.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.4
+         */
+        connectMaxTimeSeconds: FixedAttribute(3, TlvUInt8)
+    },
+
+    commands: {
+        /**
+         * This command shall scan on the Cluster instance’s associated network interface for either of:
+         *
+         *   • All available networks (non-directed scanning)
+         *
+         *   • Specific networks (directed scanning)
+         *
+         * Scanning for available networks detects all networks of the type corresponding to the cluster server
+         * instance’s associated network interface that are possible to join, such as all visible Wi-Fi access points
+         * for Wi-Fi cluster server instances, all Thread PANs for Thread cluster server instances, within bounds of
+         * the maximum response size.
+         *
+         * Scanning for a specific network (i.e. directed scanning) takes place if a network identifier (e.g. Wi-Fi
+         * SSID) is provided in the command arguments. Directed scanning shall restrict the result set to the specified
+         * network only.
+         *
+         * The client shall NOT expect the server to be done scanning and have responded with ScanNetworksResponse
+         * before ScanMaxTimeSeconds seconds have elapsed. Enough transport time affordances for retries SHOULD be
+         * expected before a client determines the operation to have timed-out.
+         *
+         * This command shall fail with a status code of BUSY if the server determines that it will fail to reliably
+         * send a response due to changes of networking interface configuration at runtime for the interface over which
+         * the command was invoked, or if it is currently unable to proceed with such an operation.
+         *
+         * Clients shall be resilient to a server that either does not support or cannot proceed with the ScanNetworks
+         * command.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.1
+         */
+        scanNetworks: Command(0, TlvScanNetworksRequest, 1, TlvScanNetworksResponse),
+
+        /**
+         * This command shall remove the network configuration from the Cluster if there was already a network
+         * configuration with the same NetworkID. The relative order of the entries in the Networks attribute list
+         * shall remain unchanged, except for the removal of the requested network configuration.
+         *
+         * If this command is received without an armed fail-safe context (see Section 11.9.6.2, “ArmFailSafe
+         * Command”), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator.
+         *
+         * If the Networks attribute does not contain a matching entry, the command shall immediately respond with
+         * NetworkConfigResponse having NetworkingStatus status field set to NetworkIdNotFound.
+         *
+         * On success, the NetworkConfigResponse command shall have its NetworkIndex field set to the 0- based index of
+         * the entry in the Networks attribute that was just removed, and a NetworkingStatus status field set to
+         * Success.
+         *
+         * This field shall contain the NetworkID for the entry to remove: the SSID for Wi-Fi and XPAN ID
+         *
+         * for Thread.
+         *
+         * See Section 11.8.7.1.2, “Breadcrumb Field” for usage.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.7
+         */
+        removeNetwork: Command(4, TlvRemoveNetworkRequest, 5, TlvNetworkConfigResponse),
+
+        /**
+         * This command shall attempt to connect to a network whose configuration was previously added by either the
+         * AddOrUpdateWiFiNetwork or AddOrUpdateThreadNetwork commands. Network is identified by its NetworkID.
+         *
+         * This command shall fail with a BUSY status code returned to the initiator if the server is currently unable
+         * to proceed with such an operation, such as if it is currently attempting to connect in the background, or is
+         * already proceeding with a prior ConnectNetwork.
+         *
+         * If this command is received without an armed fail-safe context (see Section 11.9.6.2, “ArmFailSafe
+         * Command”), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator.
+         *
+         * Success or failure of this command shall be communicated by the ConnectNetworkResponse command, unless some
+         * data model validations caused a FAILURE status to be sent prior to finishing execution of the command. The
+         * ConnectNetworkResponse shall indicate the value Success in the NetworkingStatus field on successful
+         * connection. On failure to connect, the ConnectNetworkResponse shall contain an appropriate NetworkingStatus,
+         * DebugText and ErrorValue indicating the reason for failure.
+         *
+         * The amount of time needed to determine successful or failing connectivity on the cluster server’s associated
+         * interface is provided by the ConnectMaxTimeSeconds attribute. Clients shall NOT consider the connection to
+         * have timed-out until at least that duration has taken place. For non-concurrent commissioning situations,
+         * the client SHOULD allow additional margin of time to account for its delay in executing operational
+         * discovery of the Node once it is connected to the new network.
+         *
+         * On successful connection, the entry associated with the given Network configuration in the Networks
+         * attribute shall indicate its Connected field set to true, and all other entries, if any exist, shall
+         * indicate their Connected field set to false.
+         *
+         * On failure to connect, the entry associated with the given Network configuration in the Networks attribute
+         * shall indicate its Connected field set to false.
+         *
+         * The precedence order of any entry subject to ConnectNetwork shall NOT change within the Networks attribute.
+         *
+         * Even after successfully connecting to a network, the configuration shall revert to the prior state
+         *
+         * of configuration if the CommissioningComplete command (see Section 11.9.6.6, “CommissioningComplete
+         * Command”) is not successfully invoked before expiry of the Fail-Safe timer.
+         *
+         * When non-concurrent commissioning is being used by a Commissioner or Administrator, it is possible that the
+         * only method to determine success of the operation is operational discovery of the Node on the new
+         * operational network. Therefore, before invoking the ConnectNetwork command, the client SHOULD re-invoke the
+         * Arm Fail-Safe command with a duration that meets the following:
+         *
+         *   1. Sufficient time to meet the minimum required time (see Section 11.8.6.4, “ConnectMaxTimeSeconds
+         *      Attribute”) that may be taken by the server to connect to the desired network.
+         *
+         *   2. Sufficient time to account for possible message-layer retries when a response is requested.
+         *
+         *   3. Sufficient time to allow operational discovery on the new network by a Commissioner or Administrator.
+         *
+         *   4. Sufficient time to establish a CASE session after operational discovery
+         *
+         *   5. Not so long that, in error situations, the delay to reverting back to being discoverable for
+         *      commissioning with a previous configuration would cause significant user-perceived delay.
+         *
+         * Note as well that the CommissioningTimeout duration provided in a prior OpenCommissioningWindow or
+         * OpenBasicCommissioningWindow command may impact the total time available to proceed with error recovery
+         * after a connection failure.
+         *
+         * The LastNetworkingStatus, LastNetworkID and LastConnectErrorValue attributes MAY assist the client in
+         * determining the reason for a failure after reconnecting over a Commissioning channel, especially in
+         * non-concurrent commissioning situations.
+         *
+         * This field shall contain the NetworkID for the entry used to configure the connection: the SSID for Wi-Fi
+         * and XPAN ID for Thread.
+         *
+         * See Section 11.8.7.1.2, “Breadcrumb Field” for usage.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.9
+         */
+        connectNetwork: Command(6, TlvConnectNetworkRequest, 7, TlvConnectNetworkResponse),
+
+        /**
+         * This command shall set the specific order of the network configuration selected by its NetworkID in the
+         * Networks attribute list to match the position given by NetworkIndex.
+         *
+         * This field shall contain the NetworkID for the entry to reorder: the SSID for Wi-Fi and XPAN ID for Thread.
+         *
+         * This field shall contain the 0-based index of the new desired position of the entry in the Networks
+         * attribute.
+         *
+         * See Section 11.8.7.1.2, “Breadcrumb Field” for usage.
+         *
+         * Effect when received
+         *
+         * If the Networks attribute does not contain a matching entry, the command shall immediately respond with
+         * NetworkConfigResponse having NetworkingStatus status field set to NetworkIdNotFound.
+         *
+         * If the NetworkIndex field has a value larger or equal to the current number of entries in the Networks
+         * attribute, the command shall immediately respond with NetworkConfigResponse having NetworkingStatus status
+         * field set to OutOfRange.
+         *
+         * On success, the NetworkConfigResponse command shall have its NetworkIndex field set to the 0- based index of
+         * the entry in the Networks attribute that was just updated, matching the incoming NetworkIndex, and a
+         * NetworkingStatus status field set to Success.
+         *
+         * The entry selected shall be inserted at the new position in the list. All other entries, if any exist, shall
+         * be moved to allow the insertion, in a way that they all retain their existing relative order between each
+         * other, with the exception of the newly re-ordered entry.
+         *
+         * Re-ordering to the same NetworkIndex as the current location shall be considered as a success and yield no
+         * visible changes of the Networks attribute.
+         *
+         * Examples of re-ordering
+         *
+         * To better illustrate the re-ordering operation, consider this initial state, exemplary of a Wi-Fi
+         *
+         * device:
+         *
+         * On receiving ReorderNetwork with:
+         *
+         *   • NetworkId = Home-Guest
+         *
+         *   • NetworkIndex = 0
+         *
+         * The outcome, after applying to the initial state would be:
+         *
+         * In the above outcome, FancyCat and BlueDolphin moved "down" and Home-Guest became the highest priority
+         * network in the list.
+         *
+         * On receiving ReorderNetwork with:
+         *
+         *   • NetworkId = FancyCat
+         *
+         *   • NetworkIndex = 3
+         *
+         * The outcome, after applying to the initial state would be:
+         *
+         * In the above outcome, BlueDolphin, Home-Guest and WillowTree moved "up" and FancyCat became the lowest
+         * priority network in the list.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.11
+         */
+        reorderNetwork: Command(8, TlvReorderNetworkRequest, 5, TlvNetworkConfigResponse)
+    }
+});
+
+/**
+ * A NetworkCommissioningCluster supports these elements if it supports feature WiFiNetworkInterface.
+ */
+export const WiFiNetworkInterfaceComponent = ClusterComponent({
+    commands: {
+        /**
+         * This command shall be used to add or modify Wi-Fi network configurations.
+         *
+         * If this command is received without an armed fail-safe context (see Section 11.9.6.2, “ArmFailSafe
+         * Command”), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator.
+         *
+         * The Credentials associated with the network are not readable after execution of this command, as they do not
+         * appear in the Networks attribute list, for security reasons.
+         *
+         * See Section 11.8.7.5, “Common processing of AddOrUpdateWiFiNetwork and AddOrUpdateThreadNetwork” for
+         * behavior of addition/update.
+         *
+         * This field shall contain the SSID to which to attempt connection. Specific BSSID selection is not supported
+         * by this cluster.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.3
+         */
+        addOrUpdateWiFiNetwork: Command(2, TlvAddOrUpdateWiFiNetworkRequest, 5, TlvNetworkConfigResponse)
+    }
+});
+
+/**
+ * A NetworkCommissioningCluster supports these elements if it supports feature ThreadNetworkInterface.
+ */
+export const ThreadNetworkInterfaceComponent = ClusterComponent({
+    commands: {
+        /**
+         * This command shall be used to add or modify Thread network configurations.
+         *
+         * If this command is received without an armed fail-safe context (see Section 11.9.6.2, “ArmFailSafe
+         * Command”), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator.
+         *
+         * See Section 11.8.7.5, “Common processing of AddOrUpdateWiFiNetwork and AddOrUpdateThreadNetwork” for
+         * behavior of addition/update.
+         *
+         * The XPAN ID in the OperationalDataset serves as the NetworkID for the network configuration to be added or
+         * updated.
+         *
+         * If the Networks attribute list does not contain an entry with the same NetworkID as the one provided in the
+         * OperationalDataset, the operation shall be considered an addition, otherwise, it shall be considered an
+         * update.
+         *
+         * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.4
+         */
+        addOrUpdateThreadNetwork: Command(3, TlvAddOrUpdateThreadNetworkRequest, 5, TlvNetworkConfigResponse)
+    }
+});
+
+/**
+ * Network Commissioning
+ *
+ * Network commissioning is part of the overall Node commissioning. The main goal of Network Commissioning Cluster is
+ * to associate a Node with or manage a Node’s one or more network interfaces. These network interfaces can include the
+ * following types.
+ *
+ *   • Wi-Fi (IEEE 802.11-2020)
+ *
+ *   • Ethernet (802.3)
+ *
+ *   • Thread (802.15.4)
+ *
+ * An instance of the Network Commissioning Cluster only applies to a single network interface instance present. An
+ * interface, in this context, is a unique entity that can have an IPv6 address assigned to it and ingress and egress
+ * IP packets.
+ *
+ * NetworkCommissioningCluster supports optional features that you can enable with the NetworkCommissioningCluster.with
+ * factory method.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.8
+ */
+export const NetworkCommissioningCluster = ExtensibleCluster({
+    ...NetworkCommissioningBase,
 
     /**
-     * NetworkCommissioning cluster metadata.
+     * Use this factory method to create a NetworkCommissioning cluster with support for optional features. Include
+     * each {@link NetworkCommissioningFeature} you wish to support.
      *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.8
+     * @param features the optional features to support
+     * @returns a NetworkCommissioning cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
      */
-    export const Metadata = ClusterMetadata({
-        id: 0x31,
-        name: "NetworkCommissioning",
-        revision: 1,
+    factory: <T extends `${NetworkCommissioningFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, NetworkCommissioningFeature);
+        const cluster = Cluster({
+            ...NetworkCommissioningBase,
+            supportedFeatures: BitFlags(NetworkCommissioningBase.features, ...features)
+        });
+        extendCluster(cluster, WiFiNetworkInterfaceComponent, { wiFiNetworkInterface: true });
+        extendCluster(cluster, ThreadNetworkInterfaceComponent, { threadNetworkInterface: true });
 
-        features: {
-            /**
-             * WiFiNetworkInterface
-             *
-             * Wi-Fi related features
-             */
-            wiFiNetworkInterface: BitFlag(0),
+        preventCluster(
+            cluster,
+            { wiFiNetworkInterface: true, threadNetworkInterface: true },
+            { wiFiNetworkInterface: true, ethernetNetworkInterface: true },
+            { threadNetworkInterface: true, wiFiNetworkInterface: true },
+            { threadNetworkInterface: true, ethernetNetworkInterface: true },
+            { ethernetNetworkInterface: true, wiFiNetworkInterface: true },
+            { ethernetNetworkInterface: true, threadNetworkInterface: true },
+            { wiFiNetworkInterface: false, threadNetworkInterface: false, ethernetNetworkInterface: false }
+        );
 
-            /**
-             * ThreadNetworkInterface
-             *
-             * Thread related features
-             */
-            threadNetworkInterface: BitFlag(1),
+        return cluster as unknown as NetworkCommissioningExtension<BitFlags<typeof NetworkCommissioningBase.features, T>>;
+    }
+});
 
-            /**
-             * EthernetNetworkInterface
-             *
-             * Ethernet related features
-             */
-            ethernetNetworkInterface: BitFlag(2)
-        }
-    });
+export type NetworkCommissioningExtension<SF extends TypeFromPartialBitSchema<typeof NetworkCommissioningBase.features>> =
+    ClusterForBaseCluster<typeof NetworkCommissioningBase, SF>
+    & { supportedFeatures: SF }
+    & (SF extends { wiFiNetworkInterface: true } | { threadNetworkInterface: true } ? typeof WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent : {})
+    & (SF extends { wiFiNetworkInterface: true } ? typeof WiFiNetworkInterfaceComponent : {})
+    & (SF extends { threadNetworkInterface: true } ? typeof ThreadNetworkInterfaceComponent : {})
+    & (SF extends { wiFiNetworkInterface: true, threadNetworkInterface: true } ? never : {})
+    & (SF extends { wiFiNetworkInterface: true, ethernetNetworkInterface: true } ? never : {})
+    & (SF extends { threadNetworkInterface: true, wiFiNetworkInterface: true } ? never : {})
+    & (SF extends { threadNetworkInterface: true, ethernetNetworkInterface: true } ? never : {})
+    & (SF extends { ethernetNetworkInterface: true, wiFiNetworkInterface: true } ? never : {})
+    & (SF extends { ethernetNetworkInterface: true, threadNetworkInterface: true } ? never : {})
+    & (SF extends { wiFiNetworkInterface: false, threadNetworkInterface: false, ethernetNetworkInterface: false } ? never : {});
 
-    /**
-     * A NetworkCommissioningCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This shall indicate the maximum number of network configuration entries that can be added, based on
-             * available device resources. The length of the Networks attribute list shall be less than or equal to
-             * this value.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.1
-             */
-            maxNetworks: FixedAttribute(
-                0,
-                TlvUInt8.bound({ min: 1 }),
-                { readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
-            ),
-
-            /**
-             * This attribute shall indicate the network configurations that are usable on the network interface
-             * represented by this cluster server instance.
-             *
-             * The order of configurations in the list reflects precedence. That is, any time the Node attempts to
-             * connect to the network it shall attempt to do so using the configurations in Networks Attribute in the
-             * order as they appear in the list.
-             *
-             * The order of list items shall only be modified by the AddOrUpdateThreadNetwork, AddOrUpdateWiFiNetwork
-             * and ReorderNetwork commands. In other words, the list shall be stable over
-             *
-             * time, unless mutated externally.
-             *
-             * Ethernet networks shall be automatically populated by the cluster server. Ethernet Network Commissioning
-             * Cluster instances shall always have exactly one Section 11.8.5.4, “NetworkInfoStruct” instance in their
-             * Networks attribute. There shall be no way to add, update or remove Ethernet network configurations to
-             * those Cluster instances.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.2
-             */
-            networks: Attribute(
-                1,
-                TlvArray(TlvNetworkInfoStruct),
-                { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
-            ),
-
-            /**
-             * This attribute shall indicate whether the associated network interface is enabled or not. By default all
-             * network interfaces SHOULD be enabled during initial commissioning (InterfaceEnabled set to true).
-             *
-             * It is undefined what happens if InterfaceEnabled is written to false on the same interface as that which
-             * is used to write the value. In that case, it is possible that the Administrator would have to await
-             * expiry of the fail-safe, and associated recovery of network configuration to prior safe values, before
-             * being able to communicate with the node again (see Section 11.9.6.2, “ArmFailSafe Command”).
-             *
-             * It MAY be possible to disable Ethernet interfaces but it is implementation-defined. If not supported, a
-             * write to this attribute with a value of false shall fail with a status of INVALID_ACTION. When disabled,
-             * an Ethernet interface would longer employ media detection. That is, a simple unplug and replug of the
-             * cable shall NOT re-enable the interface.
-             *
-             * On Ethernet-only Nodes, there shall always be at least one of the Network Commissioning server cluster
-             * instances with InterfaceEnabled set to true.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.5
-             */
-            interfaceEnabled: WritableAttribute(
-                4,
-                TlvBoolean,
-                { persistent: true, default: true, writeAcl: AccessLevel.Administer }
-            ),
-
-            /**
-             * This attribute shall indicate the status of the last attempt either scan or connect to an operational
-             * network, using this interface, whether by invocation of the ConnectNetwork command or by autonomous
-             * connection after loss of connectivity or during initial establishment. If no such attempt was made, or
-             * no network configurations exist in the Networks attribute, then this attribute shall be set to null.
-             *
-             * This attribute is present to assist with error recovery during Network commissioning and to assist in
-             * non-concurrent networking commissioning flows.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.6
-             */
-            lastNetworkingStatus: Attribute(
-                5,
-                TlvNullable(TlvEnum<NetworkCommissioningStatus>()),
-                { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
-            ),
-
-            /**
-             * This attribute shall indicate the NetworkID used in the last attempt to connect to an operational
-             * network, using this interface, whether by invocation of the ConnectNetwork command or by autonomous
-             * connection after loss of connectivity or during initial establishment. If no such attempt was made, or
-             * no network configurations exist in the Networks attribute, then this attribute shall be set to null.
-             *
-             * If a network configuration is removed from the Networks attribute using the RemoveNetwork command after
-             * a connection attempt, this field MAY indicate a NetworkID that is no longer configured on the Node.
-             *
-             * This attribute is present to assist with error recovery during Network commissioning and to assist in
-             * non-concurrent networking commissioning flows.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.7
-             */
-            lastNetworkId: Attribute(
-                6,
-                TlvNullable(TlvByteString.bound({ minLength: 1, maxLength: 32 })),
-                { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
-            ),
-
-            /**
-             * This attribute shall indicate the ErrorValue used in the last failed attempt to connect to an
-             * operational network, using this interface, whether by invocation of the ConnectNetwork command or by
-             * autonomous connection after loss of connectivity or during initial establishment. If no such attempt was
-             * made, or no network configurations exist in the Networks attribute, then this attribute shall be set to
-             * null.
-             *
-             * If the last connection succeeded, as indicated by a value of Success in the LastNetworkingStatus
-             * attribute, then this field shall be set to null.
-             *
-             * This attribute is present to assist with error recovery during Network commissioning and to assist in
-             * non-concurrent networking commissioning flows.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.8
-             */
-            lastConnectErrorValue: Attribute(
-                7,
-                TlvNullable(TlvInt32),
-                { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
-            )
-        }
-    });
-
-    /**
-     * A NetworkCommissioningCluster supports these elements if it supports features WiFiNetworkInterface or
-     * ThreadNetworkInterface.
-     */
-    export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This attribute shall indicate the maximum duration taken, in seconds, by the network interface on this
-             * cluster server instance to provide scan results.
-             *
-             * See Section 11.8.7.1, “ScanNetworks Command” for usage.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.3
-             */
-            scanMaxTimeSeconds: FixedAttribute(2, TlvUInt8),
-
-            /**
-             * This attribute shall indicate the maximum duration taken, in seconds, by the network interface on this
-             * cluster server instance to report a successful or failed network connection indication. This maximum
-             * time shall account for all operations needed until a successful network connection is deemed to have
-             * occurred, including, for example, obtaining IP addresses, or the execution of necessary internal retries.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.4
-             */
-            connectMaxTimeSeconds: FixedAttribute(3, TlvUInt8)
-        },
-
-        commands: {
-            /**
-             * This command shall scan on the Cluster instance’s associated network interface for either of:
-             *
-             *   • All available networks (non-directed scanning)
-             *
-             *   • Specific networks (directed scanning)
-             *
-             * Scanning for available networks detects all networks of the type corresponding to the cluster server
-             * instance’s associated network interface that are possible to join, such as all visible Wi-Fi access
-             * points for Wi-Fi cluster server instances, all Thread PANs for Thread cluster server instances, within
-             * bounds of the maximum response size.
-             *
-             * Scanning for a specific network (i.e. directed scanning) takes place if a network identifier (e.g. Wi-Fi
-             * SSID) is provided in the command arguments. Directed scanning shall restrict the result set to the
-             * specified network only.
-             *
-             * The client shall NOT expect the server to be done scanning and have responded with ScanNetworksResponse
-             * before ScanMaxTimeSeconds seconds have elapsed. Enough transport time affordances for retries SHOULD be
-             * expected before a client determines the operation to have timed-out.
-             *
-             * This command shall fail with a status code of BUSY if the server determines that it will fail to
-             * reliably send a response due to changes of networking interface configuration at runtime for the
-             * interface over which the command was invoked, or if it is currently unable to proceed with such an
-             * operation.
-             *
-             * Clients shall be resilient to a server that either does not support or cannot proceed with the
-             * ScanNetworks command.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.1
-             */
-            scanNetworks: Command(0, TlvScanNetworksRequest, 1, TlvScanNetworksResponse),
-
-            /**
-             * This command shall remove the network configuration from the Cluster if there was already a network
-             * configuration with the same NetworkID. The relative order of the entries in the Networks attribute list
-             * shall remain unchanged, except for the removal of the requested network configuration.
-             *
-             * If this command is received without an armed fail-safe context (see Section 11.9.6.2, “ArmFailSafe
-             * Command”), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator.
-             *
-             * If the Networks attribute does not contain a matching entry, the command shall immediately respond with
-             * NetworkConfigResponse having NetworkingStatus status field set to NetworkIdNotFound.
-             *
-             * On success, the NetworkConfigResponse command shall have its NetworkIndex field set to the 0- based
-             * index of the entry in the Networks attribute that was just removed, and a NetworkingStatus status field
-             * set to Success.
-             *
-             * This field shall contain the NetworkID for the entry to remove: the SSID for Wi-Fi and XPAN ID
-             *
-             * for Thread.
-             *
-             * See Section 11.8.7.1.2, “Breadcrumb Field” for usage.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.7
-             */
-            removeNetwork: Command(4, TlvRemoveNetworkRequest, 5, TlvNetworkConfigResponse),
-
-            /**
-             * This command shall attempt to connect to a network whose configuration was previously added by either
-             * the AddOrUpdateWiFiNetwork or AddOrUpdateThreadNetwork commands. Network is identified by its NetworkID.
-             *
-             * This command shall fail with a BUSY status code returned to the initiator if the server is currently
-             * unable to proceed with such an operation, such as if it is currently attempting to connect in the
-             * background, or is already proceeding with a prior ConnectNetwork.
-             *
-             * If this command is received without an armed fail-safe context (see Section 11.9.6.2, “ArmFailSafe
-             * Command”), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator.
-             *
-             * Success or failure of this command shall be communicated by the ConnectNetworkResponse command, unless
-             * some data model validations caused a FAILURE status to be sent prior to finishing execution of the
-             * command. The ConnectNetworkResponse shall indicate the value Success in the NetworkingStatus field on
-             * successful connection. On failure to connect, the ConnectNetworkResponse shall contain an appropriate
-             * NetworkingStatus, DebugText and ErrorValue indicating the reason for failure.
-             *
-             * The amount of time needed to determine successful or failing connectivity on the cluster server’s
-             * associated interface is provided by the ConnectMaxTimeSeconds attribute. Clients shall NOT consider the
-             * connection to have timed-out until at least that duration has taken place. For non-concurrent
-             * commissioning situations, the client SHOULD allow additional margin of time to account for its delay in
-             * executing operational discovery of the Node once it is connected to the new network.
-             *
-             * On successful connection, the entry associated with the given Network configuration in the Networks
-             * attribute shall indicate its Connected field set to true, and all other entries, if any exist, shall
-             * indicate their Connected field set to false.
-             *
-             * On failure to connect, the entry associated with the given Network configuration in the Networks
-             * attribute shall indicate its Connected field set to false.
-             *
-             * The precedence order of any entry subject to ConnectNetwork shall NOT change within the Networks
-             * attribute.
-             *
-             * Even after successfully connecting to a network, the configuration shall revert to the prior state
-             *
-             * of configuration if the CommissioningComplete command (see Section 11.9.6.6, “CommissioningComplete
-             * Command”) is not successfully invoked before expiry of the Fail-Safe timer.
-             *
-             * When non-concurrent commissioning is being used by a Commissioner or Administrator, it is possible that
-             * the only method to determine success of the operation is operational discovery of the Node on the new
-             * operational network. Therefore, before invoking the ConnectNetwork command, the client SHOULD re-invoke
-             * the Arm Fail-Safe command with a duration that meets the following:
-             *
-             *   1. Sufficient time to meet the minimum required time (see Section 11.8.6.4, “ConnectMaxTimeSeconds
-             *      Attribute”) that may be taken by the server to connect to the desired network.
-             *
-             *   2. Sufficient time to account for possible message-layer retries when a response is requested.
-             *
-             *   3. Sufficient time to allow operational discovery on the new network by a Commissioner or
-             *      Administrator.
-             *
-             *   4. Sufficient time to establish a CASE session after operational discovery
-             *
-             *   5. Not so long that, in error situations, the delay to reverting back to being discoverable for
-             *      commissioning with a previous configuration would cause significant user-perceived delay.
-             *
-             * Note as well that the CommissioningTimeout duration provided in a prior OpenCommissioningWindow or
-             * OpenBasicCommissioningWindow command may impact the total time available to proceed with error recovery
-             * after a connection failure.
-             *
-             * The LastNetworkingStatus, LastNetworkID and LastConnectErrorValue attributes MAY assist the client in
-             * determining the reason for a failure after reconnecting over a Commissioning channel, especially in
-             * non-concurrent commissioning situations.
-             *
-             * This field shall contain the NetworkID for the entry used to configure the connection: the SSID for
-             * Wi-Fi and XPAN ID for Thread.
-             *
-             * See Section 11.8.7.1.2, “Breadcrumb Field” for usage.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.9
-             */
-            connectNetwork: Command(6, TlvConnectNetworkRequest, 7, TlvConnectNetworkResponse),
-
-            /**
-             * This command shall set the specific order of the network configuration selected by its NetworkID in the
-             * Networks attribute list to match the position given by NetworkIndex.
-             *
-             * This field shall contain the NetworkID for the entry to reorder: the SSID for Wi-Fi and XPAN ID for
-             * Thread.
-             *
-             * This field shall contain the 0-based index of the new desired position of the entry in the Networks
-             * attribute.
-             *
-             * See Section 11.8.7.1.2, “Breadcrumb Field” for usage.
-             *
-             * Effect when received
-             *
-             * If the Networks attribute does not contain a matching entry, the command shall immediately respond with
-             * NetworkConfigResponse having NetworkingStatus status field set to NetworkIdNotFound.
-             *
-             * If the NetworkIndex field has a value larger or equal to the current number of entries in the Networks
-             * attribute, the command shall immediately respond with NetworkConfigResponse having NetworkingStatus
-             * status field set to OutOfRange.
-             *
-             * On success, the NetworkConfigResponse command shall have its NetworkIndex field set to the 0- based
-             * index of the entry in the Networks attribute that was just updated, matching the incoming NetworkIndex,
-             * and a NetworkingStatus status field set to Success.
-             *
-             * The entry selected shall be inserted at the new position in the list. All other entries, if any exist,
-             * shall be moved to allow the insertion, in a way that they all retain their existing relative order
-             * between each other, with the exception of the newly re-ordered entry.
-             *
-             * Re-ordering to the same NetworkIndex as the current location shall be considered as a success and yield
-             * no visible changes of the Networks attribute.
-             *
-             * Examples of re-ordering
-             *
-             * To better illustrate the re-ordering operation, consider this initial state, exemplary of a Wi-Fi
-             *
-             * device:
-             *
-             * On receiving ReorderNetwork with:
-             *
-             *   • NetworkId = Home-Guest
-             *
-             *   • NetworkIndex = 0
-             *
-             * The outcome, after applying to the initial state would be:
-             *
-             * In the above outcome, FancyCat and BlueDolphin moved "down" and Home-Guest became the highest priority
-             * network in the list.
-             *
-             * On receiving ReorderNetwork with:
-             *
-             *   • NetworkId = FancyCat
-             *
-             *   • NetworkIndex = 3
-             *
-             * The outcome, after applying to the initial state would be:
-             *
-             * In the above outcome, BlueDolphin, Home-Guest and WillowTree moved "up" and FancyCat became the lowest
-             * priority network in the list.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.11
-             */
-            reorderNetwork: Command(8, TlvReorderNetworkRequest, 5, TlvNetworkConfigResponse)
-        }
-    });
-
-    /**
-     * A NetworkCommissioningCluster supports these elements if it supports feature WiFiNetworkInterface.
-     */
-    export const WiFiNetworkInterfaceComponent = ClusterComponent({
-        commands: {
-            /**
-             * This command shall be used to add or modify Wi-Fi network configurations.
-             *
-             * If this command is received without an armed fail-safe context (see Section 11.9.6.2, “ArmFailSafe
-             * Command”), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator.
-             *
-             * The Credentials associated with the network are not readable after execution of this command, as they do
-             * not appear in the Networks attribute list, for security reasons.
-             *
-             * See Section 11.8.7.5, “Common processing of AddOrUpdateWiFiNetwork and AddOrUpdateThreadNetwork” for
-             * behavior of addition/update.
-             *
-             * This field shall contain the SSID to which to attempt connection. Specific BSSID selection is not
-             * supported by this cluster.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.3
-             */
-            addOrUpdateWiFiNetwork: Command(2, TlvAddOrUpdateWiFiNetworkRequest, 5, TlvNetworkConfigResponse)
-        }
-    });
-
-    /**
-     * A NetworkCommissioningCluster supports these elements if it supports feature ThreadNetworkInterface.
-     */
-    export const ThreadNetworkInterfaceComponent = ClusterComponent({
-        commands: {
-            /**
-             * This command shall be used to add or modify Thread network configurations.
-             *
-             * If this command is received without an armed fail-safe context (see Section 11.9.6.2, “ArmFailSafe
-             * Command”), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator.
-             *
-             * See Section 11.8.7.5, “Common processing of AddOrUpdateWiFiNetwork and AddOrUpdateThreadNetwork” for
-             * behavior of addition/update.
-             *
-             * The XPAN ID in the OperationalDataset serves as the NetworkID for the network configuration to be added
-             * or updated.
-             *
-             * If the Networks attribute list does not contain an entry with the same NetworkID as the one provided in
-             * the OperationalDataset, the operation shall be considered an addition, otherwise, it shall be considered
-             * an update.
-             *
-             * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.4
-             */
-            addOrUpdateThreadNetwork: Command(3, TlvAddOrUpdateThreadNetworkRequest, 5, TlvNetworkConfigResponse)
-        }
-    });
-
-    /**
-     * This cluster supports all NetworkCommissioning features. It may support illegal feature combinations.
-     *
-     * If you use this cluster you must manually specify which features are active and ensure the set of active
-     * features is legal per the Matter specification.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes, ...WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent.attributes },
-        commands: {
-            ...WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent.commands,
-            ...WiFiNetworkInterfaceComponent.commands,
-            ...ThreadNetworkInterfaceComponent.commands
-        }
-    });
-}
+/**
+ * This cluster supports all NetworkCommissioning features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const NetworkCommissioningComplete = Cluster({
+    ...NetworkCommissioningCluster,
+    attributes: { ...WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent.attributes },
+    commands: {
+        ...WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent.commands,
+        ...WiFiNetworkInterfaceComponent.commands,
+        ...ThreadNetworkInterfaceComponent.commands
+    }
+});

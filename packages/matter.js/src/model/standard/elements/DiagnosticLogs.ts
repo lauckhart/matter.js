@@ -11,8 +11,15 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "DiagnosticLogs", id: 0x32, classification: "node",
     description: "Diagnostic Logs",
-    details: "The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be " +
-             "used to aid in diagnostics.",
+
+    details: "This Cluster supports an interface to a Node. It provides commands for retrieving unstructured " +
+             "diagnostic logs from a Node that may be used to aid in diagnostics. It will often be the case that " +
+             "unstructured diagnostic logs will be Node-wide and not specific to any subset of Endpoints. When " +
+             "present, this Cluster shall be implemented once for the Node. The Node SHOULD also implement the " +
+             "BDX Initiator and BDX Sender roles as defined in the BDX Protocol." +
+             "\n" +
+             "NOTE Support for Diagnostic Logs cluster is provisional.",
+
     xref: { document: "core", section: "11.10" },
 
     children: [

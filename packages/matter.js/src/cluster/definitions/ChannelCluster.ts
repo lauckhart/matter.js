@@ -7,40 +7,14 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlags, TypeFromPartialBitSchema, BitFlag } from "../../schema/BitmapSchema.js";
-import { extendCluster, ClusterMetadata, ClusterComponent } from "../../cluster/ClusterFactory.js";
-import { GlobalAttributes, OptionalAttribute, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
+import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { OptionalAttribute, Command, TlvNoResponse, Attribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
-
-/**
- * Channel
- *
- * This cluster provides an interface for controlling the current Channel on a device.
- *
- * Use this factory function to create a Channel cluster supporting a specific set of features. Include each
- * {@link ChannelCluster.Feature} you wish to support.
- *
- * @param features a list of {@link ChannelCluster.Feature} to support
- * @returns a Channel cluster with specified features enabled
- * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6
- */
-export function ChannelCluster<T extends ChannelCluster.Feature[]>(...features: [...T]) {
-    const cluster = Cluster({
-        ...ChannelCluster.Metadata,
-        supportedFeatures: BitFlags(ChannelCluster.Metadata.features, ...features),
-        ...ChannelCluster.BaseComponent
-    });
-    extendCluster(cluster, ChannelCluster.ChannelListComponent, { channelList: true });
-    extendCluster(cluster, ChannelCluster.LineupInfoComponent, { lineupInfo: true });
-    extendCluster(cluster, ChannelCluster.ChannelListOrLineupInfoComponent, { channelList: true }, { lineupInfo: true });
-    return cluster as unknown as ChannelCluster.Type<BitFlags<typeof ChannelCluster.Metadata.features, T>>;
-}
 
 /**
  * This indicates a channel in a channel lineup.
@@ -218,159 +192,177 @@ export const TlvChangeChannelResponse = TlvObject({
     data: TlvOptionalField(1, TlvByteString)
 });
 
-export namespace ChannelCluster {
+/**
+ * These are optional features supported by ChannelCluster.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.2
+ */
+export enum ChannelFeature {
     /**
-     * These are optional features supported by ChannelCluster.
+     * ChannelList
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.2
+     * Provides list of available channels.
      */
-    export enum Feature {
+    ChannelList = "ChannelList",
+
+    /**
+     * LineupInfo
+     *
+     * Provides lineup info, which is a reference to an external source of lineup information.
+     */
+    LineupInfo = "LineupInfo"
+}
+
+/**
+ * These elements and properties are present in all Channel clusters.
+ */
+export const ChannelBase = BaseClusterComponent({
+    id: 0x504,
+    name: "Channel",
+    revision: 1,
+
+    features: {
         /**
          * ChannelList
          *
          * Provides list of available channels.
          */
-        ChannelList = "ChannelList",
+        channelList: BitFlag(0),
 
         /**
          * LineupInfo
          *
          * Provides lineup info, which is a reference to an external source of lineup information.
          */
-        LineupInfo = "LineupInfo"
+        lineupInfo: BitFlag(1)
+    },
+
+    attributes: {
+        /**
+         * This optional field contains the current channel. When supported but a channel is not currently tuned to (if
+         * a content application is in foreground), the value of the field shall be null.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.3
+         */
+        currentChannel: OptionalAttribute(2, TlvNullable(TlvChannelInfoStruct), { default: null })
+    },
+
+    commands: {
+        /**
+         * Change the channel to the channel with the given Number in the ChannelList attribute.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.3
+         */
+        changeChannelByNumber: Command(2, TlvChangeChannelByNumberRequest, 2, TlvNoResponse),
+
+        /**
+         * This command provides channel up and channel down functionality, but allows channel index jumps of size
+         * Count.
+         *
+         * When the value of the increase or decrease is larger than the number of channels remaining in the given
+         * direction, then the behavior shall be to return to the beginning (or end) of the channel list and continue.
+         * For example, if the current channel is at index 0 and count value of -1 is given, then the current channel
+         * should change to the last channel.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.4
+         */
+        skipChannel: Command(3, TlvSkipChannelRequest, 3, TlvNoResponse)
     }
+});
 
-    export type Type<T extends TypeFromPartialBitSchema<typeof Metadata.features>> =
-        typeof Metadata
-        & { attributes: GlobalAttributes<typeof Metadata.features> }
-        & { supportedFeatures: T }
-        & typeof BaseComponent
-        & (T extends { channelList: true } ? typeof ChannelListComponent : {})
-        & (T extends { lineupInfo: true } ? typeof LineupInfoComponent : {})
-        & (T extends { channelList: true } | { lineupInfo: true } ? typeof ChannelListOrLineupInfoComponent : {});
+/**
+ * A ChannelCluster supports these elements if it supports feature ChannelList.
+ */
+export const ChannelListComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This optional list provides the channels supported.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.1
+         */
+        channelList: Attribute(0, TlvArray(TlvChannelInfoStruct), { default: [] })
+    }
+});
+
+/**
+ * A ChannelCluster supports these elements if it supports feature LineupInfo.
+ */
+export const LineupInfoComponent = ClusterComponent({
+    attributes: {
+        /**
+         * This optional field identifies the channel lineup using external data sources.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.2
+         */
+        lineup: Attribute(1, TlvNullable(TlvLineupInfoStruct), { default: null })
+    }
+});
+
+/**
+ * A ChannelCluster supports these elements if it supports features ChannelList or LineupInfo.
+ */
+export const ChannelListOrLineupInfoComponent = ClusterComponent({
+    commands: {
+        /**
+         * Change the channel to the channel case-insensitive exact matching the value passed as an argument.
+         *
+         * The match priority order shall be: AffiliateCallSign ("KCTS"), CallSign ("PBS"), Name ("Comedy Central"),
+         * Number ("13.1")
+         *
+         * Upon receipt, this shall generate a ChangeChannelResponse command.
+         *
+         * Upon success, the CurrentChannel attribute, if supported, shall be updated to reflect the change.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.1
+         */
+        changeChannel: Command(0, TlvChangeChannelRequest, 1, TlvChangeChannelResponse)
+    }
+});
+
+/**
+ * Channel
+ *
+ * This cluster provides an interface for controlling the current Channel on a device or endpoint.
+ *
+ * ChannelCluster supports optional features that you can enable with the ChannelCluster.with factory method.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6
+ */
+export const ChannelCluster = ExtensibleCluster({
+    ...ChannelBase,
 
     /**
-     * Channel cluster metadata.
+     * Use this factory method to create a Channel cluster with support for optional features. Include each
+     * {@link ChannelFeature} you wish to support.
      *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6
+     * @param features the optional features to support
+     * @returns a Channel cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
      */
-    export const Metadata = ClusterMetadata({
-        id: 0x504,
-        name: "Channel",
-        revision: 1,
+    factory: <T extends `${ChannelFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, ChannelFeature);
+        const cluster = Cluster({ ...ChannelBase, supportedFeatures: BitFlags(ChannelBase.features, ...features) });
+        extendCluster(cluster, LineupInfoComponent, { lineupInfo: true });
+        extendCluster(cluster, ChannelListOrLineupInfoComponent, { channelList: true }, { lineupInfo: true });
+        return cluster as unknown as ChannelExtension<BitFlags<typeof ChannelBase.features, T>>;
+    }
+});
 
-        features: {
-            /**
-             * ChannelList
-             *
-             * Provides list of available channels.
-             */
-            channelList: BitFlag(0),
+export type ChannelExtension<SF extends TypeFromPartialBitSchema<typeof ChannelBase.features>> =
+    ClusterForBaseCluster<typeof ChannelBase, SF>
+    & { supportedFeatures: SF }
+    & (SF extends { channelList: true } ? typeof ChannelListComponent : {})
+    & (SF extends { lineupInfo: true } ? typeof LineupInfoComponent : {})
+    & (SF extends { channelList: true } | { lineupInfo: true } ? typeof ChannelListOrLineupInfoComponent : {});
 
-            /**
-             * LineupInfo
-             *
-             * Provides lineup info, which is a reference to an external source of lineup information.
-             */
-            lineupInfo: BitFlag(1)
-        }
-    });
-
-    /**
-     * A ChannelCluster supports these elements for all feature combinations.
-     */
-    export const BaseComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This optional field contains the current channel. When supported but a channel is not currently tuned to
-             * (if a content application is in foreground), the value of the field shall be null.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.3
-             */
-            currentChannel: OptionalAttribute(2, TlvNullable(TlvChannelInfoStruct), { default: null })
-        },
-
-        commands: {
-            /**
-             * Change the channel to the channel with the given Number in the ChannelList attribute.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.3
-             */
-            changeChannelByNumber: Command(2, TlvChangeChannelByNumberRequest, 2, TlvNoResponse),
-
-            /**
-             * This command provides channel up and channel down functionality, but allows channel index jumps of size
-             * Count.
-             *
-             * When the value of the increase or decrease is larger than the number of channels remaining in the given
-             * direction, then the behavior shall be to return to the beginning (or end) of the channel list and
-             * continue. For example, if the current channel is at index 0 and count value of -1 is given, then the
-             * current channel should change to the last channel.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.4
-             */
-            skipChannel: Command(3, TlvSkipChannelRequest, 3, TlvNoResponse)
-        }
-    });
-
-    /**
-     * A ChannelCluster supports these elements if it supports feature ChannelList.
-     */
-    export const ChannelListComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This optional list provides the channels supported.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.1
-             */
-            channelList: Attribute(0, TlvArray(TlvChannelInfoStruct), { default: [] })
-        }
-    });
-
-    /**
-     * A ChannelCluster supports these elements if it supports feature LineupInfo.
-     */
-    export const LineupInfoComponent = ClusterComponent({
-        attributes: {
-            /**
-             * This optional field identifies the channel lineup using external data sources.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.2
-             */
-            lineup: Attribute(1, TlvNullable(TlvLineupInfoStruct), { default: null })
-        }
-    });
-
-    /**
-     * A ChannelCluster supports these elements if it supports features ChannelList or LineupInfo.
-     */
-    export const ChannelListOrLineupInfoComponent = ClusterComponent({
-        commands: {
-            /**
-             * Change the channel to the channel case-insensitive exact matching the value passed as an argument.
-             *
-             * The match priority order shall be: AffiliateCallSign ("KCTS"), CallSign ("PBS"), Name ("Comedy
-             * Central"), Number ("13.1")
-             *
-             * Upon receipt, this shall generate a ChangeChannelResponse command.
-             *
-             * Upon success, the CurrentChannel attribute, if supported, shall be updated to reflect the change.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.1
-             */
-            changeChannel: Command(0, TlvChangeChannelRequest, 1, TlvChangeChannelResponse)
-        }
-    });
-
-    /**
-     * This cluster supports all Channel features. It may support illegal feature combinations.
-     *
-     * If you use this cluster you must manually specify which features are active and ensure the set of active
-     * features is legal per the Matter specification.
-     */
-    export const Complete = Cluster({
-        ...Metadata,
-        attributes: { ...BaseComponent.attributes, ...ChannelListComponent.attributes, ...LineupInfoComponent.attributes },
-        commands: { ...BaseComponent.commands, ...ChannelListOrLineupInfoComponent.commands }
-    });
-}
+/**
+ * This cluster supports all Channel features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const ChannelComplete = Cluster({
+    ...ChannelCluster,
+    attributes: { ...ChannelListComponent.attributes, ...LineupInfoComponent.attributes },
+    commands: { ...ChannelListOrLineupInfoComponent.commands }
+});

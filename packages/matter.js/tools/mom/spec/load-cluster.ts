@@ -50,6 +50,100 @@ export function loadCluster(clusterRef: HtmlReference) {
     // A stack of functions that ingest subsections
     const collectors = Array<SubsectionCollector>();
 
+    for (const subref of scanSection(clusterRef)) {
+        applyPatches(subref, clusterRef);
+        if (subref.ignore) {
+            continue;
+        }
+
+        while (collectors.length && !subref.xref.section.startsWith(collectors[collectors.length - 1].subsection)) {
+            collectors.pop();
+        }
+
+        if (subref.xref.section === clusterRef.xref.section) {
+            definition.prose = subref.prose;
+        }
+
+        const name = camelize(subref.name).toLowerCase();
+        switch (name) {
+            case "clusterid":
+            case "clusteridentifiers":
+                defineElement("ids", subref);
+                break;
+
+            case "features":
+                defineElement("features", subref)
+                break;
+
+            case "revisionhistory":
+                defineElement("revisions", subref);
+                break;
+
+            case "classification":
+                defineElement("classifications", subref);
+                break;
+
+            case "attributes":
+                defineElement("attributes", subref);
+                break;
+
+            case "commands":
+                defineElement("commands", subref);
+                break;
+
+            case "events":
+                defineElement("events", subref);
+                break;
+
+            case "statuscodes":
+                defineElement("statusCodes", subref);
+                break;
+
+            case "datatypes":
+                // Datatypes are different than everybody else.  The types
+                // themselves are defined in subsections
+                collectors.push({
+                    subsection: subref.xref.section,
+                    collector: (datatypeRef) => {
+                        if (!definition.datatypes) {
+                            definition.datatypes = [];
+                        }
+                        logger.debug(`datatype ${datatypeRef.name} § ${datatypeRef.xref.section}`);
+                        definition.datatypes.push(datatypeRef);
+                        if (datatypeRef.table) {
+                            // Probably a struct, enum or bitmap.  These are
+                            // sometimes followed with sections that detail
+                            // individual items
+                            collectDetails(datatypeRef);
+                        }
+                    }
+                })
+                break;
+
+            default:
+                // "Attribute Set" is suffixed to sections containing a subset
+                // of attributes
+                if (name.endsWith("attributeset")) {
+                    if (!definition.attributeSets) {
+                        definition.attributeSets = [];
+                    }
+                    logger.debug(`attribute set ${subref.name} § ${subref.xref.section}`);
+                    definition.attributeSets.push(subref)
+                    if (subref.table) {
+                        collectDetails(subref);
+                    }
+                    break;
+                }
+
+                // If we don't recognize the section name explicitly, pass to
+                // collectors so long as we're still in the relevant section
+                if (collectors.length) {
+                    collectors[collectors.length - 1].collector(subref);
+                }
+                break;
+        }
+    }
+
     function collectDetails(ref: HtmlReference) {
         collectors.push({
             subsection: ref.detailSection ?? ref.xref.section,
@@ -92,101 +186,6 @@ export function loadCluster(clusterRef: HtmlReference) {
         logger.debug(`${name} § ${ref.xref.section}`);
 
         collectDetails(definition[name] = ref);
-    }
-
-    for (const subref of scanSection(clusterRef)) {
-        applyPatches(subref, clusterRef);
-        if (subref.ignore) {
-            continue;
-        }
-
-        while (collectors.length && !subref.xref.section.startsWith(collectors[collectors.length - 1].subsection)) {
-            collectors.pop();
-        }
-
-        if (subref.xref.section === clusterRef.xref.section) {
-            definition.prose = clusterRef.prose;
-        }
-
-        const name = camelize(subref.name).toLowerCase();
-        switch (name) {
-            case "clusterid":
-            case "clusteridentifiers":
-                defineElement("ids", subref);
-                break;
-
-            case "features":
-                defineElement("features", subref)
-                break;
-
-            case "revisionhistory":
-                defineElement("revisions", subref);
-                break;
-
-            case "classification":
-                defineElement("classifications", subref);
-                break;
-
-            case "attributes":
-                defineElement("attributes", subref);
-                break;
-
-            case "commands":
-                defineElement("commands", subref);
-                break;
-
-            case "events":
-                defineElement("events", subref);
-                break;
-
-            case "statuscodes":
-                defineElement("statusCodes", subref);
-                break;
-
-            case "datatypes":
-                // Datatypes are different than everybody else.  The types
-                // themselves are defined in subsections.  This is why
-                // collectors are a stack
-                collectors.push({
-                    subsection: subref.xref.section,
-                    collector: (datatypeRef) => {
-                        if (!definition.datatypes) {
-                            definition.datatypes = [];
-                        }
-                        logger.debug(`datatype ${datatypeRef.name} § ${datatypeRef.xref.section}`);
-                        definition.datatypes.push(datatypeRef);
-                        if (datatypeRef.table) {
-                            // Probably a struct, enum or bitmap.  These are
-                            // sometimes followed with sections that detail
-                            // individual items
-                            collectDetails(datatypeRef);
-                        }
-                    }
-                })
-                break;
-
-            default:
-                // "Attribute Set" is suffixed to sections containing a subset
-                // of attributes
-                if (name.endsWith("attributeset")) {
-                    if (!definition.attributeSets) {
-                        definition.attributeSets = [];
-                    }
-                    logger.debug(`attribute set ${subref.name} § ${subref.xref.section}`);
-                    definition.attributeSets.push(subref)
-                    if (subref.table) {
-                        collectDetails(subref);
-                    }
-                    break;
-                }
-
-                // If we don't recognize the section name explicitly, pass to
-                // collectors so long as we're still in the relevant section
-                if (collectors.length) {
-                    collectors[collectors.length - 1].collector(subref);
-                }
-                break;
-        }
     }
 
     return definition;

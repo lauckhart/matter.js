@@ -10,8 +10,42 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "cluster", name: "Actions", id: 0x25, classification: "application", description: "Actions",
+
     details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to " +
-             "expose action information.",
+             "expose" +
+             "\n" +
+             "  • Information about logical grouping of endpoints on the Node (example: lights in a room)" +
+             "\n" +
+             "  • Information about named actions that can be performed on such a group of endpoints (example: " +
+             "    recall a scene for a group of lights by its name)" +
+             "\n" +
+             "  • Commands to trigger such actions" +
+             "\n" +
+             "  • Events to receive feedback on the state of such actions." +
+             "\n" +
+             "The information on grouping and available actions is typically provided by the user or Bridge " +
+             "manufacturer via some means not defined in Matter, and therefore provided as read-only to Nodes. " +
+             "For example: a manufacturer-provided app allows a user to set up logical grouping and create/assign " +
+             "scene for such groups." +
+             "\n" +
+             "Using this cluster, a Node can learn about such logical grouping, provided actions, and trigger " +
+             "such actions." +
+             "\n" +
+             "While the origin of this cluster stems from use cases with a Bridge, its server side may also be " +
+             "implemented on any Node which can expose certain grouping, actions or automations to other users." +
+             "\n" +
+             "After defining the attributes, commands and events for this cluster, and the associated data types, " +
+             "several examples are provided to illustrate the capabilities of this cluster." +
+             "\n" +
+             "Actions can be defined in a flexible manner to suit the needs of the various nodes implementing " +
+             "this cluster. For each action, the commands available for that particular action are defined." +
+             "\n" +
+             "This cluster can be used to expose only the grouping of endpoints without any actions defined by " +
+             "populating the EndpointList attribute accordingly and providing an empty list for ActionList." +
+             "\n" +
+             "The term 'action' in the description of this cluster should not be confused with the term 'action' " +
+             "as used in the Interaction Model.",
+
     xref: { document: "core", section: "9.14" },
 
     children: [
