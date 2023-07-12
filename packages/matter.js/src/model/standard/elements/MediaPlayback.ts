@@ -67,11 +67,11 @@ Matter.children.push({
             conformance: "AS", constraint: "desc", default: null, quality: "X",
 
             details: "This shall indicate the position of playback (Position field) at the time (UpdateAt field) " +
-                     "specified in the attribute. The client MAY use the SampledPosition attribute to compute the current " +
+                     "specified in the attribute. The client may use the SampledPosition attribute to compute the current " +
                      "position within the media stream based on the PlaybackSpeed, PlaybackPositionStruct.UpdatedAt and " +
                      "PlaybackPositionStruct.Position fields. To enable this, the SampledPosition attribute shall be " +
                      "updated whenever a change in either the playback speed or the playback position is triggered " +
-                     "outside the normal playback of the media. The events which MAY cause this to happen include:" +
+                     "outside the normal playback of the media. The events which may cause this to happen include:" +
                      "\n" +
                      "  • Starting or resumption of playback" +
                      "\n" +
@@ -129,7 +129,7 @@ Matter.children.push({
             tag: "attribute", name: "SeekRangeEnd", id: 0x5, type: "uint64", access: "R V", conformance: "AS",
             constraint: "desc", default: null, quality: "X",
 
-            details: "This shall indicate the furthest forward valid position to which a client MAY seek forward, in " +
+            details: "This shall indicate the furthest forward valid position to which a client may seek forward, in " +
                      "milliseconds from the start of the media. When the media has an associated StartTime, a value of " +
                      "null shall indicate that a seek forward is valid only until the current time within the media, " +
                      "using a position computed from the difference between the current time offset and StartTime, in " +
@@ -142,7 +142,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "SeekRangeStart", id: 0x6, type: "uint64", access: "R V", conformance: "AS",
             constraint: "desc", default: null, quality: "X",
-            details: "This shall indicate the earliest valid position to which a client MAY seek back, in milliseconds " +
+            details: "This shall indicate the earliest valid position to which a client may seek back, in milliseconds " +
                      "from start of the media. A value of Nas shall indicate that seeking backwards is not allowed.",
             xref: { document: "cluster", section: "6.10.3.6" }
         },
@@ -166,7 +166,7 @@ Matter.children.push({
             tag: "command", name: "Stop", id: 0x2, access: "O", conformance: "M", direction: "request",
             response: "PlaybackResponse",
             details: "Upon receipt, this shall stop playback of the media. User-visible outcome is context-specific. This " +
-                     "MAY navigate the user back to the location from where the media was originally launched.",
+                     "may navigate the user back to the location from where the media was originally launched.",
             xref: { document: "cluster", section: "6.10.4.3" }
         },
 
@@ -203,7 +203,7 @@ Matter.children.push({
                      "\n" +
                      "wards." +
                      "\n" +
-                     "Different \"rewind\" speeds MAY be be reflected on the media playback device based upon the number of " +
+                     "Different \"rewind\" speeds may be be reflected on the media playback device based upon the number of " +
                      "sequential calls to this function and the capability of the device. This is to avoid needing to " +
                      "define every speed (multiple fast, slow motion, etc). If the PlaybackSpeed attribute is supported " +
                      "it shall be updated to reflect the new speed of playback. If the playback speed cannot be changed " +
@@ -222,7 +222,7 @@ Matter.children.push({
                      "currently playing in the backward direction or is not playing. If the playback is already happening " +
                      "in the forward direction receipt of this command shall increase the speed of the media playback." +
                      "\n" +
-                     "Different \"fast-forward\" speeds MAY be be reflected on the media playback device based upon the " +
+                     "Different \"fast-forward\" speeds may be be reflected on the media playback device based upon the " +
                      "number of sequential calls to this function and the capability of the device. This is to avoid " +
                      "needing to define every speed (multiple fast, slow motion, etc). If the PlaybackSpeed attribute is " +
                      "supported it shall be updated to reflect the new speed of playback. If the playback speed cannot be " +
@@ -239,18 +239,18 @@ Matter.children.push({
             details: "Upon receipt, this shall Skip forward in the media by the given number of milliseconds.",
             xref: { document: "cluster", section: "6.10.4.9" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "DeltaPositionMilliseconds", id: 0x0, type: "uint64", conformance: "M",
 
                 details: "This shall indicate the duration of the time span to skip forward in the media, in milliseconds. In " +
                          "case the resulting position falls in the middle of a frame, the server shall set the position to " +
                          "the beginning of that frame and set the SampledPosition attribute on the cluster accordingly. If " +
-                         "the resultant position falls beyond the furthest valid position in the media the client MAY seek " +
+                         "the resultant position falls beyond the furthest valid position in the media the client may seek " +
                          "forward to, the position should be set to that furthest valid position. If the SampledPosition " +
                          "attribute is supported it shall be updated on the cluster accordingly.",
 
                 xref: { document: "cluster", section: "6.10.4.9.1" }
-            } ]
+            }]
         },
 
         {
@@ -259,18 +259,18 @@ Matter.children.push({
             details: "Upon receipt, this shall Skip backward in the media by the given number of milliseconds.",
             xref: { document: "cluster", section: "6.10.4.10" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "DeltaPositionMilliseconds", id: 0x0, type: "uint64", conformance: "M",
 
                 details: "This shall indicate the duration of the time span to skip backward in the media, in milliseconds. " +
                          "In case the resulting position falls in the middle of a frame, the server shall set the position to " +
                          "the beginning of that frame and set the SampledPosition attribute on the cluster accordingly. If " +
-                         "the resultant position falls before the earliest valid position to which a client MAY seek back to, " +
+                         "the resultant position falls before the earliest valid position to which a client may seek back to, " +
                          "the position should be set to that earliest valid position. If the SampledPosition attribute is " +
                          "supported it shall be updated on the cluster accordingly.",
 
                 xref: { document: "cluster", section: "6.10.4.10.1" }
-            } ]
+            }]
         },
 
         {
@@ -298,18 +298,18 @@ Matter.children.push({
             details: "Upon receipt, this shall change the playback position in the media to the given position.",
             xref: { document: "cluster", section: "6.10.4.11" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Position", id: 0x0, type: "uint64", conformance: "M",
 
                 details: "This shall indicate the position (in milliseconds) in the media to seek to. In case the position " +
                          "falls in the middle of a frame, the server shall set the position to the beginning of that frame " +
                          "and set the SampledPosition attribute on the cluster accordingly. If the position falls before the " +
-                         "earliest valid position or beyond the furthest valid position to which a client MAY seek back or " +
+                         "earliest valid position or beyond the furthest valid position to which a client may seek back or " +
                          "forward to respectively, the status of SEEK_OUT_OF_RANGE shall be returned and no change shall be " +
                          "made to the position of the playback.",
 
                 xref: { document: "cluster", section: "6.10.4.11.1" }
-            } ]
+            }]
         },
 
         {

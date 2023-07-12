@@ -199,7 +199,8 @@ function createValueElement<T extends AnyValueElement>({
     logger.debug(`${factory.Tag} ${name}`);
 
     const attr = (name: string) => source.getAttribute(name);
-    const id = int(attr("code") || attr("value") || attr("mask") || attr("fieldId") || attr("id"));
+    const id = int(attr("code") || attr("value") || attr("fieldId") || attr("id"));
+
     if (factory.Tag !== DatatypeElement.Tag) {
         need(`${factory.Tag} id`, id);
     }
@@ -312,14 +313,52 @@ const translators: { [name: string]: Translator } = {
     },
 
     bitmap: (source) => {
-        return createValueElement({
+        const bitmap = createValueElement({
             factory: DatatypeElement,
             source,
             isClass: true,
             type: need("bitmap type", str(source.getAttribute("type"))),
-            propertyTag: "field",
             propertyIsClass: true
-        })
+        });
+
+        children(source, "field").forEach(f => {
+            const mask = need("bitmap field", int(f.getAttribute("mask")));
+
+            if (!mask) {
+                throw new Error("Empty bitmask");
+            }
+
+            let msb = undefined, lsb = undefined;
+            let bit = 1;
+            for (let i = 0; mask >= bit; i++) {
+                if (mask & bit) {
+                    msb = i;
+                    if (lsb === undefined) {
+                        lsb = i;
+                    }
+                }
+                bit <<= 1;
+            }
+
+            if (msb === undefined || lsb === undefined) {
+                throw new Error("Could not detect bit range in mask");
+            }
+
+            if (!bitmap.children) {
+                bitmap.children = [];
+            }
+
+            const constraint = msb === lsb
+                ? { value: msb }
+                : { min: lsb, max: msb + 1 };
+
+            bitmap.children.push(DatatypeElement({
+                name: need("bitmap field name", str(f.getAttribute("name"))),
+                constraint: constraint
+            }));
+        });
+
+        return bitmap;
     },
 
     cluster: (source) => {

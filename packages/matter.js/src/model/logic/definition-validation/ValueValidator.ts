@@ -107,8 +107,8 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         }
         def = cast;
 
-        // For bitmaps and enums, convert string name to numeric ID
-        if (metatype === Metatype.bitmap || metatype === Metatype.enum) {
+        // For enums convert string name to numeric ID
+        if (metatype === Metatype.enum) {
             if (typeof def === "string") {
                 let member = this.model.member(def);
 
@@ -123,31 +123,6 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                 } else {
                     this.error("INVALID_ENTRY", `"${def}" is not in ${metatype} ${this.model.type}`);
                 }
-            }
-        }
-
-        // If default bitmap values are numeric, convert them to a flag array
-        if (metatype === Metatype.bitmap && typeof def === "number") {
-            const flags = Array<string>();
-
-            for (let bit = 1; bit <= def; bit <<= 1) {
-                if (def & bit) {
-                    const flag = this.model.member(bit);
-                    if (flag) {
-                        flags.push(flag.name);
-                    } else {
-                        // Do not count as an error if there are a lot of high
-                        // bits set.  The spec often specifies masks as
-                        // inclusive of undefined values
-                        if (!(def & 0xff00)) {
-                            this.error("INVALID_DEFAULT_BIT", `Bitmap default bit ${Math.log2(bit)} is not defined`);
-                        }
-                    }
-                }
-            }
-
-            if (flags.length) {
-                def = FieldValue.Flags(flags);
             }
         }
 
@@ -181,23 +156,10 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                         `CHILDLESS_${metatype.toUpperCase()}`,
                         `${this.model.type} with no children`);
                 }
-                const ids = new Set<number>();
-                const names = new Set<string>();
-                for (const c of this.model.children) {
-                    if (c.id) {
-                        if (ids.has(c.id)) {
-                            this.error(
-                                `DUPLICATE_${metatype.toUpperCase()}_ID`,
-                                `${this.model.type} ID 0x${c.id.toString(16)} appears more than once`);
-                        } else {
-                            ids.add(c.id);
-                        }
-                    }
-                    if (names.has(c.name)) {
-                        this.error(
-                            `DUPLICATE_${metatype.toUpperCase()}_NAME`,
-                            `${this.model.type} name "${c.name}" appears more than once`)
-                    }
+                if (metatype == Metatype.enum) {
+                    this.validateEnumKeys();
+                } else {
+                    this.validateBitFields();
                 }
                 break;
 
@@ -208,6 +170,60 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                     this.error("OVERLY_TYPED_ARRAY", `array element with multiple entry types`);
                 }
                 break;
+        }
+    }
+
+    private validateEnumKeys() {
+        const ids = new Set<number>();
+        const names = new Set<string>();
+        for (const c of this.model.children) {
+            if (c.id) {
+                if (ids.has(c.id)) {
+                    this.error(
+                        "DUPLICATE_ENUM_ID",
+                        `${this.model.type} ID 0x${c.id.toString(16)} appears more than once`);
+                } else {
+                    ids.add(c.id);
+                }
+            }
+            if (names.has(c.name)) {
+                this.error(
+                    "DUPLICATE_ENUM_NAME",
+                    `${this.model.type} name "${c.name}" appears more than once`)
+            }
+        }
+    }
+
+    private validateBitFields() {
+        const ranges = Array<{ name: String, min: number, max: number }>();
+        for (const c of this.model.children) {
+            let min, max;
+
+            if (typeof c.constraint.value === "number") {
+                min = c.constraint.value;
+                max = c.constraint.value + 1;
+            } else {
+                min = c.constraint.min;
+                max = c.constraint.max;
+                if (typeof min !== "number" || typeof max !== "number" || min < 0 || min > max) {
+                    this.error(
+                        "UNCONSTRAINED_BIT_RANGE",
+                        `${this.model.type} bit field "${c.name}" is not properly constrained`
+                    )
+                    continue;
+                }
+            }
+
+            for (const r of ranges) {
+                if (min < r.max && max > r.min) {
+                    this.error(
+                        "OVERLAPPING_BIT_RANGE",
+                        `${this.model.type} bit fields "${r.name}" and "${c.name}" overlap`
+                    );
+                }
+            }
+
+            ranges.push({ name: c.name, min, max });
         }
     }
 

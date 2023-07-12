@@ -72,7 +72,7 @@ Matter.children.push({
             details: "This attribute shall indicate the assessed RMS or DC voltage currently provided by the hard-wired " +
                      "source, in mV (millivolts). A value of NULL shall indicate the Node is currently unable to assess " +
                      "the value. If the wired source is not connected, but the Node is still able to assess a value, then " +
-                     "the assessed value MAY be reported.",
+                     "the assessed value may be reported.",
             xref: { document: "core", section: "11.7.6.4" }
         },
 
@@ -82,7 +82,7 @@ Matter.children.push({
             details: "This attribute shall indicate the assessed frequency of the voltage, currently provided by the " +
                      "hard-wired source, in Hz. A value of NULL shall indicate the Node is currently unable to assess the " +
                      "value. If the wired source is not connected, but the Node is still able to assess a value, then the " +
-                     "assessed value MAY be reported.",
+                     "assessed value may be reported.",
             xref: { document: "core", section: "11.7.6.5" }
         },
 
@@ -100,7 +100,7 @@ Matter.children.push({
             details: "This attribute shall indicate the assessed instantaneous current draw of the Node on the hard- " +
                      "wired source, in mA (milliamps). A value of NULL shall indicate the Node is currently unable to " +
                      "assess the value. If the wired source is not connected, but the Node is still able to assess a " +
-                     "value, then the assessed value MAY be reported.",
+                     "value, then the assessed value may be reported.",
             xref: { document: "core", section: "11.7.6.7" }
         },
 
@@ -139,11 +139,11 @@ Matter.children.push({
                      "value. When the Node detects all conditions contributing to a fault have been cleared, the " +
                      "corresponding WiredFaultEnum value shall be removed from this list. An empty list shall indicate " +
                      "there are currently no active faults. The order of this list SHOULD have no significance. Clients " +
-                     "interested in monitoring changes in active faults MAY subscribe to this attribute, or they MAY " +
+                     "interested in monitoring changes in active faults may subscribe to this attribute, or they may " +
                      "subscribe to WiredFaultChange.",
 
             xref: { document: "core", section: "11.7.6.11" },
-            children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
+            children: [{ tag: "datatype", name: "entry", type: "WiredFaultEnum" }]
         },
 
         {
@@ -184,8 +184,8 @@ Matter.children.push({
         {
             tag: "attribute", name: "BatReplacementNeeded", id: 0xf, type: "bool", access: "R V",
             conformance: "BAT",
-            details: "This attribute shall indicate if the battery needs to be replaced. Replacement MAY be simple " +
-                     "routine maintenance, such as with a single use, non-rechargeable cell. Replacement, however, MAY " +
+            details: "This attribute shall indicate if the battery needs to be replaced. Replacement may be simple " +
+                     "routine maintenance, such as with a single use, non-rechargeable cell. Replacement, however, may " +
                      "also indicate end of life, or serious fault with a rechargeable or even non-replaceable cell.",
             xref: { document: "core", section: "11.7.6.16" }
         },
@@ -215,11 +215,11 @@ Matter.children.push({
                      "value. When the Node detects all conditions contributing to a fault have been cleared, the " +
                      "corresponding BatFaultEnum value shall be removed from this list. An empty list shall indicate " +
                      "there are currently no active faults. The order of this list SHOULD have no significance. Clients " +
-                     "interested in monitoring changes in active faults MAY subscribe to this attribute, or they MAY " +
+                     "interested in monitoring changes in active faults may subscribe to this attribute, or they may " +
                      "subscribe to Section 11.7.7.2, “BatFaultChange Event”.",
 
             xref: { document: "core", section: "11.7.6.19" },
-            children: [ { tag: "datatype", name: "entry", type: "BatFaultEnum" } ]
+            children: [{ tag: "datatype", name: "entry", type: "BatFaultEnum" }]
         },
 
         {
@@ -322,11 +322,11 @@ Matter.children.push({
                      "BatChargeFaultEnum value. When the Node detects all conditions contributing to a fault have been " +
                      "cleared, the corresponding BatChargeFaultEnum value shall be removed from this list. An empty list " +
                      "shall indicate there are currently no active faults. The order of this list SHOULD have no " +
-                     "significance. Clients interested in monitoring changes in active faults MAY subscribe to this " +
-                     "attribute, or they MAY subscribe to the BatFaultChange event.",
+                     "significance. Clients interested in monitoring changes in active faults may subscribe to this " +
+                     "attribute, or they may subscribe to the BatFaultChange event.",
 
             xref: { document: "core", section: "11.7.6.31" },
-            children: [ { tag: "datatype", name: "entry", type: "BatChargeFaultEnum" } ]
+            children: [{ tag: "datatype", name: "entry", type: "BatChargeFaultEnum" }]
         },
 
         {
@@ -344,7 +344,7 @@ Matter.children.push({
                     details: "This field shall represent the set of faults currently detected, as per Section 11.7.6.11, " +
                              "“ActiveWiredFaults Attribute”.",
                     xref: { document: "core", section: "11.7.7.1.1" },
-                    children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "WiredFaultEnum" }]
                 },
 
                 {
@@ -353,7 +353,7 @@ Matter.children.push({
                     details: "This field shall represent the set of faults detected prior to this change event, as per Section " +
                              "11.7.6.11, “ActiveWiredFaults Attribute”.",
                     xref: { document: "core", section: "11.7.7.1.2" },
-                    children: [ { tag: "datatype", name: "entry", type: "WiredFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "WiredFaultEnum" }]
                 }
             ]
         },
@@ -377,12 +377,12 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8",
                     default: [],
-                    children: [ { tag: "datatype", name: "entry", type: "BatFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "BatFaultEnum" }]
                 },
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8",
                     default: [],
-                    children: [ { tag: "datatype", name: "entry", type: "BatFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "BatFaultEnum" }]
                 }
             ]
         },
@@ -408,12 +408,12 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 16",
                     default: [],
-                    children: [ { tag: "datatype", name: "entry", type: "BatChargeFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "BatChargeFaultEnum" }]
                 },
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 16",
                     default: [],
-                    children: [ { tag: "datatype", name: "entry", type: "BatChargeFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "BatChargeFaultEnum" }]
                 }
             ]
         },
@@ -421,20 +421,40 @@ Matter.children.push({
         {
             tag: "datatype", name: "WiredFaultEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.7.5.1" },
+
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "OverVoltage", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "UnderVoltage", id: 0x2, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "The Node detects an unspecified fault on this wired power source."
+                },
+                {
+                    tag: "datatype", name: "OverVoltage", id: 0x1, conformance: "M",
+                    description: "The Node detects the supplied voltage is above maximum supported value for this wired power source."
+                },
+                {
+                    tag: "datatype", name: "UnderVoltage", id: 0x2, conformance: "M",
+                    description: "The Node detects the supplied voltage is below maximum supported value for this wired power source."
+                }
             ]
         },
 
         {
             tag: "datatype", name: "BatFaultEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.7.5.2" },
+
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "OverTemp", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "UnderTemp", id: 0x2, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "The Node detects an unspecified fault on this battery power source."
+                },
+                {
+                    tag: "datatype", name: "OverTemp", id: 0x1, conformance: "M",
+                    description: "The Node detects the temperature of this battery power source is above ideal operating conditions."
+                },
+                {
+                    tag: "datatype", name: "UnderTemp", id: 0x2, conformance: "M",
+                    description: "The Node detects the temperature of this battery power source is below ideal operating conditions."
+                }
             ]
         },
 
@@ -443,17 +463,50 @@ Matter.children.push({
             xref: { document: "core", section: "11.7.5.3" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "AmbientTooHot", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "AmbientTooCold", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "BatteryTooHot", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "BatteryTooCold", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "BatteryAbsent", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "BatteryOverVoltage", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "BatteryUnderVoltage", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "ChargerOverVoltage", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "ChargerUnderVoltage", id: 0x9, conformance: "M" },
-                { tag: "datatype", name: "SafetyTimeout", id: 0xa, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "The Node detects an unspecified fault on this battery source."
+                },
+                {
+                    tag: "datatype", name: "AmbientTooHot", id: 0x1, conformance: "M",
+                    description: "The Node detects the ambient temperature is above the nominal range for this battery source."
+                },
+                {
+                    tag: "datatype", name: "AmbientTooCold", id: 0x2, conformance: "M",
+                    description: "The Node detects the ambient temperature is below the nominal range for this battery source."
+                },
+                {
+                    tag: "datatype", name: "BatteryTooHot", id: 0x3, conformance: "M",
+                    description: "The Node detects the temperature of this battery source is above the nominal range."
+                },
+                {
+                    tag: "datatype", name: "BatteryTooCold", id: 0x4, conformance: "M",
+                    description: "The Node detects the temperature of this battery source is below the nominal range."
+                },
+                {
+                    tag: "datatype", name: "BatteryAbsent", id: 0x5, conformance: "M",
+                    description: "The Node detects this battery source is not present."
+                },
+                {
+                    tag: "datatype", name: "BatteryOverVoltage", id: 0x6, conformance: "M",
+                    description: "The Node detects this battery source is over voltage."
+                },
+                {
+                    tag: "datatype", name: "BatteryUnderVoltage", id: 0x7, conformance: "M",
+                    description: "The Node detects this battery source is under voltage."
+                },
+                {
+                    tag: "datatype", name: "ChargerOverVoltage", id: 0x8, conformance: "M",
+                    description: "The Node detects the charger for this battery source is over voltage."
+                },
+                {
+                    tag: "datatype", name: "ChargerUnderVoltage", id: 0x9, conformance: "M",
+                    description: "The Node detects the charger for this battery source is under voltage."
+                },
+                {
+                    tag: "datatype", name: "SafetyTimeout", id: 0xa, conformance: "M",
+                    description: "The Node detects a charging safety timeout for this battery source."
+                }
             ]
         },
 
@@ -462,10 +515,22 @@ Matter.children.push({
             xref: { document: "core", section: "11.7.5.4" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Active", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Standby", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Unavailable", id: 0x3, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "Indicate the source status is not specified"
+                },
+                {
+                    tag: "datatype", name: "Active", id: 0x1, conformance: "M",
+                    description: "Indicate the source is available and currently supplying power"
+                },
+                {
+                    tag: "datatype", name: "Standby", id: 0x2, conformance: "M",
+                    description: "Indicate the source is available, but is not currently supplying power"
+                },
+                {
+                    tag: "datatype", name: "Unavailable", id: 0x3, conformance: "M",
+                    description: "Indicate the source is not currently available to supply power"
+                }
             ]
         },
 
@@ -473,18 +538,25 @@ Matter.children.push({
             tag: "datatype", name: "WiredCurrentTypeEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.7.5.5" },
             children: [
-                { tag: "datatype", name: "Ac", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Dc", id: 0x1, conformance: "M" }
+                { tag: "datatype", name: "Ac", id: 0x0, conformance: "M", description: "Indicates AC current" },
+                { tag: "datatype", name: "Dc", id: 0x1, conformance: "M", description: "Indicates DC current" }
             ]
         },
 
         {
             tag: "datatype", name: "BatChargeLevelEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.7.5.6" },
+
             children: [
-                { tag: "datatype", name: "Ok", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Warning", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Critical", id: 0x2, conformance: "M" }
+                { tag: "datatype", name: "Ok", id: 0x0, conformance: "M", description: "Charge level is nominal" },
+                {
+                    tag: "datatype", name: "Warning", id: 0x1, conformance: "M",
+                    description: "Charge level is low, intervention may soon be required."
+                },
+                {
+                    tag: "datatype", name: "Critical", id: 0x2, conformance: "M",
+                    description: "Charge level is critical, immediate intervention is required"
+                }
             ]
         },
 
@@ -493,10 +565,22 @@ Matter.children.push({
             xref: { document: "core", section: "11.7.5.7" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "NotReplaceable", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "UserReplaceable", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "FactoryReplaceable", id: 0x3, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "The replaceability is unspecified or unknown."
+                },
+                {
+                    tag: "datatype", name: "NotReplaceable", id: 0x1, conformance: "M",
+                    description: "The battery is not replaceable."
+                },
+                {
+                    tag: "datatype", name: "UserReplaceable", id: 0x2, conformance: "M",
+                    description: "The battery is replaceable by the user or customer."
+                },
+                {
+                    tag: "datatype", name: "FactoryReplaceable", id: 0x3, conformance: "M",
+                    description: "The battery is replaceable by an authorized factory technician."
+                }
             ]
         },
 
@@ -505,87 +589,90 @@ Matter.children.push({
             xref: { document: "core", section: "11.7.5.8" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Aaa", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Aa", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "C", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "D", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "4V5", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "6V0", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "9V0", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "12Aa", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "Aaaa", id: 0x9, conformance: "M" },
-                { tag: "datatype", name: "A", id: 0xa, conformance: "M" },
-                { tag: "datatype", name: "B", id: 0xb, conformance: "M" },
-                { tag: "datatype", name: "F", id: 0xc, conformance: "M" },
-                { tag: "datatype", name: "N", id: 0xd, conformance: "M" },
-                { tag: "datatype", name: "No6", id: 0xe, conformance: "M" },
-                { tag: "datatype", name: "SubC", id: 0xf, conformance: "M" },
-                { tag: "datatype", name: "A23", id: 0x10, conformance: "M" },
-                { tag: "datatype", name: "A27", id: 0x11, conformance: "M" },
-                { tag: "datatype", name: "Ba5800", id: 0x12, conformance: "M" },
-                { tag: "datatype", name: "Duplex", id: 0x13, conformance: "M" },
-                { tag: "datatype", name: "4Sr44", id: 0x14, conformance: "M" },
-                { tag: "datatype", name: "523", id: 0x15, conformance: "M" },
-                { tag: "datatype", name: "531", id: 0x16, conformance: "M" },
-                { tag: "datatype", name: "15V0", id: 0x17, conformance: "M" },
-                { tag: "datatype", name: "22V5", id: 0x18, conformance: "M" },
-                { tag: "datatype", name: "30V0", id: 0x19, conformance: "M" },
-                { tag: "datatype", name: "45V0", id: 0x1a, conformance: "M" },
-                { tag: "datatype", name: "67V5", id: 0x1b, conformance: "M" },
-                { tag: "datatype", name: "J", id: 0x1c, conformance: "M" },
-                { tag: "datatype", name: "Cr123A", id: 0x1d, conformance: "M" },
-                { tag: "datatype", name: "Cr2", id: 0x1e, conformance: "M" },
-                { tag: "datatype", name: "2Cr5", id: 0x1f, conformance: "M" },
-                { tag: "datatype", name: "CrP2", id: 0x20, conformance: "M" },
-                { tag: "datatype", name: "CrV3", id: 0x21, conformance: "M" },
-                { tag: "datatype", name: "Sr41", id: 0x22, conformance: "M" },
-                { tag: "datatype", name: "Sr43", id: 0x23, conformance: "M" },
-                { tag: "datatype", name: "Sr44", id: 0x24, conformance: "M" },
-                { tag: "datatype", name: "Sr45", id: 0x25, conformance: "M" },
-                { tag: "datatype", name: "Sr48", id: 0x26, conformance: "M" },
-                { tag: "datatype", name: "Sr54", id: 0x27, conformance: "M" },
-                { tag: "datatype", name: "Sr55", id: 0x28, conformance: "M" },
-                { tag: "datatype", name: "Sr57", id: 0x29, conformance: "M" },
-                { tag: "datatype", name: "Sr58", id: 0x2a, conformance: "M" },
-                { tag: "datatype", name: "Sr59", id: 0x2b, conformance: "M" },
-                { tag: "datatype", name: "Sr60", id: 0x2c, conformance: "M" },
-                { tag: "datatype", name: "Sr63", id: 0x2d, conformance: "M" },
-                { tag: "datatype", name: "Sr64", id: 0x2e, conformance: "M" },
-                { tag: "datatype", name: "Sr65", id: 0x2f, conformance: "M" },
-                { tag: "datatype", name: "Sr66", id: 0x30, conformance: "M" },
-                { tag: "datatype", name: "Sr67", id: 0x31, conformance: "M" },
-                { tag: "datatype", name: "Sr68", id: 0x32, conformance: "M" },
-                { tag: "datatype", name: "Sr69", id: 0x33, conformance: "M" },
-                { tag: "datatype", name: "Sr516", id: 0x34, conformance: "M" },
-                { tag: "datatype", name: "Sr731", id: 0x35, conformance: "M" },
-                { tag: "datatype", name: "Sr712", id: 0x36, conformance: "M" },
-                { tag: "datatype", name: "Lr932", id: 0x37, conformance: "M" },
-                { tag: "datatype", name: "A5", id: 0x38, conformance: "M" },
-                { tag: "datatype", name: "A10", id: 0x39, conformance: "M" },
-                { tag: "datatype", name: "A13", id: 0x3a, conformance: "M" },
-                { tag: "datatype", name: "A312", id: 0x3b, conformance: "M" },
-                { tag: "datatype", name: "A675", id: 0x3c, conformance: "M" },
-                { tag: "datatype", name: "Ac41E", id: 0x3d, conformance: "M" },
-                { tag: "datatype", name: "10180", id: 0x3e, conformance: "M" },
-                { tag: "datatype", name: "10280", id: 0x3f, conformance: "M" },
-                { tag: "datatype", name: "10440", id: 0x40, conformance: "M" },
-                { tag: "datatype", name: "14250", id: 0x41, conformance: "M" },
-                { tag: "datatype", name: "14430", id: 0x42, conformance: "M" },
-                { tag: "datatype", name: "14500", id: 0x43, conformance: "M" },
-                { tag: "datatype", name: "14650", id: 0x44, conformance: "M" },
-                { tag: "datatype", name: "15270", id: 0x45, conformance: "M" },
-                { tag: "datatype", name: "16340", id: 0x46, conformance: "M" },
-                { tag: "datatype", name: "Rcr123A", id: 0x47, conformance: "M" },
-                { tag: "datatype", name: "17500", id: 0x48, conformance: "M" },
-                { tag: "datatype", name: "17670", id: 0x49, conformance: "M" },
-                { tag: "datatype", name: "18350", id: 0x4a, conformance: "M" },
-                { tag: "datatype", name: "18500", id: 0x4b, conformance: "M" },
-                { tag: "datatype", name: "18650", id: 0x4c, conformance: "M" },
-                { tag: "datatype", name: "19670", id: 0x4d, conformance: "M" },
-                { tag: "datatype", name: "25500", id: 0x4e, conformance: "M" },
-                { tag: "datatype", name: "26650", id: 0x4f, conformance: "M" },
-                { tag: "datatype", name: "32600", id: 0x50, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "Common type is unknown or unspecified"
+                },
+                { tag: "datatype", name: "Aaa", id: 0x1, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Aa", id: 0x2, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "C", id: 0x3, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "D", id: 0x4, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "4V5", id: 0x5, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "6V0", id: 0x6, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "9V0", id: 0x7, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "12Aa", id: 0x8, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Aaaa", id: 0x9, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "A", id: 0xa, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "B", id: 0xb, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "F", id: 0xc, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "N", id: 0xd, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "No6", id: 0xe, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "SubC", id: 0xf, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "A23", id: 0x10, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "A27", id: 0x11, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Ba5800", id: 0x12, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Duplex", id: 0x13, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "4Sr44", id: 0x14, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "523", id: 0x15, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "531", id: 0x16, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "15V0", id: 0x17, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "22V5", id: 0x18, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "30V0", id: 0x19, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "45V0", id: 0x1a, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "67V5", id: 0x1b, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "J", id: 0x1c, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Cr123A", id: 0x1d, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Cr2", id: 0x1e, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "2Cr5", id: 0x1f, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "CrP2", id: 0x20, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "CrV3", id: 0x21, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr41", id: 0x22, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr43", id: 0x23, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr44", id: 0x24, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr45", id: 0x25, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr48", id: 0x26, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr54", id: 0x27, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr55", id: 0x28, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr57", id: 0x29, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr58", id: 0x2a, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr59", id: 0x2b, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr60", id: 0x2c, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr63", id: 0x2d, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr64", id: 0x2e, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr65", id: 0x2f, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr66", id: 0x30, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr67", id: 0x31, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr68", id: 0x32, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr69", id: 0x33, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr516", id: 0x34, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr731", id: 0x35, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Sr712", id: 0x36, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Lr932", id: 0x37, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "A5", id: 0x38, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "A10", id: 0x39, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "A13", id: 0x3a, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "A312", id: 0x3b, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "A675", id: 0x3c, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Ac41E", id: 0x3d, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "10180", id: 0x3e, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "10280", id: 0x3f, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "10440", id: 0x40, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "14250", id: 0x41, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "14430", id: 0x42, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "14500", id: 0x43, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "14650", id: 0x44, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "15270", id: 0x45, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "16340", id: 0x46, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "Rcr123A", id: 0x47, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "17500", id: 0x48, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "17670", id: 0x49, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "18350", id: 0x4a, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "18500", id: 0x4b, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "18650", id: 0x4c, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "19670", id: 0x4d, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "25500", id: 0x4e, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "26650", id: 0x4f, conformance: "M", description: "Common type is as specified" },
+                { tag: "datatype", name: "32600", id: 0x50, conformance: "M", description: "Common type is as specified" }
             ]
         },
 
@@ -594,39 +681,132 @@ Matter.children.push({
             xref: { document: "core", section: "11.7.5.9" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Alkaline", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "LithiumCarbonFluoride", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "LithiumChromiumOxide", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "LithiumCopperOxide", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "LithiumIronDisulfide", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "LithiumManganeseDioxide", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "LithiumThionylChloride", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "Magnesium", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "MercuryOxide", id: 0x9, conformance: "M" },
-                { tag: "datatype", name: "NickelOxyhydride", id: 0xa, conformance: "M" },
-                { tag: "datatype", name: "SilverOxide", id: 0xb, conformance: "M" },
-                { tag: "datatype", name: "ZincAir", id: 0xc, conformance: "M" },
-                { tag: "datatype", name: "ZincCarbon", id: 0xd, conformance: "M" },
-                { tag: "datatype", name: "ZincChloride", id: 0xe, conformance: "M" },
-                { tag: "datatype", name: "ZincManganeseDioxide", id: 0xf, conformance: "M" },
-                { tag: "datatype", name: "LeadAcid", id: 0x10, conformance: "M" },
-                { tag: "datatype", name: "LithiumCobaltOxide", id: 0x11, conformance: "M" },
-                { tag: "datatype", name: "LithiumIon", id: 0x12, conformance: "M" },
-                { tag: "datatype", name: "LithiumIonPolymer", id: 0x13, conformance: "M" },
-                { tag: "datatype", name: "LithiumIronPhosphate", id: 0x14, conformance: "M" },
-                { tag: "datatype", name: "LithiumSulfur", id: 0x15, conformance: "M" },
-                { tag: "datatype", name: "LithiumTitanate", id: 0x16, conformance: "M" },
-                { tag: "datatype", name: "NickelCadmium", id: 0x17, conformance: "M" },
-                { tag: "datatype", name: "NickelHydrogen", id: 0x18, conformance: "M" },
-                { tag: "datatype", name: "NickelIron", id: 0x19, conformance: "M" },
-                { tag: "datatype", name: "NickelMetalHydride", id: 0x1a, conformance: "M" },
-                { tag: "datatype", name: "NickelZinc", id: 0x1b, conformance: "M" },
-                { tag: "datatype", name: "SilverZinc", id: 0x1c, conformance: "M" },
-                { tag: "datatype", name: "SodiumIon", id: 0x1d, conformance: "M" },
-                { tag: "datatype", name: "SodiumSulfur", id: 0x1e, conformance: "M" },
-                { tag: "datatype", name: "ZincBromide", id: 0x1f, conformance: "M" },
-                { tag: "datatype", name: "ZincCerium", id: 0x20, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "Cell chemistry is unspecified or unknown"
+                },
+                { tag: "datatype", name: "Alkaline", id: 0x1, conformance: "M", description: "Cell chemistry is alkaline" },
+                {
+                    tag: "datatype", name: "LithiumCarbonFluoride", id: 0x2, conformance: "M",
+                    description: "Cell chemistry is lithium carbon fluoride"
+                },
+                {
+                    tag: "datatype", name: "LithiumChromiumOxide", id: 0x3, conformance: "M",
+                    description: "Cell chemistry is lithium chromium oxide"
+                },
+                {
+                    tag: "datatype", name: "LithiumCopperOxide", id: 0x4, conformance: "M",
+                    description: "Cell chemistry is lithium copper oxide"
+                },
+                {
+                    tag: "datatype", name: "LithiumIronDisulfide", id: 0x5, conformance: "M",
+                    description: "Cell chemistry is lithium iron disulfide"
+                },
+                {
+                    tag: "datatype", name: "LithiumManganeseDioxide", id: 0x6, conformance: "M",
+                    description: "Cell chemistry is lithium manganese dioxide"
+                },
+                {
+                    tag: "datatype", name: "LithiumThionylChloride", id: 0x7, conformance: "M",
+                    description: "Cell chemistry is lithium thionyl chloride"
+                },
+                {
+                    tag: "datatype", name: "Magnesium", id: 0x8, conformance: "M",
+                    description: "Cell chemistry is magnesium"
+                },
+                {
+                    tag: "datatype", name: "MercuryOxide", id: 0x9, conformance: "M",
+                    description: "Cell chemistry is mercury oxide"
+                },
+                {
+                    tag: "datatype", name: "NickelOxyhydride", id: 0xa, conformance: "M",
+                    description: "Cell chemistry is nickel oxyhydride"
+                },
+                {
+                    tag: "datatype", name: "SilverOxide", id: 0xb, conformance: "M",
+                    description: "Cell chemistry is silver oxide"
+                },
+                { tag: "datatype", name: "ZincAir", id: 0xc, conformance: "M", description: "Cell chemistry is zinc air" },
+                {
+                    tag: "datatype", name: "ZincCarbon", id: 0xd, conformance: "M",
+                    description: "Cell chemistry is zinc carbon"
+                },
+                {
+                    tag: "datatype", name: "ZincChloride", id: 0xe, conformance: "M",
+                    description: "Cell chemistry is zinc chloride"
+                },
+                {
+                    tag: "datatype", name: "ZincManganeseDioxide", id: 0xf, conformance: "M",
+                    description: "Cell chemistry is zinc manganese dioxide"
+                },
+                {
+                    tag: "datatype", name: "LeadAcid", id: 0x10, conformance: "M",
+                    description: "Cell chemistry is lead acid"
+                },
+                {
+                    tag: "datatype", name: "LithiumCobaltOxide", id: 0x11, conformance: "M",
+                    description: "Cell chemistry is lithium cobalt oxide"
+                },
+                {
+                    tag: "datatype", name: "LithiumIon", id: 0x12, conformance: "M",
+                    description: "Cell chemistry is lithium ion"
+                },
+                {
+                    tag: "datatype", name: "LithiumIonPolymer", id: 0x13, conformance: "M",
+                    description: "Cell chemistry is lithium ion polymer"
+                },
+                {
+                    tag: "datatype", name: "LithiumIronPhosphate", id: 0x14, conformance: "M",
+                    description: "Cell chemistry is lithium iron phosphate"
+                },
+                {
+                    tag: "datatype", name: "LithiumSulfur", id: 0x15, conformance: "M",
+                    description: "Cell chemistry is lithium sulfur"
+                },
+                {
+                    tag: "datatype", name: "LithiumTitanate", id: 0x16, conformance: "M",
+                    description: "Cell chemistry is lithium titanate"
+                },
+                {
+                    tag: "datatype", name: "NickelCadmium", id: 0x17, conformance: "M",
+                    description: "Cell chemistry is nickel cadmium"
+                },
+                {
+                    tag: "datatype", name: "NickelHydrogen", id: 0x18, conformance: "M",
+                    description: "Cell chemistry is nickel hydrogen"
+                },
+                {
+                    tag: "datatype", name: "NickelIron", id: 0x19, conformance: "M",
+                    description: "Cell chemistry is nickel iron"
+                },
+                {
+                    tag: "datatype", name: "NickelMetalHydride", id: 0x1a, conformance: "M",
+                    description: "Cell chemistry is nickel metal hydride"
+                },
+                {
+                    tag: "datatype", name: "NickelZinc", id: 0x1b, conformance: "M",
+                    description: "Cell chemistry is nickel zinc"
+                },
+                {
+                    tag: "datatype", name: "SilverZinc", id: 0x1c, conformance: "M",
+                    description: "Cell chemistry is silver zinc"
+                },
+                {
+                    tag: "datatype", name: "SodiumIon", id: 0x1d, conformance: "M",
+                    description: "Cell chemistry is sodium ion"
+                },
+                {
+                    tag: "datatype", name: "SodiumSulfur", id: 0x1e, conformance: "M",
+                    description: "Cell chemistry is sodium sulfur"
+                },
+                {
+                    tag: "datatype", name: "ZincBromide", id: 0x1f, conformance: "M",
+                    description: "Cell chemistry is zinc bromide"
+                },
+                {
+                    tag: "datatype", name: "ZincCerium", id: 0x20, conformance: "M",
+                    description: "Cell chemistry is zinc cerium"
+                }
             ]
         },
 
@@ -635,10 +815,19 @@ Matter.children.push({
             xref: { document: "core", section: "11.7.5.10" },
 
             children: [
-                { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "IsCharging", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "IsAtFullCharge", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "IsNotCharging", id: 0x3, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "M",
+                    description: "Unable to determine the charging state"
+                },
+                { tag: "datatype", name: "IsCharging", id: 0x1, conformance: "M", description: "The battery is charging" },
+                {
+                    tag: "datatype", name: "IsAtFullCharge", id: 0x2, conformance: "M",
+                    description: "The battery is at full charge"
+                },
+                {
+                    tag: "datatype", name: "IsNotCharging", id: 0x3, conformance: "M",
+                    description: "The battery is not charging"
+                }
             ]
         }
     ]

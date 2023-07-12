@@ -209,18 +209,18 @@ export abstract class ModelVariantTraversal<S = void> {
                 const childName = this.getCanonicalName(child);
 
                 let slot;
-                let idStr: string | undefined;
+                let key: string | undefined;
                 if (childId !== undefined) {
-                    idStr = childId.toString();
+                    key = childId.toString();
 
                     // Commands may re-use the ID for request and response
                     // So append the direction to the ID
                     if (child instanceof CommandModel) {
-                        idStr = `${idStr}:${child.direction}`
+                        key = `${key}:${child.direction}`
                     }
 
                     // Find existing slot by ID
-                    slot = mapping.idToSlot[idStr];
+                    slot = mapping.idToSlot[key];
                 }
 
                 // Find existing slot by name
@@ -235,9 +235,9 @@ export abstract class ModelVariantTraversal<S = void> {
                 }
 
                 // Map the child's ID to the slot
-                if (idStr !== undefined) {
-                    if (mapping.idToSlot[idStr] === undefined) {
-                        mapping.idToSlot[idStr] = slot;
+                if (key !== undefined) {
+                    if (mapping.idToSlot[key] === undefined) {
+                        mapping.idToSlot[key] = slot;
                     }
                 }
 

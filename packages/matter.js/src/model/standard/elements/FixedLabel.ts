@@ -26,10 +26,10 @@ Matter.children.push({
 
     xref: { document: "core", section: "9.8" },
 
-    children: [ {
+    children: [{
         tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "R V", conformance: "M",
         default: [], quality: "N",
         xref: { document: "core", section: "9.8.4" },
-        children: [ { tag: "datatype", name: "entry", type: "LabelStruct" } ]
-    } ]
+        children: [{ tag: "datatype", name: "entry", type: "LabelStruct" }]
+    }]
 });

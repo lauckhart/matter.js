@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFieldEnum, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, Attribute, WritableAttribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -35,40 +35,93 @@ export const enum WindowCoveringType {
 }
 
 /**
- * Bit definitions for TlvConfigStatus
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
- */
-export const ConfigStatusBits = {
-    operational: BitFlag(1),
-    onlineReserved: BitFlag(2),
-    liftMovementReversed: BitFlag(4),
-    liftPositionAware: BitFlag(8),
-    tiltPositionAware: BitFlag(16),
-    liftEncoderControlled: BitFlag(32),
-    tiltEncoderControlled: BitFlag(64)
-};
-
-/**
  * The value of the WindowCovering configStatus attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
  */
-export const TlvConfigStatus = TlvBitmap(TlvUInt8, ConfigStatusBits);
+export const ConfigStatus = {
+    /**
+     * Operational: This status bit defines if the Window Covering is operational.The SafetyStatus & Mode attributes
+     * might affect this bit
+     */
+    operational: BitFlag(0),
 
-/**
- * Bit definitions for TlvOperationalStatus
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
- */
-export const OperationalStatusBits = { global: BitFlag(3), lift: BitFlag(12), tilt: BitFlag(48) };
+    /**
+     * deprecated
+     */
+    onlineReserved: BitFlag(1),
+
+    /**
+     * Reversal: This status bit identifies if the directions of the lift/slide movements have been reversed in order
+     * for commands (e.g: Open, Close, GoTos) to match the physical installation conditionsThis bit can be adjusted by
+     * setting the appropriate reversal bit value in the Mode attribute
+     */
+    liftMovementReversed: BitFlag(2),
+
+    /**
+     * Control - Lift: This status bit identifies if the window covering supports the Position Aware Lift Control
+     */
+    liftPositionAware: BitFlag(3),
+
+    /**
+     * Control - Tilt: This status bit identifies if the window covering supports the Position Aware Tilt Control
+     */
+    tiltPositionAware: BitFlag(4),
+
+    /**
+     * Encoder - Lift: This status bit identifies if a Position Aware Controlled Window Covering is employing an
+     * encoder for positioning the height of the window covering.
+     */
+    liftEncoderControlled: BitFlag(5),
+
+    /**
+     * Encoder - Tilt: This status bit identifies if a Position Aware Controlled Window Covering is employing an
+     * encoder for tilting the window covering.
+     */
+    tiltEncoderControlled: BitFlag(6)
+};
 
 /**
  * The value of the WindowCovering operationalStatus attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
  */
-export const TlvOperationalStatus = TlvBitmap(TlvUInt8, OperationalStatusBits);
+export const OperationalStatus = {
+    /**
+     * Movement status of the cover
+     */
+    global: BitFieldEnum<MovementStatus>(0, 2),
+
+    /**
+     * Movement status of the cover's lift function
+     */
+    lift: BitFieldEnum<MovementStatus>(2, 2),
+
+    /**
+     * Movement status of the cover's tilt function
+     */
+    tilt: BitFieldEnum<MovementStatus>(4, 2)
+};
+
+/**
+ * These are the legal value for fields of the OperationalStatus attribute.
+ */
+export const enum MovementStatus {
+    /**
+     * Covering is not moving
+     */
+    Stopped = 0,
+
+    /**
+     * Covering is moving from closed to open
+     */
+    Opening = 1,
+
+    /**
+     * Covering is moving from open to closed
+     */
+    Closing = 2
+}
 
 /**
  * The value of the WindowCovering endProductType attribute
@@ -104,30 +157,56 @@ export const enum EndProductType {
 }
 
 /**
- * Bit definitions for TlvMode
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
- */
-export const ModeBits = {
-    motorDirectionReversed: BitFlag(1),
-    calibrationMode: BitFlag(2),
-    maintenanceMode: BitFlag(4),
-    ledFeedback: BitFlag(8)
-};
-
-/**
  * The value of the WindowCovering mode attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
  */
-export const TlvMode = TlvBitmap(TlvUInt8, ModeBits);
+export const Mode = {
+    /**
+     * Disables (0) or Enables (1) Lift reversal
+     */
+    bit0: BitFlag(0),
+
+    /**
+     * Disabled (0) or Enabled (1) placing the Window Covering into calibration Mode where limits are either setup
+     * using tools or learned by the Window Covering by doing self-calibration.If in calibration mode, all commands
+     * (e.g: UpOrOpen, DownOrClose, GoTos) that can result in movement, could be accepted and result in a
+     * self-calibration being initiated before the command is executed. In case the Window Covering does not have the
+     * ability or is not able to perform a self-calibration, the command SHOULD be ignored and a FAILURE status SHOULD
+     * be returned.In a write interaction, setting this bit to 0, while the device is in calibration mode, is not
+     * allowed and SHALL generate a FAILURE error status. In order to leave calibration mode, the device must perform
+     * its calibration routine, either as a self- calibration or assisted by external tool(s), depending on the
+     * device/manufacturer implementation.A manufacturer might choose to set the operational bit to its not operational
+     * value, if applicable during calibration mode
+     */
+    bit1: BitFlag(1),
+
+    /**
+     * Disables (0) or Enables (1) placing the Window Covering into Maintenance Mode where it cannot be moved over the
+     * network or by a switch connected to a Local Switch Input.While in maintenance mode, all commands (e.g: UpOrOpen,
+     * DownOrClose, GoTos) that can result in movement, must be ignored and respond with a BUSY status. Additionally,
+     * the operational bit of the ConfigStatus attribute should be set to its not operational value.
+     */
+    bit2: BitFlag(2),
+
+    /**
+     * Disables (0) or Enables (1) the display of any feedback LEDs resident especially on the packaging of an endpoint
+     * where they may cause distraction to the occupant.
+     */
+    bit3: BitFlag(3)
+};
 
 /**
- * Bit definitions for TlvSafetyStatus
+ * The value of the WindowCovering safetyStatus attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
  */
-export const SafetyStatusBits = {
+export const SafetyStatus = {
+    /**
+     * Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range.
+     */
+    remoteLockout: BitFlag(0),
+
     /**
      * Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its
      * actuator(s).
@@ -148,51 +227,44 @@ export const SafetyStatusBits = {
     /**
      * Motor(s) and/or electric circuit thermal protection activated.
      */
-    thermalProtection: BitFlag(16),
+    thermalProtection: BitFlag(4),
 
     /**
      * An obstacle is preventing actuator movement.
      */
-    obstacleDetected: BitFlag(32),
+    obstacleDetected: BitFlag(5),
 
     /**
      * Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power
      * might not be fully available at the moment.
      */
-    power: BitFlag(64),
+    power: BitFlag(6),
 
     /**
      * Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335).
      */
-    stopInput: BitFlag(128),
+    stopInput: BitFlag(7),
 
     /**
      * Mechanical problem related to the motor(s) detected.
      */
-    motorJammed: BitFlag(256),
+    motorJammed: BitFlag(8),
 
     /**
      * PCB, fuse and other electrics problems.
      */
-    hardwareFailure: BitFlag(512),
+    hardwareFailure: BitFlag(9),
 
     /**
      * Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled).
      */
-    manualOperation: BitFlag(1024),
+    manualOperation: BitFlag(10),
 
     /**
      * Protection is activated.
      */
-    protection: BitFlag(2048)
+    protection: BitFlag(11)
 };
-
-/**
- * The value of the WindowCovering safetyStatus attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
- */
-export const TlvSafetyStatus = TlvBitmap(TlvUInt16, SafetyStatusBits);
 
 /**
  * Input to the WindowCovering goToLiftPercentage command
@@ -333,8 +405,8 @@ export const WindowCoveringBase = BaseClusterComponent({
          */
         configStatus: Attribute(
             7,
-            TlvConfigStatus,
-            { persistent: true, default: BitFlags(ConfigStatusBits, "Operational", "OnlineReserved") }
+            TlvBitmap(TlvUInt8, ConfigStatus),
+            { persistent: true, default: BitsFromPartial(ConfigStatus, { operational: true, onlineReserved: true }) }
         ),
 
         /**
@@ -343,7 +415,11 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
          */
-        operationalStatus: Attribute(10, TlvOperationalStatus),
+        operationalStatus: Attribute(
+            10,
+            TlvBitmap(TlvUInt8, OperationalStatus),
+            { default: BitsFromPartial(OperationalStatus, {}) }
+        ),
 
         /**
          * The EndProductType attribute identifies the product type in complement of the main category indicated by the
@@ -365,7 +441,11 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
          */
-        mode: WritableAttribute(23, TlvMode, { persistent: true, writeAcl: AccessLevel.Manage }),
+        mode: WritableAttribute(
+            23,
+            TlvBitmap(TlvUInt8, Mode),
+            { persistent: true, default: BitsFromPartial(Mode, {}), writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The SafetyStatus attribute reflects the state of the safety sensors and the common issues preventing
@@ -375,7 +455,11 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
          */
-        safetyStatus: OptionalAttribute(26, TlvSafetyStatus)
+        safetyStatus: OptionalAttribute(
+            26,
+            TlvBitmap(TlvUInt16, SafetyStatus),
+            { default: BitsFromPartial(SafetyStatus, {}) }
+        )
     },
 
     commands: {

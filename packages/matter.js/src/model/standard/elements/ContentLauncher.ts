@@ -38,7 +38,7 @@ Matter.children.push({
             details: "This list provides list of content types supported by the Video Player or Content App in the form " +
                      "of entries in the HTTP \"Accept\" request header.",
             xref: { document: "cluster", section: "6.7.3.1" },
-            children: [ { tag: "datatype", name: "entry", type: "string" } ]
+            children: [{ tag: "datatype", name: "entry", type: "string" }]
         },
 
         {
@@ -102,7 +102,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "DisplayString", id: 0x1, type: "string", conformance: "O",
-                    details: "This field, if present, shall provide a string that MAY be used to describe the content being " +
+                    details: "This field, if present, shall provide a string that may be used to describe the content being " +
                              "accessed at the given URL.",
                     xref: { document: "cluster", section: "6.7.4.2.2" }
                 },
@@ -110,7 +110,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "BrandingInformation", id: 0x2, type: "BrandingInformationStruct",
                     conformance: "O",
-                    details: "This field, if present, shall indicate the branding information that MAY be displayed when playing " +
+                    details: "This field, if present, shall indicate the branding information that may be displayed when playing " +
                              "back the given content.",
                     xref: { document: "cluster", section: "6.7.4.2.3" }
                 }
@@ -160,14 +160,14 @@ Matter.children.push({
             details: "This object defines inputs to a search for content for display or playback.",
             xref: { document: "cluster", section: "6.7.5.2" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "ParameterList", id: 0x0, type: "list", conformance: "M",
                 details: "This shall indicate the list of parameters comprising the search. If multiple parameters are " +
                          "provided, the search parameters shall be joined with 'AND' logic. e.g. action movies with Tom " +
                          "Cruise will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]",
                 xref: { document: "cluster", section: "6.7.5.2.1" },
-                children: [ { tag: "datatype", name: "entry", type: "ParameterStruct" } ]
-            } ]
+                children: [{ tag: "datatype", name: "entry", type: "ParameterStruct" }]
+            }]
         },
 
         {
@@ -191,7 +191,7 @@ Matter.children.push({
                     tag: "datatype", name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: [],
                     details: "This shall indicate the list of additional external content identifiers.",
                     xref: { document: "cluster", section: "6.7.5.3.3" },
-                    children: [ { tag: "datatype", name: "entry", type: "AdditionalInfoStruct" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "AdditionalInfoStruct" }]
                 }
             ]
         },
@@ -296,7 +296,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Background", id: 0x1, type: "StyleInformationStruct", conformance: "O",
                     details: "This shall indicate background of the Video Player while content launch request is being processed " +
-                             "by it. This background information MAY also be used by the Video Player when it is in idle state.",
+                             "by it. This background information may also be used by the Video Player when it is in idle state.",
                     xref: { document: "cluster", section: "6.7.5.6.2" }
                 },
 

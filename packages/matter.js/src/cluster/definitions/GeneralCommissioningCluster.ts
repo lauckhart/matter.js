@@ -15,7 +15,7 @@ import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
- * This structure provides some constant values that MAY be of use to all commissioners.
+ * This structure provides some constant values that may be of use to all commissioners.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.3
  */
@@ -49,8 +49,19 @@ export const TlvBasicCommissioningInfo = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.2
  */
 export const enum RegulatoryLocationType {
+    /**
+     * Indoor only
+     */
     Indoor = 0,
+
+    /**
+     * Outdoor only
+     */
     Outdoor = 1,
+
+    /**
+     * Indoor/Outdoor
+     */
     IndoorOutdoor = 2
 }
 
@@ -70,10 +81,31 @@ export const TlvArmFailSafeRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.1
  */
 export const enum CommissioningError {
+    /**
+     * No error
+     */
     Ok = 0,
+
+    /**
+     * Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have
+     * proper configuration.
+     */
     ValueOutsideRange = 1,
+
+    /**
+     * Executed CommissioningComplete outside CASE session.
+     */
     InvalidAuthentication = 2,
+
+    /**
+     * Executed CommissioningComplete when there was no active Fail-Safe context.
+     */
     NoFailSafe = 3,
+
+    /**
+     * Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated
+     * with the current fail- safe context.
+     */
     BusyWithOtherAdmin = 4
 }
 
@@ -104,7 +136,7 @@ export const TlvArmFailSafeResponse = TlvObject({
  */
 export const TlvSetRegulatoryConfigRequest = TlvObject({
     newRegulatoryConfig: TlvField(0, TlvEnum<RegulatoryLocationType>()),
-    countryCode: TlvField(1, TlvString.bound({ minLength: 2, maxLength: 2 })),
+    countryCode: TlvField(1, TlvString),
     breadcrumb: TlvField(2, TlvUInt64)
 });
 
@@ -155,7 +187,7 @@ export const GeneralCommissioningCluster = Cluster({
     attributes: {
         /**
          * This attribute allows for the storage of a client-provided small payload which Administrators and
-         * Commissioners MAY write and then subsequently read, to keep track of their own progress. This MAY be used by
+         * Commissioners may write and then subsequently read, to keep track of their own progress. This may be used by
          * the Commissioner to avoid repeating already-executed actions upon re-establishing a commissioning link after
          * an error.
          *
@@ -327,7 +359,7 @@ export const GeneralCommissioningCluster = Cluster({
          *   6. If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking the
          *      RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the Fabric Index that
          *      was the subject of the AddNOC command. This shall remove all associations to that Fabric including all
-         *      fabric-scoped data, and MAY possibly factory-reset the device depending on current device state. This
+         *      fabric-scoped data, and may possibly factory-reset the device depending on current device state. This
          *      shall only apply to Fabrics added during the fail-safe period as the result of the AddNOC command.
          *
          *   7. Remove any RCACs added by the AddTrustedRootCertificate command that are not currently referenced by

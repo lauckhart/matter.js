@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { Cluster, Attribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -21,23 +21,16 @@ import { TlvClusterId } from "../../datatype/ClusterId.js";
 import { TlvAny } from "../../tlv/TlvAny.js";
 
 /**
- * Bit definitions for TlvNameSupport
+ * The value of the Scenes nameSupport attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.5
  */
-export const NameSupportBits = {
+export const NameSupport = {
     /**
      * The ability to store a name for a scene.
      */
     sceneNames: BitFlag(7)
 };
-
-/**
- * The value of the Scenes nameSupport attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.5
- */
-export const TlvNameSupport = TlvBitmap(TlvUInt8, NameSupportBits);
 
 /**
  * This data type indicates a combination of an identifier and the value of an attribute.
@@ -184,13 +177,13 @@ export const TlvGetSceneMembershipRequest = TlvObject({ groupId: TlvField(0, Tlv
  * The Capacity field shall contain the remaining capacity of the Scene Table of the server (for all groups). The
  * following values apply:
  *
- *   • 0 - No further scenes MAY be added.
+ *   • 0 - No further scenes may be added.
  *
- *   • 0 < Capacity < 0xfe - Capacity holds the number of scenes that MAY be added.
+ *   • 0 < Capacity < 0xfe - Capacity holds the number of scenes that may be added.
  *
- *   • 0xfe - At least 1 further scene MAY be added (exact number is unknown).
+ *   • 0xfe - At least 1 further scene may be added (exact number is unknown).
  *
- *   • null - It is unknown if any further scenes MAY be added.
+ *   • null - It is unknown if any further scenes may be added.
  *
  * The Status field shall contain SUCCESS or ILLEGAL_COMMAND (the endpoint is not a member of the group) as appropriate.
  *
@@ -265,18 +258,79 @@ export const TlvEnhancedViewSceneResponse = TlvObject({
 });
 
 /**
- * Bit definitions for TlvMode
+ * The value of nameFor(model) {
+ *
+ * var _a;
+ *
+ * if (!(model instanceof ValueModel)) {
+ *
+ * return;
+ *
+ * }
+ *
+ * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
+ *
+ * let name = defining.name;
+ *
+ * // If there is a name collision, prefix the name with the parent's name
+ *
+ * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+ *
+ * name = `${defining.parent.name}${name}`;
+ *
+ * }
+ *
+ * // Specialize the name based on the model type
+ *
+ * if (defining instanceof CommandModel && defining.isRequest) {
+ *
+ * name += "Request";
+ *
+ * }
+ *
+ * if (defining instanceof EventModel) {
+ *
+ * name += "Event";
+ *
+ * }
+ *
+ * // For enums and bitmaps we create a TypeScript value object, for other
+ *
+ * // types we create a TLV definition
+ *
+ * if (defining.effectiveMetatype === Metatype.enum) {
+ *
+ * if (name.endsWith("Enum")) {
+ *
+ * // This seems a bit redundant
+ *
+ * name = name.substring(0, name.length - 4);
+ *
+ * }
+ *
+ * }
+ *
+ * else if (defining.effectiveMetatype !== Metatype.bitmap) {
+ *
+ * name = "Tlv" + name;
+ *
+ * }
+ *
+ * // We reserve the name "Type". Plus it's kind of ambiguous
+ *
+ * if (name == "Type") {
+ *
+ * name = `${this.cluster.name}Type`;
+ *
+ * }
+ *
+ * return name;
+ *
+ * }.mode
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11.1
  */
-export const ModeBits = { copyAllScenes: BitFlag(0), reserved: BitFlag(1) };
-
-/**
- * The value of CopyScene.mode
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11.1
- */
-export const TlvMode = TlvBitmap(TlvUInt8, ModeBits);
+export const Mode = { copyAllScenes: BitFlag(0), reserved: BitFlag(1) };
 
 /**
  * Input to the Scenes copyScene command
@@ -294,7 +348,7 @@ export const TlvCopySceneRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.11.1
      */
-    mode: TlvField(0, TlvMode),
+    mode: TlvField(0, TlvBitmap(TlvUInt8, Mode)),
 
     /**
      * The GroupIdentifierFrom field specifies the identifier of the group from which the scene is to be copied.
@@ -384,9 +438,9 @@ export enum ScenesFeature {
  * The Scenes cluster provides attributes and commands for setting up and recalling scenes. Each scene corresponds to a
  * set of stored values of specified attributes for one or more clusters on the same end point as the Scenes cluster.
  *
- * In most cases scenes are associated with a particular group identifier. Scenes MAY also exist without a group, in
+ * In most cases scenes are associated with a particular group identifier. Scenes may also exist without a group, in
  * which case the value 0 replaces the group identifier. Note that extra care is required in these cases to avoid a
- * scene identifier collision, and that commands related to scenes without a group MAY only be unicast, i.e., they MAY
+ * scene identifier collision, and that commands related to scenes without a group may only be unicast, i.e., they may
  * not be multicast or broadcast.
  *
  * In a network supporting fabrics, scenes are scoped to the accessing fabric. When storing scene information,
@@ -452,7 +506,7 @@ export const ScenesCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.5
          */
-        nameSupport: Attribute(4, TlvNameSupport),
+        nameSupport: Attribute(4, TlvBitmap(TlvUInt8, NameSupport), { default: BitsFromPartial(NameSupport, {}) }),
 
         /**
          * The LastConfiguredBy attribute holds the Node ID (the IEEE address in case of Zigbee) of the node that last
@@ -469,7 +523,7 @@ export const ScenesCluster = Cluster({
     commands: {
         /**
          * It is not mandatory for an extension field set to be included in the command for every cluster on that
-         * endpoint that has a defined extension field set. Extension field sets MAY be omitted, including the case of
+         * endpoint that has a defined extension field set. Extension field sets may be omitted, including the case of
          * no extension field sets at all.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.9.2

@@ -28,7 +28,7 @@ Matter.children.push({
                      "\n" +
                      "The StateValue field shall indicate the new value of the StateValue attribute.",
             xref: { document: "cluster", section: "1.7.5.1" },
-            children: [ { tag: "datatype", name: "StateValue", id: 0x0, type: "bool", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "StateValue", id: 0x0, type: "bool", conformance: "M" }]
         }
     ]
 });

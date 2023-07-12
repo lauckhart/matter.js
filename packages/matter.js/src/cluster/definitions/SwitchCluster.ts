@@ -222,7 +222,7 @@ export const MomentarySwitchMultiPressComponent = ClusterComponent({
 export const LatchingSwitchComponent = ClusterComponent({
     events: {
         /**
-         * This event shall be generated, when the latching switch is moved to a new position. It MAY have been delayed
+         * This event shall be generated, when the latching switch is moved to a new position. It may have been delayed
          * by debouncing within the switch.
          *
          * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.
@@ -315,7 +315,7 @@ export const MomentarySwitchReleaseComponent = ClusterComponent({
  * Interactions with the switch device are exposed as attributes (for the latching switch) and as events (for both
  * types of switches).
  *
- * An interested client MAY subscribe to these attributes/events and thus be informed of the interactions, and can
+ * An interested client may subscribe to these attributes/events and thus be informed of the interactions, and can
  * perform actions based on this, for example by sending commands to perform an action such as controlling a light or a
  * window shade.
  *

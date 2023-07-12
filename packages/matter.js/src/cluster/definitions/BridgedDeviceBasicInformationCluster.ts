@@ -76,7 +76,7 @@ export const TlvReachableChangedEvent = TlvObject({ reachableNewValue: TlvField(
  *   • Indicate that the functionality on the Endpoint where it is placed (and its Parts) is bridged from a non-Matter
  *     technology, and
  *
- *   • Provide a centralized collection of attributes that the Node MAY collect to aid in conveying information
+ *   • Provide a centralized collection of attributes that the Node may collect to aid in conveying information
  *     regarding the Bridged Device to a user, such as the vendor name, the model name, or user-assigned name.
  *
  * This cluster shall be exposed by a Bridge on the Endpoint representing each Bridged Device. When the functionality
@@ -200,9 +200,9 @@ export const BridgedDeviceBasicInformationCluster = Cluster({
         /**
          * This event shall be generated when there is a change in the Reachable attribute. Its purpose is to provide
          * an indication towards interested parties that the reachability of a bridged device (over the non-Matter
-         * network) has changed, so they MAY take appropriate action.
+         * network) has changed, so they may take appropriate action.
          *
-         * After (re)start of a bridge this event MAY be generated.
+         * After (re)start of a bridge this event may be generated.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
          */

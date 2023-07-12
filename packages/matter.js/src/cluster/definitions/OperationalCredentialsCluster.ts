@@ -58,7 +58,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.1
      */
-    rootPublicKey: TlvField(1, TlvByteString.bound({ minLength: 65, maxLength: 65 })),
+    rootPublicKey: TlvField(1, TlvByteString),
 
     /**
      * This field shall contain the value of AdminVendorID provided in the AddNOC command that led to the creation of
@@ -102,9 +102,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
  */
-export const TlvAttestationRequestRequest = TlvObject({
-    attestationNonce: TlvField(0, TlvByteString.bound({ minLength: 32, maxLength: 32 }))
-});
+export const TlvAttestationRequestRequest = TlvObject({ attestationNonce: TlvField(0, TlvByteString) });
 
 /**
  * This command shall be generated in response to an Attestation Request command.
@@ -130,7 +128,7 @@ export const TlvAttestationResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2.2
      */
-    attestationSignature: TlvField(1, TlvByteString.bound({ minLength: 64, maxLength: 64 }))
+    attestationSignature: TlvField(1, TlvByteString)
 });
 
 /**
@@ -140,7 +138,14 @@ export const TlvAttestationResponse = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.2
  */
 export const enum CertificateChainType {
+    /**
+     * Request the DER- encoded DAC certificate
+     */
     DacCertificate = 1,
+
+    /**
+     * Request the DER- encoded PAI certificate
+     */
     PaiCertificate = 2
 }
 
@@ -172,7 +177,7 @@ export const TlvCertificateChainResponse = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
  */
 export const TlvCsrRequestRequest = TlvObject({
-    csrNonce: TlvField(0, TlvByteString.bound({ minLength: 32, maxLength: 32 })),
+    csrNonce: TlvField(0, TlvByteString),
     isForUpdateNoc: TlvOptionalField(1, TlvBoolean)
 });
 
@@ -197,7 +202,7 @@ export const TlvCsrResponse = TlvObject({
      */
     nocsrElements: TlvField(0, TlvByteString),
 
-    attestationSignature: TlvField(1, TlvByteString.bound({ minLength: 64, maxLength: 64 }))
+    attestationSignature: TlvField(1, TlvByteString)
 });
 
 /**
@@ -222,7 +227,7 @@ export const TlvAddNocRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8.1
      */
-    ipkValue: TlvField(2, TlvByteString.bound({ minLength: 16, maxLength: 16 })),
+    ipkValue: TlvField(2, TlvByteString),
 
     /**
      * If the AddNOC command succeeds according to the semantics of the following subsections, then the
@@ -300,7 +305,7 @@ export const TlvAddNocRequest = TlvObject({
      *       new Fabric Scope, along with the RootCACertificate provided with the prior successful
      *       AddTrustedRootCertificate command invoked in the same fail-safe period.
      *
-     *     a. Implementation of certificate chain storage MAY separate or otherwise encode the components of the array
+     *     a. Implementation of certificate chain storage may separate or otherwise encode the components of the array
      *        in implementation-specific ways, as long as they follow the correct format when being read from the NOCs
      *        list or used within other protocols such as CASE.
      *
@@ -347,15 +352,54 @@ export const TlvAddNocRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.3
  */
 export const enum NodeOperationalCertStatus {
+    /**
+     * OK, no error
+     */
     Ok = 0,
+
+    /**
+     * Public Key in the NOC does not match the public key in the NOCSR
+     */
     InvalidPublicKey = 1,
+
+    /**
+     * The Node Operational ID in the NOC is not formatted correctly.
+     */
     InvalidNodeOpId = 2,
+
+    /**
+     * Any other validation error in NOC chain
+     */
     InvalidNoc = 3,
+
+    /**
+     * No record of prior CSR for which this NOC could match
+     */
     MissingCsr = 4,
+
+    /**
+     * NOCs table full, cannot add another one
+     */
     TableFull = 5,
+
+    /**
+     * Invalid CaseAdminSubject field for an AddNOC command.
+     */
     InvalidAdminSubject = 6,
+
+    /**
+     * Trying to AddNOC instead of UpdateNOC against an existing Fabric.
+     */
     FabricConflict = 9,
+
+    /**
+     * Label already exists on another Fabric.
+     */
     LabelConflict = 10,
+
+    /**
+     * FabricIndex argument is invalid.
+     */
     InvalidFabricIndex = 11
 }
 
@@ -391,9 +435,9 @@ export const TlvNocResponse = TlvObject({
     fabricIndex: TlvOptionalField(1, TlvUInt8.bound({ min: 1, max: 254 })),
 
     /**
-     * This field MAY contain debugging textual information from the cluster implementation, which SHOULD NOT be
+     * This field may contain debugging textual information from the cluster implementation, which SHOULD NOT be
      * presented to user interfaces in any way. Its purpose is to help developers in troubleshooting errors and the
-     * contents MAY go into logs or crash reports.
+     * contents may go into logs or crash reports.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10.3
      */
@@ -475,7 +519,7 @@ export const OperationalCredentialsCluster = Cluster({
 
         /**
          * This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only list of
-         * FabricDescriptorStruct. This information MAY be computed directly from the NOCs attribute.
+         * FabricDescriptorStruct. This information may be computed directly from the NOCs attribute.
          *
          * Upon Factory Data Reset, this attribute shall be set to a default value of an empty list.
          *
@@ -516,7 +560,7 @@ export const OperationalCredentialsCluster = Cluster({
          * Depending on the method of storage employed by the server, either shared storage for identical root
          * certificates shared by many fabrics, or individually stored root certificate per fabric, multiple
          *
-         * identical root certificates MAY legally appear within the list.
+         * identical root certificates may legally appear within the list.
          *
          * To match a root with a given fabric, the root certificate’s subject and subject public key need to be
          * cross-referenced with the NOC or ICAC certificates that appear in the NOCs attribute for a given fabric.

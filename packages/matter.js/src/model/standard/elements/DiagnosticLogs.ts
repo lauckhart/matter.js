@@ -32,7 +32,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Intent", id: 0x0, type: "IntentEnum", conformance: "M",
-                    details: "This field shall indicate why the diagnostic logs are being retrieved from the Node. A Node MAY " +
+                    details: "This field shall indicate why the diagnostic logs are being retrieved from the Node. A Node may " +
                              "utilize this field to selectively determine the logs to transfer.",
                     xref: { document: "core", section: "11.10.5.1.1" }
                 },
@@ -139,6 +139,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "EndUserSupport", id: 0x0, conformance: "M",
+                    description: "Logs to be used for end- user support",
                     details: "shall indicate that the purpose of the log request is to retrieve logs for the intention of " +
                              "providing support to an end-user.",
                     xref: { document: "core", section: "11.10.4.1.1" }
@@ -146,6 +147,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "NetworkDiag", id: 0x1, conformance: "M",
+                    description: "Logs to be used for network diagnostics",
                     details: "shall indicate that the purpose of the log request is to diagnose the network(s) for which the Node " +
                              "is currently commissioned (and/or connected) or has previously been commissioned (and/or connected).",
                     xref: { document: "core", section: "11.10.4.1.2" }
@@ -153,6 +155,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "CrashLogs", id: 0x2, conformance: "M",
+                    description: "Obtain crash logs from the Node",
                     details: "shall indicate that the purpose of the log request is to retrieve any crash logs that may be " +
                              "present on a Node.",
                     xref: { document: "core", section: "11.10.4.1.3" }
@@ -167,12 +170,14 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Success", id: 0x0, conformance: "M",
+                    description: "Successful transfer of logs",
                     details: "shall be used if diagnostic logs will be or are being transferred.",
                     xref: { document: "core", section: "11.10.4.2.1" }
                 },
 
                 {
                     tag: "datatype", name: "Exhausted", id: 0x1, conformance: "M",
+                    description: "All logs has been transferred",
                     details: "shall be used when a BDX session is requested, however, all available logs were provided in a" +
                              "\n" +
                              "LogContent field.",
@@ -181,6 +186,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "NoLogs", id: 0x2, conformance: "M",
+                    description: "No logs of the requested type available",
                     details: "shall be used if the Node does not currently have any diagnostic logs of the requested type " +
                              "(Intent) to transfer.",
                     xref: { document: "core", section: "11.10.4.2.3" }
@@ -188,6 +194,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Busy", id: 0x3, conformance: "M",
+                    description: "Unable to handle request, retry later",
                     details: "shall be used if the Node is unable to handle the request (e.g. in the process of another transfer) " +
                              "and the Client SHOULD re-attempt the request later.",
                     xref: { document: "core", section: "11.10.4.2.4" }
@@ -195,6 +202,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Denied", id: 0x4, conformance: "M",
+                    description: "The request is denied, no logs being transferred",
                     details: "shall be used if the Node is denying the current transfer of diagnostic logs for any reason.",
                     xref: { document: "core", section: "11.10.4.2.5" }
                 }
@@ -208,6 +216,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "ResponsePayload", id: 0x0, conformance: "M",
+                    description: "Logs to be returned as a response",
                     details: "shall be used by a Client to request that logs are transferred using the LogContent attribute of " +
                              "the response",
                     xref: { document: "core", section: "11.10.4.3.1" }
@@ -215,6 +224,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Bdx", id: 0x1, conformance: "M",
+                    description: "Logs to be returned using BDX",
                     details: "shall be used by a Client to request that logs are transferred using BDX as defined in BDX Protocol",
                     xref: { document: "core", section: "11.10.4.3.2" }
                 }

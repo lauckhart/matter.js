@@ -18,11 +18,11 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.4.2" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "AP", id: 0x0, description: "ApplicationPlatform",
                 details: "Support for attributes and commands required for endpoint to support launching any application " +
                          "within the supported application catalogs"
-            } ]
+            }]
         },
 
         {
@@ -37,7 +37,7 @@ Matter.children.push({
                      "their own Vendor ID) and will assign an ApplicationID to each Content App.",
 
             xref: { document: "cluster", section: "6.4.3.1" },
-            children: [ { tag: "datatype", name: "entry", type: "uint16" } ]
+            children: [{ tag: "datatype", name: "entry", type: "uint16" }]
         },
 
         {
@@ -63,7 +63,7 @@ Matter.children.push({
                      "The endpoint shall launch and bring to foreground the requisite application if the application is " +
                      "not already launched and in foreground. The Status attribute shall be updated to " +
                      "ACTIVE_VISIBLE_FOCUS on the Application Basic cluster of the Endpoint corresponding to the launched " +
-                     "application. The Status attribute shall be updated on any other application whose Status MAY have " +
+                     "application. The Status attribute shall be updated on any other application whose Status may have " +
                      "changed as a result of this command. The CurrentApp attribute, if supported, shall be updated to " +
                      "reflect the new application in the foreground." +
                      "\n" +
@@ -107,18 +107,18 @@ Matter.children.push({
                      "\n" +
                      "The Status attribute shall be updated to STOPPED on the Application Basic cluster of the Endpoint " +
                      "corresponding to the stopped application. The Status attribute shall be updated on any other " +
-                     "application whose Status MAY have changed as a result of this command." +
+                     "application whose Status may have changed as a result of this command." +
                      "\n" +
                      "This command returns a Launcher Response.",
 
             xref: { document: "cluster", section: "6.4.4.2" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP",
                 constraint: "desc",
                 details: "This field shall specify the Application to stop.",
                 xref: { document: "cluster", section: "6.4.4.2.1" }
-            } ]
+            }]
         },
 
         {
@@ -131,22 +131,22 @@ Matter.children.push({
                      "\n" +
                      "  • otherwise the application corresponding to the endpoint." +
                      "\n" +
-                     "The endpoint MAY decide to stop the application based on manufacturer specific behavior or resource " +
+                     "The endpoint may decide to stop the application based on manufacturer specific behavior or resource " +
                      "constraints if any. The Status attribute shall be updated to ACTIVE_HIDDEN or STOPPED, depending on " +
                      "the action taken, on the Application Basic cluster of the Endpoint corresponding to the application " +
                      "on which the action was taken. The Status attribute shall be updated on any other application whose " +
-                     "Status MAY have changed as a result of this command." +
+                     "Status may have changed as a result of this command." +
                      "\n" +
                      "This command returns a Launcher Response.",
 
             xref: { document: "cluster", section: "6.4.4.3" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP",
                 constraint: "desc",
                 details: "This field shall specify the Application to hide.",
                 xref: { document: "cluster", section: "6.4.4.3.1" }
-            } ]
+            }]
         },
 
         {

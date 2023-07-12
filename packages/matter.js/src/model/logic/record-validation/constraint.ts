@@ -42,11 +42,15 @@ export function addConstraint(builder: ValidatorBuilder, model: ValueModel, cons
             parts.push(...typeTest);
         }
 
-        if (ast.min) {
-            parts.push(`${value} >= ${ast.min}`);
-        }
-        if (ast.max) {
-            parts.push(`${value} < ${ast.max}`);
+        if (ast.value) {
+            parts.push(`${value} === ${ast.value}`);
+        } else {
+            if (ast.min) {
+                parts.push(`${value} >= ${ast.min}`);
+            }
+            if (ast.max) {
+                parts.push(`${value} < ${ast.max}`);
+            }
         }
 
         if (entryTest) {

@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "ThreadNetworkDiagnostics", id: 0x35, classification: "node",
     description: "Thread Network Diagnostics",
     details: "The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
-             "that MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+             "that may be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
              "Thread Network Diagnostics Cluster attempts to centralize all metrics that are relevant to a " +
              "potential Thread radio running on a Node.",
     xref: { document: "core", section: "11.13" },
@@ -113,7 +113,7 @@ Matter.children.push({
             details: "The NeighborTable attribute shall indicate the current list of Nodes that comprise the neighbor " +
                      "table on the Node.",
             xref: { document: "core", section: "11.13.6.8" },
-            children: [ { tag: "datatype", name: "entry", type: "NeighborTableStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "NeighborTableStruct" }]
         },
 
         {
@@ -122,7 +122,7 @@ Matter.children.push({
             details: "The RouteTable attribute shall indicate the current list of router capable Nodes for which routes " +
                      "have been established.",
             xref: { document: "core", section: "11.13.6.9" },
-            children: [ { tag: "datatype", name: "entry", type: "RouteTableStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "RouteTableStruct" }]
         },
 
         {
@@ -612,11 +612,11 @@ Matter.children.push({
                      "NetworkFaultEnum value. When the Node detects that all conditions contributing to a fault has been " +
                      "cleared, the corresponding NetworkFaultEnum value shall be removed from this list. An empty list " +
                      "shall indicate there are currently no active faults. The order of this list SHOULD have no " +
-                     "significance. Clients interested in monitoring changes in active faults MAY subscribe to this " +
-                     "attribute, or they MAY subscribe to NetworkFaultChange",
+                     "significance. Clients interested in monitoring changes in active faults may subscribe to this " +
+                     "attribute, or they may subscribe to NetworkFaultChange",
 
             xref: { document: "core", section: "11.13.6.63" },
-            children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
+            children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
         },
 
         {
@@ -641,7 +641,7 @@ Matter.children.push({
                     details: "This field shall represent the set of faults currently detected, as per Section 11.13.5.1, " +
                              "“NetworkFaultEnum”.",
                     xref: { document: "core", section: "11.13.8.1.1" },
-                    children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
                 },
 
                 {
@@ -649,7 +649,7 @@ Matter.children.push({
                     details: "This field shall represent the set of faults detected prior to this change event, as per Section " +
                              "11.13.5.1, “NetworkFaultEnum”.",
                     xref: { document: "core", section: "11.13.8.1.2" },
-                    children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
                 }
             ]
         },
@@ -673,10 +673,22 @@ Matter.children.push({
             xref: { document: "core", section: "11.13.5.1" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "LinkDown", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "HardwareFailure", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "NetworkJammed", id: 0x3, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "Indicates an unspecified fault."
+                },
+                {
+                    tag: "datatype", name: "LinkDown", id: 0x1, conformance: "M",
+                    description: "Indicates the Thread link is down."
+                },
+                {
+                    tag: "datatype", name: "HardwareFailure", id: 0x2, conformance: "M",
+                    description: "Indicates there has been Thread hardware failure."
+                },
+                {
+                    tag: "datatype", name: "NetworkJammed", id: 0x3, conformance: "M",
+                    description: "Indicates the Thread network is jammed."
+                }
             ]
         },
 
@@ -684,8 +696,8 @@ Matter.children.push({
             tag: "datatype", name: "ConnectionStatusEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.13.5.2" },
             children: [
-                { tag: "datatype", name: "Connected", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "NotConnected", id: 0x1, conformance: "M" }
+                { tag: "datatype", name: "Connected", id: 0x0, conformance: "M", description: "Node is connected" },
+                { tag: "datatype", name: "NotConnected", id: 0x1, conformance: "M", description: "Node is not connected" }
             ]
         },
 
@@ -694,13 +706,34 @@ Matter.children.push({
             xref: { document: "core", section: "11.13.5.3" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Unassigned", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "SleepyEndDevice", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "EndDevice", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Reed", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Router", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "Leader", id: 0x6, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "Unspecified routing role."
+                },
+                {
+                    tag: "datatype", name: "Unassigned", id: 0x1, conformance: "M",
+                    description: "The Node does not currently have a role as a result of the Thread interface not currently being configured or operational."
+                },
+                {
+                    tag: "datatype", name: "SleepyEndDevice", id: 0x2, conformance: "M",
+                    description: "The Node acts as a Sleepy End Device with RX-off-when-idle sleepy radio behavior."
+                },
+                {
+                    tag: "datatype", name: "EndDevice", id: 0x3, conformance: "M",
+                    description: "The Node acts as an End Device without RX- off-when-idle sleepy radio behavior."
+                },
+                {
+                    tag: "datatype", name: "Reed", id: 0x4, conformance: "M",
+                    description: "The Node acts as an Router Eligible End Device."
+                },
+                {
+                    tag: "datatype", name: "Router", id: 0x5, conformance: "M",
+                    description: "The Node acts as a Router Device."
+                },
+                {
+                    tag: "datatype", name: "Leader", id: 0x6, conformance: "M",
+                    description: "The Node acts as a Leader Device."
+                }
             ]
         },
 

@@ -28,7 +28,7 @@ Matter.children.push({
             default: 0,
 
             details: "This attribute allows for the storage of a client-provided small payload which Administrators and " +
-                     "Commissioners MAY write and then subsequently read, to keep track of their own progress. This MAY " +
+                     "Commissioners may write and then subsequently read, to keep track of their own progress. This may " +
                      "be used by the Commissioner to avoid repeating already-executed actions upon re-establishing a " +
                      "commissioning link after an error." +
                      "\n" +
@@ -208,7 +208,7 @@ Matter.children.push({
                      "  6. If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking " +
                      "     the RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the " +
                      "     Fabric Index that was the subject of the AddNOC command. This shall remove all associations to " +
-                     "     that Fabric including all fabric-scoped data, and MAY possibly factory-reset the device " +
+                     "     that Fabric including all fabric-scoped data, and may possibly factory-reset the device " +
                      "     depending on current device state. This shall only apply to Fabrics added during the fail-safe " +
                      "     period as the result of the AddNOC command." +
                      "\n" +
@@ -402,11 +402,23 @@ Matter.children.push({
             xref: { document: "core", section: "11.9.4.1" },
 
             children: [
-                { tag: "datatype", name: "Ok", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "ValueOutsideRange", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "InvalidAuthentication", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "NoFailSafe", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "BusyWithOtherAdmin", id: 0x4, conformance: "M" }
+                { tag: "datatype", name: "Ok", id: 0x0, conformance: "M", description: "No error" },
+                {
+                    tag: "datatype", name: "ValueOutsideRange", id: 0x1, conformance: "M",
+                    description: "Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have proper configuration."
+                },
+                {
+                    tag: "datatype", name: "InvalidAuthentication", id: 0x2, conformance: "M",
+                    description: "Executed CommissioningComplete outside CASE session."
+                },
+                {
+                    tag: "datatype", name: "NoFailSafe", id: 0x3, conformance: "M",
+                    description: "Executed CommissioningComplete when there was no active Fail-Safe context."
+                },
+                {
+                    tag: "datatype", name: "BusyWithOtherAdmin", id: 0x4, conformance: "M",
+                    description: "Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated with the current fail- safe context."
+                }
             ]
         },
 
@@ -416,15 +428,15 @@ Matter.children.push({
                      "possible radio usage.",
             xref: { document: "core", section: "11.9.4.2" },
             children: [
-                { tag: "datatype", name: "Indoor", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Outdoor", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "IndoorOutdoor", id: 0x2, conformance: "M" }
+                { tag: "datatype", name: "Indoor", id: 0x0, conformance: "M", description: "Indoor only" },
+                { tag: "datatype", name: "Outdoor", id: 0x1, conformance: "M", description: "Outdoor only" },
+                { tag: "datatype", name: "IndoorOutdoor", id: 0x2, conformance: "M", description: "Indoor/Outdoor" }
             ]
         },
 
         {
             tag: "datatype", name: "BasicCommissioningInfo", type: "struct", conformance: "M",
-            details: "This structure provides some constant values that MAY be of use to all commissioners.",
+            details: "This structure provides some constant values that may be of use to all commissioners.",
             xref: { document: "core", section: "11.9.4.3" },
 
             children: [

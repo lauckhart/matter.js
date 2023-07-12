@@ -22,12 +22,40 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.3
  */
 export const enum RoutingRole {
+    /**
+     * Unspecified routing role.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node does not currently have a role as a result of the Thread interface not currently being configured or
+     * operational.
+     */
     Unassigned = 1,
+
+    /**
+     * The Node acts as a Sleepy End Device with RX-off-when-idle sleepy radio behavior.
+     */
     SleepyEndDevice = 2,
+
+    /**
+     * The Node acts as an End Device without RX- off-when-idle sleepy radio behavior.
+     */
     EndDevice = 3,
+
+    /**
+     * The Node acts as an Router Eligible End Device.
+     */
     Reed = 4,
+
+    /**
+     * The Node acts as a Router Device.
+     */
     Router = 5,
+
+    /**
+     * The Node acts as a Leader Device.
+     */
     Leader = 6
 }
 
@@ -332,9 +360,24 @@ export const TlvOperationalDatasetComponents = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.1
  */
 export const enum NetworkFault {
+    /**
+     * Indicates an unspecified fault.
+     */
     Unspecified = 0,
+
+    /**
+     * Indicates the Thread link is down.
+     */
     LinkDown = 1,
+
+    /**
+     * Indicates there has been Thread hardware failure.
+     */
     HardwareFailure = 2,
+
+    /**
+     * Indicates the Thread network is jammed.
+     */
     NetworkJammed = 3
 }
 
@@ -342,7 +385,14 @@ export const enum NetworkFault {
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.2
  */
 export const enum ConnectionStatus {
+    /**
+     * Node is connected
+     */
     Connected = 0,
+
+    /**
+     * Node is not connected
+     */
     NotConnected = 1
 }
 
@@ -599,7 +649,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.61
          */
-        channelPage0Mask: Attribute(60, TlvNullable(TlvByteString.bound({ minLength: 4, maxLength: 4 }))),
+        channelPage0Mask: Attribute(60, TlvNullable(TlvByteString)),
 
         /**
          * The OperationalDatasetComponents attribute is a collection of flags to indicate the presence of various
@@ -617,7 +667,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          * detects that all conditions contributing to a fault has been cleared, the corresponding NetworkFaultEnum
          * value shall be removed from this list. An empty list shall indicate there are currently no active faults.
          * The order of this list SHOULD have no significance. Clients interested in monitoring changes in active
-         * faults MAY subscribe to this attribute, or they MAY subscribe to NetworkFaultChange
+         * faults may subscribe to this attribute, or they may subscribe to NetworkFaultChange
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.63
          */
@@ -1067,7 +1117,7 @@ export const MacCountsComponent = ClusterComponent({
 /**
  * Thread Network Diagnostics
  *
- * The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used
+ * The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that may be used
  * by a Node to assist a user or Administrator in diagnosing potential problems. The Thread Network Diagnostics Cluster
  * attempts to centralize all metrics that are relevant to a potential Thread radio running on a Node.
  *

@@ -20,7 +20,7 @@ Matter.children.push({
              "Interactions with the switch device are exposed as attributes (for the latching switch) and as " +
              "events (for both types of switches)." +
              "\n" +
-             "An interested client MAY subscribe to these attributes/events and thus be informed of the " +
+             "An interested client may subscribe to these attributes/events and thus be informed of the " +
              "interactions, and can perform actions based on this, for example by sending commands to perform an " +
              "action such as controlling a light or a window shade.",
 
@@ -76,16 +76,16 @@ Matter.children.push({
 
         {
             tag: "event", name: "SwitchLatched", id: 0x0, access: "V", conformance: "LS", priority: "info",
-            details: "This event shall be generated, when the latching switch is moved to a new position. It MAY have " +
+            details: "This event shall be generated, when the latching switch is moved to a new position. It may have " +
                      "been delayed by debouncing within the switch." +
                      "\n" +
                      "The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. after the " +
                      "move.",
             xref: { document: "cluster", section: "1.11.7.1" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
                 constraint: "0 to NumberOfPositions1"
-            } ]
+            }]
         },
 
         {
@@ -95,10 +95,10 @@ Matter.children.push({
                      "The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while " +
                      "pressed.",
             xref: { document: "cluster", section: "1.11.7.2" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
                 constraint: "0 to NumberOfPositions1"
-            } ]
+            }]
         },
 
         {
@@ -109,10 +109,10 @@ Matter.children.push({
                      "The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. while " +
                      "pressed.",
             xref: { document: "cluster", section: "1.11.7.3" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
                 constraint: "0 to NumberOfPositions1"
-            } ]
+            }]
         },
 
         {
@@ -133,10 +133,10 @@ Matter.children.push({
                      "just prior to release.",
 
             xref: { document: "cluster", section: "1.11.7.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
                 constraint: "0 to NumberOfPositions1"
-            } ]
+            }]
         },
 
         {
@@ -151,10 +151,10 @@ Matter.children.push({
                      "just prior to release.",
 
             xref: { document: "cluster", section: "1.11.7.5" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
                 constraint: "0 to NumberOfPositions1"
-            } ]
+            }]
         },
 
         {

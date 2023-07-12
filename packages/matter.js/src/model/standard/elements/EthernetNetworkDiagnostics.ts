@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "EthernetNetworkDiagnostics", id: 0x37, classification: "node",
     description: "Ethernet Network Diagnostics",
     details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics " +
-             "metrics that MAY be used by a Node to assist a user or Administrator in diagnosing potential " +
+             "metrics that may be used by a Node to assist a user or Administrator in diagnosing potential " +
              "problems. The Ethernet Network Diagnostics Cluster attempts to centralize all metrics that are " +
              "relevant to a potential Ethernet connection to a Node.",
     xref: { document: "core", section: "11.15" },
@@ -140,16 +140,16 @@ Matter.children.push({
             xref: { document: "core", section: "11.15.5.1" },
 
             children: [
-                { tag: "datatype", name: "Rate10M", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Rate100M", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Rate1G", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Rate25G", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Rate5G", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Rate10G", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "Rate40G", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "Rate100G", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "Rate200G", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "Rate400G", id: 0x9, conformance: "M" }
+                { tag: "datatype", name: "Rate10M", id: 0x0, conformance: "M", description: "PHY rate is 10Mbps" },
+                { tag: "datatype", name: "Rate100M", id: 0x1, conformance: "M", description: "PHY rate is 100Mbps" },
+                { tag: "datatype", name: "Rate1G", id: 0x2, conformance: "M", description: "PHY rate is 1Gbps" },
+                { tag: "datatype", name: "Rate25G", id: 0x3, conformance: "M", description: "PHY rate is 2.5Gbps" },
+                { tag: "datatype", name: "Rate5G", id: 0x4, conformance: "M", description: "PHY rate is 5Gbps" },
+                { tag: "datatype", name: "Rate10G", id: 0x5, conformance: "M", description: "PHY rate is 10Gbps" },
+                { tag: "datatype", name: "Rate40G", id: 0x6, conformance: "M", description: "PHY rate is 40Gbps" },
+                { tag: "datatype", name: "Rate100G", id: 0x7, conformance: "M", description: "PHY rate is 100Gbps" },
+                { tag: "datatype", name: "Rate200G", id: 0x8, conformance: "M", description: "PHY rate is 200Gbps" },
+                { tag: "datatype", name: "Rate400G", id: 0x9, conformance: "M", description: "PHY rate is 400Gbps" }
             ]
         }
     ]

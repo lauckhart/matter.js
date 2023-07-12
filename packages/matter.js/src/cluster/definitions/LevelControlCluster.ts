@@ -8,25 +8,18 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 
 /**
- * Bit definitions for TlvOptions
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
- */
-export const OptionsBits = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFlag(1) };
-
-/**
  * The value of the LevelControl options attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
  */
-export const TlvOptions = TlvBitmap(TlvUInt8, OptionsBits);
+export const Options = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFlag(1) };
 
 /**
  * Input to the LevelControl moveToLevel command
@@ -64,7 +57,7 @@ export const TlvMoveRequest = TlvObject({
      * attribute shall be used. However, if the Rate field is equal to null and the DefaultMoveRate attribute is not
      * supported, or if the Rate field is equal to null and the value of the DefaultMoveRate attribute is equal to
      * null, then the device SHOULD move as fast as it is able. If the device is not able to move at a variable rate,
-     * this field MAY be disregarded.
+     * this field may be disregarded.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2.2
      */
@@ -99,12 +92,7 @@ export const TlvStepRequest = TlvObject({
  */
 export const TlvStopRequest = TlvObject({ optionsMask: TlvField(0, TlvUInt8), optionsOverride: TlvField(1, TlvUInt8) });
 
-/**
- * Bit definitions for TlvLevelControlOptions
- */
-export const LevelControlOptionsBits = { executeIfOff: BitFlag(1), coupleColorTempToLevel: BitFlag(2) };
-
-export const TlvLevelControlOptions = TlvBitmap(TlvUInt8, LevelControlOptionsBits);
+export const LevelControlOptions = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFlag(1) };
 
 /**
  * Input to the LevelControl moveToLevelWithOnOff command
@@ -114,8 +102,8 @@ export const TlvLevelControlOptions = TlvBitmap(TlvUInt8, LevelControlOptionsBit
 export const TlvMoveToLevelWithOnOffRequest = TlvObject({
     level: TlvField(0, TlvUInt8),
     transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
-    optionsMask: TlvField(2, TlvLevelControlOptions),
-    optionsOverride: TlvField(3, TlvLevelControlOptions)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, LevelControlOptions)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, LevelControlOptions))
 });
 
 /**
@@ -126,8 +114,8 @@ export const TlvMoveToLevelWithOnOffRequest = TlvObject({
 export const TlvMoveWithOnOffRequest = TlvObject({
     moveMode: TlvField(0, TlvEnum<MoveMode>()),
     rate: TlvField(1, TlvNullable(TlvUInt8)),
-    optionsMask: TlvField(2, TlvLevelControlOptions),
-    optionsOverride: TlvField(3, TlvLevelControlOptions)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, LevelControlOptions)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, LevelControlOptions))
 });
 
 /**
@@ -139,8 +127,8 @@ export const TlvStepWithOnOffRequest = TlvObject({
     stepMode: TlvField(0, TlvEnum<StepMode>()),
     stepSize: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvNullable(TlvUInt16)),
-    optionsMask: TlvField(3, TlvLevelControlOptions),
-    optionsOverride: TlvField(4, TlvLevelControlOptions)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, LevelControlOptions)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, LevelControlOptions))
 });
 
 /**
@@ -149,8 +137,8 @@ export const TlvStepWithOnOffRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
  */
 export const TlvStopWithOnOffRequest = TlvObject({
-    optionsMask: TlvField(0, TlvLevelControlOptions),
-    optionsOverride: TlvField(1, TlvLevelControlOptions)
+    optionsMask: TlvField(0, TlvBitmap(TlvUInt8, LevelControlOptions)),
+    optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, LevelControlOptions))
 });
 
 /**
@@ -257,7 +245,7 @@ export const LevelControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
          */
-        options: WritableAttribute(15, TlvOptions),
+        options: WritableAttribute(15, TlvBitmap(TlvUInt8, Options), { default: BitsFromPartial(Options, {}) }),
 
         /**
          * The OnOffTransitionTime attribute represents the time taken to move to or from the target level when On or
@@ -329,7 +317,7 @@ export const LevelControlBase = BaseClusterComponent({
          * as the device is able. If the TransitionTime field is equal to null, the device SHOULD move as fast as it is
          * able.
          *
-         * If the device is not able to move at a variable rate, the TransitionTime field MAY be disregarded.
+         * If the device is not able to move at a variable rate, the TransitionTime field may be disregarded.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.3
          */

@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "GeneralDiagnostics", id: 0x33, classification: "node",
     description: "General Diagnostics",
     details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire " +
-             "standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrator in " +
+             "standardized diagnostics metrics that may be used by a Node to assist a user or Administrator in " +
              "diagnosing potential problems. The General Diagnostics Cluster attempts to centralize all metrics " +
              "that are broadly relevant to the majority of Nodes.",
     xref: { document: "core", section: "11.11" },
@@ -24,7 +24,7 @@ Matter.children.push({
             details: "The NetworkInterfaces attribute shall be a list of NetworkInterface structs. Each logical network " +
                      "interface on the Node shall be represented by a single entry within the NetworkInterfaces attribute.",
             xref: { document: "core", section: "11.11.6.1" },
-            children: [ { tag: "datatype", name: "entry", type: "NetworkInterface" } ]
+            children: [{ tag: "datatype", name: "entry", type: "NetworkInterface" }]
         },
 
         {
@@ -75,11 +75,11 @@ Matter.children.push({
                      "HardwareFaultEnum value. When the Node detects that all conditions contributing to a fault has been " +
                      "cleared, the corresponding HardwareFaultEnum value shall be removed from this list. An empty list " +
                      "shall indicate there are currently no active faults. The order of this list SHOULD have no " +
-                     "significance. Clients interested in monitoring changes in active faults MAY subscribe to this " +
-                     "attribute, or they MAY subscribe to HardwareFaultChange.",
+                     "significance. Clients interested in monitoring changes in active faults may subscribe to this " +
+                     "attribute, or they may subscribe to HardwareFaultChange.",
 
             xref: { document: "core", section: "11.11.6.6" },
-            children: [ { tag: "datatype", name: "entry", type: "HardwareFaultEnum" } ]
+            children: [{ tag: "datatype", name: "entry", type: "HardwareFaultEnum" }]
         },
 
         {
@@ -92,11 +92,11 @@ Matter.children.push({
                      "value. When the Node detects that all conditions contributing to a fault has been cleared, the " +
                      "corresponding RadioFaultEnum value shall be removed from this list. An empty list shall indicate " +
                      "there are currently no active faults. The order of this list SHOULD have no significance. Clients " +
-                     "interested in monitoring changes in active faults MAY subscribe to this attribute, or they MAY " +
+                     "interested in monitoring changes in active faults may subscribe to this attribute, or they may " +
                      "subscribe to RadioFaultChange.",
 
             xref: { document: "core", section: "11.11.6.7" },
-            children: [ { tag: "datatype", name: "entry", type: "RadioFaultEnum" } ]
+            children: [{ tag: "datatype", name: "entry", type: "RadioFaultEnum" }]
         },
 
         {
@@ -109,11 +109,11 @@ Matter.children.push({
                      "NetworkFaultEnum value. When the Node detects that all conditions contributing to a fault has been " +
                      "cleared, the corresponding NetworkFaultEnum value shall be removed from this list. An empty list " +
                      "shall indicate there are currently no active faults. The order of this list SHOULD have no " +
-                     "significance. Clients interested in monitoring changes in active faults MAY subscribe to this " +
-                     "attribute, or they MAY subscribe to NetworkFaultChange.",
+                     "significance. Clients interested in monitoring changes in active faults may subscribe to this " +
+                     "attribute, or they may subscribe to NetworkFaultChange.",
 
             xref: { document: "core", section: "11.11.6.8" },
-            children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
+            children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
         },
 
         {
@@ -144,7 +144,7 @@ Matter.children.push({
                     details: "This field shall represent the set of faults currently detected, as per Section 11.11.4.1, " +
                              "“HardwareFaultEnum”.",
                     xref: { document: "core", section: "11.11.8.1.1" },
-                    children: [ { tag: "datatype", name: "entry", type: "HardwareFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "HardwareFaultEnum" }]
                 },
 
                 {
@@ -153,7 +153,7 @@ Matter.children.push({
                              "\n" +
                              "11.11.4.1, “HardwareFaultEnum”.",
                     xref: { document: "core", section: "11.11.8.1.2" },
-                    children: [ { tag: "datatype", name: "entry", type: "HardwareFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "HardwareFaultEnum" }]
                 }
             ]
         },
@@ -176,11 +176,11 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 7",
-                    children: [ { tag: "datatype", name: "entry", type: "RadioFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "RadioFaultEnum" }]
                 },
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 7",
-                    children: [ { tag: "datatype", name: "entry", type: "RadioFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "RadioFaultEnum" }]
                 }
             ]
         },
@@ -203,11 +203,11 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
-                    children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
                 },
                 {
                     tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
-                    children: [ { tag: "datatype", name: "entry", type: "NetworkFaultEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
                 }
             ]
         },
@@ -216,11 +216,11 @@ Matter.children.push({
             tag: "event", name: "BootReason", id: 0x3, access: "V", conformance: "M", priority: "critical",
             details: "The BootReason Event shall indicate the reason that caused the device to start-up.",
             xref: { document: "core", section: "11.11.8.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M",
                 details: "This field shall contain the reason for this BootReason event.",
                 xref: { document: "core", section: "11.11.8.4.1" }
-            } ]
+            }]
         },
 
         {
@@ -279,7 +279,7 @@ Matter.children.push({
                              "execute the expected trigger action." +
                              "\n" +
                              "If no specific test event triggers are required to be supported by certification test requirements " +
-                             "for the features that a given product will be certified against, this command MAY always fail with " +
+                             "for the features that a given product will be certified against, this command may always fail with " +
                              "the INVALID_COMMAND status, equivalent to the situation of receiving an unknown EventTrigger, for " +
                              "all possible EventTrigger values.",
 
@@ -290,11 +290,11 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "StatusCode", type: "status",
-            children: [ {
+            children: [{
                 tag: "datatype", name: "EnableKeyMismatch", id: 0x2,
                 details: "Provided EnableKey does not match the previously configured value.",
                 xref: { document: "core", section: "11.11.5" }
-            } ]
+            }]
         },
 
         {
@@ -302,17 +302,50 @@ Matter.children.push({
             xref: { document: "core", section: "11.11.4.1" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Radio", id: 0x1, conformance: "O" },
-                { tag: "datatype", name: "Sensor", id: 0x2, conformance: "O" },
-                { tag: "datatype", name: "ResettableOverTemp", id: 0x3, conformance: "O" },
-                { tag: "datatype", name: "NonResettableOverTemp", id: 0x4, conformance: "O" },
-                { tag: "datatype", name: "PowerSource", id: 0x5, conformance: "O" },
-                { tag: "datatype", name: "VisualDisplayFault", id: 0x6, conformance: "O" },
-                { tag: "datatype", name: "AudioOutputFault", id: 0x7, conformance: "O" },
-                { tag: "datatype", name: "UserInterfaceFault", id: 0x8, conformance: "O" },
-                { tag: "datatype", name: "NonVolatileMemoryError", id: 0x9, conformance: "O" },
-                { tag: "datatype", name: "TamperDetected", id: 0xa, conformance: "O" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "The Node has encountered an unspecified fault."
+                },
+                {
+                    tag: "datatype", name: "Radio", id: 0x1, conformance: "O",
+                    description: "The Node has encountered a fault with at least one of its radios."
+                },
+                {
+                    tag: "datatype", name: "Sensor", id: 0x2, conformance: "O",
+                    description: "The Node has encountered a fault with at least one of its sensors."
+                },
+                {
+                    tag: "datatype", name: "ResettableOverTemp", id: 0x3, conformance: "O",
+                    description: "The Node has encountered an over-temperature fault that is resettable."
+                },
+                {
+                    tag: "datatype", name: "NonResettableOverTemp", id: 0x4, conformance: "O",
+                    description: "The Node has encountered an over-temperature fault that is not resettable."
+                },
+                {
+                    tag: "datatype", name: "PowerSource", id: 0x5, conformance: "O",
+                    description: "The Node has encountered a fault with at least one of its power sources."
+                },
+                {
+                    tag: "datatype", name: "VisualDisplayFault", id: 0x6, conformance: "O",
+                    description: "The Node has encountered a fault with at least one of its visual displays."
+                },
+                {
+                    tag: "datatype", name: "AudioOutputFault", id: 0x7, conformance: "O",
+                    description: "The Node has encountered a fault with at least one of its audio outputs."
+                },
+                {
+                    tag: "datatype", name: "UserInterfaceFault", id: 0x8, conformance: "O",
+                    description: "The Node has encountered a fault with at least one of its user interfaces."
+                },
+                {
+                    tag: "datatype", name: "NonVolatileMemoryError", id: 0x9, conformance: "O",
+                    description: "The Node has encountered a fault with its non-volatile memory."
+                },
+                {
+                    tag: "datatype", name: "TamperDetected", id: 0xa, conformance: "O",
+                    description: "The Node has encountered disallowed physical tampering."
+                }
             ]
         },
 
@@ -321,13 +354,34 @@ Matter.children.push({
             xref: { document: "core", section: "11.11.4.2" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "WiFiFault", id: 0x1, conformance: "O" },
-                { tag: "datatype", name: "CellularFault", id: 0x2, conformance: "O" },
-                { tag: "datatype", name: "ThreadFault", id: 0x3, conformance: "O" },
-                { tag: "datatype", name: "NfcFault", id: 0x4, conformance: "O" },
-                { tag: "datatype", name: "BleFault", id: 0x5, conformance: "O" },
-                { tag: "datatype", name: "EthernetFault", id: 0x6, conformance: "O" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "The Node has encountered an unspecified radio fault."
+                },
+                {
+                    tag: "datatype", name: "WiFiFault", id: 0x1, conformance: "O",
+                    description: "The Node has encountered a fault with its Wi-Fi radio."
+                },
+                {
+                    tag: "datatype", name: "CellularFault", id: 0x2, conformance: "O",
+                    description: "The Node has encountered a fault with its cellular radio."
+                },
+                {
+                    tag: "datatype", name: "ThreadFault", id: 0x3, conformance: "O",
+                    description: "The Node has encountered a fault with its802.15.4 radio."
+                },
+                {
+                    tag: "datatype", name: "NfcFault", id: 0x4, conformance: "O",
+                    description: "The Node has encountered a fault with its NFC radio."
+                },
+                {
+                    tag: "datatype", name: "BleFault", id: 0x5, conformance: "O",
+                    description: "The Node has encountered a fault with its BLE radio."
+                },
+                {
+                    tag: "datatype", name: "EthernetFault", id: 0x6, conformance: "O",
+                    description: "The Node has encountered a fault with its Ethernet controller."
+                }
             ]
         },
 
@@ -336,10 +390,22 @@ Matter.children.push({
             xref: { document: "core", section: "11.11.4.3" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "HardwareFailure", id: 0x1, conformance: "O" },
-                { tag: "datatype", name: "NetworkJammed", id: 0x2, conformance: "O" },
-                { tag: "datatype", name: "ConnectionFailed", id: 0x3, conformance: "O" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "The Node has encountered an unspecified fault."
+                },
+                {
+                    tag: "datatype", name: "HardwareFailure", id: 0x1, conformance: "O",
+                    description: "The Node has encountered a network fault as a result of a hardware failure."
+                },
+                {
+                    tag: "datatype", name: "NetworkJammed", id: 0x2, conformance: "O",
+                    description: "The Node has encountered a network fault as a result of a jammed network."
+                },
+                {
+                    tag: "datatype", name: "ConnectionFailed", id: 0x3, conformance: "O",
+                    description: "The Node has encountered a network fault as a result of a failure to establish a connection."
+                }
             ]
         },
 
@@ -348,11 +414,20 @@ Matter.children.push({
             xref: { document: "core", section: "11.11.4.4" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "WiFi", id: 0x1, conformance: "O" },
-                { tag: "datatype", name: "Ethernet", id: 0x2, conformance: "O" },
-                { tag: "datatype", name: "Cellular", id: 0x3, conformance: "O" },
-                { tag: "datatype", name: "Thread", id: 0x4, conformance: "O" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "Indicates an interface of an unspecified type."
+                },
+                { tag: "datatype", name: "WiFi", id: 0x1, conformance: "O", description: "Indicates a Wi-Fi interface." },
+                {
+                    tag: "datatype", name: "Ethernet", id: 0x2, conformance: "O",
+                    description: "Indicates a Ethernet interface."
+                },
+                {
+                    tag: "datatype", name: "Cellular", id: 0x3, conformance: "O",
+                    description: "Indicates a Cellular interface."
+                },
+                { tag: "datatype", name: "Thread", id: 0x4, conformance: "O", description: "Indicates a Thread interface." }
             ]
         },
 
@@ -361,13 +436,34 @@ Matter.children.push({
             xref: { document: "core", section: "11.11.4.5" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "PowerOnReboot", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "BrownOutReset", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "SoftwareWatchdogReset", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "HardwareWatchdogReset", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "SoftwareUpdateCompleted", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "SoftwareReset", id: 0x6, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "The Node is unable to identify the Power-On reason as one of the other provided enumeration values."
+                },
+                {
+                    tag: "datatype", name: "PowerOnReboot", id: 0x1, conformance: "M",
+                    description: "The Node has booted as the result of physical interaction with the device resulting in a reboot."
+                },
+                {
+                    tag: "datatype", name: "BrownOutReset", id: 0x2, conformance: "M",
+                    description: "The Node has rebooted as the result of a brown-out of the Node’s power supply."
+                },
+                {
+                    tag: "datatype", name: "SoftwareWatchdogReset", id: 0x3, conformance: "M",
+                    description: "The Node has rebooted as the result of a software watchdog timer."
+                },
+                {
+                    tag: "datatype", name: "HardwareWatchdogReset", id: 0x4, conformance: "M",
+                    description: "The Node has rebooted as the result of a hardware watchdog timer."
+                },
+                {
+                    tag: "datatype", name: "SoftwareUpdateCompleted", id: 0x5, conformance: "M",
+                    description: "The Node has rebooted as the result of a completed software update."
+                },
+                {
+                    tag: "datatype", name: "SoftwareReset", id: 0x6, conformance: "M",
+                    description: "The Node has rebooted as the result of a software initiated reboot."
+                }
             ]
         },
 
@@ -426,7 +522,7 @@ Matter.children.push({
                     details: "This field shall provide a list of the IPv4 addresses that are currently assigned to the network " +
                              "interface.",
                     xref: { document: "core", section: "11.11.4.6.6" },
-                    children: [ { tag: "datatype", name: "entry", type: "ipv4adr" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "ipv4adr" }]
                 },
 
                 {
@@ -437,7 +533,7 @@ Matter.children.push({
                              "assigned GUA and ULA addresses. This list shall NOT include any multicast group addresses to which " +
                              "the Node is subscribed.",
                     xref: { document: "core", section: "11.11.4.6.7" },
-                    children: [ { tag: "datatype", name: "entry", type: "ipv6adr" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "ipv6adr" }]
                 },
 
                 {

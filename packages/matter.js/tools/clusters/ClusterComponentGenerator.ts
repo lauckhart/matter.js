@@ -35,8 +35,9 @@ export class ClusterComponentGenerator {
     }
 
     defineComponent(component: NamedComponent) {
-        this.target.file.addImport("cluster/ClusterFactory", "ClusterComponent");
-        const block = this.target.expressions(`export const ${component.name}Component = ClusterComponent({`, `})`)
+        this.file.addImport("cluster/ClusterFactory", "ClusterComponent");
+        const name = `${component.name}Component`;
+        const block = this.target.expressions(`export const ${name} = ClusterComponent({`, `})`)
             .document(component.documentation);
         return this.populateComponent(component, block);
     }
@@ -69,7 +70,7 @@ export class ClusterComponentGenerator {
             const factory = factoryParts.join("");
             this.file.addImport("cluster/Cluster", factory);
 
-            const tlvType = this.tlv.reference(model, this.cluster);
+            const tlvType = this.tlv.reference(model);
 
             const block = add(factory);
             block.atom(model.id);
@@ -89,7 +90,7 @@ export class ClusterComponentGenerator {
             // TODO - don't currently have a way to express "this field should
             // default to the value of another field" as indicated by
             // model.default.reference
-            const def = this.createDefaultValue(model, tlvType);
+            const def = this.createDefaultValue(model);
             if (def !== undefined) {
                 options.value(def, "default: ");
             }
@@ -124,7 +125,7 @@ export class ClusterComponentGenerator {
 
             const block = add(factory);
             block.atom(model.id);
-            block.atom(this.tlv.reference(model, this.cluster));
+            block.atom(this.tlv.reference(model));
 
             // Note - we end up mapping "status" response type to TlvNoResponse.
             // Technically "no response" and "status response" are different things
@@ -136,7 +137,7 @@ export class ClusterComponentGenerator {
             }
             if (responseModel) {
                 block.atom(responseModel.id);
-                block.atom(this.tlv.reference(responseModel, this.cluster));
+                block.atom(this.tlv.reference(responseModel));
             } else {
                 this.file.addImport("cluster/Cluster", "TlvNoResponse");
                 block.atom(model.id);
@@ -159,7 +160,7 @@ export class ClusterComponentGenerator {
             const block = add(factory);
             block.atom(model.id);
             block.atom(`EventPriority.${priority}`);
-            block.atom(this.tlv.reference(model, this.cluster));
+            block.atom(this.tlv.reference(model));
         });
 
         return block;
@@ -190,63 +191,93 @@ export class ClusterComponentGenerator {
         }
     }
 
-    private createDefaultValue(model: AttributeModel, tlvType: string) {
-        let def = model.effectiveDefault;
-        if (def === undefined || def === null) {
-            return def;
+    private createDefaultValue(model: AttributeModel) {
+        let defaultValue = model.effectiveDefault;
+        if (defaultValue === undefined || defaultValue === null) {
+            return defaultValue;
         }
 
         // TODO - don't currently have a way to express "this field should
         // default to the value of another field" as indicated by
         // model.default.reference
-        if (FieldValue.is(def, FieldValue.reference)) {
+        if (FieldValue.is(defaultValue, FieldValue.reference)) {
             return;
         }
 
         const metatype = model.effectiveMetatype;
 
         switch (metatype) {
-            case Metatype.enum:
-                if (typeof def == "number" || typeof def == "string") {
-                    const value = model.member(def);
-                    if (value) {
-                        let enumName = value.parent?.name;
-                        if (enumName) {
-                            if (enumName.endsWith("Enum")) {
-                                enumName = enumName.substring(0, enumName.length - 4);
-                            }
-                            if (enumName == "Type") {
-                                enumName = `${this.cluster.name}Type`;
-                            }
-                            def = serialize.asIs(`${enumName}.${value.name}`);
-                        }
-                    }
-                }
-                break;
-
             case Metatype.integer:
             case Metatype.float:
-                const id = FieldValue.numericValue(def, model.type);
+                // Simple numbers serialize either as one of our "wrapped ID"
+                // things or just as a numeric literal
+                const id = FieldValue.numericValue(defaultValue, model.type);
                 if (id !== undefined && this.tlv.isSpecializedId(model)) {
                     return { id };
                 }
                 return id;
 
+            case Metatype.enum:
+                // For enums, translate ID or string into an enum constant
+                if (typeof defaultValue == "number" || typeof defaultValue == "string") {
+                    const value = model.member(defaultValue);
+                    if (value) {
+                        let enumName = this.tlv.nameFor(value.parent);
+                        if (enumName) {
+                            return serialize.asIs(`${enumName}.${value.name}`);
+                        }
+                    }
+                }
+                break;
+
             case Metatype.bitmap:
-                if (!FieldValue.is(def, FieldValue.flags)) {
-                    // TLV doesn't understand anything other than an object
-                    // as the default value.  To create said object we need
-                    // named references
-                    return;
+                // Bitmaps are more complicated.  We need to collect bits into
+                // individual fields.  Then we generate a value for each field
+                // depending on the field type
+                const bits = FieldValue.numericValue(defaultValue, model.type);
+                if (bits === undefined) {
+                    break;
                 }
 
-                this.file.addImport("schema/BitmapSchema", "BitFlags");
-                const flags = (def as FieldValue.Flags).flags.map(f => serialize(camelize(f, true)));
-                def = serialize.asIs(`BitFlags(${tlvType.replace(/^Tlv/, "")}Bits, ${flags.join(", ")})`);
+                const fields = new Map<ValueModel, number>();
+                for (let bit = 0; Math.pow(bit, 2) <= bits; bit++) {
+                    if (!(bits & (1 << bit))) {
+                        continue;
+                    }
 
-                break;
+                    const definition = model.bitDefinition(bit);
+                    if (!definition || definition.deprecated) {
+                        continue;
+                    }
+
+                    if (definition.constraint.value !== undefined) {
+                        fields.set(definition, 1);
+                    } else if (definition.constraint.min !== undefined) {
+                        const fieldBit = 1 << (bit - (definition.constraint.min as number));
+                        fields.set(definition, (fields.get(definition) ?? 0) & fieldBit);
+                    }
+                }
+
+                const properties = {} as { [name: string]: boolean | number | string };
+                for (const [field, bits] of fields) {
+                    const name = camelize(field.name, false);
+                    if (typeof field.constraint.value === "number") {
+                        properties[name] = true;
+                    } else {
+                        const defining = field.definingModel;
+                        const enumValue = defining?.member(bits);
+                        if (enumValue) {
+                            properties[name] = serialize.asIs(`${this.tlv.nameFor(defining)}.${enumValue.name}`);
+                        } else {
+                            properties[name] = bits;
+                        }
+                    }
+                }
+
+                this.file.addImport("schema/BitmapSchema", "BitsFromPartial");
+                return serialize.asIs(`BitsFromPartial(${this.tlv.nameFor(model)}, ${serialize(properties)})`);
         }
 
-        return def;
+        return defaultValue;
     }
 }

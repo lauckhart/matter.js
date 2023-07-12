@@ -41,7 +41,7 @@ export const TlvNetworkInfoStruct = TlvObject({
      * SSID in Wi-Fi is a collection of 1-32 bytes, the text encoding of which is not specified. Implementations must
      * be careful to support reporting byte strings without requiring a particular encoding for transfer. Only the
      * commissioner should try to potentially decode the bytes. The most common encoding is UTF-8, however this is just
-     * a convention. Some configurations may use Latin-1 or other character sets. A commissioner MAY decode using
+     * a convention. Some configurations may use Latin-1 or other character sets. A commissioner may decode using
      * UTF-8, replacing encoding errors with "?" at the application level while retaining the underlying representation.
      *
      * XPAN ID is a big-endian 64-bit unsigned number, represented on the first 8 octets of the octet string.
@@ -63,18 +63,69 @@ export const TlvNetworkInfoStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.3
  */
 export const enum NetworkCommissioningStatus {
+    /**
+     * OK, no error
+     */
     Success = 0,
+
+    /**
+     * Value Outside Range
+     */
     OutOfRange = 1,
+
+    /**
+     * A collection would exceed its size limit
+     */
     BoundsExceeded = 2,
+
+    /**
+     * The NetworkID is not among the collection of added networks
+     */
     NetworkIdNotFound = 3,
+
+    /**
+     * The NetworkID is already among the collection of added networks
+     */
     DuplicateNetworkId = 4,
+
+    /**
+     * Cannot find AP: SSID Not found
+     */
     NetworkNotFound = 5,
+
+    /**
+     * Cannot find AP: Mismatch on band/channels/regulatory domain / 2.4GHz vs 5GHz
+     */
     RegulatoryError = 6,
+
+    /**
+     * Cannot associate due to authentication failure
+     */
     AuthFailure = 7,
+
+    /**
+     * Cannot associate due to unsupported security mode
+     */
     UnsupportedSecurity = 8,
+
+    /**
+     * Other association failure
+     */
     OtherConnectionFailure = 9,
+
+    /**
+     * Failure to generate an IPv6 address
+     */
     Ipv6Failed = 10,
+
+    /**
+     * Failure to bind Wi-Fi <-> IP interfaces
+     */
     IpBindFailed = 11,
+
+    /**
+     * Unknown error
+     */
     UnknownError = 12
 }
 
@@ -104,11 +155,12 @@ export const TlvScanNetworksRequest = TlvObject({
 });
 
 /**
- * Bit definitions for TlvWiFiSecurityBitmap
+ * WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the Security field of the
+ * WiFiInterfaceScanResultStruct.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.1
  */
-export const WiFiSecurityBitmapBits = {
+export const WiFiSecurityBitmap = {
     /**
      * Supports unencrypted Wi-Fi
      */
@@ -135,13 +187,6 @@ export const WiFiSecurityBitmapBits = {
     wpa3Personal: BitFlag(4)
 };
 
-/**
- * WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the Security field of the
- * WiFiInterfaceScanResultStruct.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.1
- */
-export const TlvWiFiSecurityBitmap = TlvBitmap(TlvUInt8, WiFiSecurityBitmapBits);
 export const enum WiFiBand {
     "2G4" = 0,
     "3G65" = 1,
@@ -156,13 +201,13 @@ export const enum WiFiBand {
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.5
  */
 export const TlvWiFiInterfaceScanResultStruct = TlvObject({
-    security: TlvOptionalField(0, TlvWiFiSecurityBitmap),
+    security: TlvOptionalField(0, TlvBitmap(TlvUInt8, WiFiSecurityBitmap)),
     ssid: TlvOptionalField(1, TlvByteString.bound({ maxLength: 32 })),
-    bssid: TlvOptionalField(2, TlvByteString.bound({ minLength: 6, maxLength: 6 })),
+    bssid: TlvOptionalField(2, TlvByteString),
     channel: TlvOptionalField(3, TlvUInt16),
 
     /**
-     * This field, if present, MAY be used to differentiate overlapping channel number values across different Wi-Fi
+     * This field, if present, may be used to differentiate overlapping channel number values across different Wi-Fi
      * frequency bands.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.5.1
@@ -231,8 +276,8 @@ export const TlvScanNetworksResponse = TlvObject({
     networkingStatus: TlvField(0, TlvEnum<NetworkCommissioningStatus>()),
 
     /**
-     * This field, if present and non-empty, MAY contain error information which MAY be communicated to the user in
-     * case the NetworkingStatus was not Success. Its purpose is to help developers in troubleshooting errors and MAY
+     * This field, if present and non-empty, may contain error information which may be communicated to the user in
+     * case the NetworkingStatus was not Success. Its purpose is to help developers in troubleshooting errors and may
      * go into logs or crash reports.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.2.2
@@ -240,11 +285,11 @@ export const TlvScanNetworksResponse = TlvObject({
     debugText: TlvOptionalField(1, TlvString.bound({ maxLength: 512 })),
 
     /**
-     * If NetworkingStatus was Success, this field shall contain the Wi-Fi network scan results. The list MAY be empty
+     * If NetworkingStatus was Success, this field shall contain the Wi-Fi network scan results. The list may be empty
      * if none were found in range on the bands supported by the interface, or if directed scanning had been used and
      * the desired SSID was not found in range.
      *
-     * The maximum number of results present in the result list supported MAY depend on memory and MAY contain a subset
+     * The maximum number of results present in the result list supported may depend on memory and may contain a subset
      * of possibilities, to avoid memory exhaustion on the cluster server and avoid crossing the maximum command
      * response size supported (see Section 4.4.4, “Message Size Requirements”).
      *
@@ -257,10 +302,10 @@ export const TlvScanNetworksResponse = TlvObject({
     wiFiScanResults: TlvOptionalField(2, TlvArray(TlvWiFiInterfaceScanResultStruct)),
 
     /**
-     * If NetworkingStatus was Success, this field shall contain the Thread network scan results. The list MAY be empty
+     * If NetworkingStatus was Success, this field shall contain the Thread network scan results. The list may be empty
      * if none were found in range on the bands supported by the interface.
      *
-     * The maximum number of results present in the result list supported MAY depend on memory and MAY contain a subset
+     * The maximum number of results present in the result list supported may depend on memory and may contain a subset
      * of possibilities, to avoid memory exhaustion on the cluster server and avoid crossing the maximum command
      * response size supported (see Section 4.4.4, “Message Size Requirements”).
      *
@@ -391,7 +436,7 @@ export const TlvConnectNetworkResponse = TlvObject({
      *     ◦ Table 9-50 "Status Codes" in IEEE 802.11-2020 contains a description of all values possible, which can
      *       unambiguously be used to determine the cause, such as an invalid security type, unsupported rate, etc.
      *
-     *   • Otherwise, the ErrorValue field shall contain an implementation-dependent value which MAY be used by a
+     *   • Otherwise, the ErrorValue field shall contain an implementation-dependent value which may be used by a
      *     reader of the structure to record, report or diagnose the failure.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.10.1
@@ -449,7 +494,7 @@ export const TlvAddOrUpdateWiFiNetworkRequest = TlvObject({
      * When the length of Credentials and available set of BSSID admits more than one option, such as the presence of
      * both WPA2 and WPA security type within the result set, WPA2 shall be considered more secure.
      *
-     * Note that it MAY occur that a station cannot connect to a particular access point with higher security and
+     * Note that it may occur that a station cannot connect to a particular access point with higher security and
      * selects a lower security connectivity type if the link quality is deemed to be too low to achieve successful
      * operation, or if all retry attempts fail.
      *
@@ -592,7 +637,7 @@ export const NetworkCommissioningBase = BaseClusterComponent({
          * the fail-safe, and associated recovery of network configuration to prior safe values, before being able to
          * communicate with the node again (see Section 11.9.6.2, “ArmFailSafe Command”).
          *
-         * It MAY be possible to disable Ethernet interfaces but it is implementation-defined. If not supported, a
+         * It may be possible to disable Ethernet interfaces but it is implementation-defined. If not supported, a
          * write to this attribute with a value of false shall fail with a status of INVALID_ACTION. When disabled, an
          * Ethernet interface would longer employ media detection. That is, a simple unplug and replug of the cable
          * shall NOT re-enable the interface.
@@ -632,7 +677,7 @@ export const NetworkCommissioningBase = BaseClusterComponent({
          * configurations exist in the Networks attribute, then this attribute shall be set to null.
          *
          * If a network configuration is removed from the Networks attribute using the RemoveNetwork command after a
-         * connection attempt, this field MAY indicate a NetworkID that is no longer configured on the Node.
+         * connection attempt, this field may indicate a NetworkID that is no longer configured on the Node.
          *
          * This attribute is present to assist with error recovery during Network commissioning and to assist in
          * non-concurrent networking commissioning flows.
@@ -809,7 +854,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          * OpenBasicCommissioningWindow command may impact the total time available to proceed with error recovery
          * after a connection failure.
          *
-         * The LastNetworkingStatus, LastNetworkID and LastConnectErrorValue attributes MAY assist the client in
+         * The LastNetworkingStatus, LastNetworkID and LastConnectErrorValue attributes may assist the client in
          * determining the reason for a failure after reconnecting over a Commissioning channel, especially in
          * non-concurrent commissioning situations.
          *

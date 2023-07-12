@@ -17,10 +17,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.5.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "LT", id: 0x0, description: "LevelControlForLighting",
                 details: "Behavior that supports lighting applications."
-            } ]
+            }]
         },
 
         {
@@ -181,8 +181,8 @@ Matter.children.push({
 
                     xref: { document: "cluster", section: "1.5.7.6.1" },
                     children: [
-                        { tag: "datatype", name: "AcceptOnlyWhenOn", id: 0x0 },
-                        { tag: "datatype", name: "Reserved", id: 0x1, conformance: "M" }
+                        { tag: "datatype", name: "AcceptOnlyWhenOn", constraint: "0" },
+                        { tag: "datatype", name: "Reserved", constraint: "1" }
                     ]
                 },
 

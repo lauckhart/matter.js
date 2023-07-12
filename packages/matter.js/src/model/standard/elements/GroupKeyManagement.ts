@@ -18,10 +18,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.2.5" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "CS", id: 0x0, description: "CacheAndSync",
                 details: "The ability to support CacheAndSync security policy and MCSP."
-            } ]
+            }]
         },
 
         {
@@ -30,7 +30,7 @@ Matter.children.push({
             details: "This attribute is a list of GroupKeyMapStruct entries. Each entry associates a logical Group Id " +
                      "with a particular group key set.",
             xref: { document: "core", section: "11.2.7.1" },
-            children: [ { tag: "datatype", name: "entry", type: "GroupKeyMapStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "GroupKeyMapStruct" }]
         },
 
         {
@@ -47,7 +47,7 @@ Matter.children.push({
                      "endpoint, the entire GroupTable entry for that given GroupId shall be removed.",
 
             xref: { document: "core", section: "11.2.7.2" },
-            children: [ { tag: "datatype", name: "entry", type: "GroupInfoMapStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "GroupInfoMapStruct" }]
         },
 
         {
@@ -111,7 +111,7 @@ Matter.children.push({
                      "  • Otherwise, this status code shall be set to FAILURE.",
 
             xref: { document: "core", section: "11.2.8.1" },
-            children: [ { tag: "datatype", name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" }]
         },
 
         {
@@ -131,7 +131,7 @@ Matter.children.push({
                      "fabric, then this command shall fail with a NOT_FOUND status code.",
 
             xref: { document: "core", section: "11.2.8.2" },
-            children: [ { tag: "datatype", name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" }]
         },
 
         {
@@ -140,7 +140,7 @@ Matter.children.push({
                      "found. It shall contain the configuration of the requested Group Key Set, with the EpochKey0, " +
                      "EpochKey1 and EpochKey2 key contents replaced by null.",
             xref: { document: "core", section: "11.2.8.3" },
-            children: [ { tag: "datatype", name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" }]
         },
 
         {
@@ -167,7 +167,7 @@ Matter.children.push({
                      "GroupKeySetID requested did not exist.",
 
             xref: { document: "core", section: "11.2.8.4" },
-            children: [ { tag: "datatype", name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" }]
         },
 
         {
@@ -184,7 +184,7 @@ Matter.children.push({
                      "values from those structs.",
 
             xref: { document: "core", section: "11.2.8.5" },
-            children: [ { tag: "datatype", name: "GroupKeySetIDs", type: "uint16", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "GroupKeySetIDs", type: "uint16", conformance: "M" }]
         },
 
         {
@@ -202,18 +202,25 @@ Matter.children.push({
                      "Each entry in GroupKeySetIDs is a GroupKeySetID field.",
 
             xref: { document: "core", section: "11.2.8.6" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "GroupKeySetIDs", id: 0x0, type: "list", conformance: "M",
-                children: [ { tag: "datatype", name: "entry", type: "uint16" } ]
-            } ]
+                children: [{ tag: "datatype", name: "entry", type: "uint16" }]
+            }]
         },
 
         {
             tag: "datatype", name: "GroupKeySecurityPolicyEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.2.6.1" },
+
             children: [
-                { tag: "datatype", name: "TrustFirst", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "CacheAndSync", id: 0x1, conformance: "CS" }
+                {
+                    tag: "datatype", name: "TrustFirst", id: 0x0, conformance: "M",
+                    description: "Message counter synchronization using trust-first"
+                },
+                {
+                    tag: "datatype", name: "CacheAndSync", id: 0x1, conformance: "CS",
+                    description: "Message counter synchronization using cache-and-sync"
+                }
             ]
         },
 
@@ -224,11 +231,14 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "PerGroupId", id: 0x0, conformance: "M",
+                    description: "Indicates filtering of multicast messages for a specific Group ID",
                     details: "The 16-bit Group Identifier of the Multicast Address shall be the Group ID of the group.",
                     xref: { document: "core", section: "11.2.6.2.1" }
                 },
+
                 {
                     tag: "datatype", name: "AllNodes", id: 0x1, conformance: "M",
+                    description: "Indicates not filtering of multicast messages",
                     details: "The 16-bit Group Identifier of the Multicast Address shall be 0xFFFF.",
                     xref: { document: "core", section: "11.2.6.2.2" }
                 }
@@ -364,7 +374,7 @@ Matter.children.push({
                     details: "This field provides the list of Endpoint IDs on the Node to which messages to this group shall be " +
                              "forwarded.",
                     xref: { document: "core", section: "11.2.6.5.1" },
-                    children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
                 },
 
                 {

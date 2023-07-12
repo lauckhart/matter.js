@@ -59,7 +59,7 @@ Matter.children.push({
             tag: "attribute", name: "NodeLabel", id: 0x5, type: "string", access: "RW VM", conformance: "M",
             constraint: "max 32", default: "", quality: "N",
             details: "This attribute shall represent a user defined name for the Node. This attribute SHOULD be set " +
-                     "during initial commissioning and MAY be updated by further reconfigurations.",
+                     "during initial commissioning and may be updated by further reconfigurations.",
             xref: { document: "core", section: "11.1.5.6" }
         },
 
@@ -69,8 +69,8 @@ Matter.children.push({
 
             details: "This attribute shall be an ISO 3166-1 alpha-2 code to represent the country, dependent territory, " +
                      "or special area of geographic interest in which the Node is located at the time of the attribute " +
-                     "being set. This attribute shall be set during initial commissioning (unless already set) and MAY be " +
-                     "updated by further reconfigurations. This attribute MAY affect some regulatory aspects of the " +
+                     "being set. This attribute shall be set during initial commissioning (unless already set) and may be " +
+                     "updated by further reconfigurations. This attribute may affect some regulatory aspects of the " +
                      "Node’s operation, such as radio transmission power levels in given spectrum allocation bands if " +
                      "technologies where this is applicable are used. The Location’s region code shall be interpreted in " +
                      "a case-insensitive manner. If the Node cannot understand the location code with which it was " +
@@ -105,7 +105,7 @@ Matter.children.push({
                      "version number can be compared using a total ordering to determine if a version is logically newer " +
                      "than another one. A larger value of SoftwareVersion is newer than a lower value, from the " +
                      "perspective of software updates (see Section 11.19.3.3, “Availability of Software Images”). Nodes " +
-                     "MAY query this field to determine the currently running version of software on another given Node.",
+                     "may query this field to determine the currently running version of software on another given Node.",
             xref: { document: "core", section: "11.1.5.10" }
         },
 
@@ -114,7 +114,7 @@ Matter.children.push({
             conformance: "M", constraint: "1 to 64", quality: "F",
 
             details: "This attribute shall contain a current human-readable representation for the software running on " +
-                     "the Node. This version information MAY be conveyed to users. The maximum length of the " +
+                     "the Node. This version information may be conveyed to users. The maximum length of the " +
                      "SoftwareVersionString attribute is 64 bytes of UTF-8 characters. The contents SHOULD only use " +
                      "simple 7-bit ASCII alphanumeric and punctuation characters, so as to simplify the conveyance of the " +
                      "value to a variety of cultures." +
@@ -130,7 +130,7 @@ Matter.children.push({
 
             details: "This attribute shall specify the date that the Node was manufactured. The first 8 characters shall " +
                      "specify the date of manufacture of the Node in international date notation according to ISO 8601, " +
-                     "i.e., YYYYMMDD, e.g., 20060814. The final 8 characters MAY include country, factory, line, shift or " +
+                     "i.e., YYYYMMDD, e.g., 20060814. The final 8 characters may include country, factory, line, shift or " +
                      "other related information at the option of the vendor. The format of this information is vendor" +
                      "\n" +
                      "defined.",
@@ -166,7 +166,7 @@ Matter.children.push({
             tag: "attribute", name: "ProductLabel", id: 0xe, type: "string", access: "R V", conformance: "O",
             constraint: "max 64", quality: "F",
             details: "This attribute shall specify a vendor specific human readable (displayable) product label. The " +
-                     "ProductLabel attribute MAY be used to provide a more user-friendly value than that represented by " +
+                     "ProductLabel attribute may be used to provide a more user-friendly value than that represented by " +
                      "the ProductName attribute. The ProductLabel attribute SHOULD NOT include the name of the vendor as " +
                      "defined within the VendorName attribute.",
             xref: { document: "core", section: "11.1.5.15" }
@@ -207,7 +207,7 @@ Matter.children.push({
             details: "This attribute (when used) shall indicate a unique identifier for the device, which is constructed " +
                      "in a manufacturer specific manner." +
                      "\n" +
-                     "It MAY be constructed using a permanent device identifier (such as device MAC address) as basis. In " +
+                     "It may be constructed using a permanent device identifier (such as device MAC address) as basis. In " +
                      "order to prevent tracking," +
                      "\n" +
                      "  • it SHOULD NOT be identical to (or easily derived from) such permanent device identifier" +
@@ -228,14 +228,14 @@ Matter.children.push({
 
             details: "This attribute shall provide the minimum guaranteed value for some system-wide resource " +
                      "capabilities that are not otherwise cluster-specific and do not appear elsewhere. This attribute " +
-                     "MAY be used by clients to optimize communication with Nodes by allowing them to use more than the " +
+                     "may be used by clients to optimize communication with Nodes by allowing them to use more than the " +
                      "strict minimum values required by this specification, wherever available." +
                      "\n" +
-                     "The values supported by the server in reality MAY be larger than the values provided in this " +
+                     "The values supported by the server in reality may be larger than the values provided in this " +
                      "attribute, such as if a server is not resource-constrained at all. However, clients SHOULD only " +
                      "rely on the amounts provided in this attribute." +
                      "\n" +
-                     "Note that since the fixed values within this attribute MAY change over time, both increasing and " +
+                     "Note that since the fixed values within this attribute may change over time, both increasing and " +
                      "decreasing, as software versions change for a given Node, clients SHOULD take care not to assume " +
                      "forever unchanging values and SHOULD NOT cache this value permanently at Commissioning time.",
 
@@ -251,12 +251,12 @@ Matter.children.push({
                      "it completes a boot or reboot process.",
             xref: { document: "core", section: "11.1.6.1" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
                 details: "This field shall be set to the same value as the one available in the Software Version attribute of " +
                          "the Basic Information Cluster.",
                 xref: { document: "core", section: "11.1.6.1.1" }
-            } ]
+            }]
         },
 
         {
@@ -264,7 +264,7 @@ Matter.children.push({
             details: "The ShutDown event SHOULD be generated by a Node prior to any orderly shutdown sequence on a " +
                      "best-effort basis. When a ShutDown event is generated, it SHOULD be the last Data Model event " +
                      "recorded by the Node. This event SHOULD be delivered urgently to current subscribers on a best- " +
-                     "effort basis. Any subsequent incoming interactions to the Node MAY be dropped until the completion " +
+                     "effort basis. Any subsequent incoming interactions to the Node may be dropped until the completion " +
                      "of a future boot or reboot process.",
             xref: { document: "core", section: "11.1.6.2" }
         },
@@ -278,18 +278,18 @@ Matter.children.push({
                      "Leave event is generated, it SHOULD be assumed that the fabric recorded in the event is no longer " +
                      "usable, and subsequent interactions targeting that fabric will most likely fail." +
                      "\n" +
-                     "Upon receipt of Leave Event on a subscription, the receiving Node MAY update other nodes in the " +
+                     "Upon receipt of Leave Event on a subscription, the receiving Node may update other nodes in the " +
                      "fabric by removing related bindings, access control list entries and other data referencing the " +
                      "leaving Node.",
 
             xref: { document: "core", section: "11.1.6.3" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M",
                 constraint: "1 to 254",
                 details: "This field shall contain the local Fabric Index of the fabric which the node is about to leave.",
                 xref: { document: "core", section: "11.1.6.3.1" }
-            } ]
+            }]
         },
 
         {
@@ -300,11 +300,11 @@ Matter.children.push({
                      "\n" +
                      "Its main use case is in the derived Bridged Device Basic Information cluster.",
             xref: { document: "core", section: "11.1.6.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M",
                 details: "This field shall indicate the value of the Reachable attribute after it was changed.",
                 xref: { document: "core", section: "11.1.6.4.1" }
-            } ]
+            }]
         },
 
         {

@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -16,18 +16,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
- * Bit definitions for TlvOptions
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
- */
-export const OptionsBits = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFlag(1) };
-
-/**
  * The value of the PulseWidthModulation options attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
  */
-export const TlvOptions = TlvBitmap(TlvUInt8, OptionsBits);
+export const Options = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFlag(1) };
 
 /**
  * Input to the PulseWidthModulation moveToLevel command
@@ -42,7 +35,75 @@ export const TlvMoveToLevelRequest = TlvObject({
 });
 
 /**
- * The value of Move.moveMode
+ * The value of nameFor(model) {
+ *
+ * var _a;
+ *
+ * if (!(model instanceof ValueModel)) {
+ *
+ * return;
+ *
+ * }
+ *
+ * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
+ *
+ * let name = defining.name;
+ *
+ * // If there is a name collision, prefix the name with the parent's name
+ *
+ * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+ *
+ * name = `${defining.parent.name}${name}`;
+ *
+ * }
+ *
+ * // Specialize the name based on the model type
+ *
+ * if (defining instanceof CommandModel && defining.isRequest) {
+ *
+ * name += "Request";
+ *
+ * }
+ *
+ * if (defining instanceof EventModel) {
+ *
+ * name += "Event";
+ *
+ * }
+ *
+ * // For enums and bitmaps we create a TypeScript value object, for other
+ *
+ * // types we create a TLV definition
+ *
+ * if (defining.effectiveMetatype === Metatype.enum) {
+ *
+ * if (name.endsWith("Enum")) {
+ *
+ * // This seems a bit redundant
+ *
+ * name = name.substring(0, name.length - 4);
+ *
+ * }
+ *
+ * }
+ *
+ * else if (defining.effectiveMetatype !== Metatype.bitmap) {
+ *
+ * name = "Tlv" + name;
+ *
+ * }
+ *
+ * // We reserve the name "Type". Plus it's kind of ambiguous
+ *
+ * if (name == "Type") {
+ *
+ * name = `${this.cluster.name}Type`;
+ *
+ * }
+ *
+ * return name;
+ *
+ * }.moveMode
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2.1
  */
@@ -70,7 +131,7 @@ export const TlvMoveRequest = TlvObject({
      * attribute shall be used. However, if the Rate field is equal to null and the DefaultMoveRate attribute is not
      * supported, or if the Rate field is equal to null and the value of the DefaultMoveRate attribute is equal to
      * null, then the device SHOULD move as fast as it is able. If the device is not able to move at a variable rate,
-     * this field MAY be disregarded.
+     * this field may be disregarded.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2.2
      */
@@ -204,7 +265,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
          */
-        options: WritableAttribute(15, TlvOptions),
+        options: WritableAttribute(15, TlvBitmap(TlvUInt8, Options), { default: BitsFromPartial(Options, {}) }),
 
         /**
          * The OnOffTransitionTime attribute represents the time taken to move to or from the target level when On or
@@ -276,7 +337,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          * as the device is able. If the TransitionTime field is equal to null, the device SHOULD move as fast as it is
          * able.
          *
-         * If the device is not able to move at a variable rate, the TransitionTime field MAY be disregarded.
+         * If the device is not able to move at a variable rate, the TransitionTime field may be disregarded.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.3
          */

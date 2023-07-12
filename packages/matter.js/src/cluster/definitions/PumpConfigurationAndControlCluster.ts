@@ -8,22 +8,20 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, OptionalAttribute, Attribute, OptionalWritableAttribute, AccessLevel, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvBitmap, TlvEnum, TlvUInt24, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
- * Bit definitions for TlvPumpStatusBitmap
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1
  */
-export const PumpStatusBitmapBits = {
+export const PumpStatusBitmap = {
     /**
      * A fault related to the system or pump device is detected.
      *
-     * If this bit is set, it MAY correspond to an event in the range 2-16, see Events.
+     * If this bit is set, it may correspond to an event in the range 2-16, see Events.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.1
      */
@@ -32,7 +30,7 @@ export const PumpStatusBitmapBits = {
     /**
      * A fault related to the supply to the pump is detected.
      *
-     * If this bit is set, it MAY correspond to an event in the range 0-1 or 13, see Events.
+     * If this bit is set, it may correspond to an event in the range 0-1 or 13, see Events.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.2
      */
@@ -57,12 +55,12 @@ export const PumpStatusBitmapBits = {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.3
      */
-    localOverride: BitFlag(16),
+    localOverride: BitFlag(4),
 
     /**
      * Pump is currently running
      */
-    running: BitFlag(32),
+    running: BitFlag(5),
 
     /**
      * A remote pressure sensor is used as the sensor for the regulation of the pump.
@@ -72,7 +70,7 @@ export const PumpStatusBitmapBits = {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.4
      */
-    remotePressure: BitFlag(64),
+    remotePressure: BitFlag(6),
 
     /**
      * A remote flow sensor is used as the sensor for the regulation of the pump.
@@ -82,7 +80,7 @@ export const PumpStatusBitmapBits = {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.5
      */
-    remoteFlow: BitFlag(128),
+    remoteFlow: BitFlag(7),
 
     /**
      * A remote temperature sensor is used as the sensor for the regulation of the pump.
@@ -92,28 +90,36 @@ export const PumpStatusBitmapBits = {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.6
      */
-    remoteTemperature: BitFlag(256)
+    remoteTemperature: BitFlag(8)
 };
-
-/**
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1
- */
-export const TlvPumpStatusBitmap = TlvBitmap(TlvUInt16, PumpStatusBitmapBits);
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.2
  */
 export const enum OperationMode {
     /**
-     * If the pump is running in this operation mode the setpoint is an internal variable which MAY be controlled
+     * The pump is controlled by a setpoint, as defined by a connected remote sensor or by the ControlMode attribute.
+     *
+     * If the pump is running in this operation mode the setpoint is an internal variable which may be controlled
      * between 0% and 100%, e.g., by means of the Level Control cluster
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.2.1
      */
     Normal = 0,
 
+    /**
+     * This value sets the pump to run at the minimum possible speed it can without being stopped.
+     */
     Minimum = 1,
+
+    /**
+     * This value sets the pump to run at its maximum possible speed.
+     */
     Maximum = 2,
+
+    /**
+     * This value sets the pump to run with the local settings of the pump, regardless of what these are.
+     */
     Local = 3
 }
 
@@ -122,6 +128,8 @@ export const enum OperationMode {
  */
 export const enum ControlMode {
     /**
+     * The pump is running at a constant speed.
+     *
      * The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – MaxConstSpeed]
      * attributes.
      *
@@ -130,6 +138,8 @@ export const enum ControlMode {
     ConstantSpeed = 0,
 
     /**
+     * The pump will regulate its speed to maintain a constant differential pressure over its flanges.
+     *
      * The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. In case of
      * the internal pressure sensor, this will be the range derived from the [MinConstPressure – MaxConstPressure]
      * attributes. In case of a remote pressure sensor, this will be the range derived from the [MinMeasuredValue –
@@ -140,6 +150,8 @@ export const enum ControlMode {
     ConstantPressure = 1,
 
     /**
+     * The pump will regulate its speed to maintain a constant differential pressure over its flanges.
+     *
      * The setpoint is interpreted as a percentage of the range derived of the [MinCompPressure – MaxCompPressure]
      * attributes. The internal setpoint will be lowered (compensated) dependent on the flow in the pump (lower flow ⇒
      * lower internal setpoint).
@@ -149,6 +161,8 @@ export const enum ControlMode {
     ProportionalPressure = 2,
 
     /**
+     * The pump will regulate its speed to maintain a constant flow through the pump.
+     *
      * The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. In case of
      * the internal flow sensor, this will be the range derived from the [MinConstFlow – MaxConstFlow] attributes. In
      * case of a remote flow sensor, this will be the range derived from the [MinMeasuredValue – MaxMeasuredValue]
@@ -159,6 +173,8 @@ export const enum ControlMode {
     ConstantFlow = 3,
 
     /**
+     * The pump will regulate its speed to maintain a constant temperature.
+     *
      * The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. In case of
      * the internal temperature sensor, this will be the range derived from the [MinConstTemp – MaxConstTemp]
      * attributes. In case of a remote temperature sensor, this will be the range derived from the [MinMeasuredValue –
@@ -169,6 +185,9 @@ export const enum ControlMode {
     ConstantTemperature = 5,
 
     /**
+     * The operation of the pump is automatically optimized to provide the most suitable performance with respect to
+     * comfort and energy savings.
+     *
      * This behavior is manufacturer defined. The pump can be stopped by setting the setpoint of the level control
      * cluster to 0, or by using the On/Off cluster. If the pump is started (at any setpoint), the speed of the pump is
      * entirely determined by the pump.
@@ -332,7 +351,11 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.14
          */
-        pumpStatus: OptionalAttribute(16, TlvPumpStatusBitmap),
+        pumpStatus: OptionalAttribute(
+            16,
+            TlvBitmap(TlvUInt16, PumpStatusBitmap),
+            { default: BitsFromPartial(PumpStatusBitmap, {}) }
+        ),
 
         /**
          * This attribute specifies current effective operation mode of the pump as defined in OperationModeEnum.
@@ -471,7 +494,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          * If this attribute is Normal and no remote sensor is connected, the control mode of the pump is decided by
          * the ControlMode attribute.
          *
-         * OperationMode MAY be changed at any time, even when the pump is running. The behavior of the pump at the
+         * OperationMode may be changed at any time, even when the pump is running. The behavior of the pump at the
          * point of changing the value of this attribute is vendor-specific.
          *
          * In the case a device does not support a specific operation mode, the write interaction to this attribute
@@ -493,7 +516,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * pump.
          *
-         * ControlMode MAY be changed at any time, even when the pump is running. The behavior of the pump at the point
+         * ControlMode may be changed at any time, even when the pump is running. The behavior of the pump at the point
          * of changing is vendor-specific.
          *
          * In the case a device does not support a specific control mode, the write interaction to this attribute with

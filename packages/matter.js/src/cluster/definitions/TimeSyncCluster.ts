@@ -23,10 +23,35 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.1
  */
 export const enum Granularity {
+    /**
+     * This indicates that the server is not currently synchronized with a UTC Time source and its clock is based on
+     * the Last Known Good UTC Time only.
+     */
     NoTimeGranularity = 0,
+
+    /**
+     * This indicates the server was synchronized to an upstream source in the past, but sufficient clock drift has
+     * occurred such that the clock error is now > 5 seconds.
+     */
     MinutesGranularity = 1,
+
+    /**
+     * This indicates the server is synchronized to an upstream source using a low resolution protocol. UTC Time is
+     * accurate to ± 5 seconds.
+     */
     SecondsGranularity = 2,
+
+    /**
+     * This indicates the server is synchronized to an upstream source using high resolution time-synchronization
+     * protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is
+     * accurate to ± 50ms.
+     */
     MillisecondsGranularity = 3,
+
+    /**
+     * This indicates the server is synchronized to an upstream source using a highly precise time-synchronization
+     * protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs.
+     */
     MicrosecondsGranularity = 4
 }
 
@@ -274,7 +299,7 @@ export const TimeSyncBase = BaseClusterComponent({
          * If the server has achieved time synchronization, this shall indicate the current time as a UTC epoch-us
          * (Epoch Time in Microseconds).
          *
-         * If the server has not achieved time synchronization, this shall be null. This attribute MAY be set when a
+         * If the server has not achieved time synchronization, this shall be null. This attribute may be set when a
          * Section 11.16.9.1, “SetUtcTime Command” is received.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.1
@@ -291,7 +316,7 @@ export const TimeSyncBase = BaseClusterComponent({
 
         /**
          * The server’s time source. This attribute indicates what method the server is using to sync, whether the
-         * source uses NTS or not and whether the source is internal or external to the Fabric. This attribute MAY be
+         * source uses NTS or not and whether the source is internal or external to the Fabric. This attribute may be
          * used by a client to determine its level of trust in the UTCTime. It is of type TimeSourceEnum.
          *
          * If a server is unsure if the selected NTP server is within the Fabric, it SHOULD indicate the server is
@@ -303,10 +328,10 @@ export const TimeSyncBase = BaseClusterComponent({
 
         /**
          * The Node ID of a trusted Time Cluster. The TrustedTimeNodeId Node is used as a check on external time sync
-         * sources and MAY be used as the primary time source if other time sources are unavailable. See Section
+         * sources and may be used as the primary time source if other time sources are unavailable. See Section
          * 11.16.13, “Time source prioritization”. This attribute is writeable only by an Administrator. It SHOULD be
          * set by the Commissioner during commissioning. If no appropriate TrustedTimeNodeId is available, the
-         * commissioner MAY set this value to null.
+         * commissioner may set this value to null.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.5
          */
@@ -315,10 +340,10 @@ export const TimeSyncBase = BaseClusterComponent({
 
     commands: {
         /**
-         * This command MAY be issued by Administrator to set the time. If the Commissioner does not have a valid time
-         * source, it MAY send a Granularity of NoTimeGranularity.
+         * This command may be issued by Administrator to set the time. If the Commissioner does not have a valid time
+         * source, it may send a Granularity of NoTimeGranularity.
          *
-         * Upon receipt of this command, the server MAY update its UTCTime attribute to match the time specified in the
+         * Upon receipt of this command, the server may update its UTCTime attribute to match the time specified in the
          * command, if the stated Granularity and TimeSource are acceptable. The server shall update its UTCTime
          * attribute if its current Granularity is NoTimeGranularity.
          *
@@ -347,7 +372,7 @@ export const NtpClientComponent = ClusterComponent({
          * contain a domain name or a static IPv6 address in text format as specified in RFC 5952
          * [https://tools.ietf.org/html/rfc5952]. See Section 11.16.13, “Time source prioritization”. This attribute is
          * writeable only by an Administrator. It SHOULD be set by the Commissioner during commissioning. If no default
-         * NTP is available, the Commissioner MAY set this value to null.
+         * NTP is available, the Commissioner may set this value to null.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.4
          */
@@ -373,9 +398,9 @@ export const TimeZoneComponent = ClusterComponent({
          * The first entry shall have a ValidAt entry of 0. If there is a second entry, it shall have a non-zero
          * ValidAt time.
          *
-         * If a server supports a TimeZoneDatabase, the server MAY update its own DSTOffset list (Section 11.16.8.7,
+         * If a server supports a TimeZoneDatabase, the server may update its own DSTOffset list (Section 11.16.8.7,
          * “DSTOffset Attribute”) to add new DST change times as required, based on the Name fields of the
-         * TimeZoneStruct. Administrators MAY add additional entries to the DSTOffset of other Nodes with the same time
+         * TimeZoneStruct. Administrators may add additional entries to the DSTOffset of other Nodes with the same time
          * zone, if required.
          *
          * If a server does not support a TimeZoneDatabase, the Name field of the TimeZoneStruct is only applicable for
@@ -406,13 +431,13 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * Upon writing this attribute, the server shall recompute its LocalTime.
          *
-         * This list MAY hold up to 20 entries. If a server does not have sufficient storage for 20 entries, it MAY
+         * This list may hold up to 20 entries. If a server does not have sufficient storage for 20 entries, it may
          * truncate the list by removing entries with the largest ValidStarting times. The server shall reserve
          * sufficient storage for at least one entry.
          *
          * Over time, the server SHOULD remove any entries which are no longer active from the list.
          *
-         * Over time, if the server supports a TimeZoneDatabase, it MAY update its own list to add additional entries.
+         * Over time, if the server supports a TimeZoneDatabase, it may update its own list to add additional entries.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.7
          */
@@ -430,8 +455,8 @@ export const TimeZoneComponent = ClusterComponent({
         localTime: Attribute(7, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 }),
 
         /**
-         * Indicates whether the server has access to a time zone database. Nodes with a time zone database MAY update
-         * their own DSTOffset attribute to add new entries and MAY push DSTOffset updates to other Nodes in the same
+         * Indicates whether the server has access to a time zone database. Nodes with a time zone database may update
+         * their own DSTOffset attribute to add new entries and may push DSTOffset updates to other Nodes in the same
          * time zone as required.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.9

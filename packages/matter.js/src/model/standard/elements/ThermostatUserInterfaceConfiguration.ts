@@ -81,10 +81,10 @@ Matter.children.push({
 
             details: "The ScheduleProgrammingVisibility attribute is used to hide the weekly schedule programming " +
                      "functionality or menu on a thermostat from a user to prevent local user programming of the weekly " +
-                     "schedule. The schedule programming MAY still be performed via a remote interface, and the " +
-                     "thermostat MAY operate in schedule programming mode." +
+                     "schedule. The schedule programming may still be performed via a remote interface, and the " +
+                     "thermostat may operate in schedule programming mode." +
                      "\n" +
-                     "This attribute is designed to prevent local tampering with or disabling of schedules that MAY have " +
+                     "This attribute is designed to prevent local tampering with or disabling of schedules that may have " +
                      "been programmed by users or service providers via a more capable remote interface. The programming " +
                      "schedule shall continue to run even though it is not visible to the user locally at the thermostat." +
                      "\n" +

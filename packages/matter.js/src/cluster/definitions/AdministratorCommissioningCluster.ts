@@ -21,8 +21,19 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.18.5.1
  */
 export const enum CommissioningWindowStatus {
+    /**
+     * Commissioning window not open
+     */
     WindowNotOpen = 0,
+
+    /**
+     * An Enhanced Commissioning Method window is open
+     */
     EnhancedWindowOpen = 1,
+
+    /**
+     * A Basic Commissioning Method window is open
+     */
     BasicWindowOpen = 2
 }
 
@@ -93,7 +104,7 @@ export const AdministratorCommissioningBase = BaseClusterComponent({
 
         /**
          * When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the FabricIndex
-         * associated with the Fabric scoping of the Administrator that opened the window. This MAY be used to
+         * associated with the Fabric scoping of the Administrator that opened the window. This may be used to
          * cross-reference in the Fabrics attribute of the Node Operational Credentials cluster.
          *
          * If, during an open commissioning window, the fabric for the Administrator that opened the window is removed,

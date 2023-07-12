@@ -166,8 +166,8 @@ Matter.children.push({
 
             xref: { document: "cluster", section: "1.6.5.8" },
             children: [
-                { tag: "datatype", name: "ExecuteIfOff", id: 0x0 },
-                { tag: "datatype", name: "CoupleColorTempToLevel", id: 0x1 }
+                { tag: "datatype", name: "ExecuteIfOff", constraint: "0" },
+                { tag: "datatype", name: "CoupleColorTempToLevel", constraint: "1" }
             ]
         },
 
@@ -226,7 +226,7 @@ Matter.children.push({
                              "value in DefaultMoveRate attribute shall be used. However, if the Rate field is equal to null and " +
                              "the DefaultMoveRate attribute is not supported, or if the Rate field is equal to null and the value " +
                              "of the DefaultMoveRate attribute is equal to null, then the device SHOULD move as fast as it is " +
-                             "able. If the device is not able to move at a variable rate, this field MAY be disregarded.",
+                             "able. If the device is not able to move at a variable rate, this field may be disregarded.",
 
                     xref: { document: "cluster", section: "1.6.6.2.2" }
                 },
@@ -253,7 +253,7 @@ Matter.children.push({
                      "as close to this as the device is able. If the TransitionTime field is equal to null, the device " +
                      "SHOULD move as fast as it is able." +
                      "\n" +
-                     "If the device is not able to move at a variable rate, the TransitionTime field MAY be disregarded.",
+                     "If the device is not able to move at a variable rate, the TransitionTime field may be disregarded.",
 
             xref: { document: "cluster", section: "1.6.6.3" },
 
@@ -343,14 +343,14 @@ Matter.children.push({
             tag: "command", name: "MoveToClosestFrequency", id: 0x8, access: "O", conformance: "FQ",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "1.6.6.5" },
-            children: [ { tag: "datatype", name: "Frequency", id: 0x0, type: "uint16", conformance: "M", default: 0 } ]
+            children: [{ tag: "datatype", name: "Frequency", id: 0x0, type: "uint16", conformance: "M", default: 0 }]
         },
 
         {
             tag: "datatype", name: "LevelControlOptions", type: "map8", conformance: "M",
             children: [
-                { tag: "datatype", name: "ExecuteIfOff", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "CoupleColorTempToLevel", id: 0x2, conformance: "M" }
+                { tag: "datatype", name: "ExecuteIfOff", constraint: "0" },
+                { tag: "datatype", name: "CoupleColorTempToLevel", constraint: "1" }
             ]
         },
 

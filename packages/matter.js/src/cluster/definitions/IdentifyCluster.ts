@@ -57,7 +57,75 @@ export const enum IdentifyType {
 export const TlvIdentifyRequest = TlvObject({ identifyTime: TlvField(0, TlvUInt16) });
 
 /**
- * The value of TriggerEffect.effectIdentifier
+ * The value of nameFor(model) {
+ *
+ * var _a;
+ *
+ * if (!(model instanceof ValueModel)) {
+ *
+ * return;
+ *
+ * }
+ *
+ * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
+ *
+ * let name = defining.name;
+ *
+ * // If there is a name collision, prefix the name with the parent's name
+ *
+ * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+ *
+ * name = `${defining.parent.name}${name}`;
+ *
+ * }
+ *
+ * // Specialize the name based on the model type
+ *
+ * if (defining instanceof CommandModel && defining.isRequest) {
+ *
+ * name += "Request";
+ *
+ * }
+ *
+ * if (defining instanceof EventModel) {
+ *
+ * name += "Event";
+ *
+ * }
+ *
+ * // For enums and bitmaps we create a TypeScript value object, for other
+ *
+ * // types we create a TLV definition
+ *
+ * if (defining.effectiveMetatype === Metatype.enum) {
+ *
+ * if (name.endsWith("Enum")) {
+ *
+ * // This seems a bit redundant
+ *
+ * name = name.substring(0, name.length - 4);
+ *
+ * }
+ *
+ * }
+ *
+ * else if (defining.effectiveMetatype !== Metatype.bitmap) {
+ *
+ * name = "Tlv" + name;
+ *
+ * }
+ *
+ * // We reserve the name "Type". Plus it's kind of ambiguous
+ *
+ * if (name == "Type") {
+ *
+ * name = `${this.cluster.name}Type`;
+ *
+ * }
+ *
+ * return name;
+ *
+ * }.effectIdentifier
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.1
  */
@@ -96,7 +164,75 @@ export const enum EffectIdentifier {
 }
 
 /**
- * The value of TriggerEffect.effectVariant
+ * The value of nameFor(model) {
+ *
+ * var _a;
+ *
+ * if (!(model instanceof ValueModel)) {
+ *
+ * return;
+ *
+ * }
+ *
+ * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
+ *
+ * let name = defining.name;
+ *
+ * // If there is a name collision, prefix the name with the parent's name
+ *
+ * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+ *
+ * name = `${defining.parent.name}${name}`;
+ *
+ * }
+ *
+ * // Specialize the name based on the model type
+ *
+ * if (defining instanceof CommandModel && defining.isRequest) {
+ *
+ * name += "Request";
+ *
+ * }
+ *
+ * if (defining instanceof EventModel) {
+ *
+ * name += "Event";
+ *
+ * }
+ *
+ * // For enums and bitmaps we create a TypeScript value object, for other
+ *
+ * // types we create a TLV definition
+ *
+ * if (defining.effectiveMetatype === Metatype.enum) {
+ *
+ * if (name.endsWith("Enum")) {
+ *
+ * // This seems a bit redundant
+ *
+ * name = name.substring(0, name.length - 4);
+ *
+ * }
+ *
+ * }
+ *
+ * else if (defining.effectiveMetatype !== Metatype.bitmap) {
+ *
+ * name = "Tlv" + name;
+ *
+ * }
+ *
+ * // We reserve the name "Type". Plus it's kind of ambiguous
+ *
+ * if (name == "Type") {
+ *
+ * name = `${this.cluster.name}Type`;
+ *
+ * }
+ *
+ * return name;
+ *
+ * }.effectVariant
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.2
  */
@@ -112,7 +248,7 @@ export const enum EffectVariant {
 export const TlvTriggerEffectRequest = TlvObject({
     /**
      * This field specifies the identify effect to use. All values of the EffectIdentifier shall be supported.
-     * Implementors MAY deviate from the example light effects in the table below, but they SHOULD indicate during
+     * Implementors may deviate from the example light effects in the table below, but they SHOULD indicate during
      * testing how they handle each effect.
      *
      * This field shall contain one of the non-reserved values listed below.
@@ -254,7 +390,7 @@ export const QueryComponent = ClusterComponent({
  * (e.g., an installer) which of several nodes and/or endpoints it is. It also supports a multicast request that any
  * endpoint that is identifying itself to respond to the initiator.
  *
- * The state of this cluster MAY be shared on more than one endpoint on a node.
+ * The state of this cluster may be shared on more than one endpoint on a node.
  *
  * For Example: Two endpoints on a single node, one a temperature sensor, and one a humidity sensor, may both share the
  * same cluster instance and therefore identification state (e.g. single LED on the node).

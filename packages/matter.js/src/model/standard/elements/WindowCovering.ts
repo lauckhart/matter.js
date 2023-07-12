@@ -118,8 +118,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ConfigStatus", id: 0x7, type: "map8", access: "R V", conformance: "M",
-            constraint: "desc", default: { type: "flags", flags: [ "Operational", "OnlineReserved" ] },
-            quality: "N",
+            constraint: "desc", default: 3, quality: "N",
             details: "The ConfigStatus attribute makes configuration and status information available. To change " +
                      "settings, devices shall write to the Mode attribute of the Window Covering Settings Attribute Set. " +
                      "The behavior causing the setting or clearing of each bit is vendor specific. See table below for " +
@@ -127,13 +126,31 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.3.5.8" },
 
             children: [
-                { tag: "datatype", name: "Operational", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "OnlineReserved", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "LiftMovementReversed", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "LiftPositionAware", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "TiltPositionAware", id: 0x10, conformance: "M" },
-                { tag: "datatype", name: "LiftEncoderControlled", id: 0x20, conformance: "M" },
-                { tag: "datatype", name: "TiltEncoderControlled", id: 0x40, conformance: "M" }
+                {
+                    tag: "datatype", name: "Operational", constraint: "0",
+                    description: "Operational: This status bit defines if the Window Covering is operational.The SafetyStatus & Mode attributes might affect this bit"
+                },
+                { tag: "datatype", name: "OnlineReserved", constraint: "1", description: "deprecated" },
+                {
+                    tag: "datatype", name: "LiftMovementReversed", constraint: "2",
+                    description: "Reversal: This status bit identifies if the directions of the lift/slide movements have been reversed in order for commands (e.g: Open, Close, GoTos) to match the physical installation conditionsThis bit can be adjusted by setting the appropriate reversal bit value in the Mode attribute"
+                },
+                {
+                    tag: "datatype", name: "LiftPositionAware", constraint: "3",
+                    description: "Control - Lift: This status bit identifies if the window covering supports the Position Aware Lift Control"
+                },
+                {
+                    tag: "datatype", name: "TiltPositionAware", constraint: "4",
+                    description: "Control - Tilt: This status bit identifies if the window covering supports the Position Aware Tilt Control"
+                },
+                {
+                    tag: "datatype", name: "LiftEncoderControlled", constraint: "5",
+                    description: "Encoder - Lift: This status bit identifies if a Position Aware Controlled Window Covering is employing an encoder for positioning the height of the window covering."
+                },
+                {
+                    tag: "datatype", name: "TiltEncoderControlled", constraint: "6",
+                    description: "Encoder - Tilt: This status bit identifies if a Position Aware Controlled Window Covering is employing an encoder for tilting the window covering."
+                }
             ]
         },
 
@@ -161,10 +178,20 @@ Matter.children.push({
             details: "The OperationalStatus attribute keeps track of currently ongoing operations and applies to all type " +
                      "of devices. See below for details about the meaning of individual bits.",
             xref: { document: "cluster", section: "5.3.5.15" },
+
             children: [
-                { tag: "datatype", name: "Global", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Lift", id: 0xc, conformance: "M" },
-                { tag: "datatype", name: "Tilt", id: 0x30, conformance: "M" }
+                {
+                    tag: "datatype", name: "Global", type: "MovementStatus", constraint: "0 to 2",
+                    description: "Movement status of the cover"
+                },
+                {
+                    tag: "datatype", name: "Lift", type: "MovementStatus", constraint: "2 to 4",
+                    description: "Movement status of the cover's lift function"
+                },
+                {
+                    tag: "datatype", name: "Tilt", type: "MovementStatus", constraint: "4 to 6",
+                    description: "Movement status of the cover's tilt function"
+                }
             ]
         },
 
@@ -298,10 +325,19 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.3.5.21" },
 
             children: [
-                { tag: "datatype", name: "MotorDirectionReversed", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "CalibrationMode", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "MaintenanceMode", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "LedFeedback", id: 0x8, conformance: "M" }
+                { tag: "datatype", name: "Bit0", constraint: "0", description: "Disables (0) or Enables (1) Lift reversal" },
+                {
+                    tag: "datatype", name: "Bit1", constraint: "1",
+                    description: "Disabled (0) or Enabled (1) placing the Window Covering into calibration Mode where limits are either setup using tools or learned by the Window Covering by doing self-calibration.If in calibration mode, all commands (e.g: UpOrOpen, DownOrClose, GoTos) that can result in movement, could be accepted and result in a self-calibration being initiated before the command is executed. In case the Window Covering does not have the ability or is not able to perform a self-calibration, the command SHOULD be ignored and a FAILURE status SHOULD be returned.In a write interaction, setting this bit to 0, while the device is in calibration mode, is not allowed and SHALL generate a FAILURE error status. In order to leave calibration mode, the device must perform its calibration routine, either as a self- calibration or assisted by external tool(s), depending on the device/manufacturer implementation.A manufacturer might choose to set the operational bit to its not operational value, if applicable during calibration mode"
+                },
+                {
+                    tag: "datatype", name: "Bit2", constraint: "2",
+                    description: "Disables (0) or Enables (1) placing the Window Covering into Maintenance Mode where it cannot be moved over the network or by a switch connected to a Local Switch Input.While in maintenance mode, all commands (e.g: UpOrOpen, DownOrClose, GoTos) that can result in movement, must be ignored and respond with a BUSY status. Additionally, the operational bit of the ConfigStatus attribute should be set to its not operational value."
+                },
+                {
+                    tag: "datatype", name: "Bit3", constraint: "3",
+                    description: "Disables (0) or Enables (1) the display of any feedback LEDs resident especially on the packaging of an endpoint where they may cause distraction to the occupant."
+                }
             ]
         },
 
@@ -325,49 +361,50 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "TamperDetection", id: 0x1, conformance: "M",
+                    tag: "datatype", name: "RemoteLockout", constraint: "0",
+                    description: "Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range."
+                },
+                {
+                    tag: "datatype", name: "TamperDetection", constraint: "1",
                     description: "Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its actuator(s)."
                 },
                 {
-                    tag: "datatype", name: "FailedCommunication", id: 0x2, conformance: "M",
+                    tag: "datatype", name: "FailedCommunication", constraint: "2",
                     description: "Communication failure to sensors or other safety equipment."
                 },
                 {
-                    tag: "datatype", name: "PositionFailure", id: 0x3,
+                    tag: "datatype", name: "PositionFailure", constraint: "3",
                     description: "Device has failed to reach the desired position. e.g. with Position Aware device, time expired before TargetPosition is reached."
                 },
                 {
-                    tag: "datatype", name: "ThermalProtection", id: 0x10, conformance: "M",
+                    tag: "datatype", name: "ThermalProtection", constraint: "4",
                     description: "Motor(s) and/or electric circuit thermal protection activated."
                 },
                 {
-                    tag: "datatype", name: "ObstacleDetected", id: 0x20, conformance: "M",
+                    tag: "datatype", name: "ObstacleDetected", constraint: "5",
                     description: "An obstacle is preventing actuator movement."
                 },
                 {
-                    tag: "datatype", name: "Power", id: 0x40, conformance: "M",
+                    tag: "datatype", name: "Power", constraint: "6",
                     description: "Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power might not be fully available at the moment."
                 },
                 {
-                    tag: "datatype", name: "StopInput", id: 0x80, conformance: "M",
+                    tag: "datatype", name: "StopInput", constraint: "7",
                     description: "Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335)."
                 },
                 {
-                    tag: "datatype", name: "MotorJammed", id: 0x100, conformance: "M",
+                    tag: "datatype", name: "MotorJammed", constraint: "8",
                     description: "Mechanical problem related to the motor(s) detected."
                 },
                 {
-                    tag: "datatype", name: "HardwareFailure", id: 0x200, conformance: "M",
+                    tag: "datatype", name: "HardwareFailure", constraint: "9",
                     description: "PCB, fuse and other electrics problems."
                 },
                 {
-                    tag: "datatype", name: "ManualOperation", id: 0x400, conformance: "M",
+                    tag: "datatype", name: "ManualOperation", constraint: "10",
                     description: "Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled)."
                 },
-                {
-                    tag: "datatype", name: "Protection", id: 0x800, conformance: "M",
-                    description: "Protection is activated."
-                }
+                { tag: "datatype", name: "Protection", constraint: "11", description: "Protection is activated." }
             ]
         },
 
@@ -556,6 +593,16 @@ Matter.children.push({
                     tag: "datatype", name: "TiltPercent100ThsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
                     constraint: "desc"
                 }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "MovementStatus", type: "enum8",
+            details: "These are the legal value for fields of the OperationalStatus attribute.",
+            children: [
+                { tag: "datatype", name: "Stopped", id: 0x0, details: "Covering is not moving" },
+                { tag: "datatype", name: "Opening", id: 0x1, details: "Covering is moving from closed to open" },
+                { tag: "datatype", name: "Closing", id: 0x2, details: "Covering is moving from open to closed" }
             ]
         }
     ]

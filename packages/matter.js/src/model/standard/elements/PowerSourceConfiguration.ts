@@ -16,7 +16,7 @@ Matter.children.push({
              "Power Source cluster.",
     xref: { document: "core", section: "11.6" },
 
-    children: [ {
+    children: [{
         tag: "attribute", name: "Sources", id: 0x0, type: "list", access: "R V", conformance: "M",
         constraint: "max 6", quality: "N",
 
@@ -28,9 +28,9 @@ Matter.children.push({
                  "The order of power sources on a Node is defined by the Order attribute of its associated Power " +
                  "Source cluster provided on the endpoint. List entries shall be sorted in increasing order, that is, " +
                  "an entry with a lower order shall have a lower index than any entry with a higher order. Multiple " +
-                 "entries MAY have the same order, there are no restrictions on their relative sorting.",
+                 "entries may have the same order, there are no restrictions on their relative sorting.",
 
         xref: { document: "core", section: "11.6.4.1" },
-        children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
-    } ]
+        children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
+    }]
 });

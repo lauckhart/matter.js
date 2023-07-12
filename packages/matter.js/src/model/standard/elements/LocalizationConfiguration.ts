@@ -45,7 +45,7 @@ Matter.children.push({
                      "the ActiveLocale attribute. The list shall NOT contain any duplicate entries. The ordering of items " +
                      "within the list SHOULD NOT express any meaning.",
             xref: { document: "core", section: "11.3.4.2" },
-            children: [ { tag: "datatype", name: "entry", type: "string" } ]
+            children: [{ tag: "datatype", name: "entry", type: "string" }]
         }
     ]
 });

@@ -40,9 +40,8 @@ Matter.children.push({
                      "set to 0.",
             xref: { document: "cluster", section: "3.3.6.3" },
             children: [
-                { tag: "datatype", name: "BallastNonOperational", id: 0x0 },
-                { tag: "datatype", name: "LampFailure", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "LampNotInSocket", id: 0x2, conformance: "M" }
+                { tag: "datatype", name: "BallastNonOperational", constraint: "0" },
+                { tag: "datatype", name: "LampFailure", constraint: "1" }
             ]
         },
 
@@ -172,22 +171,22 @@ Matter.children.push({
         {
             tag: "attribute", name: "LampAlarmMode", id: 0x34, type: "map8", access: "RW VM", conformance: "O",
             default: 0,
-            details: "The LampAlarmMode attribute specifies which attributes MAY cause an alarm notification to be " +
+            details: "The LampAlarmMode attribute specifies which attributes may cause an alarm notification to be " +
                      "generated, as listed in Values of the LampAlarmMode Attribute. A ‘1’ in each bit position causes " +
                      "its associated attribute to be able to generate an alarm. (Note: All alarms are also logged in the " +
                      "alarm table – see Alarms cluster).",
             xref: { document: "cluster", section: "3.3.9.5" },
-            children: [ { tag: "datatype", name: "LampBurnHours", id: 0x1, conformance: "M" } ]
+            children: [{ tag: "datatype", name: "LampBurnHours", constraint: "0" }]
         },
 
         {
             tag: "attribute", name: "LampBurnHoursTripPoint", id: 0x35, type: "uint24", access: "RW VM",
             conformance: "O", default: 0, quality: "X",
 
-            details: "The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute MAY " +
+            details: "The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute may " +
                      "reach before an alarm is generated." +
                      "\n" +
-                     "If the Alarms cluster is not present on the same device this attribute is not used and thus MAY be " +
+                     "If the Alarms cluster is not present on the same device this attribute is not used and thus may be " +
                      "omitted (see Dependencies)." +
                      "\n" +
                      "The Alarm Code field included in the generated alarm shall be 0x01." +

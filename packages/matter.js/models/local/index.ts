@@ -9,3 +9,4 @@
 // then only fields present will override
 
 import "./ColorControlOverrides.ts";
+import "./WindowCoveringOverrides.ts";

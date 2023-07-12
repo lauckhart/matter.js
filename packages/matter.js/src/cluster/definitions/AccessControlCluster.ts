@@ -27,10 +27,19 @@ import { TlvNodeId } from "../../datatype/NodeId.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2
  */
 export const enum AccessControlEntryPrivilege {
+    /**
+     * Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)
+     */
     View = 1,
+
+    /**
+     * Can read and observe all (as seen by a Proxy)
+     */
     ProxyView = 2,
 
     /**
+     * View privileges, and can perform the primary function of this Node (except Access Control Cluster)
+     *
      * This value implicitly grants View privileges
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2.1
@@ -38,6 +47,8 @@ export const enum AccessControlEntryPrivilege {
     Operate = 3,
 
     /**
+     * Operate privileges, and can modify persistent configuration of this Node (except Access Control Cluster)
+     *
      * This value implicitly grants Operate & View privileges
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2.2
@@ -45,6 +56,8 @@ export const enum AccessControlEntryPrivilege {
     Manage = 4,
 
     /**
+     * Manage privileges, and can observe and modify the Access Control Cluster
+     *
      * This value implicitly grants Manage, Operate, Proxy View & View privileges
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.2.3
@@ -56,8 +69,19 @@ export const enum AccessControlEntryPrivilege {
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.3
  */
 export const enum AccessControlEntryAuthMode {
+    /**
+     * Passcode authenticated session
+     */
     Pase = 1,
+
+    /**
+     * Certificate authenticated session
+     */
     Case = 2,
+
+    /**
+     * Group authenticated session
+     */
     Group = 3
 }
 
@@ -91,7 +115,7 @@ export const TlvAccessControlEntryStruct = TlvObject({
      *
      * Individual clusters shall define whether attributes are readable, writable, or both readable and writable.
      * Clusters also shall define which privilege is minimally required to be able to perform a particular read or
-     * write action on those attributes, or invoke particular commands. Device type specifications MAY further restrict
+     * write action on those attributes, or invoke particular commands. Device type specifications may further restrict
      * the privilege required.
      *
      * The Access Control Cluster shall require the Administer privilege to observe and modify the Access Control
@@ -112,7 +136,7 @@ export const TlvAccessControlEntryStruct = TlvObject({
     /**
      * The subjects field shall specify a list of Subject IDs, to which this Access Control Entry grants access.
      *
-     * Device types MAY impose additional constraints on the minimum number of subjects per Access Control Entry.
+     * Device types may impose additional constraints on the minimum number of subjects per Access Control Entry.
      *
      * An attempt to create an entry with more subjects than the node can support shall result in a RESOURCE_EXHAUSTED
      * error and the entry shall NOT be created.
@@ -149,7 +173,7 @@ export const TlvAccessControlEntryStruct = TlvObject({
      * The targets field shall specify a list of AccessControlTargetStruct, which define the clusters on this Node to
      * which this Access Control Entry grants access.
      *
-     * Device types MAY impose additional constraints on the minimum number of targets per Access Control Entry.
+     * Device types may impose additional constraints on the minimum number of targets per Access Control Entry.
      *
      * An attempt to create an entry with more targets than the node can support shall result in a RESOURCE_EXHAUSTED
      * error and the entry shall NOT be created.
@@ -174,15 +198,15 @@ export const TlvAccessControlEntryStruct = TlvObject({
  */
 export const TlvAccessControlExtensionStruct = TlvObject({
     /**
-     * This field MAY be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s
+     * This field may be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s
      *
      * Access Control Entries.
      *
      * The contents shall consist of a top-level anonymous list; each list element shall include a profile-specific tag
      * encoded in fully-qualified form.
      *
-     * Administrators MAY iterate over this list of elements, and interpret selected elements at their discretion. The
-     * content of each element is not specified, but MAY be coordinated among manufacturers at their discretion.
+     * Administrators may iterate over this list of elements, and interpret selected elements at their discretion. The
+     * content of each element is not specified, but may be coordinated among manufacturers at their discretion.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.6.1
      */
@@ -193,8 +217,19 @@ export const TlvAccessControlExtensionStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 9.10.4.1
  */
 export const enum ChangeType {
+    /**
+     * Entry or extension was changed
+     */
     Changed = 0,
+
+    /**
+     * Entry or extension was added
+     */
     Added = 1,
+
+    /**
+     * Entry or extension was removed
+     */
     Removed = 2
 }
 
@@ -297,7 +332,7 @@ export const AccessControlCluster = Cluster({
         ),
 
         /**
-         * If present, the Access Control Extensions MAY be used by Administrators to store arbitrary data related to
+         * If present, the Access Control Extensions may be used by Administrators to store arbitrary data related to
          * fabric’s Access Control Entries.
          *
          * The Access Control Extension list shall support a single extension entry per supported fabric.

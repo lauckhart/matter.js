@@ -19,6 +19,7 @@ import { Aspect } from "./Aspect.js";
  */
 export class Constraint extends Aspect<Constraint.Definition> implements Constraint.Ast {
     desc?: boolean;
+    value?: FieldValue;
     min?: FieldValue;
     max?: FieldValue;
     entry?: Constraint;
@@ -38,7 +39,7 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
                 break;
 
             case "number":
-                ast = { min: definition, max: definition };
+                ast = { value: definition };
                 break;
 
             default:
@@ -46,6 +47,37 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
         }
 
         Object.assign(this, ast);
+    }
+
+    /**
+     * Test a value against a constraint.
+     */
+    test(value: FieldValue) {
+        if (value === undefined) {
+            return false;
+        }
+
+        if (this.value === value) {
+            return true;
+        }
+        
+        if (this.value !== undefined || value === null) {
+            return false;
+        }
+
+        if (this.min !== undefined && this.min !== null) {
+            if (typeof this.min !== typeof value || this.min > value) {
+                return false;
+            }
+        }
+
+        if (this.max !== undefined && this.max !== null) {
+            if (typeof this.max !== typeof value || this.max <= value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     override toString() {
@@ -65,6 +97,11 @@ export namespace Constraint {
          * automatically.
          */
         desc?: boolean,
+
+        /**
+         * Constant value.
+         */
+        value?: FieldValue;
 
         /**
          * Lower bound on value or sequence length.
@@ -124,7 +161,7 @@ export namespace Constraint {
                 if (value === undefined || value === null) {
                     return;
                 }
-                return { min: value, max: value };
+                return { value };
 
             case 2:
                 switch (words[0].toLowerCase()) {
@@ -292,11 +329,11 @@ export namespace Constraint {
             return "desc";
         }
 
-        if (ast.min !== undefined && ast.min !== null) {
+        if (ast.value !== undefined && ast.value !== null) {
+            return `${FieldValue.serialize(ast.value)}`;
+        } else if (ast.min !== undefined && ast.min !== null) {
             if (ast.max === undefined || ast.max === null) {
                 return `min ${FieldValue.serialize(ast.min)}`;
-            } else if (ast.min === ast.max) {
-                return `${FieldValue.serialize(ast.min)}`;
             }
             return `${FieldValue.serialize(ast.min)} to ${FieldValue.serialize(ast.max)}`;
         } else if (ast.max !== undefined && ast.max !== null) {

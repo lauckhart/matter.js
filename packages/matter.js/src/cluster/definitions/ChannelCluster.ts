@@ -19,7 +19,7 @@ import { TlvArray } from "../../tlv/TlvArray.js";
 /**
  * This indicates a channel in a channel lineup.
  *
- * While the major and minor numbers in the ChannelInfoStruct support use of ATSC channel format, a lineup MAY use
+ * While the major and minor numbers in the ChannelInfoStruct support use of ATSC channel format, a lineup may use
  * other formats which can map into these numeric values.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.5.1

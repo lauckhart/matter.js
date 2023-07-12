@@ -67,12 +67,12 @@ export const TlvModeOptionStruct = TlvObject({
     mode: TlvField(1, TlvUInt8),
 
     /**
-     * This field is a list of semantic tags that map to the mode option. This MAY be used by clients to determine the
+     * This field is a list of semantic tags that map to the mode option. This may be used by clients to determine the
      * meaning of the mode option as defined in a standard or manufacturer specific namespace. Semantic tags can help
      * clients look for options that meet certain criteria. A semantic tag shall be either a standard tag or
      * manufacturer specific tag as defined in each SemanticTagStruct list entry.
      *
-     * A mode option MAY have more than one semantic tag. A mode option MAY be mapped to a mixture of standard and
+     * A mode option may have more than one semantic tag. A mode option may be mapped to a mixture of standard and
      * manufacturer specific semantic tags.
      *
      * All standard semantic tags are from a single namespace indicated by the StandardNamespace attribute.

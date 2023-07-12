@@ -15,7 +15,7 @@ Matter.children.push({
              "an observer (e.g., an installer) which of several nodes and/or endpoints it is. It also supports a " +
              "multicast request that any endpoint that is identifying itself to respond to the initiator." +
              "\n" +
-             "The state of this cluster MAY be shared on more than one endpoint on a node." +
+             "The state of this cluster may be shared on more than one endpoint on a node." +
              "\n" +
              "For Example: Two endpoints on a single node, one a temperature sensor, and one a humidity sensor, " +
              "may both share the same cluster instance and therefore identification state (e.g. single LED on the " +
@@ -30,10 +30,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.2.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "QRY", id: 0x0, description: "Query",
                 details: "Multicast query for identification state"
-            } ]
+            }]
         },
 
         {
@@ -84,7 +84,7 @@ Matter.children.push({
             response: "status",
             details: "This command starts or stops the receiving device identifying itself.",
             xref: { document: "cluster", section: "1.2.6.1" },
-            children: [ { tag: "datatype", name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" }]
         },
 
         {
@@ -116,7 +116,7 @@ Matter.children.push({
                     constraint: "desc",
 
                     details: "This field specifies the identify effect to use. All values of the EffectIdentifier shall be " +
-                             "supported. Implementors MAY deviate from the example light effects in the table below, but they " +
+                             "supported. Implementors may deviate from the example light effects in the table below, but they " +
                              "SHOULD indicate during testing how they handle each effect." +
                              "\n" +
                              "This field shall contain one of the non-reserved values listed below." +
@@ -162,7 +162,7 @@ Matter.children.push({
                              "\n" +
                              "Table 4. Values of the EffectVariant Field of the TriggerEffect Command",
                     xref: { document: "cluster", section: "1.2.6.3.2" },
-                    children: [ { tag: "datatype", name: "Default", id: 0x0, conformance: "M" } ]
+                    children: [{ tag: "datatype", name: "Default", id: 0x0, conformance: "M" }]
                 }
             ]
         },
@@ -173,12 +173,12 @@ Matter.children.push({
                      "Command, in the case that the device is currently identifying itself.",
             xref: { document: "cluster", section: "1.2.6.4" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Timeout", id: 0x0, type: "uint16", conformance: "M",
                 details: "This field contains the current value of the IdentifyTime attribute, and specifies the length of " +
                          "time, in seconds, that the device will continue to identify itself.",
                 xref: { document: "cluster", section: "1.2.6.4.1" }
-            } ]
+            }]
         }
     ]
 });

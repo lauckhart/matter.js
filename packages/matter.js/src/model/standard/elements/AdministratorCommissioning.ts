@@ -22,10 +22,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.18.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "BC", id: 0x0, description: "Basic",
                 details: "Node supports Basic Commissioning Method."
-            } ]
+            }]
         },
 
         {
@@ -49,7 +49,7 @@ Matter.children.push({
 
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                      "FabricIndex associated with the Fabric scoping of the Administrator that opened the window. This " +
-                     "MAY be used to cross-reference in the Fabrics attribute of the Node Operational Credentials cluster." +
+                     "may be used to cross-reference in the Fabrics attribute of the Node Operational Credentials cluster." +
                      "\n" +
                      "If, during an open commissioning window, the fabric for the Administrator that opened the window is " +
                      "removed, then this attribute shall be set to null." +
@@ -93,7 +93,7 @@ Matter.children.push({
             tag: "command", name: "OpenBasicCommissioningWindow", id: 0x1, access: "A T", conformance: "BC",
             direction: "request", response: "status",
             xref: { document: "core", section: "11.18.8" },
-            children: [ { tag: "datatype", name: "CommissioningTimeout", type: "uint16", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "CommissioningTimeout", type: "uint16", conformance: "M" }]
         },
 
         {
@@ -137,10 +137,20 @@ Matter.children.push({
         {
             tag: "datatype", name: "CommissioningWindowStatusEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.18.5.1" },
+
             children: [
-                { tag: "datatype", name: "WindowNotOpen", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "EnhancedWindowOpen", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "BasicWindowOpen", id: 0x2, conformance: "BC" }
+                {
+                    tag: "datatype", name: "WindowNotOpen", id: 0x0, conformance: "M",
+                    description: "Commissioning window not open"
+                },
+                {
+                    tag: "datatype", name: "EnhancedWindowOpen", id: 0x1, conformance: "M",
+                    description: "An Enhanced Commissioning Method window is open"
+                },
+                {
+                    tag: "datatype", name: "BasicWindowOpen", id: 0x2, conformance: "BC",
+                    description: "A Basic Commissioning Method window is open"
+                }
             ]
         }
     ]

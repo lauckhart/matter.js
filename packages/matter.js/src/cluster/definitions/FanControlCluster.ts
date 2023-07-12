@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { WritableAttribute, Attribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -100,60 +100,32 @@ export const enum FanModeSequence {
 }
 
 /**
- * Bit definitions for TlvRockSupport
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.8
- */
-export const RockSupportBits = { rockLeftRight: BitFlag(0), rockUpDown: BitFlag(1), rockRound: BitFlag(2) };
-
-/**
  * The value of the FanControl rockSupport attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.8
  */
-export const TlvRockSupport = TlvBitmap(TlvUInt8, RockSupportBits);
-
-/**
- * Bit definitions for TlvRockSetting
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
- */
-export const RockSettingBits = { rockLeftRight: BitFlag(0), rockUpDown: BitFlag(1), rockRound: BitFlag(2) };
+export const RockSupport = { rockLeftRight: BitFlag(0), rockUpDown: BitFlag(1), rockRound: BitFlag(2) };
 
 /**
  * The value of the FanControl rockSetting attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
  */
-export const TlvRockSetting = TlvBitmap(TlvUInt8, RockSettingBits);
-
-/**
- * Bit definitions for TlvWindSupport
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.10
- */
-export const WindSupportBits = { sleepWind: BitFlag(0), naturalWind: BitFlag(1) };
+export const RockSetting = { rockLeftRight: BitFlag(0), rockUpDown: BitFlag(1), rockRound: BitFlag(2) };
 
 /**
  * The value of the FanControl windSupport attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.10
  */
-export const TlvWindSupport = TlvBitmap(TlvUInt8, WindSupportBits);
-
-/**
- * Bit definitions for TlvWindSetting
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
- */
-export const WindSettingBits = { sleepWind: BitFlag(0), naturalWind: BitFlag(1) };
+export const WindSupport = { sleepWind: BitFlag(0), naturalWind: BitFlag(1) };
 
 /**
  * The value of the FanControl windSetting attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
  */
-export const TlvWindSetting = TlvBitmap(TlvUInt8, WindSettingBits);
+export const WindSetting = { sleepWind: BitFlag(0), naturalWind: BitFlag(1) };
 
 /**
  * These are optional features supported by FanControlCluster.
@@ -230,7 +202,7 @@ export const FanControlBase = BaseClusterComponent({
 
     attributes: {
         /**
-         * This attribute shall indicate the current speed mode of the fan. This attribute MAY be written by the client
+         * This attribute shall indicate the current speed mode of the fan. This attribute may be written by the client
          * to indicate a new speed mode of the fan. This attribute shall be set to one of the values in the table below.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.1
@@ -249,7 +221,7 @@ export const FanControlBase = BaseClusterComponent({
         ),
 
         /**
-         * This attribute shall indicate the speed setting for the fan. This attribute MAY be written by the client to
+         * This attribute shall indicate the speed setting for the fan. This attribute may be written by the client to
          * indicate a new fan speed. If the client writes null to this attribute, the attribute value shall NOT change.
          * If this is set to 0, the server shall set the FanMode attribute value to Off.
          *
@@ -281,7 +253,7 @@ export const MultiSpeedComponent = ClusterComponent({
         speedMax: FixedAttribute(4, TlvUInt8.bound({ min: 1, max: 100 }), { default: 1 }),
 
         /**
-         * This attribute shall indicate the speed setting for the fan. This attribute MAY be written by the client to
+         * This attribute shall indicate the speed setting for the fan. This attribute may be written by the client to
          * indicate a new fan speed. If the client writes null to this attribute, the attribute value shall NOT change.
          * If this is set to 0, the server shall set the FanMode attribute value to Off. Please see the Section
          * 4.4.6.6.1 for details on other values.
@@ -311,7 +283,7 @@ export const RockingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.8
          */
-        rockSupport: FixedAttribute(7, TlvRockSupport),
+        rockSupport: FixedAttribute(7, TlvBitmap(TlvUInt8, RockSupport), { default: BitsFromPartial(RockSupport, {}) }),
 
         /**
          * This attribute is a bitmap that indicates the current active fan rocking motion settings. Each bit shall
@@ -329,7 +301,7 @@ export const RockingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
          */
-        rockSetting: WritableAttribute(8, TlvRockSetting)
+        rockSetting: WritableAttribute(8, TlvBitmap(TlvUInt8, RockSetting), { default: BitsFromPartial(RockSetting, {}) })
     }
 });
 
@@ -344,7 +316,7 @@ export const WindComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.10
          */
-        windSupport: FixedAttribute(9, TlvWindSupport),
+        windSupport: FixedAttribute(9, TlvBitmap(TlvUInt8, WindSupport), { default: BitsFromPartial(WindSupport, {}) }),
 
         /**
          * This attribute is a bitmap that indicates the current active fan wind feature settings. Each bit shall only
@@ -362,7 +334,7 @@ export const WindComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
          */
-        windSetting: WritableAttribute(10, TlvWindSetting)
+        windSetting: WritableAttribute(10, TlvBitmap(TlvUInt8, WindSetting), { default: BitsFromPartial(WindSetting, {}) })
     }
 });
 

@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "SoftwareDiagnostics", id: 0x34, classification: "node",
     description: "Software Diagnostics",
     details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that " +
-             "MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+             "may be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
              "Software Diagnostics Cluster attempts to centralize all metrics that are relevant to the software " +
              "that may be running on a Node.",
     xref: { document: "core", section: "11.12" },
@@ -21,10 +21,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.12.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "WTRMRK", id: 0x0, description: "Watermarks",
                 details: "Node makes available the metrics for high watermark related to memory consumption."
-            } ]
+            }]
         },
 
         {
@@ -33,14 +33,14 @@ Matter.children.push({
             details: "The ThreadMetrics attribute shall be a list of ThreadMetricsStruct structs. Each active thread on " +
                      "the Node shall be represented by a single entry within the ThreadMetrics attribute.",
             xref: { document: "core", section: "11.12.6.1" },
-            children: [ { tag: "datatype", name: "entry", type: "ThreadMetricsStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "ThreadMetricsStruct" }]
         },
 
         {
             tag: "attribute", name: "CurrentHeapFree", id: 0x1, type: "uint64", access: "R V", conformance: "O",
             default: 0,
             details: "The CurrentHeapFree attribute shall indicate the current amount of heap memory, in bytes, that are " +
-                     "free for allocation. The effective amount MAY be smaller due to heap fragmentation or other reasons.",
+                     "free for allocation. The effective amount may be smaller due to heap fragmentation or other reasons.",
             xref: { document: "core", section: "11.12.6.2" }
         },
 
@@ -85,7 +85,7 @@ Matter.children.push({
                     tag: "datatype", name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O",
                     constraint: "max 1024",
                     details: "The FaultRecording field shall be a manufacturer-specified payload intended to convey information " +
-                             "to assist in further diagnosing or debugging a software fault. The FaultRecording field MAY be used " +
+                             "to assist in further diagnosing or debugging a software fault. The FaultRecording field may be used " +
                              "to convey information such as, but not limited to, thread backtraces or register contents.",
                     xref: { document: "core", section: "11.12.8.1.1" }
                 }

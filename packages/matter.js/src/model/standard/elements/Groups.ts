@@ -35,10 +35,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.3.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "GN", id: 0x0, default: 0, description: "GroupNames",
                 details: "The ability to store a name for a group."
-            } ]
+            }]
         },
 
         {
@@ -48,9 +48,10 @@ Matter.children.push({
                      "The most significant bit, bit 7, shall be equal to bit 0 of the FeatureMap attribute. All other " +
                      "bits shall be 0.",
             xref: { document: "cluster", section: "1.3.6.1" },
-            children: [
-                { tag: "datatype", name: "GroupNames", id: 0x7, description: "The ability to store a name for a group." }
-            ]
+            children: [{
+                tag: "datatype", name: "GroupNames", constraint: "7",
+                description: "The ability to store a name for a group."
+            }]
         },
 
         {
@@ -82,11 +83,11 @@ Matter.children.push({
             details: "The GetGroupMembership command allows a client to inquire about the group membership of the server " +
                      "endpoint, in a number of ways.",
             xref: { document: "cluster", section: "1.3.7.3" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "GroupList", id: 0x0, type: "list", conformance: "M",
                 constraint: "all[min 1]",
-                children: [ { tag: "datatype", name: "entry", type: "group-id" } ]
-            } ]
+                children: [{ tag: "datatype", name: "entry", type: "group-id" }]
+            }]
         },
 
         {
@@ -162,13 +163,13 @@ Matter.children.push({
                      "The Capacity field shall contain the remaining capacity of the Group Table of the node. The " +
                      "following values apply:" +
                      "\n" +
-                     "  • 0 - No further groups MAY be added." +
+                     "  • 0 - No further groups may be added." +
                      "\n" +
-                     "  • 0 < Capacity < 0xfe - Capacity holds the number of groups that MAY be added." +
+                     "  • 0 < Capacity < 0xfe - Capacity holds the number of groups that may be added." +
                      "\n" +
-                     "  • 0xfe - At least 1 further group MAY be added (exact number is unknown)." +
+                     "  • 0xfe - At least 1 further group may be added (exact number is unknown)." +
                      "\n" +
-                     "  • null - It is unknown if any further groups MAY be added." +
+                     "  • null - It is unknown if any further groups may be added." +
                      "\n" +
                      "The GroupList field shall contain either the group IDs of all the groups in the Group Table for " +
                      "which the server endpoint is a member of the group (in the case where the GroupList field of the " +
@@ -187,7 +188,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "GroupList", id: 0x1, type: "list", conformance: "M",
                     constraint: "all[min 1]",
-                    children: [ { tag: "datatype", name: "entry", type: "group-id" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "group-id" }]
                 }
             ]
         },

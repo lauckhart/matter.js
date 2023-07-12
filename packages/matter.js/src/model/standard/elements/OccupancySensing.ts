@@ -137,7 +137,7 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "Occupied", id: 0x1, conformance: "M",
+                    tag: "datatype", name: "Occupied", constraint: "0",
                     description: "Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied."
                 }
             ]
@@ -148,10 +148,22 @@ Matter.children.push({
             xref: { document: "cluster", section: "2.7.5.2" },
 
             children: [
-                { tag: "datatype", name: "Pir", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Ultrasonic", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "PirAndUltrasonic", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "PhysicalContact", id: 0x3, conformance: "M" }
+                {
+                    tag: "datatype", name: "Pir", id: 0x0, conformance: "M",
+                    description: "Indicates a passive infrared sensor."
+                },
+                {
+                    tag: "datatype", name: "Ultrasonic", id: 0x1, conformance: "M",
+                    description: "Indicates a ultrasonic sensor."
+                },
+                {
+                    tag: "datatype", name: "PirAndUltrasonic", id: 0x2, conformance: "M",
+                    description: "Indicates a passive infrared and ultrasonic sensor."
+                },
+                {
+                    tag: "datatype", name: "PhysicalContact", id: 0x3, conformance: "M",
+                    description: "Indicates a physical contact sensor."
+                }
             ]
         },
 
@@ -160,12 +172,10 @@ Matter.children.push({
             xref: { document: "cluster", section: "2.7.5.3" },
 
             children: [
+                { tag: "datatype", name: "Pir", constraint: "0", description: "Indicates a passive infrared sensor." },
+                { tag: "datatype", name: "Ultrasonic", constraint: "1", description: "Indicates a ultrasonic sensor." },
                 {
-                    tag: "datatype", name: "Ultrasonic", id: 0x1, conformance: "M",
-                    description: "Indicates a ultrasonic sensor."
-                },
-                {
-                    tag: "datatype", name: "PhysicalContact", id: 0x4, conformance: "M",
+                    tag: "datatype", name: "PhysicalContact", constraint: "2",
                     description: "Indicates a physical contact sensor."
                 }
             ]

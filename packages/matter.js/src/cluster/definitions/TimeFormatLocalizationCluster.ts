@@ -18,7 +18,14 @@ import { TlvArray } from "../../tlv/TlvArray.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.1
  */
 export const enum HourFormat {
+    /**
+     * Time conveyed with a 12-hour clock
+     */
     "12Hr" = 0,
+
+    /**
+     * Time conveyed with a 24-hour clock
+     */
     "24Hr" = 1
 }
 
@@ -26,17 +33,64 @@ export const enum HourFormat {
  * @see {@link MatterCoreSpecificationV1_1} § 11.4.5.2
  */
 export const enum CalendarType {
+    /**
+     * Dates conveyed using the Buddhist calendar
+     */
     Buddhist = 0,
+
+    /**
+     * Dates conveyed using the Chinese calendar
+     */
     Chinese = 1,
+
+    /**
+     * Dates conveyed using the Coptic calendar
+     */
     Coptic = 2,
+
+    /**
+     * Dates conveyed using the Ethiopian calendar
+     */
     Ethiopian = 3,
+
+    /**
+     * Dates conveyed using the Gregorian calendar
+     */
     Gregorian = 4,
+
+    /**
+     * Dates conveyed using the Hebrew calendar
+     */
     Hebrew = 5,
+
+    /**
+     * Dates conveyed using the Indian calendar
+     */
     Indian = 6,
+
+    /**
+     * Dates conveyed using the Islamic calendar
+     */
     Islamic = 7,
+
+    /**
+     * Dates conveyed using the Japanese calendar
+     */
     Japanese = 8,
+
+    /**
+     * Dates conveyed using the Korean calendar
+     */
     Korean = 9,
+
+    /**
+     * Dates conveyed using the Persian calendar
+     */
     Persian = 10,
+
+    /**
+     * Dates conveyed using the Taiwanese calendar
+     */
     Taiwanese = 11
 }
 

@@ -17,6 +17,8 @@ import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
  */
 export const enum Intent {
     /**
+     * Logs to be used for end- user support
+     *
      * shall indicate that the purpose of the log request is to retrieve logs for the intention of providing support to
      * an end-user.
      *
@@ -25,6 +27,8 @@ export const enum Intent {
     EndUserSupport = 0,
 
     /**
+     * Logs to be used for network diagnostics
+     *
      * shall indicate that the purpose of the log request is to diagnose the network(s) for which the Node is currently
      * commissioned (and/or connected) or has previously been commissioned (and/or connected).
      *
@@ -33,6 +37,8 @@ export const enum Intent {
     NetworkDiag = 1,
 
     /**
+     * Obtain crash logs from the Node
+     *
      * shall indicate that the purpose of the log request is to retrieve any crash logs that may be present on a Node.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.1.3
@@ -45,6 +51,8 @@ export const enum Intent {
  */
 export const enum TransferProtocol {
     /**
+     * Logs to be returned as a response
+     *
      * shall be used by a Client to request that logs are transferred using the LogContent attribute of the response
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3.1
@@ -52,6 +60,8 @@ export const enum TransferProtocol {
     ResponsePayload = 0,
 
     /**
+     * Logs to be returned using BDX
+     *
      * shall be used by a Client to request that logs are transferred using BDX as defined in BDX Protocol
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.3.2
@@ -66,7 +76,7 @@ export const enum TransferProtocol {
  */
 export const TlvRetrieveLogsRequestRequest = TlvObject({
     /**
-     * This field shall indicate why the diagnostic logs are being retrieved from the Node. A Node MAY utilize this
+     * This field shall indicate why the diagnostic logs are being retrieved from the Node. A Node may utilize this
      * field to selectively determine the logs to transfer.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1.1
@@ -127,6 +137,8 @@ export const TlvRetrieveLogsRequestRequest = TlvObject({
  */
 export const enum Status {
     /**
+     * Successful transfer of logs
+     *
      * shall be used if diagnostic logs will be or are being transferred.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.1
@@ -134,6 +146,8 @@ export const enum Status {
     Success = 0,
 
     /**
+     * All logs has been transferred
+     *
      * shall be used when a BDX session is requested, however, all available logs were provided in a
      *
      * LogContent field.
@@ -143,6 +157,8 @@ export const enum Status {
     Exhausted = 1,
 
     /**
+     * No logs of the requested type available
+     *
      * shall be used if the Node does not currently have any diagnostic logs of the requested type (Intent) to transfer.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.3
@@ -150,6 +166,8 @@ export const enum Status {
     NoLogs = 2,
 
     /**
+     * Unable to handle request, retry later
+     *
      * shall be used if the Node is unable to handle the request (e.g. in the process of another transfer) and the
      * Client SHOULD re-attempt the request later.
      *
@@ -158,6 +176,8 @@ export const enum Status {
     Busy = 3,
 
     /**
+     * The request is denied, no logs being transferred
+     *
      * shall be used if the Node is denying the current transfer of diagnostic logs for any reason.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.4.2.5
@@ -186,7 +206,7 @@ export const TlvRetrieveLogsResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.2
      */
-    logContent: TlvField(1, TlvByteString.bound({ minLength: 1024, maxLength: 1024 })),
+    logContent: TlvField(1, TlvByteString),
 
     /**
      * This field SHOULD be included in the command if the Status field has a value of Success and the Node maintains a

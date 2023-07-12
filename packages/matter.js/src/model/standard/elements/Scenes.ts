@@ -15,10 +15,10 @@ Matter.children.push({
              "corresponds to a set of stored values of specified attributes for one or more clusters on the same " +
              "end point as the Scenes cluster." +
              "\n" +
-             "In most cases scenes are associated with a particular group identifier. Scenes MAY also exist " +
+             "In most cases scenes are associated with a particular group identifier. Scenes may also exist " +
              "without a group, in which case the value 0 replaces the group identifier. Note that extra care is " +
              "required in these cases to avoid a scene identifier collision, and that commands related to scenes " +
-             "without a group MAY only be unicast, i.e., they MAY not be multicast or broadcast." +
+             "without a group may only be unicast, i.e., they may not be multicast or broadcast." +
              "\n" +
              "In a network supporting fabrics, scenes are scoped to the accessing fabric. When storing scene " +
              "information, implementations need to take care of this." +
@@ -31,10 +31,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.4.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "SN", id: 0x0, default: 0, description: "SceneNames",
                 details: "The ability to store a name for a scene."
-            } ]
+            }]
         },
 
         {
@@ -81,9 +81,10 @@ Matter.children.push({
                      "The most significant bit, bit 7, shall be equal to bit 0 of the FeatureMap attribute. All other " +
                      "bits shall be 0.",
             xref: { document: "cluster", section: "1.4.7.5" },
-            children: [
-                { tag: "datatype", name: "SceneNames", id: 0x7, description: "The ability to store a name for a scene." }
-            ]
+            children: [{
+                tag: "datatype", name: "SceneNames", constraint: "7",
+                description: "The ability to store a name for a scene."
+            }]
         },
 
         {
@@ -101,7 +102,7 @@ Matter.children.push({
             tag: "command", name: "AddScene", id: 0x0, access: "M", conformance: "M", direction: "request",
             response: "AddSceneResponse",
             details: "It is not mandatory for an extension field set to be included in the command for every cluster on " +
-                     "that endpoint that has a defined extension field set. Extension field sets MAY be omitted, " +
+                     "that endpoint that has a defined extension field set. Extension field sets may be omitted, " +
                      "including the case of no extension field sets at all.",
             xref: { document: "cluster", section: "1.4.9.2" },
 
@@ -112,7 +113,7 @@ Matter.children.push({
                 { tag: "datatype", name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 16" },
                 {
                     tag: "datatype", name: "ExtensionFieldSets", id: 0x4, type: "list", conformance: "M",
-                    children: [ { tag: "datatype", name: "entry", type: "ExtensionFieldSet" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
                 }
             ]
         },
@@ -141,7 +142,7 @@ Matter.children.push({
             tag: "command", name: "RemoveAllScenes", id: 0x3, access: "M", conformance: "M",
             direction: "request", response: "RemoveAllScenesResponse",
             xref: { document: "cluster", section: "1.4.9.5" },
-            children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }]
         },
 
         {
@@ -172,7 +173,7 @@ Matter.children.push({
                      "group when no commissioning tool is in the network, or for a commissioning tool to get the used " +
                      "scene identifiers within a certain group, for the endpoint that implements this cluster.",
             xref: { document: "cluster", section: "1.4.9.8" },
-            children: [ { tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }]
         },
 
         {
@@ -231,8 +232,8 @@ Matter.children.push({
 
                     xref: { document: "cluster", section: "1.4.9.11.1" },
                     children: [
-                        { tag: "datatype", name: "CopyAllScenes", id: 0x0 },
-                        { tag: "datatype", name: "Reserved", id: 0x1, conformance: "M" }
+                        { tag: "datatype", name: "CopyAllScenes", constraint: "0" },
+                        { tag: "datatype", name: "Reserved", constraint: "1" }
                     ]
                 },
 
@@ -292,7 +293,7 @@ Matter.children.push({
                 { tag: "datatype", name: "SceneName", id: 0x4, type: "string", conformance: "desc", constraint: "max 16" },
                 {
                     tag: "datatype", name: "ExtensionFieldSets", id: 0x5, type: "list", conformance: "desc",
-                    children: [ { tag: "datatype", name: "entry", type: "ExtensionFieldSet" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
                 }
             ]
         },
@@ -335,13 +336,13 @@ Matter.children.push({
                      "The Capacity field shall contain the remaining capacity of the Scene Table of the server (for all " +
                      "groups). The following values apply:" +
                      "\n" +
-                     "  • 0 - No further scenes MAY be added." +
+                     "  • 0 - No further scenes may be added." +
                      "\n" +
-                     "  • 0 < Capacity < 0xfe - Capacity holds the number of scenes that MAY be added." +
+                     "  • 0 < Capacity < 0xfe - Capacity holds the number of scenes that may be added." +
                      "\n" +
-                     "  • 0xfe - At least 1 further scene MAY be added (exact number is unknown)." +
+                     "  • 0xfe - At least 1 further scene may be added (exact number is unknown)." +
                      "\n" +
-                     "  • null - It is unknown if any further scenes MAY be added." +
+                     "  • null - It is unknown if any further scenes may be added." +
                      "\n" +
                      "The Status field shall contain SUCCESS or ILLEGAL_COMMAND (the endpoint is not a member of the " +
                      "group) as appropriate." +
@@ -364,7 +365,7 @@ Matter.children.push({
                 { tag: "datatype", name: "GroupId", id: 0x2, type: "group-id", conformance: "M" },
                 {
                     tag: "datatype", name: "SceneList", id: 0x3, type: "list", conformance: "O",
-                    children: [ { tag: "datatype", name: "entry", type: "uint8" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "uint8" }]
                 }
             ]
         },
@@ -473,7 +474,7 @@ Matter.children.push({
                 { tag: "datatype", name: "ClusterId", id: 0x0, type: "cluster-id", access: "RW", conformance: "M" },
                 {
                     tag: "datatype", name: "AttributeValueList", id: 0x1, type: "list", access: "RW", conformance: "M",
-                    children: [ { tag: "datatype", name: "entry", type: "AttributeValuePair" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "AttributeValuePair" }]
                 }
             ]
         }

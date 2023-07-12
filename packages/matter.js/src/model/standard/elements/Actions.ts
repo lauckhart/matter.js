@@ -55,7 +55,7 @@ Matter.children.push({
             details: "The ActionList attribute holds the list of actions. Each entry shall have an unique ActionID, and " +
                      "its EndpointListID shall exist in the EndpointLists attribute.",
             xref: { document: "core", section: "9.14.5.1" },
-            children: [ { tag: "datatype", name: "entry", type: "ActionStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "ActionStruct" }]
         },
 
         {
@@ -64,7 +64,7 @@ Matter.children.push({
             details: "The EndpointLists attribute holds the list of endpoint lists. Each entry shall have an unique " +
                      "EndpointListID.",
             xref: { document: "core", section: "9.14.5.2" },
-            children: [ { tag: "datatype", name: "entry", type: "EndpointListStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "EndpointListStruct" }]
         },
 
         {
@@ -83,7 +83,7 @@ Matter.children.push({
                      "      provided by this cluster)." +
                      "\n" +
                      "  • When used with a suffix of \"/?a=\" and the decimal value of ActionID for one of the actions, it " +
-                     "    MAY provide information about that particular action. This could be a deeplink to " +
+                     "    may provide information about that particular action. This could be a deeplink to " +
                      "    manufacturer-app/website (associated somehow to the server node) with the " +
                      "    information/edit-screen for this action so that the user can view and update details of the " +
                      "    action, e.g. edit the scene, or change the wake-up experience time period." +
@@ -422,47 +422,51 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "InstantActionWithTransition", id: 0x1, conformance: "M",
+                    tag: "datatype", name: "InstantAction", constraint: "0",
+                    description: "Indicate support for InstantAction command"
+                },
+                {
+                    tag: "datatype", name: "InstantActionWithTransition", constraint: "1",
                     description: "Indicate support for InstantActionWithTransition command"
                 },
                 {
-                    tag: "datatype", name: "StartAction", id: 0x2, conformance: "M",
+                    tag: "datatype", name: "StartAction", constraint: "2",
                     description: "Indicate support for StartAction command"
                 },
                 {
-                    tag: "datatype", name: "StartActionWithDuration", id: 0x3,
+                    tag: "datatype", name: "StartActionWithDuration", constraint: "3",
                     description: "Indicate support for StartActionWithDuration command"
                 },
                 {
-                    tag: "datatype", name: "StopAction", id: 0x10, conformance: "M",
+                    tag: "datatype", name: "StopAction", constraint: "4",
                     description: "Indicate support for StopAction command"
                 },
                 {
-                    tag: "datatype", name: "PauseAction", id: 0x20, conformance: "M",
+                    tag: "datatype", name: "PauseAction", constraint: "5",
                     description: "Indicate support for PauseAction command"
                 },
                 {
-                    tag: "datatype", name: "PauseActionWithDuration", id: 0x40, conformance: "M",
+                    tag: "datatype", name: "PauseActionWithDuration", constraint: "6",
                     description: "Indicate support for PauseActionWithDuration command"
                 },
                 {
-                    tag: "datatype", name: "ResumeAction", id: 0x80, conformance: "M",
+                    tag: "datatype", name: "ResumeAction", constraint: "7",
                     description: "Indicate support for ResumeAction command"
                 },
                 {
-                    tag: "datatype", name: "EnableAction", id: 0x100, conformance: "M",
+                    tag: "datatype", name: "EnableAction", constraint: "8",
                     description: "Indicate support for EnableAction command"
                 },
                 {
-                    tag: "datatype", name: "EnableActionWithDuration", id: 0x200, conformance: "M",
+                    tag: "datatype", name: "EnableActionWithDuration", constraint: "9",
                     description: "Indicate support for EnableActionWithDuration command"
                 },
                 {
-                    tag: "datatype", name: "DisableAction", id: 0x400, conformance: "M",
+                    tag: "datatype", name: "DisableAction", constraint: "10",
                     description: "Indicate support for DisableAction command"
                 },
                 {
-                    tag: "datatype", name: "DisableActionWithDuration", id: 0x800, conformance: "M",
+                    tag: "datatype", name: "DisableActionWithDuration", constraint: "11",
                     description: "Indicate support for DisableActionWithDuration command"
                 }
             ]
@@ -473,10 +477,14 @@ Matter.children.push({
             xref: { document: "core", section: "9.14.4.2" },
 
             children: [
-                { tag: "datatype", name: "Other", id: 0x0, conformance: "M" },
+                {
+                    tag: "datatype", name: "Other", id: 0x0, conformance: "M",
+                    description: "Use this only when none of the other values applies"
+                },
 
                 {
                     tag: "datatype", name: "Scene", id: 0x1, conformance: "M",
+                    description: "Bring the endpoints into a certain state",
 
                     details: "Can be used to set a static state of the associated endpoints (typically using InstantAction or " +
                              "InstantActionWithTransition), or to bring these endpoints into a more dynamic state (typically " +
@@ -493,6 +501,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Sequence", id: 0x2, conformance: "M",
+                    description: "A sequence of states with a certain time pattern",
                     details: "Indicates an action which involves a sequence of events/states of the associated endpoints, such as " +
                              "a wake-up experience." +
                              "\n" +
@@ -502,6 +511,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Automation", id: 0x3, conformance: "M",
+                    description: "Control an automation (e.g. motion sensor controlling lights)",
                     details: "Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can " +
                              "bee.g. started, stopped, paused, resumed. Example: see example 3.",
                     xref: { document: "core", section: "9.14.4.2.3" }
@@ -509,6 +519,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Exception", id: 0x4, conformance: "M",
+                    description: "Sequence that will run when something doesn’t happen",
                     details: "Indicates some action which the server will execute when a certain condition (which normally does " +
                              "not happen) is not met." +
                              "\n" +
@@ -519,6 +530,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Notification", id: 0x5, conformance: "M",
+                    description: "Use the endpoints to send a message to user",
                     details: "Indicates an action that can be triggered (e.g. by InstantAction) to notify the user." +
                              "\n" +
                              "Example: play a pattern on the lights in the living room if there is someone in the garden in the " +
@@ -528,6 +540,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Alarm", id: 0x6, conformance: "M",
+                    description: "Higher priority notification",
                     details: "Similar to Notification but with a higher priority (and might override other endpoint states which " +
                              "Type=Notification would not override)." +
                              "\n" +
@@ -544,19 +557,29 @@ Matter.children.push({
             xref: { document: "core", section: "9.14.4.3" },
 
             children: [
-                { tag: "datatype", name: "Inactive", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Active", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Paused", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Disabled", id: 0x3, conformance: "M" }
+                { tag: "datatype", name: "Inactive", id: 0x0, conformance: "M", description: "The action is not active" },
+                { tag: "datatype", name: "Active", id: 0x1, conformance: "M", description: "The action is active" },
+                { tag: "datatype", name: "Paused", id: 0x2, conformance: "M", description: "The action has been paused" },
+                {
+                    tag: "datatype", name: "Disabled", id: 0x3, conformance: "M",
+                    description: "The action has been disabled"
+                }
             ]
         },
 
         {
             tag: "datatype", name: "ActionErrorEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "9.14.4.4" },
+
             children: [
-                { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Interrupted", id: 0x1, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "M",
+                    description: "Other reason not listed in the row(s) below"
+                },
+                {
+                    tag: "datatype", name: "Interrupted", id: 0x1, conformance: "M",
+                    description: "The action was interrupted by another command or interaction"
+                }
             ]
         },
 
@@ -569,8 +592,9 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Other", id: 0x0, conformance: "M",
+                    description: "Another group of endpoints",
                     details: "This value is provided for the case of an endpoint list which is tied specifically to this action " +
-                             "i.e. not independently created by the user. For Type=Other the Name MAY be empty. A Matter " +
+                             "i.e. not independently created by the user. For Type=Other the Name may be empty. A Matter " +
                              "controller would typically not use this for anything else than just to know which endpoints would " +
                              "be affected by the action.",
                     xref: { document: "core", section: "9.14.4.5.1" }
@@ -578,6 +602,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Room", id: 0x1, conformance: "M",
+                    description: "User-configured group of endpoints where an endpoint can be in only one room",
                     details: "Is used for the situation where an endpoint can only be part of one such rooms (e.g. physical " +
                              "mapping). Using these exposed logical groups, a Matter controller who has a similar grouping " +
                              "concept can use it to place each endpoint (bridged device) in the right room automatically, without " +
@@ -588,6 +613,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Zone", id: 0x2, conformance: "M",
+                    description: "User-configured group of endpoints where an endpoint can be in any number of zones",
 
                     details: "Is a more general concept where an endpoint can be part of multiple zones, e.g. a light in the " +
                              "living" +
@@ -640,7 +666,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "SupportedCommands", id: 0x4, type: "CommandBits", conformance: "M",
-                    constraint: "0",
+                    constraint: "0 to 0",
                     details: "This field is a bitmap which shall be used to indicate which of the cluster’s commands are sup" +
                              "\n" +
                              "ported for this particular action, with a bit set to 1 for each supported command according to the " +
@@ -681,7 +707,7 @@ Matter.children.push({
                     tag: "datatype", name: "Endpoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256",
                     details: "This field shall provide a list of endpoint numbers.",
                     xref: { document: "core", section: "9.14.4.7.1" },
-                    children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
                 }
             ]
         }

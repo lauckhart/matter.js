@@ -40,7 +40,7 @@ Matter.children.push({
              "When a client cluster requires a target for an interaction, the Binding cluster shall exist on the " +
              "same endpoint." +
              "\n" +
-             "Once a binding entry is created on the Binding cluster, the client endpoint MAY initiate " +
+             "Once a binding entry is created on the Binding cluster, the client endpoint may initiate " +
              "interactions to the binding target.",
 
     xref: { document: "core", section: "9.6" },
@@ -51,7 +51,7 @@ Matter.children.push({
             constraint: "desc", default: [], quality: "N",
             details: "Each entry shall represent a binding.",
             xref: { document: "core", section: "9.6.6.1" },
-            children: [ { tag: "datatype", name: "entry", type: "TargetStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "TargetStruct" }]
         },
 
         {

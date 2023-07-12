@@ -21,9 +21,24 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.4
  */
 export const enum PowerSourceStatus {
+    /**
+     * Indicate the source status is not specified
+     */
     Unspecified = 0,
+
+    /**
+     * Indicate the source is available and currently supplying power
+     */
     Active = 1,
+
+    /**
+     * Indicate the source is available, but is not currently supplying power
+     */
     Standby = 2,
+
+    /**
+     * Indicate the source is not currently available to supply power
+     */
     Unavailable = 3
 }
 
@@ -31,7 +46,14 @@ export const enum PowerSourceStatus {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.5
  */
 export const enum WiredCurrentType {
+    /**
+     * Indicates AC current
+     */
     Ac = 0,
+
+    /**
+     * Indicates DC current
+     */
     Dc = 1
 }
 
@@ -39,8 +61,19 @@ export const enum WiredCurrentType {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.1
  */
 export const enum WiredFault {
+    /**
+     * The Node detects an unspecified fault on this wired power source.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node detects the supplied voltage is above maximum supported value for this wired power source.
+     */
     OverVoltage = 1,
+
+    /**
+     * The Node detects the supplied voltage is below maximum supported value for this wired power source.
+     */
     UnderVoltage = 2
 }
 
@@ -71,8 +104,19 @@ export const TlvWiredFaultChangeEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.6
  */
 export const enum BatChargeLevel {
+    /**
+     * Charge level is nominal
+     */
     Ok = 0,
+
+    /**
+     * Charge level is low, intervention may soon be required.
+     */
     Warning = 1,
+
+    /**
+     * Charge level is critical, immediate intervention is required
+     */
     Critical = 2
 }
 
@@ -80,9 +124,24 @@ export const enum BatChargeLevel {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.7
  */
 export const enum BatReplaceability {
+    /**
+     * The replaceability is unspecified or unknown.
+     */
     Unspecified = 0,
+
+    /**
+     * The battery is not replaceable.
+     */
     NotReplaceable = 1,
+
+    /**
+     * The battery is replaceable by the user or customer.
+     */
     UserReplaceable = 2,
+
+    /**
+     * The battery is replaceable by an authorized factory technician.
+     */
     FactoryReplaceable = 3
 }
 
@@ -90,8 +149,19 @@ export const enum BatReplaceability {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.2
  */
 export const enum BatFault {
+    /**
+     * The Node detects an unspecified fault on this battery power source.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node detects the temperature of this battery power source is above ideal operating conditions.
+     */
     OverTemp = 1,
+
+    /**
+     * The Node detects the temperature of this battery power source is below ideal operating conditions.
+     */
     UnderTemp = 2
 }
 
@@ -109,86 +179,409 @@ export const TlvBatFaultChangeEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.8
  */
 export const enum BatCommonDesignation {
+    /**
+     * Common type is unknown or unspecified
+     */
     Unspecified = 0,
+
+    /**
+     * Common type is as specified
+     */
     Aaa = 1,
+
+    /**
+     * Common type is as specified
+     */
     Aa = 2,
+
+    /**
+     * Common type is as specified
+     */
     C = 3,
+
+    /**
+     * Common type is as specified
+     */
     D = 4,
+
+    /**
+     * Common type is as specified
+     */
     "4V5" = 5,
+
+    /**
+     * Common type is as specified
+     */
     "6V0" = 6,
+
+    /**
+     * Common type is as specified
+     */
     "9V0" = 7,
+
+    /**
+     * Common type is as specified
+     */
     "12Aa" = 8,
+
+    /**
+     * Common type is as specified
+     */
     Aaaa = 9,
+
+    /**
+     * Common type is as specified
+     */
     A = 10,
+
+    /**
+     * Common type is as specified
+     */
     B = 11,
+
+    /**
+     * Common type is as specified
+     */
     F = 12,
+
+    /**
+     * Common type is as specified
+     */
     N = 13,
+
+    /**
+     * Common type is as specified
+     */
     No6 = 14,
+
+    /**
+     * Common type is as specified
+     */
     SubC = 15,
+
+    /**
+     * Common type is as specified
+     */
     A23 = 16,
+
+    /**
+     * Common type is as specified
+     */
     A27 = 17,
+
+    /**
+     * Common type is as specified
+     */
     Ba5800 = 18,
+
+    /**
+     * Common type is as specified
+     */
     Duplex = 19,
+
+    /**
+     * Common type is as specified
+     */
     "4Sr44" = 20,
+
+    /**
+     * Common type is as specified
+     */
     E523 = 21,
+
+    /**
+     * Common type is as specified
+     */
     E531 = 22,
+
+    /**
+     * Common type is as specified
+     */
     "15V0" = 23,
+
+    /**
+     * Common type is as specified
+     */
     "22V5" = 24,
+
+    /**
+     * Common type is as specified
+     */
     "30V0" = 25,
+
+    /**
+     * Common type is as specified
+     */
     "45V0" = 26,
+
+    /**
+     * Common type is as specified
+     */
     "67V5" = 27,
+
+    /**
+     * Common type is as specified
+     */
     J = 28,
+
+    /**
+     * Common type is as specified
+     */
     Cr123A = 29,
+
+    /**
+     * Common type is as specified
+     */
     Cr2 = 30,
+
+    /**
+     * Common type is as specified
+     */
     "2Cr5" = 31,
+
+    /**
+     * Common type is as specified
+     */
     CrP2 = 32,
+
+    /**
+     * Common type is as specified
+     */
     CrV3 = 33,
+
+    /**
+     * Common type is as specified
+     */
     Sr41 = 34,
+
+    /**
+     * Common type is as specified
+     */
     Sr43 = 35,
+
+    /**
+     * Common type is as specified
+     */
     Sr44 = 36,
+
+    /**
+     * Common type is as specified
+     */
     Sr45 = 37,
+
+    /**
+     * Common type is as specified
+     */
     Sr48 = 38,
+
+    /**
+     * Common type is as specified
+     */
     Sr54 = 39,
+
+    /**
+     * Common type is as specified
+     */
     Sr55 = 40,
+
+    /**
+     * Common type is as specified
+     */
     Sr57 = 41,
+
+    /**
+     * Common type is as specified
+     */
     Sr58 = 42,
+
+    /**
+     * Common type is as specified
+     */
     Sr59 = 43,
+
+    /**
+     * Common type is as specified
+     */
     Sr60 = 44,
+
+    /**
+     * Common type is as specified
+     */
     Sr63 = 45,
+
+    /**
+     * Common type is as specified
+     */
     Sr64 = 46,
+
+    /**
+     * Common type is as specified
+     */
     Sr65 = 47,
+
+    /**
+     * Common type is as specified
+     */
     Sr66 = 48,
+
+    /**
+     * Common type is as specified
+     */
     Sr67 = 49,
+
+    /**
+     * Common type is as specified
+     */
     Sr68 = 50,
+
+    /**
+     * Common type is as specified
+     */
     Sr69 = 51,
+
+    /**
+     * Common type is as specified
+     */
     Sr516 = 52,
+
+    /**
+     * Common type is as specified
+     */
     Sr731 = 53,
+
+    /**
+     * Common type is as specified
+     */
     Sr712 = 54,
+
+    /**
+     * Common type is as specified
+     */
     Lr932 = 55,
+
+    /**
+     * Common type is as specified
+     */
     A5 = 56,
+
+    /**
+     * Common type is as specified
+     */
     A10 = 57,
+
+    /**
+     * Common type is as specified
+     */
     A13 = 58,
+
+    /**
+     * Common type is as specified
+     */
     A312 = 59,
+
+    /**
+     * Common type is as specified
+     */
     A675 = 60,
+
+    /**
+     * Common type is as specified
+     */
     Ac41E = 61,
+
+    /**
+     * Common type is as specified
+     */
     E10180 = 62,
+
+    /**
+     * Common type is as specified
+     */
     E10280 = 63,
+
+    /**
+     * Common type is as specified
+     */
     E10440 = 64,
+
+    /**
+     * Common type is as specified
+     */
     E14250 = 65,
+
+    /**
+     * Common type is as specified
+     */
     E14430 = 66,
+
+    /**
+     * Common type is as specified
+     */
     E14500 = 67,
+
+    /**
+     * Common type is as specified
+     */
     E14650 = 68,
+
+    /**
+     * Common type is as specified
+     */
     E15270 = 69,
+
+    /**
+     * Common type is as specified
+     */
     E16340 = 70,
+
+    /**
+     * Common type is as specified
+     */
     Rcr123A = 71,
+
+    /**
+     * Common type is as specified
+     */
     E17500 = 72,
+
+    /**
+     * Common type is as specified
+     */
     E17670 = 73,
+
+    /**
+     * Common type is as specified
+     */
     E18350 = 74,
+
+    /**
+     * Common type is as specified
+     */
     E18500 = 75,
+
+    /**
+     * Common type is as specified
+     */
     E18650 = 76,
+
+    /**
+     * Common type is as specified
+     */
     E19670 = 77,
+
+    /**
+     * Common type is as specified
+     */
     E25500 = 78,
+
+    /**
+     * Common type is as specified
+     */
     E26650 = 79,
+
+    /**
+     * Common type is as specified
+     */
     E32600 = 80
 }
 
@@ -196,38 +589,169 @@ export const enum BatCommonDesignation {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.9
  */
 export const enum BatApprovedChemistry {
+    /**
+     * Cell chemistry is unspecified or unknown
+     */
     Unspecified = 0,
+
+    /**
+     * Cell chemistry is alkaline
+     */
     Alkaline = 1,
+
+    /**
+     * Cell chemistry is lithium carbon fluoride
+     */
     LithiumCarbonFluoride = 2,
+
+    /**
+     * Cell chemistry is lithium chromium oxide
+     */
     LithiumChromiumOxide = 3,
+
+    /**
+     * Cell chemistry is lithium copper oxide
+     */
     LithiumCopperOxide = 4,
+
+    /**
+     * Cell chemistry is lithium iron disulfide
+     */
     LithiumIronDisulfide = 5,
+
+    /**
+     * Cell chemistry is lithium manganese dioxide
+     */
     LithiumManganeseDioxide = 6,
+
+    /**
+     * Cell chemistry is lithium thionyl chloride
+     */
     LithiumThionylChloride = 7,
+
+    /**
+     * Cell chemistry is magnesium
+     */
     Magnesium = 8,
+
+    /**
+     * Cell chemistry is mercury oxide
+     */
     MercuryOxide = 9,
+
+    /**
+     * Cell chemistry is nickel oxyhydride
+     */
     NickelOxyhydride = 10,
+
+    /**
+     * Cell chemistry is silver oxide
+     */
     SilverOxide = 11,
+
+    /**
+     * Cell chemistry is zinc air
+     */
     ZincAir = 12,
+
+    /**
+     * Cell chemistry is zinc carbon
+     */
     ZincCarbon = 13,
+
+    /**
+     * Cell chemistry is zinc chloride
+     */
     ZincChloride = 14,
+
+    /**
+     * Cell chemistry is zinc manganese dioxide
+     */
     ZincManganeseDioxide = 15,
+
+    /**
+     * Cell chemistry is lead acid
+     */
     LeadAcid = 16,
+
+    /**
+     * Cell chemistry is lithium cobalt oxide
+     */
     LithiumCobaltOxide = 17,
+
+    /**
+     * Cell chemistry is lithium ion
+     */
     LithiumIon = 18,
+
+    /**
+     * Cell chemistry is lithium ion polymer
+     */
     LithiumIonPolymer = 19,
+
+    /**
+     * Cell chemistry is lithium iron phosphate
+     */
     LithiumIronPhosphate = 20,
+
+    /**
+     * Cell chemistry is lithium sulfur
+     */
     LithiumSulfur = 21,
+
+    /**
+     * Cell chemistry is lithium titanate
+     */
     LithiumTitanate = 22,
+
+    /**
+     * Cell chemistry is nickel cadmium
+     */
     NickelCadmium = 23,
+
+    /**
+     * Cell chemistry is nickel hydrogen
+     */
     NickelHydrogen = 24,
+
+    /**
+     * Cell chemistry is nickel iron
+     */
     NickelIron = 25,
+
+    /**
+     * Cell chemistry is nickel metal hydride
+     */
     NickelMetalHydride = 26,
+
+    /**
+     * Cell chemistry is nickel zinc
+     */
     NickelZinc = 27,
+
+    /**
+     * Cell chemistry is silver zinc
+     */
     SilverZinc = 28,
+
+    /**
+     * Cell chemistry is sodium ion
+     */
     SodiumIon = 29,
+
+    /**
+     * Cell chemistry is sodium sulfur
+     */
     SodiumSulfur = 30,
+
+    /**
+     * Cell chemistry is zinc bromide
+     */
     ZincBromide = 31,
+
+    /**
+     * Cell chemistry is zinc cerium
+     */
     ZincCerium = 32
 }
 
@@ -235,9 +759,24 @@ export const enum BatApprovedChemistry {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.10
  */
 export const enum BatChargeState {
+    /**
+     * Unable to determine the charging state
+     */
     Unknown = 0,
+
+    /**
+     * The battery is charging
+     */
     IsCharging = 1,
+
+    /**
+     * The battery is at full charge
+     */
     IsAtFullCharge = 2,
+
+    /**
+     * The battery is not charging
+     */
     IsNotCharging = 3
 }
 
@@ -245,16 +784,59 @@ export const enum BatChargeState {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.5.3
  */
 export const enum BatChargeFault {
+    /**
+     * The Node detects an unspecified fault on this battery source.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node detects the ambient temperature is above the nominal range for this battery source.
+     */
     AmbientTooHot = 1,
+
+    /**
+     * The Node detects the ambient temperature is below the nominal range for this battery source.
+     */
     AmbientTooCold = 2,
+
+    /**
+     * The Node detects the temperature of this battery source is above the nominal range.
+     */
     BatteryTooHot = 3,
+
+    /**
+     * The Node detects the temperature of this battery source is below the nominal range.
+     */
     BatteryTooCold = 4,
+
+    /**
+     * The Node detects this battery source is not present.
+     */
     BatteryAbsent = 5,
+
+    /**
+     * The Node detects this battery source is over voltage.
+     */
     BatteryOverVoltage = 6,
+
+    /**
+     * The Node detects this battery source is under voltage.
+     */
     BatteryUnderVoltage = 7,
+
+    /**
+     * The Node detects the charger for this battery source is over voltage.
+     */
     ChargerOverVoltage = 8,
+
+    /**
+     * The Node detects the charger for this battery source is under voltage.
+     */
     ChargerUnderVoltage = 9,
+
+    /**
+     * The Node detects a charging safety timeout for this battery source.
+     */
     SafetyTimeout = 10
 }
 
@@ -380,7 +962,7 @@ export const WiredComponent = ClusterComponent({
         /**
          * This attribute shall indicate the assessed RMS or DC voltage currently provided by the hard-wired source, in
          * mV (millivolts). A value of NULL shall indicate the Node is currently unable to assess the value. If the
-         * wired source is not connected, but the Node is still able to assess a value, then the assessed value MAY be
+         * wired source is not connected, but the Node is still able to assess a value, then the assessed value may be
          * reported.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.4
@@ -390,7 +972,7 @@ export const WiredComponent = ClusterComponent({
         /**
          * This attribute shall indicate the assessed frequency of the voltage, currently provided by the hard-wired
          * source, in Hz. A value of NULL shall indicate the Node is currently unable to assess the value. If the wired
-         * source is not connected, but the Node is still able to assess a value, then the assessed value MAY be
+         * source is not connected, but the Node is still able to assess a value, then the assessed value may be
          * reported.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.5
@@ -408,7 +990,7 @@ export const WiredComponent = ClusterComponent({
         /**
          * This attribute shall indicate the assessed instantaneous current draw of the Node on the hard- wired source,
          * in mA (milliamps). A value of NULL shall indicate the Node is currently unable to assess the value. If the
-         * wired source is not connected, but the Node is still able to assess a value, then the assessed value MAY be
+         * wired source is not connected, but the Node is still able to assess a value, then the assessed value may be
          * reported.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.7
@@ -445,8 +1027,8 @@ export const WiredComponent = ClusterComponent({
          * shall NOT contain more than one instance of a specific WiredFaultEnum value. When the Node detects all
          * conditions contributing to a fault have been cleared, the corresponding WiredFaultEnum value shall be
          * removed from this list. An empty list shall indicate there are currently no active faults. The order of this
-         * list SHOULD have no significance. Clients interested in monitoring changes in active faults MAY subscribe to
-         * this attribute, or they MAY subscribe to WiredFaultChange.
+         * list SHOULD have no significance. Clients interested in monitoring changes in active faults may subscribe to
+         * this attribute, or they may subscribe to WiredFaultChange.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.11
          */
@@ -504,8 +1086,8 @@ export const BatteryComponent = ClusterComponent({
         batChargeLevel: Attribute(14, TlvEnum<BatChargeLevel>()),
 
         /**
-         * This attribute shall indicate if the battery needs to be replaced. Replacement MAY be simple routine
-         * maintenance, such as with a single use, non-rechargeable cell. Replacement, however, MAY also indicate end
+         * This attribute shall indicate if the battery needs to be replaced. Replacement may be simple routine
+         * maintenance, such as with a single use, non-rechargeable cell. Replacement, however, may also indicate end
          * of life, or serious fault with a rechargeable or even non-replaceable cell.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.16
@@ -533,8 +1115,8 @@ export const BatteryComponent = ClusterComponent({
          * shall NOT contain more than one instance of a specific BatFaultEnum value. When the Node detects all
          * conditions contributing to a fault have been cleared, the corresponding BatFaultEnum value shall be removed
          * from this list. An empty list shall indicate there are currently no active faults. The order of this list
-         * SHOULD have no significance. Clients interested in monitoring changes in active faults MAY subscribe to this
-         * attribute, or they MAY subscribe to Section 11.7.7.2, “BatFaultChange Event”.
+         * SHOULD have no significance. Clients interested in monitoring changes in active faults may subscribe to this
+         * attribute, or they may subscribe to Section 11.7.7.2, “BatFaultChange Event”.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.19
          */
@@ -664,8 +1246,8 @@ export const RechargeableComponent = ClusterComponent({
          * list shall NOT contain more than one instance of a specific BatChargeFaultEnum value. When the Node detects
          * all conditions contributing to a fault have been cleared, the corresponding BatChargeFaultEnum value shall
          * be removed from this list. An empty list shall indicate there are currently no active faults. The order of
-         * this list SHOULD have no significance. Clients interested in monitoring changes in active faults MAY
-         * subscribe to this attribute, or they MAY subscribe to the BatFaultChange event.
+         * this list SHOULD have no significance. Clients interested in monitoring changes in active faults may
+         * subscribe to this attribute, or they may subscribe to the BatFaultChange event.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.31
          */

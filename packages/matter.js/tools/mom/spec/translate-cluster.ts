@@ -45,7 +45,7 @@ export function* translateCluster(definition: ClusterReference) {
 
     for (const [id, name] of metadata.ids.entries()) {
         const idStr = id === undefined ? "(no ID)" : `0x${id.toString(16)}`;
-        logger.debug(`0x${idStr} ${name}`, Logger.dict({ rev: metadata.revision, cls: metadata.classification }));
+        logger.debug(`${idStr} ${name}`, Logger.dict({ rev: metadata.revision, cls: metadata.classification }));
         const cluster = ClusterElement({
             id: id,
             name: name,
@@ -363,7 +363,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
                 id: Alias(Integer, ...ids),
                 name: Alias(Identifier, ...names),
                 conformance: Optional(Code),
-                description: Optional(Alias(Str, "notes")),
+                description: Optional(Alias(Str, "summary", "notes")),
                 meaning: Optional(Str)
             });
 
@@ -373,26 +373,49 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
         }
 
         case Metatype.bitmap: {
-            let records: { id?: number, name: string }[];
-
             if (hasColumn(definition, "meaning")) {
                 // Window covering cluster just plain made up their own format.
-                // Implemented a parser but maintaining is more work than just
-                // defining manually so tossed it
-                logger.warn("Ignoring weird window covering bitmasks");
-                return [];
-            } else {
-                // Standard(ish) bitmap table
-                //
-                // Previously had identified aliases as "mappedprotocol", "statebit", "function", "relatedattribute"
-                // but this was only a partial list.  Auto-detection makes more sense
-                const { ids, names } = chooseIdentityAliases(definition, ["bit", "id"], ["name", "eventdescription"]);
-                records = translateTable("bit", definition, {
-                    id: Alias(Integer, ...ids),
-                    name: Alias(Identifier, ...names),
-                    description: Optional(Alias(Str, "summary"))
+                // We extract bits, description and conformance but just
+                // leave a placeholder for the name
+                const records = translateTable("bit", definition, {
+                    bit: Str,
+                    description: Str,
+                    conformance: Optional(Alias(Str, "M"))
+                });
+                return translateRecordsToMatter("wc bit", records, (r) => {
+                    const bits = r.bit.split("..").map(b => Number.parseInt(b));
+                    if (bits.findIndex(Number.isNaN) !== -1) {
+                        return;
+                    }
+                    let name, constraint;
+                    if (bits.length === 1) {
+                        constraint = bits[0];
+                        name = `Bit${bits[0]}`;
+                    } else if (bits.length === 2) {
+                        constraint = { min: bits[0], max: bits[1] + 1 };
+                        name = `Bits${bits[0]}To${bits[1]}`;
+                    }
+                    if (name) {
+                        return DatatypeElement({
+                            name,
+                            constraint,
+                            description: r.description,
+                            conformance: r.conformance
+                        });
+                    }
                 });
             }
+
+            // Standard(ish) bitmap table
+            //
+            // Previously had identified aliases as "mappedprotocol", "statebit", "function", "relatedattribute"
+            // but this was only a partial list.  Auto-detection makes more sense
+            const { ids, names } = chooseIdentityAliases(definition, ["bit", "id"], ["name", "eventdescription"]);
+            const records = translateTable("bit", definition, {
+                constraint: Alias(Str, ...ids),
+                name: Alias(Identifier, ...names),
+                description: Optional(Alias(Str, "summary"))
+            });
 
             return translateRecordsToMatter("bit", records, DatatypeElement);
         }

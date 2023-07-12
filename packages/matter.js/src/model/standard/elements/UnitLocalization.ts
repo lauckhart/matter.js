@@ -26,10 +26,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.5.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "TEMP", id: 0x0, description: "TemperatureUnit",
                 details: "The Node can be configured to use different units of temperature when conveying values to a user."
-            } ]
+            }]
         },
 
         {
@@ -44,10 +44,20 @@ Matter.children.push({
         {
             tag: "datatype", name: "TempUnitEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.5.5.1" },
+
             children: [
-                { tag: "datatype", name: "Fahrenheit", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Celsius", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Kelvin", id: 0x2, conformance: "M" }
+                {
+                    tag: "datatype", name: "Fahrenheit", id: 0x0, conformance: "M",
+                    description: "Temperature conveyed in Fahrenheit"
+                },
+                {
+                    tag: "datatype", name: "Celsius", id: 0x1, conformance: "M",
+                    description: "Temperature conveyed in Celsius"
+                },
+                {
+                    tag: "datatype", name: "Kelvin", id: 0x2, conformance: "M",
+                    description: "Temperature conveyed in Kelvin"
+                }
             ]
         }
     ]

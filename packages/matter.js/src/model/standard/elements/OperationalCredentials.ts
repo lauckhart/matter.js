@@ -30,7 +30,7 @@ Matter.children.push({
                      "The number of entries in this list shall match the number of entries in the Fabrics attribute.",
 
             xref: { document: "core", section: "11.17.5.1" },
-            children: [ { tag: "datatype", name: "entry", type: "NOCStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "NOCStruct" }]
         },
 
         {
@@ -38,14 +38,14 @@ Matter.children.push({
             constraint: "max SupportedFabrics", quality: "N",
 
             details: "This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only " +
-                     "list of FabricDescriptorStruct. This information MAY be computed directly from the NOCs attribute." +
+                     "list of FabricDescriptorStruct. This information may be computed directly from the NOCs attribute." +
                      "\n" +
                      "Upon Factory Data Reset, this attribute shall be set to a default value of an empty list." +
                      "\n" +
                      "The number of entries in this list shall match the number of entries in the NOCs attribute.",
 
             xref: { document: "core", section: "11.17.5.2" },
-            children: [ { tag: "datatype", name: "entry", type: "FabricDescriptorStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "FabricDescriptorStruct" }]
         },
 
         {
@@ -84,7 +84,7 @@ Matter.children.push({
                      "Depending on the method of storage employed by the server, either shared storage for identical root " +
                      "certificates shared by many fabrics, or individually stored root certificate per fabric, multiple" +
                      "\n" +
-                     "identical root certificates MAY legally appear within the list." +
+                     "identical root certificates may legally appear within the list." +
                      "\n" +
                      "To match a root with a given fabric, the root certificate’s subject and subject public key need to " +
                      "be cross-referenced with the NOC or ICAC certificates that appear in the NOCs attribute for a given " +
@@ -93,7 +93,7 @@ Matter.children.push({
                      "Upon Factory Data Reset, this attribute shall be set to a default value whereby the list is empty.",
 
             xref: { document: "core", section: "11.17.5.5" },
-            children: [ { tag: "datatype", name: "entry", type: "octstr" } ]
+            children: [{ tag: "datatype", name: "entry", type: "octstr" }]
         },
 
         {
@@ -158,10 +158,10 @@ Matter.children.push({
             details: "If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall " +
                      "fail with a Status Code of INVALID_COMMAND.",
             xref: { document: "core", section: "11.17.6.3" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "CertificateType", id: 0x0, type: "CertificateChainTypeEnum",
                 conformance: "M", constraint: "desc"
-            } ]
+            }]
         },
 
         {
@@ -169,13 +169,13 @@ Matter.children.push({
             details: "This command shall be generated in response to a CertificateChainRequest command.",
             xref: { document: "core", section: "11.17.6.4" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Certificate", id: 0x0, type: "octstr", conformance: "M",
                 constraint: "max 600",
                 details: "This field shall be the DER encoded certificate corresponding to the CertificateType field in the " +
                          "CertificateChainRequest command.",
                 xref: { document: "core", section: "11.17.6.4.1" }
-            } ]
+            }]
         },
 
         {
@@ -372,7 +372,7 @@ Matter.children.push({
                              "      associated with the new Fabric Scope, along with the RootCACertificate provided with the " +
                              "      prior successful AddTrustedRootCertificate command invoked in the same fail-safe period." +
                              "\n" +
-                             "    a. Implementation of certificate chain storage MAY separate or otherwise encode the components " +
+                             "    a. Implementation of certificate chain storage may separate or otherwise encode the components " +
                              "       of the array in implementation-specific ways, as long as they follow the correct format when " +
                              "       being read from the NOCs list or used within other protocols such as CASE." +
                              "\n" +
@@ -525,9 +525,9 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "DebugText", id: 0x2, type: "string", conformance: "O",
                     constraint: "max 128",
-                    details: "This field MAY contain debugging textual information from the cluster implementation, which SHOULD " +
+                    details: "This field may contain debugging textual information from the cluster implementation, which SHOULD " +
                              "NOT be presented to user interfaces in any way. Its purpose is to help developers in " +
-                             "troubleshooting errors and the contents MAY go into logs or crash reports.",
+                             "troubleshooting errors and the contents may go into logs or crash reports.",
                     xref: { document: "core", section: "11.17.6.10.3" }
                 }
             ]
@@ -563,7 +563,7 @@ Matter.children.push({
                      "updated.",
 
             xref: { document: "core", section: "11.17.6.11" },
-            children: [ { tag: "datatype", name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32" } ]
+            children: [{ tag: "datatype", name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32" }]
         },
 
         {
@@ -626,7 +626,7 @@ Matter.children.push({
                      "session with the target.",
 
             xref: { document: "core", section: "11.17.6.12" },
-            children: [ { tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254" } ]
+            children: [{ tag: "datatype", name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254" }]
         },
 
         {
@@ -661,7 +661,7 @@ Matter.children.push({
                      "root of trust using the RemoveFabric command.",
 
             xref: { document: "core", section: "11.17.6.13" },
-            children: [ { tag: "datatype", name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" } ]
+            children: [{ tag: "datatype", name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" }]
         },
 
         {
@@ -669,9 +669,16 @@ Matter.children.push({
             details: "This enumeration is used by the CertificateChainRequest command to convey which certificate from " +
                      "the device attestation certificate chain to transmit back to the client.",
             xref: { document: "core", section: "11.17.4.2" },
+
             children: [
-                { tag: "datatype", name: "DacCertificate", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "PaiCertificate", id: 0x2, conformance: "M" }
+                {
+                    tag: "datatype", name: "DacCertificate", id: 0x1, conformance: "M",
+                    description: "Request the DER- encoded DAC certificate"
+                },
+                {
+                    tag: "datatype", name: "PaiCertificate", id: 0x2, conformance: "M",
+                    description: "Request the DER- encoded PAI certificate"
+                }
             ]
         },
 
@@ -683,16 +690,43 @@ Matter.children.push({
             xref: { document: "core", section: "11.17.4.3" },
 
             children: [
-                { tag: "datatype", name: "Ok", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "InvalidPublicKey", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "InvalidNodeOpId", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "InvalidNoc", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "MissingCsr", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "TableFull", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "InvalidAdminSubject", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "FabricConflict", id: 0x9, conformance: "M" },
-                { tag: "datatype", name: "LabelConflict", id: 0xa, conformance: "M" },
-                { tag: "datatype", name: "InvalidFabricIndex", id: 0xb, conformance: "M" }
+                { tag: "datatype", name: "Ok", id: 0x0, conformance: "M", description: "OK, no error" },
+                {
+                    tag: "datatype", name: "InvalidPublicKey", id: 0x1, conformance: "M",
+                    description: "Public Key in the NOC does not match the public key in the NOCSR"
+                },
+                {
+                    tag: "datatype", name: "InvalidNodeOpId", id: 0x2, conformance: "M",
+                    description: "The Node Operational ID in the NOC is not formatted correctly."
+                },
+                {
+                    tag: "datatype", name: "InvalidNoc", id: 0x3, conformance: "M",
+                    description: "Any other validation error in NOC chain"
+                },
+                {
+                    tag: "datatype", name: "MissingCsr", id: 0x4, conformance: "M",
+                    description: "No record of prior CSR for which this NOC could match"
+                },
+                {
+                    tag: "datatype", name: "TableFull", id: 0x5, conformance: "M",
+                    description: "NOCs table full, cannot add another one"
+                },
+                {
+                    tag: "datatype", name: "InvalidAdminSubject", id: 0x6, conformance: "M",
+                    description: "Invalid CaseAdminSubject field for an AddNOC command."
+                },
+                {
+                    tag: "datatype", name: "FabricConflict", id: 0x9, conformance: "M",
+                    description: "Trying to AddNOC instead of UpdateNOC against an existing Fabric."
+                },
+                {
+                    tag: "datatype", name: "LabelConflict", id: 0xa, conformance: "M",
+                    description: "Label already exists on another Fabric."
+                },
+                {
+                    tag: "datatype", name: "InvalidFabricIndex", id: 0xb, conformance: "M",
+                    description: "FabricIndex argument is invalid."
+                }
             ]
         },
 

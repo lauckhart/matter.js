@@ -29,7 +29,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "ProtocolsSupported", id: 0x3, type: "list", conformance: "M",
                     constraint: "max 8",
-                    children: [ { tag: "datatype", name: "entry", type: "DownloadProtocolEnum" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "DownloadProtocolEnum" }]
                 },
                 { tag: "datatype", name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O" },
                 { tag: "datatype", name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2" },
@@ -67,7 +67,7 @@ Matter.children.push({
             tag: "command", name: "ApplyUpdateRequest", id: 0x2, conformance: "M", direction: "request",
             response: "ApplyUpdateResponse",
             details: "This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”. " +
-                     "This field MAY be used by the OTA Provider to track minimal lifecycle state to allow finer-grained " +
+                     "This field may be used by the OTA Provider to track minimal lifecycle state to allow finer-grained " +
                      "scheduling of the application of Software Images by OTA Requestors.",
             xref: { document: "core", section: "11.19.6.5.18" },
             children: [
@@ -105,9 +105,9 @@ Matter.children.push({
                      "  2. An OTA Requestor has just successfully applied a Software Image it had obtained through means " +
                      "     different than those of this Cluster." +
                      "\n" +
-                     "An OTA Provider MAY use the state of invocation of this command to help track the progress of " +
+                     "An OTA Provider may use the state of invocation of this command to help track the progress of " +
                      "update for OTA Requestors it knows require a new OTA Software Image. However, due to the " +
-                     "possibility that an OTA Requestor MAY never come back (e.g. device removed from Fabric altogether, " +
+                     "possibility that an OTA Requestor may never come back (e.g. device removed from Fabric altogether, " +
                      "or a critical malfunction), an OTA Provider shall NOT expect every OTA Requestor to invoke this " +
                      "command for correct operation of the OTA Provider." +
                      "\n" +
@@ -116,9 +116,9 @@ Matter.children.push({
                      "\n" +
                      "Effect on Receipt" +
                      "\n" +
-                     "An OTA Provider receiving an invocation of this command MAY log it internally." +
+                     "An OTA Provider receiving an invocation of this command may log it internally." +
                      "\n" +
-                     "On receiving this command, an OTA Provider MAY use the information to update its bookkeeping of " +
+                     "On receiving this command, an OTA Provider may use the information to update its bookkeeping of " +
                      "cached Software Images, or use it for other similar administrative purposes.",
 
             xref: { document: "core", section: "11.19.6.5.22" },
@@ -134,10 +134,22 @@ Matter.children.push({
             xref: { document: "core", section: "11.19.6.4.1" },
 
             children: [
-                { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
+                {
+                    tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M",
+                    description: "Indicates that the OTA Provider has an update available."
+                },
+                {
+                    tag: "datatype", name: "Busy", id: 0x1, conformance: "M",
+                    description: "Indicates OTA Provider may have an update, but it is not ready yet."
+                },
+                {
+                    tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M",
+                    description: "Indicates that there is definitely no update currently available from the OTA Provider."
+                },
+                {
+                    tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M",
+                    description: "Indicates that the requested download protocol is not supported by the OTA Provider."
+                }
             ]
         },
 
@@ -147,10 +159,17 @@ Matter.children.push({
                      "enumeration is used in the Action field of the ApplyUpdateResponse command. See (Section " +
                      "11.19.6.5.4.1, “Action Field”).",
             xref: { document: "core", section: "11.19.6.4.2" },
+
             children: [
-                { tag: "datatype", name: "Proceed", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "AwaitNextAction", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Discontinue", id: 0x2, conformance: "M" }
+                { tag: "datatype", name: "Proceed", id: 0x0, conformance: "M", description: "Apply the update." },
+                {
+                    tag: "datatype", name: "AwaitNextAction", id: 0x1, conformance: "M",
+                    description: "Wait at least the given delay time."
+                },
+                {
+                    tag: "datatype", name: "Discontinue", id: 0x2, conformance: "M",
+                    description: "The OTA Provider is conveying a desire to rescind a previously provided Software Image."
+                }
             ]
         },
 
@@ -162,10 +181,19 @@ Matter.children.push({
             xref: { document: "core", section: "11.19.6.4.3" },
 
             children: [
-                { tag: "datatype", name: "BdxSynchronous", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "BdxAsynchronous", id: 0x1, conformance: "O" },
-                { tag: "datatype", name: "Https", id: 0x2, conformance: "O" },
-                { tag: "datatype", name: "VendorSpecific", id: 0x3, conformance: "O" }
+                {
+                    tag: "datatype", name: "BdxSynchronous", id: 0x0, conformance: "M",
+                    description: "Indicates support for synchronous BDX."
+                },
+                {
+                    tag: "datatype", name: "BdxAsynchronous", id: 0x1, conformance: "O",
+                    description: "Indicates support for asynchronous BDX."
+                },
+                { tag: "datatype", name: "Https", id: 0x2, conformance: "O", description: "Indicates support for HTTPS." },
+                {
+                    tag: "datatype", name: "VendorSpecific", id: 0x3, conformance: "O",
+                    description: "Indicates support for vendor specific protocol."
+                }
             ]
         },
 

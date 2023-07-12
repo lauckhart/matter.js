@@ -69,18 +69,79 @@ export const TlvOffWithEffectRequest = TlvObject({
 });
 
 /**
- * Bit definitions for TlvOnOffControl
+ * The value of nameFor(model) {
+ *
+ * var _a;
+ *
+ * if (!(model instanceof ValueModel)) {
+ *
+ * return;
+ *
+ * }
+ *
+ * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
+ *
+ * let name = defining.name;
+ *
+ * // If there is a name collision, prefix the name with the parent's name
+ *
+ * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+ *
+ * name = `${defining.parent.name}${name}`;
+ *
+ * }
+ *
+ * // Specialize the name based on the model type
+ *
+ * if (defining instanceof CommandModel && defining.isRequest) {
+ *
+ * name += "Request";
+ *
+ * }
+ *
+ * if (defining instanceof EventModel) {
+ *
+ * name += "Event";
+ *
+ * }
+ *
+ * // For enums and bitmaps we create a TypeScript value object, for other
+ *
+ * // types we create a TLV definition
+ *
+ * if (defining.effectiveMetatype === Metatype.enum) {
+ *
+ * if (name.endsWith("Enum")) {
+ *
+ * // This seems a bit redundant
+ *
+ * name = name.substring(0, name.length - 4);
+ *
+ * }
+ *
+ * }
+ *
+ * else if (defining.effectiveMetatype !== Metatype.bitmap) {
+ *
+ * name = "Tlv" + name;
+ *
+ * }
+ *
+ * // We reserve the name "Type". Plus it's kind of ambiguous
+ *
+ * if (name == "Type") {
+ *
+ * name = `${this.cluster.name}Type`;
+ *
+ * }
+ *
+ * return name;
+ *
+ * }.onOffControl
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6.1
  */
-export const OnOffControlBits = { acceptOnlyWhenOn: BitFlag(0), reserved: BitFlag(1) };
-
-/**
- * The value of OnWithTimedOff.onOffControl
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6.1
- */
-export const TlvOnOffControl = TlvBitmap(TlvUInt8, OnOffControlBits);
+export const OnOffControl = { acceptOnlyWhenOn: BitFlag(0), reserved: BitFlag(1) };
 
 /**
  * Input to the OnOff onWithTimedOff command
@@ -99,7 +160,7 @@ export const TlvOnWithTimedOffRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6.1
      */
-    onOffControl: TlvField(0, TlvOnOffControl),
+    onOffControl: TlvField(0, TlvBitmap(TlvUInt8, OnOffControl)),
 
     /**
      * The OnTime field is used to adjust the value of the OnTime attribute.

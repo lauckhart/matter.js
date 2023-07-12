@@ -38,7 +38,7 @@ Matter.children.push({
                      "cluster instance on the endpoint.",
 
             xref: { document: "core", section: "9.5.5.1" },
-            children: [ { tag: "datatype", name: "entry", type: "DeviceTypeStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "DeviceTypeStruct" }]
         },
 
         {
@@ -46,7 +46,7 @@ Matter.children.push({
             default: [], quality: "F",
             details: "This attribute shall list each cluster ID for the server clusters present on the endpoint instance.",
             xref: { document: "core", section: "9.5.5.2" },
-            children: [ { tag: "datatype", name: "entry", type: "cluster-id" } ]
+            children: [{ tag: "datatype", name: "entry", type: "cluster-id" }]
         },
 
         {
@@ -54,7 +54,7 @@ Matter.children.push({
             default: [], quality: "F",
             details: "This attribute shall list each cluster ID for the client clusters present on the endpoint instance.",
             xref: { document: "core", section: "9.5.5.3" },
-            children: [ { tag: "datatype", name: "entry", type: "cluster-id" } ]
+            children: [{ tag: "datatype", name: "entry", type: "cluster-id" }]
         },
 
         {
@@ -64,7 +64,7 @@ Matter.children.push({
                      "shall include the endpoints in this list. See Endpoint Composition for more information which " +
                      "endpoints to include in this list.",
             xref: { document: "core", section: "9.5.5.4" },
-            children: [ { tag: "datatype", name: "entry", type: "endpoint-no" } ]
+            children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
         },
 
         {

@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "WiFiNetworkDiagnostics", id: 0x36, classification: "node",
     description: "WiFi Network Diagnostics",
     details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
-             "that MAY be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
+             "that may be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
              "Wi-Fi Network Diagnostics Cluster attempts to centralize all metrics that are relevant to a " +
              "potential Wi-Fi radio running on a Node.",
     xref: { document: "core", section: "11.14" },
@@ -79,7 +79,7 @@ Matter.children.push({
             conformance: "ERRCNT", default: 0, quality: "X C",
             details: "The BeaconLostCount attribute shall indicate the count of the number of missed beacons the Node has " +
                      "detected. If the Node does not have an ability to count beacons expected and not received, this " +
-                     "value MAY remain set to zero.",
+                     "value may remain set to zero.",
             xref: { document: "core", section: "11.14.6.6" }
         },
 
@@ -89,7 +89,7 @@ Matter.children.push({
             details: "The BeaconRxCount attribute shall indicate the count of the number of received beacons. The total " +
                      "number of expected beacons that could have been received during the interval since association " +
                      "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
-                     "report count of beacons received, this value MAY remain set to zero.",
+                     "report count of beacons received, this value may remain set to zero.",
             xref: { document: "core", section: "11.14.6.7" }
         },
 
@@ -149,13 +149,13 @@ Matter.children.push({
                      "result of de-authenticated or dis-association and indicates the reason.",
             xref: { document: "core", section: "11.14.8.1" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M",
                 details: "This field shall contain the Reason Code field value for the Disassociation or Deauthentication " +
                          "event that caused the disconnection and the value shall align with Table 9-49 \"Reason codes\" of " +
                          "IEEE 802.11-2020.",
                 xref: { document: "core", section: "11.14.8.1.1" }
-            } ]
+            }]
         },
 
         {
@@ -232,12 +232,30 @@ Matter.children.push({
             xref: { document: "core", section: "11.14.5.1" },
 
             children: [
-                { tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "None", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Wep", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Wpa", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Wpa2", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Wpa3", id: 0x5, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unspecified", id: 0x0, conformance: "M",
+                    description: "Indicate the usage of an unspecified Wi-Fi security type"
+                },
+                {
+                    tag: "datatype", name: "None", id: 0x1, conformance: "M",
+                    description: "Indicate the usage of no Wi-Fi security"
+                },
+                {
+                    tag: "datatype", name: "Wep", id: 0x2, conformance: "M",
+                    description: "Indicate the usage of WEP Wi-Fi security"
+                },
+                {
+                    tag: "datatype", name: "Wpa", id: 0x3, conformance: "M",
+                    description: "Indicate the usage of WPA Wi-Fi security"
+                },
+                {
+                    tag: "datatype", name: "Wpa2", id: 0x4, conformance: "M",
+                    description: "Indicate the usage of WPA2 Wi-Fi security"
+                },
+                {
+                    tag: "datatype", name: "Wpa3", id: 0x5, conformance: "M",
+                    description: "Indicate the usage of WPA3 Wi-Fi security"
+                }
             ]
         },
 
@@ -246,12 +264,30 @@ Matter.children.push({
             xref: { document: "core", section: "11.14.5.2" },
 
             children: [
-                { tag: "datatype", name: "A", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "B", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "G", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "N", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Ac", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Ax", id: 0x5, conformance: "M" }
+                {
+                    tag: "datatype", name: "A", id: 0x0, conformance: "M",
+                    description: "Indicate the network interface is currently using 802.11a against the wireless access point."
+                },
+                {
+                    tag: "datatype", name: "B", id: 0x1, conformance: "M",
+                    description: "Indicate the network interface is currently using 802.11b against the wireless access point."
+                },
+                {
+                    tag: "datatype", name: "G", id: 0x2, conformance: "M",
+                    description: "Indicate the network interface is currently using 802.11g against the wireless access point."
+                },
+                {
+                    tag: "datatype", name: "N", id: 0x3, conformance: "M",
+                    description: "Indicate the network interface is currently using 802.11n against the wireless access point."
+                },
+                {
+                    tag: "datatype", name: "Ac", id: 0x4, conformance: "M",
+                    description: "Indicate the network interface is currently using 802.11ac against the wireless access point."
+                },
+                {
+                    tag: "datatype", name: "Ax", id: 0x5, conformance: "M",
+                    description: "Indicate the network interface is currently using 802.11ax against the wireless access point."
+                }
             ]
         },
 
@@ -260,19 +296,38 @@ Matter.children.push({
             xref: { document: "core", section: "11.14.5.3" },
 
             children: [
-                { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "AssociationFailed", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "AuthenticationFailed", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "SsidNotFound", id: 0x3, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "M",
+                    description: "The reason for the failure is unknown."
+                },
+                {
+                    tag: "datatype", name: "AssociationFailed", id: 0x1, conformance: "M",
+                    description: "An error occurred during association."
+                },
+                {
+                    tag: "datatype", name: "AuthenticationFailed", id: 0x2, conformance: "M",
+                    description: "An error occurred during authentication."
+                },
+                {
+                    tag: "datatype", name: "SsidNotFound", id: 0x3, conformance: "M",
+                    description: "The specified SSID could not be found."
+                }
             ]
         },
 
         {
             tag: "datatype", name: "ConnectionStatusEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.14.5.4" },
+
             children: [
-                { tag: "datatype", name: "Connected", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "NotConnected", id: 0x1, conformance: "M" }
+                {
+                    tag: "datatype", name: "Connected", id: 0x0, conformance: "M",
+                    description: "Indicate the node is connected"
+                },
+                {
+                    tag: "datatype", name: "NotConnected", id: 0x1, conformance: "M",
+                    description: "Indicate the node is not connected"
+                }
             ]
         }
     ]

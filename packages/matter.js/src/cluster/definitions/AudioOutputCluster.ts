@@ -139,7 +139,7 @@ export const NameUpdatesComponent = ClusterComponent({
         /**
          * Upon receipt, this shall rename the output at a specific index in the Output List.
          *
-         * Updates to the output name shall appear in the device’s settings menus. Name updates MAY automatically be
+         * Updates to the output name shall appear in the device’s settings menus. Name updates may automatically be
          * sent to the actual device to which the output connects.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4.2

@@ -5,9 +5,9 @@
  */
 
 import { InternalError } from "../../common/InternalError.js";
-import { ElementTag, FieldValue } from "../definitions/index.js";
+import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, Globals } from "../elements/index.js";
-import { type Model, type ValueModel, type DatatypeModel, CommandModel } from "../models/index.js";
+import { type Model, type ValueModel, CommandModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
 
@@ -217,20 +217,6 @@ export class ModelTraversal {
     }
 
     /**
-     * Find the model defining array entry type, if any.
-     */
-    findListEntry(model: ValueModel | undefined): DatatypeModel | undefined {
-        return this.operation(() => {
-            while (model) {
-                const entry = this.findMember(model, "entry", [ElementTag.Datatype]);
-                if (entry) {
-                    return entry as DatatypeModel;
-                }
-            }
-        })
-    }
-
-    /**
      * Search inherited scope for a named member.
      */
     findMember(scope: Model | undefined, key: ModelTraversal.ElementSelector, allowedTags: ElementTag[]): Model | undefined {
@@ -243,6 +229,32 @@ export class ModelTraversal {
                 scope = this.findBase(scope);
             }
         });
+    }
+
+    /**
+     * Search inherited scope for a bit definition.
+     */
+    findBitDefinition(scope: Model | undefined, bit: number) {
+        return this.operation(() => {
+            while (scope) {
+                if (!scope.isType) {
+                    return;
+                }
+
+                if ((scope as ValueModel).effectiveMetatype !== Metatype.bitmap) {
+                    scope = scope.parent;
+                    continue;
+                }
+
+                for (const c of (scope as ValueModel).children) {
+                    if (c.constraint.test(bit)) {
+                        return c;
+                    }
+                }
+                
+                scope = this.findBase(scope);
+            }
+        })
     }
 
     /**

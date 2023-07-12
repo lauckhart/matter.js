@@ -364,7 +364,7 @@ Matter.children.push({
                      "If this attribute is Normal and no remote sensor is connected, the control mode of the pump is " +
                      "decided by the ControlMode attribute." +
                      "\n" +
-                     "OperationMode MAY be changed at any time, even when the pump is running. The behavior of the pump " +
+                     "OperationMode may be changed at any time, even when the pump is running. The behavior of the pump " +
                      "at the point of changing the value of this attribute is vendor-specific." +
                      "\n" +
                      "In the case a device does not support a specific operation mode, the write interaction to this " +
@@ -384,7 +384,7 @@ Matter.children.push({
                      "\n" +
                      "pump." +
                      "\n" +
-                     "ControlMode MAY be changed at any time, even when the pump is running. The behavior of the pump at " +
+                     "ControlMode may be changed at any time, even when the pump is running. The behavior of the pump at " +
                      "the point of changing is vendor-specific." +
                      "\n" +
                      "In the case a device does not support a specific control mode, the write interaction to this " +
@@ -479,27 +479,24 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "DeviceFault", id: 0x0,
+                    tag: "datatype", name: "DeviceFault", constraint: "0",
                     description: "A fault related to the system or pump device is detected.",
-                    details: "If this bit is set, it MAY correspond to an event in the range 2-16, see Events.",
+                    details: "If this bit is set, it may correspond to an event in the range 2-16, see Events.",
                     xref: { document: "cluster", section: "4.2.6.1.1" }
                 },
 
                 {
-                    tag: "datatype", name: "SupplyFault", id: 0x1, conformance: "M",
+                    tag: "datatype", name: "SupplyFault", constraint: "1",
                     description: "A fault related to the supply to the pump is detected.",
-                    details: "If this bit is set, it MAY correspond to an event in the range 0-1 or 13, see Events.",
+                    details: "If this bit is set, it may correspond to an event in the range 0-1 or 13, see Events.",
                     xref: { document: "cluster", section: "4.2.6.1.2" }
                 },
 
-                {
-                    tag: "datatype", name: "SpeedLow", id: 0x2, conformance: "M",
-                    description: "Setpoint is too low to achieve."
-                },
-                { tag: "datatype", name: "SpeedHigh", id: 0x3, description: "Setpoint is too high to achieve." },
+                { tag: "datatype", name: "SpeedLow", constraint: "2", description: "Setpoint is too low to achieve." },
+                { tag: "datatype", name: "SpeedHigh", constraint: "3", description: "Setpoint is too high to achieve." },
 
                 {
-                    tag: "datatype", name: "LocalOverride", id: 0x10, conformance: "M",
+                    tag: "datatype", name: "LocalOverride", constraint: "4",
                     description: "Device control is overridden by hardware, such as an external STOP button or via a local HMI.",
                     details: "While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing " +
                              "OperationMode shall generate a FAILURE error status until LocalOverride is cleared on the physical " +
@@ -508,10 +505,10 @@ Matter.children.push({
                     xref: { document: "cluster", section: "4.2.6.1.3" }
                 },
 
-                { tag: "datatype", name: "Running", id: 0x20, conformance: "M", description: "Pump is currently running" },
+                { tag: "datatype", name: "Running", constraint: "5", description: "Pump is currently running" },
 
                 {
-                    tag: "datatype", name: "RemotePressure", id: 0x40, conformance: "M",
+                    tag: "datatype", name: "RemotePressure", constraint: "6",
                     description: "A remote pressure sensor is used as the sensor for the regulation of the pump.",
                     details: "If this bit is set, EffectiveControlMode is ConstantPressure and the setpoint for the pump is " +
                              "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -520,7 +517,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "RemoteFlow", id: 0x80, conformance: "M",
+                    tag: "datatype", name: "RemoteFlow", constraint: "7",
                     description: "A remote flow sensor is used as the sensor for the regulation of the pump.",
                     details: "If this bit is set, EffectiveControlMode is ConstantFlow, and the setpoint for the pump is " +
                              "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -529,7 +526,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "RemoteTemperature", id: 0x100, conformance: "M",
+                    tag: "datatype", name: "RemoteTemperature", constraint: "8",
                     description: "A remote temperature sensor is used as the sensor for the regulation of the pump.",
                     details: "If this bit is set, EffectiveControlMode is ConstantTemperature, and the setpoint for the pump is " +
                              "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -546,14 +543,24 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "Normal", id: 0x0, conformance: "M",
-                    details: "If the pump is running in this operation mode the setpoint is an internal variable which MAY be " +
+                    description: "The pump is controlled by a setpoint, as defined by a connected remote sensor or by the ControlMode attribute.",
+                    details: "If the pump is running in this operation mode the setpoint is an internal variable which may be " +
                              "controlled between 0% and 100%, e.g., by means of the Level Control cluster",
                     xref: { document: "cluster", section: "4.2.6.2.1" }
                 },
 
-                { tag: "datatype", name: "Minimum", id: 0x1, conformance: "SPD" },
-                { tag: "datatype", name: "Maximum", id: 0x2, conformance: "SPD" },
-                { tag: "datatype", name: "Local", id: 0x3, conformance: "LOCAL" }
+                {
+                    tag: "datatype", name: "Minimum", id: 0x1, conformance: "SPD",
+                    description: "This value sets the pump to run at the minimum possible speed it can without being stopped."
+                },
+                {
+                    tag: "datatype", name: "Maximum", id: 0x2, conformance: "SPD",
+                    description: "This value sets the pump to run at its maximum possible speed."
+                },
+                {
+                    tag: "datatype", name: "Local", id: 0x3, conformance: "LOCAL",
+                    description: "This value sets the pump to run with the local settings of the pump, regardless of what these are."
+                }
             ]
         },
 
@@ -564,6 +571,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "ConstantSpeed", id: 0x0, conformance: "SPD",
+                    description: "The pump is running at a constant speed.",
                     details: "The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – " +
                              "MaxConstSpeed] attributes.",
                     xref: { document: "cluster", section: "4.2.6.3.1" }
@@ -571,6 +579,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "ConstantPressure", id: 0x1, conformance: "PRSCONST",
+                    description: "The pump will regulate its speed to maintain a constant differential pressure over its flanges.",
                     details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                              "In case of the internal pressure sensor, this will be the range derived from the [MinConstPressure " +
                              "– MaxConstPressure] attributes. In case of a remote pressure sensor, this will be the range derived " +
@@ -580,6 +589,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "ProportionalPressure", id: 0x2, conformance: "PRSCOMP",
+                    description: "The pump will regulate its speed to maintain a constant differential pressure over its flanges.",
                     details: "The setpoint is interpreted as a percentage of the range derived of the [MinCompPressure – " +
                              "MaxCompPressure] attributes. The internal setpoint will be lowered (compensated) dependent on the " +
                              "flow in the pump (lower flow ⇒ lower internal setpoint).",
@@ -588,6 +598,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "ConstantFlow", id: 0x3, conformance: "FLW",
+                    description: "The pump will regulate its speed to maintain a constant flow through the pump.",
                     details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                              "In case of the internal flow sensor, this will be the range derived from the [MinConstFlow – " +
                              "MaxConstFlow] attributes. In case of a remote flow sensor, this will be the range derived from the " +
@@ -597,6 +608,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "ConstantTemperature", id: 0x5, conformance: "TEMP",
+                    description: "The pump will regulate its speed to maintain a constant temperature.",
                     details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                              "In case of the internal temperature sensor, this will be the range derived from the [MinConstTemp – " +
                              "MaxConstTemp] attributes. In case of a remote temperature sensor, this will be the range derived " +
@@ -606,6 +618,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Automatic", id: 0x7, conformance: "AUTO",
+                    description: "The operation of the pump is automatically optimized to provide the most suitable performance with respect to comfort and energy savings.",
                     details: "This behavior is manufacturer defined. The pump can be stopped by setting the setpoint of the level " +
                              "control cluster to 0, or by using the On/Off cluster. If the pump is started (at any setpoint), the " +
                              "speed of the pump is entirely determined by the pump.",

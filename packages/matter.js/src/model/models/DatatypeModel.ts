@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Mei } from "../definitions/index.js";
+import { Mei, Metatype } from "../definitions/index.js";
 import { DatatypeElement } from "../elements/index.js";
 import { ValueModel } from "./ValueModel.js";
 import { Model } from "./Model.js";
@@ -34,6 +34,17 @@ export class DatatypeModel extends ValueModel implements DatatypeElement {
                 return index;
             }
         }
+    }
+
+    /**
+     * The key for bitmap fields is actually the constraint which defines the
+     * bit range.  All other datatypes use the default key.
+     */
+    override get key() {
+        if (this.parent instanceof ValueModel && this.parent.effectiveMetatype === Metatype.bitmap) {
+            return this.constraint.toString();
+        }
+        return super.key;
     }
 
     static {

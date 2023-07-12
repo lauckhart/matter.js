@@ -32,14 +32,49 @@ export const TlvProviderLocationStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.5
  */
 export const enum UpdateState {
+    /**
+     * Current state is not yet determined.
+     */
     Unknown = 0,
+
+    /**
+     * Indicate a Node not yet in the process of software update.
+     */
     Idle = 1,
+
+    /**
+     * Indicate a Node in the process of querying an OTA Provider.
+     */
     Querying = 2,
+
+    /**
+     * Indicate a Node waiting after a Busy response.
+     */
     DelayedOnQuery = 3,
+
+    /**
+     * Indicate a Node currently in the process of downloading a software update.
+     */
     Downloading = 4,
+
+    /**
+     * Indicate a Node currently in the process of verifying and applying a software update.
+     */
     Applying = 5,
+
+    /**
+     * Indicate a Node waiting caused by AwaitNextAction response.
+     */
     DelayedOnApply = 6,
+
+    /**
+     * Indicate a Node in the process of recovering to a previous version.
+     */
     RollingBack = 7,
+
+    /**
+     * Indicate a Node is capable of user consent.
+     */
     DelayedOnUserConsent = 8
 }
 
@@ -47,8 +82,21 @@ export const enum UpdateState {
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.1
  */
 export const enum AnnouncementReason {
+    /**
+     * An OTA Provider is announcing its presence.
+     */
     SimpleAnnouncement = 0,
+
+    /**
+     * An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be
+     * available.
+     */
     UpdateAvailable = 1,
+
+    /**
+     * An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be
+     * available, which contains an update that needs to be applied urgently.
+     */
     UrgentUpdateAvailable = 2
 }
 
@@ -71,10 +119,29 @@ export const TlvAnnounceOtaProviderRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.15
  */
 export const enum ChangeReason {
+    /**
+     * The reason for a state change is unknown.
+     */
     Unknown = 0,
+
+    /**
+     * The reason for a state change is the success of a prior operation.
+     */
     Success = 1,
+
+    /**
+     * The reason for a state change is the failure of a prior operation.
+     */
     Failure = 2,
+
+    /**
+     * The reason for a state change is a time-out.
+     */
     TimeOut = 3,
+
+    /**
+     * The reason for a state change is a request by the OTA Provider to wait.
+     */
     DelayByProvider = 4
 }
 
@@ -173,7 +240,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * A value of 0 shall indicate that the beginning has occurred. A value of 100 shall indicate completion.
          *
-         * This field MAY be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting progress
+         * This field may be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting progress
          * when this attribute is part of a subscription.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.4
@@ -183,7 +250,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
 
     commands: {
         /**
-         * This command MAY be invoked by Administrators to announce the presence of a particular OTA Provider.
+         * This command may be invoked by Administrators to announce the presence of a particular OTA Provider.
          *
          * This command shall be scoped to the accessing fabric.
          *

@@ -23,9 +23,24 @@ import { TlvBoolean } from "../../tlv/TlvBoolean.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.3
  */
 export const enum DownloadProtocol {
+    /**
+     * Indicates support for synchronous BDX.
+     */
     BdxSynchronous = 0,
+
+    /**
+     * Indicates support for asynchronous BDX.
+     */
     BdxAsynchronous = 1,
+
+    /**
+     * Indicates support for HTTPS.
+     */
     Https = 2,
+
+    /**
+     * Indicates support for vendor specific protocol.
+     */
     VendorSpecific = 3
 }
 
@@ -40,7 +55,7 @@ export const TlvQueryImageRequest = TlvObject({
     softwareVersion: TlvField(2, TlvUInt32),
     protocolsSupported: TlvField(3, TlvArray(TlvEnum<DownloadProtocol>())),
     hardwareVersion: TlvOptionalField(4, TlvUInt16),
-    location: TlvOptionalField(5, TlvString.bound({ minLength: 2, maxLength: 2 })),
+    location: TlvOptionalField(5, TlvString),
     requestorCanConsent: TlvOptionalField(6, TlvBoolean),
     metadataForProvider: TlvOptionalField(7, TlvByteString.bound({ maxLength: 512 }))
 });
@@ -51,9 +66,24 @@ export const TlvQueryImageRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.1
  */
 export const enum Status {
+    /**
+     * Indicates that the OTA Provider has an update available.
+     */
     UpdateAvailable = 0,
+
+    /**
+     * Indicates OTA Provider may have an update, but it is not ready yet.
+     */
     Busy = 1,
+
+    /**
+     * Indicates that there is definitely no update currently available from the OTA Provider.
+     */
     NotAvailable = 2,
+
+    /**
+     * Indicates that the requested download protocol is not supported by the OTA Provider.
+     */
     DownloadProtocolNotSupported = 3
 }
 
@@ -88,8 +118,19 @@ export const TlvApplyUpdateRequestRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.4.2
  */
 export const enum ApplyUpdateAction {
+    /**
+     * Apply the update.
+     */
     Proceed = 0,
+
+    /**
+     * Wait at least the given delay time.
+     */
     AwaitNextAction = 1,
+
+    /**
+     * The OTA Provider is conveying a desire to rescind a previously provided Software Image.
+     */
     Discontinue = 2
 }
 
@@ -135,7 +176,7 @@ export const OtaSoftwareUpdateProviderCluster = Cluster({
 
         /**
          * This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”. This
-         * field MAY be used by the OTA Provider to track minimal lifecycle state to allow finer-grained scheduling of
+         * field may be used by the OTA Provider to track minimal lifecycle state to allow finer-grained scheduling of
          * the application of Software Images by OTA Requestors.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
@@ -159,9 +200,9 @@ export const OtaSoftwareUpdateProviderCluster = Cluster({
          *   2. An OTA Requestor has just successfully applied a Software Image it had obtained through means different
          *      than those of this Cluster.
          *
-         * An OTA Provider MAY use the state of invocation of this command to help track the progress of update for OTA
+         * An OTA Provider may use the state of invocation of this command to help track the progress of update for OTA
          * Requestors it knows require a new OTA Software Image. However, due to the possibility that an OTA Requestor
-         * MAY never come back (e.g. device removed from Fabric altogether, or a critical malfunction), an OTA Provider
+         * may never come back (e.g. device removed from Fabric altogether, or a critical malfunction), an OTA Provider
          * shall NOT expect every OTA Requestor to invoke this command for correct operation of the OTA Provider.
          *
          * This command shall be considered optional and shall not result in reduced availability of the OTA Provider
@@ -169,9 +210,9 @@ export const OtaSoftwareUpdateProviderCluster = Cluster({
          *
          * Effect on Receipt
          *
-         * An OTA Provider receiving an invocation of this command MAY log it internally.
+         * An OTA Provider receiving an invocation of this command may log it internally.
          *
-         * On receiving this command, an OTA Provider MAY use the information to update its bookkeeping of cached
+         * On receiving this command, an OTA Provider may use the information to update its bookkeeping of cached
          * Software Images, or use it for other similar administrative purposes.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.22

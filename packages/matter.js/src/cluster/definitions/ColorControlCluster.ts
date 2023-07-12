@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { OptionalAttribute, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap, TlvInt16 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
@@ -40,18 +40,11 @@ export const enum ColorMode {
 }
 
 /**
- * Bit definitions for TlvOptions
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
- */
-export const OptionsBits = { executeIfOff: BitFlag(1) };
-
-/**
  * The value of the ColorControl options attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
  */
-export const TlvOptions = TlvBitmap(TlvUInt8, OptionsBits);
+export const Options = { executeIfOff: BitFlag(0) };
 
 /**
  * The value of the ColorControl enhancedColorMode attribute
@@ -604,11 +597,79 @@ export const TlvEnhancedMoveToHueAndSaturationRequest = TlvObject({
 });
 
 /**
- * Bit definitions for TlvUpdateFlags
+ * The value of nameFor(model) {
+ *
+ * var _a;
+ *
+ * if (!(model instanceof ValueModel)) {
+ *
+ * return;
+ *
+ * }
+ *
+ * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
+ *
+ * let name = defining.name;
+ *
+ * // If there is a name collision, prefix the name with the parent's name
+ *
+ * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+ *
+ * name = `${defining.parent.name}${name}`;
+ *
+ * }
+ *
+ * // Specialize the name based on the model type
+ *
+ * if (defining instanceof CommandModel && defining.isRequest) {
+ *
+ * name += "Request";
+ *
+ * }
+ *
+ * if (defining instanceof EventModel) {
+ *
+ * name += "Event";
+ *
+ * }
+ *
+ * // For enums and bitmaps we create a TypeScript value object, for other
+ *
+ * // types we create a TLV definition
+ *
+ * if (defining.effectiveMetatype === Metatype.enum) {
+ *
+ * if (name.endsWith("Enum")) {
+ *
+ * // This seems a bit redundant
+ *
+ * name = name.substring(0, name.length - 4);
+ *
+ * }
+ *
+ * }
+ *
+ * else if (defining.effectiveMetatype !== Metatype.bitmap) {
+ *
+ * name = "Tlv" + name;
+ *
+ * }
+ *
+ * // We reserve the name "Type". Plus it's kind of ambiguous
+ *
+ * if (name == "Type") {
+ *
+ * name = `${this.cluster.name}Type`;
+ *
+ * }
+ *
+ * return name;
+ *
+ * }.updateFlags
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.1
  */
-export const UpdateFlagsBits = {
+export const UpdateFlags = {
     updateAction: BitFlag(0),
     updateDirection: BitFlag(1),
     updateTime: BitFlag(2),
@@ -617,14 +678,75 @@ export const UpdateFlagsBits = {
 };
 
 /**
- * The value of ColorLoopSet.updateFlags
+ * The value of nameFor(model) {
  *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.1
- */
-export const TlvUpdateFlags = TlvBitmap(TlvUInt8, UpdateFlagsBits);
-
-/**
- * The value of ColorLoopSet.action
+ * var _a;
+ *
+ * if (!(model instanceof ValueModel)) {
+ *
+ * return;
+ *
+ * }
+ *
+ * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
+ *
+ * let name = defining.name;
+ *
+ * // If there is a name collision, prefix the name with the parent's name
+ *
+ * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+ *
+ * name = `${defining.parent.name}${name}`;
+ *
+ * }
+ *
+ * // Specialize the name based on the model type
+ *
+ * if (defining instanceof CommandModel && defining.isRequest) {
+ *
+ * name += "Request";
+ *
+ * }
+ *
+ * if (defining instanceof EventModel) {
+ *
+ * name += "Event";
+ *
+ * }
+ *
+ * // For enums and bitmaps we create a TypeScript value object, for other
+ *
+ * // types we create a TLV definition
+ *
+ * if (defining.effectiveMetatype === Metatype.enum) {
+ *
+ * if (name.endsWith("Enum")) {
+ *
+ * // This seems a bit redundant
+ *
+ * name = name.substring(0, name.length - 4);
+ *
+ * }
+ *
+ * }
+ *
+ * else if (defining.effectiveMetatype !== Metatype.bitmap) {
+ *
+ * name = "Tlv" + name;
+ *
+ * }
+ *
+ * // We reserve the name "Type". Plus it's kind of ambiguous
+ *
+ * if (name == "Type") {
+ *
+ * name = `${this.cluster.name}Type`;
+ *
+ * }
+ *
+ * return name;
+ *
+ * }.action
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.2
  */
@@ -635,7 +757,75 @@ export const enum Action {
 }
 
 /**
- * The value of ColorLoopSet.direction
+ * The value of nameFor(model) {
+ *
+ * var _a;
+ *
+ * if (!(model instanceof ValueModel)) {
+ *
+ * return;
+ *
+ * }
+ *
+ * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
+ *
+ * let name = defining.name;
+ *
+ * // If there is a name collision, prefix the name with the parent's name
+ *
+ * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+ *
+ * name = `${defining.parent.name}${name}`;
+ *
+ * }
+ *
+ * // Specialize the name based on the model type
+ *
+ * if (defining instanceof CommandModel && defining.isRequest) {
+ *
+ * name += "Request";
+ *
+ * }
+ *
+ * if (defining instanceof EventModel) {
+ *
+ * name += "Event";
+ *
+ * }
+ *
+ * // For enums and bitmaps we create a TypeScript value object, for other
+ *
+ * // types we create a TLV definition
+ *
+ * if (defining.effectiveMetatype === Metatype.enum) {
+ *
+ * if (name.endsWith("Enum")) {
+ *
+ * // This seems a bit redundant
+ *
+ * name = name.substring(0, name.length - 4);
+ *
+ * }
+ *
+ * }
+ *
+ * else if (defining.effectiveMetatype !== Metatype.bitmap) {
+ *
+ * name = "Tlv" + name;
+ *
+ * }
+ *
+ * // We reserve the name "Type". Plus it's kind of ambiguous
+ *
+ * if (name == "Type") {
+ *
+ * name = `${this.cluster.name}Type`;
+ *
+ * }
+ *
+ * return name;
+ *
+ * }.direction
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.3
  */
@@ -675,7 +865,7 @@ export const TlvColorLoopSetRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.19.1
      */
-    updateFlags: TlvField(0, TlvUpdateFlags),
+    updateFlags: TlvField(0, TlvBitmap(TlvUInt8, UpdateFlags)),
 
     /**
      * The Action field specifies the action to take for the color loop if the UpdateAction sub-field of the
@@ -867,7 +1057,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
          */
-        options: WritableAttribute(15, TlvOptions),
+        options: WritableAttribute(15, TlvBitmap(TlvUInt8, Options), { default: BitsFromPartial(Options, {}) }),
 
         /**
          * The NumberOfPrimaries attribute contains the number of color primaries implemented on this device. A value
@@ -1097,7 +1287,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.18
          */
-        colorCapabilities: Attribute(16394, TlvUInt16)
+        colorCapabilities: Attribute(16394, TlvUInt16, { default: BitsFromPartial(ColorCapabilities, {}) })
     }
 });
 

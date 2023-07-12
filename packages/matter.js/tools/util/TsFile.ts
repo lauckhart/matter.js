@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { InternalError } from "../../src/common/InternalError.js";
 import { Specification } from "../../src/model/index.js";
 import { serialize } from "../../src/util/String.js";
 import { writeMatterFile } from "./file.js";
@@ -142,6 +143,7 @@ class Atom extends Raw {
 export class Block extends Entry {
     entries = Array<Entry>();
     private addBefore?: Entry;
+    private definedNames = new Set<string>();
 
     constructor(parentBlock: Block | undefined) {
         super(parentBlock);
@@ -213,6 +215,21 @@ export class Block extends Entry {
 
     /** Add entries.  Each entry will be serialized using toString() */
     add(...entries: Entry[]) {
+        // Entries usually aren't fully defined when added but they do have
+        // their prefix set.  So we can attempt to extract the string name in
+        // order to offer lightweight attempt at rejecting duplicate
+        // identifiers
+        entries.forEach(e => {
+            const s = e.toString();
+            let m = s.match(/^(\w+):/);
+            if (!m) {
+                m = s.match(/\s*(?:(?:export|public|private|const)\s+)*(?:(?:function|enum|class|interface|const|var|let)\s+)(\w+)/);
+            }
+            if (m) {
+                this.nameDefined(m[1]);
+            }
+        })
+
         if (this.addBefore) {
             const index = this.entries.indexOf(this.addBefore);
             if (index !== -1) {
@@ -220,6 +237,7 @@ export class Block extends Entry {
                 return this;
             }
         }
+        
         this.entries.push(...entries);
         return this;
     }
@@ -298,6 +316,14 @@ export class Block extends Entry {
         } finally {
             this.addBefore = oldAddBefore;
         }
+    }
+
+    /** This is just a helper for guarding against duplicate definitions */
+    nameDefined(name: string): void {
+        if (this.definedNames.has(name)) {
+            throw new InternalError(`Conflicting definitions ${name} in same scope`);
+        }
+        this.definedNames.add(name);
     }
 
     protected delimiterAfter(index: number, serialized: string): string {
@@ -465,16 +491,13 @@ class ExpressionBlock extends NestedBlock {
                 {
                     // Need to reserialize with reduced padding
                     let line = this.entries[0].toString(linePrefix).trim();
-                    if (isArrayOrObject) {
-                        line = ` ${line} `;
-                    }
                     return `${linePrefix}${this.prefix}${line}${this.suffix}`;
                 }
 
             case ExpressionLayout.SingleLine:
                 {
                     let line = serializedEntries.map(e => e.trim()).join(", ");
-                    if (isArrayOrObject) {
+                    if (isArrayOrObject && !line.startsWith("[") && !line.startsWith("{")) {
                         line = ` ${line} `;
                     }
                     return `${linePrefix}${this.prefix}${line}${this.suffix}`;

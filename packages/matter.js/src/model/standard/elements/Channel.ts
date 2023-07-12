@@ -35,7 +35,7 @@ Matter.children.push({
             constraint: "None", default: [],
             details: "This optional list provides the channels supported.",
             xref: { document: "cluster", section: "6.6.3.1" },
-            children: [ { tag: "datatype", name: "entry", type: "ChannelInfoStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "ChannelInfoStruct" }]
         },
 
         {
@@ -67,11 +67,11 @@ Matter.children.push({
                      "Upon success, the CurrentChannel attribute, if supported, shall be updated to reflect the change.",
 
             xref: { document: "cluster", section: "6.6.4.1" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Match", id: 0x0, type: "string", conformance: "M",
                 details: "This shall contain a user-input string to match in order to identify the target channel.",
                 xref: { document: "cluster", section: "6.6.4.1.1" }
-            } ]
+            }]
         },
 
         {
@@ -128,12 +128,12 @@ Matter.children.push({
 
             xref: { document: "cluster", section: "6.6.4.4" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Count", id: 0x0, type: "int16", conformance: "M",
                 details: "This shall indicate the number of steps to increase (Count is positive) or decrease (Count is " +
                          "negative) the current channel.",
                 xref: { document: "cluster", section: "6.6.4.4.1" }
-            } ]
+            }]
         },
 
         {
@@ -141,7 +141,7 @@ Matter.children.push({
             details: "This indicates a channel in a channel lineup." +
                      "\n" +
                      "While the major and minor numbers in the ChannelInfoStruct support use of ATSC channel format, a " +
-                     "lineup MAY use other formats which can map into these numeric values.",
+                     "lineup may use other formats which can map into these numeric values.",
             xref: { document: "cluster", section: "6.6.5.1" },
 
             children: [
@@ -212,7 +212,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "LineupInfoTypeEnum", type: "enum8", conformance: "M",
             xref: { document: "cluster", section: "6.6.5.3" },
-            children: [ { tag: "datatype", name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator" } ]
+            children: [{ tag: "datatype", name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator" }]
         },
 
         {

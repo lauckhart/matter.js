@@ -77,7 +77,7 @@ Matter.children.push({
             constraint: "None", quality: "F",
             details: "This is a list of vendor IDs. Each entry is a vendor-id.",
             xref: { document: "cluster", section: "6.3.3.8" },
-            children: [ { tag: "datatype", name: "entry", type: "vendor-id" } ]
+            children: [{ tag: "datatype", name: "entry", type: "vendor-id" }]
         },
 
         {

@@ -81,18 +81,18 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Occupancy", id: 0x2, type: "map8", access: "R V", conformance: "OCC",
-            constraint: "desc", default: { type: "flags", flags: [ "Occupied" ] },
+            constraint: "desc", default: 1,
             details: "This attribute specifies whether the heated/cooled space is occupied or not, as measured locally or " +
                      "remotely (over the network). If bit 0 = 1, the space is occupied, else it is unoccupied. All other " +
                      "bits are reserved.",
             xref: { document: "cluster", section: "4.3.7.4" },
-            children: [ { tag: "datatype", name: "Occupied", id: 0x1, conformance: "M" } ]
+            children: [{ tag: "datatype", name: "occupied", constraint: "0" }]
         },
 
         {
             tag: "attribute", name: "AbsMinHeatSetpointLimit", id: 0x3, type: "temperature", access: "R V",
             conformance: "[HEAT]", constraint: "desc", default: 700, quality: "F",
-            details: "This attribute specifies the absolute minimum level that the heating setpoint MAY be set to. This " +
+            details: "This attribute specifies the absolute minimum level that the heating setpoint may be set to. This " +
                      "is a limitation imposed by the manufacturer." +
                      "\n" +
                      "Refer to Setpoint Limits for constraints",
@@ -102,7 +102,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "AbsMaxHeatSetpointLimit", id: 0x4, type: "temperature", access: "R V",
             conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "F",
-            details: "This attribute specifies the absolute maximum level that the heating setpoint MAY be set to. This " +
+            details: "This attribute specifies the absolute maximum level that the heating setpoint may be set to. This " +
                      "is a limitation imposed by the manufacturer." +
                      "\n" +
                      "Refer to Setpoint Limits for constraints",
@@ -112,7 +112,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "AbsMinCoolSetpointLimit", id: 0x5, type: "temperature", access: "R V",
             conformance: "[COOL]", constraint: "desc", default: 1600, quality: "F",
-            details: "This attribute specifies the absolute minimum level that the cooling setpoint MAY be set to. This " +
+            details: "This attribute specifies the absolute minimum level that the cooling setpoint may be set to. This " +
                      "is a limitation imposed by the manufacturer." +
                      "\n" +
                      "Refer to Setpoint Limits for constraints",
@@ -122,7 +122,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "AbsMaxCoolSetpointLimit", id: 0x6, type: "temperature", access: "R V",
             conformance: "[COOL]", constraint: "desc", default: 3200, quality: "F",
-            details: "This attribute specifies the absolute maximum level that the cooling setpoint MAY be set to. This " +
+            details: "This attribute specifies the absolute maximum level that the cooling setpoint may be set to. This " +
                      "is a limitation imposed by the manufacturer." +
                      "\n" +
                      "Refer to Setpoint Limits for constraints",
@@ -136,7 +136,7 @@ Matter.children.push({
                      "loop in use by the thermostat (if any), in percent. This value is 0 when the thermostat is in “off” " +
                      "or “heating” mode." +
                      "\n" +
-                     "This attribute is reported regularly and MAY be used to control a cooling device.",
+                     "This attribute is reported regularly and may be used to control a cooling device.",
             xref: { document: "cluster", section: "4.3.7.9" }
         },
 
@@ -146,7 +146,7 @@ Matter.children.push({
             details: "This attribute specifies the level of heating demanded by the PI loop in percent. This value is 0 " +
                      "when the thermostat is in “off” or “cooling” mode." +
                      "\n" +
-                     "This attribute is reported regularly and MAY be used to control a heating device.",
+                     "This attribute is reported regularly and may be used to control a heating device.",
             xref: { document: "cluster", section: "4.3.7.10" }
         },
 
@@ -166,15 +166,15 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "CoolingStage", id: 0x0,
+                    tag: "datatype", name: "CoolingStage",
                     description: "00 – Cool Stage 101 – Cool Stage 210 – Cool Stage 311 – Reserved"
                 },
                 {
-                    tag: "datatype", name: "HeatingStage", id: 0x2,
+                    tag: "datatype", name: "HeatingStage",
                     description: "00 – Heat Stage 101 – Heat Stage 210 – Heat Stage 311 – Reserved"
                 },
-                { tag: "datatype", name: "HeatingType", id: 0x4, description: "0 – Conventional1 – Heat Pump" },
-                { tag: "datatype", name: "HeatingFuel", id: 0x5, description: "0 – Electric / B1 – Gas / O" }
+                { tag: "datatype", name: "HeatingType", constraint: "4", description: "0 – Conventional1 – Heat Pump" },
+                { tag: "datatype", name: "HeatingFuel", constraint: "5", description: "0 – Electric / B1 – Gas / O" }
             ]
         },
 
@@ -260,7 +260,7 @@ Matter.children.push({
             tag: "attribute", name: "MinHeatSetpointLimit", id: 0x15, type: "temperature", access: "RW VM",
             conformance: "[HEAT]", constraint: "desc", default: 700, quality: "N",
 
-            details: "This attribute specifies the minimum level that the heating setpoint MAY be set to." +
+            details: "This attribute specifies the minimum level that the heating setpoint may be set to." +
                      "\n" +
                      "This attribute, and the following three attributes, allow the user to define setpoint limits more " +
                      "constrictive than the manufacturer imposed ones. Limiting users (e.g., in a commercial building) to " +
@@ -279,7 +279,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxHeatSetpointLimit", id: 0x16, type: "temperature", access: "RW VM",
             conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "N",
 
-            details: "This attribute specifies the maximum level that the heating setpoint MAY be set to." +
+            details: "This attribute specifies the maximum level that the heating setpoint may be set to." +
                      "\n" +
                      "Refer to Setpoint Limits for constraints. If an attempt is made to set this attribute to a value " +
                      "which conflicts with setpoint values then those setpoints shall be adjusted by the minimum amount " +
@@ -294,7 +294,7 @@ Matter.children.push({
             tag: "attribute", name: "MinCoolSetpointLimit", id: 0x17, type: "temperature", access: "RW VM",
             conformance: "[COOL]", constraint: "desc", default: 1600, quality: "N",
 
-            details: "This attribute specifies the minimum level that the cooling setpoint MAY be set to." +
+            details: "This attribute specifies the minimum level that the cooling setpoint may be set to." +
                      "\n" +
                      "Refer to Setpoint Limits for constraints. If an attempt is made to set this attribute to a value " +
                      "which conflicts with setpoint values then those setpoints shall be adjusted by the minimum amount " +
@@ -309,7 +309,7 @@ Matter.children.push({
             tag: "attribute", name: "MaxCoolSetpointLimit", id: 0x18, type: "temperature", access: "RW VM",
             conformance: "[COOL]", constraint: "desc", default: 3200, quality: "N",
 
-            details: "This attribute specifies the maximum level that the cooling setpoint MAY be set to." +
+            details: "This attribute specifies the maximum level that the cooling setpoint may be set to." +
                      "\n" +
                      "Refer to Setpoint Limits for constraints. If an attempt is made to set this attribute to a value " +
                      "which conflicts with setpoint values then those setpoints shall be adjusted by the minimum amount " +
@@ -359,15 +359,15 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "LocalTemperature", id: 0x0,
+                    tag: "datatype", name: "LocalTemperature", constraint: "0",
                     description: "When set, LocalTemperature Value is derived from a remote node"
                 },
                 {
-                    tag: "datatype", name: "OutdoorTemperature", id: 0x1,
+                    tag: "datatype", name: "OutdoorTemperature", constraint: "1",
                     description: "When set, OutdoorTemperature is derived from a remote node"
                 },
                 {
-                    tag: "datatype", name: "Occupancy", id: 0x2,
+                    tag: "datatype", name: "Occupancy", constraint: "2",
                     description: "When set, Occupancy is derived from a remote node"
                 }
             ]
@@ -480,9 +480,9 @@ Matter.children.push({
 
             xref: { document: "cluster", section: "4.3.7.25" },
             children: [
-                { tag: "datatype", name: "InitializationFailure", id: 0x0 },
-                { tag: "datatype", name: "HardwareFailure", id: 0x1 },
-                { tag: "datatype", name: "SelfCalibrationFailure", id: 0x2 }
+                { tag: "datatype", name: "InitializationFailure", constraint: "0" },
+                { tag: "datatype", name: "HardwareFailure", constraint: "1" },
+                { tag: "datatype", name: "SelfCalibrationFailure", constraint: "2" }
             ]
         },
 
@@ -506,7 +506,7 @@ Matter.children.push({
                      "\n" +
                      "Table 77. StartofWeek Values" +
                      "\n" +
-                     "This attribute MAY be able to be used as the base to determine if the device supports weekly " +
+                     "This attribute may be able to be used as the base to determine if the device supports weekly " +
                      "scheduling by reading the attribute. Successful response means that the weekly scheduling is " +
                      "supported.",
 
@@ -579,11 +579,11 @@ Matter.children.push({
 
             details: "This attribute determines the operational state of the thermostat’s programming. The thermostat " +
                      "shall modify its programming operation when this attribute is modified by a client and update this " +
-                     "attribute when its programming operation is modified locally by a user. The thermostat MAY support " +
-                     "more than one active ThermostatProgrammingOperationMode. For example, the thermostat MAY operate " +
+                     "attribute when its programming operation is modified locally by a user. The thermostat may support " +
+                     "more than one active ThermostatProgrammingOperationMode. For example, the thermostat may operate " +
                      "simultaneously in Schedule Programming Mode and Recovery Mode." +
                      "\n" +
-                     "Thermostats which contain a schedule MAY use this attribute to control how that schedule is used, " +
+                     "Thermostats which contain a schedule may use this attribute to control how that schedule is used, " +
                      "even if they do not support the Schedule Configuration feature." +
                      "\n" +
                      "Table 79. ThermostatProgrammingOperationMode Attribute Values" +
@@ -598,11 +598,11 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "ScheduleActive", id: 0x0,
+                    tag: "datatype", name: "ScheduleActive", constraint: "0",
                     description: "Schedule programming mode. This enables any programmed weekly schedule configurations."
                 },
-                { tag: "datatype", name: "AutoRecovery", id: 0x1, description: "Auto/recovery mode" },
-                { tag: "datatype", name: "Economy", id: 0x2, description: "Economy/EnergyStar mode" }
+                { tag: "datatype", name: "AutoRecovery", constraint: "1", description: "Auto/recovery mode" },
+                { tag: "datatype", name: "Economy", constraint: "2", description: "Economy/EnergyStar mode" }
             ]
         },
 
@@ -617,17 +617,13 @@ Matter.children.push({
             xref: { document: "cluster", section: "4.3.7.33" },
 
             children: [
-                { tag: "datatype", name: "Heat", id: 0x0, description: "Heat State On" },
-                { tag: "datatype", name: "Cool", id: 0x1, conformance: "M", description: "Cool State On" },
-                { tag: "datatype", name: "Fan", id: 0x2, conformance: "M", description: "Fan State On" },
-                { tag: "datatype", name: "HeatStage2", id: 0x3, description: "Heat 2nd Stage State On" },
-                { tag: "datatype", name: "CoolStage2", id: 0x4, conformance: "M", description: "Cool 2nd Stage State On" },
-                { tag: "datatype", name: "FanStage2", id: 0x5, description: "Fan 2nd Stage State On" },
-                { tag: "datatype", name: "FanStage3", id: 0x6, description: "Fan 3rd Stage Stage On" },
-                { tag: "datatype", name: "HeatSecondStageStateOn", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "CoolSecondStageStateOn", id: 0x10, conformance: "M" },
-                { tag: "datatype", name: "FanSecondStageStateOn", id: 0x20, conformance: "M" },
-                { tag: "datatype", name: "FanThirdStageStateOn", id: 0x40, conformance: "M" }
+                { tag: "datatype", name: "Heat", constraint: "0", description: "Heat State On" },
+                { tag: "datatype", name: "Cool", constraint: "1", description: "Cool State On" },
+                { tag: "datatype", name: "Fan", constraint: "2", description: "Fan State On" },
+                { tag: "datatype", name: "HeatStage2", constraint: "3", description: "Heat 2nd Stage State On" },
+                { tag: "datatype", name: "CoolStage2", constraint: "4", description: "Cool 2nd Stage State On" },
+                { tag: "datatype", name: "FanStage2", constraint: "5", description: "Fan 2nd Stage State On" },
+                { tag: "datatype", name: "FanStage3", constraint: "6", description: "Fan 3rd Stage Stage On" }
             ]
         },
 
@@ -640,7 +636,7 @@ Matter.children.push({
                      "\n" +
                      "This attribute enables service providers to determine whether changes to setpoints were initiated " +
                      "due to occupant comfort, scheduled programming or some other source (e.g., electric utility or " +
-                     "other service provider). Because automation services MAY initiate frequent setpoint changes, this " +
+                     "other service provider). Because automation services may initiate frequent setpoint changes, this " +
                      "attribute clearly differentiates the source of setpoint changes made at the thermostat." +
                      "\n" +
                      "Table 81. SetpointChangeSource Values",
@@ -894,13 +890,19 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "CompressorFail", id: 0x0,
+                    tag: "datatype", name: "CompressorFail", constraint: "0",
                     description: "Compressor Failure or Refrigerant Leakage"
                 },
-                { tag: "datatype", name: "RoomSensorFail", id: 0x1, description: "Room Temperature Sensor Failure" },
-                { tag: "datatype", name: "OutdoorSensorFail", id: 0x2, description: "Outdoor Temperature Sensor Failure" },
-                { tag: "datatype", name: "CoilSensorFail", id: 0x3, description: "Indoor Coil Temperature Sensor Failure" },
-                { tag: "datatype", name: "FanFail", id: 0x4, description: "Fan Failure" }
+                { tag: "datatype", name: "RoomSensorFail", constraint: "1", description: "Room Temperature Sensor Failure" },
+                {
+                    tag: "datatype", name: "OutdoorSensorFail", constraint: "2",
+                    description: "Outdoor Temperature Sensor Failure"
+                },
+                {
+                    tag: "datatype", name: "CoilSensorFail", constraint: "3",
+                    description: "Indoor Coil Temperature Sensor Failure"
+                },
+                { tag: "datatype", name: "FanFail", constraint: "4", description: "Fan Failure" }
             ]
         },
 
@@ -1109,22 +1111,22 @@ Matter.children.push({
             tag: "datatype", name: "DayOfWeek", type: "map8", conformance: "M",
 
             children: [
-                { tag: "datatype", name: "Sunday", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Monday", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Tuesday", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Wednesday", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "Thursday", id: 0x10, conformance: "M" },
-                { tag: "datatype", name: "Friday", id: 0x20, conformance: "M" },
-                { tag: "datatype", name: "Saturday", id: 0x40, conformance: "M" },
-                { tag: "datatype", name: "Away", id: 0x80, conformance: "M" }
+                { tag: "datatype", name: "Sunday", constraint: "0" },
+                { tag: "datatype", name: "Monday", constraint: "1" },
+                { tag: "datatype", name: "Tuesday", constraint: "2" },
+                { tag: "datatype", name: "Wednesday", constraint: "3" },
+                { tag: "datatype", name: "Thursday", constraint: "4" },
+                { tag: "datatype", name: "Friday", constraint: "5" },
+                { tag: "datatype", name: "Saturday", constraint: "6" },
+                { tag: "datatype", name: "Away", constraint: "7" }
             ]
         },
 
         {
             tag: "datatype", name: "ModeForSequence", type: "map8", conformance: "M",
             children: [
-                { tag: "datatype", name: "HeatSetpointPresent", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "CoolSetpointPresent", id: 0x2, conformance: "M" }
+                { tag: "datatype", name: "HeatSetpointPresent", constraint: "0" },
+                { tag: "datatype", name: "CoolSetpointPresent", constraint: "1" }
             ]
         }
     ]

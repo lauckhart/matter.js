@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { Cluster, FixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
@@ -18,23 +18,16 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
- * Bit definitions for TlvNameSupport
+ * The value of the Groups nameSupport attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.6.1
  */
-export const NameSupportBits = {
+export const NameSupport = {
     /**
      * The ability to store a name for a group.
      */
     groupNames: BitFlag(7)
 };
-
-/**
- * The value of the Groups nameSupport attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.6.1
- */
-export const TlvNameSupport = TlvBitmap(TlvUInt8, NameSupportBits);
 
 /**
  * Input to the Groups addGroup command
@@ -86,13 +79,13 @@ export const TlvGetGroupMembershipRequest = TlvObject({ groupList: TlvField(0, T
  *
  * The Capacity field shall contain the remaining capacity of the Group Table of the node. The following values apply:
  *
- *   • 0 - No further groups MAY be added.
+ *   • 0 - No further groups may be added.
  *
- *   • 0 < Capacity < 0xfe - Capacity holds the number of groups that MAY be added.
+ *   • 0 < Capacity < 0xfe - Capacity holds the number of groups that may be added.
  *
- *   • 0xfe - At least 1 further group MAY be added (exact number is unknown).
+ *   • 0xfe - At least 1 further group may be added (exact number is unknown).
  *
- *   • null - It is unknown if any further groups MAY be added.
+ *   • null - It is unknown if any further groups may be added.
  *
  * The GroupList field shall contain either the group IDs of all the groups in the Group Table for which the server
  * endpoint is a member of the group (in the case where the GroupList field of the received GetGroupMembership command
@@ -190,7 +183,7 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.6.1
          */
-        nameSupport: FixedAttribute(0, TlvNameSupport)
+        nameSupport: FixedAttribute(0, TlvBitmap(TlvUInt8, NameSupport), { default: BitsFromPartial(NameSupport, {}) })
     },
 
     commands: {

@@ -8,45 +8,56 @@
 
 import { Cluster, Attribute, OptionalWritableAttribute, AccessLevel } from "../../cluster/Cluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
+import { TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-
-/**
- * Bit definitions for TlvOccupancyBitmap
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.1
- */
-export const OccupancyBitmapBits = {
-    /**
-     * Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.
-     */
-    occupied: BitFlag(1)
-};
 
 /**
  * All other bits are reserved.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.1
  */
-export const TlvOccupancyBitmap = TlvBitmap(TlvUInt8, OccupancyBitmapBits);
+export const OccupancyBitmap = {
+    /**
+     * Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.
+     */
+    occupied: BitFlag(0)
+};
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.2
  */
 export const enum OccupancySensorType {
+    /**
+     * Indicates a passive infrared sensor.
+     */
     Pir = 0,
+
+    /**
+     * Indicates a ultrasonic sensor.
+     */
     Ultrasonic = 1,
+
+    /**
+     * Indicates a passive infrared and ultrasonic sensor.
+     */
     PirAndUltrasonic = 2,
+
+    /**
+     * Indicates a physical contact sensor.
+     */
     PhysicalContact = 3
 }
 
 /**
- * Bit definitions for TlvOccupancySensorTypeBitmap
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.3
  */
-export const OccupancySensorTypeBitmapBits = {
+export const OccupancySensorTypeBitmap = {
+    /**
+     * Indicates a passive infrared sensor.
+     */
+    pir: BitFlag(0),
+
     /**
      * Indicates a ultrasonic sensor.
      */
@@ -55,13 +66,8 @@ export const OccupancySensorTypeBitmapBits = {
     /**
      * Indicates a physical contact sensor.
      */
-    physicalContact: BitFlag(4)
+    physicalContact: BitFlag(2)
 };
-
-/**
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.3
- */
-export const TlvOccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, OccupancySensorTypeBitmapBits);
 
 /**
  * Occupancy Sensing
@@ -82,7 +88,7 @@ export const OccupancySensingCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.6.1
          */
-        occupancy: Attribute(0, TlvOccupancyBitmap),
+        occupancy: Attribute(0, TlvBitmap(TlvUInt8, OccupancyBitmap)),
 
         /**
          * The OccupancySensorType attribute specifies the type of the occupancy sensor.
@@ -102,7 +108,7 @@ export const OccupancySensingCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.6.3
          */
-        occupancySensorTypeBitmap: Attribute(2, TlvOccupancySensorTypeBitmap),
+        occupancySensorTypeBitmap: Attribute(2, TlvBitmap(TlvUInt8, OccupancySensorTypeBitmap)),
 
         /**
          * The PIROccupiedToUnoccupiedDelay attribute specifies the time delay, in seconds, before the PIR sensor

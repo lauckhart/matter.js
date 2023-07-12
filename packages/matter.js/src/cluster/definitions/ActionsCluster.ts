@@ -19,9 +19,14 @@ import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.2
  */
 export const enum ActionType {
+    /**
+     * Use this only when none of the other values applies
+     */
     Other = 0,
 
     /**
+     * Bring the endpoints into a certain state
+     *
      * Can be used to set a static state of the associated endpoints (typically using InstantAction or
      * InstantActionWithTransition), or to bring these endpoints into a more dynamic state (typically using
      * StartAction), where the endpoints would e.g. gradually cycle through certain colors for a pleasing effect. A
@@ -36,6 +41,8 @@ export const enum ActionType {
     Scene = 1,
 
     /**
+     * A sequence of states with a certain time pattern
+     *
      * Indicates an action which involves a sequence of events/states of the associated endpoints, such as a wake-up
      * experience.
      *
@@ -46,6 +53,8 @@ export const enum ActionType {
     Sequence = 2,
 
     /**
+     * Control an automation (e.g. motion sensor controlling lights)
+     *
      * Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can bee.g. started,
      * stopped, paused, resumed. Example: see example 3.
      *
@@ -54,6 +63,8 @@ export const enum ActionType {
     Automation = 3,
 
     /**
+     * Sequence that will run when something doesn’t happen
+     *
      * Indicates some action which the server will execute when a certain condition (which normally does not happen) is
      * not met.
      *
@@ -65,6 +76,8 @@ export const enum ActionType {
     Exception = 4,
 
     /**
+     * Use the endpoints to send a message to user
+     *
      * Indicates an action that can be triggered (e.g. by InstantAction) to notify the user.
      *
      * Example: play a pattern on the lights in the living room if there is someone in the garden in the evening.
@@ -74,6 +87,8 @@ export const enum ActionType {
     Notification = 5,
 
     /**
+     * Higher priority notification
+     *
      * Similar to Notification but with a higher priority (and might override other endpoint states which
      * Type=Notification would not override).
      *
@@ -85,11 +100,16 @@ export const enum ActionType {
 }
 
 /**
- * Bit definitions for TlvCommandBits
+ * Note - The bit allocation of this bitmap shall follow the ID’s of the Commands of this cluster.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.1
  */
-export const CommandBitsBits = {
+export const CommandBits = {
+    /**
+     * Indicate support for InstantAction command
+     */
+    instantAction: BitFlag(0),
+
     /**
      * Indicate support for InstantActionWithTransition command
      */
@@ -108,50 +128,43 @@ export const CommandBitsBits = {
     /**
      * Indicate support for StopAction command
      */
-    stopAction: BitFlag(16),
+    stopAction: BitFlag(4),
 
     /**
      * Indicate support for PauseAction command
      */
-    pauseAction: BitFlag(32),
+    pauseAction: BitFlag(5),
 
     /**
      * Indicate support for PauseActionWithDuration command
      */
-    pauseActionWithDuration: BitFlag(64),
+    pauseActionWithDuration: BitFlag(6),
 
     /**
      * Indicate support for ResumeAction command
      */
-    resumeAction: BitFlag(128),
+    resumeAction: BitFlag(7),
 
     /**
      * Indicate support for EnableAction command
      */
-    enableAction: BitFlag(256),
+    enableAction: BitFlag(8),
 
     /**
      * Indicate support for EnableActionWithDuration command
      */
-    enableActionWithDuration: BitFlag(512),
+    enableActionWithDuration: BitFlag(9),
 
     /**
      * Indicate support for DisableAction command
      */
-    disableAction: BitFlag(1024),
+    disableAction: BitFlag(10),
 
     /**
      * Indicate support for DisableActionWithDuration command
      */
-    disableActionWithDuration: BitFlag(2048)
+    disableActionWithDuration: BitFlag(11)
 };
-
-/**
- * Note - The bit allocation of this bitmap shall follow the ID’s of the Commands of this cluster.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.1
- */
-export const TlvCommandBits = TlvBitmap(TlvUInt16, CommandBitsBits);
 
 /**
  * Note that some of these states are applicable only for certain actions, as determined by their SupportedCommands.
@@ -159,9 +172,24 @@ export const TlvCommandBits = TlvBitmap(TlvUInt16, CommandBitsBits);
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.3
  */
 export const enum ActionState {
+    /**
+     * The action is not active
+     */
     Inactive = 0,
+
+    /**
+     * The action is active
+     */
     Active = 1,
+
+    /**
+     * The action has been paused
+     */
     Paused = 2,
+
+    /**
+     * The action has been disabled
+     */
     Disabled = 3
 }
 
@@ -211,7 +239,7 @@ export const TlvActionStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.6.5
      */
-    supportedCommands: TlvField(4, TlvCommandBits),
+    supportedCommands: TlvField(4, TlvBitmap(TlvUInt16, CommandBits)),
 
     /**
      * This field shall indicate the current state of this action.
@@ -229,8 +257,10 @@ export const TlvActionStruct = TlvObject({
  */
 export const enum EndpointListType {
     /**
+     * Another group of endpoints
+     *
      * This value is provided for the case of an endpoint list which is tied specifically to this action i.e. not
-     * independently created by the user. For Type=Other the Name MAY be empty. A Matter controller would typically not
+     * independently created by the user. For Type=Other the Name may be empty. A Matter controller would typically not
      * use this for anything else than just to know which endpoints would be affected by the action.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.5.1
@@ -238,6 +268,8 @@ export const enum EndpointListType {
     Other = 0,
 
     /**
+     * User-configured group of endpoints where an endpoint can be in only one room
+     *
      * Is used for the situation where an endpoint can only be part of one such rooms (e.g. physical mapping). Using
      * these exposed logical groups, a Matter controller who has a similar grouping concept can use it to place each
      * endpoint (bridged device) in the right room automatically, without user having to redo that setup for each
@@ -249,6 +281,8 @@ export const enum EndpointListType {
     Room = 1,
 
     /**
+     * User-configured group of endpoints where an endpoint can be in any number of zones
+     *
      * Is a more general concept where an endpoint can be part of multiple zones, e.g. a light in the living
      *
      * room can be part of the "reading corner" zone (subset of the lights in the living room) but also part of the
@@ -449,7 +483,14 @@ export const TlvStateChangedEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.4
  */
 export const enum ActionError {
+    /**
+     * Other reason not listed in the row(s) below
+     */
     Unknown = 0,
+
+    /**
+     * The action was interrupted by another command or interaction
+     */
     Interrupted = 1
 }
 
@@ -542,7 +583,7 @@ export const ActionsCluster = Cluster({
          *       Matter/bridgev1/Actions for this generic case (access generic info how to use actions provided by this
          *       cluster).
          *
-         *   • When used with a suffix of "/?a=" and the decimal value of ActionID for one of the actions, it MAY
+         *   • When used with a suffix of "/?a=" and the decimal value of ActionID for one of the actions, it may
          *     provide information about that particular action. This could be a deeplink to manufacturer-app/website
          *     (associated somehow to the server node) with the information/edit-screen for this action so that the
          *     user can view and update details of the action, e.g. edit the scene, or change the wake-up experience

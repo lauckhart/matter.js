@@ -9,37 +9,23 @@
 import { Cluster, Attribute, OptionalAttribute, WritableAttribute, AccessLevel, OptionalWritableAttribute } from "../../cluster/Cluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvUInt8, TlvBitmap, TlvUInt24 } from "../../tlv/TlvNumber.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvString } from "../../tlv/TlvString.js";
-
-/**
- * Bit definitions for TlvBallastStatus
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.3
- */
-export const BallastStatusBits = { ballastNonOperational: BitFlag(0), lampFailure: BitFlag(1), lampNotInSocket: BitFlag(2) };
 
 /**
  * The value of the BallastConfiguration ballastStatus attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.3
  */
-export const TlvBallastStatus = TlvBitmap(TlvUInt8, BallastStatusBits);
-
-/**
- * Bit definitions for TlvLampAlarmMode
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.5
- */
-export const LampAlarmModeBits = { lampBurnHours: BitFlag(1) };
+export const BallastStatus = { ballastNonOperational: BitFlag(0), lampFailure: BitFlag(1) };
 
 /**
  * The value of the BallastConfiguration lampAlarmMode attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.5
  */
-export const TlvLampAlarmMode = TlvBitmap(TlvUInt8, LampAlarmModeBits);
+export const LampAlarmMode = { lampBurnHours: BitFlag(0) };
 
 /**
  * Ballast Configuration
@@ -78,7 +64,11 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.3
          */
-        ballastStatus: OptionalAttribute(2, TlvBallastStatus),
+        ballastStatus: OptionalAttribute(
+            2,
+            TlvBitmap(TlvUInt8, BallastStatus),
+            { default: BitsFromPartial(BallastStatus, {}) }
+        ),
 
         /**
          * The MinLevel attribute specifies the light output of the ballast according to the dimming light curve (see
@@ -192,19 +182,23 @@ export const BallastConfigurationCluster = Cluster({
         lampBurnHours: OptionalWritableAttribute(51, TlvNullable(TlvUInt24), { default: 0, writeAcl: AccessLevel.Manage }),
 
         /**
-         * The LampAlarmMode attribute specifies which attributes MAY cause an alarm notification to be generated, as
+         * The LampAlarmMode attribute specifies which attributes may cause an alarm notification to be generated, as
          * listed in Values of the LampAlarmMode Attribute. A ‘1’ in each bit position causes its associated attribute
          * to be able to generate an alarm. (Note: All alarms are also logged in the alarm table – see Alarms cluster).
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.5
          */
-        lampAlarmMode: OptionalWritableAttribute(52, TlvLampAlarmMode, { writeAcl: AccessLevel.Manage }),
+        lampAlarmMode: OptionalWritableAttribute(
+            52,
+            TlvBitmap(TlvUInt8, LampAlarmMode),
+            { default: BitsFromPartial(LampAlarmMode, {}), writeAcl: AccessLevel.Manage }
+        ),
 
         /**
-         * The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute MAY reach
+         * The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute may reach
          * before an alarm is generated.
          *
-         * If the Alarms cluster is not present on the same device this attribute is not used and thus MAY be omitted
+         * If the Alarms cluster is not present on the same device this attribute is not used and thus may be omitted
          * (see Dependencies).
          *
          * The Alarm Code field included in the generated alarm shall be 0x01.

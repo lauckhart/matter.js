@@ -80,7 +80,7 @@ Matter.children.push({
                      "network configurations to those Cluster instances.",
 
             xref: { document: "core", section: "11.8.6.2" },
-            children: [ { tag: "datatype", name: "entry", type: "NetworkInfoStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "NetworkInfoStruct" }]
         },
 
         {
@@ -118,7 +118,7 @@ Matter.children.push({
                      "values, before being able to communicate with the node again (see Section 11.9.6.2, “ArmFailSafe " +
                      "Command”)." +
                      "\n" +
-                     "It MAY be possible to disable Ethernet interfaces but it is implementation-defined. If not " +
+                     "It may be possible to disable Ethernet interfaces but it is implementation-defined. If not " +
                      "supported, a write to this attribute with a value of false shall fail with a status of " +
                      "INVALID_ACTION. When disabled, an Ethernet interface would longer employ media detection. That is, " +
                      "a simple unplug and replug of the cable shall NOT re-enable the interface." +
@@ -156,7 +156,7 @@ Matter.children.push({
                      "null." +
                      "\n" +
                      "If a network configuration is removed from the Networks attribute using the RemoveNetwork command " +
-                     "after a connection attempt, this field MAY indicate a NetworkID that is no longer configured on the " +
+                     "after a connection attempt, this field may indicate a NetworkID that is no longer configured on the " +
                      "Node." +
                      "\n" +
                      "This attribute is present to assist with error recovery during Network commissioning and to assist " +
@@ -278,9 +278,9 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "DebugText", id: 0x1, type: "string", conformance: "O",
                     constraint: "max 512",
-                    details: "This field, if present and non-empty, MAY contain error information which MAY be communicated to " +
+                    details: "This field, if present and non-empty, may contain error information which may be communicated to " +
                              "the user in case the NetworkingStatus was not Success. Its purpose is to help developers in " +
-                             "troubleshooting errors and MAY go into logs or crash reports.",
+                             "troubleshooting errors and may go into logs or crash reports.",
                     xref: { document: "core", section: "11.8.7.2.2" }
                 },
 
@@ -289,10 +289,10 @@ Matter.children.push({
                     constraint: "desc",
 
                     details: "If NetworkingStatus was Success, this field shall contain the Wi-Fi network scan results. The list " +
-                             "MAY be empty if none were found in range on the bands supported by the interface, or if directed " +
+                             "may be empty if none were found in range on the bands supported by the interface, or if directed " +
                              "scanning had been used and the desired SSID was not found in range." +
                              "\n" +
-                             "The maximum number of results present in the result list supported MAY depend on memory and MAY " +
+                             "The maximum number of results present in the result list supported may depend on memory and may " +
                              "contain a subset of possibilities, to avoid memory exhaustion on the cluster server and avoid " +
                              "crossing the maximum command response size supported (see Section 4.4.4, “Message Size " +
                              "Requirements”)." +
@@ -302,7 +302,7 @@ Matter.children.push({
                              "that most likely to be reachable elements are included within the size limits of the response.",
 
                     xref: { document: "core", section: "11.8.7.2.3" },
-                    children: [ { tag: "datatype", name: "entry", type: "WiFiInterfaceScanResultStruct" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "WiFiInterfaceScanResultStruct" }]
                 },
 
                 {
@@ -310,9 +310,9 @@ Matter.children.push({
                     constraint: "desc",
 
                     details: "If NetworkingStatus was Success, this field shall contain the Thread network scan results. The list " +
-                             "MAY be empty if none were found in range on the bands supported by the interface." +
+                             "may be empty if none were found in range on the bands supported by the interface." +
                              "\n" +
-                             "The maximum number of results present in the result list supported MAY depend on memory and MAY " +
+                             "The maximum number of results present in the result list supported may depend on memory and may " +
                              "contain a subset of possibilities, to avoid memory exhaustion on the cluster server and avoid " +
                              "crossing the maximum command response size supported (see Section 4.4.4, “Message Size " +
                              "Requirements”)." +
@@ -322,7 +322,7 @@ Matter.children.push({
                              "included within the size limits of the response.",
 
                     xref: { document: "core", section: "11.8.7.2.4" },
-                    children: [ { tag: "datatype", name: "entry", type: "ThreadInterfaceScanResultStruct" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "ThreadInterfaceScanResultStruct" }]
                 }
             ]
         },
@@ -387,7 +387,7 @@ Matter.children.push({
                              "presence of both WPA2 and WPA security type within the result set, WPA2 shall be considered more " +
                              "secure." +
                              "\n" +
-                             "Note that it MAY occur that a station cannot connect to a particular access point with higher " +
+                             "Note that it may occur that a station cannot connect to a particular access point with higher " +
                              "security and selects a lower security connectivity type if the link quality is deemed to be too low " +
                              "to achieve successful operation, or if all retry attempts fail." +
                              "\n" +
@@ -591,7 +591,7 @@ Matter.children.push({
                      "OpenBasicCommissioningWindow command may impact the total time available to proceed with error " +
                      "recovery after a connection failure." +
                      "\n" +
-                     "The LastNetworkingStatus, LastNetworkID and LastConnectErrorValue attributes MAY assist the client " +
+                     "The LastNetworkingStatus, LastNetworkID and LastConnectErrorValue attributes may assist the client " +
                      "in determining the reason for a failure after reconnecting over a Commissioning channel, especially " +
                      "in non-concurrent commissioning situations." +
                      "\n" +
@@ -673,7 +673,7 @@ Matter.children.push({
                              "      which can unambiguously be used to determine the cause, such as an invalid security type, " +
                              "      unsupported rate, etc." +
                              "\n" +
-                             "  • Otherwise, the ErrorValue field shall contain an implementation-dependent value which MAY be " +
+                             "  • Otherwise, the ErrorValue field shall contain an implementation-dependent value which may be " +
                              "    used by a reader of the structure to record, report or diagnose the failure.",
 
                     xref: { document: "core", section: "11.8.7.10.1" }
@@ -759,15 +759,18 @@ Matter.children.push({
             xref: { document: "core", section: "11.8.5.1" },
 
             children: [
-                { tag: "datatype", name: "Unencrypted", id: 0x0, description: "Supports unencrypted Wi-Fi" },
-                { tag: "datatype", name: "Wep", id: 0x1, description: "Supports Wi-Fi using WEP security" },
-                { tag: "datatype", name: "WpaPersonal", id: 0x2, description: "Supports Wi-Fi using WPA-Personal security" },
+                { tag: "datatype", name: "Unencrypted", constraint: "0", description: "Supports unencrypted Wi-Fi" },
+                { tag: "datatype", name: "Wep", constraint: "1", description: "Supports Wi-Fi using WEP security" },
                 {
-                    tag: "datatype", name: "Wpa2Personal", id: 0x3,
+                    tag: "datatype", name: "WpaPersonal", constraint: "2",
+                    description: "Supports Wi-Fi using WPA-Personal security"
+                },
+                {
+                    tag: "datatype", name: "Wpa2Personal", constraint: "3",
                     description: "Supports Wi-Fi using WPA2-Personal security"
                 },
                 {
-                    tag: "datatype", name: "Wpa3Personal", id: 0x4,
+                    tag: "datatype", name: "Wpa3Personal", constraint: "4",
                     description: "Supports Wi-Fi using WPA3-Personal security"
                 }
             ]
@@ -780,11 +783,26 @@ Matter.children.push({
             xref: { document: "core", section: "11.8.5.2" },
 
             children: [
-                { tag: "datatype", name: "2G4", id: 0x0, conformance: "O.a+" },
-                { tag: "datatype", name: "3G65", id: 0x1, conformance: "O.a+" },
-                { tag: "datatype", name: "5G", id: 0x2, conformance: "O.a+" },
-                { tag: "datatype", name: "6G", id: 0x3, conformance: "O.a+" },
-                { tag: "datatype", name: "60G", id: 0x4, conformance: "O.a+" }
+                {
+                    tag: "datatype", name: "2G4", id: 0x0, conformance: "O.a+",
+                    description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)"
+                },
+                {
+                    tag: "datatype", name: "3G65", id: 0x1, conformance: "O.a+",
+                    description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)"
+                },
+                {
+                    tag: "datatype", name: "5G", id: 0x2, conformance: "O.a+",
+                    description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)"
+                },
+                {
+                    tag: "datatype", name: "6G", id: 0x3, conformance: "O.a+",
+                    description: "6GHz - 5.925GHz to7.125GHz (802.11ax / WiFi 6E)"
+                },
+                {
+                    tag: "datatype", name: "60G", id: 0x4, conformance: "O.a+",
+                    description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)"
+                }
             ]
         },
 
@@ -793,19 +811,49 @@ Matter.children.push({
             xref: { document: "core", section: "11.8.5.3" },
 
             children: [
-                { tag: "datatype", name: "Success", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "OutOfRange", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "BoundsExceeded", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "NetworkIdNotFound", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "DuplicateNetworkId", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "NetworkNotFound", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "RegulatoryError", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "AuthFailure", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "UnsupportedSecurity", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "OtherConnectionFailure", id: 0x9, conformance: "M" },
-                { tag: "datatype", name: "Ipv6Failed", id: 0xa, conformance: "M" },
-                { tag: "datatype", name: "IpBindFailed", id: 0xb, conformance: "M" },
-                { tag: "datatype", name: "UnknownError", id: 0xc, conformance: "M" }
+                { tag: "datatype", name: "Success", id: 0x0, conformance: "M", description: "OK, no error" },
+                { tag: "datatype", name: "OutOfRange", id: 0x1, conformance: "M", description: "Value Outside Range" },
+                {
+                    tag: "datatype", name: "BoundsExceeded", id: 0x2, conformance: "M",
+                    description: "A collection would exceed its size limit"
+                },
+                {
+                    tag: "datatype", name: "NetworkIdNotFound", id: 0x3, conformance: "M",
+                    description: "The NetworkID is not among the collection of added networks"
+                },
+                {
+                    tag: "datatype", name: "DuplicateNetworkId", id: 0x4, conformance: "M",
+                    description: "The NetworkID is already among the collection of added networks"
+                },
+                {
+                    tag: "datatype", name: "NetworkNotFound", id: 0x5, conformance: "M",
+                    description: "Cannot find AP: SSID Not found"
+                },
+                {
+                    tag: "datatype", name: "RegulatoryError", id: 0x6, conformance: "M",
+                    description: "Cannot find AP: Mismatch on band/channels/regulatory domain / 2.4GHz vs 5GHz"
+                },
+                {
+                    tag: "datatype", name: "AuthFailure", id: 0x7, conformance: "M",
+                    description: "Cannot associate due to authentication failure"
+                },
+                {
+                    tag: "datatype", name: "UnsupportedSecurity", id: 0x8, conformance: "M",
+                    description: "Cannot associate due to unsupported security mode"
+                },
+                {
+                    tag: "datatype", name: "OtherConnectionFailure", id: 0x9, conformance: "M",
+                    description: "Other association failure"
+                },
+                {
+                    tag: "datatype", name: "Ipv6Failed", id: 0xa, conformance: "M",
+                    description: "Failure to generate an IPv6 address"
+                },
+                {
+                    tag: "datatype", name: "IpBindFailed", id: 0xb, conformance: "M",
+                    description: "Failure to bind Wi-Fi <-> IP interfaces"
+                },
+                { tag: "datatype", name: "UnknownError", id: 0xc, conformance: "M", description: "Unknown error" }
             ]
         },
 
@@ -839,7 +887,7 @@ Matter.children.push({
                              "Implementations must be careful to support reporting byte strings without requiring a particular " +
                              "encoding for transfer. Only the commissioner should try to potentially decode the bytes. The most " +
                              "common encoding is UTF-8, however this is just a convention. Some configurations may use Latin-1 or " +
-                             "other character sets. A commissioner MAY decode using UTF-8, replacing encoding errors with \"?\" at " +
+                             "other character sets. A commissioner may decode using UTF-8, replacing encoding errors with \"?\" at " +
                              "the application level while retaining the underlying representation." +
                              "\n" +
                              "XPAN ID is a big-endian 64-bit unsigned number, represented on the first 8 octets of the octet " +
@@ -871,7 +919,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "WiFiBand", id: 0x4, type: "WiFiBand", conformance: "[WI]",
-                    details: "This field, if present, MAY be used to differentiate overlapping channel number values across " +
+                    details: "This field, if present, may be used to differentiate overlapping channel number values across " +
                              "different Wi-Fi frequency bands.",
                     xref: { document: "core", section: "11.8.5.5.1" }
                 },
@@ -922,11 +970,11 @@ Matter.children.push({
             tag: "datatype", name: "WiFiSecurity", type: "map8", conformance: "M",
 
             children: [
-                { tag: "datatype", name: "Unencrypted", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Wep", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "WpaPersonal", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Wpa2Personal", id: 0x8, conformance: "M" },
-                { tag: "datatype", name: "Wpa3Personal", id: 0x10, conformance: "M" }
+                { tag: "datatype", name: "Unencrypted", constraint: "0" },
+                { tag: "datatype", name: "WEP", constraint: "1" },
+                { tag: "datatype", name: "WPA-PERSONAL", constraint: "2" },
+                { tag: "datatype", name: "WPA2-PERSONAL", constraint: "3" },
+                { tag: "datatype", name: "WPA3-PERSONAL", constraint: "4" }
             ]
         },
 

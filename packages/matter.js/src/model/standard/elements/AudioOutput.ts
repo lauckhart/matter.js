@@ -18,10 +18,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.5.2" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "NU", id: 0x0, description: "NameUpdates",
                 details: "Supports updates to output names"
-            } ]
+            }]
         },
 
         {
@@ -29,7 +29,7 @@ Matter.children.push({
             constraint: "None",
             details: "This list provides the outputs supported by the device.",
             xref: { document: "cluster", section: "6.5.3.1" },
-            children: [ { tag: "datatype", name: "entry", type: "OutputInfoStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "OutputInfoStruct" }]
         },
 
         {
@@ -43,7 +43,7 @@ Matter.children.push({
             tag: "command", name: "SelectOutput", id: 0x0, access: "O", conformance: "M", direction: "request",
             response: "status",
             xref: { document: "cluster", section: "6.5.4" },
-            children: [ { tag: "datatype", name: "Index", type: "uint8", conformance: "M" } ]
+            children: [{ tag: "datatype", name: "Index", type: "uint8", conformance: "M" }]
         },
 
         {
@@ -51,7 +51,7 @@ Matter.children.push({
             response: "status",
             details: "Upon receipt, this shall rename the output at a specific index in the Output List." +
                      "\n" +
-                     "Updates to the output name shall appear in the device’s settings menus. Name updates MAY " +
+                     "Updates to the output name shall appear in the device’s settings menus. Name updates may " +
                      "automatically be sent to the actual device to which the output connects.",
             xref: { document: "cluster", section: "6.5.4.2" },
             children: [

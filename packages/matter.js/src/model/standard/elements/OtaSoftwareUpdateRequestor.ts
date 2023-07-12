@@ -30,7 +30,7 @@ Matter.children.push({
                      "the DefaultOTAProviders attribute.",
 
             xref: { document: "core", section: "11.19.7.5.1" },
-            children: [ { tag: "datatype", name: "entry", type: "ProviderLocationStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "ProviderLocationStruct" }]
         },
 
         {
@@ -65,7 +65,7 @@ Matter.children.push({
                      "A value of 0 shall indicate that the beginning has occurred. A value of 100 shall indicate " +
                      "completion." +
                      "\n" +
-                     "This field MAY be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting " +
+                     "This field may be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting " +
                      "progress when this attribute is part of a subscription.",
 
             xref: { document: "core", section: "11.19.7.5.4" }
@@ -126,7 +126,7 @@ Matter.children.push({
             tag: "command", name: "AnnounceOtaProvider", id: 0x0, access: "A", conformance: "O",
             direction: "request", response: "status",
 
-            details: "This command MAY be invoked by Administrators to announce the presence of a particular OTA Provider." +
+            details: "This command may be invoked by Administrators to announce the presence of a particular OTA Provider." +
                      "\n" +
                      "This command shall be scoped to the accessing fabric." +
                      "\n" +
@@ -155,10 +155,20 @@ Matter.children.push({
         {
             tag: "datatype", name: "AnnouncementReasonEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.19.7.4.1" },
+
             children: [
-                { tag: "datatype", name: "SimpleAnnouncement", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "UpdateAvailable", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "UrgentUpdateAvailable", id: 0x2, conformance: "M" }
+                {
+                    tag: "datatype", name: "SimpleAnnouncement", id: 0x0, conformance: "M",
+                    description: "An OTA Provider is announcing its presence."
+                },
+                {
+                    tag: "datatype", name: "UpdateAvailable", id: 0x1, conformance: "M",
+                    description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available."
+                },
+                {
+                    tag: "datatype", name: "UrgentUpdateAvailable", id: 0x2, conformance: "M",
+                    description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available, which contains an update that needs to be applied urgently."
+                }
             ]
         },
 
@@ -167,15 +177,42 @@ Matter.children.push({
             xref: { document: "core", section: "11.19.7.4.5" },
 
             children: [
-                { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Idle", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Querying", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "DelayedOnQuery", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "Downloading", id: 0x4, conformance: "M" },
-                { tag: "datatype", name: "Applying", id: 0x5, conformance: "M" },
-                { tag: "datatype", name: "DelayedOnApply", id: 0x6, conformance: "M" },
-                { tag: "datatype", name: "RollingBack", id: 0x7, conformance: "M" },
-                { tag: "datatype", name: "DelayedOnUserConsent", id: 0x8, conformance: "M" }
+                {
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "M",
+                    description: "Current state is not yet determined."
+                },
+                {
+                    tag: "datatype", name: "Idle", id: 0x1, conformance: "M",
+                    description: "Indicate a Node not yet in the process of software update."
+                },
+                {
+                    tag: "datatype", name: "Querying", id: 0x2, conformance: "M",
+                    description: "Indicate a Node in the process of querying an OTA Provider."
+                },
+                {
+                    tag: "datatype", name: "DelayedOnQuery", id: 0x3, conformance: "M",
+                    description: "Indicate a Node waiting after a Busy response."
+                },
+                {
+                    tag: "datatype", name: "Downloading", id: 0x4, conformance: "M",
+                    description: "Indicate a Node currently in the process of downloading a software update."
+                },
+                {
+                    tag: "datatype", name: "Applying", id: 0x5, conformance: "M",
+                    description: "Indicate a Node currently in the process of verifying and applying a software update."
+                },
+                {
+                    tag: "datatype", name: "DelayedOnApply", id: 0x6, conformance: "M",
+                    description: "Indicate a Node waiting caused by AwaitNextAction response."
+                },
+                {
+                    tag: "datatype", name: "RollingBack", id: 0x7, conformance: "M",
+                    description: "Indicate a Node in the process of recovering to a previous version."
+                },
+                {
+                    tag: "datatype", name: "DelayedOnUserConsent", id: 0x8, conformance: "M",
+                    description: "Indicate a Node is capable of user consent."
+                }
             ]
         },
 
@@ -185,11 +222,26 @@ Matter.children.push({
             xref: { document: "core", section: "11.19.7.4.15" },
 
             children: [
-                { tag: "datatype", name: "Unknown", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Success", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Failure", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "TimeOut", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "DelayByProvider", id: 0x4, conformance: "O" }
+                {
+                    tag: "datatype", name: "Unknown", id: 0x0, conformance: "M",
+                    description: "The reason for a state change is unknown."
+                },
+                {
+                    tag: "datatype", name: "Success", id: 0x1, conformance: "M",
+                    description: "The reason for a state change is the success of a prior operation."
+                },
+                {
+                    tag: "datatype", name: "Failure", id: 0x2, conformance: "M",
+                    description: "The reason for a state change is the failure of a prior operation."
+                },
+                {
+                    tag: "datatype", name: "TimeOut", id: 0x3, conformance: "M",
+                    description: "The reason for a state change is a time-out."
+                },
+                {
+                    tag: "datatype", name: "DelayByProvider", id: 0x4, conformance: "O",
+                    description: "The reason for a state change is a request by the OTA Provider to wait."
+                }
             ]
         },
 

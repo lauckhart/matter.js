@@ -22,7 +22,7 @@ Matter.children.push({
                      "experience presented to the user by the Endpoint (Video Player or Content App). The list shall not " +
                      "contain any entries with the same Identifier in the TargetInfoStruct object.",
             xref: { document: "cluster", section: "6.11.3.1" },
-            children: [ { tag: "datatype", name: "entry", type: "TargetInfoStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "TargetInfoStruct" }]
         },
 
         {

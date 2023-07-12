@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, OptionalWritableAttribute, AccessLevel, WritableAttribute, FixedAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -104,36 +104,16 @@ export const enum LockType {
 }
 
 /**
- * Bit definitions for TlvSupportedOperatingModes
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.24
- */
-export const SupportedOperatingModesBits = {
-    vacation: BitFlag(1),
-    privacy: BitFlag(2),
-    noRemoteLockUnlock: BitFlag(8),
-    passage: BitFlag(16)
-};
-
-/**
  * The value of the DoorLock supportedOperatingModes attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.24
  */
-export const TlvSupportedOperatingModes = TlvBitmap(TlvUInt16, SupportedOperatingModesBits);
-
-/**
- * Bit definitions for TlvDefaultConfigurationRegister
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.28
- */
-export const DefaultConfigurationRegisterBits = {
-    enableLocalProgrammingEnabled: BitFlag(1),
-    keypadInterfaceDefaultAccessEnabled: BitFlag(2),
-    remoteInterfaceDefaultAccessIsEnabled: BitFlag(4),
-    soundEnabled: BitFlag(32),
-    autoRelockTimeSet: BitFlag(64),
-    ledSettingsSet: BitFlag(128)
+export const SupportedOperatingModes = {
+    normal: BitFlag(0),
+    vacation: BitFlag(1),
+    privacy: BitFlag(2),
+    noRemoteLockUnlock: BitFlag(3),
+    passage: BitFlag(4)
 };
 
 /**
@@ -141,18 +121,13 @@ export const DefaultConfigurationRegisterBits = {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.28
  */
-export const TlvDefaultConfigurationRegister = TlvBitmap(TlvUInt16, DefaultConfigurationRegisterBits);
-
-/**
- * Bit definitions for TlvLocalProgrammingFeatures
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.33
- */
-export const LocalProgrammingFeaturesBits = {
-    addUsersCredentialsSchedulesLocally: BitFlag(1),
-    modifyUsersCredentialsSchedulesLocally: BitFlag(2),
-    clearUsersCredentialsSchedulesLocally: BitFlag(4),
-    adjustLockSettingsLocally: BitFlag(8)
+export const DefaultConfigurationRegister = {
+    enableLocalProgrammingEnabled: BitFlag(0),
+    keypadInterfaceDefaultAccessEnabled: BitFlag(1),
+    remoteInterfaceDefaultAccessIsEnabled: BitFlag(2),
+    soundEnabled: BitFlag(5),
+    autoRelockTimeSet: BitFlag(6),
+    ledSettingsSet: BitFlag(7)
 };
 
 /**
@@ -160,14 +135,19 @@ export const LocalProgrammingFeaturesBits = {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.33
  */
-export const TlvLocalProgrammingFeatures = TlvBitmap(TlvUInt8, LocalProgrammingFeaturesBits);
+export const LocalProgrammingFeatures = {
+    addUsersCredentialsSchedulesLocally: BitFlag(0),
+    modifyUsersCredentialsSchedulesLocally: BitFlag(1),
+    clearUsersCredentialsSchedulesLocally: BitFlag(2),
+    adjustLockSettingsLocally: BitFlag(3)
+};
 
 /**
- * Bit definitions for TlvAlarmMask
+ * The value of the DoorLock alarmMask attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.39
  */
-export const AlarmMaskBits = {
+export const AlarmMask = {
     lockingMechanismJammed: BitFlag(0),
     lockResetToFactoryDefaults: BitFlag(1),
     reserved: BitFlag(2),
@@ -176,13 +156,6 @@ export const AlarmMaskBits = {
     tamperAlarmFrontEscutcheonRemovedFromMain: BitFlag(5),
     forcedDoorOpenUnderDoorLockedCondition: BitFlag(6)
 };
-
-/**
- * The value of the DoorLock alarmMask attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.39
- */
-export const TlvAlarmMask = TlvBitmap(TlvUInt16, AlarmMaskBits);
 
 /**
  * Input to the DoorLock lockDoor command
@@ -527,18 +500,11 @@ export const TlvDoorStateChangeEvent = TlvObject({
 });
 
 /**
- * Bit definitions for TlvCredentialRulesSupport
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.19
- */
-export const CredentialRulesSupportBits = { single: BitFlag(0), dual: BitFlag(1), tri: BitFlag(4) };
-
-/**
  * The value of the DoorLock credentialRulesSupport attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.19
  */
-export const TlvCredentialRulesSupport = TlvBitmap(TlvUInt8, CredentialRulesSupportBits);
+export const CredentialRulesSupport = { single: BitFlag(0), dual: BitFlag(1), tri: BitFlag(2) };
 
 /**
  * The DataOperationType enum shall indicate the data operation performed.
@@ -903,26 +869,20 @@ export const TlvLockUserChangeEvent = TlvObject({
 });
 
 /**
- * Bit definitions for TlvDaysMaskMap
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.6
- */
-export const DaysMaskMapBits = {
-    sunday: BitFlag(0),
-    tuesday: BitFlag(2),
-    wednesday: BitFlag(8),
-    thursday: BitFlag(16),
-    friday: BitFlag(32),
-    saturday: BitFlag(64)
-};
-
-/**
  * The DaysMask field used in various commands and shall indicate the days of the week the Week Day schedule applies
  * for.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.6
  */
-export const TlvDaysMaskMap = TlvBitmap(TlvUInt8, DaysMaskMapBits);
+export const DaysMaskMap = {
+    sunday: BitFlag(0),
+    monday: BitFlag(1),
+    tuesday: BitFlag(2),
+    wednesday: BitFlag(3),
+    thursday: BitFlag(4),
+    friday: BitFlag(5),
+    saturday: BitFlag(6)
+};
 
 /**
  * Input to the DoorLock setWeekDaySchedule command
@@ -932,7 +892,7 @@ export const TlvDaysMaskMap = TlvBitmap(TlvUInt8, DaysMaskMapBits);
 export const TlvSetWeekDayScheduleRequest = TlvObject({
     weekDayIndex: TlvField(0, TlvUInt8),
     userIndex: TlvField(1, TlvUInt16),
-    daysMask: TlvField(2, TlvDaysMaskMap),
+    daysMask: TlvField(2, TlvBitmap(TlvUInt8, DaysMaskMap)),
     startHour: TlvField(3, TlvUInt8),
     startMinute: TlvField(4, TlvUInt8),
     endHour: TlvField(5, TlvUInt8),
@@ -956,7 +916,7 @@ export const TlvGetWeekDayScheduleResponse = TlvObject({
     weekDayIndex: TlvField(0, TlvUInt8),
     userIndex: TlvField(1, TlvUInt16),
     status: TlvField(2, TlvEnum<DlStatus>()),
-    daysMask: TlvOptionalField(3, TlvDaysMaskMap),
+    daysMask: TlvOptionalField(3, TlvBitmap(TlvUInt8, DaysMaskMap)),
     startHour: TlvOptionalField(4, TlvUInt8),
     startMinute: TlvOptionalField(5, TlvUInt8),
     endHour: TlvOptionalField(6, TlvUInt8),
@@ -1107,11 +1067,11 @@ export const TlvGetHolidayScheduleResponse = TlvObject({
 export const TlvClearHolidayScheduleRequest = TlvObject({ holidayIndex: TlvField(0, TlvUInt8) });
 
 /**
- * Bit definitions for TlvKeypadOperationEventMask
+ * The value of the DoorLock keypadOperationEventMask attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.40
  */
-export const KeypadOperationEventMaskBits = {
+export const KeypadOperationEventMask = {
     unknownOrManufacturerSpecificKeypadOperationEvent: BitFlag(0),
     lockSourceKeypad: BitFlag(1),
     unlockSourceKeypad: BitFlag(2),
@@ -1123,18 +1083,11 @@ export const KeypadOperationEventMaskBits = {
 };
 
 /**
- * The value of the DoorLock keypadOperationEventMask attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.40
- */
-export const TlvKeypadOperationEventMask = TlvBitmap(TlvUInt16, KeypadOperationEventMaskBits);
-
-/**
- * Bit definitions for TlvKeypadProgrammingEventMask
+ * The value of the DoorLock keypadProgrammingEventMask attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.44
  */
-export const KeypadProgrammingEventMaskBits = {
+export const KeypadProgrammingEventMask = {
     unknownOrManufacturerSpecificKeypadProgrammingEvent: BitFlag(0),
     programmingPinCodeChangedSourceKeypad: BitFlag(1),
     pinAddedSourceKeypad: BitFlag(2),
@@ -1143,18 +1096,11 @@ export const KeypadProgrammingEventMaskBits = {
 };
 
 /**
- * The value of the DoorLock keypadProgrammingEventMask attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.44
- */
-export const TlvKeypadProgrammingEventMask = TlvBitmap(TlvUInt16, KeypadProgrammingEventMaskBits);
-
-/**
- * Bit definitions for TlvRemoteOperationEventMask
+ * The value of the DoorLock remoteOperationEventMask attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.41
  */
-export const RemoteOperationEventMaskBits = {
+export const RemoteOperationEventMask = {
     unknownOrManufacturerSpecificRemoteOperationEvent: BitFlag(0),
     lockSourceRemote: BitFlag(1),
     unlockSourceRemote: BitFlag(2),
@@ -1165,18 +1111,11 @@ export const RemoteOperationEventMaskBits = {
 };
 
 /**
- * The value of the DoorLock remoteOperationEventMask attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.41
- */
-export const TlvRemoteOperationEventMask = TlvBitmap(TlvUInt16, RemoteOperationEventMaskBits);
-
-/**
- * Bit definitions for TlvManualOperationEventMask
+ * The value of the DoorLock manualOperationEventMask attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.42
  */
-export const ManualOperationEventMaskBits = {
+export const ManualOperationEventMask = {
     unknownOrManufacturerSpecificManualOperationEvent: BitFlag(0),
     thumbturnLock: BitFlag(1),
     thumbturnUnlock: BitFlag(2),
@@ -1191,18 +1130,11 @@ export const ManualOperationEventMaskBits = {
 };
 
 /**
- * The value of the DoorLock manualOperationEventMask attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.42
- */
-export const TlvManualOperationEventMask = TlvBitmap(TlvUInt16, ManualOperationEventMaskBits);
-
-/**
- * Bit definitions for TlvRemoteProgrammingEventMask
+ * The value of the DoorLock remoteProgrammingEventMask attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.45
  */
-export const RemoteProgrammingEventMaskBits = {
+export const RemoteProgrammingEventMask = {
     unknownOrManufacturerSpecificRemoteProgrammingEvent: BitFlag(0),
     pinAddedSourceRemote: BitFlag(2),
     pinClearedSourceRemote: BitFlag(3),
@@ -1212,18 +1144,11 @@ export const RemoteProgrammingEventMaskBits = {
 };
 
 /**
- * The value of the DoorLock remoteProgrammingEventMask attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.45
- */
-export const TlvRemoteProgrammingEventMask = TlvBitmap(TlvUInt16, RemoteProgrammingEventMaskBits);
-
-/**
- * Bit definitions for TlvRfidOperationEventMask
+ * The value of the DoorLock rfidOperationEventMask attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.43
  */
-export const RfidOperationEventMaskBits = {
+export const RfidOperationEventMask = {
     unknownOrManufacturerSpecificKeypadOperationEvent: BitFlag(0),
     lockSourceRfid: BitFlag(1),
     unlockSourceRfid: BitFlag(2),
@@ -1232,13 +1157,6 @@ export const RfidOperationEventMaskBits = {
     unlockSourceRfidErrorInvalidRfidId: BitFlag(5),
     unlockSourceRfidErrorInvalidSchedule: BitFlag(6)
 };
-
-/**
- * The value of the DoorLock rfidOperationEventMask attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.43
- */
-export const TlvRfidOperationEventMask = TlvBitmap(TlvUInt16, RfidOperationEventMaskBits);
 
 /**
  * These are optional features supported by DoorLockCluster.
@@ -1512,8 +1430,8 @@ export const DoorLockBase = BaseClusterComponent({
          */
         supportedOperatingModes: FixedAttribute(
             38,
-            TlvSupportedOperatingModes,
-            { default: BitFlags(SupportedOperatingModesBits, "Vacation", "Privacy", "Passage") }
+            TlvBitmap(TlvUInt16, SupportedOperatingModes),
+            { default: BitsFromPartial(SupportedOperatingModes, { vacation: true, privacy: true, passage: true }) }
         ),
 
         /**
@@ -1521,8 +1439,8 @@ export const DoorLockBase = BaseClusterComponent({
          * hardware dip switch setting, etc…) and represents the default setting for some of the attributes within this
          * cluster (for example: LED, Auto Lock, Sound Volume, and Operating Mode attributes).
          *
-         * This is a read-only attribute and is intended to allow clients to determine what changes MAY need to be made
-         * without having to query all the included attributes. It MAY be beneficial for the clients to know what the
+         * This is a read-only attribute and is intended to allow clients to determine what changes may need to be made
+         * without having to query all the included attributes. It may be beneficial for the clients to know what the
          * device’s original settings were in the event that the device needs to be restored to factory default
          * settings.
          *
@@ -1535,7 +1453,11 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.28
          */
-        defaultConfigurationRegister: OptionalAttribute(39, TlvDefaultConfigurationRegister),
+        defaultConfigurationRegister: OptionalAttribute(
+            39,
+            TlvBitmap(TlvUInt16, DefaultConfigurationRegister),
+            { default: BitsFromPartial(DefaultConfigurationRegister, {}) }
+        ),
 
         /**
          * Enable/disable local programming on the door lock of certain features (see LocalProgrammingFeatures
@@ -1585,8 +1507,8 @@ export const DoorLockBase = BaseClusterComponent({
          */
         localProgrammingFeatures: OptionalWritableAttribute(
             44,
-            TlvLocalProgrammingFeatures,
-            { writeAcl: AccessLevel.Administer }
+            TlvBitmap(TlvUInt8, LocalProgrammingFeatures),
+            { default: BitsFromPartial(LocalProgrammingFeatures, {}), writeAcl: AccessLevel.Administer }
         ),
 
         /**
@@ -1601,9 +1523,9 @@ export const DoorLockBase = BaseClusterComponent({
          */
         alarmMask: OptionalWritableAttribute(
             64,
-            TlvAlarmMask,
+            TlvBitmap(TlvUInt16, AlarmMask),
             {
-                default: BitFlags(AlarmMaskBits, "LockResetToFactoryDefaults", "Reserved", "TamperAlarmWrongCodeEntryLimit"),
+                default: BitsFromPartial(AlarmMask, { lockingMechanismJammed: true, lockResetToFactoryDefaults: true, reserved: true, rfModulePowerCycled: true, tamperAlarmWrongCodeEntryLimit: true, tamperAlarmFrontEscutcheonRemovedFromMain: true, forcedDoorOpenUnderDoorLockedCondition: true }),
                 writeAcl: AccessLevel.Administer
             }
         )
@@ -1749,8 +1671,8 @@ export const UserComponent = ClusterComponent({
          */
         credentialRulesSupport: FixedAttribute(
             27,
-            TlvCredentialRulesSupport,
-            { default: BitFlags(CredentialRulesSupportBits, "Single") }
+            TlvBitmap(TlvUInt8, CredentialRulesSupport),
+            { default: BitsFromPartial(CredentialRulesSupport, { single: true }) }
         ),
 
         /**
@@ -2007,7 +1929,7 @@ export const PinCredentialOrRfidCredentialComponent = ClusterComponent({
          * UserCodeTemporaryDisableTime. If the attribute accepts writes and an attempt to write the value 0 is made,
          * the device shall respond with CONSTRAINT_ERROR.
          *
-         * The lock MAY reset the counter used to track incorrect credential presentations as required by internal
+         * The lock may reset the counter used to track incorrect credential presentations as required by internal
          * logic, environmental events, or other reasons. The lock shall reset the counter if a valid credential is
          * presented.
          *
@@ -2069,9 +1991,9 @@ export const NotificationAndPinCredentialComponent = ClusterComponent({
          */
         keypadOperationEventMask: OptionalWritableAttribute(
             65,
-            TlvKeypadOperationEventMask,
+            TlvBitmap(TlvUInt16, KeypadOperationEventMask),
             {
-                default: BitFlags(KeypadOperationEventMaskBits, "LockSourceKeypad", "UnlockSourceKeypad", "LockSourceKeypadErrorInvalidSchedule"),
+                default: BitsFromPartial(KeypadOperationEventMask, { unknownOrManufacturerSpecificKeypadOperationEvent: true, lockSourceKeypad: true, unlockSourceKeypad: true, lockSourceKeypadErrorInvalidPin: true, lockSourceKeypadErrorInvalidSchedule: true, unlockSourceKeypadErrorInvalidCode: true, unlockSourceKeypadErrorInvalidSchedule: true, nonAccessUserOperationEventSourceKeypad: true }),
                 writeAcl: AccessLevel.Administer
             }
         ),
@@ -2086,9 +2008,9 @@ export const NotificationAndPinCredentialComponent = ClusterComponent({
          */
         keypadProgrammingEventMask: OptionalWritableAttribute(
             69,
-            TlvKeypadProgrammingEventMask,
+            TlvBitmap(TlvUInt16, KeypadProgrammingEventMask),
             {
-                default: BitFlags(KeypadProgrammingEventMaskBits, "ProgrammingPinCodeChangedSourceKeypad", "PinAddedSourceKeypad", "PinChangedSourceKeypad"),
+                default: BitsFromPartial(KeypadProgrammingEventMask, { unknownOrManufacturerSpecificKeypadProgrammingEvent: true, programmingPinCodeChangedSourceKeypad: true, pinAddedSourceKeypad: true, pinClearedSourceKeypad: true, pinChangedSourceKeypad: true }),
                 writeAcl: AccessLevel.Administer
             }
         )
@@ -2112,9 +2034,9 @@ export const NotificationComponent = ClusterComponent({
          */
         remoteOperationEventMask: OptionalWritableAttribute(
             66,
-            TlvRemoteOperationEventMask,
+            TlvBitmap(TlvUInt16, RemoteOperationEventMask),
             {
-                default: BitFlags(RemoteOperationEventMaskBits, "LockSourceRemote", "UnlockSourceRemote", "LockSourceRemoteErrorInvalidSchedule"),
+                default: BitsFromPartial(RemoteOperationEventMask, { unknownOrManufacturerSpecificRemoteOperationEvent: true, lockSourceRemote: true, unlockSourceRemote: true, lockSourceRemoteErrorInvalidCode: true, lockSourceRemoteErrorInvalidSchedule: true, unlockSourceRemoteErrorInvalidCode: true, unlockSourceRemoteErrorInvalidSchedule: true }),
                 writeAcl: AccessLevel.Administer
             }
         ),
@@ -2129,9 +2051,9 @@ export const NotificationComponent = ClusterComponent({
          */
         manualOperationEventMask: OptionalWritableAttribute(
             67,
-            TlvManualOperationEventMask,
+            TlvBitmap(TlvUInt16, ManualOperationEventMask),
             {
-                default: BitFlags(ManualOperationEventMaskBits, "ThumbturnLock", "ThumbturnUnlock", "KeyLock"),
+                default: BitsFromPartial(ManualOperationEventMask, { unknownOrManufacturerSpecificManualOperationEvent: true, thumbturnLock: true, thumbturnUnlock: true, oneTouchLock: true, keyLock: true, keyUnlock: true, autoLock: true, scheduleLock: true, scheduleUnlock: true, manualLock: true, manualUnlock: true }),
                 writeAcl: AccessLevel.Administer
             }
         ),
@@ -2146,9 +2068,9 @@ export const NotificationComponent = ClusterComponent({
          */
         remoteProgrammingEventMask: OptionalWritableAttribute(
             70,
-            TlvRemoteProgrammingEventMask,
+            TlvBitmap(TlvUInt16, RemoteProgrammingEventMask),
             {
-                default: BitFlags(RemoteProgrammingEventMaskBits, "PinAddedSourceRemote", "PinChangedSourceRemote"),
+                default: BitsFromPartial(RemoteProgrammingEventMask, { unknownOrManufacturerSpecificRemoteProgrammingEvent: true, pinAddedSourceRemote: true, pinClearedSourceRemote: true, pinChangedSourceRemote: true, rfidCodeAddedSourceRemote: true, rfidCodeClearedSourceRemote: true }),
                 writeAcl: AccessLevel.Administer
             }
         )
@@ -2170,9 +2092,9 @@ export const NotificationAndRfidCredentialComponent = ClusterComponent({
          */
         rfidOperationEventMask: OptionalWritableAttribute(
             68,
-            TlvRfidOperationEventMask,
+            TlvBitmap(TlvUInt16, RfidOperationEventMask),
             {
-                default: BitFlags(RfidOperationEventMaskBits, "LockSourceRfid", "UnlockSourceRfid", "LockSourceRfidErrorInvalidSchedule"),
+                default: BitsFromPartial(RfidOperationEventMask, { unknownOrManufacturerSpecificKeypadOperationEvent: true, lockSourceRfid: true, unlockSourceRfid: true, lockSourceRfidErrorInvalidRfidId: true, lockSourceRfidErrorInvalidSchedule: true, unlockSourceRfidErrorInvalidRfidId: true, unlockSourceRfidErrorInvalidSchedule: true }),
                 writeAcl: AccessLevel.Administer
             }
         ),
@@ -2180,7 +2102,11 @@ export const NotificationAndRfidCredentialComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3
          */
-        rfidPro: OptionalWritableAttribute(71, TlvUInt16, { writeAcl: AccessLevel.Administer })
+        rfidPro: OptionalWritableAttribute(
+            71,
+            TlvUInt16,
+            { default: BitsFromPartial(RfidPro, {}), writeAcl: AccessLevel.Administer }
+        )
     }
 });
 

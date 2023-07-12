@@ -19,15 +19,54 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.15.5.1
  */
 export const enum PHYRate {
+    /**
+     * PHY rate is 10Mbps
+     */
     Rate10M = 0,
+
+    /**
+     * PHY rate is 100Mbps
+     */
     Rate100M = 1,
+
+    /**
+     * PHY rate is 1Gbps
+     */
     Rate1G = 2,
+
+    /**
+     * PHY rate is 2.5Gbps
+     */
     Rate25G = 3,
+
+    /**
+     * PHY rate is 5Gbps
+     */
     Rate5G = 4,
+
+    /**
+     * PHY rate is 10Gbps
+     */
     Rate10G = 5,
+
+    /**
+     * PHY rate is 40Gbps
+     */
     Rate40G = 6,
+
+    /**
+     * PHY rate is 100Gbps
+     */
     Rate100G = 7,
+
+    /**
+     * PHY rate is 200Gbps
+     */
     Rate200G = 8,
+
+    /**
+     * PHY rate is 400Gbps
+     */
     Rate400G = 9
 }
 
@@ -196,7 +235,7 @@ export const PacketCountsOrErrorCountsComponent = ClusterComponent({
 /**
  * Ethernet Network Diagnostics
  *
- * The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be
+ * The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that may be
  * used by a Node to assist a user or Administrator in diagnosing potential problems. The Ethernet Network Diagnostics
  * Cluster attempts to centralize all metrics that are relevant to a potential Ethernet connection to a Node.
  *

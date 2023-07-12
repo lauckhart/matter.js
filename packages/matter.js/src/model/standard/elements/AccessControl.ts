@@ -41,18 +41,18 @@ Matter.children.push({
                      "with targets on the Node.",
 
             xref: { document: "core", section: "9.10.5.3" },
-            children: [ { tag: "datatype", name: "entry", type: "AccessControlEntryStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "AccessControlEntryStruct" }]
         },
 
         {
             tag: "attribute", name: "Extension", id: 0x1, type: "list", access: "RW F A", conformance: "O",
             constraint: "desc",
-            details: "If present, the Access Control Extensions MAY be used by Administrators to store arbitrary data " +
+            details: "If present, the Access Control Extensions may be used by Administrators to store arbitrary data " +
                      "related to fabric’s Access Control Entries." +
                      "\n" +
                      "The Access Control Extension list shall support a single extension entry per supported fabric.",
             xref: { document: "core", section: "9.10.5.4" },
-            children: [ { tag: "datatype", name: "entry", type: "AccessControlExtensionStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "AccessControlExtensionStruct" }]
         },
 
         {
@@ -212,10 +212,17 @@ Matter.children.push({
         {
             tag: "datatype", name: "ChangeTypeEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "9.10.4.1" },
+
             children: [
-                { tag: "datatype", name: "Changed", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Added", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Removed", id: 0x2, conformance: "M" }
+                {
+                    tag: "datatype", name: "Changed", id: 0x0, conformance: "M",
+                    description: "Entry or extension was changed"
+                },
+                { tag: "datatype", name: "Added", id: 0x1, conformance: "M", description: "Entry or extension was added" },
+                {
+                    tag: "datatype", name: "Removed", id: 0x2, conformance: "M",
+                    description: "Entry or extension was removed"
+                }
             ]
         },
 
@@ -227,20 +234,32 @@ Matter.children.push({
             xref: { document: "core", section: "9.10.4.2" },
 
             children: [
-                { tag: "datatype", name: "View", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "ProxyView", id: 0x2, conformance: "P, M" },
+                {
+                    tag: "datatype", name: "View", id: 0x1, conformance: "M",
+                    description: "Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)"
+                },
+                {
+                    tag: "datatype", name: "ProxyView", id: 0x2, conformance: "P, M",
+                    description: "Can read and observe all (as seen by a Proxy)"
+                },
+
                 {
                     tag: "datatype", name: "Operate", id: 0x3, conformance: "M",
+                    description: "View privileges, and can perform the primary function of this Node (except Access Control Cluster)",
                     details: "This value implicitly grants View privileges",
                     xref: { document: "core", section: "9.10.4.2.1" }
                 },
+
                 {
                     tag: "datatype", name: "Manage", id: 0x4, conformance: "M",
+                    description: "Operate privileges, and can modify persistent configuration of this Node (except Access Control Cluster)",
                     details: "This value implicitly grants Operate & View privileges",
                     xref: { document: "core", section: "9.10.4.2.2" }
                 },
+
                 {
                     tag: "datatype", name: "Administer", id: 0x5, conformance: "M",
+                    description: "Manage privileges, and can observe and modify the Access Control Cluster",
                     details: "This value implicitly grants Manage, Operate, Proxy View & View privileges",
                     xref: { document: "core", section: "9.10.4.2.3" }
                 }
@@ -250,10 +269,14 @@ Matter.children.push({
         {
             tag: "datatype", name: "AccessControlEntryAuthModeEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "9.10.4.3" },
+
             children: [
-                { tag: "datatype", name: "Pase", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Case", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "Group", id: 0x3, conformance: "M" }
+                { tag: "datatype", name: "Pase", id: 0x1, conformance: "M", description: "Passcode authenticated session" },
+                {
+                    tag: "datatype", name: "Case", id: 0x2, conformance: "M",
+                    description: "Certificate authenticated session"
+                },
+                { tag: "datatype", name: "Group", id: 0x3, conformance: "M", description: "Group authenticated session" }
             ]
         },
 
@@ -293,7 +316,7 @@ Matter.children.push({
                              "Individual clusters shall define whether attributes are readable, writable, or both readable and " +
                              "writable. Clusters also shall define which privilege is minimally required to be able to perform a " +
                              "particular read or write action on those attributes, or invoke particular commands. Device type " +
-                             "specifications MAY further restrict the privilege required." +
+                             "specifications may further restrict the privilege required." +
                              "\n" +
                              "The Access Control Cluster shall require the Administer privilege to observe and modify the Access " +
                              "Control Cluster itself. The Administer privilege shall NOT be used on Access Control Entries which " +
@@ -316,7 +339,7 @@ Matter.children.push({
                     details: "The subjects field shall specify a list of Subject IDs, to which this Access Control Entry grants " +
                              "access." +
                              "\n" +
-                             "Device types MAY impose additional constraints on the minimum number of subjects per Access Control " +
+                             "Device types may impose additional constraints on the minimum number of subjects per Access Control " +
                              "Entry." +
                              "\n" +
                              "An attempt to create an entry with more subjects than the node can support shall result in a " +
@@ -348,7 +371,7 @@ Matter.children.push({
                              "Management Cluster.",
 
                     xref: { document: "core", section: "9.10.4.5.3" },
-                    children: [ { tag: "datatype", name: "entry", type: "SubjectID" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "SubjectID" }]
                 },
 
                 {
@@ -358,7 +381,7 @@ Matter.children.push({
                     details: "The targets field shall specify a list of AccessControlTargetStruct, which define the clusters on " +
                              "this Node to which this Access Control Entry grants access." +
                              "\n" +
-                             "Device types MAY impose additional constraints on the minimum number of targets per Access Control " +
+                             "Device types may impose additional constraints on the minimum number of targets per Access Control " +
                              "Entry." +
                              "\n" +
                              "An attempt to create an entry with more targets than the node can support shall result in a " +
@@ -375,7 +398,7 @@ Matter.children.push({
                              "instances on all endpoints on this Node.",
 
                     xref: { document: "core", section: "9.10.4.5.4" },
-                    children: [ { tag: "datatype", name: "entry", type: "AccessControlTargetStruct" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "AccessControlTargetStruct" }]
                 }
             ]
         },
@@ -385,23 +408,23 @@ Matter.children.push({
             conformance: "M",
             xref: { document: "core", section: "9.10.4.6" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Data", id: 0x1, type: "octstr", access: "S", conformance: "M",
                 constraint: "max 128",
 
-                details: "This field MAY be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s" +
+                details: "This field may be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s" +
                          "\n" +
                          "Access Control Entries." +
                          "\n" +
                          "The contents shall consist of a top-level anonymous list; each list element shall include a " +
                          "profile-specific tag encoded in fully-qualified form." +
                          "\n" +
-                         "Administrators MAY iterate over this list of elements, and interpret selected elements at their " +
-                         "discretion. The content of each element is not specified, but MAY be coordinated among " +
+                         "Administrators may iterate over this list of elements, and interpret selected elements at their " +
+                         "discretion. The content of each element is not specified, but may be coordinated among " +
                          "manufacturers at their discretion.",
 
                 xref: { document: "core", section: "9.10.4.6.1" }
-            } ]
+            }]
         },
 
         {

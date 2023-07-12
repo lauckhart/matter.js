@@ -33,7 +33,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "FanMode", id: 0x0, type: "enum8", access: "RW VO", conformance: "M",
             constraint: "0 to 6", default: 0, quality: "N",
-            details: "This attribute shall indicate the current speed mode of the fan. This attribute MAY be written by " +
+            details: "This attribute shall indicate the current speed mode of the fan. This attribute may be written by " +
                      "the client to indicate a new speed mode of the fan. This attribute shall be set to one of the " +
                      "values in the table below.",
             xref: { document: "cluster", section: "4.4.6.1" },
@@ -128,7 +128,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "PercentSetting", id: 0x2, type: "uint8", access: "RW VO", conformance: "M",
             constraint: "0 to 100", default: 0, quality: "X",
-            details: "This attribute shall indicate the speed setting for the fan. This attribute MAY be written by the " +
+            details: "This attribute shall indicate the speed setting for the fan. This attribute may be written by the " +
                      "client to indicate a new fan speed. If the client writes null to this attribute, the attribute " +
                      "value shall NOT change. If this is set to 0, the server shall set the FanMode attribute value to " +
                      "Off.",
@@ -154,7 +154,7 @@ Matter.children.push({
         {
             tag: "attribute", name: "SpeedSetting", id: 0x5, type: "uint8", access: "RW VO", conformance: "SPD",
             constraint: "0 to SpeedMax", default: 0, quality: "X",
-            details: "This attribute shall indicate the speed setting for the fan. This attribute MAY be written by the " +
+            details: "This attribute shall indicate the speed setting for the fan. This attribute may be written by the " +
                      "client to indicate a new fan speed. If the client writes null to this attribute, the attribute " +
                      "value shall NOT change. If this is set to 0, the server shall set the FanMode attribute value to " +
                      "Off. Please see the Section 4.4.6.6.1 for details on other values.",
@@ -176,9 +176,9 @@ Matter.children.push({
                      "shown in the table below.",
             xref: { document: "cluster", section: "4.4.6.8" },
             children: [
-                { tag: "datatype", name: "RockLeftRight", id: 0x0 },
-                { tag: "datatype", name: "RockUpDown", id: 0x1 },
-                { tag: "datatype", name: "RockRound", id: 0x2 }
+                { tag: "datatype", name: "RockLeftRight", constraint: "0" },
+                { tag: "datatype", name: "RockUpDown", constraint: "1" },
+                { tag: "datatype", name: "RockRound", constraint: "2" }
             ]
         },
 
@@ -201,9 +201,9 @@ Matter.children.push({
 
             xref: { document: "cluster", section: "4.4.6.9" },
             children: [
-                { tag: "datatype", name: "RockLeftRight", id: 0x0 },
-                { tag: "datatype", name: "RockUpDown", id: 0x1 },
-                { tag: "datatype", name: "RockRound", id: 0x2 }
+                { tag: "datatype", name: "RockLeftRight", constraint: "0" },
+                { tag: "datatype", name: "RockUpDown", constraint: "1" },
+                { tag: "datatype", name: "RockRound", constraint: "2" }
             ]
         },
 
@@ -213,7 +213,10 @@ Matter.children.push({
             details: "This attribute is a bitmap that indicates what wind modes the server supports. At least one wind " +
                      "mode bit shall be set. The bitmap is shown in the table below.",
             xref: { document: "cluster", section: "4.4.6.10" },
-            children: [ { tag: "datatype", name: "SleepWind", id: 0x0 }, { tag: "datatype", name: "NaturalWind", id: 0x1 } ]
+            children: [
+                { tag: "datatype", name: "SleepWind", constraint: "0" },
+                { tag: "datatype", name: "NaturalWind", constraint: "1" }
+            ]
         },
 
         {
@@ -234,7 +237,10 @@ Matter.children.push({
                      "The bitmap is shown in the table below.",
 
             xref: { document: "cluster", section: "4.4.6.11" },
-            children: [ { tag: "datatype", name: "SleepWind", id: 0x0 }, { tag: "datatype", name: "NaturalWind", id: 0x1 } ]
+            children: [
+                { tag: "datatype", name: "SleepWind", constraint: "0" },
+                { tag: "datatype", name: "NaturalWind", constraint: "1" }
+            ]
         }
     ]
 });

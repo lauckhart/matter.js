@@ -148,7 +148,7 @@ export const AccountLoginCluster = Cluster({
          *
          * Upon receipt, the Content App checks if the account associated with the client’s Temp Account Identifier has
          * a current active Setup PIN with the given value. If the Setup PIN is valid for the user account associated
-         * with the Temp Account Identifier, then the Content App MAY make that user account active.
+         * with the Temp Account Identifier, then the Content App may make that user account active.
          *
          * The Temporary Account Identifier for a Commissionee may be populated with the Rotating ID field of the
          * client’s commissionable node advertisement encoded as an octet string where the octets of the Rotating

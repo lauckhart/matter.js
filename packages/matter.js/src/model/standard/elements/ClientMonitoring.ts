@@ -19,7 +19,7 @@ Matter.children.push({
         { tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M", default: 0 },
         {
             tag: "attribute", name: "ExpectedClients", id: 0x3, type: "list", conformance: "M",
-            children: [ { tag: "datatype", name: "entry", type: "MonitoringRegistration" } ]
+            children: [{ tag: "datatype", name: "entry", type: "MonitoringRegistration" }]
         },
 
         {

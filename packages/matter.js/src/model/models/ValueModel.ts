@@ -150,7 +150,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Get the entry type for lists, if any.
      */
     get listEntry() {
-        return new ModelTraversal().findListEntry(this);
+        return this.member("entry", [ElementTag.Datatype]) as DatatypeModel | undefined;
     }
 
     /**
@@ -209,6 +209,13 @@ export abstract class ValueModel extends Model implements ValueElement {
      */
     get nullable() {
         return !!this.quality.nullable;
+    }
+
+    /**
+     * Search the inheritance chain for a bitmap field defining a specific bit.
+     */
+    bitDefinition(bit: number) {
+        return new ModelTraversal().findBitDefinition(this, bit);
     }
 
     override valueOf() {

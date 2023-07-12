@@ -38,10 +38,10 @@ Matter.children.push({
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.8.4" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "DEPONOFF", id: 0x0, description: "OnOff",
                 details: "Dependency with the On/Off cluster"
-            } ]
+            }]
         },
 
         {
@@ -76,7 +76,7 @@ Matter.children.push({
                      "Each item in this list represents a unique mode as indicated by the Mode field of the " +
                      "ModeOptionStruct. Each entry in this list shall have a unique value for the Mode field.",
             xref: { document: "cluster", section: "1.8.5.3" },
-            children: [ { tag: "datatype", name: "entry", type: "ModeOptionStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "ModeOptionStruct" }]
         },
 
         {
@@ -136,7 +136,7 @@ Matter.children.push({
                      "\n" +
                      "server shall respond with an INVALID_COMMAND status response.",
             xref: { document: "cluster", section: "1.8.6.1" },
-            children: [ { tag: "datatype", name: "NewMode", id: 0x0, type: "uint8", conformance: "M", constraint: "desc" } ]
+            children: [{ tag: "datatype", name: "NewMode", id: 0x0, type: "uint8", conformance: "M", constraint: "desc" }]
         },
 
         {
@@ -165,13 +165,13 @@ Matter.children.push({
                     tag: "datatype", name: "SemanticTags", id: 0x2, type: "list", conformance: "M",
                     constraint: "max 64", quality: "F",
 
-                    details: "This field is a list of semantic tags that map to the mode option. This MAY be used by clients to " +
+                    details: "This field is a list of semantic tags that map to the mode option. This may be used by clients to " +
                              "determine the meaning of the mode option as defined in a standard or manufacturer specific " +
                              "namespace. Semantic tags can help clients look for options that meet certain criteria. A semantic " +
                              "tag shall be either a standard tag or manufacturer specific tag as defined in each " +
                              "SemanticTagStruct list entry." +
                              "\n" +
-                             "A mode option MAY have more than one semantic tag. A mode option MAY be mapped to a mixture of " +
+                             "A mode option may have more than one semantic tag. A mode option may be mapped to a mixture of " +
                              "standard and manufacturer specific semantic tags." +
                              "\n" +
                              "All standard semantic tags are from a single namespace indicated by the StandardNamespace attribute." +
@@ -180,7 +180,7 @@ Matter.children.push({
                              "Clients seeking the option for either HIGH or MAX will find the same option in this case.",
 
                     xref: { document: "cluster", section: "1.8.8.1.3" },
-                    children: [ { tag: "datatype", name: "entry", type: "SemanticTagStruct" } ]
+                    children: [{ tag: "datatype", name: "entry", type: "SemanticTagStruct" }]
                 }
             ]
         },

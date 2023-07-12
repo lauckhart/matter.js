@@ -68,7 +68,14 @@ export const TlvGroupInfoMapStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.1
  */
 export const enum GroupKeySecurityPolicy {
+    /**
+     * Message counter synchronization using trust-first
+     */
     TrustFirst = 0,
+
+    /**
+     * Message counter synchronization using cache-and-sync
+     */
     CacheAndSync = 1
 }
 
@@ -77,6 +84,8 @@ export const enum GroupKeySecurityPolicy {
  */
 export const enum GroupKeyMulticastPolicy {
     /**
+     * Indicates filtering of multicast messages for a specific Group ID
+     *
      * The 16-bit Group Identifier of the Multicast Address shall be the Group ID of the group.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.2.1
@@ -84,6 +93,8 @@ export const enum GroupKeyMulticastPolicy {
     PerGroupId = 0,
 
     /**
+     * Indicates not filtering of multicast messages
+     *
      * The 16-bit Group Identifier of the Multicast Address shall be 0xFFFF.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.2.2
@@ -116,7 +127,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.2
      */
-    epochKey0: TlvField(2, TlvNullable(TlvByteString.bound({ minLength: 16, maxLength: 16 }))),
+    epochKey0: TlvField(2, TlvNullable(TlvByteString)),
 
     /**
      * This field, if not null, shall define when EpochKey0 becomes valid as specified by Section 4.15.3, “Epoch Keys”.
@@ -132,7 +143,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.4
      */
-    epochKey1: TlvField(4, TlvNullable(TlvByteString.bound({ minLength: 16, maxLength: 16 }))),
+    epochKey1: TlvField(4, TlvNullable(TlvByteString)),
 
     /**
      * This field, if not null, shall define when EpochKey1 becomes valid as specified by Section 4.15.3, “Epoch Keys”.
@@ -148,7 +159,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.6
      */
-    epochKey2: TlvField(6, TlvNullable(TlvByteString.bound({ minLength: 16, maxLength: 16 }))),
+    epochKey2: TlvField(6, TlvNullable(TlvByteString)),
 
     /**
      * This field, if not null, shall define when EpochKey2 becomes valid as specified by Section 4.15.3, “Epoch Keys”.

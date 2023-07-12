@@ -189,6 +189,24 @@ export function BitFlags<T extends BitSchema, F extends Capitalize<Extract<keyof
     )) as BitFlags<T, F>;
 }
 
+/** Create a full bitmap schema from a partial bitmap schema */
+export function BitsFromPartial<S extends BitSchema, P extends TypeFromPartialBitSchema<S>>(schema: S, bits: P) {
+    const result = {} as { [key: string]: boolean | number };
+
+    for (const k in schema) {
+        const value = bits[k];
+        if (value !== undefined) {
+            result[k] = value;
+        } else if (schema[k] instanceof BitFlag) {
+            result[k] = false;
+        } else {
+            result[k] = 0;
+        }
+    }
+
+    return result as TypeFromBitSchema<S>;
+}
+
 /** Declares a bitmap schema by indicating the bit position and their names. */
 export const BitmapSchema = <T extends BitSchema>(bitSchemas: T) => new BitmapSchemaInternal(bitSchemas);
 

@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -122,7 +122,7 @@ export const TlvBrandingInformationStruct = TlvObject({
 
     /**
      * This shall indicate background of the Video Player while content launch request is being processed by it. This
-     * background information MAY also be used by the Video Player when it is in idle state.
+     * background information may also be used by the Video Player when it is in idle state.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.6.2
      */
@@ -173,7 +173,7 @@ export const TlvLaunchUrlRequest = TlvObject({
     contentUrl: TlvField(0, TlvString),
 
     /**
-     * This field, if present, shall provide a string that MAY be used to describe the content being accessed at the
+     * This field, if present, shall provide a string that may be used to describe the content being accessed at the
      * given URL.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2.2
@@ -181,7 +181,7 @@ export const TlvLaunchUrlRequest = TlvObject({
     displayString: TlvOptionalField(1, TlvString),
 
     /**
-     * This field, if present, shall indicate the branding information that MAY be displayed when playing back the
+     * This field, if present, shall indicate the branding information that may be displayed when playing back the
      * given content.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2.3
@@ -473,7 +473,11 @@ export const UrlPlaybackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2
          */
-        supportedStreamingProtocols: Attribute(1, TlvUInt32, { persistent: true })
+        supportedStreamingProtocols: Attribute(
+            1,
+            TlvUInt32,
+            { persistent: true, default: BitsFromPartial(SupportedStreamingProtocols, {}) }
+        )
     },
 
     commands: {
