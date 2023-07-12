@@ -232,6 +232,23 @@ export class ModelTraversal {
     }
 
     /**
+     * Retrieve all children of a specific type, inherited or otherwise.
+     */
+    findMembers(scope: Model, allowedTags: ElementTag[]) {
+        const members = Array<Model>();
+
+        this.visitInheritance(scope, model => {
+            for (const child of model.children) {
+                if (allowedTags.indexOf(child.tag) !== -1) {
+                    members.push(child);
+                }
+            };
+        });
+
+        return members;
+    }
+
+    /**
      * Search inherited scope for a bit definition.
      */
     findBitDefinition(scope: Model | undefined, bit: number) {

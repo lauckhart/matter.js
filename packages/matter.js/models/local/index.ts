@@ -10,3 +10,4 @@
 
 import "./ColorControlOverrides.ts";
 import "./WindowCoveringOverrides.ts";
+import "./AdministratorCommissioningClusterOverrides.ts";

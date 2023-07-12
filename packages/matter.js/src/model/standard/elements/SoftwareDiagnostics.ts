@@ -78,7 +78,7 @@ Matter.children.push({
                 { tag: "datatype", name: "Id", id: 0x0, type: "uint64", conformance: "M", default: 0 },
                 {
                     tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
-                    default: "empty"
+                    default: ""
                 },
 
                 {
@@ -130,7 +130,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
-                    default: "empty",
+                    default: "",
                     details: "The Name field shall be set to a vendor defined name or prefix of the software thread that is " +
                              "static for the duration of the thread.",
                     xref: { document: "core", section: "11.12.5.1.2" }

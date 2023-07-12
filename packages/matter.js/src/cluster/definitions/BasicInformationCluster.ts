@@ -8,13 +8,14 @@
 
 import { Cluster, FixedAttribute, WritableAttribute, AccessLevel, OptionalFixedAttribute, OptionalWritableAttribute, OptionalAttribute, Event, EventPriority, OptionalEvent } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { TlvUInt16, TlvUInt32, TlvEnum, TlvUInt8 } from "../../tlv/TlvNumber.js";
+import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
 
 /**
  * This structure provides constant values related to overall global capabilities of this Node, that are not
@@ -107,7 +108,7 @@ export const TlvLeaveEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.3.1
      */
-    fabricIndex: TlvField(0, TlvUInt8.bound({ min: 1, max: 254 }))
+    fabricIndex: TlvField(0, TlvFabricIndex)
 });
 
 /**
@@ -356,7 +357,11 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.20
          */
-        capabilityMinima: FixedAttribute(19, TlvCapabilityMinimaStruct),
+        capabilityMinima: FixedAttribute(
+            19,
+            TlvCapabilityMinimaStruct,
+            { default: { caseSessionsPerFabric: 3, subscriptionsPerFabric: 3 } }
+        ),
 
         productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
     },

@@ -598,7 +598,7 @@ Matter.children.push({
 
         {
             tag: "datatype", name: "MovementStatus", type: "enum8",
-            details: "These are the legal value for fields of the OperationalStatus attribute.",
+            details: "Values for OperationalStatus attribute fields.",
             children: [
                 { tag: "datatype", name: "Stopped", id: 0x0, details: "Covering is not moving" },
                 { tag: "datatype", name: "Opening", id: 0x1, details: "Covering is moving from closed to open" },

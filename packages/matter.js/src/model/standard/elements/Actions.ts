@@ -69,7 +69,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SetupUrl", id: 0x2, type: "string", access: "R V", conformance: "O",
-            constraint: "max 512", default: "empty",
+            constraint: "max 512", default: "",
 
             details: "The SetupURL attribute (when provided) shall indicate a URL; its syntax shall follow the syntax as " +
                      "specified in RFC 3986, max. 512 ASCII characters. The location referenced by this URL shall provide " +

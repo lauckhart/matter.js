@@ -90,43 +90,50 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             return;
         }
 
-        let def = this.model.default;
-        if (def === undefined) {
+        let defaultValue = this.model.default;
+        if (defaultValue === undefined) {
             return;
         }
 
-        if (this.validateSpecialDefault(metatype, def)) {
+        if (this.validateSpecialDefault(metatype, defaultValue)) {
             return;
         }
 
         // Convert value to proper type if possible
-        const cast = Metatype.cast(metatype, def);
+        if (metatype === Metatype.string && defaultValue === "empty") {
+            // Metatype doesn't handle this case because otherwise you'd never
+            // be able to have a string called "empty".  In this case though
+            // the data likely comes from the spec so we're going to take a
+            // flyer and say you can never have "empty" as a default value
+            defaultValue = "";
+        }
+        const cast = Metatype.cast(metatype, defaultValue);
         if (cast === FieldValue.Invalid) {
-            this.error("INVALID_VALUE", `Value "${def}" is not a ${metatype}`);
+            this.error("INVALID_VALUE", `Value "${defaultValue}" is not a ${metatype}`);
             return;
         }
-        def = cast;
+        defaultValue = cast;
 
         // For enums convert string name to numeric ID
         if (metatype === Metatype.enum) {
-            if (typeof def === "string") {
-                let member = this.model.member(def);
+            if (typeof defaultValue === "string") {
+                let member = this.model.member(defaultValue);
 
                 // If the name didn't match, try case-insensitive search
                 if (!member) {
                     // Cast of def to string should be unnecessary here, TS bug?
-                    member = this.model.member(model => model.name.toLowerCase() === (def as string).toLowerCase());
+                    member = this.model.member(model => model.name.toLowerCase() === (defaultValue as string).toLowerCase());
                 }
 
                 if (member && member.effectiveId !== undefined) {
-                    def = member.effectiveId;
+                    defaultValue = member.effectiveId;
                 } else {
-                    this.error("INVALID_ENTRY", `"${def}" is not in ${metatype} ${this.model.type}`);
+                    this.error("INVALID_ENTRY", `"${defaultValue}" is not in ${metatype} ${this.model.type}`);
                 }
             }
         }
 
-        this.model.default = def;
+        this.model.default = defaultValue;
     }
 
     private validateEntries() {

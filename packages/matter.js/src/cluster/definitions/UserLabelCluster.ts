@@ -33,7 +33,7 @@ export const UserLabelCluster = Cluster({
          */
         labelList: WritableAttribute(
             0,
-            TlvArray(TlvLabelStruct),
+            TlvArray(TlvLabelStruct, { minLength: 4 }),
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
         )
     }

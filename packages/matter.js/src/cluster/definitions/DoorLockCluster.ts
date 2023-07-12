@@ -15,6 +15,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
+import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -352,7 +353,7 @@ export const TlvLockOperationEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.3.4
      */
-    fabricIndex: TlvField(3, TlvNullable(TlvUInt8)),
+    fabricIndex: TlvField(3, TlvNullable(TlvFabricIndex)),
 
     /**
      * The Node ID of the node that performed the lock operation. This shall be null if there is no Node associated
@@ -368,7 +369,7 @@ export const TlvLockOperationEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.3.6
      */
-    credentials: TlvOptionalField(5, TlvNullable(TlvArray(TlvCredentialStruct)))
+    credentials: TlvOptionalField(5, TlvNullable(TlvArray(TlvCredentialStruct, { minLength: 1 })))
 });
 
 /**
@@ -425,7 +426,7 @@ export const TlvLockOperationErrorEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.4.5
      */
-    fabricIndex: TlvField(4, TlvNullable(TlvUInt8)),
+    fabricIndex: TlvField(4, TlvNullable(TlvFabricIndex)),
 
     /**
      * The Node ID of the node that performed the lock operation. This shall be null if there is no Node associated
@@ -443,7 +444,7 @@ export const TlvLockOperationErrorEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.4.7
      */
-    credentials: TlvOptionalField(6, TlvNullable(TlvArray(TlvCredentialStruct)))
+    credentials: TlvOptionalField(6, TlvNullable(TlvArray(TlvCredentialStruct, { minLength: 1 })))
 });
 
 /**
@@ -673,8 +674,8 @@ export const TlvGetUserResponse = TlvObject({
     userType: TlvField(4, TlvNullable(TlvEnum<UserType>())),
     credentialRule: TlvField(5, TlvNullable(TlvEnum<CredentialRule>())),
     credentials: TlvField(6, TlvNullable(TlvCredentialStruct)),
-    creatorFabricIndex: TlvField(7, TlvNullable(TlvUInt8)),
-    lastModifiedFabricIndex: TlvField(8, TlvNullable(TlvUInt8)),
+    creatorFabricIndex: TlvField(7, TlvNullable(TlvFabricIndex)),
+    lastModifiedFabricIndex: TlvField(8, TlvNullable(TlvFabricIndex)),
     nextUserIndex: TlvField(9, TlvNullable(TlvUInt16))
 });
 
@@ -731,8 +732,8 @@ export const TlvGetCredentialStatusRequest = TlvObject({ credential: TlvField(0,
 export const TlvGetCredentialStatusResponse = TlvObject({
     credentialExists: TlvField(0, TlvBoolean),
     userIndex: TlvField(1, TlvNullable(TlvUInt16)),
-    creatorFabricIndex: TlvField(2, TlvNullable(TlvUInt8)),
-    lastModifiedFabricIndex: TlvField(3, TlvNullable(TlvUInt8)),
+    creatorFabricIndex: TlvField(2, TlvNullable(TlvFabricIndex)),
+    lastModifiedFabricIndex: TlvField(3, TlvNullable(TlvFabricIndex)),
     nextCredentialIndex: TlvField(4, TlvNullable(TlvUInt16))
 });
 
@@ -846,7 +847,7 @@ export const TlvLockUserChangeEvent = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.5.5
      */
-    fabricIndex: TlvField(4, TlvNullable(TlvUInt8)),
+    fabricIndex: TlvField(4, TlvNullable(TlvFabricIndex)),
 
     /**
      * The Node ID that that performed the change (if any). The Node ID of the node that performed the change. This

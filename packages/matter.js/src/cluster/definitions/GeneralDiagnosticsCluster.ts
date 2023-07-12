@@ -97,7 +97,7 @@ export const TlvNetworkInterface = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.6.6
      */
-    iPv4Addresses: TlvField(5, TlvArray(TlvByteString)),
+    iPv4Addresses: TlvField(5, TlvArray(TlvByteString, { maxLength: 4 })),
 
     /**
      * This field shall provide a list of the unicast IPv6 addresses that are currently assigned to the network
@@ -106,7 +106,7 @@ export const TlvNetworkInterface = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.6.7
      */
-    iPv6Addresses: TlvField(6, TlvArray(TlvByteString)),
+    iPv6Addresses: TlvField(6, TlvArray(TlvByteString, { maxLength: 8 })),
 
     /**
      * This field shall indicate the type of the interface using the InterfaceTypeEnum.
@@ -343,7 +343,7 @@ export const TlvHardwareFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1.1
      */
-    current: TlvField(0, TlvArray(TlvEnum<HardwareFault>())),
+    current: TlvField(0, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 })),
 
     /**
      * This field shall represent the set of faults detected prior to this change event, as per Section
@@ -352,7 +352,7 @@ export const TlvHardwareFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1.2
      */
-    previous: TlvField(1, TlvArray(TlvEnum<HardwareFault>()))
+    previous: TlvField(1, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 }))
 });
 
 /**
@@ -361,8 +361,8 @@ export const TlvHardwareFaultChangeEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.2
  */
 export const TlvRadioFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<RadioFault>())),
-    previous: TlvField(1, TlvArray(TlvEnum<RadioFault>()))
+    current: TlvField(0, TlvArray(TlvEnum<RadioFault>(), { maxLength: 7 })),
+    previous: TlvField(1, TlvArray(TlvEnum<RadioFault>(), { maxLength: 7 }))
 });
 
 /**
@@ -371,8 +371,8 @@ export const TlvRadioFaultChangeEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.3
  */
 export const TlvNetworkFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<NetworkFault>())),
-    previous: TlvField(1, TlvArray(TlvEnum<NetworkFault>()))
+    current: TlvField(0, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 })),
+    previous: TlvField(1, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }))
 });
 
 /**
@@ -412,7 +412,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.1
          */
-        networkInterfaces: Attribute(0, TlvArray(TlvNetworkInterface), { default: [] }),
+        networkInterfaces: Attribute(0, TlvArray(TlvNetworkInterface, { maxLength: 8 }), { default: [] }),
 
         /**
          * The RebootCount attribute shall indicate a best-effort count of the number of times the Node has rebooted.
@@ -462,7 +462,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.6
          */
-        activeHardwareFaults: OptionalAttribute(5, TlvArray(TlvEnum<HardwareFault>()), { default: [] }),
+        activeHardwareFaults: OptionalAttribute(5, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 }), { default: [] }),
 
         /**
          * The ActiveRadioFaults attribute shall indicate the set of faults currently detected by the Node. When the
@@ -475,7 +475,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.7
          */
-        activeRadioFaults: OptionalAttribute(6, TlvArray(TlvEnum<RadioFault>()), { default: [] }),
+        activeRadioFaults: OptionalAttribute(6, TlvArray(TlvEnum<RadioFault>(), { maxLength: 7 }), { default: [] }),
 
         /**
          * The ActiveNetworkFaults attribute shall indicate the set of faults currently detected by the Node. When the
@@ -488,7 +488,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.8
          */
-        activeNetworkFaults: OptionalAttribute(7, TlvArray(TlvEnum<NetworkFault>()), { default: [] }),
+        activeNetworkFaults: OptionalAttribute(7, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }), { default: [] }),
 
         /**
          * The TestEventTriggersEnabled attribute shall indicate whether the Node has any TestEventTrigger configured.

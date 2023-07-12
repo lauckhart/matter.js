@@ -172,6 +172,14 @@ export abstract class ValueModel extends Model implements ValueElement {
     }
 
     /**
+     * Retrieve all datatype members.
+     */
+    get members(): DatatypeModel[] {
+        return new ModelTraversal().findMembers(this, [ElementTag.Datatype]) as DatatypeModel[];
+    }
+
+
+    /**
      * Collect constraints and conformance for this type and all base types.
      */
     get validationAspects() {

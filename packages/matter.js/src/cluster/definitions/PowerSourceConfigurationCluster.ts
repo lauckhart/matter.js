@@ -38,6 +38,6 @@ export const PowerSourceConfigurationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.6.4.1
          */
-        sources: Attribute(0, TlvArray(TlvEndpointNumber), { persistent: true, default: [] })
+        sources: Attribute(0, TlvArray(TlvEndpointNumber, { maxLength: 6 }), { persistent: true, default: [] })
     }
 });

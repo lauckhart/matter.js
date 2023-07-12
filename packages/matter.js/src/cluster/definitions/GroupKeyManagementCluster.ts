@@ -53,7 +53,7 @@ export const TlvGroupInfoMapStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.5.1
      */
-    endpoints: TlvField(2, TlvArray(TlvEndpointNumber)),
+    endpoints: TlvField(2, TlvArray(TlvEndpointNumber, { minLength: 1 })),
 
     /**
      * This field provides a name for the group. This field shall contain the last GroupName written for a given

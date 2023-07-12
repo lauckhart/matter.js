@@ -319,7 +319,7 @@ export const TlvEndpointListStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 9.14.4.7.1
      */
-    endpoints: TlvField(3, TlvArray(TlvEndpointNumber))
+    endpoints: TlvField(3, TlvArray(TlvEndpointNumber, { maxLength: 256 }))
 });
 
 /**
@@ -562,14 +562,14 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.1
          */
-        actionList: Attribute(0, TlvArray(TlvActionStruct), { default: [] }),
+        actionList: Attribute(0, TlvArray(TlvActionStruct, { maxLength: 256 }), { default: [] }),
 
         /**
          * The EndpointLists attribute holds the list of endpoint lists. Each entry shall have an unique EndpointListID.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.2
          */
-        endpointLists: Attribute(1, TlvArray(TlvEndpointListStruct), { default: [] }),
+        endpointLists: Attribute(1, TlvArray(TlvEndpointListStruct, { maxLength: 256 }), { default: [] }),
 
         /**
          * The SetupURL attribute (when provided) shall indicate a URL; its syntax shall follow the syntax as specified
@@ -595,7 +595,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.3
          */
-        setupUrl: OptionalAttribute(2, TlvString.bound({ maxLength: 512 }), { default: "empty" })
+        setupUrl: OptionalAttribute(2, TlvString.bound({ maxLength: 512 }), { default: "" })
     },
 
     commands: {

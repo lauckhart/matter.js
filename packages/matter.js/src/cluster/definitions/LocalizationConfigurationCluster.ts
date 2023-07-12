@@ -54,6 +54,6 @@ export const LocalizationConfigurationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.3.4.2
          */
-        supportedLocales: FixedAttribute(1, TlvArray(TlvString), { default: [] })
+        supportedLocales: FixedAttribute(1, TlvArray(TlvString, { maxLength: 32 }), { default: [] })
     }
 });

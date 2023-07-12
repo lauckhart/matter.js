@@ -73,7 +73,7 @@ export const DescriptorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.1
          */
-        deviceTypeList: FixedAttribute(0, TlvArray(TlvDeviceTypeStruct), { default: [] }),
+        deviceTypeList: FixedAttribute(0, TlvArray(TlvDeviceTypeStruct, { minLength: 1 }), { default: [] }),
 
         /**
          * This attribute shall list each cluster ID for the server clusters present on the endpoint instance.

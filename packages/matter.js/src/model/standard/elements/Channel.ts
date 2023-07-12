@@ -162,22 +162,21 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "O", default: "empty",
+                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the marketing name for the channel, such as “The CW\" or \"Comedy Central\". This " +
                              "field is optional, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.3" }
                 },
 
                 {
-                    tag: "datatype", name: "CallSign", id: 0x3, type: "string", conformance: "O", default: "empty",
+                    tag: "datatype", name: "CallSign", id: 0x3, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the call sign of the channel, such as \"PBS\". This field is optional, but SHOULD " +
                              "be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.4" }
                 },
 
                 {
-                    tag: "datatype", name: "AffiliateCallSign", id: 0x4, type: "string", conformance: "O",
-                    default: "empty",
+                    tag: "datatype", name: "AffiliateCallSign", id: 0x4, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the local affiliate call sign, such as \"KCTS\". This field is optional, but " +
                              "SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.5" }

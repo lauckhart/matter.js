@@ -8,7 +8,7 @@ import { HtmlReference } from "./spec-types.js";
 import { Logger } from "../../../src/log/Logger.js";
 import { AnyElement, DatatypeElement, Specification } from "../../../src/model/index.js";
 import { Str } from "./html-translators.js";
-import { addDetails } from "./extract-details.js";
+import { addDocumentation } from "./add-documentation.js";
 
 const logger = Logger.get("translate-table");
 
@@ -191,7 +191,7 @@ function installPreciseDetails(
 ) {
     const lookup = Object.fromEntries(
         definitions.map((detail) =>
-            [detail.name.toLowerCase(), detail]
+            [detail.name.toLowerCase().replace(/\s*\([^)]+\)\s*/g, " "), detail]
         )
     );
 
@@ -205,7 +205,7 @@ function installPreciseDetails(
         if (detail) {
             r.xref = detail.xref;
             
-            addDetails(r, detail);
+            addDocumentation(r, detail);
 
             if (r.details && r.details.indexOf("SHALL indicate the of the") !== -1) {
                 // Goofballs copy & pasted this typo a couple times

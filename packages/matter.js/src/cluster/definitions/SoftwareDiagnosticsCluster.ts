@@ -120,7 +120,7 @@ export const SoftwareDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.1
          */
-        threadMetrics: OptionalAttribute(0, TlvArray(TlvThreadMetricsStruct), { default: [] }),
+        threadMetrics: OptionalAttribute(0, TlvArray(TlvThreadMetricsStruct, { maxLength: 64 }), { default: [] }),
 
         /**
          * The CurrentHeapFree attribute shall indicate the current amount of heap memory, in bytes, that are free for

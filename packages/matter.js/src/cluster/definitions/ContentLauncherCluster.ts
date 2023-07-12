@@ -466,7 +466,7 @@ export const UrlPlaybackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.1
          */
-        acceptHeader: Attribute(0, TlvArray(TlvString), { persistent: true, default: [] }),
+        acceptHeader: Attribute(0, TlvArray(TlvString, { maxLength: 100 }), { persistent: true, default: [] }),
 
         /**
          * This attribute provides information about supported streaming protocols.

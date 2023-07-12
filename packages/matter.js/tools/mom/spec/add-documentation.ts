@@ -77,7 +77,7 @@ function mergeSplitParagraphs(paragraphs: string[]) {
  * gobbledy gook produced by tired spec writers -> word -> PDF -> HTML -> us
  * pipeline.
  */
-export function addDetails(target: { details?: string }, definition: HtmlReference) {
+export function addDocumentation(target: { details?: string }, definition: HtmlReference) {
     let prose = definition.prose;
     if (!prose) {
         return;

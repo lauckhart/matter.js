@@ -18,6 +18,7 @@ import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvSubjectId } from "../../datatype/SubjectId.js";
+import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
 
 /**
  * This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a given Node.
@@ -432,7 +433,7 @@ export const TlvNocResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10.2
      */
-    fabricIndex: TlvOptionalField(1, TlvUInt8.bound({ min: 1, max: 254 })),
+    fabricIndex: TlvOptionalField(1, TlvFabricIndex),
 
     /**
      * This field may contain debugging textual information from the cluster implementation, which SHOULD NOT be
@@ -466,7 +467,7 @@ export const TlvUpdateFabricLabelRequest = TlvObject({ label: TlvField(0, TlvStr
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.12
  */
-export const TlvRemoveFabricRequest = TlvObject({ fabricIndex: TlvField(0, TlvUInt8.bound({ min: 1, max: 254 })) });
+export const TlvRemoveFabricRequest = TlvObject({ fabricIndex: TlvField(0, TlvFabricIndex) });
 
 /**
  * Input to the OperationalCredentials addTrustedRootCertificate command

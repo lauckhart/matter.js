@@ -31,6 +31,7 @@ const IntegerGlobalMap: { [name: string]: [string, string] } = {
     [Globals.endpointNo.name]: ["datatype", "TlvEndpointNumber"],
     [Globals.eventId.name]: ["datatype", "TlvEventId"],
     [Globals.fabricId.name]: ["datatype", "TlvFabricId"],
+    [Globals.fabricIdx.name]: ["datatype", "TlvFabricIndex"],
     [Globals.groupId.name]: ["datatype", "TlvGroupId"],
     [Globals.nodeId.name]: ["datatype", "TlvNodeId"],
     [Globals.SubjectId.name]: ["datatype", "TlvSubjectId"],
@@ -43,13 +44,16 @@ const IntegerGlobalMap: { [name: string]: [string, string] } = {
 export class TlvGenerator {
     private definedDatatypes = new Set<Model>();
     private scopedNames = new Set<string>();
+    private cluster: ClusterModel;
 
-    constructor(private file: ClusterFile, private cluster: ClusterModel) {
+    constructor(public file: ClusterFile) {
+        this.cluster = file.cluster;
+
         // Find datatype names that conflict at top-level module scope.
         // Datatypes at cluster level get to use their own name but for nested
         // structures we prepend the parent name
         const names = new Set<string>();
-        cluster.visit((model) => {
+        this.cluster.visit((model) => {
             if (model instanceof DatatypeModel && model.children.length) {
                 const metatype = model.effectiveMetatype;
                 switch (metatype) {
@@ -115,20 +119,26 @@ export class TlvGenerator {
 
             case Metatype.bytes:
             case Metatype.string:
-                tlv = this.importTlv("tlv/TlvString", metabase.name === Globals.octstr.name ? "TlvByteString" : "TlvString");
-                const bounds = this.createBounds(model, "minLength", "maxLength");
-                if (bounds) {
-                    tlv = `${tlv}.bound(${serialize(bounds)})`;
+                {
+                    tlv = this.importTlv("tlv/TlvString", metabase.name === Globals.octstr.name ? "TlvByteString" : "TlvString");
+                    const bounds = this.createBounds(model, "minLength", "maxLength");
+                    if (bounds) {
+                        tlv = `${tlv}.bound(${serialize(bounds)})`;
+                    }
                 }
                 break;
 
             case Metatype.array:
-                this.importTlv("tlv", "TlvArray");
-                const entry = model.listEntry;
-                if (!entry) {
-                    throw new InternalError(`${model.path}: No list entry type`);
+                {
+                    this.importTlv("tlv", "TlvArray");
+                    const entry = model.listEntry;
+                    if (!entry) {
+                        throw new InternalError(`${model.path}: No list entry type`);
+                    }
+                    const bounds = this.createBounds(model, "minLength", "maxLength");
+                    const boundsStr = bounds ? `, ${serialize(bounds)}` : "";
+                    tlv = `TlvArray(${this.reference(entry)}${boundsStr})`;
                 }
-                tlv = `TlvArray(${this.reference(entry)})`;
                 break;
 
             case Metatype.bitmap:

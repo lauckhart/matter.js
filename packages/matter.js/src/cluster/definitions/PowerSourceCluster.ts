@@ -89,7 +89,7 @@ export const TlvWiredFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.1.1
      */
-    current: TlvField(0, TlvArray(TlvEnum<WiredFault>())),
+    current: TlvField(0, TlvArray(TlvEnum<WiredFault>(), { maxLength: 8 })),
 
     /**
      * This field shall represent the set of faults detected prior to this change event, as per Section 11.7.6.11,
@@ -97,7 +97,7 @@ export const TlvWiredFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.1.2
      */
-    previous: TlvField(1, TlvArray(TlvEnum<WiredFault>()))
+    previous: TlvField(1, TlvArray(TlvEnum<WiredFault>(), { maxLength: 8 }))
 });
 
 /**
@@ -171,8 +171,8 @@ export const enum BatFault {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.2
  */
 export const TlvBatFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<BatFault>())),
-    previous: TlvField(1, TlvArray(TlvEnum<BatFault>()))
+    current: TlvField(0, TlvArray(TlvEnum<BatFault>(), { maxLength: 8 })),
+    previous: TlvField(1, TlvArray(TlvEnum<BatFault>(), { maxLength: 8 }))
 });
 
 /**
@@ -846,8 +846,8 @@ export const enum BatChargeFault {
  * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.3
  */
 export const TlvBatChargeFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<BatChargeFault>())),
-    previous: TlvField(1, TlvArray(TlvEnum<BatChargeFault>()))
+    current: TlvField(0, TlvArray(TlvEnum<BatChargeFault>(), { maxLength: 16 })),
+    previous: TlvField(1, TlvArray(TlvEnum<BatChargeFault>(), { maxLength: 16 }))
 });
 
 /**

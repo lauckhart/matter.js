@@ -82,7 +82,7 @@ export const TlvModeOptionStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.8.1.3
      */
-    semanticTags: TlvField(2, TlvArray(TlvSemanticTagStruct))
+    semanticTags: TlvField(2, TlvArray(TlvSemanticTagStruct, { maxLength: 64 }))
 });
 
 /**
@@ -154,7 +154,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.3
          */
-        supportedModes: FixedAttribute(2, TlvArray(TlvModeOptionStruct), { default: [] }),
+        supportedModes: FixedAttribute(2, TlvArray(TlvModeOptionStruct, { maxLength: 255 }), { default: [] }),
 
         /**
          * This attribute represents the current mode of the server.

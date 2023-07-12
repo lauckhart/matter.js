@@ -104,7 +104,7 @@ export const OperationalStatus = {
 };
 
 /**
- * These are the legal value for fields of the OperationalStatus attribute.
+ * Values for OperationalStatus attribute fields.
  */
 export const enum MovementStatus {
     /**

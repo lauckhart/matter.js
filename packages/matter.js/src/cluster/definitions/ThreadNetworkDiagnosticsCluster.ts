@@ -414,7 +414,7 @@ export const TlvNetworkFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.1.1
      */
-    current: TlvField(0, TlvArray(TlvEnum<NetworkFault>())),
+    current: TlvField(0, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 })),
 
     /**
      * This field shall represent the set of faults detected prior to this change event, as per Section 11.13.5.1,
@@ -422,7 +422,7 @@ export const TlvNetworkFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.1.2
      */
-    previous: TlvField(1, TlvArray(TlvEnum<NetworkFault>()))
+    previous: TlvField(1, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }))
 });
 
 /**
@@ -671,7 +671,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.63
          */
-        activeNetworkFaults: Attribute(62, TlvArray(TlvEnum<NetworkFault>()), { default: [] })
+        activeNetworkFaults: Attribute(62, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }), { default: [] })
     },
 
     events: {

@@ -420,7 +420,11 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.6
          */
-        timeZone: WritableAttribute(5, TlvArray(TlvTimeZoneStruct), { default: [], writeAcl: AccessLevel.Manage }),
+        timeZone: WritableAttribute(
+            5,
+            TlvArray(TlvTimeZoneStruct, { minLength: 1, maxLength: 2 }),
+            { default: [], writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * A list of offsets to apply for daylight savings time, and their validity period. List entries shall be
@@ -441,7 +445,11 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.7
          */
-        dstOffset: WritableAttribute(6, TlvArray(TlvDSTOffsetStruct), { default: [], writeAcl: AccessLevel.Manage }),
+        dstOffset: WritableAttribute(
+            6,
+            TlvArray(TlvDSTOffsetStruct, { maxLength: 20 }),
+            { default: [], writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The computed current local time of the server as a epoch-us (Epoch Time in Microseconds). The local time
