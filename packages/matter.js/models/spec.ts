@@ -2926,7 +2926,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "XY",
-                    constraint: "0 to 0", default: 24939, quality: "N S P",
+                    constraint: "0 to 65279", default: 24939, quality: "N S P",
 
                     details: "The CurrentX attribute contains the current value of the normalized chromaticity value x, as " +
                              "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
@@ -2940,7 +2940,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "XY",
-                    constraint: "0 to 0", default: 24701, quality: "N S P",
+                    constraint: "0 to 65279", default: 24701, quality: "N S P",
 
                     details: "The CurrentY attribute contains the current value of the normalized chromaticity value y, as " +
                              "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
@@ -2980,7 +2980,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ColorTemperatureMireds", id: 0x7, type: "uint16", access: "R V",
-                    conformance: "CT", constraint: "0 to 0", default: 250, quality: "N S P",
+                    conformance: "CT", constraint: "0 to 65279", default: 250, quality: "N S P",
 
                     details: "The ColorTemperatureMireds attribute contains a scaled inverse of the current value of the color " +
                              "temperature. The unit of ColorTemperatureMireds is the mired (micro reciprocal degree), AKA mirek " +
@@ -3133,7 +3133,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ColorCapabilities", id: 0x400a, type: "map16", access: "R V",
-                    conformance: "M", constraint: "0 to 0", default: 0,
+                    conformance: "M", constraint: "0 to 31", default: 0,
                     details: "Bits 0-4 of the ColorCapabilities attribute shall have the same values as the corresponding bits of " +
                              "the FeatureMap attribute. All other bits in ColorCapabilities shall be 0.",
                     xref: { document: "cluster", section: "3.2.7.18" }
@@ -3141,7 +3141,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ColorTempPhysicalMinMireds", id: 0x400b, type: "uint16", access: "R V",
-                    conformance: "CT", constraint: "0 to 0", default: 0,
+                    conformance: "CT", constraint: "0 to 65279", default: 0,
                     details: "The ColorTempPhysicalMinMireds attribute indicates the minimum mired value supported by the " +
                              "hardware. ColorTempPhysicalMinMireds corresponds to the maximum color temperature in kelvins " +
                              "supported by the hardware. ColorTempPhysicalMinMireds ≤ ColorTemperatureMireds.",
@@ -3150,7 +3150,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ColorTempPhysicalMaxMireds", id: 0x400c, type: "uint16", access: "R V",
-                    conformance: "CT", constraint: "0 to 0", default: 65279,
+                    conformance: "CT", constraint: "0 to 65279", default: 65279,
                     details: "The ColorTempPhysicalMaxMireds attribute indicates the maximum mired value supported by the " +
                              "hardware. ColorTempPhysicalMaxMireds corresponds to the minimum color temperature in kelvins " +
                              "supported by the hardware. ColorTemperatureMireds ≤ ColorTempPhysicalMaxMireds.",
@@ -3181,7 +3181,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "StartUpColorTemperatureMireds", id: 0x4010, type: "uint16",
-                    access: "RW VM", conformance: "CT | ColorTemperatureMireds", constraint: "0 to 0", quality: "X",
+                    access: "RW VM", conformance: "CT | ColorTemperatureMireds", constraint: "0 to 65279", quality: "X",
 
                     details: "The StartUpColorTemperatureMireds attribute shall define the desired startup color temperature " +
                              "value a lamp shall use when it is supplied with power and this value shall be reflected in the " +
@@ -3211,7 +3211,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "Primary1X", id: 0x11, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     details: "The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined " +
                              "in the CIE xyY Color Space." +
                              "\n" +
@@ -3222,7 +3222,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "Primary1Y", id: 0x12, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     details: "The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined " +
                              "in the CIE xyY Color Space." +
                              "\n" +
@@ -3247,12 +3247,12 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "Primary2X", id: 0x15, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
                     tag: "attribute", name: "Primary2Y", id: 0x16, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
@@ -3262,12 +3262,12 @@ export const SpecMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "Primary3X", id: 0x19, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
                     tag: "attribute", name: "Primary3Y", id: 0x1a, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.8" }
                 },
                 {
@@ -3277,12 +3277,12 @@ export const SpecMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "Primary4X", id: 0x20, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary4Y", id: 0x21, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
@@ -3292,12 +3292,12 @@ export const SpecMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "Primary5X", id: 0x24, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary5Y", id: 0x25, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
@@ -3307,12 +3307,12 @@ export const SpecMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "Primary6X", id: 0x28, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
                     tag: "attribute", name: "Primary6Y", id: 0x29, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to 0", quality: "F",
+                    constraint: "0 to 65279", quality: "F",
                     xref: { document: "cluster", section: "3.2.9" }
                 },
                 {
@@ -3323,7 +3323,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "WhitePointX", id: 0x30, type: "uint16", access: "RW VM", conformance: "O",
-                    constraint: "0 to 0",
+                    constraint: "0 to 65279",
                     details: "The WhitePointX attribute contains the normalized chromaticity value x, as defined in the CIE xyY " +
                              "Color Space, of the current white point of the device." +
                              "\n" +
@@ -3334,7 +3334,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "WhitePointY", id: 0x31, type: "uint16", access: "RW VM", conformance: "O",
-                    constraint: "0 to 0",
+                    constraint: "0 to 65279",
                     details: "The WhitePointY attribute contains the normalized chromaticity value y, as defined in the CIE xyY " +
                              "Color Space, of the current white point of the device." +
                              "\n" +
@@ -3345,7 +3345,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ColorPointRx", id: 0x32, type: "uint16", access: "RW VM", conformance: "O",
-                    constraint: "0 to 0",
+                    constraint: "0 to 65279",
                     details: "The ColorPointRX attribute contains the normalized chromaticity value x, as defined in the CIE xyY " +
                              "Color Space, of the red color point of the device." +
                              "\n" +
@@ -3356,7 +3356,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ColorPointRy", id: 0x33, type: "uint16", access: "RW VM", conformance: "O",
-                    constraint: "0 to 0",
+                    constraint: "0 to 65279",
                     details: "The ColorPointRY attribute contains the normalized chromaticity value y, as defined in the CIE xyY " +
                              "Color Space, of the red color point of the device." +
                              "\n" +
@@ -3381,12 +3381,12 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "ColorPointGx", id: 0x36, type: "uint16", access: "RW VM", conformance: "O",
-                    constraint: "0 to 0",
+                    constraint: "0 to 65279",
                     xref: { document: "cluster", section: "3.2.10" }
                 },
                 {
                     tag: "attribute", name: "ColorPointGy", id: 0x37, type: "uint16", access: "RW VM", conformance: "O",
-                    constraint: "0 to 0",
+                    constraint: "0 to 65279",
                     xref: { document: "cluster", section: "3.2.10" }
                 },
                 {
@@ -3396,12 +3396,12 @@ export const SpecMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "ColorPointBx", id: 0x3a, type: "uint16", access: "RW VM", conformance: "O",
-                    constraint: "0 to 0",
+                    constraint: "0 to 65279",
                     xref: { document: "cluster", section: "3.2.10" }
                 },
                 {
                     tag: "attribute", name: "ColorPointBy", id: 0x3b, type: "uint16", access: "RW VM", conformance: "O",
-                    constraint: "0 to 0",
+                    constraint: "0 to 65279",
                     xref: { document: "cluster", section: "3.2.10" }
                 },
                 {
@@ -3656,8 +3656,14 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "3.2.11.11" },
 
                     children: [
-                        { tag: "datatype", name: "ColorX", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 0" },
-                        { tag: "datatype", name: "ColorY", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 0" },
+                        {
+                            tag: "datatype", name: "ColorX", id: 0x0, type: "uint16", conformance: "M",
+                            constraint: "0 to 65279"
+                        },
+                        {
+                            tag: "datatype", name: "ColorY", id: 0x1, type: "uint16", conformance: "M",
+                            constraint: "0 to 65279"
+                        },
                         {
                             tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
                             constraint: "0 to 65534"
@@ -3740,7 +3746,7 @@ export const SpecMatter: MatterElement = {
                     children: [
                         {
                             tag: "datatype", name: "ColorTemperatureMireds", id: 0x0, type: "uint16", conformance: "M",
-                            constraint: "0 to 0"
+                            constraint: "0 to 65279"
                         },
                         {
                             tag: "datatype", name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M",
@@ -4069,7 +4075,7 @@ export const SpecMatter: MatterElement = {
 
                         {
                             tag: "datatype", name: "ColorTemperatureMinimumMireds", id: 0x2, type: "uint16", conformance: "M",
-                            constraint: "0 to 0",
+                            constraint: "0 to 65279",
 
                             details: "The ColorTemperatureMinimumMireds field specifies a lower bound on the ColorTemperatureMireds " +
                                      "attribute (≡ an upper bound on the color temperature in kelvins) for the current move operation" +
@@ -4086,7 +4092,7 @@ export const SpecMatter: MatterElement = {
 
                         {
                             tag: "datatype", name: "ColorTemperatureMaximumMireds", id: 0x3, type: "uint16", conformance: "M",
-                            constraint: "0 to 0",
+                            constraint: "0 to 65279",
 
                             details: "The ColorTemperatureMaximumMireds field specifies an upper bound on the ColorTemperatureMireds " +
                                      "attribute (≡ a lower bound on the color temperature in kelvins) for the current move operation" +
@@ -4145,7 +4151,7 @@ export const SpecMatter: MatterElement = {
 
                         {
                             tag: "datatype", name: "ColorTemperatureMinimumMireds", id: 0x3, type: "uint16", conformance: "M",
-                            constraint: "0 to 0",
+                            constraint: "0 to 65279",
 
                             details: "The ColorTemperatureMinimumMireds field specifies a lower bound on the ColorTemperatureMireds " +
                                      "attribute (≡ an upper bound on the color temperature in kelvins) for the current step operation" +
@@ -4162,7 +4168,7 @@ export const SpecMatter: MatterElement = {
 
                         {
                             tag: "datatype", name: "ColorTemperatureMaximumMireds", id: 0x4, type: "uint16", conformance: "M",
-                            constraint: "0 to 0",
+                            constraint: "0 to 65279",
 
                             details: "The ColorTemperatureMaximumMireds field specifies an upper bound on the ColorTemperatureMireds " +
                                      "attribute (≡ a lower bound on the color temperature in kelvins) for the current step operation" +
@@ -12003,7 +12009,7 @@ export const SpecMatter: MatterElement = {
 
                         {
                             tag: "datatype", name: "SupportedCommands", id: 0x4, type: "CommandBits", conformance: "M",
-                            constraint: "0 to 0",
+                            constraint: "0 to 4095",
                             details: "This field is a bitmap which shall be used to indicate which of the cluster’s commands are sup" +
                                      "\n" +
                                      "ported for this particular action, with a bit set to 1 for each supported command according to the " +

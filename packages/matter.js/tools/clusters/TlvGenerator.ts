@@ -9,6 +9,7 @@ import {
     ClusterModel,
     CommandModel,
     Conformance,
+    Constraint,
     DatatypeModel,
     ElementTag,
     EventModel,
@@ -121,7 +122,7 @@ export class TlvGenerator {
             case Metatype.string:
                 {
                     tlv = this.importTlv("tlv/TlvString", metabase.name === Globals.octstr.name ? "TlvByteString" : "TlvString");
-                    const bounds = this.createBounds(model, "minLength", "maxLength");
+                    const bounds = this.createLengthBounds(model);
                     if (bounds) {
                         tlv = `${tlv}.bound(${serialize(bounds)})`;
                     }
@@ -135,7 +136,7 @@ export class TlvGenerator {
                     if (!entry) {
                         throw new InternalError(`${model.path}: No list entry type`);
                     }
-                    const bounds = this.createBounds(model, "minLength", "maxLength");
+                    const bounds = this.createLengthBounds(model);
                     const boundsStr = bounds ? `, ${serialize(bounds)}` : "";
                     tlv = `TlvArray(${this.reference(entry)}${boundsStr})`;
                 }
@@ -252,7 +253,7 @@ export class TlvGenerator {
         let tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
         this.importTlv("tlv/TlvNumber", tlv);
 
-        const bounds = this.createBounds(model, "min", "max");
+        const bounds = this.createNumberBounds(model);
         if (bounds) {
             tlv = `${tlv}.bound(${serialize(bounds)})`;
         }
@@ -461,20 +462,38 @@ export class TlvGenerator {
         return name;
     }
 
-    private createBounds<MIN extends string, MAX extends string>(model: ValueModel, minKey: MIN, maxKey: MAX): { [key in MIN | MAX]: number } | undefined {
-        const bounds = {} as any;
-
+    private createLengthBounds(model: ValueModel) {
         const constraint = model.effectiveConstraint;
-        const min = FieldValue.numericValue(constraint.min, model.type);
-        const max = FieldValue.numericValue(constraint.max, model.type);
-        if (!(min || max)) {
+        const value = FieldValue.numericValue(constraint.value, model.type);
+        if (value !== undefined) {
+            return { length: value };
+        }
+
+        return this.createRangeBounds(constraint, "minLength", "maxLength")
+    }
+
+    private createNumberBounds(model: ValueModel) {
+        const constraint = model.effectiveConstraint;
+        const value = FieldValue.numericValue(constraint.value, model.type);
+        if (value !== undefined) {
+            return { min: value, max: value + 1 };
+        }
+
+        return this.createRangeBounds(constraint, "min", "max", model.type);
+    }
+
+    private createRangeBounds(constraint: Constraint, minKey: string, maxKey: string, type?: string) {
+        const min = FieldValue.numericValue(constraint.min, type);
+        const max = FieldValue.numericValue(constraint.max, type);
+        if (min === undefined && max === undefined) {
             return;
         }
 
-        if (min) {
+        let bounds = {} as { [key: string]: number }
+        if (min !== undefined) {
             bounds[minKey] = min;
         }
-        if (max) {
+        if (max !== undefined) {
             bounds[maxKey] = max;
         }
 

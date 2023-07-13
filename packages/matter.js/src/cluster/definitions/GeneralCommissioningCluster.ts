@@ -136,7 +136,7 @@ export const TlvArmFailSafeResponse = TlvObject({
  */
 export const TlvSetRegulatoryConfigRequest = TlvObject({
     newRegulatoryConfig: TlvField(0, TlvEnum<RegulatoryLocationType>()),
-    countryCode: TlvField(1, TlvString),
+    countryCode: TlvField(1, TlvString.bound({ length: 2 })),
     breadcrumb: TlvField(2, TlvUInt64)
 });
 

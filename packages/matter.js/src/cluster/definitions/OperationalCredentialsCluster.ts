@@ -59,7 +59,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.1
      */
-    rootPublicKey: TlvField(1, TlvByteString),
+    rootPublicKey: TlvField(1, TlvByteString.bound({ length: 65 })),
 
     /**
      * This field shall contain the value of AdminVendorID provided in the AddNOC command that led to the creation of
@@ -103,7 +103,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
  */
-export const TlvAttestationRequestRequest = TlvObject({ attestationNonce: TlvField(0, TlvByteString) });
+export const TlvAttestationRequestRequest = TlvObject({ attestationNonce: TlvField(0, TlvByteString.bound({ length: 32 })) });
 
 /**
  * This command shall be generated in response to an Attestation Request command.
@@ -129,7 +129,7 @@ export const TlvAttestationResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2.2
      */
-    attestationSignature: TlvField(1, TlvByteString)
+    attestationSignature: TlvField(1, TlvByteString.bound({ length: 64 }))
 });
 
 /**
@@ -178,7 +178,7 @@ export const TlvCertificateChainResponse = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
  */
 export const TlvCsrRequestRequest = TlvObject({
-    csrNonce: TlvField(0, TlvByteString),
+    csrNonce: TlvField(0, TlvByteString.bound({ length: 32 })),
     isForUpdateNoc: TlvOptionalField(1, TlvBoolean)
 });
 
@@ -203,7 +203,7 @@ export const TlvCsrResponse = TlvObject({
      */
     nocsrElements: TlvField(0, TlvByteString),
 
-    attestationSignature: TlvField(1, TlvByteString)
+    attestationSignature: TlvField(1, TlvByteString.bound({ length: 64 }))
 });
 
 /**
@@ -228,7 +228,7 @@ export const TlvAddNocRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8.1
      */
-    ipkValue: TlvField(2, TlvByteString),
+    ipkValue: TlvField(2, TlvByteString.bound({ length: 16 })),
 
     /**
      * If the AddNOC command succeeds according to the semantics of the following subsections, then the

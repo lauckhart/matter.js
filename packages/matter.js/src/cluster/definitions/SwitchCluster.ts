@@ -19,7 +19,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
  */
 export const TlvMultiPressOngoingEvent = TlvObject({
-    newPosition: TlvField(0, TlvUInt8),
+    newPosition: TlvField(0, TlvUInt8.bound({ min: 0 })),
     currentNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 2 }))
 });
 
@@ -29,7 +29,7 @@ export const TlvMultiPressOngoingEvent = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
  */
 export const TlvMultiPressCompleteEvent = TlvObject({
-    previousPosition: TlvField(0, TlvUInt8),
+    previousPosition: TlvField(0, TlvUInt8.bound({ min: 0 })),
     totalNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 1 }))
 });
 
@@ -38,35 +38,35 @@ export const TlvMultiPressCompleteEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
  */
-export const TlvSwitchLatchedEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
+export const TlvSwitchLatchedEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
 
 /**
  * Body of the Switch initialPress event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
  */
-export const TlvInitialPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
+export const TlvInitialPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
 
 /**
  * Body of the Switch longPress event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
  */
-export const TlvLongPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
+export const TlvLongPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
 
 /**
  * Body of the Switch longRelease event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
  */
-export const TlvLongReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8) });
+export const TlvLongReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
 
 /**
  * Body of the Switch shortRelease event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
  */
-export const TlvShortReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8) });
+export const TlvShortReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
 
 /**
  * These are optional features supported by SwitchCluster.
@@ -151,7 +151,7 @@ export const SwitchBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.2
          */
-        currentPosition: Attribute(1, TlvUInt8, { persistent: true, default: 0 })
+        currentPosition: Attribute(1, TlvUInt8.bound({ min: 0 }), { persistent: true, default: 0 })
     }
 });
 

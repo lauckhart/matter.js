@@ -127,7 +127,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.2
      */
-    epochKey0: TlvField(2, TlvNullable(TlvByteString)),
+    epochKey0: TlvField(2, TlvNullable(TlvByteString.bound({ length: 16 }))),
 
     /**
      * This field, if not null, shall define when EpochKey0 becomes valid as specified by Section 4.15.3, “Epoch Keys”.
@@ -143,7 +143,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.4
      */
-    epochKey1: TlvField(4, TlvNullable(TlvByteString)),
+    epochKey1: TlvField(4, TlvNullable(TlvByteString.bound({ length: 16 }))),
 
     /**
      * This field, if not null, shall define when EpochKey1 becomes valid as specified by Section 4.15.3, “Epoch Keys”.
@@ -159,7 +159,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.6
      */
-    epochKey2: TlvField(6, TlvNullable(TlvByteString)),
+    epochKey2: TlvField(6, TlvNullable(TlvByteString.bound({ length: 16 }))),
 
     /**
      * This field, if not null, shall define when EpochKey2 becomes valid as specified by Section 4.15.3, “Epoch Keys”.

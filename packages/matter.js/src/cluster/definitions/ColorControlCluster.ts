@@ -79,7 +79,7 @@ export const TlvMoveToHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.1
      */
-    hue: TlvField(0, TlvUInt8.bound({ max: 254 })),
+    hue: TlvField(0, TlvUInt8.bound({ min: 0, max: 254 })),
 
     /**
      * The Direction field shall be one of the non-reserved values in Values of the Direction Field.
@@ -93,7 +93,7 @@ export const TlvMoveToHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.3
      */
-    transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+    transitionTime: TlvField(2, TlvUInt16.bound({ min: 0, max: 65534 })),
 
     optionsMask: TlvField(3, TlvUInt8),
     optionsOverride: TlvField(4, TlvUInt8)
@@ -187,8 +187,8 @@ export const TlvStepHueRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.7
  */
 export const TlvMoveToSaturationRequest = TlvObject({
-    saturation: TlvField(0, TlvUInt8.bound({ max: 254 })),
-    transitionTime: TlvField(1, TlvUInt16.bound({ max: 65534 })),
+    saturation: TlvField(0, TlvUInt8.bound({ min: 0, max: 254 })),
+    transitionTime: TlvField(1, TlvUInt16.bound({ min: 0, max: 65534 })),
     optionsMask: TlvField(2, TlvUInt8),
     optionsOverride: TlvField(3, TlvUInt8)
 });
@@ -263,9 +263,9 @@ export const TlvStepSaturationRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.10
  */
 export const TlvMoveToHueAndSaturationRequest = TlvObject({
-    hue: TlvField(0, TlvUInt8.bound({ max: 254 })),
-    saturation: TlvField(1, TlvUInt8.bound({ max: 254 })),
-    transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+    hue: TlvField(0, TlvUInt8.bound({ min: 0, max: 254 })),
+    saturation: TlvField(1, TlvUInt8.bound({ min: 0, max: 254 })),
+    transitionTime: TlvField(2, TlvUInt16.bound({ min: 0, max: 65534 })),
     optionsMask: TlvField(3, TlvUInt8),
     optionsOverride: TlvField(4, TlvUInt8)
 });
@@ -276,9 +276,9 @@ export const TlvMoveToHueAndSaturationRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.11
  */
 export const TlvMoveToColorRequest = TlvObject({
-    colorX: TlvField(0, TlvUInt16),
-    colorY: TlvField(1, TlvUInt16),
-    transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+    colorX: TlvField(0, TlvUInt16.bound({ min: 0, max: 65279 })),
+    colorY: TlvField(1, TlvUInt16.bound({ min: 0, max: 65279 })),
+    transitionTime: TlvField(2, TlvUInt16.bound({ min: 0, max: 65534 })),
     optionsMask: TlvField(3, TlvUInt8),
     optionsOverride: TlvField(4, TlvUInt8)
 });
@@ -324,7 +324,7 @@ export const TlvStepColorRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.13.2
      */
-    transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+    transitionTime: TlvField(2, TlvUInt16.bound({ min: 0, max: 65534 })),
 
     optionsMask: TlvField(3, TlvUInt8),
     optionsOverride: TlvField(4, TlvUInt8)
@@ -336,8 +336,8 @@ export const TlvStepColorRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.14
  */
 export const TlvMoveToColorTemperatureRequest = TlvObject({
-    colorTemperatureMireds: TlvField(0, TlvUInt16),
-    transitionTime: TlvField(1, TlvUInt16.bound({ max: 65534 })),
+    colorTemperatureMireds: TlvField(0, TlvUInt16.bound({ min: 0, max: 65279 })),
+    transitionTime: TlvField(1, TlvUInt16.bound({ min: 0, max: 65534 })),
     optionsMask: TlvField(2, TlvUInt8),
     optionsOverride: TlvField(3, TlvUInt8)
 });
@@ -380,7 +380,7 @@ export const TlvMoveColorTemperatureRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.21.3
      */
-    colorTemperatureMinimumMireds: TlvField(2, TlvUInt16),
+    colorTemperatureMinimumMireds: TlvField(2, TlvUInt16.bound({ min: 0, max: 65279 })),
 
     /**
      * The ColorTemperatureMaximumMireds field specifies an upper bound on the ColorTemperatureMireds attribute (≡ a
@@ -395,7 +395,7 @@ export const TlvMoveColorTemperatureRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.21.4
      */
-    colorTemperatureMaximumMireds: TlvField(3, TlvUInt16),
+    colorTemperatureMaximumMireds: TlvField(3, TlvUInt16.bound({ min: 0, max: 65279 })),
 
     optionsMask: TlvField(4, TlvUInt8),
     optionsOverride: TlvField(5, TlvUInt8)
@@ -429,7 +429,7 @@ export const TlvStepColorTemperatureRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.22.3
      */
-    transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+    transitionTime: TlvField(2, TlvUInt16.bound({ min: 0, max: 65534 })),
 
     /**
      * The ColorTemperatureMinimumMireds field specifies a lower bound on the ColorTemperatureMireds attribute (≡ an
@@ -444,7 +444,7 @@ export const TlvStepColorTemperatureRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.22.4
      */
-    colorTemperatureMinimumMireds: TlvField(3, TlvUInt16),
+    colorTemperatureMinimumMireds: TlvField(3, TlvUInt16.bound({ min: 0, max: 65279 })),
 
     /**
      * The ColorTemperatureMaximumMireds field specifies an upper bound on the ColorTemperatureMireds attribute (≡ a
@@ -459,7 +459,7 @@ export const TlvStepColorTemperatureRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.22.5
      */
-    colorTemperatureMaximumMireds: TlvField(4, TlvUInt16),
+    colorTemperatureMaximumMireds: TlvField(4, TlvUInt16.bound({ min: 0, max: 65279 })),
 
     optionsMask: TlvField(5, TlvUInt8),
     optionsOverride: TlvField(6, TlvUInt8)
@@ -492,7 +492,7 @@ export const TlvEnhancedMoveToHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.15.3
      */
-    transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+    transitionTime: TlvField(2, TlvUInt16.bound({ min: 0, max: 65534 })),
 
     optionsMask: TlvField(3, TlvUInt8),
     optionsOverride: TlvField(4, TlvUInt8)
@@ -557,7 +557,7 @@ export const TlvEnhancedStepHueRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.17.3
      */
-    transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+    transitionTime: TlvField(2, TlvUInt16.bound({ min: 0, max: 65534 })),
 
     optionsMask: TlvField(3, TlvUInt8),
     optionsOverride: TlvField(4, TlvUInt8)
@@ -582,7 +582,7 @@ export const TlvEnhancedMoveToHueAndSaturationRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.18.2
      */
-    saturation: TlvField(1, TlvUInt8.bound({ max: 254 })),
+    saturation: TlvField(1, TlvUInt8.bound({ min: 0, max: 254 })),
 
     /**
      * This field is identical to the TransitionTime field of the MoveToHue command of the Color Control cluster (see
@@ -590,7 +590,7 @@ export const TlvEnhancedMoveToHueAndSaturationRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.18.3
      */
-    transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+    transitionTime: TlvField(2, TlvUInt16.bound({ min: 0, max: 65534 })),
 
     optionsMask: TlvField(3, TlvUInt8),
     optionsOverride: TlvField(4, TlvUInt8)
@@ -1002,7 +1002,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.3
          */
-        remainingTime: OptionalAttribute(2, TlvUInt16.bound({ max: 65534 }), { default: 0 }),
+        remainingTime: OptionalAttribute(2, TlvUInt16.bound({ min: 0, max: 65534 }), { default: 0 }),
 
         /**
          * The DriftCompensation attribute indicates what mechanism, if any, is in use for compensation for
@@ -1069,7 +1069,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8.1
          */
-        numberOfPrimaries: FixedAttribute(16, TlvNullable(TlvUInt8.bound({ max: 6 }))),
+        numberOfPrimaries: FixedAttribute(16, TlvNullable(TlvUInt8.bound({ min: 0, max: 6 }))),
 
         /**
          * The Primary1X attribute contains the normalized chromaticity value x for this primary, as defined in the CIE
@@ -1080,7 +1080,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8.2
          */
-        primary1X: OptionalFixedAttribute(17, TlvUInt16),
+        primary1X: OptionalFixedAttribute(17, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * The Primary1Y attribute contains the normalized chromaticity value y for this primary, as defined in the CIE
@@ -1091,7 +1091,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8.3
          */
-        primary1Y: OptionalFixedAttribute(18, TlvUInt16),
+        primary1Y: OptionalFixedAttribute(18, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * The Primary1intensity attribute contains a representation of the maximum intensity of this primary as
@@ -1107,12 +1107,12 @@ export const ColorControlBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
          */
-        primary2X: OptionalFixedAttribute(21, TlvUInt16),
+        primary2X: OptionalFixedAttribute(21, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
          */
-        primary2Y: OptionalFixedAttribute(22, TlvUInt16),
+        primary2Y: OptionalFixedAttribute(22, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
@@ -1122,12 +1122,12 @@ export const ColorControlBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
          */
-        primary3X: OptionalFixedAttribute(25, TlvUInt16),
+        primary3X: OptionalFixedAttribute(25, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
          */
-        primary3Y: OptionalFixedAttribute(26, TlvUInt16),
+        primary3Y: OptionalFixedAttribute(26, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.8
@@ -1137,12 +1137,12 @@ export const ColorControlBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
          */
-        primary4X: FixedAttribute(32, TlvUInt16),
+        primary4X: FixedAttribute(32, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
          */
-        primary4Y: FixedAttribute(33, TlvUInt16),
+        primary4Y: FixedAttribute(33, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
@@ -1152,12 +1152,12 @@ export const ColorControlBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
          */
-        primary5X: FixedAttribute(36, TlvUInt16),
+        primary5X: FixedAttribute(36, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
          */
-        primary5Y: FixedAttribute(37, TlvUInt16),
+        primary5Y: FixedAttribute(37, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
@@ -1167,12 +1167,12 @@ export const ColorControlBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
          */
-        primary6X: FixedAttribute(40, TlvUInt16),
+        primary6X: FixedAttribute(40, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
          */
-        primary6Y: FixedAttribute(41, TlvUInt16),
+        primary6Y: FixedAttribute(41, TlvUInt16.bound({ min: 0, max: 65279 })),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.9
@@ -1188,7 +1188,11 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.1
          */
-        whitePointX: OptionalWritableAttribute(48, TlvUInt16, { writeAcl: AccessLevel.Manage }),
+        whitePointX: OptionalWritableAttribute(
+            48,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The WhitePointY attribute contains the normalized chromaticity value y, as defined in the CIE xyY Color
@@ -1199,7 +1203,11 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.2
          */
-        whitePointY: OptionalWritableAttribute(49, TlvUInt16, { writeAcl: AccessLevel.Manage }),
+        whitePointY: OptionalWritableAttribute(
+            49,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The ColorPointRX attribute contains the normalized chromaticity value x, as defined in the CIE xyY Color
@@ -1210,7 +1218,11 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.3
          */
-        colorPointRx: OptionalWritableAttribute(50, TlvUInt16, { writeAcl: AccessLevel.Manage }),
+        colorPointRx: OptionalWritableAttribute(
+            50,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The ColorPointRY attribute contains the normalized chromaticity value y, as defined in the CIE xyY Color
@@ -1221,7 +1233,11 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10.4
          */
-        colorPointRy: OptionalWritableAttribute(51, TlvUInt16, { writeAcl: AccessLevel.Manage }),
+        colorPointRy: OptionalWritableAttribute(
+            51,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The ColorPointRIntensity attribute contains a representation of the relative intensity of the red color
@@ -1237,12 +1253,20 @@ export const ColorControlBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
          */
-        colorPointGx: OptionalWritableAttribute(54, TlvUInt16, { writeAcl: AccessLevel.Manage }),
+        colorPointGx: OptionalWritableAttribute(
+            54,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
          */
-        colorPointGy: OptionalWritableAttribute(55, TlvUInt16, { writeAcl: AccessLevel.Manage }),
+        colorPointGy: OptionalWritableAttribute(
+            55,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
@@ -1252,12 +1276,20 @@ export const ColorControlBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
          */
-        colorPointBx: OptionalWritableAttribute(58, TlvUInt16, { writeAcl: AccessLevel.Manage }),
+        colorPointBx: OptionalWritableAttribute(
+            58,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
          */
-        colorPointBy: OptionalWritableAttribute(59, TlvUInt16, { writeAcl: AccessLevel.Manage }),
+        colorPointBy: OptionalWritableAttribute(
+            59,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.10
@@ -1287,7 +1319,11 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.18
          */
-        colorCapabilities: Attribute(16394, TlvUInt16, { default: BitsFromPartial(ColorCapabilities, {}) })
+        colorCapabilities: Attribute(
+            16394,
+            TlvUInt16.bound({ min: 0, max: 31 }),
+            { default: BitsFromPartial(ColorCapabilities, {}) }
+        )
     }
 });
 
@@ -1308,7 +1344,7 @@ export const HueSaturationComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.1
          */
-        currentHue: Attribute(0, TlvUInt8.bound({ max: 254 }), { persistent: true, default: 0 }),
+        currentHue: Attribute(0, TlvUInt8.bound({ min: 0, max: 254 }), { persistent: true, default: 0 }),
 
         /**
          * The CurrentSaturation attribute holds the current saturation value of the light. It is updated as fast as
@@ -1321,7 +1357,7 @@ export const HueSaturationComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.2
          */
-        currentSaturation: Attribute(1, TlvUInt8.bound({ max: 254 }), { scene: true, persistent: true, default: 0 })
+        currentSaturation: Attribute(1, TlvUInt8.bound({ min: 0, max: 254 }), { scene: true, persistent: true, default: 0 })
     },
 
     commands: {
@@ -1376,7 +1412,7 @@ export const XyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.4
          */
-        currentX: Attribute(3, TlvUInt16, { scene: true, persistent: true, default: 1558 }),
+        currentX: Attribute(3, TlvUInt16.bound({ min: 0, max: 65279 }), { scene: true, persistent: true, default: 1558 }),
 
         /**
          * The CurrentY attribute contains the current value of the normalized chromaticity value y, as defined in the
@@ -1387,7 +1423,7 @@ export const XyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.5
          */
-        currentY: Attribute(4, TlvUInt16, { scene: true, persistent: true, default: 1543 })
+        currentY: Attribute(4, TlvUInt16.bound({ min: 0, max: 65279 }), { scene: true, persistent: true, default: 1543 })
     },
 
     commands: {
@@ -1428,7 +1464,11 @@ export const ColorTemperatureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.8
          */
-        colorTemperatureMireds: Attribute(7, TlvUInt16, { scene: true, persistent: true, default: 0 }),
+        colorTemperatureMireds: Attribute(
+            7,
+            TlvUInt16.bound({ min: 0, max: 65279 }),
+            { scene: true, persistent: true, default: 0 }
+        ),
 
         /**
          * The ColorTempPhysicalMinMireds attribute indicates the minimum mired value supported by the hardware.
@@ -1437,7 +1477,7 @@ export const ColorTemperatureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.19
          */
-        colorTempPhysicalMinMireds: Attribute(16395, TlvUInt16, { default: 0 }),
+        colorTempPhysicalMinMireds: Attribute(16395, TlvUInt16.bound({ min: 0, max: 65279 }), { default: 0 }),
 
         /**
          * The ColorTempPhysicalMaxMireds attribute indicates the maximum mired value supported by the hardware.
@@ -1446,7 +1486,7 @@ export const ColorTemperatureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.20
          */
-        colorTempPhysicalMaxMireds: Attribute(16396, TlvUInt16, { default: 65279 }),
+        colorTempPhysicalMaxMireds: Attribute(16396, TlvUInt16.bound({ min: 0, max: 65279 }), { default: 65279 }),
 
         /**
          * The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the
@@ -1478,7 +1518,7 @@ export const ColorTemperatureComponent = ClusterComponent({
          */
         startUpColorTemperatureMireds: OptionalWritableAttribute(
             16400,
-            TlvNullable(TlvUInt16),
+            TlvNullable(TlvUInt16.bound({ min: 0, max: 65279 })),
             { writeAcl: AccessLevel.Manage }
         )
     },

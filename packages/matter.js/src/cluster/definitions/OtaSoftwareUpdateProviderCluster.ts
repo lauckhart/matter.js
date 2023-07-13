@@ -55,7 +55,7 @@ export const TlvQueryImageRequest = TlvObject({
     softwareVersion: TlvField(2, TlvUInt32),
     protocolsSupported: TlvField(3, TlvArray(TlvEnum<DownloadProtocol>(), { maxLength: 8 })),
     hardwareVersion: TlvOptionalField(4, TlvUInt16),
-    location: TlvOptionalField(5, TlvString),
+    location: TlvOptionalField(5, TlvString.bound({ length: 2 })),
     requestorCanConsent: TlvOptionalField(6, TlvBoolean),
     metadataForProvider: TlvOptionalField(7, TlvByteString.bound({ maxLength: 512 }))
 });

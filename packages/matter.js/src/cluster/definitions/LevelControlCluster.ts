@@ -27,7 +27,7 @@ export const Options = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFl
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.1
  */
 export const TlvMoveToLevelRequest = TlvObject({
-    level: TlvField(0, TlvUInt8.bound({ max: 254 })),
+    level: TlvField(0, TlvUInt8.bound({ min: 0, max: 254 })),
     transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
     optionsMask: TlvField(2, TlvUInt8),
     optionsOverride: TlvField(3, TlvUInt8)
@@ -402,7 +402,7 @@ export const FrequencyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.6
          */
-        minFrequency: Attribute(5, TlvUInt16, { default: 0 }),
+        minFrequency: Attribute(5, TlvUInt16.bound({ min: 0 }), { default: 0 }),
 
         /**
          * The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being

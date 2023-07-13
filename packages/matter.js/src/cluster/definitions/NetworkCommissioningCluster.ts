@@ -203,7 +203,7 @@ export const enum WiFiBand {
 export const TlvWiFiInterfaceScanResultStruct = TlvObject({
     security: TlvOptionalField(0, TlvBitmap(TlvUInt8, WiFiSecurityBitmap)),
     ssid: TlvOptionalField(1, TlvByteString.bound({ maxLength: 32 })),
-    bssid: TlvOptionalField(2, TlvByteString),
+    bssid: TlvOptionalField(2, TlvByteString.bound({ length: 6 })),
     channel: TlvOptionalField(3, TlvUInt16),
 
     /**
@@ -228,7 +228,7 @@ export const TlvWiFiInterfaceScanResultStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.6
  */
 export const TlvThreadInterfaceScanResultStruct = TlvObject({
-    panId: TlvOptionalField(0, TlvUInt16.bound({ max: 65534 })),
+    panId: TlvOptionalField(0, TlvUInt16.bound({ min: 0, max: 65534 })),
     extendedPanId: TlvOptionalField(1, TlvUInt64),
     networkName: TlvOptionalField(2, TlvString.bound({ minLength: 1, maxLength: 16 })),
     channel: TlvOptionalField(3, TlvUInt16),

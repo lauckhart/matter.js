@@ -175,7 +175,7 @@ export const TlvVersionAppliedEvent = TlvObject({
 export const TlvDownloadErrorEvent = TlvObject({
     softwareVersion: TlvField(0, TlvUInt32),
     bytesDownloaded: TlvField(1, TlvUInt64),
-    progressPercent: TlvField(2, TlvNullable(TlvUInt8.bound({ max: 100 }))),
+    progressPercent: TlvField(2, TlvNullable(TlvUInt8.bound({ min: 0, max: 100 }))),
     platformCode: TlvField(3, TlvNullable(TlvInt64))
 });
 
@@ -245,7 +245,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.4
          */
-        updateStateProgress: Attribute(3, TlvNullable(TlvUInt8.bound({ max: 100 })), { default: null })
+        updateStateProgress: Attribute(3, TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })), { default: null })
     },
 
     commands: {

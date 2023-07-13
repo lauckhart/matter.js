@@ -466,7 +466,7 @@ export const TlvThermostatScheduleTransition = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.9.5.1
      */
-    transitionTime: TlvField(0, TlvUInt16.bound({ max: 1439 })),
+    transitionTime: TlvField(0, TlvUInt16.bound({ min: 0, max: 1439 })),
 
     heatSetpoint: TlvField(1, TlvNullable(TlvInt16)),
     coolSetpoint: TlvField(2, TlvNullable(TlvInt16))
@@ -746,7 +746,7 @@ export const ThermostatBase = BaseClusterComponent({
          */
         temperatureSetpointHoldDuration: OptionalWritableAttribute(
             36,
-            TlvNullable(TlvUInt16.bound({ max: 1440 })),
+            TlvNullable(TlvUInt16.bound({ min: 0, max: 1440 })),
             { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
         ),
 
@@ -1017,7 +1017,7 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.10
          */
-        piHeatingDemand: OptionalAttribute(8, TlvUInt8.bound({ max: 100 })),
+        piHeatingDemand: OptionalAttribute(8, TlvUInt8.bound({ min: 0, max: 100 })),
 
         /**
          * This attribute specifies the heating mode setpoint when the room is occupied.
@@ -1116,7 +1116,7 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.9
          */
-        piCoolingDemand: OptionalAttribute(7, TlvUInt8.bound({ max: 100 })),
+        piCoolingDemand: OptionalAttribute(7, TlvUInt8.bound({ min: 0, max: 100 })),
 
         /**
          * This attribute specifies the cooling mode setpoint when the room is occupied.
@@ -1225,7 +1225,7 @@ export const AutoModeComponent = ClusterComponent({
          */
         minSetpointDeadBand: WritableAttribute(
             25,
-            TlvInt8.bound({ max: 25 }),
+            TlvInt8.bound({ min: 0, max: 25 }),
             { persistent: true, default: 25, writeAcl: AccessLevel.Manage }
         ),
 
@@ -1334,7 +1334,7 @@ export const SetbackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.38
          */
-        occupiedSetbackMin: FixedAttribute(53, TlvNullable(TlvUInt8), { default: null }),
+        occupiedSetbackMin: FixedAttribute(53, TlvNullable(TlvUInt8.bound({ min: 0 })), { default: null }),
 
         /**
          * This attribute specifies the maximum value that the Thermostat server will allow the OccupiedSetback
@@ -1383,7 +1383,7 @@ export const SetbackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.41
          */
-        unoccupiedSetbackMin: OptionalFixedAttribute(56, TlvNullable(TlvUInt8), { default: null }),
+        unoccupiedSetbackMin: OptionalFixedAttribute(56, TlvNullable(TlvUInt8.bound({ min: 0 })), { default: null }),
 
         /**
          * This attribute specifies the maximum value that the Thermostat server will allow the UnoccupiedSetback

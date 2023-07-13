@@ -572,7 +572,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          */
         currentPositionLiftPercentage: OptionalAttribute(
             8,
-            TlvNullable(TlvUInt8.bound({ max: 100 })),
+            TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })),
             { scene: true, persistent: true, default: null }
         )
     },
@@ -630,7 +630,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          */
         currentPositionTiltPercentage: OptionalAttribute(
             9,
-            TlvNullable(TlvUInt8.bound({ max: 100 })),
+            TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })),
             { scene: true, persistent: true, default: null }
         )
     },
@@ -681,7 +681,7 @@ export const LiftComponent = ClusterComponent({
          */
         targetPositionLiftPercent100Ths: OptionalAttribute(
             11,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
+            TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
             { scene: true, default: null }
         ),
 
@@ -693,7 +693,7 @@ export const LiftComponent = ClusterComponent({
          */
         currentPositionLiftPercent100Ths: OptionalAttribute(
             14,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
+            TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
             { persistent: true, default: null }
         ),
 
@@ -703,7 +703,11 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.17
          */
-        installedOpenLimitLift: OptionalAttribute(16, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 }),
+        installedOpenLimitLift: OptionalAttribute(
+            16,
+            TlvUInt16.bound({ min: 0, max: 65534 }),
+            { persistent: true, default: 0 }
+        ),
 
         /**
          * The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering whether
@@ -711,7 +715,11 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.18
          */
-        installedClosedLimitLift: OptionalAttribute(17, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 })
+        installedClosedLimitLift: OptionalAttribute(
+            17,
+            TlvUInt16.bound({ min: 0, max: 65534 }),
+            { persistent: true, default: 0 }
+        )
     },
 
     commands: {
@@ -759,7 +767,7 @@ export const TiltComponent = ClusterComponent({
          */
         targetPositionTiltPercent100Ths: OptionalAttribute(
             12,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
+            TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
             { scene: true, default: null }
         ),
 
@@ -771,7 +779,7 @@ export const TiltComponent = ClusterComponent({
          */
         currentPositionTiltPercent100Ths: OptionalAttribute(
             15,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
+            TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
             { persistent: true, default: null }
         ),
 
@@ -781,7 +789,11 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.19
          */
-        installedOpenLimitTilt: OptionalAttribute(18, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 }),
+        installedOpenLimitTilt: OptionalAttribute(
+            18,
+            TlvUInt16.bound({ min: 0, max: 65534 }),
+            { persistent: true, default: 0 }
+        ),
 
         /**
          * The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering whether
@@ -789,7 +801,11 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.20
          */
-        installedClosedLimitTilt: OptionalAttribute(19, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 })
+        installedClosedLimitTilt: OptionalAttribute(
+            19,
+            TlvUInt16.bound({ min: 0, max: 65534 }),
+            { persistent: true, default: 0 }
+        )
     },
 
     commands: {

@@ -1032,7 +1032,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.11
          */
-        activeWiredFaults: OptionalAttribute(10, TlvArray(TlvEnum<WiredFault>()), { default: [] })
+        activeWiredFaults: OptionalAttribute(10, TlvArray(TlvEnum<WiredFault>(), { length: 8 }), { default: [] })
     },
 
     events: {
@@ -1067,7 +1067,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.13
          */
-        batPercentRemaining: OptionalAttribute(12, TlvNullable(TlvUInt8.bound({ max: 200 })), { omitChanges: true }),
+        batPercentRemaining: OptionalAttribute(12, TlvNullable(TlvUInt8.bound({ min: 0, max: 200 })), { omitChanges: true }),
 
         /**
          * This attribute shall indicate the estimated time in seconds before the battery will no longer be able to
@@ -1120,7 +1120,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.19
          */
-        activeBatFaults: OptionalAttribute(18, TlvArray(TlvEnum<BatFault>()), { default: [] })
+        activeBatFaults: OptionalAttribute(18, TlvArray(TlvEnum<BatFault>(), { length: 8 }), { default: [] })
     },
 
     events: {
@@ -1251,7 +1251,7 @@ export const RechargeableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.31
          */
-        activeBatChargeFaults: OptionalAttribute(30, TlvArray(TlvEnum<BatChargeFault>()), { default: [] })
+        activeBatChargeFaults: OptionalAttribute(30, TlvArray(TlvEnum<BatChargeFault>(), { length: 16 }), { default: [] })
     },
 
     events: {

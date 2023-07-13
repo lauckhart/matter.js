@@ -130,7 +130,12 @@ export namespace Constraint {
     export type Definition = (Ast & { definition?: Definition }) | string | number | undefined;
 
     function parseValue(numOrName: string): FieldValue {
-        const value = Number.parseFloat(numOrName);
+        let value;
+        if (numOrName.startsWith("0x") || numOrName.startsWith("0b")) {
+            value = Number.parseInt(numOrName);
+        } else {
+            value = Number.parseFloat(numOrName);
+        }
         if (Number.isNaN(value)) {
             return FieldValue.Reference(camelize(numOrName));
         }

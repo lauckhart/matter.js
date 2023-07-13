@@ -83,7 +83,7 @@ export const PressureMeasurementBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.4
          */
-        tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }), { default: 0 })
+        tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { default: 0 })
     }
 });
 
@@ -129,7 +129,7 @@ export const ExtendedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.8
          */
-        scaledTolerance: OptionalAttribute(19, TlvUInt16.bound({ max: 2048 }), { default: 0 }),
+        scaledTolerance: OptionalAttribute(19, TlvUInt16.bound({ min: 0, max: 2048 }), { default: 0 }),
 
         /**
          * This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue Attribute).

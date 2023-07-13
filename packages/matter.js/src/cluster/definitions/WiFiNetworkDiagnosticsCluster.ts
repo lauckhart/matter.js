@@ -232,7 +232,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.1
          */
-        bssid: Attribute(0, TlvNullable(TlvByteString), { default: null }),
+        bssid: Attribute(0, TlvNullable(TlvByteString.bound({ length: 6 })), { default: null }),
 
         /**
          * The SecurityType attribute shall indicate the current type of Wi-Fi security used.
@@ -261,7 +261,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.5
          */
-        rssi: Attribute(4, TlvNullable(TlvInt8.bound({ min: -120 })), { omitChanges: true, default: null }),
+        rssi: Attribute(4, TlvNullable(TlvInt8.bound({ min: -120, max: 0 })), { omitChanges: true, default: null }),
 
         /**
          * The CurrentMaxRate attribute shall indicate the current maximum PHY rate of transfer of data in

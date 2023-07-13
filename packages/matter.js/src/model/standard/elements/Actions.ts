@@ -668,7 +668,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "SupportedCommands", id: 0x4, type: "CommandBits", conformance: "M",
-                    constraint: "0 to 0",
+                    constraint: "0 to 4095",
                     details: "This field is a bitmap which shall be used to indicate which of the cluster’s commands are sup" +
                              "\n" +
                              "ported for this particular action, with a bit set to 1 for each supported command according to the " +

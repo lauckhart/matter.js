@@ -54,7 +54,7 @@ export const TlvOpenCommissioningWindowRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.18.8.1.2
      */
-    pakePasscodeVerifier: TlvField(1, TlvByteString),
+    pakePasscodeVerifier: TlvField(1, TlvByteString.bound({ length: 97 })),
 
     /**
      * This field shall be used by the Node as the long discriminator for DNS-SD advertisement (see Commissioning
@@ -63,7 +63,7 @@ export const TlvOpenCommissioningWindowRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.18.8.1.3
      */
-    discriminator: TlvField(2, TlvUInt16.bound({ max: 4095 })),
+    discriminator: TlvField(2, TlvUInt16.bound({ min: 0, max: 4095 })),
 
     /**
      * This field shall be used by the Node as the PAKE iteration count associated with the ephemeral PAKE passcode

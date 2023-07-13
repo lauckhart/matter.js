@@ -203,7 +203,11 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.7
          */
-        location: WritableAttribute(6, TlvString, { persistent: true, default: "XX", writeAcl: AccessLevel.Administer }),
+        location: WritableAttribute(
+            6,
+            TlvString.bound({ length: 2 }),
+            { persistent: true, default: "XX", writeAcl: AccessLevel.Administer }
+        ),
 
         /**
          * This attribute shall specify the version number of the hardware of the Node. The meaning of its value, and

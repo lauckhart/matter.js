@@ -198,7 +198,7 @@ export const TlvTimeZoneStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.3.3
      */
-    name: TlvOptionalField(2, TlvString.bound({ maxLength: 64 }))
+    name: TlvOptionalField(2, TlvString.bound({ minLength: 0, maxLength: 64 }))
 });
 
 /**
@@ -232,7 +232,7 @@ export const TlvDSTOffsetStruct = TlvObject({
  */
 export const TlvTimeZoneStatusEvent = TlvObject({
     offset: TlvField(0, TlvInt32.bound({ min: -43200, max: 50400 })),
-    name: TlvOptionalField(1, TlvString.bound({ maxLength: 64 }))
+    name: TlvOptionalField(1, TlvString.bound({ minLength: 0, maxLength: 64 }))
 });
 
 /**

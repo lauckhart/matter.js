@@ -76,7 +76,7 @@ export const IlluminanceMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.4
          */
-        tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 })),
+        tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 })),
 
         /**
          * The LightSensorType attribute specifies the electronic type of the light sensor. This attribute shall be set

@@ -304,7 +304,7 @@ export const TlvTestEventTriggerRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.7.1.1
      */
-    enableKey: TlvField(0, TlvByteString),
+    enableKey: TlvField(0, TlvByteString.bound({ length: 16 })),
 
     /**
      * This field shall indicate the test or test mode which the client wants to trigger.
