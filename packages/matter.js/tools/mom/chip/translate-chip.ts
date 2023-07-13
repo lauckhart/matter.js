@@ -134,11 +134,11 @@ function setQualities(src: Element, target: ValueElement) {
     const writable = bool(src.getAttribute("writable"));
     const timed = bool(src.getAttribute("mustUseTimedWrite"));
 
-    const access: Access.Ast = {
-        rw: Access.Rw.Read
-    };
+    const access = {} as Access.Ast;
     if (writable) {
         access.rw = Access.Rw.ReadWrite;
+    } else {
+        access.rw = Access.Rw.Read;
     }
     if (fabricSensitive) {
         access.fabric = Access.Fabric.Sensitive;

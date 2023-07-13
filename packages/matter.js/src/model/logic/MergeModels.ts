@@ -274,19 +274,19 @@ export namespace MergeModels {
 
             // Prefer spec for elements that are insufficiently defined in
             // chip
-            "conformance": ["local", "spec", "chip"],
-            "constraint": ["local", "spec", "chip"],
-            "quality": ["local", "spec", "chip"],
-            "access": ["local", "spec", "chip"],
+            conformance: ["local", "spec", "chip"],
+            constraint: ["local", "spec", "chip"],
+            quality: ["local", "spec", "chip"],
+            access: ["local", "spec", "chip" ],
 
             // Prefer spec for element names
-            "name": ["local", "spec", "chip"],
+            name: ["local", "spec", "chip"],
 
             // Prefer spec for datatype names (must match element names)
-            "type": ["local", "spec", "chip"],
+            type: ["local", "spec", "chip"],
 
             // Prefer spec for detailed documentation
-            "details": [ "local", "spec", "chip" ]
+            details: [ "local", "spec", "chip" ]
         }
     }
 }

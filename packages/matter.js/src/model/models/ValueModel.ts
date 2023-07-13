@@ -136,7 +136,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      * The value to use as a default.
      */
     get effectiveDefault(): FieldValue | undefined {
-        if (this.default === undefined && !this.nullable && this.effectiveMetatype === Metatype.array) {
+        if (this.default === undefined && !this.nullable && this.effectiveMetatype === Metatype.array && !this.constraint.min) {
             return [];
         }
         return this.default;
