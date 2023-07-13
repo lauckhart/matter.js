@@ -41,6 +41,7 @@ Matter.children.push({
     xref: { document: "core", section: "9.13" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
         {
             tag: "attribute", name: "DataModelRevision", id: 0x0, conformance: "X",
             xref: { document: "core", section: "9.13.4" }

@@ -22,7 +22,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export const TemperatureMeasurementCluster = Cluster({
     id: 0x402,
     name: "TemperatureMeasurement",
-    revision: 1,
+    revision: 4,
     features: {},
 
     attributes: {

@@ -182,7 +182,8 @@ export const BridgedDeviceBasicInformationCluster = Cluster({
          */
         uniqueId: OptionalFixedAttribute(18, TlvString.bound({ maxLength: 32 })),
 
-        productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
+        productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct),
+        clusterRevision: Attribute(65533, TlvUInt16, { default: 1 })
     },
 
     events: {

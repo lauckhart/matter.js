@@ -348,7 +348,7 @@ export enum WindowCoveringFeature {
 export const WindowCoveringBase = BaseClusterComponent({
     id: 0x102,
     name: "WindowCovering",
-    revision: 1,
+    revision: 5,
 
     features: {
         /**

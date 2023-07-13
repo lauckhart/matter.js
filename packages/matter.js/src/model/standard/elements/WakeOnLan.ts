@@ -16,6 +16,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "1.10" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "MacAddress", id: 0x0, type: "hwadr", access: "R V", conformance: "O",
             constraint: "desc", quality: "F",

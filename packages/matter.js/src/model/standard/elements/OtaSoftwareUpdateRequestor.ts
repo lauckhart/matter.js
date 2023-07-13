@@ -15,6 +15,8 @@ Matter.children.push({
     xref: { document: "core", section: "11.19.7" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW F VA",
             conformance: "M", constraint: "desc", default: [],

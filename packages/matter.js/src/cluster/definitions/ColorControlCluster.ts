@@ -956,7 +956,7 @@ export enum ColorControlFeature {
 export const ColorControlBase = BaseClusterComponent({
     id: 0x300,
     name: "ColorControl",
-    revision: 1,
+    revision: 5,
 
     features: {
         /**

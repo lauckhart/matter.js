@@ -566,7 +566,7 @@ export enum ThermostatFeature {
 export const ThermostatBase = BaseClusterComponent({
     id: 0x201,
     name: "Thermostat",
-    revision: 1,
+    revision: 6,
 
     features: {
         /**

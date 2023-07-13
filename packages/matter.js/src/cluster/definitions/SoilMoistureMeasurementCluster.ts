@@ -21,7 +21,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export const SoilMoistureMeasurementCluster = Cluster({
     id: 0x408,
     name: "SoilMoistureMeasurement",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {

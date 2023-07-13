@@ -49,6 +49,8 @@ Matter.children.push({
     xref: { document: "core", section: "9.14" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "ActionList", id: 0x0, type: "list", access: "R V", conformance: "M",
             constraint: "max 256", default: [],

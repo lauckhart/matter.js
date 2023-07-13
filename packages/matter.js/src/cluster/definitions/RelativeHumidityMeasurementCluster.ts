@@ -23,7 +23,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export const RelativeHumidityMeasurementCluster = Cluster({
     id: 0x405,
     name: "RelativeHumidityMeasurement",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {

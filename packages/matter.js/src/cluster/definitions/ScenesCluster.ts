@@ -453,7 +453,7 @@ export enum ScenesFeature {
 export const ScenesCluster = Cluster({
     id: 0x5,
     name: "Scenes",
-    revision: 1,
+    revision: 4,
 
     features: {
         /**

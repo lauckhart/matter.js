@@ -22,7 +22,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export const FlowMeasurementCluster = Cluster({
     id: 0x404,
     name: "FlowMeasurement",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {

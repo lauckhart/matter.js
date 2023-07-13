@@ -31,6 +31,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.2" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.2.4" },
@@ -212,6 +214,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.3" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.3.4" },
@@ -423,6 +427,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.4" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.4.4" },
@@ -861,6 +867,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.5" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.5.4" },
@@ -1076,6 +1084,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.6" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 5 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.6.4" },
@@ -1391,6 +1401,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.6" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 5 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.6.4" },
@@ -1704,6 +1716,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.7" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "StateValue", id: 0x0, type: "bool", access: "R V", conformance: "M",
                     quality: "P",
@@ -1748,6 +1762,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.8" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.8.4" },
@@ -1938,12 +1954,16 @@ export const SpecMatter: MatterElement = {
             details: "This cluster provides an interface for managing low power mode on a device.",
             xref: { document: "cluster", section: "1.9" },
 
-            children: [{
-                tag: "command", name: "Sleep", id: 0x0, access: "O", conformance: "M", direction: "request",
-                response: "status",
-                details: "This command shall put the device into low power mode.",
-                xref: { document: "cluster", section: "1.9.3.1" }
-            }]
+            children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
+                {
+                    tag: "command", name: "Sleep", id: 0x0, access: "O", conformance: "M", direction: "request",
+                    response: "status",
+                    details: "This command shall put the device into low power mode.",
+                    xref: { document: "cluster", section: "1.9.3.1" }
+                }
+            ]
         },
 
         {
@@ -1953,6 +1973,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.10" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "MacAddress", id: 0x0, type: "hwadr", access: "R V", conformance: "O",
                     constraint: "desc", quality: "F",
@@ -1998,6 +2020,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "1.11" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.11.4" },
@@ -2210,6 +2234,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "2.2" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
                 {
                     tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
                     constraint: "0, MinMeasuredValue to MaxMeasuredValue", default: 0, quality: "X P",
@@ -2276,6 +2302,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "2.3" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 },
+
                 {
                     tag: "attribute", name: "MeasuredValue", id: 0x0, type: "int16", access: "R V", conformance: "M",
                     constraint: "MinMeasuredValuetoMaxMeasuredValue", quality: "X P",
@@ -2326,6 +2354,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "2.4" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "2.4.4" },
@@ -2431,6 +2461,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "2.5" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
                 {
                     tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
                     constraint: "MinMeasuredValue to MaxMeasuredValue", default: null, quality: "X P",
@@ -2478,6 +2510,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "2.6" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
                 {
                     tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
                     constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
@@ -2532,6 +2566,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "2.6" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
                 {
                     tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
                     constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
@@ -2586,6 +2622,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "2.6" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
                 {
                     tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
                     constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
@@ -2637,6 +2675,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "2.7" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
                 {
                     tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", access: "R V",
                     conformance: "M", constraint: "0", quality: "P",
@@ -2814,6 +2854,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "3.2" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 5 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "3.2.5" },
@@ -4181,6 +4223,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "3.3" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 },
+
                 {
                     tag: "attribute", name: "PhysicalMinLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
                     constraint: "1 to 254", default: 1,
@@ -4372,6 +4416,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "4.2" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "4.2.4" },
@@ -4995,6 +5041,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "4.3" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 6 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "4.3.3.1" },
@@ -6080,6 +6128,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "4.4" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "4.4.5" },
@@ -6321,6 +6371,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "4.5" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 },
+
                 {
                     tag: "attribute", name: "TemperatureDisplayMode", id: 0x0, type: "enum8", access: "RW VO",
                     conformance: "M", constraint: "desc", default: 0,
@@ -6419,6 +6471,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "5.2" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 6 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "5.2.2" },
@@ -7917,6 +7971,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "5.3" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 5 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "5.3.4" },
@@ -8507,6 +8563,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.2" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "command", name: "GetSetupPin", id: 0x0, access: "A T", conformance: "M", direction: "request",
                     response: "GetSetupPinResponse",
@@ -8659,6 +8717,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.3" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "VendorName", id: 0x0, type: "string", access: "R V", conformance: "O",
                     constraint: "max 32", default: "", quality: "F",
@@ -8785,6 +8845,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.4" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "6.4.2" },
@@ -9000,6 +9062,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.5" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "6.5.2" },
@@ -9093,6 +9157,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.6" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "6.6.2" },
@@ -9321,6 +9387,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.7" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "6.7.2" },
@@ -9731,6 +9799,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.8" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "6.8.2" },
@@ -9804,6 +9874,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.9" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "6.9.2" },
@@ -9935,6 +10007,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.10" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "6.10.2" },
@@ -10323,6 +10397,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "cluster", section: "6.11" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "TargetList", id: 0x0, type: "list", access: "R V", conformance: "M",
                     details: "The TargetList attribute shall represent a list of targets that can be navigated to within the " +
@@ -10444,6 +10520,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.5" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "DeviceTypeList", id: 0x0, type: "list", access: "R V", conformance: "M",
                     constraint: "min 1", quality: "F",
@@ -10548,6 +10626,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.6" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "Binding", id: 0x0, type: "list", access: "RW F VM", conformance: "M",
                     constraint: "desc", default: [], quality: "N",
@@ -10601,6 +10681,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.7" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "LabelList", id: 0x0, type: "list", conformance: "M", constraint: "Derived",
                     default: [],
@@ -10653,12 +10735,16 @@ export const SpecMatter: MatterElement = {
 
             xref: { document: "core", section: "9.8" },
 
-            children: [{
-                tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "R V", conformance: "M",
-                default: [], quality: "N",
-                xref: { document: "core", section: "9.8.4" },
-                children: [{ tag: "datatype", name: "entry", type: "LabelStruct" }]
-            }]
+            children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
+                {
+                    tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "R V", conformance: "M",
+                    default: [], quality: "N",
+                    xref: { document: "core", section: "9.8.4" },
+                    children: [{ tag: "datatype", name: "entry", type: "LabelStruct" }]
+                }
+            ]
         },
 
         {
@@ -10666,14 +10752,18 @@ export const SpecMatter: MatterElement = {
             details: "This cluster provides a feature to tag an endpoint with zero or more labels.",
             xref: { document: "core", section: "9.9" },
 
-            children: [{
-                tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "RW VM", conformance: "M",
-                constraint: "min 4", default: [], quality: "N",
-                details: "An implementation shall support at least 4 list entries per node for all User Label cluster " +
-                         "instances on the node.",
-                xref: { document: "core", section: "9.9.4.1" },
-                children: [{ tag: "datatype", name: "entry", type: "LabelStruct" }]
-            }]
+            children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
+                {
+                    tag: "attribute", name: "LabelList", id: 0x0, type: "list", access: "RW VM", conformance: "M",
+                    constraint: "min 4", default: [], quality: "N",
+                    details: "An implementation shall support at least 4 list entries per node for all User Label cluster " +
+                             "instances on the node.",
+                    xref: { document: "core", section: "9.9.4.1" },
+                    children: [{ tag: "datatype", name: "entry", type: "LabelStruct" }]
+                }
+            ]
         },
 
         {
@@ -10691,6 +10781,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.10" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "Acl", id: 0x0, type: "list", access: "RW F A", conformance: "M",
                     constraint: "desc",
@@ -11139,6 +11231,7 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.13" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
                 {
                     tag: "attribute", name: "DataModelRevision", id: 0x0, conformance: "X",
                     xref: { document: "core", section: "9.13.4" }
@@ -11285,6 +11378,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.14" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "ActionList", id: 0x0, type: "list", access: "R V", conformance: "M",
                     constraint: "max 256", default: [],
@@ -11966,6 +12061,7 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.15.13" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
                 {
                     tag: "command", name: "ProxyDiscoverRequest", id: 0x0, access: "O", conformance: "M",
                     direction: "request",
@@ -11984,6 +12080,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.15.14" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "ConfigurationList", id: 0x0, type: "list", access: "RW", conformance: "M",
                     default: [], quality: "N",
@@ -12029,6 +12127,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "9.15.15" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "ValidProxyList", id: 0x0, type: "list", access: "RW", conformance: "M",
                     default: [], quality: "N F",
@@ -12066,6 +12166,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.1" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "DataModelRevision", id: 0x0, type: "uint16", access: "R V",
                     conformance: "M", quality: "F",
@@ -12392,6 +12494,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.2" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.2.5" },
@@ -12783,6 +12887,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.3" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "ActiveLocale", id: 0x0, type: "string", access: "RW VM", conformance: "M",
                     constraint: "max 35", quality: "N",
@@ -12825,6 +12931,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.4" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.4.4" },
@@ -12952,6 +13060,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.5" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.5.4" },
@@ -12999,23 +13109,27 @@ export const SpecMatter: MatterElement = {
                      "Power Source cluster.",
             xref: { document: "core", section: "11.6" },
 
-            children: [{
-                tag: "attribute", name: "Sources", id: 0x0, type: "list", access: "R V", conformance: "M",
-                constraint: "max 6", quality: "N",
+            children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
 
-                details: "This list shall contain the set of all power sources capable of participating in the power system " +
-                         "of this Node. Each entry in the list shall be the endpoint number of an endpoint having a Power " +
-                         "Source cluster, which corresponds to a physical power source. The endpoint number shall be unique " +
-                         "within the list." +
-                         "\n" +
-                         "The order of power sources on a Node is defined by the Order attribute of its associated Power " +
-                         "Source cluster provided on the endpoint. List entries shall be sorted in increasing order, that is, " +
-                         "an entry with a lower order shall have a lower index than any entry with a higher order. Multiple " +
-                         "entries may have the same order, there are no restrictions on their relative sorting.",
+                {
+                    tag: "attribute", name: "Sources", id: 0x0, type: "list", access: "R V", conformance: "M",
+                    constraint: "max 6", quality: "N",
 
-                xref: { document: "core", section: "11.6.4.1" },
-                children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
-            }]
+                    details: "This list shall contain the set of all power sources capable of participating in the power system " +
+                             "of this Node. Each entry in the list shall be the endpoint number of an endpoint having a Power " +
+                             "Source cluster, which corresponds to a physical power source. The endpoint number shall be unique " +
+                             "within the list." +
+                             "\n" +
+                             "The order of power sources on a Node is defined by the Order attribute of its associated Power " +
+                             "Source cluster provided on the endpoint. List entries shall be sorted in increasing order, that is, " +
+                             "an entry with a lower order shall have a lower index than any entry with a higher order. Multiple " +
+                             "entries may have the same order, there are no restrictions on their relative sorting.",
+
+                    xref: { document: "core", section: "11.6.4.1" },
+                    children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
+                }
+            ]
         },
 
         {
@@ -13027,6 +13141,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.7" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.7.4" },
@@ -14098,6 +14214,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.8" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.8.4" },
@@ -15054,6 +15172,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.9" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "Breadcrumb", id: 0x0, type: "uint64", access: "RW VA", conformance: "M",
                     default: 0,
@@ -15517,6 +15637,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.10" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "command", name: "RetrieveLogsRequest", id: 0x0, access: "O", conformance: "M",
                     direction: "request", response: "RetrieveLogsResponse",
@@ -15736,6 +15858,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.11" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "NetworkInterfaces", id: 0x0, type: "list", access: "R V", conformance: "M",
                     constraint: "max 8",
@@ -16279,6 +16403,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.12" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.12.4" },
@@ -16432,6 +16558,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.13" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.13.4" },
@@ -17435,6 +17563,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.14" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.14.4" },
@@ -17757,6 +17887,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.15" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.15.4" },
@@ -17910,6 +18042,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.16" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.16.5" },
@@ -18340,6 +18474,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.17" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "NoCs", id: 0x0, type: "list", access: "R F A", conformance: "M",
                     constraint: "max SupportedFabrics", quality: "N C",
@@ -19166,6 +19302,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.18" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "core", section: "11.18.4" },
@@ -19435,6 +19573,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.19.6" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "command", name: "QueryImage", id: 0x0, conformance: "M", direction: "request",
                     response: "QueryImageResponse",
@@ -19645,6 +19785,8 @@ export const SpecMatter: MatterElement = {
             xref: { document: "core", section: "11.19.7" },
 
             children: [
+                { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
                 {
                     tag: "attribute", name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW F VA",
                     conformance: "M", constraint: "desc", default: [],

@@ -307,7 +307,7 @@ export enum IdentifyFeature {
 export const IdentifyBase = BaseClusterComponent({
     id: 0x3,
     name: "Identify",
-    revision: 1,
+    revision: 4,
 
     features: {
         /**

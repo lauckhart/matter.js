@@ -17,6 +17,7 @@ Matter.children.push({
     xref: { document: "core", section: "9.15.13" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
         {
             tag: "command", name: "ProxyDiscoverRequest", id: 0x0, access: "O", conformance: "M",
             direction: "request",

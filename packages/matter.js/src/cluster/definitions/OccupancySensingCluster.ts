@@ -79,7 +79,7 @@ export const OccupancySensorTypeBitmap = {
 export const OccupancySensingCluster = Cluster({
     id: 0x406,
     name: "OccupancySensing",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {

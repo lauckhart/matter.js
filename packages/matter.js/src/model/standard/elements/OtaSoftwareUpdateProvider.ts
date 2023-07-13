@@ -15,6 +15,8 @@ Matter.children.push({
     xref: { document: "core", section: "11.19.6" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "command", name: "QueryImage", id: 0x0, conformance: "M", direction: "request",
             response: "QueryImageResponse",

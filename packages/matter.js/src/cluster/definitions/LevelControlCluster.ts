@@ -182,7 +182,7 @@ export enum LevelControlFeature {
 export const LevelControlBase = BaseClusterComponent({
     id: 0x8,
     name: "LevelControl",
-    revision: 1,
+    revision: 5,
 
     features: {
         /**

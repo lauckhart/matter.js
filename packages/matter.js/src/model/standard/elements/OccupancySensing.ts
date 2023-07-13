@@ -15,6 +15,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "2.7" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
         {
             tag: "attribute", name: "Occupancy", id: 0x0, type: "OccupancyBitmap", access: "R V",
             conformance: "M", constraint: "0", quality: "P",

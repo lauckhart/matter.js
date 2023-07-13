@@ -168,7 +168,7 @@ export enum FanControlFeature {
 export const FanControlBase = BaseClusterComponent({
     id: 0x202,
     name: "FanControl",
-    revision: 1,
+    revision: 2,
 
     features: {
         /**

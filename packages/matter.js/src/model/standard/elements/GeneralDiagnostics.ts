@@ -18,6 +18,8 @@ Matter.children.push({
     xref: { document: "core", section: "11.11" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "NetworkInterfaces", id: 0x0, type: "list", access: "R V", conformance: "M",
             constraint: "max 8",

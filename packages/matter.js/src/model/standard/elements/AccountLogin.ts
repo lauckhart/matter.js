@@ -18,6 +18,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "6.2" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "command", name: "GetSetupPin", id: 0x0, access: "A T", conformance: "M", direction: "request",
             response: "GetSetupPinResponse",

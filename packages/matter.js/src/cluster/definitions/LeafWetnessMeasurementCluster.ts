@@ -21,7 +21,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export const LeafWetnessMeasurementCluster = Cluster({
     id: 0x407,
     name: "LeafWetnessMeasurement",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {

@@ -15,6 +15,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "6.4" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.4.2" },

@@ -16,6 +16,8 @@ Matter.children.push({
     xref: { document: "core", section: "11.17" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "NoCs", id: 0x0, type: "list", access: "R F A", conformance: "M",
             constraint: "max SupportedFabrics", quality: "N C",

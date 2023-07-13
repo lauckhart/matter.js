@@ -37,7 +37,7 @@ export const LampAlarmMode = { lampBurnHours: BitFlag(0) };
 export const BallastConfigurationCluster = Cluster({
     id: 0x301,
     name: "BallastConfiguration",
-    revision: 1,
+    revision: 4,
     features: {},
 
     attributes: {

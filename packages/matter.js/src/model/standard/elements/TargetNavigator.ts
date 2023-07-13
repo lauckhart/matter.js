@@ -16,6 +16,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "6.11" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "TargetList", id: 0x0, type: "list", access: "R V", conformance: "M",
             details: "The TargetList attribute shall represent a list of targets that can be navigated to within the " +

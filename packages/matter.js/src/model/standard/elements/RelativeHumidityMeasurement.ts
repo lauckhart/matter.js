@@ -17,6 +17,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "2.6" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 },
+
         {
             tag: "attribute", name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
             constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",

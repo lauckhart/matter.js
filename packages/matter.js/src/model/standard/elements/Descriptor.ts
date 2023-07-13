@@ -26,6 +26,8 @@ Matter.children.push({
     xref: { document: "core", section: "9.5" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "DeviceTypeList", id: 0x0, type: "list", access: "R V", conformance: "M",
             constraint: "min 1", quality: "F",

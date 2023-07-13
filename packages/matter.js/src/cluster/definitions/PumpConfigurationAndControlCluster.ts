@@ -259,7 +259,7 @@ export enum PumpConfigurationAndControlFeature {
 export const PumpConfigurationAndControlBase = BaseClusterComponent({
     id: 0x200,
     name: "PumpConfigurationAndControl",
-    revision: 1,
+    revision: 4,
 
     features: {
         /**

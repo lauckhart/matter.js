@@ -92,7 +92,7 @@ export const enum ScheduleProgrammingVisibility {
 export const ThermostatUserInterfaceConfigurationCluster = Cluster({
     id: 0x204,
     name: "ThermostatUserInterfaceConfiguration",
-    revision: 1,
+    revision: 2,
     features: {},
 
     attributes: {

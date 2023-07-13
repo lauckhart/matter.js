@@ -31,7 +31,7 @@ export const enum LightSensorType {
 export const IlluminanceMeasurementCluster = Cluster({
     id: 0x400,
     name: "IlluminanceMeasurement",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {

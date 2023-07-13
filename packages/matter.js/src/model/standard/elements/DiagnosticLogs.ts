@@ -23,6 +23,8 @@ Matter.children.push({
     xref: { document: "core", section: "11.10" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "command", name: "RetrieveLogsRequest", id: 0x0, access: "O", conformance: "M",
             direction: "request", response: "RetrieveLogsResponse",

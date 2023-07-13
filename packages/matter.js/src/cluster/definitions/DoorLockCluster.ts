@@ -1256,7 +1256,7 @@ export enum DoorLockFeature {
 export const DoorLockBase = BaseClusterComponent({
     id: 0x101,
     name: "DoorLock",
-    revision: 1,
+    revision: 6,
 
     features: {
         /**

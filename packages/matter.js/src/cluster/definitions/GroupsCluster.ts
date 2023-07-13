@@ -165,7 +165,7 @@ export enum GroupsFeature {
 export const GroupsCluster = Cluster({
     id: 0x4,
     name: "Groups",
-    revision: 1,
+    revision: 4,
 
     features: {
         /**

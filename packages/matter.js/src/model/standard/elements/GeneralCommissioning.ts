@@ -23,6 +23,8 @@ Matter.children.push({
     xref: { document: "core", section: "11.9" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "Breadcrumb", id: 0x0, type: "uint64", access: "RW VA", conformance: "M",
             default: 0,

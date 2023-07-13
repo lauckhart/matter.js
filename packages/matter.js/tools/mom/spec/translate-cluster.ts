@@ -164,7 +164,13 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             revision = 1;
         }
 
-        children.push({ ...Globals.ClusterRevision, default: revision });
+        children.push({
+            tag: Globals.ClusterRevision.tag,
+            id: Globals.ClusterRevision.id,
+            name: Globals.ClusterRevision.name,
+            type: "ClusterRevision",
+            default: revision
+        });
 
         return revision;
     }

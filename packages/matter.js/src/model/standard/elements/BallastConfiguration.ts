@@ -15,6 +15,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "3.3" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 },
+
         {
             tag: "attribute", name: "PhysicalMinLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
             constraint: "1 to 254", default: 1,

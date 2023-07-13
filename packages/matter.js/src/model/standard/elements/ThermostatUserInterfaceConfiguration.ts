@@ -16,6 +16,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "4.5" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 },
+
         {
             tag: "attribute", name: "TemperatureDisplayMode", id: 0x0, type: "enum8", access: "RW VO",
             conformance: "M", constraint: "desc", default: 0,

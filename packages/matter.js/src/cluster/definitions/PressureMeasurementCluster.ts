@@ -33,7 +33,7 @@ export enum PressureMeasurementFeature {
 export const PressureMeasurementBase = BaseClusterComponent({
     id: 0x403,
     name: "PressureMeasurement",
-    revision: 1,
+    revision: 3,
 
     features: {
         /**

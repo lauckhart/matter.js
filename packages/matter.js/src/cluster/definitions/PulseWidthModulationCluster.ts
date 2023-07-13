@@ -202,7 +202,7 @@ export enum PulseWidthModulationFeature {
 export const PulseWidthModulationBase = BaseClusterComponent({
     id: 0x1c,
     name: "PulseWidthModulation",
-    revision: 1,
+    revision: 5,
 
     features: {
         /**

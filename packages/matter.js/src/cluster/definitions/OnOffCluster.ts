@@ -197,7 +197,7 @@ export enum OnOffFeature {
 export const OnOffBase = BaseClusterComponent({
     id: 0x6,
     name: "OnOff",
-    revision: 1,
+    revision: 4,
 
     features: {
         /**

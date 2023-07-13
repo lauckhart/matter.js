@@ -23,6 +23,8 @@ Matter.children.push({
     xref: { document: "core", section: "11.3" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "ActiveLocale", id: 0x0, type: "string", access: "RW VM", conformance: "M",
             constraint: "max 35", quality: "N",
