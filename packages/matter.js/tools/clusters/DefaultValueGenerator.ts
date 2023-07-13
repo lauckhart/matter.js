@@ -6,7 +6,7 @@
 
 import { FieldValue, Metatype, ValueModel } from "../../src/model/index.js";
 import { camelize, serialize } from "../../src/util/String.js";
-import { TlvGenerator } from "./TlvGenerator.js";
+import { NestedConstantMap as WrappedConstantKeys, TlvGenerator } from "./TlvGenerator.js";
 
 /**
  * Generates a default value for fields based on model definitions.
@@ -58,11 +58,15 @@ export class DefaultValueGenerator {
      * just as a numeric literal.
      */
     private createNumeric(defaultValue: FieldValue, model: ValueModel) {
-        const id = FieldValue.numericValue(defaultValue, model.type);
-        if (id !== undefined && this.tlv.isSpecializedId(model)) {
-            return { id };
+        const value = FieldValue.numericValue(defaultValue, model.type);
+        const type = model.effectiveType;
+        if (type) {
+            const fieldName = (WrappedConstantKeys as any)[model.effectiveType];
+            if (fieldName) {
+                return { [fieldName]: value };
+            }
         }
-        return id;
+        return value;
     }
 
     /**
@@ -127,6 +131,9 @@ export class DefaultValueGenerator {
                     properties[name] = bits;
                 }
             }
+        }
+        if (!Object.keys(properties).length) {
+            return;
         }
 
         this.tlv.file.addImport("schema/BitmapSchema", "BitsFromPartial");

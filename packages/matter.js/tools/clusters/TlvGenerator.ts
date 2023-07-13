@@ -24,7 +24,7 @@ import { Entry } from "../util/TsFile.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
 
-const IntegerGlobalMap: { [name: string]: [string, string] } = {
+const SpecializedNumbers: { [name: string]: [string, string] } = {
     [Globals.actionId.name]: ["datatype", "TlvAttributeId"],
     [Globals.clusterId.name]: ["datatype", "TlvClusterId"],
     [Globals.commandId.name]: ["datatype", "TlvCommandId"],
@@ -36,8 +36,30 @@ const IntegerGlobalMap: { [name: string]: [string, string] } = {
     [Globals.groupId.name]: ["datatype", "TlvGroupId"],
     [Globals.nodeId.name]: ["datatype", "TlvNodeId"],
     [Globals.SubjectId.name]: ["datatype", "TlvSubjectId"],
-    [Globals.vendorId.name]: ["datatype", "TlvVendorId"]
+    [Globals.vendorId.name]: ["datatype", "TlvVendorId"],
+    [Globals.percent.name]: ["number", "TlvPercent"],
+    [Globals.percent100ths.name]: ["number", "TlvPercent100ths"],
+    [Globals.epochUs.name]: ["number", "TlvEpochUs"],
+    [Globals.epochS.name]: ["number", "TlvEpochS"],
+    [Globals.posixMs.name]: ["number", "TlvPosixMs"],
+    [Globals.systimeUs.name]: ["number", "TlvSysTimeUs"],
+    [Globals.systimeMs.name]: ["number", "TlvSysTimeMS"]
 };
+
+export const NestedConstantMap = {
+    [Globals.actionId.name]: "id",
+    [Globals.clusterId.name]: "id",
+    [Globals.commandId.name]: "id",
+    [Globals.deviceTypeId.name]: "id",
+    [Globals.endpointNo.name]: "number",
+    [Globals.eventId.name]: "id",
+    [Globals.fabricId.name]: "id",
+    [Globals.fabricIdx.name]: "index",
+    [Globals.groupId.name]: "id",
+    [Globals.nodeId.name]: "id",
+    [Globals.SubjectId.name]: "id",
+    [Globals.vendorId.name]: "id"
+}
 
 /**
  * Adds TLV structures for ValueModels to a ClusterFile
@@ -79,6 +101,8 @@ export class TlvGenerator {
             fileOrDirectory = `${fileOrDirectory}/${name.replace(/^Tlv/, "")}`;
         } else if (fileOrDirectory === "tlv") {
             fileOrDirectory = `${fileOrDirectory}/${name}`;
+        } else if (fileOrDirectory === "number") {
+            fileOrDirectory = `tlv/TlvNumber`;
         }
         this.file.addImport(fileOrDirectory, name);
         return name;
@@ -107,7 +131,7 @@ export class TlvGenerator {
                 } else {
                     tlv = "TlvDouble";
                 }
-                this.importTlv("tlv/TlvNumber", tlv);
+                this.importTlv("number", tlv);
                 break;
 
             case Metatype.integer:
@@ -159,7 +183,7 @@ export class TlvGenerator {
                 {
                     const dt = this.defineDatatype(model);
                     if (dt) {
-                        this.importTlv("tlv/TlvNumber", "TlvEnum");
+                        this.importTlv("number", "TlvEnum");
                         tlv = `TlvEnum<${dt}>()`;
                     } else {
                         // No fields; revert to the primitive type the enum
@@ -191,14 +215,6 @@ export class TlvGenerator {
             tlv = `TlvNullable(${tlv})`;
         }
         return tlv;
-    }
-
-    /**
-     * Determine whether an integer type is one of our "object wrapped ID"
-     * things.
-     */
-    isSpecializedId(model: ValueModel) {
-        return !!IntegerGlobalMap[model.globalBase?.name as any];
     }
 
     /**
@@ -245,17 +261,22 @@ export class TlvGenerator {
     }
 
     private integerTlv(metabase: ValueModel, model: ValueModel) {
-        const globalMapping = IntegerGlobalMap[model.globalBase?.name as any];
+        const globalBase = model.globalBase?.name;
+        const globalMapping = SpecializedNumbers[globalBase as any];
+
+        let tlv;
         if (globalMapping) {
-            return this.importTlv(...globalMapping);
+            tlv = this.importTlv(...globalMapping);
+        } else {
+            tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
+            this.importTlv("number", tlv);
         }
 
-        let tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
-        this.importTlv("tlv/TlvNumber", tlv);
-
-        const bounds = this.createNumberBounds(model);
-        if (bounds) {
-            tlv = `${tlv}.bound(${serialize(bounds)})`;
+        if (!NestedConstantMap[globalBase as any]) {
+            const bounds = this.createNumberBounds(model);
+            if (bounds) {
+                tlv = `${tlv}.bound(${serialize(bounds)})`;
+            }
         }
 
         return tlv;
@@ -292,8 +313,8 @@ export class TlvGenerator {
                 throw new InternalError(`${model.path}: Could not determine numeric type for ${model.type}`);
         }
 
-        this.importTlv("tlv/TlvNumber", tlvNum);
-        this.importTlv("tlv/TlvNumber", "TlvBitmap");
+        this.importTlv("number", tlvNum);
+        this.importTlv("number", "TlvBitmap");
 
         return `TlvBitmap(${tlvNum}, ${name})`;
     }

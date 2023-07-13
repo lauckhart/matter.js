@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { Cluster, FixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
-import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
+import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
@@ -183,7 +183,7 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.6.1
          */
-        nameSupport: FixedAttribute(0, TlvBitmap(TlvUInt8, NameSupport), { default: BitsFromPartial(NameSupport, {}) })
+        nameSupport: FixedAttribute(0, TlvBitmap(TlvUInt8, NameSupport))
     },
 
     commands: {

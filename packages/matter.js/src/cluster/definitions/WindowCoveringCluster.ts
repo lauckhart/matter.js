@@ -10,7 +10,7 @@ import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specificat
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
 import { BitFlag, BitsFromPartial, BitFieldEnum, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, Attribute, WritableAttribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
-import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16, TlvPercent, TlvPercent100ths } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
@@ -272,8 +272,8 @@ export const SafetyStatus = {
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
  */
 export const TlvGoToLiftPercentageRequest = TlvObject({
-    liftPercentageValue: TlvOptionalField(0, TlvUInt8),
-    liftPercent100ThsValue: TlvOptionalField(1, TlvUInt16)
+    liftPercentageValue: TlvOptionalField(0, TlvPercent),
+    liftPercent100ThsValue: TlvOptionalField(1, TlvPercent100ths)
 });
 
 /**
@@ -282,8 +282,8 @@ export const TlvGoToLiftPercentageRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
  */
 export const TlvGoToTiltPercentageRequest = TlvObject({
-    tiltPercentageValue: TlvOptionalField(0, TlvUInt8),
-    tiltPercent100ThsValue: TlvOptionalField(1, TlvUInt16)
+    tiltPercentageValue: TlvOptionalField(0, TlvPercent),
+    tiltPercent100ThsValue: TlvOptionalField(1, TlvPercent100ths)
 });
 
 /**
@@ -415,11 +415,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
          */
-        operationalStatus: Attribute(
-            10,
-            TlvBitmap(TlvUInt8, OperationalStatus),
-            { default: BitsFromPartial(OperationalStatus, {}) }
-        ),
+        operationalStatus: Attribute(10, TlvBitmap(TlvUInt8, OperationalStatus)),
 
         /**
          * The EndProductType attribute identifies the product type in complement of the main category indicated by the
@@ -441,11 +437,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
          */
-        mode: WritableAttribute(
-            23,
-            TlvBitmap(TlvUInt8, Mode),
-            { persistent: true, default: BitsFromPartial(Mode, {}), writeAcl: AccessLevel.Manage }
-        ),
+        mode: WritableAttribute(23, TlvBitmap(TlvUInt8, Mode), { persistent: true, writeAcl: AccessLevel.Manage }),
 
         /**
          * The SafetyStatus attribute reflects the state of the safety sensors and the common issues preventing
@@ -455,11 +447,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
          */
-        safetyStatus: OptionalAttribute(
-            26,
-            TlvBitmap(TlvUInt16, SafetyStatus),
-            { default: BitsFromPartial(SafetyStatus, {}) }
-        )
+        safetyStatus: OptionalAttribute(26, TlvBitmap(TlvUInt16, SafetyStatus))
     },
 
     commands: {
@@ -572,7 +560,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          */
         currentPositionLiftPercentage: OptionalAttribute(
             8,
-            TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })),
+            TlvNullable(TlvPercent.bound({ min: 0, max: 100 })),
             { scene: true, persistent: true, default: null }
         )
     },
@@ -630,7 +618,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          */
         currentPositionTiltPercentage: OptionalAttribute(
             9,
-            TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })),
+            TlvNullable(TlvPercent.bound({ min: 0, max: 100 })),
             { scene: true, persistent: true, default: null }
         )
     },
@@ -681,7 +669,7 @@ export const LiftComponent = ClusterComponent({
          */
         targetPositionLiftPercent100Ths: OptionalAttribute(
             11,
-            TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
+            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { scene: true, default: null }
         ),
 
@@ -693,7 +681,7 @@ export const LiftComponent = ClusterComponent({
          */
         currentPositionLiftPercent100Ths: OptionalAttribute(
             14,
-            TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
+            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { persistent: true, default: null }
         ),
 
@@ -767,7 +755,7 @@ export const TiltComponent = ClusterComponent({
          */
         targetPositionTiltPercent100Ths: OptionalAttribute(
             12,
-            TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
+            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { scene: true, default: null }
         ),
 
@@ -779,7 +767,7 @@ export const TiltComponent = ClusterComponent({
          */
         currentPositionTiltPercent100Ths: OptionalAttribute(
             15,
-            TlvNullable(TlvUInt16.bound({ min: 0, max: 10000 })),
+            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { persistent: true, default: null }
         ),
 

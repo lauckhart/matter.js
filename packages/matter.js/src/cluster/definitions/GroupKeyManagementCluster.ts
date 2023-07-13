@@ -12,7 +12,7 @@ import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
-import { TlvUInt16, TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvUInt16, TlvEnum, TlvEpochUs } from "../../tlv/TlvNumber.js";
 import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -135,7 +135,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.3
      */
-    epochStartTime0: TlvField(3, TlvNullable(TlvUInt64)),
+    epochStartTime0: TlvField(3, TlvNullable(TlvEpochUs)),
 
     /**
      * This field, if not null, shall be the root credential used in the derivation of an operational group key for
@@ -151,7 +151,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.5
      */
-    epochStartTime1: TlvField(5, TlvNullable(TlvUInt64)),
+    epochStartTime1: TlvField(5, TlvNullable(TlvEpochUs)),
 
     /**
      * This field, if not null, shall be the root credential used in the derivation of an operational group key for
@@ -167,7 +167,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.7
      */
-    epochStartTime2: TlvField(7, TlvNullable(TlvUInt64)),
+    epochStartTime2: TlvField(7, TlvNullable(TlvEpochUs)),
 
     /**
      * This field specifies how the IPv6 Multicast Address shall be formed for groups using this operational group key

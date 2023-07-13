@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, OptionalAttribute, WritableAttribute, OptionalWritableAttribute, Command, TlvNoResponse, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -265,7 +265,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
          */
-        options: WritableAttribute(15, TlvBitmap(TlvUInt8, Options), { default: BitsFromPartial(Options, {}) }),
+        options: WritableAttribute(15, TlvBitmap(TlvUInt8, Options)),
 
         /**
          * The OnOffTransitionTime attribute represents the time taken to move to or from the target level when On or

@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { Cluster, Attribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
-import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
+import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -506,7 +506,7 @@ export const ScenesCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4.7.5
          */
-        nameSupport: Attribute(4, TlvBitmap(TlvUInt8, NameSupport), { default: BitsFromPartial(NameSupport, {}) }),
+        nameSupport: Attribute(4, TlvBitmap(TlvUInt8, NameSupport)),
 
         /**
          * The LastConfiguredBy attribute holds the Node ID (the IEEE address in case of Zigbee) of the node that last

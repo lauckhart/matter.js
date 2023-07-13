@@ -8,7 +8,6 @@
 
 import { Cluster, OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvUInt32, TlvInt16, TlvUInt16, TlvInt32, TlvInt8, TlvUInt8 } from "../../tlv/TlvNumber.js";
-import { BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 
@@ -35,7 +34,7 @@ export const ElectricalMeasurementCluster = Cluster({
     features: {},
 
     attributes: {
-        measurementType: OptionalAttribute(0, TlvUInt32, { default: BitsFromPartial(MeasurementType, {}) }),
+        measurementType: OptionalAttribute(0, TlvUInt32),
         dcVoltage: OptionalAttribute(256, TlvInt16, { default: 32768 }),
         dcVoltageMin: OptionalAttribute(257, TlvInt16, { default: 32768 }),
         dcVoltageMax: OptionalAttribute(258, TlvInt16, { default: 32768 }),
@@ -105,18 +104,10 @@ export const ElectricalMeasurementCluster = Cluster({
         acCurrentDivisor: OptionalAttribute(1539, TlvUInt16, { default: 1 }),
         acPowerMultiplier: OptionalAttribute(1540, TlvUInt16, { default: 1 }),
         acPowerDivisor: OptionalAttribute(1541, TlvUInt16, { default: 1 }),
-        dcOverloadAlarmsMask: OptionalWritableAttribute(
-            1792,
-            TlvUInt8,
-            { default: BitsFromPartial(DcOverloadAlarmsMask, {}) }
-        ),
+        dcOverloadAlarmsMask: OptionalWritableAttribute(1792, TlvUInt8),
         dcVoltageOverload: OptionalAttribute(1793, TlvInt16, { default: 65535 }),
         dcCurrentOverload: OptionalAttribute(1794, TlvInt16, { default: 65535 }),
-        acOverloadAlarmsMask: OptionalWritableAttribute(
-            2048,
-            TlvUInt16,
-            { default: BitsFromPartial(AcOverloadAlarmsMask, {}) }
-        ),
+        acOverloadAlarmsMask: OptionalWritableAttribute(2048, TlvUInt16),
         acVoltageOverload: OptionalAttribute(2049, TlvInt16, { default: 65535 }),
         acCurrentOverload: OptionalAttribute(2050, TlvInt16, { default: 65535 }),
         acPowerOverload: OptionalAttribute(2051, TlvInt16, { default: 65535 }),

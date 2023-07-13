@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { WritableAttribute, Attribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvEnum, TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -283,7 +283,7 @@ export const RockingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.8
          */
-        rockSupport: FixedAttribute(7, TlvBitmap(TlvUInt8, RockSupport), { default: BitsFromPartial(RockSupport, {}) }),
+        rockSupport: FixedAttribute(7, TlvBitmap(TlvUInt8, RockSupport)),
 
         /**
          * This attribute is a bitmap that indicates the current active fan rocking motion settings. Each bit shall
@@ -301,7 +301,7 @@ export const RockingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
          */
-        rockSetting: WritableAttribute(8, TlvBitmap(TlvUInt8, RockSetting), { default: BitsFromPartial(RockSetting, {}) })
+        rockSetting: WritableAttribute(8, TlvBitmap(TlvUInt8, RockSetting))
     }
 });
 
@@ -316,7 +316,7 @@ export const WindComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.10
          */
-        windSupport: FixedAttribute(9, TlvBitmap(TlvUInt8, WindSupport), { default: BitsFromPartial(WindSupport, {}) }),
+        windSupport: FixedAttribute(9, TlvBitmap(TlvUInt8, WindSupport)),
 
         /**
          * This attribute is a bitmap that indicates the current active fan wind feature settings. Each bit shall only
@@ -334,7 +334,7 @@ export const WindComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
          */
-        windSetting: WritableAttribute(10, TlvBitmap(TlvUInt8, WindSetting), { default: BitsFromPartial(WindSetting, {}) })
+        windSetting: WritableAttribute(10, TlvBitmap(TlvUInt8, WindSetting))
     }
 });
 

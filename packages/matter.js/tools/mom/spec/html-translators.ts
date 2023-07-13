@@ -16,8 +16,7 @@ export const Str = (el: HTMLElement) => {
         }
     }
 
-    const text = el.textContent
-
+    const text = el.textContent;
     if (!text) {
         return "";
     }

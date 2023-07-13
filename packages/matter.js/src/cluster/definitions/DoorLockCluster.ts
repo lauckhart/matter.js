@@ -10,7 +10,7 @@ import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specificat
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
 import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, OptionalWritableAttribute, AccessLevel, WritableAttribute, FixedAttribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
-import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvBitmap } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvBitmap, TlvEpochS } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -942,8 +942,8 @@ export const TlvClearWeekDayScheduleRequest = TlvObject({
 export const TlvSetYearDayScheduleRequest = TlvObject({
     yearDayIndex: TlvField(0, TlvUInt8),
     userIndex: TlvField(1, TlvUInt16),
-    localStartTime: TlvField(2, TlvUInt32),
-    localEndTime: TlvField(3, TlvUInt32)
+    localStartTime: TlvField(2, TlvEpochS),
+    localEndTime: TlvField(3, TlvEpochS)
 });
 
 /**
@@ -963,8 +963,8 @@ export const TlvGetYearDayScheduleResponse = TlvObject({
     yearDayIndex: TlvField(0, TlvUInt8),
     userIndex: TlvField(1, TlvUInt16),
     status: TlvField(2, TlvEnum<DlStatus>()),
-    localStartTime: TlvOptionalField(3, TlvUInt32),
-    localEndTime: TlvOptionalField(4, TlvUInt32)
+    localStartTime: TlvOptionalField(3, TlvEpochS),
+    localEndTime: TlvOptionalField(4, TlvEpochS)
 });
 
 /**
@@ -1037,8 +1037,8 @@ export const enum OperatingMode {
  */
 export const TlvSetHolidayScheduleRequest = TlvObject({
     holidayIndex: TlvField(0, TlvUInt8),
-    localStartTime: TlvField(1, TlvUInt32),
-    localEndTime: TlvField(2, TlvUInt32),
+    localStartTime: TlvField(1, TlvEpochS),
+    localEndTime: TlvField(2, TlvEpochS),
     operatingMode: TlvField(3, TlvEnum<OperatingMode>())
 });
 
@@ -1055,8 +1055,8 @@ export const TlvGetHolidayScheduleRequest = TlvObject({ holidayIndex: TlvField(0
 export const TlvGetHolidayScheduleResponse = TlvObject({
     holidayIndex: TlvField(0, TlvUInt8),
     status: TlvField(1, TlvEnum<DlStatus>()),
-    localStartTime: TlvOptionalField(2, TlvUInt32),
-    localEndTime: TlvOptionalField(3, TlvUInt32),
+    localStartTime: TlvOptionalField(2, TlvEpochS),
+    localEndTime: TlvOptionalField(3, TlvEpochS),
     operatingMode: TlvOptionalField(4, TlvEnum<OperatingMode>())
 });
 
@@ -1454,11 +1454,7 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.28
          */
-        defaultConfigurationRegister: OptionalAttribute(
-            39,
-            TlvBitmap(TlvUInt16, DefaultConfigurationRegister),
-            { default: BitsFromPartial(DefaultConfigurationRegister, {}) }
-        ),
+        defaultConfigurationRegister: OptionalAttribute(39, TlvBitmap(TlvUInt16, DefaultConfigurationRegister)),
 
         /**
          * Enable/disable local programming on the door lock of certain features (see LocalProgrammingFeatures
@@ -1509,7 +1505,7 @@ export const DoorLockBase = BaseClusterComponent({
         localProgrammingFeatures: OptionalWritableAttribute(
             44,
             TlvBitmap(TlvUInt8, LocalProgrammingFeatures),
-            { default: BitsFromPartial(LocalProgrammingFeatures, {}), writeAcl: AccessLevel.Administer }
+            { writeAcl: AccessLevel.Administer }
         ),
 
         /**
@@ -2103,11 +2099,7 @@ export const NotificationAndRfidCredentialComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3
          */
-        rfidPro: OptionalWritableAttribute(
-            71,
-            TlvUInt16,
-            { default: BitsFromPartial(RfidPro, {}), writeAcl: AccessLevel.Administer }
-        )
+        rfidPro: OptionalWritableAttribute(71, TlvUInt16, { writeAcl: AccessLevel.Administer })
     }
 });
 

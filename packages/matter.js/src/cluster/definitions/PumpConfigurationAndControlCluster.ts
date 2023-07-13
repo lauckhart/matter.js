@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, OptionalAttribute, Attribute, OptionalWritableAttribute, AccessLevel, WritableAttribute, OptionalEvent, EventPriority, OptionalFixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvBitmap, TlvEnum, TlvUInt24, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -351,11 +351,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.14
          */
-        pumpStatus: OptionalAttribute(
-            16,
-            TlvBitmap(TlvUInt16, PumpStatusBitmap),
-            { default: BitsFromPartial(PumpStatusBitmap, {}) }
-        ),
+        pumpStatus: OptionalAttribute(16, TlvBitmap(TlvUInt16, PumpStatusBitmap)),
 
         /**
          * This attribute specifies current effective operation mode of the pump as defined in OperationModeEnum.

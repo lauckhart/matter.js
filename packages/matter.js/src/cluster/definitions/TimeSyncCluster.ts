@@ -10,7 +10,7 @@ import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
 import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, OptionalAttribute, WritableAttribute, AccessLevel, Command, TlvNoResponse, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
-import { TlvUInt64, TlvEnum, TlvInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvEpochUs, TlvEnum, TlvInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -157,7 +157,7 @@ export const TlvSetUtcTimeRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.9.1.1
      */
-    utcTime: TlvField(0, TlvUInt64),
+    utcTime: TlvField(0, TlvEpochUs),
 
     /**
      * This shall give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity Attribute”.
@@ -190,7 +190,7 @@ export const TlvTimeZoneStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.3.2
      */
-    validAt: TlvField(1, TlvUInt64),
+    validAt: TlvField(1, TlvEpochUs),
 
     /**
      * The time zone name SHOULD provide a human-readable time zone name and it SHOULD use the country/city format
@@ -215,14 +215,14 @@ export const TlvDSTOffsetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.4.1
      */
-    validStarting: TlvField(1, TlvUInt64),
+    validStarting: TlvField(1, TlvEpochUs),
 
     /**
      * The UTC time when the offset shall stop being applied. This value shall be larger than the ValidStarting time.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.4.2
      */
-    validUntil: TlvField(2, TlvUInt64)
+    validUntil: TlvField(2, TlvEpochUs)
 });
 
 /**
@@ -304,7 +304,7 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.1
          */
-        utcTime: Attribute(0, TlvNullable(TlvUInt64), { omitChanges: true, default: null }),
+        utcTime: Attribute(0, TlvNullable(TlvEpochUs), { omitChanges: true, default: null }),
 
         /**
          * The granularity of the error that the server is willing to guarantee on the time synchronization. It is of
@@ -460,7 +460,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.8
          */
-        localTime: Attribute(7, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 }),
+        localTime: Attribute(7, TlvNullable(TlvEpochUs), { omitChanges: true, default: 0 }),
 
         /**
          * Indicates whether the server has access to a time zone database. Nodes with a time zone database may update

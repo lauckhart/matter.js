@@ -10,7 +10,7 @@ import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specificat
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
 import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, Command, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
-import { TlvEnum, TlvUInt64, TlvFloat } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt64, TlvEpochUs, TlvFloat } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
@@ -148,7 +148,7 @@ export const TlvPlaybackPositionStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.5.3.1
      */
-    updatedAt: TlvField(0, TlvUInt64),
+    updatedAt: TlvField(0, TlvEpochUs),
 
     /**
      * This shall indicate the associated discrete position within the media stream, in milliseconds from the beginning
@@ -317,7 +317,7 @@ export const AdvancedSeekComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.2
          */
-        startTime: Attribute(1, TlvNullable(TlvUInt64), { default: 0 }),
+        startTime: Attribute(1, TlvNullable(TlvEpochUs), { default: 0 }),
 
         /**
          * This shall indicate the duration, in milliseconds, of the current media being played back or null when

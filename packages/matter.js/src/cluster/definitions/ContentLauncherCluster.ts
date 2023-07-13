@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
@@ -473,11 +473,7 @@ export const UrlPlaybackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2
          */
-        supportedStreamingProtocols: Attribute(
-            1,
-            TlvUInt32,
-            { persistent: true, default: BitsFromPartial(SupportedStreamingProtocols, {}) }
-        )
+        supportedStreamingProtocols: Attribute(1, TlvUInt32, { persistent: true })
     },
 
     commands: {

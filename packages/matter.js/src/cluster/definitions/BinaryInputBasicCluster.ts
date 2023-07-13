@@ -10,7 +10,6 @@ import { Cluster, OptionalWritableAttribute, WritableAttribute, OptionalAttribut
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvUInt8, TlvUInt32 } from "../../tlv/TlvNumber.js";
-import { BitsFromPartial } from "../../schema/BitmapSchema.js";
 
 /**
  * Binary Input (Basic)
@@ -31,7 +30,7 @@ export const BinaryInputBasicCluster = Cluster({
         polarity: OptionalAttribute(84, TlvUInt8, { default: 0 }),
         presentValue: WritableAttribute(85, TlvBoolean),
         reliability: OptionalWritableAttribute(103, TlvUInt8, { default: 0 }),
-        statusFlags: Attribute(111, TlvUInt8, { default: BitsFromPartial(StatusFlags, {}) }),
+        statusFlags: Attribute(111, TlvUInt8),
         applicationType: OptionalAttribute(256, TlvUInt32)
     }
 });

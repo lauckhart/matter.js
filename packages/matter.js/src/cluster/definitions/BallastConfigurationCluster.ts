@@ -9,7 +9,7 @@
 import { Cluster, Attribute, OptionalAttribute, WritableAttribute, AccessLevel, OptionalWritableAttribute } from "../../cluster/Cluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvUInt8, TlvBitmap, TlvUInt24 } from "../../tlv/TlvNumber.js";
-import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
+import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvString } from "../../tlv/TlvString.js";
 
@@ -64,11 +64,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.3
          */
-        ballastStatus: OptionalAttribute(
-            2,
-            TlvBitmap(TlvUInt8, BallastStatus),
-            { default: BitsFromPartial(BallastStatus, {}) }
-        ),
+        ballastStatus: OptionalAttribute(2, TlvBitmap(TlvUInt8, BallastStatus)),
 
         /**
          * The MinLevel attribute specifies the light output of the ballast according to the dimming light curve (see
@@ -188,11 +184,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.5
          */
-        lampAlarmMode: OptionalWritableAttribute(
-            52,
-            TlvBitmap(TlvUInt8, LampAlarmMode),
-            { default: BitsFromPartial(LampAlarmMode, {}), writeAcl: AccessLevel.Manage }
-        ),
+        lampAlarmMode: OptionalWritableAttribute(52, TlvBitmap(TlvUInt8, LampAlarmMode), { writeAcl: AccessLevel.Manage }),
 
         /**
          * The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute may reach

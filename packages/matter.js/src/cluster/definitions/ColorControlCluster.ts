@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { OptionalAttribute, Attribute, WritableAttribute, FixedAttribute, OptionalFixedAttribute, OptionalWritableAttribute, AccessLevel, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap, TlvInt16 } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
@@ -1057,7 +1057,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.10
          */
-        options: WritableAttribute(15, TlvBitmap(TlvUInt8, Options), { default: BitsFromPartial(Options, {}) }),
+        options: WritableAttribute(15, TlvBitmap(TlvUInt8, Options)),
 
         /**
          * The NumberOfPrimaries attribute contains the number of color primaries implemented on this device. A value
@@ -1319,11 +1319,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.18
          */
-        colorCapabilities: Attribute(
-            16394,
-            TlvUInt16.bound({ min: 0, max: 31 }),
-            { default: BitsFromPartial(ColorCapabilities, {}) }
-        )
+        colorCapabilities: Attribute(16394, TlvUInt16.bound({ min: 0, max: 31 }))
     }
 });
 

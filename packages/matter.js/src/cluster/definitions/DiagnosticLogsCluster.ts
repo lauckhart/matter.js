@@ -9,7 +9,7 @@
 import { Cluster, Command } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
-import { TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvEpochUs, TlvSysTimeUs } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 
 /**
@@ -215,7 +215,7 @@ export const TlvRetrieveLogsResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.3
      */
-    utcTimeStamp: TlvOptionalField(2, TlvUInt64),
+    utcTimeStamp: TlvOptionalField(2, TlvEpochUs),
 
     /**
      * This field SHOULD be included in the command if the Status field has a value of Success. When included, the
@@ -224,7 +224,7 @@ export const TlvRetrieveLogsResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.2.4
      */
-    timeSinceBoot: TlvOptionalField(3, TlvUInt64)
+    timeSinceBoot: TlvOptionalField(3, TlvSysTimeUs)
 });
 
 /**

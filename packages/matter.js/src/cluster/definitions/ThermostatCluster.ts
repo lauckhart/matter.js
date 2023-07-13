@@ -663,7 +663,7 @@ export const ThermostatBase = BaseClusterComponent({
         remoteSensing: OptionalWritableAttribute(
             26,
             TlvBitmap(TlvUInt8, RemoteSensing),
-            { persistent: true, default: BitsFromPartial(RemoteSensing, {}), writeAcl: AccessLevel.Manage }
+            { persistent: true, writeAcl: AccessLevel.Manage }
         ),
 
         /**
@@ -718,7 +718,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.25
          */
-        alarmMask: OptionalAttribute(29, TlvBitmap(TlvUInt8, AlarmMask), { default: BitsFromPartial(AlarmMask, {}) }),
+        alarmMask: OptionalAttribute(29, TlvBitmap(TlvUInt8, AlarmMask)),
 
         /**
          * This attribute specifies the temperature hold status on the thermostat. If hold status is on, the thermostat
@@ -773,7 +773,7 @@ export const ThermostatBase = BaseClusterComponent({
         thermostatProgrammingOperationMode: OptionalWritableAttribute(
             37,
             TlvBitmap(TlvUInt8, ThermostatProgrammingOperationMode),
-            { default: BitsFromPartial(ThermostatProgrammingOperationMode, {}), writeAcl: AccessLevel.Manage }
+            { writeAcl: AccessLevel.Manage }
         ),
 
         /**
@@ -916,11 +916,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.48
          */
-        acErrorCode: OptionalWritableAttribute(
-            68,
-            TlvBitmap(TlvUInt32, AcErrorCode),
-            { default: BitsFromPartial(AcErrorCode, {}), writeAcl: AccessLevel.Manage }
-        ),
+        acErrorCode: OptionalWritableAttribute(68, TlvBitmap(TlvUInt32, AcErrorCode), { writeAcl: AccessLevel.Manage }),
 
         /**
          * This attribute indicates the position of Louver on the AC.
