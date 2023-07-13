@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Cluster, OptionalFixedAttribute, OptionalWritableAttribute, Attribute, OptionalAttribute, OptionalEvent, EventPriority, Event } from "../../cluster/Cluster.js";
+import { Cluster, OptionalFixedAttribute, OptionalWritableAttribute, AccessLevel, Attribute, OptionalAttribute, OptionalEvent, EventPriority, Event } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
@@ -121,7 +121,11 @@ export const BridgedDeviceBasicInformationCluster = Cluster({
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        nodeLabel: OptionalWritableAttribute(5, TlvString.bound({ maxLength: 32 }), { persistent: true, default: "" }),
+        nodeLabel: OptionalWritableAttribute(
+            5,
+            TlvString.bound({ maxLength: 32 }),
+            { persistent: true, default: "", writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4

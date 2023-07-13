@@ -231,7 +231,7 @@ export class ModelTraversal {
 
         let shadow: Model | undefined;
         this.operationWithDismissal(model, () => {
-            this.visitInheritance(model?.parent, (parent) => {
+            this.visitInheritance(this.findBase(model?.parent), (parent) => {
                 if (model.id !== undefined) {
                     shadow = this.findLocal(parent, model.id, [ model.tag ]);
                     if (shadow) {
@@ -248,20 +248,26 @@ export class ModelTraversal {
     }
 
     /**
-     * Get an aspect from the first entry in the inheritance hierarchy where
-     * the aspect isn't empty.  Note that this searches the *parent's*
-     * inheritance hierarchy as aspects are inherited by override
+     * Get an aspect that reflects extension of any shadowed aspects.  Note
+     * that this searches the *parent's* inheritance hierarchy as aspects are
+     * inherited by replacing properties.
      */
     findAspect(model: Model | undefined, symbol: symbol): Aspect<any> | undefined {
-        return this.operation(() => {
+        let result: Aspect<any> | undefined;
+        this.operation(() => {
             while (model) {
                 const aspect = (model as any)[symbol] as Aspect<any>;
                 if (aspect && !aspect.empty) {
-                    return aspect;
+                    if (result) {
+                        result = aspect.extend(result);
+                    } else {
+                        result = aspect;
+                    }
                 }
                 model = this.findShadow(model);
             }
         })
+        return result;
     }
 
     /**
