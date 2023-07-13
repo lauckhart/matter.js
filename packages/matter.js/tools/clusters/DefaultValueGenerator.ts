@@ -103,10 +103,11 @@ export class DefaultValueGenerator {
                 continue;
             }
 
-            if (definition.constraint.value !== undefined) {
+            const constraint = definition.effectiveConstraint;
+            if (constraint.value !== undefined) {
                 fields.set(definition, 1);
-            } else if (definition.constraint.min !== undefined) {
-                const fieldBit = 1 << (bit - (definition.constraint.min as number));
+            } else if (constraint.min !== undefined) {
+                const fieldBit = 1 << (bit - (constraint.min as number));
                 fields.set(definition, (fields.get(definition) ?? 0) & fieldBit);
             }
         }
@@ -114,7 +115,8 @@ export class DefaultValueGenerator {
         const properties = {} as { [name: string]: boolean | number | string };
         for (const [field, bits] of fields) {
             const name = camelize(field.name, false);
-            if (typeof field.constraint.value === "number") {
+            const constraint = field.effectiveConstraint;
+            if (typeof constraint.value === "number") {
                 properties[name] = true;
             } else {
                 const defining = field.definingModel;

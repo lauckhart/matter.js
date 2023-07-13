@@ -78,13 +78,14 @@ export class ClusterComponentGenerator {
             block.atom(tlvType);
 
             const options = block.expressions("{", "}");
-            if (model.quality.scene) {
+            const quality = model.effectiveQuality;
+            if (quality.scene) {
                 options.atom("scene", true);
             }
-            if (model.quality.nonvolatile) {
+            if (quality.nonvolatile) {
                 options.atom("persistent", true);
             }
-            if (model.quality.changesOmitted) {
+            if (quality.changesOmitted) {
                 options.atom("omitChanges", true);
             }
 
@@ -97,13 +98,14 @@ export class ClusterComponentGenerator {
             }
             
             // View is the default
-            if (model.access.readPriv && model.access.readPriv != Access.Privilege.View) {
-                options.atom("readAcl", this.mapPrivilege(model.access.readPriv));
+            const access = model.effectiveAccess;
+            if (access.readPriv && access.readPriv != Access.Privilege.View) {
+                options.atom("readAcl", this.mapPrivilege(access.readPriv));
             }
 
             // Operate is the default
-            if (model.access.writePriv && model.access.writePriv != Access.Privilege.Operate) {
-                options.atom("writeAcl", this.mapPrivilege(model.access.writePriv));
+            if (access.writePriv && access.writePriv != Access.Privilege.Operate) {
+                options.atom("writeAcl", this.mapPrivilege(access.writePriv));
             }
 
             if (!options.length) {

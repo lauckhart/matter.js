@@ -44,12 +44,18 @@ export abstract class ValueModel extends Model implements ValueElement {
     set constraint(definition: Constraint | Constraint.Definition) {
         this.setAspect(CONSTRAINT, Constraint, definition);
     }
+    get effectiveConstraint(): Constraint {
+        return this.getEffectiveAspect(CONSTRAINT, Constraint);
+    }
 
     get conformance(): Conformance {
         return this.getAspect(CONFORMANCE, Conformance);
     }
     set conformance(definition: Conformance | Conformance.Definition) {
         this.setAspect(CONFORMANCE, Conformance, definition);
+    }
+    get effectiveConformance(): Conformance {
+        return this.getEffectiveAspect(CONFORMANCE, Conformance);
     }
 
     get access(): Access {
@@ -58,12 +64,18 @@ export abstract class ValueModel extends Model implements ValueElement {
     set access(definition: Access | Access.Definition) {
         this.setAspect(ACCESS, Access, definition);
     }
+    get effectiveAccess(): Access {
+        return this.getEffectiveAspect(ACCESS, Access);
+    }
 
     get quality(): Quality {
         return this.getAspect(QUALITY, Quality);
     }
     set quality(definition: Quality | Quality.Definition) {
         this.setAspect(QUALITY, Quality, definition);
+    }
+    get effectiveQuality(): Quality {
+        return this.getEffectiveAspect(QUALITY, Quality);
     }
 
     /**
@@ -209,14 +221,14 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Is this model deprecated?
      */
     get deprecated() {
-        return this.conformance.type === Conformance.Flag.Deprecated;
+        return this.effectiveConformance.type === Conformance.Flag.Deprecated;
     }
 
     /**
      * Can this model be omitted?
      */
     get nullable() {
-        return !!this.quality.nullable;
+        return !!this.effectiveQuality.nullable;
     }
 
     /**
@@ -260,5 +272,13 @@ export abstract class ValueModel extends Model implements ValueElement {
         } else {
             (this as any)[symbol] = new constructor(value);
         }
+    }
+
+    private getEffectiveAspect(symbol: symbol, constructor: new (definition: any) => any) {
+        const aspect = new ModelTraversal().findAspect(this, symbol);
+        if (aspect) {
+            return aspect;
+        }
+        return this.getAspect(symbol, constructor);
     }
 }

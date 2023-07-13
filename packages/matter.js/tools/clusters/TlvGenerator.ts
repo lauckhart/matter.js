@@ -338,11 +338,12 @@ export class TlvGenerator {
         for (const child of model.children) {
             let type: string | undefined;
             
-            if (typeof child.constraint.value === "number") {
+            const constraint = child.effectiveConstraint;
+            if (typeof constraint.value === "number") {
                 // Single bit
                 this.importTlv("schema/BitmapSchema", "BitFlag");
-                type = `BitFlag(${child.constraint.value})`;
-            } else if (typeof child.constraint.min === "number" && typeof child.constraint.max === "number") {
+                type = `BitFlag(${constraint.value})`;
+            } else if (typeof constraint.min === "number" && typeof constraint.max === "number") {
                 if (child.effectiveMetatype === Metatype.enum) {
                     const enumName = this.defineDatatype(child);
                     if (enumName) {
@@ -358,7 +359,7 @@ export class TlvGenerator {
                     type = `BitField`
                 }
 
-                type = `${type}(${child.constraint.min}, ${child.constraint.max - child.constraint.min})`;
+                type = `${type}(${constraint.min}, ${constraint.max - constraint.min})`;
             } else {
                 // Can't do anything without a property constrained definition
                 continue;
@@ -463,8 +464,9 @@ export class TlvGenerator {
     private createBounds<MIN extends string, MAX extends string>(model: ValueModel, minKey: MIN, maxKey: MAX): { [key in MIN | MAX]: number } | undefined {
         const bounds = {} as any;
 
-        const min = FieldValue.numericValue(model.constraint.min, model.type);
-        const max = FieldValue.numericValue(model.constraint.max, model.type);
+        const constraint = model.effectiveConstraint;
+        const min = FieldValue.numericValue(constraint.min, model.type);
+        const max = FieldValue.numericValue(constraint.max, model.type);
         if (!(min || max)) {
             return;
         }

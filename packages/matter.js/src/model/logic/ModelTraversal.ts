@@ -5,6 +5,7 @@
  */
 
 import { InternalError } from "../../common/InternalError.js";
+import { Aspect } from "../aspects/index.js";
 import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, Globals } from "../elements/index.js";
 import { type Model, type ValueModel, CommandModel } from "../models/index.js";
@@ -206,12 +207,59 @@ export class ModelTraversal {
      * Find the model this model derives from that has children, if any.
      */
     findDefiningModel(model: ValueModel | undefined): ValueModel | undefined {
+        let result: ValueModel | undefined;
+        this.visitInheritance(model, (model) => {
+            if (!model.isType) {
+                return false;
+            }
+            if (model.children.length) {
+                result = model as ValueModel;
+                return false;
+            }
+        });
+        return result;
+    }
+
+    /**
+     * Find a child in the parent's inheritance hierarchy with the same tag
+     * and ID/name.
+     */
+    findShadow(model: Model | undefined ) {
+        if (model === undefined) {
+            return undefined;
+        }
+
+        let shadow: Model | undefined;
+        this.operationWithDismissal(model, () => {
+            this.visitInheritance(model?.parent, (parent) => {
+                if (model.id !== undefined) {
+                    shadow = this.findLocal(parent, model.id, [ model.tag ]);
+                    if (shadow) {
+                        return false;
+                    }
+                }
+                shadow = this.findLocal(parent, model.name, [ model.tag ]);
+                if (shadow) {
+                    return false;
+                }
+            });
+        });
+        return shadow;
+    }
+
+    /**
+     * Get an aspect from the first entry in the inheritance hierarchy where
+     * the aspect isn't empty.  Note that this searches the *parent's*
+     * inheritance hierarchy as aspects are inherited by override
+     */
+    findAspect(model: Model | undefined, symbol: symbol): Aspect<any> | undefined {
         return this.operation(() => {
             while (model) {
-                if (model.children.length) {
-                    return model;
+                const aspect = (model as any)[symbol] as Aspect<any>;
+                if (aspect && !aspect.empty) {
+                    return aspect;
                 }
-                model = model.base;
+                model = this.findShadow(model);
             }
         })
     }
@@ -397,7 +445,7 @@ export class ModelTraversal {
     }
 
     /**
-     * Visit all nodes in the inheritance hierarchy.
+     * Visit all nodes in the inheritance hierarchy until the visitor returns false.
      */
     visitInheritance(model: Model | undefined, visitor: (model: Model) => boolean | void): boolean | undefined {
         return this.operation(() => {
